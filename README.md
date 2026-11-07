@@ -511,7 +511,13 @@ manifest. SKR's workbooks are not in the repository or on the site; see
 
 ## Publish on GitHub Pages
 
-`site/dist` is the complete site. `scripts/deploy_pages.py <remote>` builds it and
+`.github/workflows/site.yml` does it all in CI: it builds the web compiler from
+OpenModelica's public repository (`master`, or the ref given when run by hand),
+runs the tests against it, builds `site/dist` and deploys it with GitHub Pages'
+Actions source. The staged compiler is cached per OpenModelica commit. The deploy
+job runs only on `main` of a public repository.
+
+By hand: `site/dist` is the complete site. `scripts/deploy_pages.py <remote>` builds it and
 pushes it as a single commit to the `gh-pages` branch of that remote; set the
 repository's Pages source to that branch. The compiler stays out of the main
 branch's history, and each deployment replaces the previous one.

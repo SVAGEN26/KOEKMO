@@ -1,0 +1,148 @@
+# Builds OpenModelica's in-browser compiler from its public source, tests the site
+# against it and deploys the site to GitHub Pages. The compiler is never committed:
+# it is cached per OpenModelica commit, so a site-only change skips the ~1 h build.
+name: Site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      openmodelica_ref:
+        description: OpenModelica branch, tag or full commit hash
+        default: master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+env:
+  OM_REPO: https://github.com/OpenModelica/OpenModelica.git
+  RUST_TOOLCHAIN: nightly-2026-05-31
+  # wasm-opt must be binaryen 120+; Ubuntu 24.04's package is 108.
+  BINARYEN_VERSION: '124'
+  BINARYEN_SHA256: 0290c3779fedf592b8da0ded3032ff55c41a2b7bfa2d6bf7b7bac6f0e6e28963
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve the OpenModelica commit
+        id: om
+        env:
+          REF: ${{ inputs.openmodelica_ref || 'master' }}
+        run: |
+          sha=$(git ls-remote "$OM_REPO" "refs/heads/$REF" "refs/tags/$REF^{}" "refs/tags/$REF" | head -1 | cut -f1)
+          if [ -z "$sha" ]; then
+            [[ "$REF" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::$REF is not a branch, tag or full commit hash"; exit 1; }
+            sha=$REF
+          fi
+          echo "OpenModelica $REF = $sha"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the compiler
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: site/omc-web
+          key: omc-web-${{ steps.om.outputs.sha }}-${{ hashFiles('.github/workflows/site.yml', 'scripts/stage_omc.py') }}
+
+      - name: Free disk space
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost && df -h /
+
+      - name: Install build tools
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ninja-build clang lld wasi-libc \
+            libclang-rt-18-dev-wasm32 libclang-rt-dev-wasm32 libstdc++-14-dev \
+            libsuitesparse-dev liblapack-dev libblas-dev
+          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal \
+            --component rustc-codegen-cranelift-preview --target wasm32-unknown-unknown
+          curl -sSLo binaryen.tgz "https://github.com/WebAssembly/binaryen/releases/download/version_${BINARYEN_VERSION}/binaryen-version_${BINARYEN_VERSION}-x86_64-linux.tar.gz"
+          echo "$BINARYEN_SHA256  binaryen.tgz" | sha256sum -c
+          tar xzf binaryen.tgz -C "$RUNNER_TEMP"
+          "$RUNNER_TEMP/binaryen-version_${BINARYEN_VERSION}/bin/wasm-opt" --version
+
+      - name: Check out OpenModelica
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: OpenModelica/OpenModelica
+          ref: ${{ steps.om.outputs.sha }}
+          path: OpenModelica
+          fetch-depth: 0  # git describe names the compiler revision
+          filter: blob:none
+
+      - name: Check out OpenModelica's submodules
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: OpenModelica
+        run: git submodule update --init --recursive --filter=blob:none OMCompiler/3rdParty OMCompiler/Compiler/boot/bomc
+
+      # The wasm-only configure skips the C simulation runtime, which is what writes
+      # OMCompiler/SimulationRuntime/c/RuntimeSources.mo; the compiler still needs it.
+      # A native configure (no build) writes it into the source tree.
+      - name: Generate RuntimeSources.mo
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: OpenModelica
+        run: |
+          cmake -S . -B "$RUNNER_TEMP/native-cfg" -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+            -DOM_USE_SYSTEM_MINIZIP=OFF -DOM_USE_SYSTEM_EXPAT=OFF -DOM_ENABLE_GUI_CLIENTS=OFF \
+            -DOM_ENABLE_OMSIMULATOR=OFF -DOM_ENABLE_TESTSUITE=OFF -DOM_USE_CCACHE=OFF \
+            -DOM_OMC_ENABLE_MOO=OFF -DOM_OMC_ENABLE_OPTIMIZATION=OFF -DOM_OMC_ENABLE_FORTRAN=OFF \
+            > "$RUNNER_TEMP/native-cfg.log" 2>&1 || tail -30 "$RUNNER_TEMP/native-cfg.log"
+          test -s OMCompiler/SimulationRuntime/c/RuntimeSources.mo
+          rm -rf "$RUNNER_TEMP/native-cfg"
+
+      - name: Build the web compiler
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: OpenModelica
+        run: |
+          cmake -S . -B build-web -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ \
+            -DOM_OMC_WASM=ON -DRUST_OMC_WASM_MODE=web-release -DRUST_OMC_CI=ON -DOM_USE_CCACHE=OFF \
+            -DRUST_OMC_MOLD=OFF \
+            -DWASM_OPT_EXECUTABLE="$RUNNER_TEMP/binaryen-version_${BINARYEN_VERSION}/bin/wasm-opt"
+          cmake --build build-web --target install
+
+      - name: Stage the compiler
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: python3 scripts/stage_omc.py OpenModelica/build-web/install_cmake/share/omc/web
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test
+        run: npm test
+
+      - name: Build the site
+        run: |
+          python3 scripts/build.py
+          big=$(find site/dist -type f -size +99M)
+          if [ -n "$big" ]; then echo "::error::Pages rejects files of 100 MiB or more: $big"; exit 1; fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  # GitHub Pages on the free plan needs a public repository.
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main' && !github.event.repository.private
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
