@@ -21,7 +21,6 @@ concurrency:
 
 env:
   OM_REPO: https://github.com/OpenModelica/OpenModelica.git
-  RUST_TOOLCHAIN: nightly-2026-05-31
   # wasm-opt must be binaryen 120+; Ubuntu 24.04's package is 108.
   BINARYEN_VERSION: '124'
   BINARYEN_SHA256: 0290c3779fedf592b8da0ded3032ff55c41a2b7bfa2d6bf7b7bac6f0e6e28963
@@ -64,8 +63,6 @@ jobs:
           sudo apt-get install -y --no-install-recommends ninja-build clang lld wasi-libc \
             libclang-rt-18-dev-wasm32 libclang-rt-dev-wasm32 libstdc++-14-dev \
             libsuitesparse-dev liblapack-dev libblas-dev
-          rustup toolchain install "$RUST_TOOLCHAIN" --profile minimal \
-            --component rustc-codegen-cranelift-preview --target wasm32-unknown-unknown
           curl -sSLo binaryen.tgz "https://github.com/WebAssembly/binaryen/releases/download/version_${BINARYEN_VERSION}/binaryen-version_${BINARYEN_VERSION}-x86_64-linux.tar.gz"
           echo "$BINARYEN_SHA256  binaryen.tgz" | sha256sum -c
           tar xzf binaryen.tgz -C "$RUNNER_TEMP"
@@ -85,6 +82,13 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         working-directory: OpenModelica
         run: git submodule update --init --recursive --filter=blob:none OMCompiler/3rdParty OMCompiler/Compiler/boot/bomc
+
+      # Install the toolchain OpenModelica pins, with all its components, up front. Left to
+      # cargo, parallel build steps race to install the same component and fail.
+      - name: Install the Rust toolchain
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: OpenModelica/OMCompiler/Compiler/OpenModelica.rs
+        run: rustup toolchain install && rustup show active-toolchain
 
       # The wasm-only configure skips the C simulation runtime, which is what writes
       # OMCompiler/SimulationRuntime/c/RuntimeSources.mo; the compiler still needs it.
