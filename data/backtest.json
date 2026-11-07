@@ -1,0 +1,39 @@
+{
+  "method": "One-year rolling-origin retrospective population test; no true historical release vintages",
+  "results": [
+    {
+      "origin": 2022,
+      "target": 2023,
+      "actual": 43728,
+      "cohort": 43774.2161389662,
+      "persistence": 43728,
+      "trend": 43782,
+      "cohortAgeMAE": 36.154334459907524
+    },
+    {
+      "origin": 2023,
+      "target": 2024,
+      "actual": 43505,
+      "cohort": 43754.27570457586,
+      "persistence": 43728,
+      "trend": 43728,
+      "cohortAgeMAE": 69.12061424850572
+    },
+    {
+      "origin": 2024,
+      "target": 2025,
+      "actual": 43131,
+      "cohort": 43363.11100568525,
+      "persistence": 43505,
+      "trend": 43282,
+      "cohortAgeMAE": 50.14720763975065
+    }
+  ],
+  "scores": {
+    "cohort": 175.8676164091036,
+    "persistence": 199,
+    "trend": 142.66666666666666
+  },
+  "conclusion": "Åldersmodellen slår inte det bästa enkla alternativet i dessa tre år. Det behövs bättre åldersdata och fler utvärderingsår.",
+  "forecastSuperiorityProven": false
+}

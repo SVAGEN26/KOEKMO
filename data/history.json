@@ -1,0 +1,106 @@
+{
+  "municipality": "0583",
+  "scope": "kommunen, not consolidated municipal group",
+  "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+  "retrieved": "2026-10-13",
+  "pages": "Printed pages 6–7, 47–49, 70; PDF pages 4, 24–25, 36",
+  "units": "SEK million for finance; persons for demographics",
+  "note": "Rounded accounts may differ by 1 mnkr. Historical values here are retrospectively published, not a preserved real-time data vintage. Published 2025 cohort sum differs from total by 8 persons. Model inputs proportionally reconcile cohorts to reported totals; original counts remain in this file.",
+  "rows": [
+    {
+      "year": 2021,
+      "population": [
+        3386,
+        4633,
+        1550,
+        23766,
+        10339
+      ],
+      "births": 420,
+      "deaths": 455,
+      "netMigration": 58,
+      "netCost": 2733,
+      "result": 62,
+      "financeNet": -1,
+      "debt": 830,
+      "investment": 273,
+      "reportedTotal": 43674
+    },
+    {
+      "year": 2022,
+      "population": [
+        3277,
+        4664,
+        1530,
+        23694,
+        10563
+      ],
+      "births": 360,
+      "deaths": 420,
+      "netMigration": 98,
+      "netCost": 2807,
+      "result": 125,
+      "financeNet": 1,
+      "debt": 665,
+      "investment": 254,
+      "reportedTotal": 43728
+    },
+    {
+      "year": 2023,
+      "population": [
+        3202,
+        4654,
+        1569,
+        23540,
+        10763
+      ],
+      "births": 381,
+      "deaths": 445,
+      "netMigration": 51,
+      "netCost": 3063,
+      "result": 23,
+      "financeNet": -5,
+      "debt": 663,
+      "investment": 299,
+      "reportedTotal": 43728
+    },
+    {
+      "year": 2024,
+      "population": [
+        3008,
+        4671,
+        1592,
+        23311,
+        10923
+      ],
+      "births": 336,
+      "deaths": 402,
+      "netMigration": -157,
+      "netCost": 3196,
+      "result": 1,
+      "financeNet": -7,
+      "debt": 940,
+      "investment": 417,
+      "reportedTotal": 43505
+    },
+    {
+      "year": 2025,
+      "population": [
+        2894,
+        4629,
+        1575,
+        23019,
+        11022
+      ],
+      "births": 334,
+      "deaths": 468,
+      "netMigration": -239,
+      "netCost": 3203,
+      "result": 105,
+      "financeNet": -10,
+      "debt": 1040,
+      "investment": 413,
+      "reportedTotal": 43131
+    }
+  ]
+}

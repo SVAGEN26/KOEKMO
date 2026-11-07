@@ -1,0 +1,15 @@
+{
+  "source": "https://www.motala.se/media/uploads/Arsredovisning-2021_webb.pdf",
+  "sourceRelease": null,
+  "retrievedAt": "2026-10-15",
+  "vintage": "retrospective_2021_annual_report",
+  "locator": "Printed page7, Fem år i sammandrag, kommunen column2017",
+  "access": "Indexed primary-source table read via web search; direct PDF bot challenge, no local PDF saved.",
+  "notes": [
+    "Only the previously unavailable2017 row is added. Existing overlapping rows retain their selected versions.",
+    "No cohorts, gross costs, pension split or WIP inferred for2017. This row supports aggregate forecasts only."
+  ],
+  "rows": [
+    {"year": 2017, "reportedTotal": 43549, "result": 62.4, "netCost": 2363.3, "financeNet": -1.3}
+  ]
+}

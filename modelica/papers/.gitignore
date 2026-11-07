@@ -1,0 +1,4 @@
+# Originals are retrieved using fetch.py and the versioned sources.json catalogue.
+*.pdf
+download-receipts-*.json
+*.part

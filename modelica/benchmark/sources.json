@@ -1,0 +1,127 @@
+{
+  "objective": "Develop an independent municipal model with demonstrably better out-of-sample forecasts than SKR on matched targets.",
+  "role": "External benchmark only. Do not insert SKR forecast outputs into candidate predictions.",
+  "verifiedAt": "2026-10-13",
+  "municipality": "0583",
+  "comparisonScope": {
+    "publicWorkbooks": "Municipal tax and grant revenue benchmarks. Not the full budget model or its source code.",
+    "wholeBudget": "Requires separately archived comparable budget-model outputs; revenue-only results cannot establish whole-budget superiority."
+  },
+  "indexUrl": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg.8271.html",
+  "workbooks": [
+    {
+      "circular": "26:28",
+      "publishedAt": "2026-10-06",
+      "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d572/1791283712510/Prognosunderlag-K-2026-2033-26028.xlsm",
+      "status": "identified_not_downloaded",
+      "informationCutoff": null,
+      "sha256": null
+    },
+    {
+      "circular": "26:27",
+      "publishedAt": "2026-08-27",
+      "url": "https://skr.se/download/18.566ae8061a01f6a9cf1c2cbd/1787815627698/Prognosunderlag-K-2026-2033-26027.xlsm",
+      "status": "identified_not_downloaded",
+      "informationCutoff": null,
+      "sha256": null
+    },
+    {
+      "circular": "26:24",
+      "publishedAt": "2026-06-18",
+      "url": "https://skr.se/download/18.2a4041f519ed43a84f020705/1781775743672/Prognosunderlag-K-2026-2033-26024.xlsm",
+      "status": "identified_not_downloaded",
+      "informationCutoff": null,
+      "sha256": null
+    },
+    {
+      "circular": "26:18",
+      "publishedAt": "2026-04-29",
+      "url": "https://skr.se/download/18.1f3f2b7919dbdddc90cb4912/1777461327125/Prognosunderlag-K-2026-2033-26018.xlsm",
+      "status": "identified_not_downloaded",
+      "informationCutoff": null,
+      "sha256": null
+    },
+    {
+      "circular": "26:12",
+      "publishedAt": "2026-02-26",
+      "url": "https://skr.se/download/18.6d777ac619c9860f84e6723/1772101911751/Prognosunderlag-K-2026-2033-26012.xlsm",
+      "status": "identified_not_downloaded",
+      "informationCutoff": null,
+      "sha256": null
+    }
+  ],
+  "documents": [
+    {
+      "kind": "manual",
+      "url": "https://skr.se/download/18.5f6431ad19bdd3563df5747d/1769078967809/Skatter-och-bidrag-for-kommuner-2026.pdf",
+      "status": "read_via_web_not_saved_as_pdf",
+      "findings": [
+        "Revenue categories are separately modelled; compare reconciled tax and grant definitions including settlements and property fees (printed pages 11-13).",
+        "The public forecast workbook is a default-output reconciliation reference, distinct from the complete model (printed page 7)."
+      ]
+    },
+    {
+      "kind": "forecast_evaluation",
+      "url": "https://skr.se/download/18.47a584e19b2beced925cb43/1766144858335/Prognosutv%C3%A4rdering%20av%20skatteunderlaget%202019-2024.pdf",
+      "status": "read_via_web_not_saved_as_pdf",
+      "findings": [
+        "National tax-base level forecast evaluation, not a municipal whole-budget accuracy score.",
+        "Use absolute errors and bias; national percentage errors cannot be compared directly with municipal errors in mnkr."
+      ]
+    },
+    {
+      "kind": "whole_budget_model",
+      "url": "https://skr.se/ekonomiochbudgetplanering/resursfordelningochanalysstod.8273.html",
+      "status": "description_read_model_not_obtained"
+    }
+  ],
+  "historicalArchive": {
+    "status": "missing",
+    "note": "The 25:59 circular links to the current forecast page; this does not recover the original 2025 workbook."
+  },
+  "acceptanceProtocol": {
+    "primaryCriterion": "Lower held-out mean absolute error than SKR and simple persistence/trend baselines on the same cases.",
+    "strata": [
+      "municipality",
+      "scope",
+      "metric",
+      "unit",
+      "definition",
+      "horizonYears",
+      "forecastMonth"
+    ],
+    "matching": [
+      "forecastDate",
+      "informationCutoff",
+      "targetYear"
+    ],
+    "additionalScores": [
+      "bias",
+      "rootMeanSquaredError",
+      "pairedAbsoluteErrorDifference"
+    ],
+    "controls": [
+      "Archive original source releases, model version and input provenance.",
+      "Separate development, tuning and final evaluation periods; lock specifications before final evaluation.",
+      "Refit using only data available at each forecast origin. Metadata checks do not prove an actual historical cutoff.",
+      "Keep target years intact when assessing uncertainty; forecasts for the same outcome are correlated.",
+      "Report missing cases and per-horizon errors; do not select only winning targets.",
+      "Future-year differences without outcomes are scenario differences, not accuracy evidence."
+    ],
+    "claimRule": "A lower error on a small sample is descriptive evidence only, not proof of general superiority."
+  },
+  "currentEvidence": {
+    "source": "../../data/backtest.json",
+    "kind": "Retrospective population comparison only; not a SKR comparison.",
+    "cohortMAEPersons": 175.8676164091036,
+    "trendMAEPersons": 142.66666666666666,
+    "holdoutYears": 3,
+    "forecastSuperiorityProven": false
+  },
+  "nextModelHypotheses": [
+    "Local employment and taxable income dynamics beyond population ratios.",
+    "Finer elderly cohorts and observed care intensity.",
+    "Sector-specific cost and capacity adjustment estimated from historical observations."
+  ],
+  "forecastSuperiorityProven": false
+}

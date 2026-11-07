@@ -1,0 +1,185 @@
+Oberoende granskning av intäktskällor och föreslagen intäktsbrygga
+Datum: 2026-10-15
+Granskare: separat granskaragent /root/independent_review
+
+Bedömning
+
+De lokala notuppgifterna och den nationella samlingen är korrekt
+transkriberade inom nedan angivna käll- och versionsbegränsningar.
+Härledningen i docs/dynamics-equations.md §7.1 är sakligt och algebraiskt
+godtagbar som specifikation av komponenter. Den är ännu inte en fullständig
+prognosregel. Inga nya prognoser har bedömts i denna granskning och inget
+godkännande av flerårig Motala-prediktion ges. Modell och frysta arkiv har
+inte ändrats av granskaren.
+
+Lokala notuppgifter
+
+motala-revenue-components.json har kontrollerats mot noterna 6 och 7 i
+kommunens årsredovisningar. De rapporterade totalsummorna överensstämmer
+med annual-ledgers.json. Belopp i mnkr:
+
+År    Preliminär skatt  Aktuell avräkning  Föregående revision  Summa skatt
+2020       1971,8             -31,2                -10,7           1929,9
+2021       1975,2              49,9                  7,1           2032,2
+2022       2072,6              51,1                 13,9           2137,6
+2023       2181                34                   12             2227
+2024       2254                 8                  -11             2251
+
+År    Inkomstutjämning  Kostnad  Reglering  LSS   Fastighet  Flykting  Övrigt
+2020       491           18,7      44,7    21,1     91,7      11,2     82,1
+2021       496           15,7     129,7    17,7     99,1       0        5,2
+2022       531,1         13,3     120,5    19,8    102         0        7,6
+2023       581           29       102      39      106         0        8
+2024       614           31       134      39      114         0       21
+
+Bidragens rapporterade totalsummor är 760,5 / 763,5 / 794,3 / 865 / 953.
+2021 års komponenter summerar till 763,4; den explicita avrundningsresten
+0,1 är korrekt. Den ska inte läggas på en vald komponent. För 2023 är
+övriga bidrag 8 i originalets kommunkolumn korrekt. Koncernkolumnen och
+senare jämförelsekolumn visar 7 och ska inte blandas in. 2020 hämtas ur
+2021 års senare jämförelse. Nollor för en flyktingrad som inte längre
+redovisas separat är en normalisering av kategorier, inte bevis för att
+en explicit nollcell finns i varje originaltabell.
+
+Primärkällor och lokalisering:
+- 2021, not 6 och 7, kommunens 2021- och 2020-kolumner; indexerad PDF-text:
+  https://www.motala.se/media/uploads/Arsredovisning-2021_webb.pdf
+- 2022, tryckt s. 42, PDF-index 21, kommunens 2022-kolumn:
+  https://www.motala.se/media/uploads/arsredovisning-2022.pdf
+- 2023, tryckt s. 52, PDF-index 51, kommunens 2023-kolumn:
+  https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf
+- 2024, not 6 och 7, kommunens 2024-kolumn; indexerad PDF-text:
+  https://www.motala.se/media/uploads/Arsredovisning-2024.pdf
+
+Originalens PDF-bytes och publiceringsdatum är inte arkiverade/verifierade.
+Detta är källavstämda bokslutsobservationer, inte verifierade realtidsvintager.
+
+Nationella decemberuppgifter
+
+Samtliga insamlade befolkningar, fastställda och prognostiserade
+medelskattekrafter samt kommunala regleringsbelopp i
+skr-revenue-vintages.json överensstämmer med källtabellerna. Även följande
+avräkningar är verifierade, i kr/invånare:
+
+Cirkulär  Datum        Öppningsår  Följande år  Revision föregående år
+20:57     2020-12-15      -715          8                -244
+21:49     2021-12-16      1143          9                 165
+22:54     2022-12-15      1171       -317                 319
+23:56     2023-12-14       787         -7                 260
+24:56     2024-12-12       186        163                -255
+
+Primärkällor med tryckta sidnummer:
+- 20:57: tabell 6 s. 8, avräkningar s. 9, tabell 8 s. 10:
+  https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2021-02-09/agenda/cirkular-2057-fran-skr-budgetforutsattningar-for-aren-2020-2023pdf?downloadMode=open
+- 21:49: tabell 6 s. 9, avräkningar s. 10, tabell 8 s. 11:
+  https://insynsverige.se/documentHandler.ashx?did=2017024
+- 22:54: tabell 7 och avräkningar s. 9, tabell 12 s. 13:
+  https://www.patientenkat.se/download/18.2867e67f185050c7b9f1e723/1671105243834/22054.pdf
+- 23:56: tabell 8 s. 13, kommunavräkningar s. 23, tabell 16 s. 24:
+  https://extra.skr.se/download/18.40b25ebf18c6245376516b5b/1702628339915/Cirkul%C3%A4r%2023056.pdf
+- 24:56: tabell 9 s. 12, kommunavräkningar s. 21, tabell 16 s. 22:
+  https://extra.skr.se/download/18.72fac55919386070c95830a7/1733995400288/Cirkul%C3%A4r%2024056.pdf
+
+24:56 skriver felaktigt '2024' i sista meningen under Slutavräkning 2025.
+Rubrik, uppräkningsfaktorer och novemberreferens stödjer kodningen 163
+som prognos för 2025; källfelet är korrekt explicit markerat.
+
+21:49 anger både 247 055 i prognostiserad och 246 141 i fastställd
+medelskattekraft 2022, men uttryckligen endast +9 kr/invånare i avräkning.
+Transkriptionen ska bevaras. Dessa tabellserier får inte användas för att
+konstruera avräkningen genom en ogrundad differensformel. Orsaken till
+denna skillnad är inte fastställd i denna granskning.
+
+Urvalet är samma fem cirkulär som i tidigare experiment. Det ska inte
+omtolkas som senaste möjliga information vid varje årsskifte: exempelvis
+21:49 hänvisar självt till kommande 21:51 om budgetbeslut. En ändring av
+informationsregel måste göras öppet före utvärdering, inte efter resultat.
+
+Härledning och villkor före implementation
+
+§7.1 har rätt enheter: B i mnkr beskattningsbar inkomst, K i kr/person,
+skattesatser som andelar och 10^-6 vid omvandling av belopp per person.
+T_bok = tau*B + s*N_föregående_november/10^6
+        + d*N_november_två_år_tidigare/10^6
+skiljer korrekt preliminär skatt från kollektiv avräkning. En ändrad
+lokal skattesats ska inte automatiskt multiplicera hela avräkningen.
+Historisk revisionspost får inte följa med som återkommande skatt.
+Framtida revisionsposter och avräkningar som saknas efter h1 kräver
+deklarerade antaganden; null är inte noll.
+
+Inkomstutjämningsformeln med garantinivå 1,15 är korrekt. Länssatsen är
+inte 95 procent av Motalas aktuella skattesats. För Östergötlands
+kommuner anger originalförordningarna bidragssats 18,93 procent och
+avgiftssats 16,86 procent. 2019:797 gäller från 2020-01-01. 2023:683
+gäller från 2024-01-01 och anger samma satser; hänvisningen till tidigare
+lydelse stöder kontinuiteten däremellan:
+https://svenskforfattningssamling.se/sites/default/files/sfs/2019-11/SFS2019-797.pdf
+https://svenskforfattningssamling.se/sites/default/files/sfs/2023-11/SFS2023-683.pdf
+Grunddefinitionerna och novemberreferensen finns i §§3–7 och 15–17:
+https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2004773-om-kommunalekonomisk-utjamning_sfs-2004-773/
+
+Vid konstant relativ lokal skattekraft q, garantinivå och länssats är
+skalningen I_y/I_o = (K_y/K_o)*(N_y-1/N_o-1) algebraiskt riktig. Den
+innebär samma skalning av B. Dokumentet skiljer korrekt detta från
+konstant lokal andel av rikets totala skattebas. Skriv gärna q med exakt
+index N_i,y-1 även i dess definition så att referensdagen är entydig.
+
+Två öppningsankare, rapporterat I_o och B_o beräknat ur preliminär skatt,
+kan skilja från den exakta identiteten genom källavrundning. Pröva detta
+med oberoende novemberbefolkning och källans precision. Tvinga inte
+identiteten genom en dold kalibrering eller genom att härleda befolkning
+ur samma belopp och kalla den en ny observation. Samstämmigheten för
+2019 som hittills hittats är en kontroll, inte ett ersättningsunderlag.
+
+Regeringens kända administrativa underlag och SKR:s prognoser är skilda.
+För senare horisonter finns ingen verifierad unik övergång i den här
+samlingen. Regeln måste deklarera hur okända framtida administrativa
+underlag approximeras. En vald nivåjustering får inte döljas som identitet.
+
+Reglering = r_y*N_y-1/10^6 är korrekt. Den nationella novemberbefolkningen
+i samma tabellkolumn y avser november y och ska inte användas som om den
+vore referensbefolkningen för årets bidrag. Nationella mnkr-summor och
+regionernas per capita-belopp ska fortsatt hållas utanför kommunkolumnen.
+
+Konkret kategoririsk: Motala 2020 har 11,2 mnkr i separat flyktingbaserat
+välfärdsbidrag. 20:57 s. 10 beskriver att hela återstående gamla
+välfärdssatsningen ingår i regleringsposten från 2021. En fortsättning av
+11,2-raden samtidigt med den nya regleringsposten kan därför dubbelräkna.
+Samma sida skiljer 2020 års extra tillskott utanför regleringen från
+tillskott för 2021 och framåt som ingår. Inför en uttrycklig mappning av
+sådana kategoribyten före scoring. Även 82,1 mnkr som finns i både not 7
+och not 10 ska avlägsnas högst en gång när komponenter byggs upp.
+
+Kassabryggan dot(Q_T)=T_bok-T_betald och OCF med -dot(Q_T) har rätt
+tecken. Med +Q_T i nettoställningen bevaras dot(E)=R. Q_T kan vara
+negativt, alltså nettoskatteskuld. Öppningssaldo och betalningsschema
+behöver egna underlag; resultatets avstämning bevisar inte kassaflödet.
+§9:s befintliga identitet avser den nu implementerade modellen utan Q_T;
+vid implementation måste identiteten och native-kontrollen utvidgas ihop.
+
+Kvarvarande data och nästa begränsade prövning
+
+Nov2019=43 680 återges för Motala i Tranås budget 2021, tryckt s. 15,
+PDF-index 14. Samma rad visar 43 673 per 31 december 2019. Det är en
+kommunal återgivning av befolkningsuppgifter, med senare uppladdningsväg,
+och inget bevis för originalfilens historiska tillgänglighet:
+https://tranas.se/wp-content/uploads/2026/04/Mal-Budget-2021-tillganglighetsanpassad.pdf
+
+Jag har inte verifierat resterande lokala novembervärden 2020–2024.
+SCB:s TAB1267 och administrativa XLSX-arkiv är rätt källspår. Det nya
+download-katalogens länkar och publicerings-/korrigeringsmarkeringar
+överensstämmer med SCB-katalogen https://www.scb.se/oe0115.
+Själva XLSX-/ZIP-innehållet har inte varit tillgängligt för denna
+granskning. Senare korrigerade 2022-, 2023- och 2025-tabeller kan inte
+utan vidare användas som historiska prognosvintager. Original- eller
+revisionshistorik måste granskas komponentvis.
+
+Minsta meningsfulla fortsättning är oberoende novemberbefolkning och
+administrativa öppningsunderlag, kontroll av skattesats och avrundning,
+samt en låst kategorimappning för bidrag och avräkning. Först därefter
+en separat deklarerad prövning med oförändrade targetutfall, samtliga
+tidigare ursprung/horisonter och komponentfel vid sidan av resultatfel.
+Övriga bidrag, kostnadsutjämning och LSS kräver egna källor eller tydliga
+scenarier. Ingen residualanpassning eller utfallsstyrd variantselektion.
+En källförbättring kan försämra resultatfelet genom att ta bort tidigare
+felutjämning; det ska redovisas, inte användas som skäl att välja bort den.

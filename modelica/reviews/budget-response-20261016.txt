@@ -1,0 +1,69 @@
+Oberoende teknisk granskning: rapporterad budgetreaktion
+Datum: 2026-10-16
+Granskare: /root/independent_review
+
+Beslut
+
+Den separata årsmodellen, informationsgränserna och det slutliga reproduktionspaketet är tekniskt godkända för det angivna experimentet. Inget kvarstående blockerande kodfel hittades i den granskade versionen. Detta är inte ett godkännande av prognosprecision, en skattad kausal budgetreaktion, en Modelica-implementation av mekanismen eller det fulla Motala-målet.
+
+Slutligt paket: modelica/runs/budget-response-20261016-final-coverage.
+Verkliga indata omfattar endast 2020–2025. Utfallet är korrekt no_evaluable_cases: noll skattade koefficienter och noll poängsatta prognoser. forecastPrecisionApproved är false. Äldre originalpaket och det mellanliggande reviewed-coverage-paketet är bevarade; detta omdöme avser final-coverage.
+
+Granskad regel och informationsgräns
+
+R är rapporterad skatt plus generella bidrag, C verksamhetens nettokostnad och F finansiella intäkter minus finansiella kostnader. Alla belopp har samma nominella mnkr-enhet. B = R-C+F; s=0 är ett uttryckligt scenarioantagande, inte Motalas faktiska mål eller ett lagkrav. Rapporterat årsresultat Y får skilja sig från B. Skillnaden rho=Y-B sparas separat och används varken som budgetsignal eller som träningsresidual.
+
+Basen använder fem sammanhängande års nivåer och medelvärdet av fyra årsdifferenser. Vid horisont h blir basnivån X_o + d_X * sum(0.5^k, k=1..h), för X=R,C,F. Samma redan fastlagda bas gäller båda varianterna. Responsvarianten tillför lambda*B från föregående simulerade år till kostnadsförändringen; lambda=0 ger exakt basens kostnadsnivå. R och F förändras inte mellan dessa två jämförelser.
+
+Skattningen använder x_t=B_t/R_t och z_t=(C_(t+1)-C_base_(t+1|t))/R_t. Koefficienten är sum(x*z)/sum(x*x), utan intercept, med redovisad obunden skattning och klippning till [0,1]. Endast träningsmål <= min(origin,2019) tillåts. Därmed är koefficienten fryst under öppningsåren 2020–2024. Varje träningspar har fem tidigare sammanhängande basår; saknade år interpoleras inte. Minst åtta träningspar krävs. För liten signal ger unidentified_budget_signal och ingen koefficient, inte en fabricerad nollskattning. Obunden/bunden koefficient, signalstyrka och utelämning av ett träningspar redovisas. Utelämningarna är känslighetsdiagnostik, inte konfidensintervall.
+
+Öppningsår 2010–2024 och horisonter 1/2/3 är deklarerade, med sista målår 2025. Varje efterfrågad horisont beräknas separat. Ett ogiltigt längre förlopp tar därför inte bort giltiga kortare fall. Ett ogiltigt par redovisas med origin, horisont och den modell som misslyckades. De numeriska jämförelserna använder gemensamma giltiga fall; eventuella prognosmisslyckanden måste fortsatt vägas in när framtida resultat bedöms, så att endast de lyckade fallen inte framställs som full täckning.
+
+Huvudtestet använder konsekvent rapporterade, orensade poster. Ingen selektiv notrensning, framtida KPA-/SKR-bana eller målårsutfall påverkar prognosregeln. Rättelse av ett tidigare felskrivet granskningsmeddelande: saknade äldre engångspostnoter hindrar inte detta orensade huvudtest. De begränsar tolkningen av B som återkommande eller varaktigt budgetutrymme. Engångskostnader och återgång efter tillfälliga störningar kan ge en positiv skattad lambda utan att någon kausal kommunal anpassningsregel har identifierats.
+
+Självständiga kontroller
+
+1. Samtliga 13 fokuserade projekttester kördes självständigt och passerade. De omfattar bland annat analytisk återgång, exakt nollvariant, känd syntetisk koefficient, tidsgräns, otillräcklig historik, saknade år, separat bokslutsrest och de två horisontfallen: ett giltigt mål 2025 påverkas inte av en ogiltig extrapolering efter 2025; ett ogiltigt tredje år lämnar giltiga första och andra år kvar.
+
+2. En separat kontroll med rationell aritmetik skapade en egen syntetisk serie 1998–2025. Den använde inte projektets testgenerator. Koefficient, obunden skattning, varje utelämnat träningspar och prognoser jämfördes med självständiga slutna uttryck. För kostnadsskillnaden mot basen användes
+   deltaC_h = lambda * sum((1-lambda)^(h-1-j) * B_base_j, j=0..h-1).
+   Sammanlagt 1 320 numeriska kontroller passerade; största skillnaden i koefficient/prognos var 5.684341886080802e-14. MAE, RMSE och bias räknades om, liksom identiteten eY=eR-eC+eF-rho_actual. De syntetiska 42 origin/horisont-fallen ger 168 modellrader, inte 168 oberoende observationer och ingen empirisk evidens.
+
+3. Framtidsmutation jämfördes med nycklar för origin/mål/modell. Ändringar efter 2012 ändrade inte tidigare prognoser men ändrade relevanta utvärderingsfel. Ändrat öppningsvärde gav förväntad ändring som positiv kontroll. Mutation av 2020 och senare lämnade alla koefficienter för 2020–2024 oförändrade. En för kort serie gav inga fall.
+
+4. Slutarkivets sex hashade källfiler verifierades. accounts.json är byteidentisk med den granskade annual-ledgers.json; arkiverad modellkod är byteidentisk med den aktuella versionen. CLI återkördes från /tmp med PYTHONPATH borttaget och PYTHONDONTWRITEBYTECODE=1. Hela rapporten, inklusive hashlistan, är exakt lika arkivets rapport efter borttagning av enbart createdAt. Körningen returnerar avsiktligt kod 2 när inga verkliga fall kan utvärderas. Ett separat aggregatpaket med de syntetiska observationerna gick genom samma fristående CLI, returnerade 0 och gav exakt samma 168 prognosrader och diagnoser som den självständiga kontrollen.
+
+Egen kontrollkod finns i /tmp/motala-independent-budget-response-check.py och /tmp/motala-independent-budget-cli-check.py. Slutlig återkörning och syntetiskt CLI-paket finns i /tmp/motala-independent-budget-cli-f2s0yrod/. Dessa tillfälliga kontrollfiler är kompletterande granskningsspår; det frysta projektpaketet innehåller själva reproduktionsunderlaget.
+
+Rättningar som granskats och stängts
+
+Det första arkivet saknade paketlayouten motala_lab samt skriptets fasta protokollväg. Detta gav ModuleNotFoundError utanför repot. Slutarkivet har source/run_budget_response.py, source/motala_lab och source/data/budget-response-protocol.json. Felet är stängt genom faktisk fristående återkörning.
+
+Den tidigare utvärderingen beräknade en hel maximal bana innan enskilda fall valdes. Därmed kunde ett ogiltigt senare år ta bort giltiga kortare fall. Slutversionen prövar varje giltig efterfrågad horisont separat och sparar prognosfel per modell och horisont. Rättningen har granskats mot kodskillnaden och de två relevanta regressionstesterna. Den ändrar inte nollpoängsresultatet för nuvarande verkliga data.
+
+Återstående empiriskt arbete och precision
+
+Åtta träningspar med fem års bas kräver minst tretton sammanhängande observationsår. För att över huvud taget skatta den frysta koefficienten till 2020–2024 räcker exempelvis en avstämd serie 2007–2019 tillsammans med befintliga senare utfall. För alla deklarerade tidiga öppningar behövs den längre historiken. Tröskeln åtta är en låst praktisk minimiregel, inte bevis på statistisk säkerhet.
+
+Nästa nödvändiga steg är att hämta och definitionsgranska äldre rapporterade R/C/F/Y. Import av SCB-data måste kontrollera kommun 0583, kommunen snarare än koncernen, enheter, tecken och seriebrott. Skillnader mot årsredovisningar och stora oförklarade bokslutsrester får inte beskrivas som ren avrundning. Den generiska aggregatimporten kräver kommunkod, nominalenhet, reported_unadjusted, källa och lokalisering. annual-ledgers-adaptern förlitar sig på den redan granskade lokala filens kommunidentitet; den är ingen generell SCB-importör.
+
+Historiska lokala KPA- eller SKR-prognosbanor behövs inte för detta eget definierade experiment. De krävs däremot om man vill jämföra med just dessa faktiska prognoser på samma informationsgrund. Aktuella reviderade observationer möjliggör retrospektiv utvärdering, inte automatiskt historisk realtidsprognos.
+
+Efter att längre observationer avstämts krävs låst tidsordnad utvärdering, parameterstabilitet, kostnadsfel och totalresultat tillsammans med jämförelserna. Befintliga 2020–2025 har redan påverkat projektutvecklingen. Nytillkomna äldre år är inte oberoende av modellval bara för att de hämtas senare. R/F hålls oförändrade i experimentet, men lägre resultatfel kan ändå bero på att kostnads- och intäktsfel tar ut varandra. Jämförelse mot frysta M2-varianter på gemensamma fall behövs före eventuell promotion. Ingen sådan precision eller förbättring har ännu visats av detta paket.
+
+SHA256 för den slutligt granskade versionen
+
+motala_lab/budget_response.py
+84bebc9b01431781c6bb0da31e349cd872df61e821215614b2be9c643bbd7d63
+run_budget_response.py
+f51561a5ef863aa12292dad822d1b564c2278515211c3d651755f4295c8ca803
+data/budget-response-protocol.json
+54b756590314ddfb766f783a90a7ba8426eb9ea4e67edad571d23022301f0202
+tests/test_budget_response.py
+aac3dc6f14e88204d19de1ff38d212668b694338cd0af4f54c9d9f0d8782a7f6
+runs/budget-response-20261016-final-coverage/accounts.json
+1a586d225f84fc1fd808303f1e423a19f68323c3e191d85b90b5cc83b3acb42d
+runs/budget-response-20261016-final-coverage/report.json
+8620b5e4d3600f2b51298cbfd3a4b38e8bada41bc1b9a861b606f9c9102669bc
+
+Ingen modellfil, testfil, observation eller fryst körningsfil ändrades i denna granskning.

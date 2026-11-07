@@ -1,0 +1,27 @@
+{
+  "model": "MotalaDynamics-v2",
+  "reviewedAt": "2026-10-15",
+  "assessment": "Suitable for explicit mechanism and sensitivity scenarios; not forecast-validated for budget adoption.",
+  "checks": {
+    "modelAndExperimentTestsPassed": 40,
+    "rootNpmTestsPassed": true,
+    "pairedNativeCasesPassed": 20,
+    "identicalModelicaSnapshots": true,
+    "artifactHashesVerified": 633,
+    "maximumBalanceResidual": 1.455191522836685e-11,
+    "derivedParameterExportVerified": true,
+    "failureCaseRetainedWithoutInventedComparison": true
+  },
+  "reports": {
+    "comparison": "modelica/runs/dynamics-v2-20261015-reviewed/report.html",
+    "supply": "modelica/runs/dynamics-v2-20261015-supply-reviewed/report.html"
+  },
+  "remainingLimits": [
+    "Service volumes, staff FTE, facility capacity and adjustment/transition parameters need local estimation.",
+    "Five broad age cohorts; the 65+ group cannot represent changing age composition within older residents.",
+    "Tax equalisation and depreciation are simplified, borrowing assumed available.",
+    "Working-capital movements and other balance-sheet items are omitted from the cash-flow bridge.",
+    "Scenario ranges are not probability intervals; no new historical SKR accuracy comparison.",
+    "The existing browser dashboard still runs the older model."
+  ]
+}

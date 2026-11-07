@@ -1,0 +1,355 @@
+{
+  "version": 1,
+  "retrievedAt": "2026-10-15",
+  "scope": "kommunen",
+  "moneyUnit": "mnkr",
+  "method": "Manual transcription of municipal financial statements and notes. Positive expense magnitudes. No exceptional-item removal. Later comparative columns are explicitly identified. Missing outcome is null, never zero.",
+  "accessNote": "Web-indexed primary PDF text/tables were accessible. Direct PDF downloads and some full-document views failed in this environment; original PDF bytes are not archived. Page references are printed page numbers unless stated otherwise.",
+  "sources": {
+    "vadstena2021": {
+      "url": "https://www.vadstena.se/wp-content/uploads/2021/05/arsredovisning-2021-for-vadstena-kommun.pdf",
+      "title": "Vadstena årsredovisning 2021",
+      "pages": "36",
+      "access": "indexed primary result table, municipal columns 2021/2020",
+      "reportYear": 2021
+    },
+    "vadstena2022": {
+      "url": "https://www.vadstena.se/wp-content/uploads/2021/05/arsredovisning-2022-for-vadstena-kommun.pdf",
+      "title": "Vadstena årsredovisning 2022",
+      "pages": "40, note 2",
+      "access": "indexed primary result table and notes, municipal columns 2022/2021",
+      "reportYear": 2022
+    },
+    "vadstena2023": {
+      "url": "https://www.vadstena.se/wp-content/uploads/2021/05/arsredovisning-2023-for-vadstena-kommun-2023.pdf",
+      "title": "Vadstena årsredovisning 2023",
+      "pages": "35, 38",
+      "access": "indexed primary result table and note 2, municipal columns 2023/2022",
+      "reportYear": 2023
+    },
+    "vadstena2024": {
+      "url": "https://www.vadstena.se/wp-content/uploads/2021/05/ks_2025_4-arsredovisning-for-vadstena-kommun-2024.pdf",
+      "title": "Vadstena årsredovisning 2024",
+      "pages": "36, 39",
+      "access": "indexed primary result table and note 2, municipal columns 2024/2023",
+      "reportYear": 2024
+    },
+    "vadstena2025": {
+      "url": "https://www.vadstena.se/wp-content/uploads/2026/04/protokoll-kommunstyrelsen-2026-04-13.pdf",
+      "title": "Vadstena KS 2026-04-13 §63, årsredovisning 2025",
+      "pages": "14",
+      "access": "indexed municipal council executive minutes reporting annual accounts; proposed approval, not evidence of final council adoption",
+      "reportYear": 2025,
+      "publicationDate": "2026-04-13"
+    },
+    "mjolby2023": {
+      "url": "https://www.mjolby.se/download/18.20b0e4d1902c96f0dc15faa/1720442728361/Mjo%CC%88lby%20kommun%20a%CC%8Arsredovisning%202023.pdf",
+      "title": "Mjölby årsredovisning 2023",
+      "pages": "21, 28, 34",
+      "access": "primary full PDF text; first two municipal columns 2023/2022, not budget or consolidated columns",
+      "reportYear": 2023
+    },
+    "mjolby2025": {
+      "url": "https://www.mjolby.se/download/18.5dd57ed519e636b6901aac/1779795433787/%C3%85rsredovisning-2025-Mjolby-kommun.pdf",
+      "title": "Mjölby årsredovisning 2025",
+      "pages": "27, 33",
+      "access": "primary full PDF text; first two municipal columns 2025/2024",
+      "reportYear": 2025
+    },
+    "norrkoping2022": {
+      "url": "https://norrkoping.se/download/18.418ddf091884c4083c08c43/1685698809628/%C3%85rsredovisning_Norrk%C3%B6ping_kommun_2022.pdf",
+      "title": "Norrköping årsredovisning 2022 del 1",
+      "pages": "6, 47, 54, 60",
+      "access": "primary full PDF text; municipal columns are last two, 2022/2021",
+      "reportYear": 2022
+    },
+    "norrkoping2023": {
+      "url": "https://norrkoping.se/download/18.1cd49ebe1900c485a7b461/1718305774535/Norrk%C3%B6pings-kommun-%C3%85rsredovisning2023-del1.pdf",
+      "title": "Norrköping årsredovisning 2023 del 1",
+      "pages": "63, 68",
+      "access": "primary full PDF text; municipal columns are last two, 2023/2022",
+      "reportYear": 2023
+    },
+    "norrkoping2024": {
+      "url": "https://norrkoping.se/download/18.8f5aac4196f138bba110e5d/1748936883175/Norrk%C3%B6pings-kommun-%C3%85rsredovisning2024-del1.pdf",
+      "title": "Norrköping årsredovisning 2024 del 1",
+      "pages": "71, 76",
+      "access": "primary full PDF text; municipal columns are last two, 2024/2023",
+      "reportYear": 2024
+    },
+    "norrkoping2025": {
+      "url": "https://norrkoping.se/kommun-och-politik/om-norrkoping/ekonomi-fakturor-och-budget/arsredovisning",
+      "title": "Norrköping årsredovisning 2025 del 1",
+      "pages": null,
+      "access": "37 MB PDF linked by municipality, full document inaccessible in current environment",
+      "reportYear": 2025
+    },
+    "norrkoping2025press": {
+      "url": "https://via.tt.se/pressmeddelande/4314015/bokslutet-redovisar-ett-ovanligt-stort-overskott?lang=sv&publisherId=1347718",
+      "title": "Norrköpings kommun: Bokslutet redovisar ett ovanligt stort överskott",
+      "publicationDate": "2026-04-02",
+      "reportYear": 2025,
+      "access": "municipality's own press release; says just under SEK 3.6 billion, not an exact annual result"
+    }
+  },
+  "municipalities": [
+    {
+      "id": "0584",
+      "name": "Vadstena",
+      "notes": [
+        "Annual tables use tkr with a dot as thousands separator. Values below are divided by 1000 into mnkr.",
+        "Personnel is note 2 total, including operating pensions, with no second pension addition.",
+        "2025 result is 12,118,312.67 kr in the executive minutes; not confused with consolidated 16.9 mnkr."
+      ],
+      "rows": [
+        {
+          "year": 2020,
+          "result": 20.166,
+          "source": "vadstena2021",
+          "sourceNotes": [
+            "Comparative 2020 column in 2021 report."
+          ]
+        },
+        {
+          "year": 2021,
+          "result": 12.31,
+          "source": "vadstena2021"
+        },
+        {
+          "year": 2022,
+          "operatingRevenue": 148.059,
+          "grossExpense": 612.716,
+          "personnel": 357.25,
+          "depreciation": 27.388,
+          "netCost": 492.045,
+          "tax": 406.264,
+          "grants": 108.92,
+          "financialIncome": 2.47,
+          "financialExpense": 4.163,
+          "result": 21.446,
+          "source": "vadstena2022",
+          "roundingUnitMnkr": 0.001
+        },
+        {
+          "year": 2023,
+          "operatingRevenue": 146.533,
+          "grossExpense": 645.185,
+          "personnel": 379.878,
+          "depreciation": 31.418,
+          "netCost": 530.07,
+          "tax": 430.499,
+          "grants": 107.982,
+          "financialIncome": 3.529,
+          "financialExpense": 11.491,
+          "result": 0.449,
+          "source": "vadstena2023",
+          "roundingUnitMnkr": 0.001
+        },
+        {
+          "year": 2024,
+          "operatingRevenue": 151.639,
+          "grossExpense": 663.854,
+          "personnel": 402.02,
+          "depreciation": 37.306,
+          "netCost": 549.521,
+          "tax": 440.671,
+          "grants": 115.674,
+          "financialIncome": 3.968,
+          "financialExpense": 14.673,
+          "result": -3.881,
+          "source": "vadstena2024",
+          "sourceNotes": [
+            "Depreciation includes impairments 1.814+0.581 mnkr; retained."
+          ],
+          "roundingUnitMnkr": 0.001
+        },
+        {
+          "year": 2025,
+          "result": 12.11831267,
+          "source": "vadstena2025"
+        }
+      ]
+    },
+    {
+      "id": "0586",
+      "name": "Mjölby",
+      "notes": [
+        "Personnel is the total Personal line in note 3, with operating pensions counted once.",
+        "Opening 2022 comes from the 2023 comparative column and opening 2024 from the 2025 comparative column. These are retrospective inputs, not verified historical publication vintages."
+      ],
+      "rows": [
+        {
+          "year": 2020,
+          "result": 72.5,
+          "source": "mjolby2023",
+          "sourceNotes": [
+            "Five-year balance requirement table, p21."
+          ]
+        },
+        {
+          "year": 2021,
+          "result": 116.5,
+          "source": "mjolby2023",
+          "sourceNotes": [
+            "Five-year balance requirement table, p21."
+          ]
+        },
+        {
+          "year": 2022,
+          "operatingRevenue": 445.9,
+          "grossExpense": 2093.1,
+          "personnel": 1344.3,
+          "depreciation": 110.6,
+          "netCost": 1757.9,
+          "tax": 1434.1,
+          "grants": 447.9,
+          "financialIncome": 14.2,
+          "financialExpense": 10.1,
+          "result": 128.2,
+          "source": "mjolby2023",
+          "roundingUnitMnkr": 0.1
+        },
+        {
+          "year": 2023,
+          "operatingRevenue": 452.2,
+          "grossExpense": 2290.3,
+          "personnel": 1481.5,
+          "depreciation": 114.5,
+          "netCost": 1952.5,
+          "tax": 1517.1,
+          "grants": 454.9,
+          "financialIncome": 18.8,
+          "financialExpense": 34.2,
+          "result": 4.3,
+          "source": "mjolby2023",
+          "roundingUnitMnkr": 0.1
+        },
+        {
+          "year": 2024,
+          "operatingRevenue": 468.6,
+          "grossExpense": 2364.7,
+          "personnel": 1544.9,
+          "depreciation": 120.4,
+          "netCost": 2016.5,
+          "tax": 1561.1,
+          "grants": 499.1,
+          "financialIncome": 9.5,
+          "financialExpense": 50.9,
+          "result": 2.3,
+          "source": "mjolby2025",
+          "sourceNotes": [
+            "Note 3 sums to 2364.8; main result table has 2364.7. Main result table retained; 0.1 rounding conflict disclosed."
+          ],
+          "roundingUnitMnkr": 0.1
+        },
+        {
+          "year": 2025,
+          "result": 38.9,
+          "source": "mjolby2025"
+        }
+      ]
+    },
+    {
+      "id": "0581",
+      "name": "Norrköping",
+      "notes": [
+        "Municipal columns, not consolidated group columns.",
+        "No Ostlänken or market-value adjustment is removed. A structural failure on one-off items must remain visible.",
+        "2023 opening is the original 2023 presentation. The 2024 comparative report shifts 329 mnkr of Ostlänken index adjustment from revenue to reduced expense; it preserves net cost but would change differential-index predictions. Original presentation retained."
+      ],
+      "rows": [
+        {
+          "year": 2020,
+          "result": 689,
+          "source": "norrkoping2022",
+          "sourceNotes": [
+            "Five-year table p6; 2020 not retrospectively corrected for leasing errors."
+          ]
+        },
+        {
+          "year": 2021,
+          "result": 1006,
+          "source": "norrkoping2022",
+          "sourceNotes": [
+            "2021 comparative is corrected for leasing errors in 2022 report; disclosed p57."
+          ]
+        },
+        {
+          "year": 2022,
+          "operatingRevenue": 2032,
+          "grossExpense": 13564,
+          "personnel": 6047,
+          "personnelComponents": {
+            "excludingPensions": 5560,
+            "operatingPensions": 487
+          },
+          "depreciation": 610,
+          "netCost": 12142,
+          "tax": 7344,
+          "grants": 2303,
+          "financialIncome": 640,
+          "financialExpense": 1028,
+          "result": -2883,
+          "source": "norrkoping2022",
+          "sourceNotes": [
+            "Gross expense includes one-off Ostlänken contribution 3281 mnkr. Retained as reported."
+          ],
+          "roundingUnitMnkr": 1
+        },
+        {
+          "year": 2023,
+          "operatingRevenue": 2360,
+          "grossExpense": 11200,
+          "personnel": 6589,
+          "personnelComponents": {
+            "excludingPensions": 5882,
+            "operatingPensions": 707
+          },
+          "depreciation": 635,
+          "netCost": 9475,
+          "tax": 7736,
+          "grants": 2372,
+          "financialIncome": 1248,
+          "financialExpense": 1430,
+          "result": 451,
+          "source": "norrkoping2023",
+          "sourceNotes": [
+            "Revenue includes 329 mnkr Ostlänken index adjustment; financial expense includes 409 mnkr Ostlänken adjustment. Both retained."
+          ],
+          "roundingUnitMnkr": 1
+        },
+        {
+          "year": 2024,
+          "operatingRevenue": 2036,
+          "grossExpense": 11416,
+          "personnel": 6898,
+          "personnelComponents": {
+            "excludingPensions": 6068,
+            "operatingPensions": 830
+          },
+          "depreciation": 690,
+          "netCost": 10070,
+          "tax": 7877,
+          "grants": 2555,
+          "financialIncome": 1426,
+          "financialExpense": 1364,
+          "result": 424,
+          "source": "norrkoping2024",
+          "sourceNotes": [
+            "Gross expense includes 230 mnkr Ostlänken cost reduction; financial expense includes 101 mnkr Ostlänken adjustment. Both retained."
+          ],
+          "roundingUnitMnkr": 1
+        },
+        {
+          "year": 2025,
+          "result": null,
+          "source": "norrkoping2025",
+          "missingReason": "Exact municipal annual result not yet accessible. Municipality's 2026-04-02 press release reports just under 3.6 billion following Ostlänken provision reversal. The earlier preliminary 215 mnkr is superseded and must not be used.",
+          "additionalSources": [
+            "norrkoping2025press"
+          ]
+        }
+      ]
+    }
+  ]
+}

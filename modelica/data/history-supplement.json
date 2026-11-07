@@ -1,0 +1,56 @@
+{
+  "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+  "sourceRelease": null,
+  "retrievedAt": "2026-10-13",
+  "vintage": "retrospective_2022_annual_report",
+  "evidence": "Numeric tables read through the web tool, printed pages 6 and 57 (PDF pages 3 and 28, zero-based). Original PDF not downloaded; screenshot request was blocked by the source website.",
+  "notes": [
+    "2020 net cost is 2622.0 in the five-year summary; the financial analysis gives 2621.9. The summary value is retained explicitly.",
+    "Only previously missing years are added. Overlapping 2021-2022 values from the existing 2025-report series remain unchanged.",
+    "The 2022 report gives 4644 persons aged 7-15 in 2022, whereas existing 2025-report history contains 4664. This cross-source discrepancy has not been resolved; no silent correction is made.",
+    "2018 financial accounts and population total are from printed page 6. Cohorts, births and deaths are not taken from that table and remain absent; no age distribution is imputed."
+  ],
+  "rows": [
+    {
+      "year": 2018,
+      "reportedTotal": 43687,
+      "result": -20.2,
+      "netCost": 2484.1,
+      "financeNet": -1.1
+    },
+    {
+      "year": 2019,
+      "population": [
+        3418,
+        4593,
+        1531,
+        23988,
+        10143
+      ],
+      "reportedTotal": 43673,
+      "births": 438,
+      "deaths": 440,
+      "netMigration": -19,
+      "result": 16.8,
+      "netCost": 2531.0,
+      "financeNet": -2.1
+    },
+    {
+      "year": 2020,
+      "population": [
+        3448,
+        4559,
+        1559,
+        23825,
+        10249
+      ],
+      "reportedTotal": 43640,
+      "births": 430,
+      "deaths": 451,
+      "netMigration": -19,
+      "result": 64.8,
+      "netCost": 2622.0,
+      "financeNet": -3.6
+    }
+  ]
+}

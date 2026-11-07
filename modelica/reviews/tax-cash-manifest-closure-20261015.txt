@@ -1,0 +1,37 @@
+Oberoende stängningsgranskning: intäktsflaggor i manifest, 2026-10-15
+
+Beslut: det tekniska metadatafyndet i tax-cash-20261015.txt är stängt.
+Ingen ny bedömning av prognosprecision görs här.
+
+Rättningen i motala_lab/dynamics.py hämtar useExternalRevenue och
+useExternalTax från native/resolved-parameters.json. Därmed återges
+effektiva Modelica-parametrar även när scenariot ärver dem. Båda måste
+vara booleska; saknade värden och feltyper ersätts inte med förval.
+
+Jag återkörde själv DynamicsManifestTests från /tmp med
+PYTHONDONTWRITEBYTECODE=1 och uttrycklig PYTHONPATH till modelica och
+modelica/tests. Två tester PASS på 3,857 sekunder. Native CLI-körningarna
+prövar ärvt tax-settlement (true,false) och explicit override (false,true).
+Den separata valideringen avvisar saknade eller feltypade runtime-värden.
+
+Nytt granskat arkiv:
+modelica/runs/dynamics-20261015-tax-settlement-reviewed
+
+Oberoende kontroller av arkivet:
+- Manifestet anger externalRevenue=true och externalTax=false, identiskt
+  med resolved-parameters.json och det ärvda scenariot.
+- Samtliga 29 artefakthashar stämmer.
+- Sparad source/dynamics.py är identisk med den granskade aktuella koden.
+- Samtliga årsvariabler är numeriskt exakt oförändrade mot första arkivet.
+- native/native.csv är byteidentisk mot första arkivet.
+- Maximal kombinerad balansrest är 1,378452907374594e-12 mnkr.
+
+Första arkivet har bevarats; dess 29 artefakthashar stämmer fortfarande.
+Första manifestets SHA-256 är oförändrad:
+881b49c82e721ecbbec69005b8d101770dfd7e30c370204eae9f20bfacf06ff3
+Första granskningen har inte ändrats; dess SHA-256 är oförändrad:
+66a1a2193061840405764eabc87dedf260fa691fcc6f27eea1a6b96db2217dab
+
+Kassabryggans tidigare algebraiska godkännande kvarstår. Motalas faktiska
+öppningsfordran och betalningsplan kräver fortfarande källunderlag, och
+tidigare begränsningar i flerårsprognos och komponentprecision kvarstår.

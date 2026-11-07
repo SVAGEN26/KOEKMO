@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "retrievedAt": "2026-10-15",
+  "role": "source_discovery_not_model_input",
+  "selectionStatus": "No new local-revenue candidate has been scored. Prefer original adopted finance plans with dated information; proposals and retrospective reproductions must remain separate.",
+  "sources": [
+    {
+      "id": "alliansen-2021-june2020-proposal",
+      "url": "https://wp.kristdemokraterna.se/motala/files/2020/06/budget2021alliansen_200605.pdf",
+      "title": "Alliansen Motala, mål och resursplan 2021 med plan 2022–2023",
+      "type": "political_budget_proposal",
+      "adoptedAt": null,
+      "claimedPublicationDate": "2020-06-05",
+      "dateEvidenceUrl": "https://wp.kristdemokraterna.se/motala/budget-2021-ansvar-utveckling-balans/",
+      "dateEvidence": "Dated primary publisher page links this PDF; filename also carries200605. No archived historical copy or adopted November version established.",
+      "macroBasis": "Printed page20 explicitly says SKR April2020 tax-and-grant forecast. Exact circular unverified.",
+      "locator": "Printed page20, result budget; future-year columns2021,2022,2023",
+      "moneyUnit": "mnkr",
+      "unitConflict": "Table heading says mnkr but entries are in thousands: annualresult25761 and tax1968450. Converted by1000, supported by prose just under26mnkr and 1.0percent result margin. Preserve this source inconsistency.",
+      "usedAsForecastInput": false,
+      "exclusionReason": "Early political proposal, not verified latest adopted finance plan. Must not replace the final2021 budget40.1 in existing benchmark history.",
+      "rows": [
+        {
+          "targetYear": 2021,
+          "stage": "proposed_budget",
+          "tax": 1968.45,
+          "grants": 720.921,
+          "netCost": 2661.61,
+          "depreciation": 135.612,
+          "financialIncome": 3.7,
+          "financialExpense": 5.7,
+          "result": 25.761
+        },
+        {
+          "targetYear": 2022,
+          "stage": "proposed_plan",
+          "tax": 2022.223,
+          "grants": 718.448,
+          "netCost": 2670.095,
+          "depreciation": 145.188,
+          "financialIncome": 3.7,
+          "financialExpense": 5.7,
+          "result": 68.576
+        },
+        {
+          "targetYear": 2023,
+          "stage": "proposed_plan",
+          "tax": 2083.671,
+          "grants": 730.292,
+          "netCost": 2742.551,
+          "depreciation": 146.891,
+          "financialIncome": 3.7,
+          "financialExpense": 5.7,
+          "result": 69.412
+        }
+      ]
+    },
+    {
+      "id": "financeplan-2025-reproduction",
+      "url": "https://www.motala.se/media/uploads/Budget_250523.pdf",
+      "title": "Budget2025, reproduced finance plan2025–2027",
+      "type": "council_decision_reproduced_in_later_document",
+      "adoptedAt": "2024-11-04",
+      "claimedPublicationDate": null,
+      "dataLocation": "benchmark/municipal-budget-history.json, fiscalPlans and sources.budget2025",
+      "usedAsForecastInput": false,
+      "exclusionReason": "Original publication/version not independently recovered; preserved as descriptive benchmark. Prose and final table differ on result82 versus96."
+    },
+    {
+      "id": "kf-20210823-agenda",
+      "url": "https://motala.screen9.tv/media/M4R5g0_SM9v4GZDIzP0lJw/Kommunfullm%C3%A4ktige%2023%20augusti%202021%20",
+      "type": "council_video_agenda",
+      "meetingDate": "2021-08-23",
+      "locator": "1:29:21, Budget/Mål och resursplan2022 med plan2023–2024",
+      "usedAsForecastInput": false,
+      "exclusionReason": "Confirms agenda item, not final November finance plan or adopted amounts."
+    },
+    {
+      "id": "vansterpartiet-2023-proposal",
+      "url": "https://motala.vansterpartiet.se/wp/files/2022/07/MoR-2023-Vansterpartiet.pdf",
+      "type": "political_budget_proposal",
+      "adoptedAt": null,
+      "claimedPublicationDate": null,
+      "locator": "Printed page14, PDF zero-based page15",
+      "macroBasis": "SKR forecast2022-04-28 explicitly identified in the PDF",
+      "moneyUnit": "mnkr",
+      "usedAsForecastInput": false,
+      "exclusionReason": "Opposition proposal, not adopted budget. URL month is not verified publication date; proposed tax increase must remain separate.",
+      "rows": [
+        {
+          "targetYear": 2023,
+          "tax": 2169.0,
+          "grants": 824.6,
+          "separateProposedTaxIncrease": 55.0
+        },
+        {
+          "targetYear": 2024,
+          "tax": 2253.2,
+          "grants": 863.2,
+          "separateProposedTaxIncrease": 55.0
+        },
+        {
+          "targetYear": 2025,
+          "tax": 2326.2,
+          "grants": 886.6,
+          "separateProposedTaxIncrease": 55.0
+        }
+      ]
+    },
+    {
+      "id": "vansterpartiet-2024-proposal-article",
+      "url": "https://motala.vansterpartiet.se/10802-2/",
+      "type": "political_budget_proposal_article",
+      "claimedPublicationDate": "2023-06-20",
+      "usedAsForecastInput": false,
+      "exclusionReason": "Dated presentation, no verified adopted final financial table."
+    },
+    {
+      "id": "vigranskar-2023-secondary-lead",
+      "url": "https://www.vigranskar.com/2023/01/26/motala-kommun-och-finansiella-forutsattningar/",
+      "type": "secondary_contemporary_description",
+      "claimedPublicationDate": "2023-01-26",
+      "usedAsForecastInput": false,
+      "exclusionReason": "No original finance-plan link recovered. Values are search leads only, not verified primary forecast records.",
+      "quotedNumbersAsSearchLeads": {
+        "targetYear": 2023,
+        "tax": 2194.4,
+        "grants": 822.4,
+        "result": 29.1
+      }
+    }
+  ],
+  "missingAdoptedPlanOrigins": [
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "limitations": [
+    "A dated proposal is useful evidence of assumptions at the time, but not proof of the municipality's final adopted budget or forecast.",
+    "Do not infer missing historical forecast values from later outcomes or from current revised forecasts.",
+    "Budget results are policy targets and must remain distinct from independent forecasts."
+  ],
+  "discoveryChecks": {
+    "checkedAt": "2026-10-15",
+    "municipalBudgetHub": "https://www.motala.se/kommun-och-politik/kommunfakta/ekonomi-och-budget/",
+    "hubCoverage": [
+      2025,
+      2026
+    ],
+    "current2025Link": "https://www.motala.se/media/uploads/Budget_260323.pdf",
+    "diarium": "https://diariet.motala.se/",
+    "diariumAccess": "Primary portal linked by municipality; web fetch failed for both researchers. No original council budget documents recovered.",
+    "modelInputStatus": "No local budget values have been promoted to forecast inputs. A separate national tax-only diagnostic is documented in historical-protocol-tax.json."
+  },
+  "nationalForecastAlternatives": {
+    "checkedAt": "2026-10-15",
+    "page": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoser.8271.html",
+    "observedCurrentWorkbookDates": [
+      "2026-02-26",
+      "2026-04-29",
+      "2026-06-18"
+    ],
+    "historicalWorkbookStatus": "Historical circulars identify dated municipal prognosunderlag workbooks, but their old generic links redirect to the current2026 page. No workbook values from a later release have been used for historical forecasts.",
+    "historicalTitles": [
+      "Prognosunderlag K-2021–2028-21049",
+      "Prognosunderlag K-2022–2029-22054",
+      "Prognosunderlag K2024–2031 till cirkulär24:56"
+    ],
+    "remainingSourceRoute": "The dated national population/mean-tax-capacity and regulation tables have since been used in the separately specified v6–v8 component experiments. See historical-protocol-normalized-revenue.json, historical-protocol-settlements.json, historical-protocol-regulation.json and reviews/regulation-20261015.txt. Those experiments do not recover the missing original municipal budget or grant workbooks and have not established full forecast adequacy."
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-23",
+  "municipality": "0583",
+  "role": "research_and_data_discovery_not_forecast_input",
+  "status": "Archived SCB accounts for Motala recovered and reviewed; 1998-2025 reported series evaluated with the unchanged locked budget-response protocol. Forecast precision remains unapproved.",
+  "scopeCorrection": "Historical KPA or SKR forecast paths are not a prerequisite for constructing an independent municipal model. They are needed when a particular experiment conditions on those forecasts or compares with their historical predictions. Observed accounts can support alternative model estimation and evaluation, with source-version and availability limitations disclosed.",
+  "research": [
+    {
+      "id": "buettner-wildasin-2002",
+      "title": "The Dynamics of Municipal Fiscal Adjustment",
+      "url": "https://www.ifo.de/en/cesifo/publications/2002/working-paper/dynamics-municipal-fiscal-adjustment",
+      "pdf": "https://www.ifo.de/DocDL/cesifo_wp649.pdf",
+      "access": "Primary publisher abstract and PDF text, including lagged-deficit/error-correction discussion and Table 5",
+      "relevance": "Municipal expenditure and other budget components adjust following fiscal imbalances. This motivates testing lagged budget feedback, rather than allowing financing alone to absorb every imbalance.",
+      "limitation": "US municipal evidence does not supply Swedish or Motala reaction coefficients, automatic grant responses, or statutory rules."
+    },
+    {
+      "id": "dahlberg-lindstrom-1998",
+      "title": "Are Local Governments Governed by Forward Looking Decision Makers? An Investigation of Spending Patterns in Swedish Municipalities",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0094119097920696",
+      "doi": "10.1006/juec.1997.2069",
+      "access": "Indexed publisher abstract; direct full-text access unavailable",
+      "relevance": "Swedish evidence links consumption to permanent resources, motivating a distinction between recurring and temporary revenue.",
+      "limitation": "The abstract does not identify a current Motala permanent-income filter or spending speed. Its estimated share is not imported as a model parameter."
+    },
+    {
+      "id": "dahlberg-mork-rattso-agren",
+      "title": "Using a discontinuous grant rule to identify the effect of grants on local taxes and spending",
+      "url": "https://www.ifo.de/DocDL/cesifo1_wp1857.pdf",
+      "journalUrl": "https://www.sciencedirect.com/science/article/abs/pii/S0047272707000886",
+      "access": "Primary CESifo working-paper PDF text; journal published 2008",
+      "relevance": "Swedish grant-rule evidence supports testing expenditure responses to grants, rather than treating all extra resources as a lasting increase in surplus.",
+      "limitation": "A response under a particular grant rule and period is not a universal coefficient for every revenue category."
+    }
+  ],
+  "observedDataRoutes": [
+    {
+      "table": "ResultKnN",
+      "tableId": "TAB6777",
+      "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/ResultKnN/",
+      "title": "Resultaträkning för kommuner efter region och resultaträkningsposter",
+      "years": [
+        1998,
+        2025
+      ],
+      "unit": "tkr, current prices",
+      "catalogUpdatedAt": "2026-08-28",
+      "municipalValuesRetrieved": true,
+      "notes": "SCB warns that figures can differ from annual reports and that write-downs are included in depreciation. Latest published values do not establish historical publication vintages.",
+      "retrievedAt": "2026-10-16",
+      "localReceipt": "raw/scb-accounts/20261016T091141281306Z/receipts.json",
+      "reviewedModelInput": "scb-budget-response-accounts.json",
+      "preservedSourcePacket": "../reference/scb-accounts-20261016"
+    },
+    {
+      "table": "VerksKostn",
+      "tableId": "TAB4202",
+      "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/VerksKostn/",
+      "title": "Verksamhetskostnader för kommuner efter region och kontopost",
+      "years": [
+        2011,
+        2025
+      ],
+      "unit": "tkr, current prices",
+      "catalogUpdatedAt": "2026-08-28",
+      "municipalValuesRetrieved": true,
+      "retrievedAt": "2026-10-16",
+      "localReceipt": "raw/scb-accounts/20261016T091141281306Z/receipts.json"
+    },
+    {
+      "table": "SkatteIntKnN",
+      "tableId": "TAB6782",
+      "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/SkatteIntKnN/",
+      "title": "Skatteintäkter, utjämningssystem och generella bidrag samt finansiella poster",
+      "years": [
+        2011,
+        2025
+      ],
+      "unit": "tkr, current prices",
+      "catalogUpdatedAt": "2026-08-28",
+      "municipalValuesRetrieved": true,
+      "retrievedAt": "2026-10-16",
+      "localReceipt": "raw/scb-accounts/20261016T091141281306Z/receipts.json"
+    },
+    {
+      "table": "KostnDR",
+      "tableId": "TAB4199",
+      "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107B/KostnDR/",
+      "title": "Kostnader och intäkter för kommuner efter region och verksamhetsområde",
+      "years": [
+        2011,
+        2025
+      ],
+      "unit": "tkr, current prices",
+      "catalogUpdatedAt": "2026-08-28",
+      "municipalValuesRetrieved": false
+    }
+  ],
+  "candidateMechanisms": [
+    {
+      "id": "lagged_budget_response",
+      "currentCodeFinding": "Services.desiredStaff depends on demographic demand and exogenous staffingTarget. Finance covers cash deficits by borrowing. Neither supplies an endogenous operating-budget response to recurring resources.",
+      "minimalTest": "A single additional lagged recurring-budget signal in a cost forecast, compared with the identical model without that signal. Estimate only from earlier observations, not from the current twelve development cases.",
+      "protocol": "budget-response-protocol.json",
+      "implementation": "../motala_lab/budget_response.py",
+      "specifiedTest": "Reported unadjusted R/C/F, s=0; five-year base and fixed 0.5 damping; one normalized bounded least-squares coefficient; at least eight training transitions with targets <= min(origin,2019); identical zero-response control.",
+      "remainingBeforeScoring": "Retrieve and reconcile the longer observed series with explicit source, scope, item and unit mapping. Current annual-ledger coverage does not meet the older training requirement.",
+      "avoid": "Jointly fitting a permanent-income filter, spending elasticity, staffing speed and result target on five origins, or equating borrowing with operating revenue."
+    },
+    {
+      "id": "observed_sector_cost_and_volume",
+      "currentCodeFinding": "Sector shares, service weights and staff0 still depend on illustrative assumptions; staff0 is derived from payroll and an assumed annual worker cost.",
+      "minimalTest": "Replace a clearly comparable subset of these quantities with observed cost and service-volume data before adding new dynamic parameters.",
+      "avoid": "Equating employee counts with FTE, interpreting organisational transfers as real staffing changes, or adding pension costs twice."
+    }
+  ],
+  "retrievalStatus": "Primary SCB table metadata read. Attempts to read API v2 metadata and selected data did not return usable data through the web tool. No source rows or forecast scores have been fabricated or imported.",
+  "evaluationLimits": [
+    "Current revised outcome data support retrospective development, not an automatically verified real-time replay.",
+    "Use the same municipality, component definitions, information set and horizons in every paired comparison.",
+    "Retain component errors and total-result errors so offsetting revenue and cost mistakes remain visible.",
+    "The existing pooled ridge model is not a new method; adding comparable municipalities would supply more observations, not by itself a new mechanism.",
+    "New theory or a better development score does not prove superiority to an actual SKR forecast."
+  ]
+}

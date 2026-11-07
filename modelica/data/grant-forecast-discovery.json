@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "retrievedAt": "2026-10-15",
+  "role": "source_discovery_after_grant_diagnostic_not_forecast_input",
+  "sourceDiagnostic": "runs/grant-audit-20261015",
+  "sources": [
+    {
+      "id": "skr-2258",
+      "circular": "22:58",
+      "documentDate": "2022-12-27",
+      "url": "https://intranet.skr.se/download/18.6ca190ab18529e8ca784ed7f/1672145534245/22058.pdf",
+      "independentlyReadPublisherMirror": "https://www.patientenkat.se/download/18.6ca190ab18529e8ca784ed7f/1672145534245/22058.pdf",
+      "title": "Utfall kostnadsutjämning och LSS-utjämning 2023",
+      "access": "Primary SKR PDF text read through web tool; original bytes not archived.",
+      "locator": "Printed pages 1–3 and 5; PDF zero-based pages 2–4 and 6",
+      "categories": ["costEqualisation", "lssEqualisation", "regulationGrant"],
+      "evidence": "Administrative2023 equalisation values were announced in December2022. LSS uses October2021 services, RS2021 costs, a personnel-cost index and updated November2022 population. Revised inflation assumptions affect the calculation. The circular names municipal workbook Prognosunderlag K-2022–2029-22058 and SCB tables, but does not print Motala's amounts.",
+      "nationalRegulation2023SEKPerPerson": 2336,
+      "currentFrozenOriginVintage": {"circular": "22:54", "documentDate": "2022-12-15", "nationalRegulation2023SEKPerPerson": 2329},
+      "municipalValuesRetrieved": false,
+      "usedAsForecastInput": false,
+      "nextSource": "Recover original SCB December2022 municipal tables or the2258 workbook, with code0583, exact release and units. An announced administrative2023 amount is distinct from a later2023 annual-account outcome."
+    },
+    {
+      "id": "skr-2257",
+      "circular": "22:57",
+      "documentDate": "2022-12-27",
+      "url": "https://skr.se/download/18.6ca190ab18529e8ca784e2b5/1672140142545/22057.pdf",
+      "readablePublisherMirror": "https://kunskapsstyrningvard.se/download/18.6ca190ab18529e8ca784e2b5/1672140142545/22057.pdf",
+      "title": "Slutligt utfall av 2021 års kommunala fastighetsavgift samt prognos för åren 2022, 2023 och 2024",
+      "access": "SKR host returned a web error; full primary PDF text read from the publisher mirror. Original bytes not archived.",
+      "locator": "Cover and printed pages 1–5; PDF zero-based pages 0 and 2–6",
+      "categories": ["propertyFee"],
+      "evidence": "Annex1 contains municipal amounts; annex5 describes recognised2022 income; annex6 payments; annex7 receivables. Recognised income includes a correction of the preceding year's estimate when its final amount arrives. The circular also discloses an error in the earlier21:52 forecast, corrected later. Preserve the original historical vintage rather than replacing it with that later correction.",
+      "municipalValuesRetrieved": false,
+      "usedAsForecastInput": false,
+      "nextSource": "Recover annex1 and5–7 for code0583. Separate current-year estimated fee, prior-year correction and cash. A note7 total cannot automatically serve as the prior year's isolated current-fee estimate. Annex5's standard correction assumes the municipality used the specified earlier forecast; verify Motala's booked estimate or explicitly label that assumption before using the correction."
+    },
+    {
+      "id": "skr-2360",
+      "circular": "23:60",
+      "documentDate": "2023-12-21",
+      "url": "https://skr.se/download/18.30c6c28518c8adb1e6e19f5/1703152287792/Cirkul%C3%A4r%2023060.pdf",
+      "title": "Slutligt utfall av 2022 års kommunala fastighetsavgift samt prognos för åren 2023, 2024 och 2025",
+      "access": "Primary SKR PDF text read through web tool; original bytes not archived.",
+      "locator": "Printed pages 3–6; PDF zero-based pages 3–6",
+      "categories": ["propertyFee"],
+      "evidence": "The current-fee2024 forecast uses municipal small-house valuation projections and revises the previous method. Annex1 columnsAG,AI,AK,AM refer to2022,2023,2024,2025 amounts. Prior-year correction enters recognised income separately.2024 payments differ from2024 income; the2022 receivable is settled during2024. The municipal figures were to enter the following23:62 workbook.",
+      "currentFrozenOriginVintage": {"circular": "23:56", "documentDate": "2023-12-14"},
+      "municipalValuesRetrieved": false,
+      "usedAsForecastInput": false,
+      "nextSource": "Recover dated annex1 and5–7 or original23:62 workbook. Distinguish tax/fee period, recognition year, payment year and publication date before any scoring."
+    }
+  ],
+  "limitations": [
+    "These discoveries do not change any frozen source, forecast or score. No missing Motala amount has been inferred from annual accounts or national percentage changes.",
+    "Late-December documents postdate the specific vintages selected in v8 but precede its year-end macro cutoff. A future experiment must explicitly revise the locked source-selection rule across all origins, for example the latest documented release per component by December31. The cutoff need not change. No outcome-selected replacement for2022 or2023 is permitted.",
+    "Reading a dated circular proves its stated administrative calculation and release context, not retrieval of its missing municipal workbook or real-time availability of opening accounts. A standard prior-year correction also requires verification of the estimate actually booked by Motala; a publisher's assumed earlier forecast is not automatically that local estimate.",
+    "Targeted searches did not recover the original municipal attachments. A secondary2025 LSS table was only a lead; its failed primary link and subsequently updated article do not establish an original forecast vintage.",
+    "The programme composition and decision dates behind otherGeneralGrants remain unresolved, including the increase from21 to51 in the2025 report. No category transfer or replacement amount is inferred from this difference."
+  ]
+}

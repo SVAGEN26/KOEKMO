@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-14",
+  "purpose": "Research leads for a Motala-specific policy simulation. Literature findings are not calibrated Motala parameters.",
+  "sources": [
+    {
+      "title": "SystemDynamics",
+      "url": "https://github.com/modelica-3rdparty/SystemDynamics",
+      "type": "library_documentation",
+      "reviewScope": "Repository README and generated component documentation",
+      "finding": "Provides stock-and-flow modeling in Modelica. Repository release 2.1.2 targets MSL 4.0.0.",
+      "implication": "Candidate library for capacity and capital dynamics. Preserve explicit annual accounting when coupling continuous rates to yearly observations.",
+      "limitation": "Software capability does not establish empirical relationships or forecast accuracy."
+    },
+    {
+      "title": "Regional Economic Growth and Municipal Financial Planning: An Application of a System Dynamics Model to Calgary",
+      "authors": [
+        "Stanley Kongnetiman",
+        "Wenhui Fan",
+        "Patrick Walters",
+        "Nathaniel Osgood"
+      ],
+      "url": "https://www.calgary.ca/content/dam/www/cfod/finance/documents/corporate-economics/other-reports/regional-economic-growth-and-municipal-financial-planning.pdf",
+      "type": "municipal_research_paper",
+      "reviewScope": "Abstract, model structure, calibration and limitations sections",
+      "finding": "Combines demographic, staffing, infrastructure and fiscal feedbacks; calibrated against dozens of series over 1990–2008.",
+      "implication": "Use documented stocks, flows and delays with local calibration.",
+      "limitation": "Historical fit and scenario use do not establish superior held-out forecasting for Motala. Canadian tax structure cannot be transferred directly."
+    },
+    {
+      "title": "Konjunkturläget mars 2024",
+      "url": "https://www.konj.se/media/3eojy3lo/konjunkturlaget-mars-2024.pdf",
+      "type": "official_economic_methodology",
+      "reviewScope": "PDF text via research browser, printed page 44 and repeated on page 78, Demografisk framskrivning av kommunal konsumtion; original file not downloaded locally",
+      "finding": "Projects service categories using age-specific demographic weights, with assumptions about staffing, purchases, fees, wages and prices.",
+      "implication": "Separate service volumes from unit costs and expose staffing assumptions.",
+      "limitation": "National sector projection methodology is not evidence of Motala forecast precision."
+    },
+    {
+      "title": "Ausgabenseitige Effekte der demografischen Entwicklung auf die Kommunalfinanzen",
+      "authors": [
+        "Tim Starke"
+      ],
+      "year": 2021,
+      "url": "https://doi.org/10.1007/s41358-021-00269-0",
+      "type": "peer_reviewed_empirical_article",
+      "reviewScope": "Abstract and study scope",
+      "finding": "Municipal data for Mecklenburg-Western Pomerania, 2000–2016, show higher per-capita expenditure associated with population decline and persistent costs.",
+      "implication": "Test fixed costs and delayed capacity adjustment rather than proportional cost reductions.",
+      "limitation": "Different national responsibilities and institutions; estimate Swedish/Motala effects rather than importing coefficients."
+    },
+    {
+      "title": "Att prognostisera det finansiella resultatet i svenska kommuner: en jämförelse mellan ett elastiskt nät och en baseline",
+      "authors": [
+        "Sofia Nilsson"
+      ],
+      "year": 2020,
+      "url": "https://lup.lub.lu.se/student-papers/record/9033365",
+      "type": "bachelor_thesis",
+      "reviewScope": "Repository abstract only; validation design not yet audited",
+      "finding": "Reports elastic-net forecasts outperforming OLS over 2002–2018, with ridge performing best.",
+      "implication": "Investigate regularized cross-municipality estimation as a statistical comparator.",
+      "limitation": "Student thesis, not peer-reviewed proof of superiority to SKR or municipal budgets; full evaluation protocol needs review."
+    }
+  ],
+  "proposedNextExperiment": {
+    "component": "Service demand and capacity",
+    "policyParameters": [
+      "staffing per service unit",
+      "service coverage",
+      "capacity adjustment time",
+      "investment commissioning schedule"
+    ],
+    "estimatedRelationships": [
+      "age-specific service use",
+      "variable versus fixed costs",
+      "capacity adjustment"
+    ],
+    "externalScenarios": [
+      "national wages and prices",
+      "interest rates",
+      "national tax-base growth"
+    ],
+    "dataNeeded": [
+      "enrolment and school capacity",
+      "care recipients or hours by age",
+      "staff full-time equivalents and compensation",
+      "facility costs",
+      "sector accounts"
+    ],
+    "validation": "Fit using earlier years, compare sector costs and annual results at matched information dates against simple baselines and municipal projections. Existing 2018–2025 observations are development evidence."
+  }
+}

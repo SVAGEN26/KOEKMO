@@ -1,0 +1,14 @@
+{
+  "frozenBefore": "Annual-flow anchoring and historical evaluation, 2026-10-15",
+  "files": {
+    "MotalaDynamics/Capital.mo": "620298a9fe5d5358c0da2cd58ba14b56c7a161ec6e226bff0f100c8cc96420ad",
+    "MotalaDynamics/Continuous.mo": "310a1b602253969d8c29d339d6025388a3b3d19e0d6b21d6e9fae503ca267e0f",
+    "MotalaDynamics/Demography.mo": "5bd113de7a0b5e916a517391eb58e0a189622dea251a4d689972e34bb6f8bba6",
+    "MotalaDynamics/Examples.mo": "03c1d7c4dcbfbeec5d730dedfb3a98f92cae418059bb0b62e90f6a85266bcb71",
+    "MotalaDynamics/Finance.mo": "18f03aaa3a48168b62250f5703d062ec07e3b72880636806db9e70df3ab6b82d",
+    "MotalaDynamics/Parameters.mo": "2574f82f5a245543cf58500fb9d2fbf77599cebbda5ce05229e313570a2c1930",
+    "MotalaDynamics/Revenue.mo": "663ad2192b171e25dcce139a75d6a77bbe6ecf11f34284196ec6791c520758d0",
+    "MotalaDynamics/Services.mo": "ef7611249b306805dc3778b99ee93d308116fe5e7184c045bd317b9cad960475",
+    "MotalaDynamics/package.mo": "e932eece534b1d6b6daecbd336ee791c143330e92868b9cdf005a8dcfc77875b"
+  }
+}

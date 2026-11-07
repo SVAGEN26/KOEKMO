@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "role": "benchmark_only",
+  "model": "municipal",
+  "municipality": "0583",
+  "scope": "kommunen",
+  "metric": "result",
+  "definition": "annual_result_kommunen",
+  "unit": "mnkr",
+  "retrievedAt": "2026-10-14",
+  "sources": {
+    "ar2021": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2021_webb.pdf",
+      "title": "Årsredovisning 2021",
+      "locator": "Printed page 32, Resultat och kapacitet; Budget- och prognosavvikelser",
+      "access": "Indexed text read through web search; direct PDF open was blocked. Original PDF not saved."
+    },
+    "ar2022": {
+      "url": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "title": "Årsredovisning 2022",
+      "locator": "Printed page 32, Resultat och kapacitet; Budget- och prognosavvikelser",
+      "access": "PDF text read through web tool. Original PDF not saved."
+    },
+    "ar2023": {
+      "url": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf",
+      "title": "Årsredovisning 2023",
+      "locator": "Printed pages 38, 43 and 47",
+      "access": "PDF text read through web tool. Original PDF not saved."
+    },
+    "ar2024": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "title": "Årsredovisning 2024",
+      "locator": "Budgetföljsamhet; Sammanfattande bedömning",
+      "access": "Indexed text read through web search; direct PDF open failed. Original PDF not saved."
+    },
+    "ar2025": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+      "title": "Årsredovisning 2025",
+      "locator": "Printed pages 43 and 47",
+      "access": "PDF text read through web tool. Original PDF not saved."
+    },
+    "budget2025": {
+      "url": "https://www.motala.se/media/uploads/Budget_250523.pdf",
+      "title": "Budget 2025; Finansplan 2025–2027",
+      "locator": "Reproduced council decision 2024-11-04, §154, KS 2024/00252; section 5.2, printed page 32",
+      "access": "Indexed text read through web search. Direct local download failed with DNS resolution error; web open returned a bot challenge. Original PDF not saved.",
+      "skrBasis": "Section 5.2 identifies SKR's October tax forecast. Circular number not established.",
+      "conflict": "Section 5.2 prose retains 82 mnkr, while its result table and November council decision give 96. The August preliminary decision gives 82. Use the final November decision and table."
+    }
+  },
+  "budgets": [
+    {
+      "stage": "budget",
+      "adoptedAt": null,
+      "forecastDate": null,
+      "informationCutoff": null,
+      "targetYear": 2020,
+      "value": 69.2,
+      "sourceId": "ar2022",
+      "evidenceType": "derived_from_retrospective_budget_variance",
+      "derivation": "64.8 - (-4.4) = 69.2; original adoption and revision status unverified.",
+      "sourceOutcome": 64.8
+    },
+    {
+      "stage": "budget",
+      "adoptedAt": null,
+      "forecastDate": null,
+      "informationCutoff": null,
+      "targetYear": 2021,
+      "value": 40.1,
+      "sourceId": "ar2021",
+      "evidenceType": "adopted_budget_reproduced_in_annual_report",
+      "sourceOutcome": 61.7
+    },
+    {
+      "stage": "budget",
+      "adoptedAt": null,
+      "forecastDate": null,
+      "informationCutoff": null,
+      "targetYear": 2022,
+      "value": 56.3,
+      "sourceId": "ar2022",
+      "evidenceType": "adopted_budget_reproduced_in_annual_report",
+      "sourceOutcome": 125.1
+    },
+    {
+      "stage": "budget",
+      "adoptedAt": null,
+      "forecastDate": null,
+      "informationCutoff": null,
+      "targetYear": 2023,
+      "value": 29,
+      "sourceId": "ar2023",
+      "evidenceType": "budget_reproduced_in_annual_report",
+      "sourceOutcome": 23,
+      "notes": "Outcome 23 is from financial analysis p38 and income statement p47. Budget-follow-up p43 instead gives 24; preserve this unresolved source conflict."
+    },
+    {
+      "stage": "budget",
+      "adoptedAt": null,
+      "forecastDate": null,
+      "informationCutoff": null,
+      "targetYear": 2024,
+      "value": -15,
+      "sourceId": "ar2024",
+      "evidenceType": "budget_reproduced_in_annual_report",
+      "sourceOutcome": 1
+    },
+    {
+      "stage": "budget",
+      "adoptedAt": "2024-11-04",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "targetYear": 2025,
+      "value": 96,
+      "sourceId": "budget2025",
+      "evidenceType": "council_decision_reproduced_in_budget_document",
+      "sourceOutcome": 105,
+      "outcomeSourceId": "ar2025"
+    }
+  ],
+  "interimForecasts": [
+    {
+      "targetYear": 2023,
+      "stage": "april",
+      "value": 10,
+      "sourceId": "ar2023",
+      "evidenceType": "in_year_forecast_reproduced_in_annual_report",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Stage identifies reporting period, not verified publication date."
+    },
+    {
+      "targetYear": 2023,
+      "stage": "august",
+      "value": 16,
+      "sourceId": "ar2023",
+      "evidenceType": "in_year_forecast_reproduced_in_annual_report",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Stage identifies reporting period, not verified publication date."
+    },
+    {
+      "targetYear": 2024,
+      "stage": "april",
+      "value": -55,
+      "sourceId": "ar2024",
+      "evidenceType": "in_year_forecast_reproduced_in_annual_report",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Stage identifies reporting period, not verified publication date."
+    },
+    {
+      "targetYear": 2024,
+      "stage": "august",
+      "value": -26,
+      "sourceId": "ar2024",
+      "evidenceType": "in_year_forecast_reproduced_in_annual_report",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Stage identifies reporting period, not verified publication date."
+    },
+    {
+      "targetYear": 2025,
+      "stage": "april",
+      "value": 89,
+      "sourceId": "ar2025",
+      "evidenceType": "in_year_forecast_reproduced_in_annual_report",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Stage identifies reporting period, not verified publication date."
+    },
+    {
+      "targetYear": 2025,
+      "stage": "august",
+      "value": 83,
+      "sourceId": "ar2025",
+      "evidenceType": "in_year_forecast_reproduced_in_annual_report",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Stage identifies reporting period, not verified publication date."
+    }
+  ],
+  "fiscalPlans": [
+    {
+      "targetYear": 2025,
+      "stage": "budget",
+      "netCostExcludingDepreciation": 2979,
+      "depreciation": 185,
+      "netCost": 3164,
+      "tax": 2319,
+      "generalGrantsAndEqualisation": 950,
+      "financialIncome": 8,
+      "financialExpense": 17,
+      "result": 96,
+      "sourceId": "budget2025",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Expenses expressed as positive costs. Plan years are not separately adopted annual budgets."
+    },
+    {
+      "targetYear": 2026,
+      "stage": "plan",
+      "netCostExcludingDepreciation": 3056,
+      "depreciation": 194,
+      "netCost": 3250,
+      "tax": 2418,
+      "generalGrantsAndEqualisation": 971,
+      "financialIncome": 7,
+      "financialExpense": 30,
+      "result": 116,
+      "sourceId": "budget2025",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Expenses expressed as positive costs. Plan years are not separately adopted annual budgets."
+    },
+    {
+      "targetYear": 2027,
+      "stage": "plan",
+      "netCostExcludingDepreciation": 3129,
+      "depreciation": 212,
+      "netCost": 3341,
+      "tax": 2516,
+      "generalGrantsAndEqualisation": 980,
+      "financialIncome": 7,
+      "financialExpense": 41,
+      "result": 121,
+      "sourceId": "budget2025",
+      "forecastDate": null,
+      "informationCutoff": null,
+      "notes": "Expenses expressed as positive costs. Plan years are not separately adopted annual budgets."
+    }
+  ],
+  "limitations": [
+    "These are municipal budgets and forecasts, not independent SKR model outputs.",
+    "Original budget documents for 2020–2024 were not recovered. The 2020 budget is derived from a retrospectively reported variance.",
+    "Adoption date is not a verified publication date or information cutoff. Unknown dates remain null.",
+    "Do not submit these records to the matched-date scorer until forecast provenance and actual publication dates are established.",
+    "Current M1 historical predictions use full prior-year accounts, which may postdate a municipal budget adopted the preceding autumn.",
+    "The project's outcome series rounds 2021 to 62 and 2022 to 125. Source outcomes here preserve 61.7 and 125.1. No training data changed.",
+    "2023 annual-report follow-up table gives 24 while its income statement gives 23. Use income-statement 23 as outcome; keep conflict visible.",
+    "Budget targets, in-year forecasts and future plan years are different comparison stages."
+  ]
+}

@@ -1,0 +1,4 @@
+# Raw downloads are local; reviewed model inputs live one directory above.
+*
+!.gitignore
+!.gitkeep

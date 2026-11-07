@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-13T17:58:55.212447+00:00",
+  "objective": "Finish a modular, understandable Modelica model with verified improvement for Motala compared with SKR",
+  "goalAchieved": false,
+  "requirements": [
+    {
+      "requirement": "Separate understandable Modelica modules",
+      "status": "implemented",
+      "evidence": [
+        "MotalaResearch/Annual.mo",
+        "MotalaResearch/Components",
+        "README.txt"
+      ]
+    },
+    {
+      "requirement": "Executable accounting and demographic balances",
+      "status": "verified_with_scenario_limits",
+      "evidence": "runs/843617aa41637e8a/results.json: native.status=passed",
+      "limits": "Financing remains a scenario, not an empirically validated forecast."
+    },
+    {
+      "requirement": "Better forecast accuracy for Motala",
+      "status": "not_achieved",
+      "evidence": "Six retrospective annual-result cases: candidate MAE 61.39 mnkr, best simple baseline 56.97 mnkr."
+    },
+    {
+      "requirement": "Independent matched historical SKR comparison",
+      "status": "missing",
+      "evidence": "benchmark/observations.json contains no forecasts or outcomes; no local Excel workbooks found."
+    },
+    {
+      "requirement": "Calibrated local sector, income and detailed financing mechanisms",
+      "status": "incomplete",
+      "evidence": "README.txt: Next data-driven steps; available history is aggregate Motala accounts, not a municipal sector panel."
+    }
+  ],
+  "blocker": {
+    "condition": "Required external data unavailable in this environment",
+    "consecutiveGoalTurnsObserved": 3,
+    "latestReceipt": "data/raw/receipts-20261013T175827356114Z.json",
+    "webFallback": "SKR workbook and Kolada municipality endpoint also inaccessible via web tool",
+    "neededToResume": [
+      "Accessible source downloads or local copies of original SKR historical municipal forecasts with publication dates and matched definitions",
+      "Longer reviewed municipal observations with separate revenue and service cost series, plus original release metadata for historical as-of evaluation"
+    ]
+  },
+  "decision": "Blocked, not complete. No further parameter search on the already examined tiny sample is treated as evidence of superiority."
+}

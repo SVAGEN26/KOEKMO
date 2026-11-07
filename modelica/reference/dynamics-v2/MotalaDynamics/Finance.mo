@@ -1,0 +1,35 @@
+within MotalaDynamics;
+model Finance "Cash-buffer policy, gradual debt repricing, and explicit pension cash bridge"
+  parameter Real debt0, cash0, rate0, rateYears, cashTarget, liquidityYears, repaymentYears;
+  input Real resultBeforeInterest, marketRate, depreciation, disposalLoss, pensionExpense, pensionPayments, investment;
+  output Real debt(start=debt0,fixed=true), cash(start=cash0,fixed=true);
+  output Real portfolioRate(start=rate0,fixed=true);
+  output Real pensionAccrualBalance(start=0,fixed=true) "Cumulative expense minus payments, NOT actuarial liability";
+  output Real result, interest, operatingCash, cashBeforeFinancing, borrowing, repayment;
+  output Real cumulativeResult(start=0,fixed=true), cumulativeOperatingCash(start=0,fixed=true);
+  output Real cumulativeInvestment(start=0,fixed=true), cumulativeBorrowing(start=0,fixed=true);
+  output Real cumulativeRepayment(start=0,fixed=true);
+  output Real debtResidual, cashResidual;
+  Real surplus;
+equation
+  der(portfolioRate)=(marketRate-portfolioRate)/rateYears/yearSeconds;
+  interest=portfolioRate*debt;
+  result=resultBeforeInterest-interest;
+  operatingCash=result+depreciation+disposalLoss+pensionExpense-pensionPayments;
+  cashBeforeFinancing=operatingCash-investment;
+  surplus=cashBeforeFinancing+(cash-cashTarget)/liquidityYears;
+  borrowing=max(0,-surplus);
+  repayment=min(max(0,debt)/repaymentYears,max(0,surplus));
+  der(debt)=(borrowing-repayment)/yearSeconds;
+  der(cash)=(cashBeforeFinancing+borrowing-repayment)/yearSeconds;
+  der(pensionAccrualBalance)=(pensionExpense-pensionPayments)/yearSeconds;
+  der(cumulativeResult)=result/yearSeconds;
+  der(cumulativeOperatingCash)=operatingCash/yearSeconds;
+  der(cumulativeInvestment)=investment/yearSeconds;
+  der(cumulativeBorrowing)=borrowing/yearSeconds;
+  der(cumulativeRepayment)=repayment/yearSeconds;
+  debtResidual=debt-debt0-cumulativeBorrowing+cumulativeRepayment;
+  cashResidual=cash-cash0-cumulativeOperatingCash+cumulativeInvestment-cumulativeBorrowing+cumulativeRepayment;
+  assert(debt>=-1e-5 and cash>=-1e-5,"Financing policy produced a negative stock");
+  assert(pensionExpense>=0 and pensionPayments>=0,"Negative pension input");
+end Finance;

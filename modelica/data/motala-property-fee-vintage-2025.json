@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "role": "later_vintage_source_for_future_forecasts_and_definition_checks",
+  "usedAsForecastInput": false,
+  "eligibleForExistingOrigins2020To2024": false,
+  "retrievedAt": "2026-10-15",
+  "moneyUnit": "SEK",
+  "independentSourceReview": "../reviews/property-fee-vintage-2025-20261015.txt",
+  "source": {
+    "circular": "25:62",
+    "documentDate": "2025-12-22",
+    "circularUrl": "https://extra.skr.se/download/18.7577ce719b3551ea5e15417/1766399189704/_%20SKR2025_03528-1%20Cirkul%C3%A4r%2025_62%20550728_2_1.PDF",
+    "annexUrl": "https://meetingsplus.regionvastmanland.se/welcome-sv/namnder-styrelsen/regionstyrelsen/mote-2026-01-27/protocol/bilaga-till-cirkular-2562-forandringar-i-kommunal-fastighetsavgift-2008-2027pdf?downloadMode=download",
+    "archivalContext": "SKR/SCB municipal annexes reproduced as a41-page PDF in Region Vastmanland's27 January2026 meeting archive; the data row is Motala0583, not the region's own finances.",
+    "access": "Primary circular and annex PDF text read through the web tool. Screenshot requests failed. Original PDF/workbook bytes have not been downloaded or hashed.",
+    "dateEvidence": "Circular cover and annexes2–4 state2025-12-22. Annexes1 and5 retain a printed2017-12-21 header despite2025–2027 content; that header is preserved as a source inconsistency, not used as a historical availability date.",
+    "historicalPublicationTimestampVerified": false,
+    "originalWorkbookVersionVerified": false
+  },
+  "currentFeeAmounts": [
+    {"feeYear": 2024, "status": "final_as_reported_in_2025_vintage", "amountSEK": 113655015, "locator": "Annex1, PDF page index1, row583, final2024 column"},
+    {"feeYear": 2025, "status": "forecast", "amountSEK": 119132088, "changeFromPreviousFeeYearSEK": 5477073, "locator": "Annex1, PDF page index1, row583, forecast2025 column"},
+    {"feeYear": 2026, "status": "forecast", "amountSEK": 122353284, "changeFromPreviousFeeYearSEK": 3221196, "locator": "Annex1, PDF page index1, row583, forecast2026 column"},
+    {"feeYear": 2027, "status": "forecast", "amountSEK": 127091422, "changeFromPreviousFeeYearSEK": 4738138, "locator": "Annex1, PDF page index1, row583, forecast2027 column"}
+  ],
+  "recognisedIncomeExample": {
+    "recognitionYear": 2025,
+    "locator": "Annex5, PDF page index25, row0583; circular printed page2 for condition",
+    "previousFeeYear": 2024,
+    "previousYearForecastReproducedSEK": 114153319,
+    "previousYearFinalSEK": 113655015,
+    "previousYearCorrectionSEK": -498304,
+    "currentYearFeeForecastSEK": 119132088,
+    "conditionalRecognisedIncomeSEK": 118633784,
+    "condition": "Motala used the specified24:57 closing forecast for the2024 fee estimate. This local accounting choice is not established by the annex alone.",
+    "motalaPreviousBookedEstimateVerified": false,
+    "previousOriginalForecastRetrieved": false
+  },
+  "limitations": [
+    "This is a2025 information version, not a recovered original2020–2024 forecast. Even its reproduced2024 forecast must not be backfilled into the existing historical tests.",
+    "The printedDecember2025 date and later meeting copy do not prove identical content was publicly available on that original date. A strict as-of2025 replay would require separate release/version evidence. This transcription was first collected by the project on2026-10-15.",
+    "Current fee amounts exclude the separately recognised prior-year correction. They are not automatically note7 annual-account totals or cash payments.",
+    "Both the2025 current fee119132088 SEK and conditional recognised income118633784 SEK round to119 million SEK. The rounded annual-account row therefore cannot establish whether Motala used the standard correction.",
+    "A later forecast using these values must document its information date, any newer available release and a consistent selection rule. This is not necessarily the latest forecast as of retrieval.",
+    "Cash payments and opening receivables are not transcribed here. A complete cash bridge requires their separately verified amounts.",
+    "No model parameters, historical observations, frozen predictions or scores are changed by this source transcription."
+  ]
+}

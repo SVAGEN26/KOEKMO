@@ -1,0 +1,823 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "moneyUnit": "mnkr_current_prices",
+  "seriesTreatment": "reported_unadjusted",
+  "evidenceClass": "retrospective_development_not_real_time",
+  "sources": {
+    "scb-TAB6777-20261016": {
+      "url": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/ResultKnN/",
+      "apiUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/data?lang=sv&outputFormat=json-stat2",
+      "retrievedAt": "2026-10-16T09:11:43.182842+00:00",
+      "sourceUpdatedAt": "2026-08-28T06:00:00Z",
+      "originalHistoricalReleaseDates": null,
+      "sourceFileHashes": {
+        "TAB6777-metadata.json": "89631ee1be0433638528662d5d57cd49aa6249df5d9f20fa62261e13a11babd9",
+        "TAB6777-data.json": "2198be99b1fe18e3fc159a0c043401cc1401b20188fc05848dbaae7bf40742d0",
+        "TAB6777-data.request.json": "aa97922b4d04132c7a2f1d9764d3352b40b5acc9cde62b583c321d134961adac",
+        "receipts.json": "c489041e5f44f2d851a1839a4e06babe965595dc22f81b97ddb9c21500290363"
+      }
+    }
+  },
+  "definitionMapping": {
+    "schemaVersion": 1,
+    "reviewedAt": "2026-10-23",
+    "tableId": "TAB6777",
+    "municipality": "0583",
+    "scope": "kommunen",
+    "itemDimension": "Resultatraknposter",
+    "contentsCode": "000008H2",
+    "inputUnit": "tkr",
+    "outputUnit": "mnkr_current_prices",
+    "scale": 0.001,
+    "years": [
+      1998,
+      2025
+    ],
+    "expectedLabels": {
+      "030": "verksamhetens nettokostnader",
+      "040": "skatteintäkter",
+      "050": "generella statsbidrag och utjämning",
+      "060": "finansiella intäkter",
+      "072": "finansiella kostnader",
+      "071": "ränta på pensionsskulden",
+      "080": "resultat efter finansiella poster",
+      "085": "extraordinära poster (netto)",
+      "100": "extraordinära intäkter",
+      "110": "extraordinära kostnader",
+      "120": "årets resultat"
+    },
+    "equations": {
+      "taxAndGrants": "(040 + 050) / 1000",
+      "netCost": "-030 / 1000; includes depreciation/write-downs in SCB's net-cost total",
+      "financeNetThrough2010": "(060 + 072 + 071) / 1000; all expense cells already have negative signs",
+      "financeNetFrom2011": "(060 + 072) / 1000; 071 is no longer separately populated",
+      "result": "120 / 1000; retain the reported result, including extraordinary items",
+      "extraordinaryThrough2018": "(100 + 110) / 1000; expense cell 110 is signed",
+      "extraordinaryFrom2019": "085 / 1000"
+    },
+    "checks": [
+      "Every required cell is numeric, finite, in tkr and for Motala. Missing values are not filled.",
+      "071 must be populated through 2010 and missing from 2011 in this reviewed table vintage. Missing does not mean zero pension interest.",
+      "Extraordinary cells must follow the reviewed 2019 presentation change. Missing cells in the unused presentation are not converted to observations.",
+      "040+050+030+financeNet_in_tkr must equal 080 exactly at the source's integer-tkr precision.",
+      "120-080 must equal the separately reported extraordinary total. Preserve that difference as the result accounting residual."
+    ],
+    "interpretation": [
+      "The mapping was specified before scoring this imported series. No estimator, protocol threshold or forecast rule is changed.",
+      "Keep this revised SCB series separate from the annual-report series. Compare overlapping observations explicitly; do not splice the series or describe all discrepancies as rounding.",
+      "The reported-unadjusted experiment retains extraordinary items and changes in reporting definitions. Accounting reconciliation does not establish comparability across all institutional or accounting changes.",
+      "The download date and SCB update date are not original historical release dates. Evaluation remains retrospective development evidence."
+    ]
+  },
+  "annualReportReconciliation": {
+    "definition": "SCB minus the unchanged selected annual-report observation, mnkr",
+    "observationsSpliced": false,
+    "rows": [
+      {
+        "year": 2020,
+        "annualReportSourceId": "2021",
+        "annualReportValues": {
+          "taxAndGrants": 2690.4,
+          "netCost": 2621.9,
+          "financeNet": -3.7,
+          "result": 64.8
+        },
+        "scbMinusAnnualReport": {
+          "taxAndGrants": 0.011,
+          "netCost": 0.077,
+          "financeNet": 0.084,
+          "result": 0.018
+        }
+      },
+      {
+        "year": 2021,
+        "annualReportSourceId": "2022",
+        "annualReportValues": {
+          "taxAndGrants": 2795.7,
+          "netCost": 2732.8,
+          "financeNet": -1.1999999999999993,
+          "result": 61.7
+        },
+        "scbMinusAnnualReport": {
+          "taxAndGrants": 19.448,
+          "netCost": 19.507,
+          "financeNet": 0.04,
+          "result": -0.019
+        }
+      },
+      {
+        "year": 2022,
+        "annualReportSourceId": "2022",
+        "annualReportValues": {
+          "taxAndGrants": 2931.8999999999996,
+          "netCost": 2807.3,
+          "financeNet": 0.5,
+          "result": 125.1
+        },
+        "scbMinusAnnualReport": {
+          "taxAndGrants": 1.494,
+          "netCost": 0.024,
+          "financeNet": -0.007,
+          "result": 1.463
+        }
+      },
+      {
+        "year": 2023,
+        "annualReportSourceId": "2023",
+        "annualReportValues": {
+          "taxAndGrants": 3092,
+          "netCost": 3063,
+          "financeNet": -6,
+          "result": 23
+        },
+        "scbMinusAnnualReport": {
+          "taxAndGrants": -1.596,
+          "netCost": -0.004,
+          "financeNet": 0.625,
+          "result": -0.967
+        }
+      },
+      {
+        "year": 2024,
+        "annualReportSourceId": "2024",
+        "annualReportValues": {
+          "taxAndGrants": 3204,
+          "netCost": 3196,
+          "financeNet": -7,
+          "result": 1
+        },
+        "scbMinusAnnualReport": {
+          "taxAndGrants": 0.33,
+          "netCost": 0.376,
+          "financeNet": 0.151,
+          "result": 0.105
+        }
+      },
+      {
+        "year": 2025,
+        "annualReportSourceId": "2025",
+        "annualReportValues": {
+          "taxAndGrants": 3317,
+          "netCost": 3203,
+          "financeNet": -10,
+          "result": 105
+        },
+        "scbMinusAnnualReport": {
+          "taxAndGrants": 0.451,
+          "netCost": -0.096,
+          "financeNet": 0.036,
+          "result": -0.417
+        }
+      }
+    ],
+    "note": "Preserve source/version differences. In particular the 2021 grant and cost differences exceed rounding. Reasons are not inferred from arithmetic alone."
+  },
+  "rows": [
+    {
+      "year": 1998,
+      "taxAndGrants": 1149.747,
+      "netCost": 1142.445,
+      "financeNet": -5.279,
+      "result": 67.361,
+      "resultAccountingResidual": 65.338,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=1998; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1142445,
+        "040": 886595,
+        "050": 263152,
+        "060": 15499,
+        "072": -19680,
+        "071": -1098,
+        "080": 2023,
+        "085": null,
+        "100": 65338,
+        "110": 0,
+        "120": 67361
+      }
+    },
+    {
+      "year": 1999,
+      "taxAndGrants": 1190.735,
+      "netCost": 1200.102,
+      "financeNet": -10.213,
+      "result": -19.58,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=1999; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1200102,
+        "040": 928915,
+        "050": 261820,
+        "060": 6478,
+        "072": -14872,
+        "071": -1819,
+        "080": -19580,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": -19580
+      }
+    },
+    {
+      "year": 2000,
+      "taxAndGrants": 1275.931,
+      "netCost": 1238.387,
+      "financeNet": -8.689,
+      "result": 28.855,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2000; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1238387,
+        "040": 1009294,
+        "050": 266637,
+        "060": 7174,
+        "072": -13579,
+        "071": -2284,
+        "080": 28855,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 28855
+      }
+    },
+    {
+      "year": 2001,
+      "taxAndGrants": 1350.34,
+      "netCost": 1314.817,
+      "financeNet": -18.892,
+      "result": 16.631,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2001; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1314817,
+        "040": 1107188,
+        "050": 243152,
+        "060": 8822,
+        "072": -24881,
+        "071": -2833,
+        "080": 16631,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 16631
+      }
+    },
+    {
+      "year": 2002,
+      "taxAndGrants": 1411.424,
+      "netCost": 1406.155,
+      "financeNet": -6.662,
+      "result": -1.393,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2002; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1406155,
+        "040": 1141137,
+        "050": 270287,
+        "060": 8176,
+        "072": -12200,
+        "071": -2638,
+        "080": -1393,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": -1393
+      }
+    },
+    {
+      "year": 2003,
+      "taxAndGrants": 1445.668,
+      "netCost": 1481.701,
+      "financeNet": -8.516,
+      "result": -44.549,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2003; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1481701,
+        "040": 1175234,
+        "050": 270434,
+        "060": 5071,
+        "072": -10198,
+        "071": -3389,
+        "080": -44549,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": -44549
+      }
+    },
+    {
+      "year": 2004,
+      "taxAndGrants": 1487.53,
+      "netCost": 1480.141,
+      "financeNet": -6.681,
+      "result": 0.708,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2004; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1480141,
+        "040": 1220824,
+        "050": 266706,
+        "060": 4388,
+        "072": -9921,
+        "071": -1148,
+        "080": 708,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 708
+      }
+    },
+    {
+      "year": 2005,
+      "taxAndGrants": 1572.782,
+      "netCost": 1507.297,
+      "financeNet": -6.54,
+      "result": 44.553,
+      "resultAccountingResidual": -14.392,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2005; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1507297,
+        "040": 1260672,
+        "050": 312110,
+        "060": 3901,
+        "072": -9788,
+        "071": -653,
+        "080": 58945,
+        "085": null,
+        "100": 0,
+        "110": -14392,
+        "120": 44553
+      }
+    },
+    {
+      "year": 2006,
+      "taxAndGrants": 1654.223,
+      "netCost": 1585.869,
+      "financeNet": -4.246,
+      "result": 64.108,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2006; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1585869,
+        "040": 1327870,
+        "050": 326353,
+        "060": 6683,
+        "072": -10178,
+        "071": -751,
+        "080": 64108,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 64108
+      }
+    },
+    {
+      "year": 2007,
+      "taxAndGrants": 1725.267,
+      "netCost": 1682.629,
+      "financeNet": -3.385,
+      "result": 39.253,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2007; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1682629,
+        "040": 1366454,
+        "050": 358813,
+        "060": 8163,
+        "072": -10412,
+        "071": -1136,
+        "080": 39253,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 39253
+      }
+    },
+    {
+      "year": 2008,
+      "taxAndGrants": 1791.861,
+      "netCost": 1766.708,
+      "financeNet": -7.675,
+      "result": 33.578,
+      "resultAccountingResidual": 16.1,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2008; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1766708,
+        "040": 1422669,
+        "050": 369192,
+        "060": 5821,
+        "072": -12194,
+        "071": -1302,
+        "080": 17478,
+        "085": null,
+        "100": 16100,
+        "110": 0,
+        "120": 33578
+      }
+    },
+    {
+      "year": 2009,
+      "taxAndGrants": 1821.429,
+      "netCost": 1786.789,
+      "financeNet": -4.429,
+      "result": 30.211,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2009; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1786789,
+        "040": 1428028,
+        "050": 393401,
+        "060": 3364,
+        "072": -5757,
+        "071": -2036,
+        "080": 30211,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 30211
+      }
+    },
+    {
+      "year": 2010,
+      "taxAndGrants": 1898.095,
+      "netCost": 1851.59,
+      "financeNet": -3.085,
+      "result": 43.42,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2010; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1851590,
+        "040": 1443131,
+        "050": 454964,
+        "060": 5255,
+        "072": -7759,
+        "071": -581,
+        "080": 43420,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 43420
+      }
+    },
+    {
+      "year": 2011,
+      "taxAndGrants": 1943.982,
+      "netCost": 1880.292,
+      "financeNet": -8.691,
+      "result": 54.999,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2011; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1880292,
+        "040": 1485605,
+        "050": 458377,
+        "060": 5459,
+        "072": -14150,
+        "071": null,
+        "080": 54999,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 54999
+      }
+    },
+    {
+      "year": 2012,
+      "taxAndGrants": 1937.544,
+      "netCost": 1856.343,
+      "financeNet": -4.414,
+      "result": 76.787,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2012; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1856343,
+        "040": 1488001,
+        "050": 449543,
+        "060": 4412,
+        "072": -8826,
+        "071": null,
+        "080": 76787,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 76787
+      }
+    },
+    {
+      "year": 2013,
+      "taxAndGrants": 2001.654,
+      "netCost": 1933.596,
+      "financeNet": -6.233,
+      "result": 61.825,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2013; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -1933596,
+        "040": 1519069,
+        "050": 482585,
+        "060": 3457,
+        "072": -9690,
+        "071": null,
+        "080": 61825,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 61825
+      }
+    },
+    {
+      "year": 2014,
+      "taxAndGrants": 2065.682,
+      "netCost": 2073.824,
+      "financeNet": -1.05,
+      "result": -9.192,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2014; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2073824,
+        "040": 1563154,
+        "050": 502528,
+        "060": 5813,
+        "072": -6863,
+        "071": null,
+        "080": -9192,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": -9192
+      }
+    },
+    {
+      "year": 2015,
+      "taxAndGrants": 2145.689,
+      "netCost": 2138.062,
+      "financeNet": -2.999,
+      "result": 4.628,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2015; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2138062,
+        "040": 1642498,
+        "050": 503191,
+        "060": 7091,
+        "072": -10090,
+        "071": null,
+        "080": 4628,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 4628
+      }
+    },
+    {
+      "year": 2016,
+      "taxAndGrants": 2306.37,
+      "netCost": 2242.968,
+      "financeNet": -2.097,
+      "result": 61.305,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2016; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2242968,
+        "040": 1768681,
+        "050": 537689,
+        "060": 7921,
+        "072": -10018,
+        "071": null,
+        "080": 61305,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": 61305
+      }
+    },
+    {
+      "year": 2017,
+      "taxAndGrants": 2394.765,
+      "netCost": 2363.27,
+      "financeNet": -1.275,
+      "result": 62.444,
+      "resultAccountingResidual": 32.224,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2017; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2363270,
+        "040": 1850094,
+        "050": 544671,
+        "060": 9329,
+        "072": -10604,
+        "071": null,
+        "080": 30220,
+        "085": null,
+        "100": 32224,
+        "110": 0,
+        "120": 62444
+      }
+    },
+    {
+      "year": 2018,
+      "taxAndGrants": 2465.007,
+      "netCost": 2484.141,
+      "financeNet": -1.069,
+      "result": -20.203,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2018; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2484141,
+        "040": 1886708,
+        "050": 578299,
+        "060": 13891,
+        "072": -14960,
+        "071": null,
+        "080": -20203,
+        "085": null,
+        "100": 0,
+        "110": 0,
+        "120": -20203
+      }
+    },
+    {
+      "year": 2019,
+      "taxAndGrants": 2550.146,
+      "netCost": 2531.225,
+      "financeNet": -2.107,
+      "result": 16.814,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2019; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2531225,
+        "040": 1938610,
+        "050": 611536,
+        "060": 11296,
+        "072": -13403,
+        "071": null,
+        "080": 16814,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 16814
+      }
+    },
+    {
+      "year": 2020,
+      "taxAndGrants": 2690.411,
+      "netCost": 2621.977,
+      "financeNet": -3.616,
+      "result": 64.818,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2020; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2621977,
+        "040": 1929878,
+        "050": 760533,
+        "060": 4751,
+        "072": -8367,
+        "071": null,
+        "080": 64818,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 64818
+      }
+    },
+    {
+      "year": 2021,
+      "taxAndGrants": 2815.148,
+      "netCost": 2752.307,
+      "financeNet": -1.16,
+      "result": 61.681,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2021; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2752307,
+        "040": 2032167,
+        "050": 782981,
+        "060": 5962,
+        "072": -7122,
+        "071": null,
+        "080": 61681,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 61681
+      }
+    },
+    {
+      "year": 2022,
+      "taxAndGrants": 2933.394,
+      "netCost": 2807.324,
+      "financeNet": 0.493,
+      "result": 126.563,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2022; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -2807324,
+        "040": 2137588,
+        "050": 795806,
+        "060": 8073,
+        "072": -7580,
+        "071": null,
+        "080": 126563,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 126563
+      }
+    },
+    {
+      "year": 2023,
+      "taxAndGrants": 3090.404,
+      "netCost": 3062.996,
+      "financeNet": -5.375,
+      "result": 22.033,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2023; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -3062996,
+        "040": 2227010,
+        "050": 863394,
+        "060": 11457,
+        "072": -16832,
+        "071": null,
+        "080": 22033,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 22033
+      }
+    },
+    {
+      "year": 2024,
+      "taxAndGrants": 3204.33,
+      "netCost": 3196.376,
+      "financeNet": -6.849,
+      "result": 1.105,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2024; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -3196376,
+        "040": 2251166,
+        "050": 953164,
+        "060": 17216,
+        "072": -24065,
+        "071": null,
+        "080": 1105,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 1105
+      }
+    },
+    {
+      "year": 2025,
+      "taxAndGrants": 3317.451,
+      "netCost": 3202.904,
+      "financeNet": -9.964,
+      "result": 104.583,
+      "resultAccountingResidual": 0.0,
+      "sourceId": "scb-TAB6777-20261016",
+      "locator": "TAB6777; Region=0583; ContentsCode=000008H2; Tid=2025; Resultatraknposter per definitionMapping",
+      "sourceCellsTkr": {
+        "030": -3202904,
+        "040": 2330182,
+        "050": 987269,
+        "060": 15053,
+        "072": -25017,
+        "071": null,
+        "080": 104583,
+        "085": 0,
+        "100": null,
+        "110": null,
+        "120": 104583
+      }
+    }
+  ]
+}

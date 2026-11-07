@@ -1,0 +1,61 @@
+Oberoende källgranskning av fastighetsavgift, 2026-10-15
+
+Granskat: data/motala-property-fee-vintage-2025.json
+SHA256: 6cea7d0fbff89ae344951aac5b30a2954c4b77d58076d4ef47c62c8e9526dc3b
+Beslut: transkriptionen och dess avgränsningar godkänns. Ingen historisk
+modellindata, prognos eller poäng ändras. Fullmålsbeslutet är oförändrat.
+
+Bilaga1, PDF-index1, Motala583 och rubrikerna i kronor, verifierar:
+avgiftsperiod2024 slutligt113655015; prognos2025 119132088;
+prognos2026 122353284; prognos2027 127091422.
+Bilaga5, PDF-index25, Motala0583, verifierar tidigare2024-prognos
+114153319, slutligt113655015, korrigering-498304, aktuell2025-prognos
+119132088 och villkorad bokslutsintäkt118633784.
+Primär myndighetsåtergivning:
+https://meetingsplus.regionvastmanland.se/welcome-sv/namnder-styrelsen/regionstyrelsen/mote-2026-01-27/protocol/bilaga-till-cirkular-2562-forandringar-i-kommunal-fastighetsavgift-2008-2027pdf?downloadMode=download
+
+Jag kontrollerade de fem identiteterna med heltalsaritmetik:
+119132088-113655015=5477073
+122353284-119132088=3221196
+127091422-122353284=4738138
+113655015-114153319=-498304
+119132088-498304=118633784.
+Alla stämmer exakt, liksom överensstämmelsen mellan bilaga1 och5.
+
+Datumkonflikten är verklig i PDF-texten: bilaga1 och5 har2017-12-21
+i sidhuvudet, medan bilaga2–4 anger2025-12-22. Innehållet och
+mötesarkivets2026-kontext gör inte2017 till en giltig tillgänglighetsdag.
+Katalogen bevarar detta korrekt. Skärmbilder av PDF-index1 och25
+försöktes även självständigt men misslyckades. Kontrollen bygger på
+läsbar PDF-text; originalbytes och arbetsboksversion är inte arkiverade.
+
+Cirkulär25:62, omslag och tryckt s2, verifierar dokumentdatum2025-12-22
+och villkoret: bilaga5:s standardkorrigering förutsätter att kommunen
+använde24:57:s bokslutsprognos för2024. Detta bevisar inte att Motala
+faktiskt bokförde den uppskattningen. Aktuell avgiftsperiod, korrigering,
+bokslutsintäkt och betalning ska fortsatt hållas isär.
+Primärkälla:
+https://extra.skr.se/download/18.7577ce719b3551ea5e15417/1766399189704/_%20SKR2025_03528-1%20Cirkul%C3%A4r%2025_62%20550728_2_1.PDF
+
+Egen kontrollslutsats: med bokslutets precision1 mnkr avrundas både
+119132088 och118633784 till119 mnkr. Not7:s119 kan därför inte avgöra
+om standardkorrigeringen faktiskt användes. Inte heller avgör2024 års
+avrundade114 vilken av de olika2024-versionerna som låg bakom bokningen.
+
+Värdena är användbara som identifierad senare källversion och för
+definitionskontroll. De får inte backfyllas i ursprung2020–2024, och den
+återgivna2024-prognosen är fortfarande inte den återfunna originalfilen.
+För senare prognosanvändning återstår informationsdag, eventuell nyare
+version, lokal tidigare bokföring och separat hantering av framtida
+revisioner. Ingen betalnings- eller fordringsbana har verifierats här.
+
+Slutkontroll av dokumentationstillägg, 2026-10-15:
+Den slutliga källfilens SHA256 är
+efb08eda74fda3c58e82e23d434f9edcb6722d431d4a32f22eb1ef2f157ae234.
+Hashen överst avser versionen före dessa dokumentationstillägg.
+JSON-filens länk independentSourceReview pekar på denna befintliga fil.
+Förtydligandena om faktisk publicering/version och om att båda 2025-beloppen
+avrundas till 119 mnkr är korrekta; samma avrundningsbegränsning återges i
+README. Belopp och sakliga källvillkor är oförändrade. Denna källkontroll är
+avslutad. Godkännandet gäller transkription och dokumentation; det tidigare
+beslutet att fullmålet ännu inte är uppnått kvarstår.

@@ -1,0 +1,81 @@
+Oberoende kodgranskning av revenue_bridge.py
+Datum: 2026-10-15
+Granskare: separat granskaragent /root/independent_review
+
+Granskat: modelica/motala_lab/revenue_bridge.py och
+modelica/tests/test_revenue_bridge.py, före historisk inkoppling.
+Åtta tester återkörda oberoende; samtliga passerade. Inga modeller,
+indata, tester eller frysta arkiv ändrades av granskaren.
+
+Slutstatus efter rättning: kärnalgebran är riktig och båda identifierade
+valideringsbristerna är stängda. Åtta utökade tester har återkörts
+oberoende efter ändringen och samtliga passerar. Godkänd som algebraisk
+komponentmodul med avgränsningarna nedan, inte som komplett prognosmodell.
+Det är inget upptäckt transkriptionsfel i de nuvarande källdata.
+
+Fynd 1, rättat och verifierat: obegränsad avrundningsrest
+
+Den först granskade versionens opening_components, då rader 51–56,
+kontrollerade att komponenter plus residual summerade till rapporterad
+total men begränsade inte residualens storlek. En ändrad komponent kunde
+därför döljas i avrundningsresten. Oberoende reproduktion med 2020 års data:
+incomeEqualisation += 1000 och grantRoundingResidual -= 1000 accepterades.
+Returnerat inkomstutjämningsbelopp blev 1491 och residual -1000 mnkr,
+med oförändrat redovisat totalbelopp och oförändrad huvudbok.
+
+Nu krävs reportingPrecisionMnkr, 0,1 för 2020–2022 och 1 för 2023–2024.
+Residualgränsen är (n+1)*u/2 med liten numerisk tolerans, där n är antal
+komponenter och totalen också kan vara avrundad. Testet med motverkande
++1000/-1000 avvisas, liksom en otillåten rapporteringsprecision.
+Samtliga verkliga öppningsrader godtas, inklusive +0,1 mnkr år 2021.
+Denna kontroll begränsar avrundningsrester; den ersätter inte kontroll
+mot originalets komponentbelopp.
+
+Fynd 2, rättat och verifierat: källspårbarhetslucka
+
+Första versionens select_vintage accepterade vald 20:57-post även efter
+att alla källänkar och lokaliseringar tagits bort. Nu krävs en icke-tom
+källsträng samt lokalisering för populationAndCapacity,
+municipalRegulation och settlements. Testerna avvisar saknad källänk
+och saknad avräkningslokalisering. Detta bevisar inte filens autenticitet;
+arkiv och oberoende källgranskning behövs ändå.
+
+Kontroller som håller
+
+- Skattebas i mnkr gånger skattesats som andel ger mnkr. Belopp per
+  invånare multipliceras med rätt folkmängd och divideras med 10^6.
+- Aktuell avräkning använder november y-1, föregåendeårs revision
+  november y-2. Lokal skattesats multiplicerar bara preliminär skatt.
+- Inkomstutjämning använder garantinivå och separata länssatser, med
+  rätt tecken för både bidrag och avgift och noll vid gränsen.
+- Den lokala skattebasens marginaleffekt på preliminär skatt och
+  utjämning är rätt. Konstant relativ skattekraft ger den härledda
+  gemensamma skalningen när övriga parametrar hålls fasta.
+- Regleringsavgift kan vara negativ. Novemberdatum och kommun krävs.
+- Nationell befolkning och fiskal referensdag hålls isär. Senare
+  administrativa värden och avräkningar förblir null i källurvalet.
+- Ursprung och källcirkulär matchas mot kostnadsvintagen. Saknade år
+  extrapoleras inte. Booleska tal, NaN och procenttal som 21,7 avvisas
+  där andelar krävs. Inga framtida bokslut hämtas av beräkningskoden.
+
+Avgränsning
+
+november_count kontrollerar referensdatum och enhet, inte publicerings-
+datum, observed/forecast-status eller vilka värden som var kända vid ett
+prognosursprung. Det är rimligt för en ren algebraisk funktion, men ett
+senare prognosgränssnitt måste kontrollera informationsdatum och markera
+prognostiserad framtida befolkning. Rätt novemberdatum ensamt bevisar
+inte frånvaro av tidsläckage. Fraktionella prognosbefolkningar kan vara
+rimliga; de ska inte misstas för observerade personantal.
+
+Modulen implementerar ännu inte hela bidragsbryggan, kategoriövergångar,
+prognoser efter h1 eller skattefordring/kassaperiodisering. Dessa är
+öppna avgränsningar, inte fel i den granskade kärnalgebran. Kodtester ger
+ingen ny evidens för prognosprecision. Tidigare granskningsvillkor i
+revenue-sources-20261015.txt kvarstår.
+
+Dokumentationsuppföljning: §7.1 och källdatasetet beskriver nu uttryckligen
+11,2 mnkr-postens kategoriövergång, utan att påstå att samma lokala belopp
+läggs till i regleringen. Specifikationen kräver också +Q_T i
+balansidentiteten och native-kontrollen vid framtida implementation och
+anger att negativt Q_T är nettoskatteskuld. Dessa förtydliganden är riktiga.

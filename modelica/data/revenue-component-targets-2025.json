@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "unit": "mnkr",
+  "retrievedAt": "2026-10-15",
+  "role": "target_outcomes_only_for_origins_2020_2024",
+  "sources": {
+    "2025": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+      "locator": "Notes 6 and 7, printed page 52, PDF index 26, kommunen 2025 column",
+      "publicationDate": null,
+      "access": "Primary PDF text independently read by implementer and reviewer; original bytes not archived."
+    }
+  },
+  "rows": [
+    {
+      "year": 2025,
+      "reportingPrecisionMnkr": 1,
+      "sourceId": "2025",
+      "scope": "kommunen",
+      "moneyUnit": "mnkr",
+      "taxComponents": {
+        "preliminaryTax": 2344,
+        "estimatedCurrentYearSettlement": -14,
+        "priorYearSettlementDifference": 0
+      },
+      "grantComponents": {
+        "incomeEqualisation": 631,
+        "costEqualisation": 32,
+        "regulationGrant": 115,
+        "lssEqualisation": 40,
+        "propertyFee": 119,
+        "refugeeWelfareGrant": 0,
+        "otherGeneralGrants": 51
+      },
+      "reportedTax": 2330,
+      "reportedGrants": 987,
+      "taxRoundingResidual": 0,
+      "grantRoundingResidual": -1,
+      "laterComparativeSource": false,
+      "roundingNote": "Printed grant components sum 988; printed total is 987. Keep -1 mnkr rounding explicitly."
+    }
+  ]
+}

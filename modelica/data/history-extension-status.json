@@ -1,0 +1,1682 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-23T14:39:43.022691+00:00",
+  "municipality": "0583",
+  "status": "archived_observations_prepared_and_evaluated",
+  "retrieval": {
+    "municipality": "0583",
+    "catalogueSha256": "ee78abc7ad63831fa1a0d4f939d40fb30ba83cd2213947b446c6714085302c42",
+    "note": "Current observed data vintage. Retrieval date is not historical availability. No automatic model import.",
+    "requests": [
+      {
+        "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/metadata?lang=sv&defaultSelection=false",
+        "method": "GET",
+        "file": "TAB6777-metadata.json",
+        "requestedAt": "2026-10-23T13:15:05.132642+00:00",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+        "finishedAt": "2026-10-23T13:15:05.143420+00:00"
+      },
+      {
+        "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4202/metadata?lang=sv&defaultSelection=false",
+        "method": "GET",
+        "file": "TAB4202-metadata.json",
+        "requestedAt": "2026-10-23T13:15:05.143635+00:00",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+        "finishedAt": "2026-10-23T13:15:05.143802+00:00"
+      },
+      {
+        "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6782/metadata?lang=sv&defaultSelection=false",
+        "method": "GET",
+        "file": "TAB6782-metadata.json",
+        "requestedAt": "2026-10-23T13:15:05.144024+00:00",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+        "finishedAt": "2026-10-23T13:15:05.144181+00:00"
+      },
+      {
+        "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4199/metadata?lang=sv&defaultSelection=false",
+        "method": "GET",
+        "file": "TAB4199-metadata.json",
+        "requestedAt": "2026-10-23T13:15:05.144426+00:00",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+        "finishedAt": "2026-10-23T13:15:05.144592+00:00"
+      }
+    ],
+    "tables": [
+      {
+        "id": "TAB6777",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+      },
+      {
+        "id": "TAB4202",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+      },
+      {
+        "id": "TAB6782",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+      },
+      {
+        "id": "TAB4199",
+        "status": "failed",
+        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+      }
+    ]
+  },
+  "webFallback": {
+    "tablePage": "https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/ResultKnN/",
+    "tablePageReadable": true,
+    "apiDataRetrieved": false,
+    "bulkDownload": "https://www.statistikdatabasen.scb.se/Resources/PX/bulk/ssd/sv/TAB6777_sv.zip",
+    "bulkDownloadResult": "Web tool rejected application/x-zip-compressed content; no archive obtained.",
+    "notes": "Primary table metadata can be read via the web tool, but requested API datasets could not be fetched. No municipal values were extracted from search snippets."
+  },
+  "budgetResponseCheck": {
+    "protocol": "data/budget-response-protocol.json",
+    "protocolSha256": "54b756590314ddfb766f783a90a7ba8426eb9ea4e67edad571d23022301f0202",
+    "localReport": "runs/budget-response-20261023-scb/report.json",
+    "localReportSha256": "239ef0d5b3eca4e6e06c3818c56cc3038ff628cfc3d98ce79a4c9c9316db1d7e",
+    "exitCode": 0,
+    "status": "evaluated_retrospective",
+    "observedYears": [
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "fittedOrigins": 15,
+    "originHorizonCases": 42,
+    "scoredPredictions": 168,
+    "skipped": [],
+    "lambdaFrozenThrough2020to2024": 0.8812947342791938,
+    "forecastPrecisionApproved": false,
+    "summary": [
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 15,
+        "MAE": 57.039916666666656,
+        "RMSE": 64.81211849379844,
+        "bias": -52.53626666666667
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 15,
+        "MAE": 49.75301739117766,
+        "RMSE": 56.777931901385365,
+        "bias": -15.100927125007653
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 15,
+        "MAE": 2.5631166666666667,
+        "RMSE": 3.2214740279102054,
+        "bias": 0.5156333333333334
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "result",
+        "count": 15,
+        "MAE": 47.8146851029884,
+        "RMSE": 58.2961740952196,
+        "bias": -39.067972874992364
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 14,
+        "MAE": 131.54641517857146,
+        "RMSE": 146.71152649299532,
+        "bias": -130.64970089285717
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 14,
+        "MAE": 107.38572274974722,
+        "RMSE": 119.07037907331272,
+        "bias": -89.41704737529983
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 14,
+        "MAE": 2.8092544642857145,
+        "RMSE": 3.3701729887427647,
+        "bias": 0.49474553571428576
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "result",
+        "count": 14,
+        "MAE": 51.766836481335694,
+        "RMSE": 62.59756842382919,
+        "bias": -43.03962226755736
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 13,
+        "MAE": 227.56686298076923,
+        "RMSE": 242.5284723357634,
+        "bias": -227.56686298076923
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 13,
+        "MAE": 189.75427717721743,
+        "RMSE": 205.7482760351088,
+        "bias": -187.34482044644818
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 13,
+        "MAE": 3.320358173076923,
+        "RMSE": 4.641547098195669,
+        "bias": 0.685939903846154
+      },
+      {
+        "period": "all",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "result",
+        "count": 13,
+        "MAE": 46.709405176197144,
+        "RMSE": 59.76488900903063,
+        "bias": -42.01487186124416
+      },
+      {
+        "period": "all",
+        "model": "expanding_mean_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 15,
+        "MAE": 39.47331044713259,
+        "RMSE": 44.618375388916384,
+        "bias": -16.47649549238146
+      },
+      {
+        "period": "all",
+        "model": "expanding_mean_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 14,
+        "MAE": 40.391530157181194,
+        "RMSE": 45.76417112507991,
+        "bias": -16.076112895276435
+      },
+      {
+        "period": "all",
+        "model": "expanding_mean_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 13,
+        "MAE": 38.05007364481732,
+        "RMSE": 44.373281020787886,
+        "bias": -14.03225175704326
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 15,
+        "MAE": 57.039916666666656,
+        "RMSE": 64.81211849379844,
+        "bias": -52.53626666666667
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 15,
+        "MAE": 64.7988666666667,
+        "RMSE": 82.32401028729913,
+        "bias": -48.44586666666666
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 15,
+        "MAE": 2.5631166666666667,
+        "RMSE": 3.2214740279102054,
+        "bias": 0.5156333333333334
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "result",
+        "count": 15,
+        "MAE": 44.636233333333294,
+        "RMSE": 56.92737109872975,
+        "bias": -5.723033333333359
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 14,
+        "MAE": 131.54641517857146,
+        "RMSE": 146.71152649299532,
+        "bias": -130.64970089285717
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 14,
+        "MAE": 137.7355848214286,
+        "RMSE": 160.80279821239125,
+        "bias": -131.29705803571434
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 14,
+        "MAE": 2.8092544642857145,
+        "RMSE": 3.3701729887427647,
+        "bias": 0.49474553571428576
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "result",
+        "count": 14,
+        "MAE": 64.70715625000005,
+        "RMSE": 74.30196139553826,
+        "bias": -1.1596116071428475
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 13,
+        "MAE": 227.56686298076923,
+        "RMSE": 242.5284723357634,
+        "bias": -227.56686298076923
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 13,
+        "MAE": 232.53309134615387,
+        "RMSE": 249.59784698297966,
+        "bias": -232.53309134615387
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 13,
+        "MAE": 3.320358173076923,
+        "RMSE": 4.641547098195669,
+        "bias": 0.685939903846154
+      },
+      {
+        "period": "all",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "result",
+        "count": 13,
+        "MAE": 55.3215432692307,
+        "RMSE": 62.55130673353083,
+        "bias": 3.173399038461542
+      },
+      {
+        "period": "all",
+        "model": "last_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 15,
+        "MAE": 43.707,
+        "RMSE": 55.42413441994381,
+        "bias": -4.077533333333333
+      },
+      {
+        "period": "all",
+        "model": "last_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 14,
+        "MAE": 62.72207142857143,
+        "RMSE": 68.68262587905953,
+        "bias": -0.5192142857142856
+      },
+      {
+        "period": "all",
+        "model": "last_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 13,
+        "MAE": 47.352384615384615,
+        "RMSE": 56.929619882123546,
+        "bias": 3.65269230769231
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 9,
+        "MAE": 47.74715277777778,
+        "RMSE": 58.23438983042477,
+        "bias": -40.24106944444447
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 9,
+        "MAE": 47.58147375164908,
+        "RMSE": 55.04047572465257,
+        "bias": -15.20965023835543
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 9,
+        "MAE": 2.5224583333333337,
+        "RMSE": 3.301675045473552,
+        "bias": 0.062097222222222324
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "result",
+        "count": 9,
+        "MAE": 40.12778621607171,
+        "RMSE": 45.074220245908364,
+        "bias": -28.549766428311273
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 8,
+        "MAE": 103.21017187500004,
+        "RMSE": 125.3665968597393,
+        "bias": -101.64092187500003
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 8,
+        "MAE": 107.87809282774188,
+        "RMSE": 115.61199156069215,
+        "bias": -76.43291092245894
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 8,
+        "MAE": 1.970609375,
+        "RMSE": 2.252218595855124,
+        "bias": -0.786390625
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "result",
+        "count": 8,
+        "MAE": 42.287775506223106,
+        "RMSE": 49.80947146286615,
+        "bias": -30.022401577541103
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 7,
+        "MAE": 185.19285267857154,
+        "RMSE": 206.0765390847016,
+        "bias": -185.19285267857154
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 7,
+        "MAE": 171.149880639558,
+        "RMSE": 192.9502734191702,
+        "bias": -166.67517528241515
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 7,
+        "MAE": 2.7582589285714283,
+        "RMSE": 3.9865357183251398,
+        "bias": -1.4471249999999998
+      },
+      {
+        "period": "earlier_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "result",
+        "count": 7,
+        "MAE": 33.20946307684406,
+        "RMSE": 41.6695866524875,
+        "bias": -24.56823096758498
+      },
+      {
+        "period": "earlier_targets",
+        "model": "expanding_mean_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 9,
+        "MAE": 34.42594256675605,
+        "RMSE": 36.36021046428604,
+        "bias": -6.237404821658008
+      },
+      {
+        "period": "earlier_targets",
+        "model": "expanding_mean_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 8,
+        "MAE": 35.669998132698595,
+        "RMSE": 37.50733573196857,
+        "bias": -3.68833042436526
+      },
+      {
+        "period": "earlier_targets",
+        "model": "expanding_mean_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 7,
+        "MAE": 31.64767604054442,
+        "RMSE": 33.28164849031863,
+        "bias": 2.354679515011133
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 9,
+        "MAE": 47.74715277777778,
+        "RMSE": 58.23438983042477,
+        "bias": -40.24106944444447
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 9,
+        "MAE": 54.84227777777775,
+        "RMSE": 64.91469120317427,
+        "bias": -42.09213888888889
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 9,
+        "MAE": 2.5224583333333337,
+        "RMSE": 3.301675045473552,
+        "bias": 0.062097222222222324
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "result",
+        "count": 9,
+        "MAE": 33.62655555555557,
+        "RMSE": 40.46850469741188,
+        "bias": -1.6672777777778123
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 8,
+        "MAE": 103.21017187500004,
+        "RMSE": 125.3665968597393,
+        "bias": -101.64092187500003
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 8,
+        "MAE": 124.91864843750005,
+        "RMSE": 140.31146807543882,
+        "bias": -113.65122656250009
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 8,
+        "MAE": 1.970609375,
+        "RMSE": 2.252218595855124,
+        "bias": -0.786390625
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "result",
+        "count": 8,
+        "MAE": 54.38139843750004,
+        "RMSE": 63.277167755237905,
+        "bias": 7.195914062500039
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 7,
+        "MAE": 185.19285267857154,
+        "RMSE": 206.0765390847016,
+        "bias": -185.19285267857154
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 7,
+        "MAE": 206.82128125,
+        "RMSE": 224.28962326297466,
+        "bias": -206.82128125
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 7,
+        "MAE": 2.7582589285714283,
+        "RMSE": 3.9865357183251398,
+        "bias": -1.4471249999999998
+      },
+      {
+        "period": "earlier_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "result",
+        "count": 7,
+        "MAE": 45.885125,
+        "RMSE": 55.02812851552928,
+        "bias": 15.577874999999867
+      },
+      {
+        "period": "earlier_targets",
+        "model": "last_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 9,
+        "MAE": 34.516222222222225,
+        "RMSE": 44.07244398084187,
+        "bias": 2.9562222222222223
+      },
+      {
+        "period": "earlier_targets",
+        "model": "last_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 8,
+        "MAE": 54.852500000000006,
+        "RMSE": 60.06455282027829,
+        "bias": 12.726
+      },
+      {
+        "period": "earlier_targets",
+        "model": "last_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 7,
+        "MAE": 42.319,
+        "RMSE": 49.84857688898594,
+        "bias": 16.593
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 6,
+        "MAE": 70.97906249999998,
+        "RMSE": 73.58437687955647,
+        "bias": -70.97906249999998
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 6,
+        "MAE": 53.010332850470526,
+        "RMSE": 59.28872511280523,
+        "bias": -14.937842454985988
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 6,
+        "MAE": 2.6241041666666667,
+        "RMSE": 3.0972810854676776,
+        "bias": 1.1959375
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "result",
+        "count": 6,
+        "MAE": 59.34503343336343,
+        "RMSE": 73.81450934054493,
+        "bias": -54.84528254501401
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 6,
+        "MAE": 169.32807291666668,
+        "RMSE": 171.07773048974403,
+        "bias": -169.32807291666668
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 6,
+        "MAE": 106.72922931242101,
+        "RMSE": 123.53104311348693,
+        "bias": -106.72922931242101
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 6,
+        "MAE": 3.927447916666667,
+        "RMSE": 4.442840960627816,
+        "bias": 2.2029270833333334
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "result",
+        "count": 6,
+        "MAE": 64.40558444815248,
+        "RMSE": 76.38772854848594,
+        "bias": -60.39591652091237
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 6,
+        "MAE": 277.00320833333325,
+        "RMSE": 279.1021315121788,
+        "bias": -277.00320833333325
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 6,
+        "MAE": 211.45940647115336,
+        "RMSE": 219.73921441135764,
+        "bias": -211.45940647115336
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 6,
+        "MAE": 3.9761406249999998,
+        "RMSE": 5.304466731092724,
+        "bias": 3.174515625
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "result",
+        "count": 6,
+        "MAE": 62.45933762544241,
+        "RMSE": 75.58600432055152,
+        "bias": -62.36928623717987
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "expanding_mean_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 6,
+        "MAE": 47.04436226769741,
+        "RMSE": 54.71655323898686,
+        "bias": -31.83513149846664
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "expanding_mean_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 6,
+        "MAE": 46.68690618982467,
+        "RMSE": 54.87353514071168,
+        "bias": -32.59315618982467
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "expanding_mean_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 6,
+        "MAE": 45.519537516469036,
+        "RMSE": 54.533121445466044,
+        "bias": -33.15033824110672
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 6,
+        "MAE": 70.97906249999998,
+        "RMSE": 73.58437687955647,
+        "bias": -70.97906249999998
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 6,
+        "MAE": 79.7337500000001,
+        "RMSE": 103.0642080135152,
+        "bias": -57.97645833333331
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 6,
+        "MAE": 2.6241041666666667,
+        "RMSE": 3.0972810854676776,
+        "bias": 1.1959375
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "result",
+        "count": 6,
+        "MAE": 61.150749999999874,
+        "RMSE": 75.13497282800171,
+        "bias": -11.806666666666679
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 6,
+        "MAE": 169.32807291666668,
+        "RMSE": 171.07773048974403,
+        "bias": -169.32807291666668
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 6,
+        "MAE": 154.82483333333334,
+        "RMSE": 184.61992226969585,
+        "bias": -154.82483333333334
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 6,
+        "MAE": 3.927447916666667,
+        "RMSE": 4.442840960627816,
+        "bias": 2.2029270833333334
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "result",
+        "count": 6,
+        "MAE": 78.47483333333342,
+        "RMSE": 86.85134893228071,
+        "bias": -12.30031250000003
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 6,
+        "MAE": 277.00320833333325,
+        "RMSE": 279.1021315121788,
+        "bias": -277.00320833333325
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 6,
+        "MAE": 262.53020312500007,
+        "RMSE": 276.2086355507603,
+        "bias": -262.53020312500007
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 6,
+        "MAE": 3.9761406249999998,
+        "RMSE": 5.304466731092724,
+        "bias": 3.174515625
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "result",
+        "count": 6,
+        "MAE": 66.33069791666652,
+        "RMSE": 70.31831573576466,
+        "bias": -11.298489583333172
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "last_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 6,
+        "MAE": 57.49316666666667,
+        "RMSE": 69.03633979893004,
+        "bias": -14.628166666666665
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "last_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 6,
+        "MAE": 73.21483333333333,
+        "RMSE": 78.7191625580032,
+        "bias": -18.1795
+      },
+      {
+        "period": "previously_examined_targets",
+        "model": "last_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 6,
+        "MAE": 53.22466666666667,
+        "RMSE": 64.2113654711272,
+        "bias": -11.444333333333333
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 10,
+        "MAE": 51.943225000000005,
+        "RMSE": 62.10370380847873,
+        "bias": -45.18775000000003
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 10,
+        "MAE": 45.50217991026709,
+        "RMSE": 52.898687448282445,
+        "bias": -16.36753874830281
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 10,
+        "MAE": 2.4322625,
+        "RMSE": 3.173886311812775,
+        "bias": 0.21793750000000006
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "result",
+        "count": 10,
+        "MAE": 42.24489156068161,
+        "RMSE": 46.94967062815075,
+        "bias": -31.82467375169721
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 10,
+        "MAE": 116.53782500000004,
+        "RMSE": 135.7120528534416,
+        "bias": -115.28242500000003
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 10,
+        "MAE": 107.45310191052056,
+        "RMSE": 114.20116806832863,
+        "bias": -82.29695638629421
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 10,
+        "MAE": 1.9088062500000003,
+        "RMSE": 2.1830481718695824,
+        "bias": -0.45274374999999994
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "result",
+        "count": 10,
+        "MAE": 46.472911506651386,
+        "RMSE": 52.77732227566278,
+        "bias": -36.66061236370579
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 10,
+        "MAE": 206.3564625,
+        "RMSE": 222.97447496060664,
+        "bias": -206.3564625
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 10,
+        "MAE": 170.98904537755405,
+        "RMSE": 187.01872740846702,
+        "bias": -167.85675162755405
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 10,
+        "MAE": 2.522509375,
+        "RMSE": 3.58849151146161,
+        "bias": -0.9022343749999997
+      },
+      {
+        "period": "earlier_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "result",
+        "count": 10,
+        "MAE": 48.673207723927305,
+        "RMSE": 60.22412654185485,
+        "bias": -42.62434524744595
+      },
+      {
+        "period": "earlier_origins",
+        "model": "expanding_mean_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 10,
+        "MAE": 34.68077103735317,
+        "RMSE": 36.422077957579354,
+        "bias": -9.311087066764935
+      },
+      {
+        "period": "earlier_origins",
+        "model": "expanding_mean_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 10,
+        "MAE": 35.5646212334316,
+        "RMSE": 37.05116654059768,
+        "bias": -9.979287066764936
+      },
+      {
+        "period": "earlier_origins",
+        "model": "expanding_mean_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 10,
+        "MAE": 38.75853595565383,
+        "RMSE": 44.45923939645873,
+        "bias": -14.956887066764935
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 10,
+        "MAE": 51.943225000000005,
+        "RMSE": 62.10370380847873,
+        "bias": -45.18775000000003
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 10,
+        "MAE": 53.51871249999997,
+        "RMSE": 62.97330025488727,
+        "bias": -42.04358749999999
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 10,
+        "MAE": 2.4322625,
+        "RMSE": 3.173886311812775,
+        "bias": 0.21793750000000006
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "result",
+        "count": 10,
+        "MAE": 34.91197500000001,
+        "RMSE": 41.109316428958685,
+        "bias": -6.1486250000000275
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 10,
+        "MAE": 116.53782500000004,
+        "RMSE": 135.7120528534416,
+        "bias": -115.28242500000003
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 10,
+        "MAE": 120.76146874999999,
+        "RMSE": 135.24924952779747,
+        "bias": -111.74753125000002
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 10,
+        "MAE": 1.9088062500000003,
+        "RMSE": 2.1830481718695824,
+        "bias": -0.45274374999999994
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "result",
+        "count": 10,
+        "MAE": 56.47188750000004,
+        "RMSE": 64.36546608116281,
+        "bias": -7.210037499999972
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 10,
+        "MAE": 206.3564625,
+        "RMSE": 222.97447496060664,
+        "bias": -206.3564625
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 10,
+        "MAE": 198.096853125,
+        "RMSE": 211.48000525309226,
+        "bias": -198.096853125
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 10,
+        "MAE": 2.522509375,
+        "RMSE": 3.58849151146161,
+        "bias": -0.9022343749999997
+      },
+      {
+        "period": "earlier_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "result",
+        "count": 10,
+        "MAE": 55.4083437499999,
+        "RMSE": 64.41425667099594,
+        "bias": -12.38424375
+      },
+      {
+        "period": "earlier_origins",
+        "model": "last_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 10,
+        "MAE": 35.864999999999995,
+        "RMSE": 44.481239733172906,
+        "bias": -2.1397999999999997
+      },
+      {
+        "period": "earlier_origins",
+        "model": "last_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 10,
+        "MAE": 56.870799999999996,
+        "RMSE": 61.7281314912415,
+        "bias": -2.807999999999999
+      },
+      {
+        "period": "earlier_origins",
+        "model": "last_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 10,
+        "MAE": 49.024,
+        "RMSE": 60.12456457888074,
+        "bias": -7.785599999999998
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 5,
+        "MAE": 67.23329999999996,
+        "RMSE": 69.91489152891535,
+        "bias": -67.23329999999996
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 5,
+        "MAE": 58.25469235299879,
+        "RMSE": 63.83305088661291,
+        "bias": -12.567703878417342
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 5,
+        "MAE": 2.824825,
+        "RMSE": 3.314600443020999,
+        "bias": 1.1110250000000002
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 1,
+        "metric": "result",
+        "count": 5,
+        "MAE": 58.95427218760199,
+        "RMSE": 76.07094450732669,
+        "bias": -53.55457112158268
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 4,
+        "MAE": 169.06789062500002,
+        "RMSE": 171.14481819917515,
+        "bias": -169.06789062500002
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 4,
+        "MAE": 107.21727484781388,
+        "RMSE": 130.45066551724352,
+        "bias": -107.21727484781388
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 4,
+        "MAE": 5.0603750000000005,
+        "RMSE": 5.276265972012961,
+        "bias": 2.86346875
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 2,
+        "metric": "result",
+        "count": 4,
+        "MAE": 65.00164891804647,
+        "RMSE": 82.16434833638608,
+        "bias": -58.987147027186296
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 3,
+        "MAE": 298.2681979166667,
+        "RMSE": 298.59929324328454,
+        "bias": -298.2681979166667
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 3,
+        "MAE": 252.30504984276195,
+        "RMSE": 258.5604675723047,
+        "bias": -252.30504984276195
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 3,
+        "MAE": 5.979854166666667,
+        "RMSE": 7.101613895532759,
+        "bias": 5.979854166666667
+      },
+      {
+        "period": "existing_origins",
+        "model": "budget_response",
+        "horizon": 3,
+        "metric": "result",
+        "count": 3,
+        "MAE": 40.16339668376328,
+        "RMSE": 58.20793554178359,
+        "bias": -39.9832939072382
+      },
+      {
+        "period": "existing_origins",
+        "model": "expanding_mean_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 5,
+        "MAE": 49.058389266691435,
+        "RMSE": 57.61304315467811,
+        "bias": -30.807312343614512
+      },
+      {
+        "period": "existing_origins",
+        "model": "expanding_mean_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 4,
+        "MAE": 52.458802466555184,
+        "RMSE": 62.43625069326176,
+        "bias": -31.318177466555184
+      },
+      {
+        "period": "existing_origins",
+        "model": "expanding_mean_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 3,
+        "MAE": 35.68853260869565,
+        "RMSE": 44.08554265679135,
+        "bias": -10.950134057971013
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "taxAndGrants",
+        "count": 5,
+        "MAE": 67.23329999999996,
+        "RMSE": 69.91489152891535,
+        "bias": -67.23329999999996
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "netCost",
+        "count": 5,
+        "MAE": 87.35917500000014,
+        "RMSE": 111.35732988611765,
+        "bias": -61.25042499999999
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "financeNet",
+        "count": 5,
+        "MAE": 2.824825,
+        "RMSE": 3.314600443020999,
+        "bias": 1.1110250000000002
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 1,
+        "metric": "result",
+        "count": 5,
+        "MAE": 64.08474999999986,
+        "RMSE": 79.63808728318986,
+        "bias": -4.8718500000000216
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "taxAndGrants",
+        "count": 4,
+        "MAE": 169.06789062500002,
+        "RMSE": 171.14481819917515,
+        "bias": -169.06789062500002
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "netCost",
+        "count": 4,
+        "MAE": 180.17087500000014,
+        "RMSE": 211.5903848257087,
+        "bias": -180.17087500000014
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "financeNet",
+        "count": 4,
+        "MAE": 5.0603750000000005,
+        "RMSE": 5.276265972012961,
+        "bias": 2.86346875
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 2,
+        "metric": "result",
+        "count": 4,
+        "MAE": 85.29532812500013,
+        "RMSE": 94.68607118088121,
+        "bias": 13.966453124999962
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "taxAndGrants",
+        "count": 3,
+        "MAE": 298.2681979166667,
+        "RMSE": 298.59929324328454,
+        "bias": -298.2681979166667
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "netCost",
+        "count": 3,
+        "MAE": 347.3205520833335,
+        "RMSE": 347.68289269703155,
+        "bias": -347.3205520833335
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "financeNet",
+        "count": 3,
+        "MAE": 5.979854166666667,
+        "RMSE": 7.101613895532759,
+        "bias": 5.979854166666667
+      },
+      {
+        "period": "existing_origins",
+        "model": "identical_base_lambda_zero",
+        "horizon": 3,
+        "metric": "result",
+        "count": 3,
+        "MAE": 55.03220833333335,
+        "RMSE": 55.89482098301513,
+        "bias": 55.03220833333335
+      },
+      {
+        "period": "existing_origins",
+        "model": "last_reported_result",
+        "horizon": 1,
+        "metric": "result",
+        "count": 5,
+        "MAE": 59.391,
+        "RMSE": 72.51443064797516,
+        "bias": -7.953
+      },
+      {
+        "period": "existing_origins",
+        "model": "last_reported_result",
+        "horizon": 2,
+        "metric": "result",
+        "count": 4,
+        "MAE": 77.35025,
+        "RMSE": 83.5742502105164,
+        "bias": 5.202749999999998
+      },
+      {
+        "period": "existing_origins",
+        "model": "last_reported_result",
+        "horizon": 3,
+        "metric": "result",
+        "count": 3,
+        "MAE": 41.78033333333334,
+        "RMSE": 44.65843854935668,
+        "bias": 41.78033333333334
+      }
+    ],
+    "interpretation": "Budget response improves on the identical zero-response base at two and three years over all cases, but worsens one-year MAE and does not beat the expanding historical mean at any horizon. No candidate promotion; component errors and source differences remain material."
+  },
+  "remainingWork": [
+    "Original historical release dates and reporting-rule comparability remain unverified. The current evaluation is retrospective.",
+    "Investigate source/version differences with municipal accounts, including the roughly 19.5 mnkr difference in 2021 grants and net cost, before combining source series.",
+    "Frozen M2 comparison on matched targets and information is required before any promotion. No promotion or change to model mechanisms is made here."
+  ],
+  "observationsAdded": true,
+  "protocolChanged": false,
+  "note": "The longer SCB series is available and evaluated offline. New network downloads still fail in this environment, but they no longer prevent this aggregate experiment. The original annual-ledger data and all earlier run archives are preserved.",
+  "correction": "Earlier status incorrectly inferred missing data from a failed new download. A successful archived 2026-10-16 source packet was present locally and has now been hash-verified, reviewed and used.",
+  "archivedSource": {
+    "directory": "reference/scb-accounts-20261016",
+    "table": "TAB6777",
+    "observedYears": [
+      1998,
+      2025
+    ],
+    "sourceDataSha256": "2198be99b1fe18e3fc159a0c043401cc1401b20188fc05848dbaae7bf40742d0",
+    "mapping": "data/scb-budget-response-mapping.json",
+    "aggregateInput": "data/scb-budget-response-accounts.json",
+    "aggregateInputSha256": "757d8fba63b4565e484f3e6108689ea4d7ea426098a4afee9eeff5fee5baf812",
+    "sourceReconciliation": "data/scb-budget-response-accounts.json: annualReportReconciliation",
+    "notes": [
+      "Separate pension-interest column 071 included through 2010. Missing later separate cells are not observed zero pension interest.",
+      "Reported extraordinary items explain result minus the budget signal and are retained.",
+      "SCB and annual-report observations remain separate; all six overlapping annual ledgers are compared without replacing either source."
+    ]
+  },
+  "previousShortSeriesCoverageCheck": {
+    "protocol": "data/budget-response-protocol.json",
+    "protocolSha256": "54b756590314ddfb766f783a90a7ba8426eb9ea4e67edad571d23022301f0202",
+    "localReport": "runs/budget-response-20261023-coverage/report.json",
+    "localReportSha256": "28ee79c63ce11dc1ca134904268613262699667cb5b4cbdb9aac2b8b1c605cdd",
+    "exitCode": 2,
+    "status": "no_evaluable_cases",
+    "observedYears": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "fittedOrigins": 0,
+    "scoredPredictions": 0,
+    "forecastPrecisionApproved": false
+  },
+  "verification": {
+    "rawCellsReconciledYears": 28,
+    "independentRationalCoefficientChecks": 15,
+    "independentClosedFormForecastChecks": 168,
+    "maximumForecastDifferenceMnkr": 5.808686864838819e-13,
+    "offlineNormalization": "byte_identical",
+    "frozenStandaloneReplay": "report_identical_except_createdAt",
+    "normalizerSha256": "942e2bada082e0a5fbd11173ebfce4727e10ef6679768abe6dc47ee6341ac954",
+    "focusedImportTests": 9
+  }
+}

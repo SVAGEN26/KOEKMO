@@ -1,0 +1,17 @@
+{
+  "municipality":"0583",
+  "scope":"kommunen",
+  "metric":"annual_result",
+  "unit":"mnkr",
+  "source":"https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+  "printedPage":43,
+  "retrieved":"2026-10-13",
+  "evidenceType":"Forecasts retrospectively reproduced in the annual report; original release dates and contemporaneous input vintages are not yet archived",
+  "rows":[
+    {"targetYear":2025,"stage":"budget","forecast":96,"actual":105,"signedError":-9,"absoluteError":9,"releaseDate":null},
+    {"targetYear":2025,"stage":"april","forecast":89,"actual":105,"signedError":-16,"absoluteError":16,"releaseDate":null},
+    {"targetYear":2025,"stage":"august","forecast":83,"actual":105,"signedError":-22,"absoluteError":22,"releaseDate":null}
+  ],
+  "comparisonStatus":"No matched Modelica forecast. These are benchmarks to beat at the same information cutoff, not proof of model superiority. Budget is a planning reference and must be evaluated separately from in-year forecasts.",
+  "definition":"Signed error = forecast minus actual. Source table also contains rounded budget deviations; errors here are calculated from the displayed forecast and outcome, not copied from its deviation row."
+}

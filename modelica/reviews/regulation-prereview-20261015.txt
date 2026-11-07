@@ -1,0 +1,123 @@
+Oberoende förhandsgranskning av regleringsbidrag, 2026-10-15
+
+Beslut: Den föreslagna v8-regeln är sakligt försvarbar som en avgränsad,
+retrospektiv utvecklingsprövning. Inget principiellt hinder för att
+implementera och pröva det låsta protokollet. Detta är varken en
+kodgranskning, ett resultatgodkännande eller ett godkännande av den fulla
+Motala-prognosen. Inga v8-resultat har granskats i denna anteckning.
+
+Granskat protokoll: data/historical-protocol-regulation.json
+Registrerat: 2026-10-15T19:35:52.855607+00:00
+SHA256: bca8d7961c93d63f012c089251e9b135726a0aed6d78eac77048ed33170c20a4
+De tre protokollangivna källhasharna och v7:s manifesthash verifierades.
+
+Regeln och algebra
+
+R_h = r_(origin+h | decembervintage) * N_yearend,origin / 1e6.
+Enheten är mnkr per år när r är kr per invånare. Den konstanta lokala
+folkmängden är en uttrycklig prognosrestriktion för alla horisonter.
+Den är inte en observerad novemberfolkmängd eller SKR:s fullständiga
+kommunvisa prognos. Ingen extra lokal befolkningsfaktor, skattesatsfaktor
+eller indexuppräkning får multiplicera det färdiga årsbeloppet. Även
+negativa regleringsposter måste tillåtas.
+
+Skriv Gref för den oförändrade referensbidragsbanan och Ga för det
+notjusterade öppningsankaret. I v7 är kvarvarande bidrag
+H7 = (1-I0/Ga)*Gref. Därför är den explicita parentallokeringen
+(R0+F0)/(Ga-I0)*H7 = (R0+F0)/Ga*Gref.
+Att dra av denna och lägga till R_h ger exakt
+G8 = I_h + R_h + (1-(I0+R0+F0)/Ga)*Gref.
+Protokollets krav Ga-I0>0 för rekonstruktionen är rätt. Rekonstruktionen
+ska utgå från H7, inte från parentens totala bidrag. Parentallokeringarna
+är konstruerade proportionella jämförelser, inte tidigare skattade
+administrativa komponentprognoser.
+
+För 2020 är I0=491, R0=44,7 och F0=11,2. Den kvarvarande delen av
+öppningsankaret blir 213,6 mnkr för costbase (Ga=760,5) och 131,5 mnkr
+för no-repeat (Ga=678,4). Skillnaden 82,1 mnkr ska bevaras. Den senare
+policyn har redan tagit bort detta tillfälliga bidrag; ingen ny borttagning
+av 82,1 följer av regleringsregeln.
+
+Källstöd och reservationer
+
+SKR 20:57, daterat 2020-12-15, tryckt s.10 (PDF-index11), tabell8 och
+anslutande text anger att hela den gamla välfärdssatsningen ingår i
+regleringsposten från 2021. Den flyktingbaserade delen ingår inte i
+2020 års regleringspost. Det stöder att sluta bära Motala-raden 11,2
+separat när den nya regleringsbanan införs. Det innebär inte att just
+11,2 mnkr läggs till Motalas regleringspost.
+Primär kommunal återgivning av cirkuläret:
+https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2021-02-09/agenda/cirkular-2057-fran-skr-budgetforutsattningar-for-aren-2020-2023pdf?downloadMode=open
+De övriga cirkulärens regleringsrader har tidigare kontrollerats i
+reviews/revenue-sources-20261015.txt. Ingen ny källa eller revision ska
+ersätta den valda decembervintagen efter att poängen blivit kända.
+
+Samma text anger att framtida aviserade tillskott ingår i regleringsposten.
+Den kvarhållna tillfälliga 82,1-raden i costbase och dessa framtida
+tillskott har inte en fullständigt verifierad lokal kategoribrygga.
+Kvarvarande bidrag är därför fortfarande ett ärvt scenario, inte en
+certifierad prognos för alla övriga statsbidrag. Detta motiverar att
+behålla båda låsta notpolicyerna och redovisa reservationen, inte att
+välja nya borttagningar efter prognosutfallen.
+
+Utfall, avrundning och gränser
+
+Reglering plus den överförda kategorin är den lämpliga primära jämförelsen.
+Separat reglering och parentens separata F-allokering behövs också för
+att visa varför summan ändras. Framtida F=0 är en normaliserad frånvaro
+av separat kategori, inte påståendet att en nollcell har lästs i rapporten.
+
+Restutfallet O_book=G-I-R-F innehåller bokslutets bidragsavrundning.
+Det får inte tyst ersättas med summan av namngivna resterande komponenter.
+2021 ger O_book=137,8 mot namngivna 137,7 och explicit rest +0,1 mnkr.
+2025 ger O_book=241 mot namngivna 242 och explicit rest -1 mnkr.
+Exportera avrundningen separat och behåll samma utfallsdefinition i
+parent- och v8-poängen.
+
+Kräv de redan förregistrerade kontrollfallen: oförändrade P/I,
+avräkningar, kostnader och demografi; oförändrade tidigare prognoser och
+utfall; negativ regleringspost; vald källa och lokal folkmängd som
+positiva kontroller; framtida utfall och ej vald vintage som negativa
+kontroller; korrekt årsintegral; parentkopiering enligt manifest;
+full återkörning från arkiverade källor. Finansnettot får reagera i native,
+medan bokföringsjämförelsens finansnetto ska vara oförändrat.
+
+De låsta folkmängdsskillnaderna ger exakta direkta känsligheter
+r_h*deltaN/1e6. De är inte observerade approximationsfel, statistiska
+felgränser eller intervall för totalresultatet efter finansieringsdynamik.
+
+Hela Motala-målet
+
+V7 förbättrade vissa skattekomponenter men försämrade skatt plus bidrag;
+resultatvinsten berodde delvis på att intäkts- och kostnadsfel tog ut
+varandra. Därför måste v8 bedömas på regleringskomponenten, återstående
+bidrag, hela intäkten och resultatet samtidigt. En förbättrad komponent
+kan vara vetenskapligt informativ även om resultatpoängen försämras.
+Varken komponent- eller resultatvinst på dessa redan använda år är ett
+oberoende sluttest. Det återstående stora fleråriga personal- och
+kostnadsproblemet påverkas inte av att denna intäktsregel prövas.
+
+Tillägg: första kodgranskning före arkivresultat
+
+Läst regulation_forecasts.py, regulation_replay.py, macro.py,
+historical_dynamics.py:s nya gränssnitt/integraler samt de fem fokuserade
+testerna. Jag körde själv tests/test_regulation_forecasts.py via unittest:
+5 PASS på 12,533 sekunder, med PYTHONDONTWRITEBYTECODE=1.
+
+Ingen blockerande avvikelse hittades. prepare väljer redan daterade
+ursprungsindata, kräver källbelagd kategoriövergång, behåller negativa
+regleringssatser och använder en märkt lokal folkmängdsproxy. Native-
+bindningen drar av I0+R0+F0 från rätt bidragsankare och adderar det nya
+årsbeloppet utan ytterligare indexering. Årsbelopp exporteras genom
+integrerade flöden. Accounting ändrar bidrag och resultat med samma
+belopp och behåller finansnettot. Runnern använder endast manifestlistade
+parentfiler plus manifestfilen; 2025 års komponentutfall används först
+i bedömningen efter simuleringarna. Gamla utfall och prognoser skyddas
+med explicita likhetskontroller.
+
+Tester omfattar båda notpolicyerna, ursprungs- och kategorivalidering,
+negativ reglering, lokal folkmängd, årsförskjutning, framtidsmutation och
+oberoende från nationell folkmängd. Det slutliga arkivets fullständighet,
+återkörbarhet, samtliga poäng och LOO måste fortfarande granskas. Detta
+tillägg omfattar inga granskade v8-prognospoäng och ändrar inte beslutets
+avgränsning ovan.

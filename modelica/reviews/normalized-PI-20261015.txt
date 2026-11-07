@@ -1,0 +1,145 @@
+Oberoende granskning av normaliserad P/I-prövning, 2026-10-15
+
+Beslut
+Den låsta delprövningen är tekniskt reproducerad och godkänd som
+retrospektivt utvecklingsexperiment. Den nya varianten godkänns inte som
+ersättare för den tidigare Motala-prognosen eller som en validerad
+flerårsprognos. Preliminär skatt och inkomstutjämning förbättras på ett och
+två års sikt, men hela resultatet försämras tydligt på dessa horisonter.
+Detta är ett resultat om Motala, inte ett underkännande på grund av andra
+kommuner. Ingen modell-, data- eller arkivfil har ändrats av granskaren.
+
+Granskade arkiv och förhandsregel
+Första körning: runs/historical-v6-20261015-normalized-PI
+Slutlig körning: runs/historical-v6-20261015-normalized-PI-reviewed
+Föräldrakörning: slutarkivets reference, motsvarande fryst v5.
+Protokollets SHA-256:
+02b74fcb58d43deed430b9738e57f71afaa825fd36b7e15b18cb1e452cbbbc91
+Hashen stämmer med meddelandet före resultatkörningen. Regeln använder
+oförändrad referensbefolkning, regeringens medelskattekraft vid h1 och
+SKR:s prognostiserade nivå direkt vid h2/h3. Inga nivåfaktorer har skattats.
+
+Oberoende tekniska kontroller
+Samtliga 814 artefakthashar stämmer i vardera v6-arkivet. Samtliga 599
+hashar stämmer i den kopierade v5-referensen. Båda v6-versionerna har
+exakt lika evaluation.json. De gamla prognoserna och målutfallen är
+exakt bevarade. Antal mål är 5/4/3 per horisont, totalt 12 fall.
+18 nya native-körningar finns, inklusive samtliga WIP-varianter.
+24 WIP-resultatrader har tillkommit; de tidigare 72 raderna är bevarade.
+Alla nya run.mos laddar Modelica från slutarkivets egen källkopia.
+
+Jag återkörde hela slutarkivets skript från /tmp, utan PYTHONPATH, med
+arkivets kopierade reference som --parent-run och en ny utmatningskatalog:
+python3 <slutarkiv>/sources/run_normalized_revenue.py
+  --parent-run <slutarkiv>/reference
+  --out /tmp/motala-independent-v6-replay-20261015
+Återkörningen slutfördes. Hela evaluation.json är exakt identisk och
+samtliga 18 nya native.csv är byteidentiska. Även återkörningens 814
+artefakthashar stämmer. Reproduktionsfelet med ekvationsdokumentets sökväg
+är därmed stängt genom faktisk självständig återkörning.
+
+Jag räknade om MAE, bias och RMSE i de fyra relevanta score-blocken,
+samt normaliserade parskillnader och utelämningsintervall, direkt från
+prognoser och utfall. Samtliga 2 808 kontrollerade tal stämmer exakt.
+De fyra fokuserade testerna hade också återkörts självständigt före
+scoring: PASS, inklusive native framtidsmutation och positiv öppningskontroll.
+Uppgiften om 95 projekttester kommer från implementeraren; hela denna
+testsvit har inte duplicerats i denna granskning.
+
+Informationsgränser och bokföring
+prepare väljer endast komponentraden för ursprungsåret. Den nationella
+vintagen måste matcha kostnadscirkulärets datum och horisont. Uppgifterna
+för 2025 ligger separat och används som målutfall. De läcker inte in i
+prognosregeln. Öppningsbokslutens historiska tillgänglighet är fortfarande
+inte visad; daterade makroserier gör inte hela replayen till realtidsdata.
+
+TaxRate=taxRate0 kontrolleras. ReferenceGrants använder den ursprungliga
+formeln och referenceTax, aldrig den nya externa skatten. G-ankaret är
+760,5 för costbase2020 respektive 678,4 för no-repeat2020; avdraget82,1
+sker därmed en gång. De återstående intäktsdelarna är korrekt namngivna
+ärvda residualer. De har inte fått en ny administrativ prognosdefinition.
+
+Maximala kontrollerade avvikelser över körningarna:
+Balanskontroller: 5,09317e-11.
+Oförändrade kostnader/demografi mot motsvarande parent: 2,96184e-6.
+Ärvda skatte-/bidragsresidualer: 4,84256e-7 mnkr.
+Integrerade P/I-komponenter mot angiven årsregel: 8,64020e-12 mnkr.
+Identiteten deltaResultat=deltaIntäkt+deltaFinansnetto-deltaNettokostnad
+stämmer inom 7,87992e-12 mnkr.
+Finansnettots förändring ligger mellan -0,962 och +1,676 mnkr över alla
+fall och båda notpolicys. Den förklarar alltså inte resultatförsämringen
+på tiotals miljoner. Accounting-varianternas finansnetto är oförändrat.
+
+Resultat, MAE i mnkr: M2-PKV-costbase -> samma variant med normaliserad P/I
+                                     h1             h2              h3
+Preliminär skatt                 28,79->8,72     33,68->19,50     32,57->37,29
+Inkomstutjämning                 19,47->9,82     45,23->24,30     75,28->46,58
+P+I                             46,66->4,08     68,07->35,45    104,27->78,01
+Hela skatteintäkten              27,48->41,88    55,19->77,22     49,19->95,42
+Alla generella bidrag/utjämning   34,24->20,44    74,76->53,84    120,44->91,74
+Hela resultatet                 16,03->45,52    57,61->88,00    104,24->102,00
+
+H1:s låga P+I-fel är delvis felutjämning även inom dessa två komponenter:
+P har bias +8,72 och I -6,34 mnkr. Båda komponenternas egna MAE förbättras,
+så förbättringen består inte enbart av felutjämning. P/I-prognoserna är
+i princip samma för native och accounting genom den gemensamma låsta
+formeln. Deras precision är därför inte belägg för att dynamiken tillför
+denna förbättring.
+
+H3:s marginella förbättring av resultat-MAE får inte överdrivas:
+resultat-RMSE försämras från117,31 till137,06 och alla tre resultatfel
+är positiva efter ändringen. No-repeat ger resultat-MAE64,33/112,07/115,38;
+den varianten har inte selekterats bort.
+
+Småurval och utelämning av ett målår
+P, I och P+I förbättras vid h1 och h2 mot respektive parent för varje
+utelämning. Vid h3 är P+I-vinsten skör: MAE-skillnadens utelämningsintervall
+är [-71,73,+4,44] mnkr. Preliminär skatt försämras i h3-medelvärdet.
+Hela resultatets försämring vid h1 och h2 överlever samtliga utelämningar:
+[+23,48,+40,90] respektive [+17,86,+55,25] mnkr.
+H3:s resultatförändring är instabil: [-31,75,+29,47].
+Den nya variantens h1-vinst mot medelprognos och persistence är också
+skör, eftersom respektive utelämningsintervall korsar noll. Vid h3 är
+den sämre än båda dessa enkla jämförelser vid samtliga utelämningar.
+Dessa är beskrivande kontroller, inte konfidensintervall eller nya
+oberoende observationer. Upprepad utveckling på samma år begränsar
+vilka generaliseringsslutsatser som kan dras.
+
+Vad resultaten betyder för nästa Motala-steg
+Den ärvda skatteresten innehåller upprepad aktuell avräkning och tidigare
+års revisionsdifferens. För start2020/mål2021 är restens fel cirka-100,37
+mnkr, medan nya P-felet är+5,68. För start2022/mål2025 är restfelet+86,43
+mnkr. Dessa rester maskerade tidigare delar av P-felet. Intäktsfel och
+kostnadsfel har dessutom tagit ut varandra i hela resultatet. H2/h3:s
+stora kostnadsfel kvarstår, inklusive personal. Att återställa sämre
+komponentprognoser för att få en gynnsam resultatsiffra är inte motiverat.
+
+Jag tillstyrker ett separat låst avräkningsexperiment som nästa steg:
+1. Behåll v6:s P/I-regel, bidragsbana och kostnader oförändrade.
+2. Ersätt hela den ärvda skatteavräkningsresten med en uttrycklig prognos.
+   För h1: S_hat=s_(o+1|v)*N_proxy,o/1e6, där s tas från exakt samma
+   decembercirkulär och N_proxy,o är senast observerat årsslut i Motala.
+   Märk detta som proxy för 1 november samma år, aldrig observerad november.
+3. Sätt senare aktuella avräkningar och alla framtida revisionsdifferenser
+   till deklarerad förväntan noll. Källornas null ska fortfarande vara null;
+   prognosantagandet ska ligga separat. Senare befolkningsframskrivning
+   behövs inte när per-capita-beloppet i detta försök antas noll.
+4. Behåll alla fall, båda notpolicys, WIP-varianter och accountingkontroll.
+   Redovisa avräkningsfel, P-fel, hela skattens fel och hela modellens fel.
+   Kassabetalningsantaganden ger ingen ny validering av faktisk likviditet.
+
+Novemberluckan blockerar inte just denna approximation. Proxyfelet för
+h1 är exakt s*deltaN/1e6. De fem s-värdena är8,9,-317,-7,163 kr/person.
+Per100 personers avvikelse är påverkan därför högst0,0317 mnkr;
+per1000 personer högst0,317 mnkr. Detta är känslighetskoefficienter och
+villkorade scenarier, inte visade faktiska felgränser eller statistiska
+intervall. Den exakta novemberbefolkningen behövs för administrativ
+avstämning och kan senare ersätta proxyn utan omkalibrering. Den större
+osäkerheten i detta försök är den daterade avräkningsprognosen själv.
+Ingen förbättring av kommande scores är garanterad eller förutsatt.
+
+För hela Motala-målet återstår även lokala personal-/pensionsprognoser
+och bidragskomponenter. Detta nya avräkningssteg är motiverat av
+redovisningsdefinitionen och den nu synliga mekanismen, men får inte
+ersätta prövning av dessa kvarstående flerårsfel eller ett senare
+orört/prospektivt utfall före starka påståenden om prognosförmåga.

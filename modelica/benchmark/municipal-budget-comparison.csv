@@ -1,0 +1,7 @@
+year,municipalBudget,sourceOutcome,projectOutcome,candidatePrediction,budgetMinusSourceOutcome,candidateMinusSourceOutcome,budgetEvidence,budgetSource,comparisonStatus
+2020,69.2,64.8,64.8,16.80000000000009,4.4,-47.99999999999991,derived_from_retrospective_budget_variance,https://www.motala.se/media/uploads/arsredovisning-2022.pdf,descriptive_only_information_dates_not_matched
+2021,40.1,61.7,62,64.74517909029139,-21.6,3.0451790902913842,adopted_budget_reproduced_in_annual_report,https://www.motala.se/media/uploads/Arsredovisning-2021_webb.pdf,descriptive_only_information_dates_not_matched
+2022,56.3,125.1,125,61.95031368777766,-68.8,-63.149686312222336,adopted_budget_reproduced_in_annual_report,https://www.motala.se/media/uploads/arsredovisning-2022.pdf,descriptive_only_information_dates_not_matched
+2023,29,23,23,142.90503392707285,6,119.90503392707285,budget_reproduced_in_annual_report,https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf,descriptive_only_information_dates_not_matched
+2024,-15,1,1,24.149026950804526,-16,23.149026950804526,budget_reproduced_in_annual_report,https://www.motala.se/media/uploads/Arsredovisning-2024.pdf,descriptive_only_information_dates_not_matched
+2025,96,105,105,-6.513653978187451,-9,-111.51365397818745,council_decision_reproduced_in_budget_document,https://www.motala.se/media/uploads/Budget_250523.pdf,descriptive_only_information_dates_not_matched

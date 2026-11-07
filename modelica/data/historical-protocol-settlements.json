@@ -1,0 +1,62 @@
+{
+  "version": 7,
+  "registeredAt": "2026-10-15T18:59:16.811207+00:00",
+  "status": "settlement_diagnostic_locked_before_first_scoring",
+  "notBlind": "All target years have already informed development. This is not an independent final test or verified real-time replay. No promotion based only on total-result scores.",
+  "municipality": "0583",
+  "scope": "kommunen",
+  "originYears": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "horizons": [
+    1,
+    2,
+    3
+  ],
+  "eventScenarios": [
+    "costbase",
+    "no-repeat"
+  ],
+  "candidateUnchanged": "M2-PKV-costbase",
+  "parentRun": "runs/historical-v6-20261015-normalized-PI-reviewed",
+  "parentManifestSha256": "061e58d32d4629dfa20a1fa00a0d3d26fb25fe2c1a5212ac2c5838ea34d9b7b2",
+  "sources": {
+    "motala-revenue-components.json": "425bb05e72347cda813e67555faf638eb1cf880af9757ff4b623296cdebc31b6",
+    "skr-revenue-vintages.json": "4877c15a24f1eb61b5de5fddc805f800b2bb984099697cd926f7a5a29cec8f90",
+    "revenue-component-targets-2025.json": "45abfe92a65570526930b829331d3c13c19b8fed2ce556d139954651c28caa6a"
+  },
+  "populationSensitivityPersons": [
+    -1000,
+    -100,
+    0,
+    100,
+    1000
+  ],
+  "rules": [
+    "Keep all v6 preliminary-tax and income-equalisation forecasts, grants, costs, stocks, demographic/capital parameters, note policies, macro vintages and accounting assumptions. Historical own tax rate equals the reference rate.",
+    "Replace the entire inherited tax residual in v6 with a declared settlement forecast. Horizon 1 is the same December circular currentYearSettlementPerCapita for origin+1 multiplied by the opening-ledger population at year-end origin, divided by 1e6.",
+    "The year-end count is an explicit proxy for the required November 1 population in the same origin year. Never relabel it as observed November or infer population from tax outcomes.",
+    "For horizons 2 and 3 assume current-year settlements equal zero; assume all future prior-year settlement revisions equal zero. These are declared conditional expectations, not observed values or certainty. Original source nulls remain unchanged.",
+    "Bind preliminary tax to externalTax and the signed settlement separately to externalTaxSettlement, without multiplying the latter by the local tax rate. The inherited tax residual is zero in this variant; inherited grants remain unchanged.",
+    "Keep the existing same-year tax-payment assumption and zero opening net tax receivable. Result scoring does not validate actual cash settlement dates or liquidity forecasts.",
+    "Retain every previous forecast and outcome exactly, add both native note-policy variants and their accounting counterparts, and repeat both WIP alternatives at both origins with missing opening WIP.",
+    "Score combined current settlement plus prior-year revision, preliminary tax, entire tax revenue, grants, personnel, tax-and-grants, net cost, finance net and full result. Retain direct source targets for current settlement and prior revision separately. Use the same 12 cases; report MAE, bias, RMSE and leave-one-target-out stability.",
+    "Report first-year direct settlement sensitivity s*deltaN/1e6 for the preregistered -1000,-100,0,100,1000-person differences. These are hypothetical errors in the population proxy, not measured error bounds, confidence intervals or full-result intervals; later financing effects are not included in this coefficient.",
+    "No parameter fitting, score-selected horizons, blending, changed source vintages, outcome cleaning, promotion or claim of independent final validation. The prior review approved the mechanism to test, not its eventual accuracy."
+  ],
+  "requiredChecks": [
+    "all_parent_hashes_valid",
+    "prior_predictions_and_outcomes_preserved_exactly",
+    "native_balance_and_revenue_identities",
+    "unchanged_P_I_grants_costs_demography_within_1e-3",
+    "separate_signed_settlement_integral_matches_declared_annual_path",
+    "source_nulls_preserved_and_future_information_mutations_invariant",
+    "positive_controls_for_selected_settlement_and_opening_population",
+    "accounting_finance_net_unchanged",
+    "reproduction_from_saved_sources"
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "version": 2,
+  "municipality": "0583",
+  "baseYear": 2025,
+  "ageGroups": [
+    "0–6",
+    "7–15",
+    "16–18",
+    "19–64",
+    "65+"
+  ],
+  "population": [
+    2893.4633162567516,
+    4628.141565636663,
+    1574.707920906836,
+    23014.73119451077,
+    11019.956002688981
+  ],
+  "tax": 2330,
+  "grants": 987,
+  "cashCost": 3023,
+  "depreciation": 180,
+  "financialIncome": 15,
+  "interestExpense": 21,
+  "publishedResult": 105,
+  "debt": 1040,
+  "cash": 81,
+  "assets": 2997,
+  "births": 334,
+  "deaths": 468,
+  "investment": 413,
+  "taxRate": 21.7,
+  "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+  "notes": [
+    "All financial base values refer to kommunen. Assets are buildings/infrastructure plus machinery, excluding work in progress.",
+    "Net operating cost excluding depreciation = reported 3203 minus 180 = 3023. Rounded gross expenses 3775 minus operating revenue 751 give 3024; the -1 mnkr component reconciliation is explicit. cashCost is a legacy field name for accrual net operating cost, not observed cash flow.",
+    "2330 + 987 - 3203 + 15 - 21 - 4 = 104; published result is 105 after rounding. The 25 mnkr total financial expense is split into 21 interest and 4 remaining expense (including a rounding residual).",
+    "Births and deaths are observed; mortality by age and age-boundary flows are modelling assumptions.",
+    "Published 2025 cohort counts sum to 43,139, whereas published total is 43,131. Cohorts are proportionally reconciled to the published total; observedPopulation preserves the original counts. No cause is assumed for this discrepancy.",
+    "Interest-rate default is a scenario proxy: 21 mnkr interest divided by closing bank debt 1040 mnkr; it is not a reported average borrowing rate. Pension cash payments default to pension expense until a separate payment path is supplied."
+  ],
+  "assumptions": {
+    "years": 8,
+    "taxGrowth": 3.5,
+    "grantGrowth": 2.0,
+    "wageGrowth": 3.0,
+    "priceGrowth": 2.0,
+    "productivity": 0.0,
+    "migrationDelta": 0,
+    "birthChange": 0,
+    "interestRate": 2.019230769230769,
+    "taxRate": 21.7,
+    "investment": 413,
+    "adjustment": 0.5,
+    "equalisationOffset": 0.95,
+    "fixedShare": 0.25,
+    "sectorCosts": [
+      1250,
+      600,
+      1173
+    ],
+    "migrationWeights": [
+      0.15,
+      0.12,
+      0.03,
+      0.65,
+      0.05
+    ],
+    "educationWeights": [
+      0.25,
+      0.6,
+      0.15
+    ],
+    "populationRevenueElasticity": 1.0,
+    "pensionGrowth": 2.0,
+    "operatingRevenueGrowth": 2.0,
+    "pensionExpensePath": null,
+    "pensionCashPaymentsPath": null
+  },
+  "assumptionStatus": "Illustrative, not SKR or Motala forecasts. Aggregate operating components are sourced; service weights, adaptation, equalisation, revenue growth, pension growth and pension cash payments require calibration. Pension expenses are not reduced by productivity. 65+ remains too broad for production care forecasts.",
+  "skr": {
+    "status": "identified-not-imported",
+    "vintage": "2026-10-06",
+    "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d572/1791283712510/Prognosunderlag-K-2026-2033-26028.xlsm"
+  },
+  "reportedPopulation": 43131,
+  "observedPopulation": [
+    2894,
+    4629,
+    1575,
+    23019,
+    11022
+  ],
+  "operatingAccounts": {
+    "payrollExcludingPensions": 2288,
+    "pensionExpense": 190,
+    "otherOperatingExpense": 1297,
+    "operatingRevenue": 751,
+    "netCostRoundingAdjustment": -1,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+    "printedPages": [
+      47,
+      52,
+      53
+    ],
+    "definition": "Positive expense magnitudes. Other operating expense = 3775 - 2288 - 190. Reported net operating cost excluding depreciation = 3203 - 180 = 3023; rounded gross components give 3024, reconciled by -1 mnkr. These are accrual expenses and revenues, not cash payments."
+  },
+  "otherFinancialExpense": 4
+}

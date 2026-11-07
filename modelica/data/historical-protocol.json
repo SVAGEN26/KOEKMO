@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "registeredAt": "2026-10-15",
+  "status": "development_protocol_before_first_native_historical_run",
+  "notBlind": "Motala outcomes and M1 errors were already examined. No claim of untouched final holdout.",
+  "scope": "kommunen",
+  "primaryMetric": "result",
+  "horizons": [1, 2, 3],
+  "originYears": [2020, 2021, 2022, 2023, 2024],
+  "candidate": "M2 with analytically corrected annual opening rates",
+  "comparators": ["frozen M2-v2", "M1", "persistence", "fixed 0.5 damped trend"],
+  "parameters": {
+    "wageGrowth": 0.03, "priceGrowth": 0.02, "productivityGrowth": 0,
+    "taxBaseGrowth": 0.035, "grantGrowth": 0.02, "feeGrowth": 0.02, "pensionGrowth": 0.02,
+    "sectorShares": [0.3333333333333333, 0.3333333333333333, 0.3333333333333333],
+    "hiringYears": [1, 1, 1], "reductionYears": [3, 3, 3],
+    "fixedCostShare": [0.15, 0.15, 0.15], "facilityCostShare": [0.25, 0.25, 0.25],
+    "constructionYears": [2, 2, 2], "closureYears": [8, 8, 8],
+    "planningYears": [2, 2, 2], "physicalLifeYears": [40, 40, 40],
+    "compensationPerFTE": [0.65, 0.65, 0.65],
+    "incomeWeights": [0, 0, 0, 1, 0.55], "taxLagYears": 1, "equalisationOffset": 0.95,
+    "rateAdjustmentYears": 3, "liquidityYears": 0.25, "repaymentYears": 0.25,
+    "limitStaffChanges": false, "limitExternalService": false,
+    "automaticInvestment": false, "allowClosure": true,
+    "staffReductionCost": [0, 0, 0], "capacityClosureCost": [0, 0, 0]
+  },
+  "missingWIP": {
+    "nominal": 0,
+    "sensitivityFractionsOfTotalTangibleAssets": [0.1, 0.2],
+    "interpretation": "Scenario assumptions only, not observed zero, confidence bounds or fitted values. Main report must show known-WIP subset separately."
+  },
+  "rules": [
+    "No outcome-dependent parameter or candidate search. Keep unfavorable cases.",
+    "Only observations with period <= origin enter the forecast; source revisions are disclosed separately.",
+    "No 2025 money, population or derived demand defaults may fill historical opening values.",
+    "Equal sector shares are fixed uncalibrated assumptions, replacing the 2025-specific allocation.",
+    "Fixed growth assumptions are tested as assumptions; they are not historical SKR forecasts.",
+    "Every run saves resolved parameters, input hash, native log and annual integrals.",
+    "Report identical target sets, signed component errors, MAE, RMSE, bias and leave-one-year-out sensitivity.",
+    "Budgets remain a separately labelled descriptive benchmark until matching information dates are verified.",
+    "A historical win alone does not establish generalisation with five development targets."
+  ]
+}

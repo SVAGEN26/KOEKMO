@@ -1,0 +1,140 @@
+Oberoende aktuell bedömning av hela Motala-målet, 2026-10-15
+
+Beslut: Målet om en tillräckligt belagd användbar Motala-prognos är inte
+uppnått. Modellens teknik och de granskade delprövningarna är godkända
+inom sina avgränsningar. Inget kandidatbyte eller precisionsgodkännande
+följer av de senaste bidragsdiagnoserna. Detta gäller Motala i första
+hand; generell kommunöverförbarhet och den äldre auditfilens starkare
+SKR-överlägsenhetsformulering används inte som nya godkännandekrav.
+
+Underlag
+
+Läst aktuella grant-forecast-discovery.json, local-forecast-catalog.json,
+motala-personnel-sources.json och dynamics-evidence.json, bidrags- och
+kostnadsdiagnoserna, v8-granskningen, aktuell dokumentation samt de
+centrala service-, intäkts-, kapital- och finansieringsmekanismerna.
+Inga nya modeller, parametrar, prognoser eller poäng har skapats.
+
+Evidensen motiverar inte fler fria parametersökningar
+
+V8 costbase har resultat-MAE 33,69/45,45/92,02 mnkr vid ett/två/tre år.
+Historiskt medel har 51,47/54,09/32,43 och persistence58,92/76,28/40,87.
+Tidigare costbase har16,03/57,61/104,24. De olika varianternas styrkor
+överlappar inte till en enhetligt välbelagd ny vinnare. Treårsproblemet
+kvarstår, och val av bästa variant per horisont på dessa redan använda
+år skulle innebära ytterligare modellval på samma utvecklingsdata.
+
+De signerade felen är avgörande: v8:s treårsintäkt underskattas i medel
+med165,55 mnkr och nettokostnaden med199,19. Personalkostnadernas MAE
+är137,04 mnkr. Bidragsdiagnosen visar både kraftig överskattning av den
+kvarhållna2020-posten och underskattade senare utjämnings-/bidragskategorier.
+En lägre resultatpoäng kan alltså uppstå genom att fel tar ut varandra.
+
+Jag har inte identifierat någon återstående verifierad räkne-, tecken-
+eller kodrättning som med nuvarande årsdata rimligen undanröjer dessa
+problem. Detta är ingen utsaga om att alla tänkbara modeller har prövats.
+Det betyder att nästa materiella precisionsförbättring behöver motiveras
+av nya identifierande observationer eller daterade prognosunderlag,
+inte av en annan fritt vald funktion som träffar samma tolv fall bättre.
+
+Det finns fortfarande förenklade mekanismer: fast relativ skattekraft,
+normaliserad befolkning, gemensam personalindexering, grova servicegrupper,
+illustrativa anpassningstider och exponentiell avskrivning. Deras
+förenkling är inte i sig ett oupptäckt bokföringsfel. Till exempel kan
+rak avskrivning av investeringsårgångar vara mer realistisk än nuvarande
+proxy, men tillgångssaldo och årets avskrivning identifierar inte den
+befintliga portföljens ålder och återstående livslängder. Att välja dessa
+för att ta bort den observerade avskrivningsbiasen vore anpassning.
+Samma problem gäller lokal bemanning, pensioner och anpassningstider.
+
+Vad befintliga källor fortfarande kan och inte kan göra
+
+De politiska budgetförslagen2020 och2022 innehåller lokala framåtblickande
+belopp. De kan användas i tydligt märkta partiella jämförelser eller som
+källspår. De är inte en komplett serie av antagna planer, inte automatiskt
+kommunens faktiskt använda prognoser och inte ett nytt oberoende test.
+Att nu välja dem för vissa ursprung skulle inte lösa informationsjämförbarhet
+eller fullmålets evidensbrist.
+
+De nytillkomna cirkulären22:57/22:58/23:60 ger en konkret väg till rätt
+bidragsdefinitioner och administrativa underlag, men de lästa cirkulären
+innehåller inte de saknade Motala-raderna. Några nya lokala belopp kan
+därför ännu inte föras in med stöd av dessa dokument ensamma.
+
+SCB:s aktuella tabellförteckning kontrollerades självständigt. Kommun-
+tabellerna2022 och2023 anges korrigerade2023-02-01;2025 anges korrigerad
+2025-02-10. LSS-tabellerna2021–2025 är reviderade under respektive mars.
+En aktuell tabell får därför inte utan originalversionskontroll behandlas
+som en decembervintage. Även tabeller utan uttrycklig rättelsemarkering
+behöver version och rad verifierade innan historisk användning.
+Primärkälla:
+https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/
+
+Projektledaren har dessutom rapporterat återfunna kommunbilagor till
+25:62, daterade2025-12-22. Den nya PDF:en har inte självständigt lästs
+i denna granskning. Om versionen och Motala-raden verifieras kan den
+arkiveras för en senare framåtblickande prognos. Den kan inte ersätta
+saknade2020–2024-vintager eller ge nya historiska poäng för dessa starter.
+
+Prioriterat minsta nya underlag
+
+1. Lokal personalkostnad: en daterad Motala-prognos med årsbelopp och
+   tydlig omfattning. Antingen jämförbar total personal, eller separata
+   löner/icke-pensionsrelaterade avgifter, driftspension och särskild
+   löneskatt. Redovisningens öppningsbelopp måste kunna delas på samma
+   sätt. KPA är en möjlig leverantör, inte ett obligatoriskt filformat
+   eller varumärke; motsvarande verifierat kommunalt underlag räcker.
+   Prognosen behöver publicerings-/beräkningsdag, målår och uppgift om
+   vilka bemannings- och policybeslut som ingår. För mekanismskattning
+   behövs dessutom observerade årsarbetskrafter och relevanta volymer.
+
+2. Kommunvisa administrativa bidrag: originalversionen av exempelvis
+   SCB:s decembertabeller eller SKR:s då publicerade arbetsbok, med kod
+   0583, kostnadsutjämning och LSS samt definition/enhet. För fastighets-
+   avgiften behövs aktuell avgiftsperiods uppskattning, den tidigare
+   uppskattning som Motala faktiskt bokförde och separat revision.
+   Bilaga5:s standardkorrigering får användas som lokal uppgift först
+   när dess förutsättning har verifierats eller märkts som antagande.
+   Andra generella bidrag behöver program, beslutsdatum och giltighetstid.
+   En ny regel ska välja senaste tillåtna källa per komponent enligt
+   samma förhandsbestämda princip för samtliga ursprung.
+
+3. Informationsdatum och jämförelse: originalbokslutens tillgänglighet,
+   vald prognosdag samt de då tillgängliga makro- och lokala prognoserna.
+   Originalvintager löser inte ensamma att öppningsårets färdiga bokslut
+   normalt publiceras efter årsskiftet. Ett verkligt årsslutsförsök måste
+   utgå från då tillgängliga bokslut/interimsdata; ett försök efter
+   bokslutspubliceringen måste använda den senare informationsdagen
+   öppet. Jämförelserna måste ha samma tillgängliga information och
+   motsvarande mått. En budgetplan är fortsatt skild från en prognos.
+
+4. För påståenden om avskrivning, skuld och likviditet: daterad investerings-
+   och driftsättningsplan, återstående avskrivningsunderlag, låneportfölj,
+   pensionsbetalningar och relevanta fordrings-/skuldsaldon. Dessa kan
+   prioriteras efter de större personal- och intäktsfelen om det primära
+   måttet är årsresultatet. Exakt novemberbefolkning är värdefull för
+   administrativ avstämning men är inte det största återstående problemet
+   och bör inte ensamt stoppa arbete med de prioriterade komponenterna.
+
+För första välavgränsade nya delprövningen räcker ett korrekt avgränsat
+och daterat nytt komponentunderlag; man behöver inte invänta alla filer
+innan någon fortsatt analys får ske. Saknade ursprung och horisonter måste
+då stå kvar som luckor. Ett enstaka återfunnet fall får inte utges för att
+uppfylla hela prognosmålet eller få bestämma nya tillväxtparametrar.
+
+Rekommenderat nästa arbete
+
+Nästa materiella steg är att få fram och versionskontrollera prioritet1
+och2 genom åtkomliga originalfiler eller likvärdiga daterade lokala
+underlag. Fortsatt kodutbyggnad och ytterligare variationer på befintliga
+årsbelopp är för närvarande inte den mest motiverade vägen till fullmålet.
+Källregistrering av den senare25:62-versionen och förberedelse av ett
+framtida informationspaket kan göras parallellt utan att ändra arkiven.
+
+En ny låst prövning måste fortfarande redovisa komponenter, totalresultat,
+enkla baslinjer och alla avsedda horisonter. Efter fortsatt utveckling på
+de redan använda åren behövs ännu oanvänd Motala-evidens, exempelvis en
+förhandslåst senare prognos eller återfunna tidigare år som inte används
+för ytterligare modellval. En intern återkörning eller LOO på samma fem
+målår ersätter inte sådan evidens. Det fulla målet hålls öppet; den
+tekniska kvaliteten får inte användas som ersättning för saknad precision.

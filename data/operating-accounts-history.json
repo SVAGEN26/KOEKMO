@@ -1,0 +1,14 @@
+{
+  "municipality":"0583",
+  "scope":"kommunen",
+  "unit":"mnkr; positive expense magnitudes",
+  "source":"https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+  "printedPages":[47,52,53],
+  "retrieved":"2026-10-13",
+  "rows":[
+    {"year":2024,"payrollExcludingPensions":2258,"pensionExpense":275,"otherOperatingExpense":1269,"grossOperatingExpense":3802,"operatingRevenue":774,"netCostRoundingAdjustment":0,"netOperatingCost":3028},
+    {"year":2025,"payrollExcludingPensions":2288,"pensionExpense":190,"otherOperatingExpense":1297,"grossOperatingExpense":3775,"operatingRevenue":751,"netCostRoundingAdjustment":-1,"netOperatingCost":3023}
+  ],
+  "derivations":"Other operating expense = gross operating expense minus payroll excluding pensions minus pension expense. Net operating cost excludes depreciation. The reported 2025 total differs by -1 from rounded components; the difference is recorded rather than silently assigned to a service.",
+  "comparability":"Both years are from the same 2025 report. The 2023 report labels its pension-cost series as excluding payroll tax; those values are intentionally not combined without a definition reconciliation."
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "moneyUnit": "mnkr",
+  "retrievedAt": "2026-10-15",
+  "selectionRule": "Itemised entries in the municipal column of note 10 (comparison-disturbing items) for every origin. Separate named past provision charges and disposal losses from temporary receipts. No outcome-based size threshold or selection. This is not a complete inventory of every non-recurring item in the accounts.",
+  "futureRule": "costbase excludes recognised exceptional charges from the future recurring cost base and leaves receipt assumptions unchanged. no-repeat additionally assumes no renewal of all temporary receipts listed in note 10. Neither rule asserts that future provision payments, remeasurements or new government decisions are zero.",
+  "sources": {
+    "ar2021": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2021_webb.pdf",
+      "reportYear": 2021,
+      "publicationDate": null,
+      "locator": "Printed pages 41–43, notes 2, 3, 4, 7 and 10; municipality columns 2021/2020",
+      "access": "Indexed primary PDF tables and text, not a locally saved PDF.",
+      "conflicts": "Note 10 total labels appear interchanged; 78.6 combines receipt20 and costs58.6 and is not a signed net. Itemised signs are established from the nature of the transactions, notes2/3/4/7, and confirmed for2021 by report2022 note10 net-38.6. For2020 note11 recognised pandemic compensation16.1 differs from note10 exceptional15.7; this experiment uses the explicitly named note10 amount15.7 without adding note11."
+    },
+    "ar2022": {
+      "url": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "reportYear": 2022,
+      "publicationDate": null,
+      "locator": "Printed pages 41–43, notes2 and10; municipality column2022",
+      "access": "Primary PDF text read through web tool."
+    },
+    "ar2023": {
+      "url": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf",
+      "reportYear": 2023,
+      "publicationDate": null,
+      "locator": "Printed pages38,47,52 and54; note10 municipality2023, notes4 and20",
+      "access": "Primary PDF text read through web tool.",
+      "conflicts": "The exceptional result charge26 is not the total provision addition38, the net stock change, or cash paid6. Only26 is removed from the recurring operating base; no opening liability or cash balance is removed."
+    },
+    "ar2024": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "reportYear": 2024,
+      "publicationDate": null,
+      "locator": "Printed page52, note10, municipality2024 column; current-year deponi and total both0",
+      "access": "Indexed primary PDF table, not a locally saved PDF."
+    }
+  },
+  "rows": [
+    {
+      "originYear": 2020,
+      "sourceId": "ar2021",
+      "reviewComplete": true,
+      "sourceNoteNet": 129.4,
+      "notes": "Later comparative column, not a verified real-time opening source. Pandemic renewal and replacement by other general grants remain unknown at the model cutoff.",
+      "items": [
+        {"id": "2020-extra-general-grants", "label": "Extra tillskott generella statsbidrag", "kind": "temporary_receipt", "field": "grants", "amount": 82.1},
+        {"id": "2020-sick-pay", "label": "Ersättning sjuklönekostnader", "kind": "temporary_receipt", "field": "operatingRevenue", "amount": 31.6},
+        {"id": "2020-pandemic-extra-costs", "label": "Ersättning merkostnader med anledning av coronapandemin", "kind": "temporary_receipt", "field": "operatingRevenue", "amount": 15.7}
+      ]
+    },
+    {
+      "originYear": 2021,
+      "sourceId": "ar2021",
+      "reviewComplete": true,
+      "sourceNoteNet": null,
+      "notes": "Use itemised signs; note10 aggregate labels/sign convention conflict. Later report2022 confirms signed net-38.6, but supplies no additional forecast input.",
+      "items": [
+        {"id": "2021-sick-pay", "label": "Ersättning sjuklönekostnader", "kind": "temporary_receipt", "field": "operatingRevenue", "amount": 20.0},
+        {"id": "2021-pfas", "label": "Avsättning PFAS", "kind": "recognised_exceptional_cost", "field": "otherExpense", "amount": 30.0},
+        {"id": "2021-gmv-disposal", "label": "Reaförlust försäljning Gamla Motala Verkstad", "kind": "recognised_exceptional_cost", "field": "otherExpense", "amount": 28.6}
+      ]
+    },
+    {
+      "originYear": 2022,
+      "sourceId": "ar2022",
+      "reviewComplete": true,
+      "sourceNoteNet": 17.4,
+      "notes": "Only sick-pay reimbursement is listed for current2022; prior PFAS and disposal charges are comparative2021 entries, not new2022 charges.",
+      "items": [
+        {"id": "2022-sick-pay", "label": "Ersättning sjuklönekostnader", "kind": "temporary_receipt", "field": "operatingRevenue", "amount": 17.4}
+      ]
+    },
+    {
+      "originYear": 2023,
+      "sourceId": "ar2023",
+      "reviewComplete": true,
+      "sourceNoteNet": -26.0,
+      "notes": "Note10 shows magnitude26; page38 identifies a cost and the result statement includes it in operating costs. The provision's later cash and valuation flows are not inferred here.",
+      "items": [
+        {"id": "2023-landfill", "label": "Avsättning deponi, jämförelsestörande resultateffekt", "kind": "recognised_exceptional_cost", "field": "otherExpense", "amount": 26.0}
+      ]
+    },
+    {
+      "originYear": 2024,
+      "sourceId": "ar2024",
+      "reviewComplete": true,
+      "sourceNoteNet": 0,
+      "notes": "Verified zero for the stated note10 scope, not proof that all accounts are recurring. The2023 comparative26 is not a2024 adjustment.",
+      "items": []
+    }
+  ]
+}

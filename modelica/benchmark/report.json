@@ -1,0 +1,42 @@
+{
+  "status": "insufficient_matched_data",
+  "comparisons": {
+    "skr": {
+      "status": "insufficient_matched_data",
+      "matchedCases": 0,
+      "scores": [],
+      "cases": []
+    },
+    "persistence": {
+      "status": "insufficient_matched_data",
+      "matchedCases": 0,
+      "scores": [],
+      "cases": []
+    },
+    "trend": {
+      "status": "insufficient_matched_data",
+      "matchedCases": 0,
+      "scores": [],
+      "cases": []
+    },
+    "reference": {
+      "status": "insufficient_matched_data",
+      "matchedCases": 0,
+      "scores": [],
+      "cases": []
+    },
+    "municipal": {
+      "status": "insufficient_matched_data",
+      "matchedCases": 0,
+      "scores": [],
+      "cases": []
+    }
+  },
+  "matchedCases": 0,
+  "skippedCases": [],
+  "unusedOutcomes": 0,
+  "scores": [],
+  "cases": [],
+  "forecastSuperiorityProven": false,
+  "interpretation": "Descriptive paired errors only. Metadata checks do not establish genuine historical availability or independent held-out model selection."
+}

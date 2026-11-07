@@ -1,0 +1,62 @@
+# Local tooling, hosting metadata and credentials
+/.local/
+.agents/
+.codex/
+.aws/
+.openai/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python and Node environments and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Native compiler output and local archives
+/build/
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.exe
+*_res.mat
+*_res.csv
+*_init.xml
+*_info.json
+*_prof.json
+*.log
+*.tar.gz
+*.zip
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Windows download markers
+*:Zone.Identifier
+.claude/
+
+# SKR's workbooks are SKR's material and are not redistributed. Download the
+# original from SKR (data/skr-motala/README.md); the scripts verify its SHA-256.
+data/*.xlsm
+data/skr-motala/*.xlsx
+data/skr-motala/*.xlsm
+data/skr-motala/recalculated/
+# Original budget PDF with its images; the archive keeps an image-free copy.
+data/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf

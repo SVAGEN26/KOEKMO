@@ -1,0 +1,385 @@
+﻿municipality,year,kpi,title,gender,value,status,count,isdeleted
+0583,2010,N11004,"Nettokostnad förskola, kr/inv",T,4184.864736,,1,False
+0583,2011,N11004,"Nettokostnad förskola, kr/inv",T,4462.297982,,1,False
+0583,2012,N11004,"Nettokostnad förskola, kr/inv",T,4671.364081,,1,False
+0583,2013,N11004,"Nettokostnad förskola, kr/inv",T,5133.880105,,1,False
+0583,2014,N11004,"Nettokostnad förskola, kr/inv",T,5128.231037,,1,False
+0583,2015,N11004,"Nettokostnad förskola, kr/inv",T,5648.975596,,1,False
+0583,2016,N11004,"Nettokostnad förskola, kr/inv",T,5907.439086,,1,False
+0583,2017,N11004,"Nettokostnad förskola, kr/inv",T,6393.671496,,1,False
+0583,2018,N11004,"Nettokostnad förskola, kr/inv",T,6838.350081,,1,False
+0583,2019,N11004,"Nettokostnad förskola, kr/inv",T,6768.254986,,1,False
+0583,2020,N11004,"Nettokostnad förskola, kr/inv",T,6873.281393,,1,False
+0583,2021,N11004,"Nettokostnad förskola, kr/inv",T,6978.179237,,1,False
+0583,2022,N11004,"Nettokostnad förskola, kr/inv",T,7175.974204,,1,False
+0583,2023,N11004,"Nettokostnad förskola, kr/inv",T,7319.795097,,1,False
+0583,2024,N11004,"Nettokostnad förskola, kr/inv",T,7682.496265,,1,False
+0583,2025,N11004,"Nettokostnad förskola, kr/inv",T,7560.919061,,1,False
+0583,2010,N11006,"Kostnad förskola, kr/inv",T,5053.912525,,1,False
+0583,2011,N11006,"Kostnad förskola, kr/inv",T,5306.517166,,1,False
+0583,2012,N11006,"Kostnad förskola, kr/inv",T,5526.42893,,1,False
+0583,2013,N11006,"Kostnad förskola, kr/inv",T,5991.466566,,1,False
+0583,2014,N11006,"Kostnad förskola, kr/inv",T,5989.801673,,1,False
+0583,2015,N11006,"Kostnad förskola, kr/inv",T,6525.138102,,1,False
+0583,2016,N11006,"Kostnad förskola, kr/inv",T,6905.081141,,1,False
+0583,2017,N11006,"Kostnad förskola, kr/inv",T,7465.774185,,1,False
+0583,2018,N11006,"Kostnad förskola, kr/inv",T,7880.307643,,1,False
+0583,2019,N11006,"Kostnad förskola, kr/inv",T,7822.361642,,1,False
+0583,2020,N11006,"Kostnad förskola, kr/inv",T,7995.898258,,1,False
+0583,2021,N11006,"Kostnad förskola, kr/inv",T,8155.172414,,1,False
+0583,2022,N11006,"Kostnad förskola, kr/inv",T,8297.132272,,1,False
+0583,2023,N11006,"Kostnad förskola, kr/inv",T,8505.465606,,1,False
+0583,2024,N11006,"Kostnad förskola, kr/inv",T,8890.150557,,1,False
+0583,2025,N11006,"Kostnad förskola, kr/inv",T,8754.492129,,1,False
+0583,2010,N11008,"Kostnad förskola, kr/inskrivet barn",T,112516.264261,,1,False
+0583,2011,N11008,"Kostnad förskola, kr/inskrivet barn",T,115454.356307,,1,False
+0583,2012,N11008,"Kostnad förskola, kr/inskrivet barn",T,118714.7255,,1,False
+0583,2013,N11008,"Kostnad förskola, kr/inskrivet barn",T,127560.938683,,1,False
+0583,2014,N11008,"Kostnad förskola, kr/inskrivet barn",T,127994.978659,,1,False
+0583,2015,N11008,"Kostnad förskola, kr/inskrivet barn",T,139312.266733,,1,False
+0583,2016,N11008,"Kostnad förskola, kr/inskrivet barn",T,145849.609375,,1,False
+0583,2017,N11008,"Kostnad förskola, kr/inskrivet barn",T,154344.64752,,1,False
+0583,2018,N11008,"Kostnad förskola, kr/inskrivet barn",T,159382.87037,,1,False
+0583,2019,N11008,"Kostnad förskola, kr/inskrivet barn",T,156350.572082,,1,False
+0583,2020,N11008,"Kostnad förskola, kr/inskrivet barn",T,158609.545455,,1,False
+0583,2021,N11008,"Kostnad förskola, kr/inskrivet barn",T,162671.386161,,1,False
+0583,2022,N11008,"Kostnad förskola, kr/inskrivet barn",T,167505.540166,,1,False
+0583,2023,N11008,"Kostnad förskola, kr/inskrivet barn",T,175602.92729,,1,False
+0583,2024,N11008,"Kostnad förskola, kr/inskrivet barn",T,189220.156556,,1,False
+0583,2025,N11008,"Kostnad förskola, kr/inskrivet barn",T,195136.950904,,1,False
+0583,2010,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,6.02052766,,1,False
+0583,2011,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.72999192,,1,False
+0583,2012,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.78371419,,1,False
+0583,2013,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.68518519,,1,False
+0583,2014,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.9940224,,1,False
+0583,2015,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.82362205,,1,False
+0583,2016,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.4622093,,1,False
+0583,2017,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.22162162,,1,False
+0583,2018,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.51830986,,1,False
+0583,2019,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.35695538,,1,False
+0583,2020,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.72829132,,1,False
+0583,2021,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.424,,1,False
+0583,2022,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.59610028,,1,False
+0583,2023,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.57758621,,1,False
+0583,2024,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.55891239,,1,False
+0583,2025,N11010,"Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",T,5.51361995,,1,False
+0583,2016,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2053.0,,1,False
+0583,2017,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2118.0,,1,False
+0583,2018,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2140.0,,1,False
+0583,2019,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2183.0,,1,False
+0583,2020,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2191.0,,1,False
+0583,2021,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2175.0,,1,False
+0583,2022,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2157.0,,1,False
+0583,2023,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,2069.0,,1,False
+0583,2024,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,1983.0,,1,False
+0583,2025,N11807,"Inskrivna barn på förskola, hemkommun, antal",T,1846.0,,1,False
+0583,2010,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,9246.42424,,1,False
+0583,2011,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,9232.540068,,1,False
+0583,2012,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,9201.695655,,1,False
+0583,2013,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,9429.627871,,1,False
+0583,2014,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,10007.143528,,1,False
+0583,2015,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,10477.099503,,1,False
+0583,2016,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,11182.347773,,1,False
+0583,2017,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,11867.987783,,1,False
+0583,2018,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,12501.018609,,1,False
+0583,2019,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,12581.228676,,1,False
+0583,2020,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,12735.128322,,1,False
+0583,2021,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,13183.656179,,1,False
+0583,2022,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,13589.347786,,1,False
+0583,2023,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,14949.002927,,1,False
+0583,2024,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,15254.430525,,1,False
+0583,2025,N15025,"Kostnad grundskola F-9, hemkommun, kr/inv",T,15536.806473,,1,False
+0583,2010,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,85063.859006,,1,False
+0583,2011,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,86752.48478,,1,False
+0583,2012,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,87516.445252,,1,False
+0583,2013,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,90575.526183,,1,False
+0583,2014,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,93761.338617,,1,False
+0583,2015,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,94373.08419,,1,False
+0583,2016,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,98669.250382,,1,False
+0583,2017,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,103017.540362,,1,False
+0583,2018,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,107867.272368,,1,False
+0583,2019,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,108588.932806,,1,False
+0583,2020,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,110357.625099,,1,False
+0583,2021,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,113354.267152,,1,False
+0583,2022,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,115993.558461,,1,False
+0583,2023,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,127623.975009,,1,False
+0583,2024,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,130305.12468,,1,False
+0583,2025,N15027,"Kostnad grundskola F-9, hemkommun, kr/elev",T,133330.28253,,1,False
+0583,2010,N15028,"Nettokostnad grundskola F-9, kr/inv",T,9021.189369,,1,False
+0583,2011,N15028,"Nettokostnad grundskola F-9, kr/inv",T,9080.113799,,1,False
+0583,2012,N15028,"Nettokostnad grundskola F-9, kr/inv",T,9120.309551,,1,False
+0583,2013,N15028,"Nettokostnad grundskola F-9, kr/inv",T,9387.892004,,1,False
+0583,2014,N15028,"Nettokostnad grundskola F-9, kr/inv",T,9746.146254,,1,False
+0583,2015,N15028,"Nettokostnad grundskola F-9, kr/inv",T,10104.025359,,1,False
+0583,2016,N15028,"Nettokostnad grundskola F-9, kr/inv",T,10298.603726,,1,False
+0583,2017,N15028,"Nettokostnad grundskola F-9, kr/inv",T,10834.301591,,1,False
+0583,2018,N15028,"Nettokostnad grundskola F-9, kr/inv",T,11253.645249,,1,False
+0583,2019,N15028,"Nettokostnad grundskola F-9, kr/inv",T,11304.215419,,1,False
+0583,2020,N15028,"Nettokostnad grundskola F-9, kr/inv",T,11294.133822,,1,False
+0583,2021,N15028,"Nettokostnad grundskola F-9, kr/inv",T,11868.86935,,1,False
+0583,2022,N15028,"Nettokostnad grundskola F-9, kr/inv",T,12300.882729,,1,False
+0583,2023,N15028,"Nettokostnad grundskola F-9, kr/inv",T,13459.72832,,1,False
+0583,2024,N15028,"Nettokostnad grundskola F-9, kr/inv",T,13696.7475,,1,False
+0583,2025,N15028,"Nettokostnad grundskola F-9, kr/inv",T,13985.346966,,1,False
+0583,2010,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.72360248,,1,False
+0583,2011,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.95154331,,1,False
+0583,2012,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.84149184,,1,False
+0583,2013,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.26701231,,1,False
+0583,2014,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.88941548,,1,False
+0583,2015,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,12.89358845,,1,False
+0583,2016,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.93480229,,1,False
+0583,2017,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.67775528,,1,False
+0583,2018,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,12.00653983,,1,False
+0583,2019,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.86349476,,1,False
+0583,2020,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,12.0179502,,1,False
+0583,2021,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,12.36958444,,1,False
+0583,2022,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,12.23776224,,1,False
+0583,2023,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.93431757,,1,False
+0583,2024,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.61280759,,1,False
+0583,2025,N15034,"Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",T,11.62251656,,1,False
+0583,2010,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4069.0,,1,False
+0583,2011,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,3950.0,,1,False
+0583,2012,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,3956.0,,1,False
+0583,2013,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,3904.0,,1,False
+0583,2014,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4236.0,,1,False
+0583,2015,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4353.0,,1,False
+0583,2016,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4479.0,,1,False
+0583,2017,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4578.0,,1,False
+0583,2018,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4565.0,,1,False
+0583,2019,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4564.0,,1,False
+0583,2020,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4533.0,,1,False
+0583,2021,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4599.0,,1,False
+0583,2022,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4603.0,,1,False
+0583,2023,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4587.0,,1,False
+0583,2024,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4589.0,,1,False
+0583,2025,N15829,"Elever i grundskola åk. 1-9, hemkommun, antal",T,4508.0,,1,False
+0583,2010,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4510.0,,1,False
+0583,2011,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4377.0,,1,False
+0583,2012,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4415.0,,1,False
+0583,2013,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4362.0,,1,False
+0583,2014,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4698.0,,1,False
+0583,2015,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4822.0,,1,False
+0583,2016,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4987.0,,1,False
+0583,2017,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5040.0,,1,False
+0583,2018,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5087.0,,1,False
+0583,2019,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5002.0,,1,False
+0583,2020,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5008.0,,1,False
+0583,2021,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5066.0,,1,False
+0583,2022,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5077.0,,1,False
+0583,2023,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5066.0,,1,False
+0583,2024,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,5023.0,,1,False
+0583,2025,N15832,"Elever i grundskola F-9, lägeskommun, antal",T,4939.0,,1,False
+0583,2010,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,51496.789259,,1,False
+0583,2011,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,50246.871958,,1,False
+0583,2012,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,50822.83246,,1,False
+0583,2013,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,52120.927832,,1,False
+0583,2014,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,55242.967811,,1,False
+0583,2015,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,55380.957369,,1,False
+0583,2016,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,59493.129614,,1,False
+0583,2017,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,60630.621526,,1,False
+0583,2018,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,60939.214901,,1,False
+0583,2019,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,60354.333038,,1,False
+0583,2020,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,59880.085862,,1,False
+0583,2021,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,64217.429152,,1,False
+0583,2022,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,64524.282874,,1,False
+0583,2023,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,68049.149865,,1,False
+0583,2024,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,72631.05374,,1,False
+0583,2025,N20007,"Kostnad äldreomsorg, kr/inv 65+",T,71605.654223,,1,False
+0583,2010,N20014,"Nettokostnad äldreomsorg, kr/inv",T,9037.730902,,1,False
+0583,2011,N20014,"Nettokostnad äldreomsorg, kr/inv",T,9090.226642,,1,False
+0583,2012,N20014,"Nettokostnad äldreomsorg, kr/inv",T,9554.493993,,1,False
+0583,2013,N20014,"Nettokostnad äldreomsorg, kr/inv",T,9773.626947,,1,False
+0583,2014,N20014,"Nettokostnad äldreomsorg, kr/inv",T,10620.782028,,1,False
+0583,2015,N20014,"Nettokostnad äldreomsorg, kr/inv",T,10711.605249,,1,False
+0583,2016,N20014,"Nettokostnad äldreomsorg, kr/inv",T,11652.156826,,1,False
+0583,2017,N20014,"Nettokostnad äldreomsorg, kr/inv",T,11963.741992,,1,False
+0583,2018,N20014,"Nettokostnad äldreomsorg, kr/inv",T,12094.07833,,1,False
+0583,2019,N20014,"Nettokostnad äldreomsorg, kr/inv",T,12206.71811,,1,False
+0583,2020,N20014,"Nettokostnad äldreomsorg, kr/inv",T,11982.836847,,1,False
+0583,2021,N20014,"Nettokostnad äldreomsorg, kr/inv",T,12687.937904,,1,False
+0583,2022,N20014,"Nettokostnad äldreomsorg, kr/inv",T,12564.00933,,1,False
+0583,2023,N20014,"Nettokostnad äldreomsorg, kr/inv",T,13420.600073,,1,False
+0583,2024,N20014,"Nettokostnad äldreomsorg, kr/inv",T,15664.544305,,1,False
+0583,2025,N20014,"Nettokostnad äldreomsorg, kr/inv",T,15908.117132,,1,False
+0583,2010,N20043,"Kostnad äldreomsorg, kr/inv",T,10512.930521,,1,False
+0583,2011,N20043,"Kostnad äldreomsorg, kr/inv",T,10564.0,,1,False
+0583,2012,N20043,"Kostnad äldreomsorg, kr/inv",T,10890.0,,1,False
+0583,2013,N20043,"Kostnad äldreomsorg, kr/inv",T,11333.0,,1,False
+0583,2014,N20043,"Kostnad äldreomsorg, kr/inv",T,12179.0,,1,False
+0583,2015,N20043,"Kostnad äldreomsorg, kr/inv",T,12323.66035,,1,False
+0583,2016,N20043,"Kostnad äldreomsorg, kr/inv",T,13412.016274,,1,False
+0583,2017,N20043,"Kostnad äldreomsorg, kr/inv",T,13776.206113,,1,False
+0583,2018,N20043,"Kostnad äldreomsorg, kr/inv",T,13929.521368,,1,False
+0583,2019,N20043,"Kostnad äldreomsorg, kr/inv",T,14017.218877,,1,False
+0583,2020,N20043,"Kostnad äldreomsorg, kr/inv",T,14063.038497,,1,False
+0583,2021,N20043,"Kostnad äldreomsorg, kr/inv",T,15202.271374,,1,False
+0583,2022,N20043,"Kostnad äldreomsorg, kr/inv",T,15586.580681,,1,False
+0583,2023,N20043,"Kostnad äldreomsorg, kr/inv",T,16749.291072,,1,False
+0583,2024,N20043,"Kostnad äldreomsorg, kr/inv",T,18235.811976,,1,False
+0583,2025,N20043,"Kostnad äldreomsorg, kr/inv",T,18321.856669,,1,False
+0583,2010,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,177779.121322,,1,False
+0583,2011,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,177672.292722,,1,False
+0583,2012,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,183178.638007,,1,False
+0583,2013,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,192396.487324,,1,False
+0583,2014,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,211288.02446,,1,False
+0583,2015,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,210730.171383,,1,False
+0583,2016,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,228326.249508,,1,False
+0583,2017,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,232715.283165,,1,False
+0583,2018,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,232533.053114,,1,False
+0583,2019,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,227573.977695,,1,False
+0583,2020,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,225132.428467,,1,False
+0583,2021,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,237887.495521,,1,False
+0583,2022,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,233414.383562,,1,False
+0583,2023,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,238183.089431,,1,False
+0583,2024,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,242985.911179,,1,False
+0583,2025,N20048,"Kostnad äldreomsorg, kr/inv 80+",T,232491.909385,,1,False
+0583,2011,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,74.86442,,1,False
+0583,2012,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,75.656155,,1,False
+0583,2013,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,76.149009,,1,False
+0583,2014,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,74.060903,,1,False
+0583,2015,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,75.732441,,1,False
+0583,2016,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,74.547993,,1,False
+0583,2017,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,73.8438,,1,False
+0583,2018,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,73.546238,,1,False
+0583,2019,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,73.203345,,1,False
+0583,2020,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,72.421353,,1,False
+0583,2021,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,70.121266,,1,False
+0583,2022,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,72.932819,,1,False
+0583,2023,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,74.764785,,1,False
+0583,2024,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,74.125774,,1,False
+0583,2025,N20050,"Personalkostnad äldreomsorg, egen regi, andel (%)",T,74.060876,,1,False
+0583,2015,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,401.0,,1,False
+0583,2015,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,192.0,,1,False
+0583,2015,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,593.0,,1,False
+0583,2016,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,469.0,,1,False
+0583,2016,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,224.0,,1,False
+0583,2016,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,693.0,,1,False
+0583,2017,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,454.0,,1,False
+0583,2017,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,238.0,,1,False
+0583,2017,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,692.0,,1,False
+0583,2018,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,452.0,,1,False
+0583,2018,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,230.0,,1,False
+0583,2018,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,682.0,,1,False
+0583,2019,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,494.0,,1,False
+0583,2019,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,272.0,,1,False
+0583,2019,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,766.0,,1,False
+0583,2020,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,495.0,,1,False
+0583,2020,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,277.0,,1,False
+0583,2020,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,772.0,,1,False
+0583,2021,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,485.0,,1,False
+0583,2021,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,280.0,,1,False
+0583,2021,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,765.0,,1,False
+0583,2022,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,491.0,,1,False
+0583,2022,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,300.0,,1,False
+0583,2022,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,791.0,,1,False
+0583,2023,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,486.0,,1,False
+0583,2023,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,293.0,,1,False
+0583,2023,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,779.0,,1,False
+0583,2024,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,500.0,,1,False
+0583,2024,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,317.0,,1,False
+0583,2024,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,817.0,,1,False
+0583,2025,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",K,485.0,,1,False
+0583,2025,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",M,334.0,,1,False
+0583,2025,N21702,"Hemtjänsttagare 65+ i ordinärt boende, antal",T,819.0,,1,False
+0583,2015,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,103.0,,1,False
+0583,2015,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,70.0,,1,False
+0583,2015,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,173.0,,1,False
+0583,2016,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,109.0,,1,False
+0583,2016,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,84.0,,1,False
+0583,2016,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,193.0,,1,False
+0583,2017,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,108.0,,1,False
+0583,2017,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,84.0,,1,False
+0583,2017,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,192.0,,1,False
+0583,2018,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,102.0,,1,False
+0583,2018,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,87.0,,1,False
+0583,2018,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,189.0,,1,False
+0583,2019,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,121.0,,1,False
+0583,2019,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,96.0,,1,False
+0583,2019,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,217.0,,1,False
+0583,2020,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,124.0,,1,False
+0583,2020,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,107.0,,1,False
+0583,2020,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,231.0,,1,False
+0583,2021,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,124.0,,1,False
+0583,2021,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,105.0,,1,False
+0583,2021,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,229.0,,1,False
+0583,2022,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,121.0,,1,False
+0583,2022,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,111.0,,1,False
+0583,2022,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,232.0,,1,False
+0583,2023,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,117.0,,1,False
+0583,2023,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,108.0,,1,False
+0583,2023,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,225.0,,1,False
+0583,2024,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,123.0,,1,False
+0583,2024,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,113.0,,1,False
+0583,2024,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,236.0,,1,False
+0583,2025,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",K,114.0,,1,False
+0583,2025,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",M,118.0,,1,False
+0583,2025,N21703,"Hemtjänsttagare 65-79 i ordinärt boende, antal",T,232.0,,1,False
+0583,2015,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,298.0,,1,False
+0583,2015,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,122.0,,1,False
+0583,2015,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,420.0,,1,False
+0583,2016,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,360.0,,1,False
+0583,2016,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,140.0,,1,False
+0583,2016,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,500.0,,1,False
+0583,2017,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,346.0,,1,False
+0583,2017,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,154.0,,1,False
+0583,2017,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,500.0,,1,False
+0583,2018,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,350.0,,1,False
+0583,2018,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,143.0,,1,False
+0583,2018,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,493.0,,1,False
+0583,2019,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,373.0,,1,False
+0583,2019,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,176.0,,1,False
+0583,2019,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,549.0,,1,False
+0583,2020,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,371.0,,1,False
+0583,2020,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,170.0,,1,False
+0583,2020,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,541.0,,1,False
+0583,2021,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,361.0,,1,False
+0583,2021,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,175.0,,1,False
+0583,2021,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,536.0,,1,False
+0583,2022,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,370.0,,1,False
+0583,2022,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,189.0,,1,False
+0583,2022,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,559.0,,1,False
+0583,2023,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,369.0,,1,False
+0583,2023,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,185.0,,1,False
+0583,2023,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,554.0,,1,False
+0583,2024,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,377.0,,1,False
+0583,2024,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,204.0,,1,False
+0583,2024,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,581.0,,1,False
+0583,2025,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",K,371.0,,1,False
+0583,2025,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",M,216.0,,1,False
+0583,2025,N21705,"Hemtjänsttagare 80+ i ordinärt boende, antal",T,587.0,,1,False
+0583,2014,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,26.31246684,,1,False
+0583,2014,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,24.67803468,,1,False
+0583,2014,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,25.75154265,,1,False
+0583,2015,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,24.52785146,,1,False
+0583,2015,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,25.01197605,,1,False
+0583,2015,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,24.67647059,,1,False
+0583,2016,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,27.81424936,,1,False
+0583,2016,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,24.285,,1,False
+0583,2016,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,26.62394604,,1,False
+0583,2017,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,31.01758794,,1,False
+0583,2017,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,26.81018519,,1,False
+0583,2017,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,29.53745928,,1,False
+0583,2018,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,31.82160804,,1,False
+0583,2018,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,27.07476636,,1,False
+0583,2018,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,30.16176471,,1,False
+0583,2019,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,34.35744681,,1,False
+0583,2019,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,29.69721116,,1,False
+0583,2019,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,32.73509015,,1,False
+0583,2020,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,37.49568966,,1,False
+0583,2020,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,30.28464419,,1,False
+0583,2020,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,34.86183311,,1,False
+0583,2021,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,37.52653928,,1,False
+0583,2021,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,35.56870229,,1,False
+0583,2021,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,36.82673943,,1,False
+0583,2022,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,35.48723404,,1,False
+0583,2022,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,30.15068493,,1,False
+0583,2022,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,33.44225722,,1,False
+0583,2023,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,36.36965812,,1,False
+0583,2023,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,30.88172043,,1,False
+0583,2023,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,34.31994645,,1,False
+0583,2024,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,36.61825726,,1,False
+0583,2024,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,31.16772152,,1,False
+0583,2024,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,34.45989975,,1,False
+0583,2025,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",K,36.67436975,,1,False
+0583,2025,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",M,32.38390093,,1,False
+0583,2025,N21826,"Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",T,34.93992491,,1,False

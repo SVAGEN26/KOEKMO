@@ -1,0 +1,83 @@
+Oberoende källgranskning, 2026-10-15
+
+Granskat: data/grant-forecast-discovery.json, schema1, tre cirkulär.
+Beslut: katalogen är en sakligt stödd källupptäckt, inte färdig modellindata.
+Inga Motala-belopp har verifierats i de saknade kommunbilagorna, införts
+i modellen eller poängsatts genom denna granskning. Tidigare prognos-
+och precisionsbeslut ändras inte.
+
+22:58, dokumentdatum 2022-12-27
+
+Datum, titel och underlagsfil verifieras på omslaget. Tryckt s1–2
+(PDF-index2–3) behandlar 2023 års administrativa kostnads- och
+LSS-utjämning. LSS bygger på insatser 1 oktober2021, RS2021,
+personalkostnadsindex för2021 och uppdaterad befolkning 1 november2022.
+Den ändrade inflationsuppräkningen beskrivs också. Tryckt s3/tabell2
+(PDF4) anger nationell kommunreglering2023 till2336 kr/invånare.
+Det är en senare version än frysta22:54 och ska inte ersätta denna.
+Tryckt s5 (PDF6) hänvisar till kommunvisa prognosunderlag och
+uppdateringsfilen22058nr8. Inget Motala-belopp finns i den lästa texten.
+Katalogens intranetlänk och två alternativa värdar misslyckades vid
+denna granskning. Följande utgivaråtergivning var fullt textläsbar:
+https://www.patientenkat.se/download/18.6ca190ab18529e8ca784ed7f/1672145534245/22058.pdf
+
+22:57, dokumentdatum 2022-12-27
+
+Datum och titel verifieras på omslaget. Tryckt s2–3 (PDF3–4) skiljer
+aktuell avgiftsuppskattning från den korrigering av föregående års
+uppskattning som redovisas i bokslutet. Texten beskriver felaktiga
+gränsvärden i21:52 och tillgång till en senare korrigerad gammal prognos.
+Original och rättelse är skilda informationsversioner. En realtidsprövning
+får inte tyst byta originalet mot den senare rättelsen.
+Tryckt s4 (PDF5) behandlar fordran och betalning; s5 (PDF6) listar
+bilagorna och införandet i22:58-underlaget. Katalogens locator bör
+utvidgas från tryckt s1–3 till även s4–5 för dessa sakuppgifter.
+Läst primärtext från utgivarens alternativa värd:
+https://kunskapsstyrningvard.se/download/18.6ca190ab18529e8ca784e2b5/1672140142545/22057.pdf
+
+23:60, dokumentdatum 2023-12-21
+
+Datum och cirkulärnummer verifieras på omslaget. Tryckt s3–5
+(PDF3–5) stöder katalogens innehåll: 2022 års avgift i bilaga1/AG,
+2023 iAI, 2024 iAK och2025 iAM. Prognosmetoden för småhus2024
+ändras till kommunvisa taxeringsvärdesprognoser. Föregående periods
+korrigering redovisas separat. 2024 års betalning och reglering av
+2022 års fordran är skilda från2024 års redovisade intäkt.
+S5 hänvisar till kommande23:62-underlag, inte ett belopp som därmed
+har lästs eller verifierats för Motala. Bilagorna listas på s6.
+Primärkälla:
+https://skr.se/download/18.30c6c28518c8adb1e6e19f5/1703152287792/Cirkul%C3%A4r%2023060.pdf
+
+Informationsgräns och modellkonsekvens
+
+Dokumenten är senare än de särskilda cirkulär som v8 låste till samma
+PKV-vintage. De är samtidigt före årsslutet. Det är därför främst
+källvalsregeln som behöver ändras i en ny prövning; ett senare cutoff-
+datum än31/12 behöver inte införas. En möjlig gemensam regel är sista
+publicerade giltiga källa per komponent senast31/12 för varje ursprung.
+Äldre oförändrade PKV-värden kan då ha annan dokumentdag än de senaste
+administrativa bidragen. Det måste märkas som ett nytt informationspaket,
+inte samma-cirkulär-experimentet v8. Samtliga ursprung och regler för
+saknade komponenter måste omfattas före scoring.
+
+Dokumentdatum är inte ensamt bevis för att en senare nedladdad bilaga
+har exakt originalinnehåll. Bilagornas egen version, datum, enhet och
+kommunkod0583 måste verifieras; ursprungliga filer bör arkiveras.
+Öppningsbokslutens historiska publiceringstillgänglighet är fortfarande
+ett separat olöst problem.
+
+Egen bokföringsslutsats från de granskade definitionerna: framtida
+fastighetsavgift behöver särskilja aktuell avgiftsperiods uppskattning,
+senare revision av en tidigare periods bokförda uppskattning samt
+betalning. Den tidigare uppskattningen får inte utan avstämning ersättas
+med hela not7-raden, eftersom den raden kan omfatta en äldre korrigering.
+Bilaga5:s standardkorrigering förutsätter dessutom att kommunen använde
+den angivna tidigare prognosen. Det är ett villkor som måste verifieras
+eller märkas som antagande för Motala.
+
+Det går därför ännu inte att konstruera en korrekt lokal bokslutsbana
+enbart genom att lägga de nya cirkulärens avgiftsbelopp på den tidigare
+not7-totalen. Först behövs den lokala avgiftsperiodens belopp, använd
+tidigare uppskattning och berörd korrigering. Betalnings-/fordransbanan
+behöver dessutom bilaga6–7 eller likvärdigt lokalt underlag. Inga
+saknade belopp har här härletts från målutfall eller nationella procenttal.

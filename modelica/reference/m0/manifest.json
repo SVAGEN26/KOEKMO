@@ -1,0 +1,30 @@
+{
+  "id": "M0",
+  "purpose": "Frozen pre-candidate reference; no historical financial calibration is implied.",
+  "files": {
+    "Motala.mo": {
+      "sha256": "7a876bf5ee2dd485f2b5bf97b1f4f5b679e298883d77bda951da6b291cbda485",
+      "source": "/home/johti17/MOTALA/modelica/Motala.mo"
+    },
+    "engine.mjs": {
+      "sha256": "aa03f00c0009f66b65345e292d9c07f09a462975614288e9676413fea077dbf3",
+      "source": "/home/johti17/MOTALA/site/dist/engine.js"
+    },
+    "baseline.json": {
+      "sha256": "54fc39fdaf5af00abab491f297eaae1bf266f5fd9492c25a8672e52274456201",
+      "source": "/home/johti17/MOTALA/data/baseline.json"
+    },
+    "history.json": {
+      "sha256": "efa62018ded61f6964ff24972e11ca0dad6c872c76287b6bfd97ad34cfe58821",
+      "source": "/home/johti17/MOTALA/data/history.json"
+    },
+    "operating-accounts-history.json": {
+      "sha256": "419126a784cc1d5f5e90ec83feb3f0cbe6a2fac27b130f5402997afc7f2097d9",
+      "source": "/home/johti17/MOTALA/data/operating-accounts-history.json"
+    },
+    "municipal-benchmarks.json": {
+      "sha256": "7697364043c64fa2a21e8af5525fc3a25d63450a6ddfe3774b960bdf68bfee85",
+      "source": "/home/johti17/MOTALA/data/municipal-benchmarks.json"
+    }
+  }
+}

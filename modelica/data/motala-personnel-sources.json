@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "moneyUnit": "mnkr",
+  "checkedAt": "2026-10-15",
+  "role": "source_definition_audit_not_forecast_input",
+  "sources": {
+    "annual2022": {
+      "url": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "locator": "Printed pp34-35 pension discussion; p42 note4 and p43 note9 (PDF spread index21)",
+      "sourceRelease": null,
+      "access": "Primary PDF text read in this audit"
+    },
+    "annual2023": {
+      "url": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf",
+      "locator": "Printed p52 notes4/9, p53 note19, p54 note24; kommunen columns",
+      "sourceRelease": null,
+      "access": "Primary PDF text read in this audit"
+    },
+    "annual2025": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+      "locator": "Printed p52 notes4/9 (PDF spread index26), kommunen columns2024/2025",
+      "sourceRelease": null,
+      "access": "Primary PDF text read in this audit"
+    },
+    "kpaServiceDescription": {
+      "url": "https://www.kpa.se/arbetsgivare/tillaggstjanster/pensionskostnadsberakning/pensionsskuld-och-pensionskostnad/",
+      "locator": "Bokslutsberakning med en femarsprognos; Gora egna simuleringar",
+      "sourceRelease": null,
+      "access": "Current service description only, not a Motala forecast or historical vintage"
+    }
+  },
+  "observedVersions": [
+    {
+      "year": 2021,
+      "sourceId": "annual2022",
+      "columnRole": "comparative",
+      "personnelExcludingReportedPension": 1976.2,
+      "reportedPension": 167.3,
+      "combinedPersonnel": 2143.5,
+      "pensionTaxBasis": "not_separately_explicit_for_comparative_year",
+      "reportingPrecision": 0.1,
+      "operatingVersusFinance": "Note9 reports pension interest0.7 separately from operating expenses"
+    },
+    {
+      "year": 2022,
+      "sourceId": "annual2022",
+      "columnRole": "current",
+      "personnelExcludingReportedPension": 2009.0,
+      "reportedPension": 178.1,
+      "combinedPersonnel": 2187.1,
+      "pensionTaxBasis": "including_payroll_tax_explicit_in_financial_analysis",
+      "reportingPrecision": 0.1,
+      "operatingVersusFinance": "Note9 reports pension interest1.2 separately from operating expenses"
+    },
+    {
+      "year": 2022,
+      "sourceId": "annual2023",
+      "columnRole": "comparative_reclassified",
+      "personnelExcludingReportedPension": 2045,
+      "reportedPension": 141,
+      "combinedPersonnel": 2186,
+      "pensionTaxBasis": "excluding_payroll_tax_explicit_in_note4",
+      "reportingPrecision": 1,
+      "operatingVersusFinance": "Note9 pension finance1 is outside the operating sum"
+    },
+    {
+      "year": 2023,
+      "sourceId": "annual2023",
+      "columnRole": "current",
+      "personnelExcludingReportedPension": 2183,
+      "reportedPension": 248,
+      "combinedPersonnel": 2431,
+      "pensionTaxBasis": "excluding_payroll_tax_explicit_in_note4",
+      "reportingPrecision": 1,
+      "operatingVersusFinance": "Note9 pension finance5 is outside the operating sum; note19 stock changes are not total pension expense"
+    },
+    {
+      "year": 2024,
+      "sourceId": "annual2025",
+      "columnRole": "comparative",
+      "personnelExcludingReportedPension": 2258,
+      "reportedPension": 275,
+      "combinedPersonnel": 2533,
+      "pensionTaxBasis": "not_explicit_in_note4",
+      "reportingPrecision": 1,
+      "operatingVersusFinance": "Note9 pension finance5 is outside the operating sum"
+    },
+    {
+      "year": 2025,
+      "sourceId": "annual2025",
+      "columnRole": "current",
+      "personnelExcludingReportedPension": 2288,
+      "reportedPension": 190,
+      "combinedPersonnel": 2478,
+      "pensionTaxBasis": "not_explicit_in_note4",
+      "reportingPrecision": 1,
+      "operatingVersusFinance": "Note9 pension finance2 is outside the operating sum"
+    }
+  ],
+  "versionBridge2022": {
+    "originalCombinedPersonnel": 2187.1,
+    "laterComparativeCombinedPersonnel": 2186,
+    "difference": -1.1,
+    "status": "preserved_version_and_rounding_difference_not_a_calibration_adjustment",
+    "exactPayrollTaxTransfer": null,
+    "interpretation": "A large reclassification between the two note4 lines nearly cancels in the sum. Do not solve for exact local payroll tax from rounded and revised comparative values. Original historical inputs and outcomes are unchanged."
+  },
+  "forecastLeads": [
+    {
+      "sourceId": "annual2022",
+      "targetYear": 2023,
+      "quantity": "increase_in_pension_cost_including_payroll_tax",
+      "comparisonYear": 2022,
+      "lowerBoundExclusiveMnkr": 100,
+      "pointEstimate": null,
+      "forecastMadeAt": null,
+      "historicalPublicationAvailabilityEstablished": false,
+      "usedAsForecastInput": false,
+      "reason": "The annual report describes an expected increase above100mnkr. It supplies neither a dated KPA vintage nor a point estimate, and publication is later than the December2022 macro vintage. Do not insert100 as an exact forecast or add it to PKV including pension effects."
+    }
+  ],
+  "searchStatus": {
+    "datedLocalPersonnelOrKpaPathsRecovered": false,
+    "annual2021CurrentAccess": "Original PDF robot-blocked for independent reviewer;2020 classification not freshly reverified",
+    "annual2024CurrentAccess": "Original PDF exceeds web fetch size limit31841250bytes;2024 note4 amounts cross-checked against2025 comparative without replacing historical version",
+    "budget2025CurrentAccess": "Existing later budget reproduction found again; direct PDF request robot-challenged. Not a newly established historical forecast vintage.",
+    "queries": [
+      "Motala KPA prognos budget pension",
+      "Motala pensionskostnader2022 2023 budget",
+      "Motala finansplan2021 pension",
+      "Motala personalkostnader budget2023"
+    ],
+    "nextRequiredData": "Dated local total-personnel forecast, or compatible forecasts for wages/non-pension employer charges, pension operating expense with payroll-tax placement, pension finance and staffing/volume. Exact information dates and policy decisions are required."
+  },
+  "guardrails": [
+    "No new data values are inserted into any historical forecast or target by this audit.",
+    "PKV labor includes employer charges and pensions. A local pension path must replace a disjoint pension component, never be added on top of the entire existing PKV personnel projection.",
+    "The saved payroll variable is not a pure wage bill; note4 classification changed. Do not score its growth or the pension subseries as separately comparable forecasts.",
+    "Pension operating expense, pension finance, cash payments and provision changes are distinct. Do not infer full pension expense or payments solely from the change in a balance-sheet provision.",
+    "A residual between a constant-quantity PKV projection and observed total personnel cost combines price, pension, composition, staffing and possible version effects. It is not an identified price or pension error."
+  ]
+}

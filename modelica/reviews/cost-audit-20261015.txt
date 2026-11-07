@@ -1,0 +1,111 @@
+Oberoende tilläggsgranskning av kostnadsdiagnos, 2026-10-15
+
+Beslut
+Diagnosen godkänns som en korrekt, reproducerbar uppdelning av befintliga
+prognosfel. Den identifierar inte ett särskilt pensions-, pris- eller
+bemanningsfel och ger ingen ny prognosvalidering. Inga prognoser, utfall,
+parametrar eller frysta arkiv har ändrats av granskaren.
+
+Granskat
+Script: run_cost_audit.py
+Definitionskatalog: data/motala-personnel-sources.json
+Första artefakt: runs/cost-audit-20261015
+Slutlig artefakt: runs/cost-audit-20261015-reviewed
+Prognoskälla: runs/historical-v7-20261015-settlements
+
+Reproduktion och informationsbevarande
+Jag körde slutarkivets fristående script från /tmp:
+PYTHONDONTWRITEBYTECODE=1 python3 <slutarkiv>/run_cost_audit.py
+  --input-packet <slutarkiv>/input-packet.json
+  --out /tmp/motala-independent-cost-audit-20261015-reviewed
+Alla fem filer, inklusive rapport, evaluation, input-packet, script och
+manifest, är byteidentiska med slutarkivet. Även första artefakten
+återkördes. Evaluation och input-packet är exakt lika mellan första och
+slutliga versionen; rapportens förtydligande har inte ändrat beräkningarna.
+
+Båda diagnosarkivens fyra listade hashvärden stämmer. Alla 1 043 hashvärden
+i fryst v7 stämmer fortfarande. Paketets cases, bokslutsrader och tio
+öppningsaudits är exakt lika de angivna v7-filerna. Källfilernas hashvärden
+och parent-manifestets hash stämmer med provenance. Katalogen är separat
+identifierad; den används för definitioner, inte för att ersätta prognosdata.
+
+Alla 12 nominella fall och båda notpolicys finns, totalt 24 diagnosrader.
+De är inte 24 oberoende observationer. WIP-alternativen ligger kvar i v7
+och utges inte för att ingå som nya diagnosfall. Ingen simulator anropas.
+Scriptet kontrollerar också att analysen inte muterar indata.
+
+Tecken och bokföring
+Nettokostnadsfelet delas i följande signerade skillnader:
+  personal
+  + övrig driftskostnad
+  - driftintäkt
+  + avskrivning
+  + faktiskt simulerad utrangering/omställning/extra kostnad
+  + öppningens avrundning minus målårets avrundning.
+Sista termen är explicit konstruerad från kända flöden och bokslutsavrundning,
+inte beräknad som en fritt anpassad rest. Kostnadens positiva tecken och
+driftintäktens negativa tecken är korrekta. Pensionsfinans ingår inte i
+det granskade driftkostnadsmåttet.
+
+Personalidentiteten är exakt:
+  native minus utfall = accounting minus utfall + native minus accounting.
+Den första termen innehåller också faktiska volym- och sammansättnings-
+förändringar och eventuella källskillnader. Den andra är skillnaden mellan
+två modeller under samma prisbana, inte observerad eller kausalt identifierad
+bemanning. Accounting-formlerna matchar ursprungens bevarade parametrar och
+kumulativa PKV-faktorer. Pensionens interna partition får ingen extra
+volymmultiplikator i denna jämförelse; delserien utvärderas inte som en
+harmoniserad faktisk pension.
+
+Jag räknade om 402 termer och sammanfattningstal utan att använda
+analysfunktionerna. Största numeriska avvikelsen var 8,53e-14. Största
+kontrollerade nettokostnadsidentitetsrest var 7,32e-13, samma som rapporterat.
+MAE, bias, RMSE, kvantitetsbidragens medel/min/max och biasernas additivitet
+stämmer. Komponenternas MAE summeras korrekt inte till totalens MAE.
+
+Numerisk slutsats, costbase, mnkr
+                                       h1        h2        h3
+Personal-MAE, native                   37,20     98,69    137,04
+Personal-MAE, accounting               37,29     99,46    143,99
+Medel, native minus accounting          0,54      3,30      6,95
+Intervall för denna modellskillnad   0,06-0,89 2,32-4,60 5,14-8,67
+
+Detta stöder påståendet att stora personalfel kvarstår i jämförelsen med
+oförändrade kvantiteter. Det visar inte att prisbanan ensam orsakar felet.
+Inte heller visar den lilla modellskillnaden att verklig bemanningsutveckling
+är oviktig; modellen kan själv sakna sådan utveckling.
+
+Vid h3 är nettokostnadsbias -199,19. De signerade bidragen är personal
+-137,04, övrig drift -43,93, driftintäkt +6,29, avskrivning -27,66 och
+modellflöden/avrundning +3,15. Detta är en bokföringsmässig uppdelning,
+inte kausala förklaringsandelar. No-repeat bevaras; dess ändrade intäktsbas
+ändrar nettokostnadsfelet men inte slutsatsen om totalpersonalen.
+
+Definitioner och rapporttext
+Katalogen återger de källkontrollerade notraderna och skiljer original från
+senare jämförelse. Avvikelsen -1,1 mnkr för 2022, okänd exakt löneskatteflytt,
+2024/2025-rubrikernas oklara skatteplacering och 2021-PDF:ens aktuella
+åtkomstlucka finns kvar. Uppgiften om en ökning över 100 mnkr blir inte en
+punktprognos. Dessa avgränsningar överensstämmer med den tidigare granskningen
+i personnel-definitions-20261015.txt.
+
+KPA:s tjänstesida är kontrollerad och beskriver bokslutsberäkning med
+femårsprognos samt separata rapporter. Katalogen märker den korrekt som
+aktuell tjänstebeskrivning, inte en daterad Motala-prognos:
+https://www.kpa.se/arbetsgivare/tillaggstjanster/pensionskostnadsberakning/pensionsskuld-och-pensionskostnad/
+
+Första rapportens mening om att den nationella prisbanan ger nästan hela
+felet riskerade att läsas kausalt. Slutrapporten beskriver i stället att
+nästan hela felet också finns i accounting-jämförelsen, och säger uttryckligen
+att uppdelningen inte identifierar priser, pensioner och bemanning separat.
+Den språkliga invändningen är därmed stängd utan numerisk ändring.
+
+Fortsättning
+Diagnosen motiverar i första hand källarbete kring lokal personal- och
+pensionsutveckling. Daterade prognoser måste kopplas till förenliga
+definitioner och skilja drift, löneskatt, pensionsfinans och betalningar.
+Bemannings- och volymdata behövs för att pröva kvantitetsmekanismen separat.
+Avskrivnings- och övrigkostnadsfelen finns också kvar och får inte gömmas
+i en pensionskorrektion. Ingen anpassningstid eller pensionstillägg bör
+väljas för att träffa det sammanlagda resultatfelet.
+Status för hela Motala-prognosmålet ändras inte av denna diagnos.

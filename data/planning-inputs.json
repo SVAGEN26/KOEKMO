@@ -1,0 +1,798 @@
+{
+  "version": 1,
+  "municipality": "0583",
+  "baseYear": 2025,
+  "years": 8,
+  "activatedOn": "2026-11-06",
+  "rows": [
+    {
+      "year": 2026,
+      "cohorts": [
+        2782.016605495145,
+        4618.979185481855,
+        1566.7681259437352,
+        22913.034123472073,
+        11138.204556287154
+      ],
+      "sourceTotal": 43020.0,
+      "olderGroups": [
+        7588.0,
+        2964.0,
+        603.0
+      ],
+      "taxBaseGrowth": 3.6761994372424223,
+      "labourCostGrowth": 3.1240424726040494,
+      "otherPriceGrowth": 2.8000000000000025,
+      "skrCells": {
+        "taxBaseGrowth": "C9",
+        "labourCostGrowth": "C100",
+        "otherPriceGrowth": "C101"
+      }
+    },
+    {
+      "year": 2027,
+      "cohorts": [
+        2705.3792985823193,
+        4560.792255655319,
+        1553.5421051160265,
+        22936.67754347284,
+        11213.612529900936
+      ],
+      "sourceTotal": 42971.0,
+      "olderGroups": [
+        7524.0,
+        3074.0,
+        632.0
+      ],
+      "taxBaseGrowth": 4.984337937891414,
+      "labourCostGrowth": 2.6962148822070597,
+      "otherPriceGrowth": 2.7928918631001665,
+      "skrCells": {
+        "taxBaseGrowth": "D9",
+        "labourCostGrowth": "D100",
+        "otherPriceGrowth": "D101"
+      }
+    },
+    {
+      "year": 2028,
+      "cohorts": [
+        2618.7755243129222,
+        4549.95667773769,
+        1529.2647010618052,
+        22856.289795018158,
+        11328.71905166076
+      ],
+      "sourceTotal": 42884.0,
+      "olderGroups": [
+        7524.0,
+        3158.0,
+        664.0
+      ],
+      "taxBaseGrowth": 4.2030409896068655,
+      "labourCostGrowth": 4.0884525973644115,
+      "otherPriceGrowth": 2.4799999999999933,
+      "skrCells": {
+        "taxBaseGrowth": "E9",
+        "labourCostGrowth": "E100",
+        "otherPriceGrowth": "E101"
+      }
+    },
+    {
+      "year": 2029,
+      "cohorts": [
+        2589.4926638299758,
+        4476.621993638697,
+        1550.978319625303,
+        22822.835603085136,
+        11523.075314840824
+      ],
+      "sourceTotal": 42964.0,
+      "olderGroups": [
+        7550.0,
+        3297.0,
+        694.0
+      ],
+      "taxBaseGrowth": 4.015124448531182,
+      "labourCostGrowth": 3.930867628871293,
+      "otherPriceGrowth": 2.6000000000000023,
+      "skrCells": {
+        "taxBaseGrowth": "F9",
+        "labourCostGrowth": "F100",
+        "otherPriceGrowth": "F101"
+      }
+    },
+    {
+      "year": 2030,
+      "cohorts": [
+        2547.9647992992086,
+        4391.44392847735,
+        1552.8572341177803,
+        22792.43074664185,
+        11692.306861898756
+      ],
+      "sourceTotal": 42978.0,
+      "olderGroups": [
+        7613.0,
+        3383.0,
+        714.0
+      ],
+      "taxBaseGrowth": 3.920545740454129,
+      "labourCostGrowth": 3.2766930995321353,
+      "otherPriceGrowth": 2.6000000000000023,
+      "skrCells": {
+        "taxBaseGrowth": "G9",
+        "labourCostGrowth": "G100",
+        "otherPriceGrowth": "G101"
+      }
+    },
+    {
+      "year": 2031,
+      "cohorts": [
+        2511.4984888203708,
+        4304.726392725592,
+        1566.1804874677105,
+        22640.343751073044,
+        11851.256838366406
+      ],
+      "sourceTotal": 42875.0,
+      "olderGroups": [
+        7672.0,
+        3466.0,
+        731.0
+      ],
+      "taxBaseGrowth": 3.849185001300093,
+      "labourCostGrowth": 3.2766930995321353,
+      "otherPriceGrowth": 2.6000000000000023,
+      "skrCells": {
+        "taxBaseGrowth": "H9",
+        "labourCostGrowth": "H100",
+        "otherPriceGrowth": "H101"
+      }
+    },
+    {
+      "year": 2032,
+      "cohorts": [
+        2506.654522577521,
+        4193.754919426325,
+        1576.5127206887278,
+        22582.606038233258,
+        11989.478337143346
+      ],
+      "sourceTotal": 42850.0,
+      "olderGroups": [
+        7743.0,
+        3503.0,
+        761.0
+      ],
+      "taxBaseGrowth": 3.8606095159464004,
+      "labourCostGrowth": 3.2766930995321353,
+      "otherPriceGrowth": 2.6000000000000023,
+      "skrCells": {
+        "taxBaseGrowth": "I9",
+        "labourCostGrowth": "I100",
+        "otherPriceGrowth": "I101"
+      }
+    },
+    {
+      "year": 2033,
+      "cohorts": [
+        2489.245478895875,
+        4132.162595610183,
+        1583.260396767232,
+        22491.288282428966,
+        12113.050711752627
+      ],
+      "sourceTotal": 42810.0,
+      "olderGroups": [
+        7801.0,
+        3511.0,
+        818.0
+      ],
+      "taxBaseGrowth": 3.8874167871102205,
+      "labourCostGrowth": 3.2766930995321353,
+      "otherPriceGrowth": 2.6000000000000023,
+      "skrCells": {
+        "taxBaseGrowth": "J9",
+        "labourCostGrowth": "J100",
+        "otherPriceGrowth": "J101"
+      }
+    }
+  ],
+  "sourceBaseTotal": 43132.0,
+  "sources": {
+    "archive": "data/downloads/20261106T090534Z",
+    "workbook": "Prognosunderlag-K-2026-2033-26028.xlsm",
+    "workbookSha256": "232479606a21b865e914bc91f9ddf7bee06b1e4abb8de16ba4b8e2ce30afb099",
+    "skrSheet": "Blad 2 Indata",
+    "skrCircular": "26:28",
+    "population": "https://statistik.linkoping.se/PXWeb/pxweb/sv/Samlad_planering/Samlad_planering__LevaBo/bep6001.px/",
+    "populationMetadata": "bep6001-metadata.json",
+    "kolada": "https://api.kolada.se/v3/docs"
+  },
+  "revenueImport": {
+    "status": "active-recalculated-motala",
+    "selectionCell": "Prognosunderlag!B1",
+    "cachedSelection": 583,
+    "originalSelection": null,
+    "message": "Motala (0583) är valt i en omräknad arbetskopia. SKR-referensen 2026–2033 är aktiv och inkluderar slutavräkningar och fastighetsavgift. Scenariot justerar beloppen med modellens förenklade befolknings- och skattesamband. Originalfilen är bevarad och inga makron har körts."
+  },
+  "koladaLatest": [
+    {
+      "id": "N11004",
+      "title": "Nettokostnad förskola, kr/inv",
+      "description": "Nettokostnad för förskola, dividerat med antal invånare totalt 31/12. Med nettokostnad avses bruttokostnad minus bruttointäkt. Avser förskola som är en pedagogisk gruppverksamhet för barn vars föräldrar förvärvsarbetar eller studerar och för barn som har eget behov av verksamheten. Den är öppen hela året och öppettiderna anpassas till föräldrarnas arbetstider/studietider. Barnen är inskrivna i förskolan. Avser samtlig regi. Källa: SCB:s Räkenskapssammandrag.",
+      "year": 2025,
+      "value": 7560.919061,
+      "status": ""
+    },
+    {
+      "id": "N11006",
+      "title": "Kostnad förskola, kr/inv",
+      "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för förskola, dividerat med antal invånare totalt 31/12. Avser förskola som är en pedagogisk gruppverksamhet för barn vars föräldrar förvärvsarbetar eller studerar och för barn som har eget behov av verksamheten. Den är öppen hela året och öppettiderna anpassas till föräldrarnas arbetstider/studietider. Barnen är inskrivna i förskolan. Avser samtlig regi. Källa: SCB:s Räkenskapssammandrag.",
+      "year": 2025,
+      "value": 8754.492129,
+      "status": ""
+    },
+    {
+      "id": "N11008",
+      "title": "Kostnad förskola, kr/inskrivet barn",
+      "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för förskola, dividerat med genomsnittligt antal inskrivna barn i förskola vid mätning 15/10 föregående och innevarande år. Avser samtlig regi. Källa: SCB och Skolverket.",
+      "year": 2025,
+      "value": 195136.950904,
+      "status": ""
+    },
+    {
+      "id": "N11010",
+      "title": "Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",
+      "description": "Antal inskrivna i kommunal förskola dividerat med antal årsarbetare kommunal förskola.  I antalet heltidstjänster har antalet anställda som arbetar med barn (exklusive städ- och kökspersonal) räknats om till heltidstjänster med hjälp av tjänstgöringsgraden. Arbetsledares schemalagda arbetstid i barngrupp har medräknats. Avser egen regi. Uppgiften avser punktmätning 15/10. Källa: Skolverket",
+      "year": 2025,
+      "value": 5.51361995,
+      "status": ""
+    },
+    {
+      "id": "N11807",
+      "title": "Inskrivna barn på förskola, hemkommun, antal",
+      "description": "Antal barn folkbokförda i kommunen inskrivna i förskola. Uppgiften avser läsår, mätt 15 oktober. Källa: SCB och Skolverket.",
+      "year": 2025,
+      "value": 1846.0,
+      "status": ""
+    },
+    {
+      "id": "N15025",
+      "title": "Kostnad grundskola F-9, hemkommun, kr/inv",
+      "description": "Bruttokostnad - interna intäkter + kostnad för skolskjuts - försäljning av verksamhet till andra kommuner för förskoleklass och grundskola dividerat med antal invånare i kommunen 31/12 (hemkommun). Uppgiften avser kalenderår. Källa: SCB.",
+      "year": 2025,
+      "value": 15536.806473,
+      "status": ""
+    },
+    {
+      "id": "N15027",
+      "title": "Kostnad grundskola F-9, hemkommun, kr/elev",
+      "description": "Bruttokostnad - interna intäkter + kostnad för skolskjuts - försäljning av verksamhet till andra kommuner för förskoleklass och grundskola dividerat med medelvärde av antal elever folkbokförda i kommunen (hemkommun). Uppgiften avser kalenderår. Inklusive integrerade elever (from 2020) samt elever i internationella skolor. Källa: SCB",
+      "year": 2025,
+      "value": 133330.28253,
+      "status": ""
+    },
+    {
+      "id": "N15028",
+      "title": "Nettokostnad grundskola F-9, kr/inv",
+      "description": "Nettokostnad för grundskola inklusive förskoleklass, dividerat med antal invånare totalt 31/12. Med nettokostnad avses bruttokostnad minus bruttointäkt. Avser samtlig regi. Källa: SCB.",
+      "year": 2025,
+      "value": 13985.346966,
+      "status": ""
+    },
+    {
+      "id": "N15034",
+      "title": "Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",
+      "description": "Antal elever per lärare i årskurs 1-9 omräknat till heltidstjänster, i kommunala skolor i kommunen. Övrig pedagogisk personal (förskollärare, fritidspedagoger och fritidsledare) ingår inte. Avser läsår, mätt den 15 oktober. Elever och lärare vid internationella skolor är inte inkluderade. Källa: Skolverket",
+      "year": 2025,
+      "value": 11.62251656,
+      "status": ""
+    },
+    {
+      "id": "N15829",
+      "title": "Elever i grundskola åk. 1-9, hemkommun, antal",
+      "description": "Antal elever folkbokförda i kommunen inskrivna i grundskola inkl. integrerade elever. Uppgiften avser läsår, mätt 15 oktober. Källa: SCB och Skolverket.",
+      "year": 2025,
+      "value": 4508.0,
+      "status": ""
+    },
+    {
+      "id": "N15832",
+      "title": "Elever i grundskola F-9, lägeskommun, antal",
+      "description": "Antal elever i kommunal och fristående grundskola F-9 belägna i kommunen, oavsett elevens folkbokföringsort. Uppgiften avser läsår, mätt 15 oktober. Källa: SCB och Skolverket.",
+      "year": 2025,
+      "value": 4939.0,
+      "status": ""
+    },
+    {
+      "id": "N20007",
+      "title": "Kostnad äldreomsorg, kr/inv 65+",
+      "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner avseende vård och omsorg enligt SoL/HSL, dividerad med antalet invånare 65+ i kommunen den 31/12. Källa: SCB Räkenskapssammandraget.",
+      "year": 2025,
+      "value": 71605.654223,
+      "status": ""
+    },
+    {
+      "id": "N20014",
+      "title": "Nettokostnad äldreomsorg, kr/inv",
+      "description": "Nettokostnad för äldreomsorg. Med nettokostnad avses bruttokostnad minus bruttointäkt. Avseende vård och omsorg enligt SoL/HSL, dividerad med antalet invånare i kommunen den 31/12. Källa: SCB-Räkenskapssammandraget",
+      "year": 2025,
+      "value": 15908.117132,
+      "status": ""
+    },
+    {
+      "id": "N20043",
+      "title": "Kostnad äldreomsorg, kr/inv",
+      "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner avseende vård och omsorg enligt SoL/HSL, dividerad med antalet invånare i kommunen den 31/12. Källa: SCB-Räkenskapssammandraget",
+      "year": 2025,
+      "value": 18321.856669,
+      "status": ""
+    },
+    {
+      "id": "N20048",
+      "title": "Kostnad äldreomsorg, kr/inv 80+",
+      "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner avseende vård och omsorg enligt SoL/HSL, dividerad med antalet invånare 80+ i kommunen den 31/12. Källa: SCB Räkenskapssammandraget.",
+      "year": 2025,
+      "value": 232491.909385,
+      "status": ""
+    },
+    {
+      "id": "N20050",
+      "title": "Personalkostnad äldreomsorg, egen regi, andel (%)",
+      "description": "Personalkostnad för äldreomsorg i egen regi, delat på produktionskostnad för äldreomsorg. Med produktionskostnad egen regi avses bruttokostnad minus köp av verksamhet, interna intäkter och lämnade bidrag för äldreomsorg. Källa:SCB-Räkenskapssammandraget\\n",
+      "year": 2025,
+      "value": 74.060876,
+      "status": ""
+    },
+    {
+      "id": "N21702",
+      "title": "Hemtjänsttagare 65+ i ordinärt boende, antal",
+      "description": "Antal personer 65+ år med hemtjänst i ordinärt boende. Avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median. Personer med hemtjänstbeslut som endast omfattar trygghetslarm, matdistribution, avlösning eller ledsagning har exkluderats. Ålder beräknas efter hur många år personen har fyllt vid mätdagen (sista dagen) respektive månad. Källa: SCB och Socialstyrelsen.",
+      "year": 2025,
+      "value": 819.0,
+      "status": ""
+    },
+    {
+      "id": "N21703",
+      "title": "Hemtjänsttagare 65-79 i ordinärt boende, antal",
+      "description": "Antal personer 65-79 år i särskilt boende eller med hemtjänst i ordinärt boende. Avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median. Personer med hemtjänstbeslut som endast omfattar trygghetslarm, matdistribution, avlösning eller ledsagning har exkluderats. Ålder beräknas efter hur många år personen har fyllt vid mätdagen (sista dagen) respektive månad. Källa: SCB och Socialstyrelsen.",
+      "year": 2025,
+      "value": 232.0,
+      "status": ""
+    },
+    {
+      "id": "N21705",
+      "title": "Hemtjänsttagare 80+ i ordinärt boende, antal",
+      "description": "Antal personer 80+ år med hemtjänst i ordinärt boende. Avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median. Personer med hemtjänstbeslut som endast omfattar trygghetslarm, matdistribution, avlösning eller ledsagning har exkluderats. Ålder beräknas efter hur många år personen har fyllt vid mätdagen (sista dagen) respektive månad. Källa: SCB och Socialstyrelsen.",
+      "year": 2025,
+      "value": 587.0,
+      "status": ""
+    },
+    {
+      "id": "N21826",
+      "title": "Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",
+      "description": "Antal beviljade hemtjänsttimmar per månad till personer 65+ år i ordinärt boende (avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median), dividerat med antal personer med hemtjänst i ordinärt boende. Med timregistrerade avses personer där kommunen har registrerat 1-744 hemtjänsttimmar per månad, personer där 0 timmar eller heldygnsvård registrerats samt där uppgift saknas är exkluderade både i täljare och nämnare. Uppgifter om antal personer med beviljad hemtjänst och antal beviljade hemtjänsttimmar är ett månadssnitt där minst 10 månader ska vara inrapporterat. Ersätter, dock ej jämförbart med, tidigare nyckeltalet med Kolada-id N21803. Avser samtlig regi. Källa: Socialstyrelsen.",
+      "year": 2025,
+      "value": 34.93992491,
+      "status": ""
+    }
+  ],
+  "documents": [
+    {
+      "title": "Budget 2026, plan 2027–2028",
+      "file": "budget-2026-plan-2027-2028.pdf"
+    },
+    {
+      "title": "Budget 2025, plan 2026–2027",
+      "file": "budget-2025-plan-2026-2027.pdf"
+    },
+    {
+      "title": "Årsredovisning 2025",
+      "file": "arsredovisning-2025.pdf"
+    },
+    {
+      "title": "Årsredovisning 2024",
+      "file": "arsredovisning-2024.pdf"
+    },
+    {
+      "title": "Årsredovisning 2023",
+      "file": "arsredovisning-2023.pdf"
+    },
+    {
+      "title": "Årsredovisning 2022",
+      "file": "arsredovisning-2022.pdf"
+    }
+  ],
+  "limitations": [
+    "Femårsåldrar delas proportionellt vid modellens åldersgränser. Förändringarna förankras i bokslutets kohorter och totalbefolkning; källprognosens 2025-total är 43132 mot bokslutets 43131.",
+    "Årsvisa restflöden återskapar den förankrade befolkningsbanan. De är inte observerad migration; födslar och dödsfall är fortfarande modellantaganden.",
+    "SKR:s omräknade Motala-belopp är referens. Modellens scenariobelopp kan avvika genom förenklad befolknings-, skattesats- och utjämningsjustering; detta är inte en ny officiell SKR-prognos.",
+    "SKR:s arbetskraftskostnadsindex är en proxy för lönekostnader exklusive pensioner. Separat pensionskostnad är fortsatt illustrativ.",
+    "Kolada-serier används som jämförelseunderlag, inte som automatiskt skattade kostnadsvikter. Definitioner och enheter måste hållas isär.",
+    "Budget-PDF:erna är tillgängliga som referenser. Framtida budgetbelopp och investeringsplaner är inte numeriskt importerade."
+  ],
+  "revenuePath": {
+    "municipality": "0583",
+    "vintage": "2026-10-06",
+    "populationReference": "1 November of the preceding year (Blad 2 Indata C29:J29); not year-end population.",
+    "rows": [
+      {
+        "year": 2026,
+        "tax": 2403.874358,
+        "grants": 982.773537739798,
+        "population": 43155.0
+      },
+      {
+        "year": 2027,
+        "tax": 2512.8949559999996,
+        "grants": 1019.5394917055901,
+        "population": 43203.0
+      },
+      {
+        "year": 2028,
+        "tax": 2618.968228,
+        "grants": 1037.99152248903,
+        "population": 43093.0
+      },
+      {
+        "year": 2029,
+        "tax": 2724.123062,
+        "grants": 1049.57000117674,
+        "population": 43115.0
+      },
+      {
+        "year": 2030,
+        "tax": 2830.923552,
+        "grants": 1061.4225445678198,
+        "population": 43164.0
+      },
+      {
+        "year": 2031,
+        "tax": 2939.891037,
+        "grants": 1073.5617207161902,
+        "population": 43270.0
+      },
+      {
+        "year": 2032,
+        "tax": 3053.38875,
+        "grants": 1086.22587751536,
+        "population": 43379.0
+      },
+      {
+        "year": 2033,
+        "tax": 3172.086697,
+        "grants": 1099.43326482028,
+        "population": 43492.0
+      }
+    ],
+    "provenance": {
+      "workbook": "Prognosunderlag-Motala-0583.xlsx",
+      "sha256": "7ed558a7c6dceb848883666c65c41d18630af19a1388f350707886b71250af9e",
+      "cellMap": {
+        "vintage": "2026-10-06",
+        "populationReference": "1 November of the preceding year (Blad 2 Indata C29:J29); not year-end population.",
+        "municipalityCheck": {
+          "sheet": "Prognosunderlag",
+          "cell": "B1",
+          "expected": 583
+        },
+        "rows": [
+          {
+            "year": 2026,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "B38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "B40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "C29"
+            }
+          },
+          {
+            "year": 2027,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "C38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "C40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "D29"
+            }
+          },
+          {
+            "year": 2028,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "D38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "D40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "E29"
+            }
+          },
+          {
+            "year": 2029,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "E38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "E40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "F29"
+            }
+          },
+          {
+            "year": 2030,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "F38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "F40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "G29"
+            }
+          },
+          {
+            "year": 2031,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "G38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "G40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "H29"
+            }
+          },
+          {
+            "year": 2032,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "H38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "H40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "I29"
+            }
+          },
+          {
+            "year": 2033,
+            "tax": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "I38",
+              "scale": 0.001
+            },
+            "grants": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "I40",
+              "scale": 0.001
+            },
+            "population": {
+              "sheet": "Blad 2 Indata",
+              "cell": "J29"
+            }
+          }
+        ],
+        "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Original workbook units tkr; converted to mnkr."
+      },
+      "cachedFormulasNotRecalculated": true,
+      "recalculation": {
+        "source": "Prognosunderlag-K-2026-2033-26028.xlsm",
+        "sourceSha256": "232479606a21b865e914bc91f9ddf7bee06b1e4abb8de16ba4b8e2ce30afb099",
+        "selectedCopy": "Prognosunderlag-Motala-0583-selected.xlsm",
+        "cell": "Prognosunderlag!B1",
+        "value": 583,
+        "recalculated": true,
+        "engine": "LibreOffice 24.2.7.2 420(Build:2)",
+        "calculatedFile": "data/skr-motala/recalculated/Prognosunderlag-Motala-0583.xlsx",
+        "calculatedSha256": "7ed558a7c6dceb848883666c65c41d18630af19a1388f350707886b71250af9e",
+        "vbaRemovedBeforeRecalculation": true,
+        "macrosExecuted": false,
+        "components": [
+          {
+            "year": 2026,
+            "tkrByOutputRow": {
+              "12": 2432787.791,
+              "14": 635845.77,
+              "16": 50707.125,
+              "18": 120773.636477522,
+              "20": 0,
+              "22": 0,
+              "24": 53093.7225857547,
+              "26": 3293208.04506328,
+              "28": 43.572,
+              "30": -28957.005,
+              "32": 0,
+              "34": 122353.283676521,
+              "36": 3386647.8957398,
+              "38": 2403874.358,
+              "40": 982773.537739798
+            }
+          },
+          {
+            "year": 2027,
+            "tkrByOutputRow": {
+              "12": 2519072.985,
+              "14": 672541.101,
+              "16": 53701.329,
+              "18": 109825.725029064,
+              "20": 0,
+              "22": 0,
+              "24": 56379.915,
+              "26": 3411521.05502906,
+              "28": 0,
+              "30": 0,
+              "32": -6178.029,
+              "34": 127091.421676521,
+              "36": 3532434.44770559,
+              "38": 2512894.956,
+              "40": 1019539.49170559
+            }
+          },
+          {
+            "year": 2028,
+            "tkrByOutputRow": {
+              "12": 2618968.228,
+              "14": 699183.925,
+              "16": 53564.599,
+              "18": 101915.211812508,
+              "20": 0,
+              "22": 0,
+              "24": 56236.365,
+              "26": 3529868.32881251,
+              "28": 0,
+              "30": 0,
+              "32": 0,
+              "34": 127091.421676521,
+              "36": 3656959.75048903,
+              "38": 2618968.228,
+              "40": 1037991.52248903
+            }
+          },
+          {
+            "year": 2029,
+            "tkrByOutputRow": {
+              "12": 2724123.062,
+              "14": 727263.82,
+              "16": 53591.945,
+              "18": 85357.7395002218,
+              "20": 0,
+              "22": 0,
+              "24": 56265.075,
+              "26": 3646601.64150022,
+              "28": 0,
+              "30": 0,
+              "32": 0,
+              "34": 127091.421676521,
+              "36": 3773693.06317674,
+              "38": 2724123.062,
+              "40": 1049570.00117674
+            }
+          },
+          {
+            "year": 2030,
+            "tkrByOutputRow": {
+              "12": 2830923.552,
+              "14": 755801.64,
+              "16": 53652.852,
+              "18": 68547.6108913036,
+              "20": 0,
+              "22": 0,
+              "24": 56329.02,
+              "26": 3765254.6748913,
+              "28": 0,
+              "30": 0,
+              "32": 0,
+              "34": 127091.421676521,
+              "36": 3892346.09656783,
+              "38": 2830923.552,
+              "40": 1061422.54456782
+            }
+          },
+          {
+            "year": 2031,
+            "tkrByOutputRow": {
+              "12": 2939891.037,
+              "14": 784831.26,
+              "16": 53784.61,
+              "18": 51387.0790396724,
+              "20": 0,
+              "22": 0,
+              "24": 56467.35,
+              "26": 3886361.33603967,
+              "28": 0,
+              "30": 0,
+              "32": 0,
+              "34": 127091.421676521,
+              "36": 4013452.75771619,
+              "38": 2939891.037,
+              "40": 1073561.72071619
+            }
+          },
+          {
+            "year": 2032,
+            "tkrByOutputRow": {
+              "12": 3053388.75,
+              "14": 815091.41,
+              "16": 53920.097,
+              "18": 33513.3538388408,
+              "20": 0,
+              "22": 0,
+              "24": 56609.595,
+              "26": 4012523.20583884,
+              "28": 0,
+              "30": 0,
+              "32": 0,
+              "34": 127091.421676521,
+              "36": 4139614.62751536,
+              "38": 3053388.75,
+              "40": 1086225.87751536
+            }
+          },
+          {
+            "year": 2033,
+            "tkrByOutputRow": {
+              "12": 3172086.697,
+              "14": 846702.256,
+              "16": 54060.556,
+              "18": 14821.9711437628,
+              "20": 0,
+              "22": 0,
+              "24": 56757.06,
+              "26": 4144428.54014376,
+              "28": 0,
+              "30": 0,
+              "32": 0,
+              "34": 127091.421676521,
+              "36": 4271519.96182028,
+              "38": 3172086.697,
+              "40": 1099433.26482028
+            }
+          }
+        ]
+      }
+    }
+  }
+}

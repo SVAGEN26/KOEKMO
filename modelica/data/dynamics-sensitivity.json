@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "title": "Minskat utbildningsbehov: anpassning och känslighet",
+  "years": 8,
+  "reference": {
+    "scenario": "school-decline",
+    "label": "Personalanpassning på tre år",
+    "parameters": {}
+  },
+  "alternatives": [
+    {
+      "id": "faster-staffing",
+      "label": "Personalanpassning på ett halvår",
+      "parameters": {"reductionYears": [0.5, 3, 3]}
+    }
+  ],
+  "sensitivities": [
+    {"id": "wages", "label": "Årlig löneökning", "low": {"wageGrowth": 0.015}, "high": {"wageGrowth": 0.045}},
+    {"id": "construction", "label": "Byggfördröjning", "low": {"constructionYears": [1, 1, 1]}, "high": {"constructionYears": [4, 4, 4]}},
+    {"id": "facilities", "label": "Andel övrig kostnad som följer lokalkapacitet", "low": {"facilityCostShare": [0.1, 0.1, 0.1]}, "high": {"facilityCostShare": [0.4, 0.4, 0.4]}},
+    {"id": "transition", "label": "Engångskostnad per minskad årsarbetare", "low": {"staffReductionCost": [0, 0, 0]}, "high": {"staffReductionCost": [0.3, 0.3, 0.3]}}
+  ],
+  "backgrounds": [
+    {"id": "combined-stress", "label": "Kombination: högre kostnader och svagare skattebas", "parameters": {"wageGrowth": 0.045, "priceGrowth": 0.035, "taxBaseGrowth": 0.015, "marketRate": 0.05}}
+  ]
+}

@@ -1,0 +1,193 @@
+Oberoende omprövning av datakrav och fortsatt modellarbete, 2026-10-15
+
+Användarens invändning är befogad. Min tidigare anteckning
+full-goal-status-20261015.txt gjorde daterade lokala prognosunderlag till
+ett alltför starkt villkor för nästa materiella förbättring. Jag återtar
+den rekommendationen som generell blockering. En egen modell får bygga
+på historiska observationer, ekonomiska restriktioner och egna deklarerade
+prognosregler. Att de hittills prövade reglerna inte löst flerårsproblemen
+visar inte att denna väg är uttömd.
+
+Det tidigare precisionsbeslutet kvarstår: fullmålet är ännu inte belagt.
+Omprövningen ändrar vägen framåt, inte de redan observerade resultaten.
+Ingen modell, fryst artefakt, parameter eller poäng har ändrats här.
+
+Vilka data behövs för vilket påstående?
+
+En egen modell behöver tillräckligt långa, jämförbara utfallsserier för
+de komponenter och mekanismer den skattar. Framtida löner, priser,
+pensioner och bidrag kan modelleras med egna uttryckliga antaganden.
+Det är inte nödvändigt att importera KPA:s lokala prognos. En avancerad
+aktuarieberäkning kräver mer detaljerade underlag än en reducerad
+prognosekvation; man får inte förväxla dessa ambitionsnivåer.
+
+Historiska SKR-/kommunprognoser med prognosdatum behövs för ett belagt
+påstående att modellen slår just dessa prognoser på samma mål och
+information. De behövs också om modellen uttryckligen vill använda dem
+som indata. SKR:s nationella makrobana, en kommunal budget och en lokal
+bokslutsprognos är tre olika jämförelseobjekt. Avsaknaden av en rättvis
+SKR-jämförelse hindrar inte prövning mot utfall och enkla baslinjer.
+
+Publiceringsdatum för egna historiska observationsdata behövs fortfarande
+för ett verkligt realtidstest. En öppen retrospektiv prövning på reviderade
+data är däremot möjlig och värdefull, så länge den inte ges realtidsstatus.
+Historiska målårs faktiska priser eller volymer får inte bli prognosindata.
+En separat körning med kända framtida drivare kan endast vara diagnostik.
+
+Kodkontroll
+
+Services.mo:14–19 har redan trög bemanningsanpassning och olika tider för
+ökning/minskning. En sådan mekanism är alltså inte i sig ett nytt förslag.
+Parameters.mo:26–49 visar däremot fortfarande schablonandelar, härledd
+bemanning, antagen kostnad per FTE och antagna anpassningstider. I historisk
+prövning är verksamhetsandelarna lika tredjedelar. Dessa är inte skattade
+ur äldre verksamhetsutfall.
+
+Finance.mo:29–33 balanserar kassabrist med lån. Driftens bemanningsmål
+reagerar inte på budgetmarginalen; någon automatisk återkoppling från
+varaktiga ekonomiska problem till driftbeslut finns inte. M1:s fiscal.py
+har redan pooled ridge, men features:29–36 använder respektive komponents
+egen nivå/förändring och demografi, inte en explicit intäkts-/utgiftslucka.
+Varken generell pooling eller ytterligare en tröghet ska därför säljas
+som den nya mekanismen.
+
+Förslag 1: pröva en enda laggad budgetreaktion med längre Motala-historik
+
+Detta är mitt förstahandsval. Teorin om kommunal anpassning till sin
+budgetrestriktion ger en hypotes som saknas i M2. Börja med en reducerad
+årlig prognos och en exakt likadan variant utan reaktion. Bygg inte ett
+stort system av politiska och finansiella koefficienter på fem öppningar.
+
+Projektledarens föreslagna minimala form är en rimlig avgränsning:
+  R_t = T_t + G_rec,t,
+  B_t = R_t + F_t - C_rec,t - s * R_t,
+  C_hat(t+1|t) = C_rec,t + DeltaC_base_hat(t+1|t) + lambda * B_t.
+T är skatt, G generella bidrag, F finansnetto och C den positivt angivna
+nettokostnaden inklusive avskrivning. B är resultatutrymme relativt ett
+explicit marginalmål s, inte kassaflöde eller ett identifierat permanent
+överskott. "rec" kräver en källstyrd definition av återkommande poster;
+det får inte bestämmas utifrån vilka målår som förbättras. s är ett fast
+deklarerat scenario eller ett i förväg dokumenterat mål, aldrig en andra
+skattad parameter. s=0 är en enkel deklarerad start, inte ett påstående
+om lagkrav eller Motalas faktiska mål.
+
+DeltaC_base är en före skattningen låst egen kostnadsprognosförändring;
+samma bas används när lambda=0. Vid flera år används modellens föregående
+prognostiserade R/C/F, aldrig målårets utfall. Positiv lambda innebär att
+positivt utrymme följs av högre kostnader och negativt av lägre. Med
+konstant R, F och s samt noll basförändring är
+  B_(t+1) = (1-lambda) * B_t.
+Restriktionen 0<=lambda<=1 ger då monoton anpassning. Det är en korrekt
+kontroll av denna förenklade regel, inte bevis för hela modellens stabilitet
+när ränta, skuld, priser och resurser rör sig. Ingen ändring av boksluts-
+identiteten behövs. Först prövas aggregatprognosen, inte en automatisk
+personalminskning eller ett påstått lagstadgat anpassningsförlopp.
+
+Skatta endast lambda på äldre tillgängliga övergångar och redovisa
+osäkerhet/stabilitet. Förregistrera eventuell teckenrestriktion, utan att
+byta den när testresultatet blir känt. En gräns, noll eller svag variation
+är också ett resultat. Skatta inte samtidigt sparmål, permanentinkomstfilter,
+flera tidskonstanter och bemanningselasticiteter. Den slutliga specifikationen
+måste beskriva hur eventuella uttryckligt kända engångsposter hanteras;
+obehandlad bokslutsmarginal får inte kallas varaktig resurs.
+
+Identifieringen här gäller en prediktiv parameter. Eftersom C_t ingår i
+både marginalen och kostnadsbasen kan vanlig återgång efter tillfälliga
+kostnadsstörningar ge en skenbar reaktion. Bidrag är dessutom endogena.
+En positiv koefficient bevisar alltså inte politikers kausala beteende.
+Det är just därför nollvarianten, tidsordnad prövning och komponentfel
+behövs. En eventuell integration i Modelica ska påverka ett driftmål och
+redovisa servicekonsekvenser, inte bara korrigera resultatet efteråt.
+
+Primärforskning stöder hypotesen, inte en importerbar Motala-koefficient:
+Dahlberg, Mörk, Rattsø och Ågren använder svenska bidragsreglers diskontinuitet
+för att hantera endogenitet och finner ökad konsumtion snarare än sänkt
+skatt. Deras svenska data och identifikationsdesign är skälet att studien
+är relevant; dess numeriska effekt ska inte sättas som vår parameter.
+https://uu.diva-portal.org/smash/get/diva2:111495/FULLTEXT01.pdf
+Büttner och Wildasin studerar dynamisk kommunal budgetanpassning med en
+felkorrigeringsmodell på en stor amerikansk panel. Deras resultat motiverar
+att utgiftsreaktionen prövas, utan att amerikansk institutionell respons
+antas gälla Motala.
+https://www.ifo.de/en/cesifo/publications/2002/working-paper/dynamics-municipal-fiscal-adjustment
+Dahlberg och Lindströms svenska studie av permanent kontra aktuell
+resurstillgång är ytterligare stöd för att skilja tillfälligt och varaktigt;
+dess abstrakt motiverar inte att vi antar en redan identifierad permanent
+inkomst eller använder studiens procentsats som lokal parameter.
+https://www.sciencedirect.com/science/article/pii/S0094119097920696
+
+Förslag 2: identifiera en liten kostnads-/volymrelation ur verksamhetsutfall
+
+Prioritera en verksamhet med avstämbar kostnad och volym, exempelvis
+grundskola, före simultan kalibrering av hela kommunen. Hämta observerade
+kostnader, intäkter och elever/brukare från äldre årsredovisningar och
+offentlig verksamhetsstatistik. Stäm av egen regi/hemkommun, interna
+transaktioner, köp, pension, avskrivning och eventuella organisationsbyten.
+Observerad månadsanställning får fortfarande inte ersätta FTE.
+
+En möjlig liten prognosrelation är
+  c_hat(t+1|t) = c_t * [1 + beta * (Q_hat(t+1|t)/Q_t - 1)],
+där c=C/J är kostnad i fasta inputpriser, Q jämförbar verksamhetsvolym
+och J ett dokumenterat prisindex. En enda beta kan skattas på tidigare
+förändringar; beta=0 och beta=1 är tydliga förregistrerade jämförelser.
+Första försöket behöver inte separata beta för uppgång/nedgång eller både
+fast kostnadsandel och anpassningstid. Tolkningen är effektiv kortsiktig
+volymrespons, inte identifierade fysiska fasta kostnader.
+
+Framtida Q och J ska prognostiseras från då kända data med låsta egna
+regler. Det kräver varken KPA-bana eller färdig lokal budget. Historiska
+priser som deflaterar träningsutfall är något annat än att använda faktisk
+framtida inflation i testprognosen. Otillräcklig volymvariation gör beta
+svagt identifierad; då kan observerad fördelning och enhetskostnad ändå
+användas utan att hävda skattade tröghetsparametrar. En större kommunpanel
+är inte ett krav för första Motala-försöket.
+
+Starkes analys av tyska kommuner 2000–2016 ger empiriskt stöd för att
+demografisk sammansättning och kvarstående kostnader spelar roll.
+Den ger inte svenska parametervärden eller stöd för att alla kostnader
+följer samma invånarantal. Vårt nya steg är att pröva storleken mot
+observerade Motala-volymer, inte att lägga till en redan befintlig tröghet.
+https://link.springer.com/article/10.1007/s41358-021-00269-0
+
+Konkret dataväg och gemensam prövning
+
+SCB:s primärkatalog har kontrollerats nu. Resultaträkningar finns listade
+1998–2025; kostnader per kontopost, skatte-/bidragsposter och verksamhets-
+kostnader 2011–2025. Det är en avsevärt längre observationsgrund än de
+fem nuvarande öppningarna. Motala-raderna är ännu inte hämtade/verifierade
+i denna granskning, och tillgänglig katalog är inte samma sak som färdig
+analysfil.
+https://www.scb.se/OE0107
+https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/ResultKnN/
+https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/VerksKostn/
+https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107A/SkatteIntKnN/
+https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__OE__OE0107__OE0107B/KostnDR/
+Tabellerna har aktuell uppdatering2026-08-28. ResultKnN varnar uttryckligen
+för avvikelser från årsredovisningar och att nedskrivning ingår i avskrivning.
+De får därför inte klistras ihop med bokslutsserien utan definitionsbrygga,
+eller märkas som ursprungliga realtidsvintager.
+
+Nästa praktiska arbete är observationsinhämtning och avstämning av den
+längre Motala-serien, därefter låsning av det första försöket ovan.
+En informationsregel efter bokslutspublicering kan undvika den tidigare
+orealistiska årsskiftespremissen. Alternativt hålls försöket uttryckligen
+retrospektivt. Skatta bara på år före respektive prognosstart; alla val av
+regel/fönster måste göras inom träningen eller låsas före utvärdering.
+Att skatta lambda är legitim modellestimering, inte i sig överanpassning.
+Att välja lambda, modell eller horisont efter de yttre testpoängen är det
+problem som ska undvikas.
+
+Använd 1/2/3-årsprognoser, samma fall för jämförelserna, enkla baslinjer,
+de frysta modellerna samt komponenternas signerade fel. År2020–2025 har
+redan påverkat utvecklingen och kan inte göras orörda genom ett nytt
+protokoll. Äldre återfunna år kan ge ny tidsordnad evidens om regelvalen
+låses, men regimskillnader och överlappande horisonter begränsar säkerheten.
+LOO över målår är fortsatt en känslighetskontroll, inte ett nytt sluttest.
+Lägre resultatfel som uppkommer genom större motverkande intäkts- och
+kostnadsfel ska inte förväxlas med en förbättrad strukturell modell.
+
+Beslut: fortsatt arbete med egen, sparsamt parameteriserad Motala-modell
+är vetenskapligt motiverat utan kompletta lokala prognosbanor. Jag
+rekommenderar budgetreaktionen som första nya hypotes. Jag godkänner inte
+full prognosprecision i förväg och kräver inte KPA-/SKR-filer som villkor
+för att denna hypotes får prövas.

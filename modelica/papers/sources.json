@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "cataloguedAt": "2026-10-14",
+  "purpose": "Original research and methodology for an idealized Motala decision-support model. A catalogue entry does not mean the PDF has been downloaded or its parameters validated locally.",
+  "sources": [
+    {
+      "id": "calgary-system-dynamics",
+      "title": "Regional Economic Growth and Municipal Financial Planning: An Application of a System Dynamics Model to Calgary",
+      "authors": ["Stanley Kongnetiman", "Wenhui Fan", "Patrick Walters", "Nathaniel Osgood"],
+      "type": "municipal_research_paper",
+      "filename": "calgary-municipal-financial-planning.pdf",
+      "url": "https://www.calgary.ca/content/dam/www/cfod/finance/documents/corporate-economics/other-reports/regional-economic-growth-and-municipal-financial-planning.pdf",
+      "pdfUrl": "https://www.calgary.ca/content/dam/www/cfod/finance/documents/corporate-economics/other-reports/regional-economic-growth-and-municipal-financial-planning.pdf",
+      "webVerification": "PDF readable through research browser; 31 pages. Not a local download.",
+      "reviewScope": "Abstract, scope, structure, calibration and limitations",
+      "modelUse": "Reference for municipal stocks, flows, feedbacks and delays.",
+      "limitation": "Calgary's revenue institutions and fitted parameters do not transfer directly to Motala. Historical fit does not establish superior forecast accuracy."
+    },
+    {
+      "id": "ki-march-2024",
+      "title": "Konjunkturläget mars 2024",
+      "authors": ["Konjunkturinstitutet"],
+      "year": 2024,
+      "type": "official_economic_methodology",
+      "filename": "ki-konjunkturlaget-mars-2024.pdf",
+      "url": "https://www.konj.se/media/3eojy3lo/konjunkturlaget-mars-2024.pdf",
+      "pdfUrl": "https://www.konj.se/media/3eojy3lo/konjunkturlaget-mars-2024.pdf",
+      "previousUrl": "https://www.konj.se/download/18.265f19318e5606b9db67270/1725432519596/Konjunkturlaget-Mars-2024.pdf",
+      "webVerification": "Current PDF readable through research browser; 80 pages. Not a local download.",
+      "reviewScope": "Demografisk framskrivning av kommunal konsumtion, printed page 44, repeated on page 78",
+      "modelUse": "Reference for age-weighted service demand, staffing and separate volume/price assumptions.",
+      "limitation": "National methodology, including regional services; restrict our model to municipal responsibilities and calibrate Motala separately."
+    },
+    {
+      "id": "starke-2021",
+      "title": "Ausgabenseitige Effekte der demografischen Entwicklung auf die Kommunalfinanzen",
+      "authors": ["Tim Starke"],
+      "year": 2021,
+      "type": "peer_reviewed_empirical_article",
+      "filename": "starke-2021-demography-municipal-expenditure.pdf",
+      "url": "https://doi.org/10.1007/s41358-021-00269-0",
+      "pdfUrl": "https://link.springer.com/content/pdf/10.1007/s41358-021-00269-0.pdf",
+      "webVerification": "Publisher's open-access PDF link followed; 31 pages readable through research browser. Not a local download.",
+      "reviewScope": "Abstract, study scope and cost-persistence discussion",
+      "modelUse": "Motivates testing fixed costs and delayed capacity adjustment when service demand falls.",
+      "limitation": "German municipal evidence; neither coefficients nor service responsibilities can be assumed to match Sweden."
+    },
+    {
+      "id": "cellier-2008",
+      "title": "World3 in Modelica: Creating System Dynamics Models in the Modelica Framework",
+      "authors": ["François E. Cellier"],
+      "year": 2008,
+      "type": "modelica_methodology_paper",
+      "filename": "cellier-2008-world3-modelica.pdf",
+      "url": "https://people.inf.ethz.ch/cellier/Pubs/World/modelica_08_world3.pdf",
+      "pdfUrl": "https://people.inf.ethz.ch/cellier/Pubs/World/modelica_08_world3.pdf",
+      "webVerification": "Author-hosted PDF readable through research browser; 8 pages. Not a local download.",
+      "reviewScope": "Abstract and introduction to the SystemDynamics library",
+      "modelUse": "Implementation reference for stock-and-flow models in Modelica.",
+      "limitation": "This is a method/library reference, not municipal evidence or a reason to copy World3 equations."
+    },
+    {
+      "id": "nilsson-2020",
+      "title": "Att prognostisera det finansiella resultatet i svenska kommuner: en jämförelse mellan ett elastiskt nät och en baseline",
+      "authors": ["Sofia Nilsson"],
+      "year": 2020,
+      "type": "bachelor_thesis",
+      "filename": "nilsson-2020-municipal-financial-forecasting.pdf",
+      "url": "https://lup.lub.lu.se/student-papers/record/9033365",
+      "pdfUrl": null,
+      "webVerification": "Repository abstract indexed, but direct PDF URL not recovered. Use the PDF link on the repository page.",
+      "reviewScope": "Abstract only",
+      "modelUse": "Optional statistical forecasting comparator; separate from causal policy simulation.",
+      "limitation": "Bachelor thesis, not a peer-reviewed paper. Full validation design still needs review."
+    }
+  ],
+  "softwareReference": {
+    "title": "SystemDynamics library",
+    "url": "https://github.com/modelica-3rdparty/SystemDynamics",
+    "note": "Software reference rather than a paper. No library installation or model dependency change is performed by this catalogue."
+  }
+}

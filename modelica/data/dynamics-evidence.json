@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-15",
+  "model": "MotalaDynamics-v3",
+  "scopeOfEvidence": "Källstatus avser standardvärdena. Ändrade parametervärden är användarens scenarioantaganden tills annat underlag anges.",
+  "observedTotals": {
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+    "dataFile": "data/baseline.json",
+    "scope": "kommunen",
+    "parameters": ["births0", "tax0", "grants0", "payroll0", "pension0", "otherExpense0", "operatingRevenue0", "assets0", "depreciation0", "debt0", "cash0", "financialIncome", "otherFinancialExpense", "investment0", "taxRate0", "workInProgress0"],
+    "workInProgress": {"value": 99, "unit": "mnkr", "year": 2025, "printedPages": [48, 53], "note": "Kommunens utgående pågående investeringar; separat från tillgångar i bruk."}
+  },
+  "reconciledOrDerived": {
+    "annualFlowAnchoring": "Förval true: historiska årstotaler omvandlas analytiskt till öppningsflöden under antagen exponentiell prisbana. F(0)/B=(1+g)*log(1+g)/g, med gränsvärde1 vid noll. Kvantitetsförändringar modelleras separat; detta skattar inga tillväxttal.",
+    "p0": "Publicerade åldersgrupper proportionellt avstämda mot total folkmängd.",
+    "migration0": "Observerad total nettomigration; åldersfördelningen är antagen.",
+    "deathRates": "De fyra första är antagna, den sista avstämd mot totalt antal döda.",
+    "interestRate0": "Räntekostnad dividerad med utgående skuld, inte observerad portföljränta.",
+    "staff0": "Härledd från lönekostnad och antagen kostnad per årsarbetare, inte observerad bemanning.",
+    "constructionUnits0": "Härledd från ingående byggutgifter och antaget enhetspris, inte observerad projektkapacitet.",
+    "constructionMoney0": "Observerat totalbelopp fördelat med antagna verksamhetsandelar."
+  },
+  "notInterchangeable": {
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+    "printedPage": 14,
+    "observedMonthlyEmployees2025": 3878,
+    "note": "Antal anställda enligt rapportens urval är inte årsarbetskrafter. Används inte som staff0."
+  },
+  "assumedMechanisms": [
+    "taxReceivable0=0 och taxPayments=tax antar noll ingående nettoskattefordran och betalning samtidigt med intäkten. Tillståndet taxReceivable tillåter andra signerade betalningsbanor, men historiska saldon och betalningstidpunkter är ännu inte avstämda. externalTaxSettlement separerar kollektiv avräkning från beloppet som multipliceras med lokal skattesats; noll är förval.",
+    "useExternalTax kan ersätta enbart skatten medan bidrag och förenklad utjämning behåller sina interna antaganden. Historisk tax-only-känslighet använder nationella SKR-prognoser med antagen konstant lokal andel; den är inte en kommunvis SKR-prognos eller validerad demografisk skatterespons.",
+    "extraCostPath och extraCostPaymentPath är nominella scenarioantaganden för ytterligare driftkostnad respektive betalning. Förval noll betyder inget angivet tillägg, inte en observation om framtida engångshändelser. Periodiseringssaldo är kostnad minus betalning sedan modellstart, inte kommunens totala avsättning.",
+    "Separata verksamhetsandelar för lön, övrig drift, intäkter, tillgångar och investeringar; gemensam schablon är fallback.",
+    "Anpassningstider, personalförändringstak, leverantörskapacitet, omställningskostnader och framtida prisbanor är scenarioparametrar.",
+    "Befolkning och service i breda grupper; varken fullständigt elevunderlag eller omsorgsvolymer.",
+    "Finansieringspolicyn antar tillgänglig upplåning. Skatteutjämning och avskrivning är förenklade."
+  ],
+  "research": {
+    "equationsAndLiterature": "docs/dynamics-equations.md",
+    "staffingConstraints": "https://skr.se/personalochkompetensforsorjning/skrspersonalprognos.8994.html",
+    "interpretation": "SKR:s underlag motiverar att personalbehov och tillgänglig personal hålls isär; det skattar inte våra lokala förändringstak."
+  },
+  "validUse": "Jämförelse av explicit angivna mekanismer och känslighet. Ej en empiriskt validerad budgetprognos.",
+  "nextEmpiricalInputs": ["Årsarbetskrafter och lönekostnad per verksamhet", "Elever och omsorgsvolymer per ålder", "Bruttokostnader och intäkter per verksamhet", "Lokaler, driftsättningsdatum och projektbetalningar", "Låneportfölj och pensionsbetalningsplan"]
+}

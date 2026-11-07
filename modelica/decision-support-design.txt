@@ -1,0 +1,138 @@
+MOTALA: AN IDEALIZED MODEL AND A DECISION-MAKER INTERFACE
+======================================================
+Design direction recorded 14 October 2026, implementation status updated
+15 October 2026. The native M2 mechanism model is implemented; the interactive
+decision workflow below remains proposed. No forecast superiority is established.
+
+Purpose
+-------
+Help decision makers compare the timing, financial effects and service
+consequences of explicit choices. Keep mechanisms small enough to explain.
+Include a relationship when it matters to a decision and has a defensible
+source or a clearly labelled assumption that can be tested.
+
+Current integration
+-------------------
+The existing dashboard (../site/dist/app.js) runs the earlier model's JavaScript
+engine. Its adapter generates Scenario extending Motala.Annual and offers optional browser
+Modelica verification when compiler assets are installed. It is not an M1 UI.
+MotalaResearch.Annual is the newer M1 model; motala_lab/modelica.py generates
+its native Scenario and motala_lab/report.py creates a separate static report.
+M1 has population and accounting components, but fiscal paths are statistical
+inputs. It does not yet model service staffing or a debt-to-interest feedback.
+Connecting a new control requires an implemented, tested mechanism behind it.
+
+MotalaDynamics is the continuous M2 scenario model. It implements population,
+staffing, capacity/construction, operating costs, approximate revenue and
+debt-interest feedback, with an explicit pension cash bridge. Equations and
+research provenance are in ../docs/dynamics-equations.md. run_dynamics.py runs
+the native model and exports annual integrals and end-of-year stocks with a
+source snapshot. This report is separate from the dashboard. Service parameters
+are illustrative; observed volumes, sector accounts and adjustment rates still
+need estimation. M2 does not replace M1's historical evaluation results.
+
+V2 adds separate sector allocations for each ledger category, optional staffing
+and supplier limits, cash transition costs, and observed opening construction
+spending. run_experiments.py now implements paired comparisons across explicit
+sensitivity assumptions. Reports retain failed runs and compiler-resolved
+parameters. The shared browser controls remain a separate integration task.
+
+Component review, one at a time
+------------------------------
+1. Population: counts by age, births, deaths and migration. Use SCB and Motala
+   observations. Finer ages are needed before attributing care needs to older
+   groups. Migration is initially an external scenario; a municipal action
+   should affect it only through a separately evidenced relationship.
+2. Service demand: population times observed participation or care intensity.
+   KI's March 2024 report motivates separating volumes from staffing and prices.
+   Obtain local pupil counts and care volumes; population alone is insufficient.
+3. Staffing and capacity: translate demand into required staff and facilities,
+   then represent feasible adjustment over time. Starke motivates investigating
+   persistent costs; estimate Motala's effects instead of importing coefficients.
+4. Operating accounts: staff compensation, pensions, other costs and operating
+   revenue, reconciled to sector accounts. Show fixed and variable costs.
+5. Revenue: local tax base, tax rate, grants and equalisation. Use Swedish
+   institutional sources and dated SKR inputs. Specify which inputs are external
+   assumptions and which change in response to a simulated municipal decision.
+6. Investment and financing: construction, commissioning, depreciation, cash,
+   debt and interest. Preserve distinctions between expenditure and cash flows.
+   Calgary informs the overall dynamic structure; Swedish accounts define it.
+
+Cellier's paper informs the Modelica implementation. Annual accounts must remain
+reconciled if continuous stocks and rates are introduced. In M1, net cost already
+includes depreciation; replacing components must avoid counting it twice.
+
+For each component, document its purpose, equations, units, time convention,
+source and relevant page, parameter provenance, deliberate simplifications,
+missing mechanisms, and observable quantities used for validation. Put concise
+explanations beside equations and fuller notes in Modelica Documentation.
+
+Decision-maker workflow
+----------------------
+Start with a named reference scenario and its observation date. Let the user
+choose a concrete question, change a few meaningful inputs, and compare the
+result with the reference across years. Proposed Swedish control groups:
+
+  Beslut: staffing/service targets and an investment commissioning schedule.
+  Omvärld: wage and price growth, interest and national tax-base scenarios.
+  Modellantaganden: estimated service intensity, fixed costs and adjustment times.
+
+Place municipal tax-rate choices under Beslut once the revenue mechanism is
+implemented. Do not imply that national growth or migration can be commanded.
+Adjustment time combines practical constraints and management choices; expose
+an explicit implementation plan separately from the estimated response rate.
+
+Each control needs a plain-language label, unit, baseline, effective year,
+source or assumption status, and explanation of what it changes. Offer numeric
+entry as well as sliders. A valid input range is not a confidence interval.
+Policy targets do not imply instant achievement: show realized staffing and
+capacity. Do not imply unchanged service quality from an unexplained saving.
+
+Show annual result, cash, debt, service demand, available capacity and their
+changes from the reference. Include a readable explanation of the main drivers.
+Keep recorded outcomes, municipal budgets, forecasts and scenarios visibly
+identified. Scenario ranges remain scenario ranges unless probability coverage
+has been calibrated. Provide tables, accessible labels and exportable results.
+
+Use progressive detail: an overview for a meeting, a component explanation for
+discussion, and a source/equation view for scrutiny. The main view should make
+the decision understandable without requiring knowledge of Modelica.
+
+Shared computation and provenance
+---------------------------------
+Use one versioned scenario contract for the interface and simulation: base year,
+horizon, dated observations, decisions, external paths and calibrated parameters.
+Every editable field must map explicitly to a Modelica input or parameter.
+Return results with the scenario identifier and model/data versions. Never show
+results from an earlier simulation as if they reflect newly edited inputs.
+
+Prefer a Modelica execution path as the authoritative scenario calculation.
+If an immediate preview uses another engine, compare it with Modelica for
+supported controls and label verification accurately. Export the scenario,
+results and provenance together so a meeting's comparison can be reproduced.
+M2 provides native parameter overrides and export provenance. The shared
+interactive contract and browser integration are not implemented yet.
+
+First complete increment
+------------------------
+Use education demand and staffing as the first small component to review:
+  children -> enrolled pupils -> staff required -> staff available -> payroll.
+Include facility capacity/cost where observations support it, and explicitly
+represent purchased places or cross-boundary pupils where material. Reconcile
+this component with the remaining net cost rather than adding it on top.
+
+A first decision view can compare maintaining staffing per pupil with a changed
+target, showing payroll, staffing and pupil implications over time. Estimate
+response delays from evidence or mark them as sensitivity assumptions. Do not
+invent a numerical effect on educational attainment or migration.
+
+Before accepting the increment, check accounting, units, plausible limiting
+cases, control-to-output behavior, and reproduction of the same scenario in
+the UI and Modelica. Compare historical costs using only earlier information;
+keep municipal budget and SKR comparisons aligned to their publication dates.
+Ask decision makers to explain the difference between the scenarios and identify
+the changed assumptions. Their ability to do this is an interface acceptance
+criterion alongside the numerical checks.
+
+Original sources and download status: papers/README.txt and papers/sources.json.
+Research hypotheses and data needs: data/model-research.json.

@@ -1,0 +1,213 @@
+Oberoende slutgranskning: Motala v8, 2026-10-15
+
+Granskat arkiv: runs/historical-v8-20261015-regulation
+Förhandsgranskning: reviews/regulation-prereview-20261015.txt
+Protokoll SHA256:
+bca8d7961c93d63f012c089251e9b135726a0aed6d78eac77048ed33170c20a4
+
+Beslut
+
+Det tekniska experimentet godkänns som reproducerbar, avgränsad
+retrospektiv utvecklingsprövning. Inget blockerande kod-, arkiv-,
+räkne- eller informationsgränsfel hittades. Den nya regleringsregeln
+är inte godkänd som en generellt bättre prognoskandidat. Den fulla
+Motala-modellen är fortsatt inte godkänd som en tillräckligt belagd
+ett- till treårsprognos. Framför allt återstår stora fleråriga komponentfel
+och tydlig felutjämning mellan intäkter och kostnader.
+
+Detta avslag gäller evidensen för Motala. Det grundas inte på resultaten
+från Norrköping eller krav på generell överförbarhet mellan kommuner.
+
+Oberoende teknisk kontroll
+
+Alla 1 262 hashlistade artefakter i slutarkivet verifierades, liksom
+samtliga 1 043 filer i parentmanifestet. Parentkopian innehåller inga
+olistade filer. Historiskt hashlistade cachefiler är kvar i den frysta
+referensen; det aktuella programmet importerar inte dessa källor.
+Protokollhash och källhashar stämmer mot förhandsregistreringen.
+Rapportens fyra lokala länkar finns.
+
+Full återkörning gjordes från arkivets egna sources, med /tmp som cwd
+och utan PYTHONPATH:
+
+PYTHONDONTWRITEBYTECODE=1 python3 /home/johti17/MOTALA/modelica/runs/historical-v8-20261015-regulation/sources/run_regulation.py --parent-run /home/johti17/MOTALA/modelica/runs/historical-v8-20261015-regulation/reference --protocol /home/johti17/MOTALA/modelica/runs/historical-v8-20261015-regulation/protocol.json --out /tmp/motala-independent-v8-replay-20261015
+
+evaluation.json blev byteidentisk. Alla 18 native.csv blev byteidentiska.
+Samtliga 1 262 hashposter i reproduktionsarkivet verifierades också.
+Originalarkivet kontrollerades igen efteråt och är oförändrat.
+
+Det finns 12 nominella fall, fördelade 5/4/3 på horisont 1/2/3, med
+båda notpolicyerna. De 18 native-körningarna består av tio nominella
+ursprung/policy-kombinationer och åtta WIP-alternativ. De ger inte 18
+oberoende observationer. De 24 nya WIP-raderna har lagts till; tidigare
+WIP-rader bevaras exakt.
+
+Jag jämförde varje gammal prognos, varje utfall, gamla komponentfel,
+samtliga tidigare modellpoäng och deras parade jämförelser, WIP samt
+övrig ärvd metadata mot v7. De är exakt bevarade. Det nya protokollfältet
+och de uttryckligen utökade resultattabellerna är korrekt avskilda från
+den bevarade historiken. candidate är fortfarande M2-PKV-costbase och
+forecastSuperiorityProven är false.
+
+Ett separat kontrollprogram, utan återanvändning av modellens
+utvärderingsfunktioner, kontrollerade 11 393 tal: komponentfel,
+MAE/bias/RMSE, samtliga nya parade LOO-tal, äldre modellers poäng,
+känd-WIP-urval, algebra, integraler och befolkningskänsligheter.
+Största skillnaden var 2,73e-12. Kontrollprogrammet finns temporärt som
+/tmp/motala-independent-v8-check.py.
+
+Native-CSV kontrollerades direkt i samtliga 18 körningar. Största
+balansrest var 6,55e-11. Största skillnad i de storheter som ska vara
+oförändrade var 4,11e-6, under förregistrerad tolerans 1e-3.
+Årsexportens flöden stämmer exakt med differenserna i sparade kumulativa
+native-flöden. Största skillnad mot den oberoende parentallokeringen
+var 3,18e-7 och bidragsidentiteten avvek högst 2,73e-12.
+Identiteten för resultatförändringen avvek högst 1,14e-11.
+
+De fem fokuserade testerna kördes självständigt redan före scoring och
+passerade. Projektets rapporterade fulla 104-testskörning duplicerades
+inte; denna granskning tillför i stället full arkivreproduktion och
+oberoende kontroll av samtliga sparade fall.
+
+Regel, kategorier och informationsgräns
+
+Den implementerade regeln följer förhandsprotokollet: samma daterade
+decembercirkulär som tidigare, kommunernas regleringsbelopp per person,
+konstant lokalt årsslutsantal och explicit föregående novemberreferens.
+Ingen nationell folkmängd, framtida lokal observation, skattesatsfaktor
+eller ytterligare indexering har multiplicerats in.
+
+Parentallokeringen utgår från inheritedGrants/(Ganchor-I0). V8 tar bort
+R0 och F0 från just denna proportionella rest och lägger till r_h*N/1e6.
+De två notpolicyernas olika ankare används rätt. Vid ursprung 2020 är
+den kvarvarande öppningsdelen 213,6 respektive 131,5 mnkr; no-repeat
+tar inte bort 82,1 en andra gång. Källbelagd F-övergång till reglering
+från 2021 ligger kvar med sin reservation: den bevisar inte att exakt
+11,2 mnkr flyttas till Motalas nya regleringsbelopp.
+
+R+F är den primära jämförbara kategorin. Separat R och F exporteras
+också. Nollorna efter kategoriövergången är märkta som normaliserad
+avsaknad av separat kategori. Restutfallet är G-I-R-F och omfattar
+den publicerade avrundningen. Kontroll: 2021 är resten 137,8 mot
+namngivna 137,7 och avrundning +0,1; 2025 är den 241 mot namngivna
+242 och avrundning -1. Ingen utfallsrest har stämts bort.
+
+2025 års komponentfil används i scoring efter simuleringarna, inte i
+prognosvägen. Testerna och den granskade anropskedjan skyddar mot
+framtida utfall och ej valda vintager. Bokslutens faktiska historiska
+publiceringstillgänglighet är fortfarande inte fastställd; daterade
+SKR-cirkulär gör inte hela övningen till en realtidsprognos.
+
+Resultat, mnkr
+
+Nedan är costbase, native, samma 5/4/3 fall. Värdena är MAE.
+
+                              v7 h1/h2/h3              v8 h1/h2/h3
+Reglering + överförd kategori  31,352 / 28,418 / 19,235   2,563 / 20,658 / 42,159
+Hela bidraget                 20,444 / 53,835 / 91,742  41,911 / 83,425 /124,447
+Skatt + bidrag                50,272 / 83,525 /132,842  44,882 / 92,084 /165,547
+Årets resultat                29,131 / 65,114 / 90,456  33,693 / 45,449 / 92,020
+
+Regleringens h1-vinst överlever varje målårsutelämning: skillnaden
+v8-v7 är mellan -35,912 och -17,830. H2-vinsten är skör: intervallet
+är [-18,529; +5,479]. H3 är sämre vid varje utelämning:
+[+7,691; +40,514]. De nya regleringsprognosernas bias är
+-2,529 / -20,658 / -42,159. Den nationella daterade banan är således
+träffsäker nära startåret men underskattar denna komponent längre fram.
+
+Costbase:s hela bidrag försämras vid varje utelämning på alla horisonter.
+LOO-intervallen är [+8,634; +34,145], [+20,822; +39,028] och
+[+19,404; +55,184]. En förbättrad enskild komponent är alltså inte
+liktydig med en förbättrad totalbidragsprognos.
+
+Costbase:s resultatförändring är skör vid h1 och h3. H2 förbättras vid
+varje utelämning: [-34,494; -7,481]. Men hela intäktens h2-MAE blir
+sämre, och h3-intäkten blir sämre vid varje utelämning. H1-intäktens
+MAE-vinst överlever inte alla utelämningar; RMSE ökar dessutom från
+53,223 till 58,218. Därför kan resultatets h2-vinst inte användas som
+bevis för att de ekonomiska sambanden nu är korrekt prognostiserade.
+
+No-repeat behålls och bedöms separat. Dess bidrags-MAE är
+27,728 / 83,697 / 153,339 och resultat-MAE 41,093 / 78,679 / 77,863.
+H1-bidraget förbättras i genomsnitt men inte vid varje utelämning.
+H2-bidraget försämras i genomsnitt med blandad utelämningsbild; h3
+försämras vid varje utelämning. Resultatet förbättras mot sin egen
+parent vid h1 och h2 vid varje utelämning, men h3-vinsten är skör.
+Det ger inte stöd för att i efterhand välja policy per horisont.
+
+Felutjämning och finansiering
+
+Det tydligaste exemplet är 2020 -> 2021 costbase: regleringsfelet är nu
+bara +0,085 mnkr, medan den oförändrade övriga bidragsresten har felet
++79,963. Hela bidragsfelet blir +77,310. Den gamla låga regleringen
+hade delvis dolt den för höga restprognosen. Detta bekräftar nyttan av
+komponentgranskningen; det är inget skäl att återinföra ett känt
+komponentfel för att förbättra totalpoängen.
+
+V8 costbase:s intäktsbias är -33,737 / -92,084 / -165,547, medan
+nettokostnadsbias är -35,885 / -78,349 / -199,187. Resultatbias blir
+därför relativt liten: +2,671 / -12,274 / +38,716, inklusive finans och
+bokföringsavrundning. Dessa stora motverkande komponentfel kvarstår.
+Personalkostnadernas MAE är oförändrat cirka 37,201 / 98,688 /137,037.
+
+Accounting behåller finansnettot exakt och resultatförändringen är
+exakt bidragsförändringen. Native:s finansförändring över de 24 nominella
+policyfallen ligger mellan -0,684 och +0,762 mnkr. Bidragsändringarna
+dominerar alltså experimentet. Skattekassafordran är fortsatt noll och
+betalning lika med redovisad skatt, enligt de bevarade antagandena.
+Detta är ingen empirisk kontroll av framtida skuld eller likviditet.
+
+Jämförelser och användningsområde
+
+V8 costbase:s resultat-MAE 33,693 / 45,449 / 92,020 ska jämföras med
+oförändrat historiskt medel 51,470 / 54,090 / 32,428 och persistence
+58,920 / 76,275 / 40,867. H1 slår båda vid varje utelämning. H2 slår
+persistence vid varje utelämning men inte medel. H3 är sämre än båda
+vid varje utelämning. Ursprunglig M2-PKV har 25,211 / 49,205 /83,016;
+den tidigare costbase-kandidaten har 16,032 /57,610 /104,242.
+Det finns inte en enhetlig ny vinnare över horisonterna.
+
+Samma v8-regel utan dynamiska kvantiteter och finansiering har
+resultat-MAE 35,772 /47,850 /103,318 för costbase. Native-vinsten
+överlever inte varje målårsutelämning på någon horisont. Därmed finns
+fortfarande inget robust belägg för dynamikens extra prognosprecision.
+Mekanismerna kan användas för märkta scenarier och känsligheter, men
+historiska totalpoäng validerar inte kausala policyverkningar.
+
+Nästa sakligt motiverade arbete
+
+Utan nya KPA- eller vintagefiler går det redan att göra en reproducerbar
+diagnos av den kvarvarande bidragsresten. Dela öppningsresten i
+kostnadsutjämning, LSS-utjämning, fastighetsavgift, andra generella bidrag
+och avrundning med befintliga noter. Fördela den befintliga restbanan
+med de deklarerade öppningsandelarna, håll alla prognoser oförändrade
+och jämför mot respektive redan källbelagda målkomponent. Nämn uttryckligt
+att detta är en allokering av en befintlig prognos och diagnostik efter
+utfall, inte nya administrativa delprognoser eller ett nytt sluttest.
+Exportera signerade fel så att de summerar till restfelet; komponenternas
+MAE ska inte summeras. Notjusterad 82,1 och avrundningen måste fortsatt
+ha egna synliga behandlingar.
+
+Den diagnosen kan precisera vilka daterade administrativa prognoser som
+faktiskt saknas. Den får inte bli ett sätt att välja nya tillväxttal,
+fönster eller borttagningar för att passa dessa tolv utfall. Ingen
+schablonändring av hela bidragsresten är härmed rekommenderad eller
+godkänd. H3-regleringens fel ska inte heller kalibreras bort med senare
+kända nationella tillskott.
+
+För hela Motala-målet är den större prioriteten fortfarande den lokala
+personalkostnadsbanan: förenliga definitioner för löner, sociala avgifter,
+pension och särskild löneskatt; bemanning/volymer; samt daterade lokala
+pensionsprognoser. Den tidigare kostnadsdiagnosen visar att stora fel
+redan finns i jämförelsen med oförändrade kvantiteter. Den identifierar
+inte hur mycket som är pension, löner eller faktisk bemanning. En ny
+pensionsmodul eller anpassad personalelasticitet kan därför inte
+motiveras enbart med den residualen.
+
+För operativ användning kan befintliga parametriska kostnads- och
+betalningsbanor användas för tydligt märkta scenarier medan lokal
+centralprognos saknas. För ett verkligt precisionstest behövs en låst
+prognos med dokumenterad informationsdag och senare, ännu oanvända
+Motala-utfall. Även en framtida sådan prövning ska behålla enkla
+baslinjer, båda komponent- och resultatmått samt den avsedda horisonten.
+Det krävs inte en ny kommunpanel för detta Motala-mål.

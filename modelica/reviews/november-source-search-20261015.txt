@@ -1,0 +1,108 @@
+Oberoende källsökning: Motala per 1 november, 2026-10-15
+
+Uppdrag och avgränsning
+Söka direkt observerade folkmängder för 2020–2024, utan att härleda dem
+ur skatt eller utjämning. Inga modellindata, modeller eller frysta arkiv har
+ändrats. Detta är en källanteckning, inte en prognosutvärdering.
+
+Verifierat läge
+2019-11-01: 43 680, nu även direkt SCB-tabell i daterad kommunal bilaga.
+2020-11-01: inte verifierat i läsbart originalunderlag.
+2021-11-01: 43 647, direkt SCB-tabell och tillhörande daterat meddelande.
+2022-11-01: inte verifierat i läsbart originalunderlag.
+2023-11-01: inte verifierat i läsbart originalunderlag.
+2024-11-01: inte verifierat i läsbart originalunderlag.
+
+SCB utjämningsår 2022: november 2021
+SCB:s tabellsamling Kommunalekonomisk utjämning för kommuner,
+utjämningsår 2022, Utfall, finns hos Gävle kommun som mötesbilaga
+till kommunstyrelsen 2022-02-08. Tabell 1 på PDF-index 2, tredje PDF-sidan,
+och tabell 2 på index 14 anger Motala 43 647 under uttrycklig rubrik
+folkmängd den 1 november 2021. Värdet har lästs direkt, inte räknats fram.
+
+PDF:
+https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2022-02-08/agenda/bilaga-kommunalekonomisk-utjamning-for-kommuner-utfall-ar-2022-pdf?downloadMode=open
+Mötessida:
+https://meetingsplus.gavle.se/committees/kommunstyrelsen/mote-2022-02-08
+
+Tabell 2 ger också följande administrativa källvärden för Motala:
+Skatteunderlag enligt 2021 års taxering: 8 821 878 100 kr.
+Uppräknat skatteunderlag: 9 550 865 175 kr.
+Garanterat skatteunderlag: 12 356 620 647 kr.
+Skillnad: 2 805 755 472 kr; länsskattesatser 18,93 respektive 16,86 %.
+Detta är administrativa underlag för 2022, inte hela bokförda skatteintäkten.
+
+Tillhörande SCB-meddelande är daterat 2021-12-21 kl. 11:06, dnr A2021/0643.
+Det uppger att publicering sker den dagen och att novemberbefolkningen
+ersätter juniunderlaget. Bilagans titel stämmer med tabellsamlingen.
+https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2022-02-08/agenda/e-postmeddelande-kommunalekonomisk-utjamning-for-kommuner-utfall-ar-2022pdf?downloadMode=open
+
+Versionskontroll, inte residualanpassning:
+Tabellens garantiunderlag och befolkning motsvarar K=246177 kr/inv,
+medan SKR 21:49 från 2021-12-16 anger 246141. Den senare SCB-publiceringen
+får därför inte smygas in i en informationsmängd låst vid cirkulärdatumet.
+Vid årsslutsgräns är datumet förenligt, men regeln måste anges uttryckligen.
+9 550 865 175*0,217/1e6 = 2072,537742975 mnkr, jämfört med 2072,6
+i Motala not 6. Avvikelsen 0,062257025 mnkr överstiger en halv
+avrundningsenhet för en cell med precision 0,1. Den ska bevaras och utredas.
+Utjämningen enligt gap*0,1893 blir 531,12951085 mnkr och är förenlig
+med notens 531,1. Ingen av dessa kontroller används som folkobservation.
+
+SCB utjämningsår 2020: november 2019
+Gävle kommunstyrelse 2020-01-14 har en SCB-bilaga med 338 PDF-sidor.
+Tabell 1 på PDF-index 3, fjärde PDF-sidan, och tabell 2 på index 27
+anger Motala 43 680, med uttryckligt referensdatum 1 november 2019.
+Tabell 2 anger taxeringsunderlag 8 565 041 000 kr, uppräknat underlag
+9 086 514 956 kr, garantiunderlag 11 680 396 728 kr, skillnad
+2 593 881 772 kr samt länsskattesatser 18,93 och 16,86 %.
+https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2020-01-14/agenda/statistiska-centralbyran-scb-kommunalekonomisk-utjamning-for-kommuner-utfall-ar-2020-kommunenpdf?downloadMode=download
+Mötessida:
+https://meetingsplus.gavle.se/committees/kommunstyrelsen/mote-2020-01-14
+SCB:s nuvarande katalog daterar utfallssamlingen 2020 till 2019-12-20.
+Här har ingen separat e-post som binder exakt PDF till detta datum hittats.
+Möteskopian är en bättre bevarad primärkälla än en senare kommunal återgivning,
+men filernas ursprungliga byteidentitet och eventuella revisioner är inte bevisade.
+
+Det tidigare oberoende stödet är Tranås Mål och budget 2021, tryckt sida 15,
+PDF-index 14: Motala november2019 43 680 och årsslut2019 43 673 i olika
+kolumner. Filnamnet anger 2020-10-26, men nuvarande URL är en återpublicering
+från 2026; den bevisar inte ursprunglig åtkomsttidpunkt.
+https://tranas.se/wp-content/uploads/2026/04/Mal-Budget-2021-tillganglighetsanpassad.pdf
+
+Datakällor som återstår att hämta
+SCB:s katalog har utfall för samtliga utjämningsår som behövs:
+https://www.scb.se/oe0115
+2021: daterat 2020-12-21, bör ge november2020.
+2023: nuvarande kommunfil korrigerad 2023-02-01, bör ge november2022.
+2024: daterat 2023-12-22, bör ge november2023.
+2025: daterat 2024-12-23, senare korrigering 2025-02-10, bör ge november2024.
+2022: nuvarande kommunfil är korrigerad 2023-02-01. Den daterade
+Gävlekopian ovan ger ett separat tidigare underlag för jämförelse.
+Katalogens datum är inte automatiskt datum för varje statistikcells
+första offentliggörande. Korrigerade filer måste få en revisionsflagga.
+
+SCB:s äldre statistikdatabastabell FolkmangdNov/TAB1267 och dess bulkfil
+är också relevanta. Webbläsarverktyget kunde inte läsa XLSX/ZIP, API-anrop
+gav ingen läsbar tabell och nedladdning via shell saknar DNS-åtkomst.
+Det är en åtkomstlucka, inte belägg för att observationerna saknas hos SCB.
+
+Avvisade sammanblandningar och sökta spår
+Gävles preliminära 2022-tabell anger Motala 43 740, men referensen är
+30 juni 2021. Den är därför inte en observation för november2021.
+Meddelandet från september2020 för preliminärt utfall2021 säger uttryckligen
+att junibefolkningen ska ersättas med novemberbefolkning i december.
+https://meetingsplus.gavle.se/committees/kommunstyrelsen/mote-2021-10-12
+https://meetingsplus.gavle.se/committees/kommunstyrelsen/mote-2020-10-06
+
+Gävles februariagendor 2021-02-09, 2023-02-07, 2024-02-06 och 2025-02-04
+genomsöktes utan ytterligare SCB-sluttabeller. SKR 20:59 i 2021-agendan
+anger regleringspost och modellinstruktioner, men ingen direkt Motala-N.
+Tranås budget2022 gav ingen Motala-träff; budget2024 saknade relevant tabell.
+Motala kommunfaktas historiska befolkningar är årsslutstal. Kvartalsstatistik
+publicerad i november avser heller inte automatiskt den 1 november.
+
+Slutsats
+2019 och 2021 är nu direkt källstödda novemberobservationer. Fyra begärda
+år återstår. Bevara de saknade värdena som saknade tills originaltabeller
+kan läsas. Använd inte årsslut, juni, interpolerade tal eller baklängeslösta
+skatteidentiteter som om de vore verifierade novemberobservationer.

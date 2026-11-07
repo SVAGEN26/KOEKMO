@@ -1,0 +1,142 @@
+{
+  "municipality": "0583",
+  "catalogueSha256": "ee78abc7ad63831fa1a0d4f939d40fb30ba83cd2213947b446c6714085302c42",
+  "note": "Current observed data vintage. Retrieval date is not historical availability. No automatic model import.",
+  "requests": [
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/metadata?lang=sv&defaultSelection=false",
+      "method": "GET",
+      "file": "TAB6777-metadata.json",
+      "requestedAt": "2026-10-16T09:11:41.282100+00:00",
+      "status": "downloaded",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/metadata?lang=sv&defaultSelection=false",
+      "contentType": "application/json; charset=utf-8",
+      "lastModified": null,
+      "bytes": 13720,
+      "sha256": "89631ee1be0433638528662d5d57cd49aa6249df5d9f20fa62261e13a11babd9",
+      "finishedAt": "2026-10-16T09:11:41.866840+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/data?lang=sv&outputFormat=json-stat2",
+      "method": "POST",
+      "file": "TAB6777-data.json",
+      "requestedAt": "2026-10-16T09:11:41.867006+00:00",
+      "status": "downloaded",
+      "requestSha256": "aa97922b4d04132c7a2f1d9764d3352b40b5acc9cde62b583c321d134961adac",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/data?lang=sv&outputFormat=json-stat2",
+      "contentType": "application/json; charset=UTF-8",
+      "lastModified": null,
+      "bytes": 9036,
+      "sha256": "2198be99b1fe18e3fc159a0c043401cc1401b20188fc05848dbaae7bf40742d0",
+      "finishedAt": "2026-10-16T09:11:43.182842+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4202/metadata?lang=sv&defaultSelection=false",
+      "method": "GET",
+      "file": "TAB4202-metadata.json",
+      "requestedAt": "2026-10-16T09:11:43.192029+00:00",
+      "status": "downloaded",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4202/metadata?lang=sv&defaultSelection=false",
+      "contentType": "application/json; charset=utf-8",
+      "lastModified": null,
+      "bytes": 16447,
+      "sha256": "80cd82a6e301c9bb03808747c2aa3ce1d1e644dd5f3a26f4413376ad7fe98d5b",
+      "finishedAt": "2026-10-16T09:11:43.650488+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4202/data?lang=sv&outputFormat=json-stat2",
+      "method": "POST",
+      "file": "TAB4202-data.json",
+      "requestedAt": "2026-10-16T09:11:43.650657+00:00",
+      "status": "downloaded",
+      "requestSha256": "4c7dacd2244ff7565f5edc5b51267177d103d26a0d867c68c327c56f13248076",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4202/data?lang=sv&outputFormat=json-stat2",
+      "contentType": "application/json; charset=UTF-8",
+      "lastModified": null,
+      "bytes": 12476,
+      "sha256": "9154ed19b3c696acce0d4db19956b01da3ea7d3f29c740cf749c3a3644f26cd6",
+      "finishedAt": "2026-10-16T09:11:44.712389+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6782/metadata?lang=sv&defaultSelection=false",
+      "method": "GET",
+      "file": "TAB6782-metadata.json",
+      "requestedAt": "2026-10-16T09:11:44.731056+00:00",
+      "status": "downloaded",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6782/metadata?lang=sv&defaultSelection=false",
+      "contentType": "application/json; charset=utf-8",
+      "lastModified": null,
+      "bytes": 15934,
+      "sha256": "1b453adca00e120fb2266337ae748d9502a200f5053a85c64d2c23603e55296d",
+      "finishedAt": "2026-10-16T09:11:45.172690+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6782/data?lang=sv&outputFormat=json-stat2",
+      "method": "POST",
+      "file": "TAB6782-data.json",
+      "requestedAt": "2026-10-16T09:11:45.172871+00:00",
+      "status": "downloaded",
+      "requestSha256": "b4f430371c9245fa813da08f2eb69f3d0676a5f6fc1787d329200a415ade1f30",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6782/data?lang=sv&outputFormat=json-stat2",
+      "contentType": "application/json; charset=UTF-8",
+      "lastModified": null,
+      "bytes": 9462,
+      "sha256": "c70e986c9c89d71786f687c833daa04976cf895751f7577f17ffbbaa6e3da76d",
+      "finishedAt": "2026-10-16T09:11:46.383896+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4199/metadata?lang=sv&defaultSelection=false",
+      "method": "GET",
+      "file": "TAB4199-metadata.json",
+      "requestedAt": "2026-10-16T09:11:46.397386+00:00",
+      "status": "downloaded",
+      "finalUrl": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4199/metadata?lang=sv&defaultSelection=false",
+      "contentType": "application/json; charset=utf-8",
+      "lastModified": null,
+      "bytes": 18265,
+      "sha256": "65f8cb5ebe2e22d0eb6d4e624bd2c423ac4152f4661d88782c481e6d094c243e",
+      "finishedAt": "2026-10-16T09:11:46.776710+00:00"
+    },
+    {
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4199/data?lang=sv&outputFormat=json-stat2",
+      "method": "POST",
+      "file": "TAB4199-data.json",
+      "requestedAt": "2026-10-16T09:11:46.776914+00:00",
+      "status": "failed",
+      "requestSha256": "64953fbdbe4f9ad158160b1a7f073a8acca0fbdc67e78e0d78df334b1cbe5ced",
+      "error": "The read operation timed out",
+      "finishedAt": "2026-10-16T09:12:07.929854+00:00"
+    }
+  ],
+  "tables": [
+    {
+      "id": "TAB6777",
+      "status": "validated_selection",
+      "cells": 476,
+      "missing": 113,
+      "csvFile": "TAB6777-motala.csv",
+      "csvSha256": "ecd311f5e4543a2eb1fcc41b4b3cbe05ff56a350dc04aacf4f1092b6faef85c9"
+    },
+    {
+      "id": "TAB4202",
+      "status": "validated_selection",
+      "cells": 945,
+      "missing": 115,
+      "csvFile": "TAB4202-motala.csv",
+      "csvSha256": "b509bfdfc91f596d1330f648916416957aa45e638194c7eca486b78d891082ab"
+    },
+    {
+      "id": "TAB6782",
+      "status": "validated_selection",
+      "cells": 720,
+      "missing": 62,
+      "csvFile": "TAB6782-motala.csv",
+      "csvSha256": "3a43bf93919a91a9e5d856a8c78b3570b9f49a157055767343c889c04dde15cf"
+    },
+    {
+      "id": "TAB4199",
+      "status": "failed",
+      "error": "The read operation timed out"
+    }
+  ]
+}

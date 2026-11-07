@@ -1,0 +1,4 @@
+# Authored assets live in src; npm run build recreates dist.
+/dist/
+# Staged OpenModelica web compiler (~100 MB); scripts/stage_omc.py recreates it.
+/omc-web/

@@ -1,0 +1,186 @@
+{
+  "version": 5,
+  "registeredAt": "2026-10-15T17:47:17.399760+00:00",
+  "status": "development_tax_only_diagnostic_locked_before_first_replay",
+  "notBlind": "Motala outcomes and existing PKV errors were already reviewed. Rules and both scenarios are fixed before the first adjusted forecast. No blind or real-time accuracy claim.",
+  "scope": "kommunen",
+  "primaryMetric": "result",
+  "horizons": [
+    1,
+    2,
+    3
+  ],
+  "originYears": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "candidate": "M2-PKV-costbase",
+  "comparators": [
+    "frozen M2-v2",
+    "M1",
+    "persistence",
+    "fixed 0.5 damped trend",
+    "unweighted expanding historical mean, no window or decay parameter",
+    "M2 with original fixed price assumptions",
+    "PKV-accounting: same gross ledger and SKR costs, fixed quantities, fixed depreciation and finance net"
+  ],
+  "parameters": {
+    "wageGrowth": 0.03,
+    "priceGrowth": 0.02,
+    "productivityGrowth": 0,
+    "taxBaseGrowth": 0.035,
+    "grantGrowth": 0.02,
+    "feeGrowth": 0.02,
+    "pensionGrowth": 0.02,
+    "sectorShares": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "hiringYears": [
+      1,
+      1,
+      1
+    ],
+    "reductionYears": [
+      3,
+      3,
+      3
+    ],
+    "fixedCostShare": [
+      0.15,
+      0.15,
+      0.15
+    ],
+    "facilityCostShare": [
+      0.25,
+      0.25,
+      0.25
+    ],
+    "constructionYears": [
+      2,
+      2,
+      2
+    ],
+    "closureYears": [
+      8,
+      8,
+      8
+    ],
+    "planningYears": [
+      2,
+      2,
+      2
+    ],
+    "physicalLifeYears": [
+      40,
+      40,
+      40
+    ],
+    "compensationPerFTE": [
+      0.65,
+      0.65,
+      0.65
+    ],
+    "incomeWeights": [
+      0,
+      0,
+      0,
+      1,
+      0.55
+    ],
+    "taxLagYears": 1,
+    "equalisationOffset": 0.95,
+    "rateAdjustmentYears": 3,
+    "liquidityYears": 0.25,
+    "repaymentYears": 0.25,
+    "limitStaffChanges": false,
+    "limitExternalService": false,
+    "automaticInvestment": false,
+    "allowClosure": true,
+    "staffReductionCost": [
+      0,
+      0,
+      0
+    ],
+    "capacityClosureCost": [
+      0,
+      0,
+      0
+    ]
+  },
+  "missingWIP": {
+    "nominal": 0,
+    "sensitivityFractionsOfTotalTangibleAssets": [
+      0.1,
+      0.2
+    ],
+    "interpretation": "Scenario assumptions only, not observed zero, confidence bounds or fitted values. Main report must show known-WIP subset separately."
+  },
+  "rules": [
+    "No fitting or optimization against target outcomes. Do not change the PKV mapping after examining its results; retain unfavorable cases.",
+    "Only observations with period <= origin enter the forecast; source revisions are disclosed separately.",
+    "No 2025 money, population or derived demand defaults may fill historical opening values.",
+    "Equal sector shares are fixed uncalibrated assumptions, replacing the 2025-specific allocation.",
+    "Fixed growth assumptions are tested as assumptions; they are not historical SKR forecasts.",
+    "Every run saves resolved parameters, input hash, native log and annual integrals.",
+    "Report identical target sets, signed component errors, MAE, RMSE, bias and leave-one-year-out sensitivity.",
+    "Budgets remain a separately labelled descriptive benchmark until matching information dates are verified.",
+    "A historical win alone does not establish generalisation with five development targets.",
+    "Retain all five original native origins and add a separately scored aggregate-only set2019–2025. Do not present these as independent samples or select a favorable starting year.",
+    "Report M2-PKV against both fixed-input M2 and PKV-accounting so national input gains are not attributed solely to dynamics."
+  ],
+  "additionalBaselines": [
+    "historical_mean"
+  ],
+  "include2017": true,
+  "aggregateOriginYears": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "macroFile": "skr-pkv-vintages.json",
+  "macroMapping": {
+    "personnel": "Apply the same cumulative PKV labor index to payroll and pension partitions; no separate pension growth. Compare only the combined personnel total; individual payroll/pension allocations are bookkeeping proxies.",
+    "other": "Apply cumulative PKV other-consumption index to other operating expenses and replacement unit costs; no separate price growth.",
+    "timing": "Annual cumulative factors held constant within each model year. At fixed quantities, integrated annual cost equals opening annual total times product(1+growth/100).",
+    "unmodified": "Tax/grant/fee growth, demography, staffing and capital adjustment mechanisms retain the original protocol parameters.",
+    "uncertainty": "PKV local applicability and opening publication vintages remain limitations; no local pension calibration.",
+    "accountingComparator": "Same annual cost indices; tax, grants and operating revenue compound original fixed growth, depreciation and financial net held at opening values, no demographic or capital dynamics."
+  },
+  "eventsFile": "motala-noted-events.json",
+  "eventScenarios": [
+    "costbase",
+    "no-repeat"
+  ],
+  "eventRules": [
+    "Primary costbase: remove all named already-recognised exceptional costs in note10 from otherExpense0. Do not repeat the same past loss or provision recognition each forecast year. Keep opening assets, debt and cash unchanged.",
+    "Leave all income and price assumptions unchanged in costbase, so the cost-base change is isolated. This does not certify temporary receipts as permanent.",
+    "Mandatory sensitivity no-repeat: also remove every note10 temporary receipt from its original income field, including general grants. This is a zero-renewal scenario, not a calibrated expectation or confidence bound.",
+    "Apply each scenario to every declared origin; do not select years, items or scenarios after observing scores. Do not extrapolate the26mnkr provision charge from its38mnkr stock-addition line.",
+    "No adjustments to actual full annual results or historical comparator inputs. Retain original PKV and simple accounting candidates for all identical targets.",
+    "Preserve itemised reported-to-recurring bridges, source revisions, source ambiguities and unknown publication dates. Absence of reviewed notes must fail, not silently imply zero.",
+    "Only note10 items are in this version. Other impairments, asset sales, tax settlement and transfers are not certified as recurring. Future provision payments and valuation changes are not estimated by this experiment.",
+    "Future parameter fitting, horizon-dependent blends, post-score relabelling and outcome cleaning are prohibited for this run."
+  ],
+  "eventsSha256": "3e66f1e159c145acb3731c9e57ad62a9672cbf5aa4013f9962bb4e4a70db6f36",
+  "taxFile": "skr-tax-vintages.json",
+  "taxSha256": "6d67144d76b7210ed3f43fcb5b7eba67bafaa511c8eafeb6950cd9faa4de3389",
+  "taxRules": [
+    "Keep M2-PKV-costbase as the existing candidate. Add clearly labelled tax-only diagnostics to both fixed note policies and their accounting counterparts; no promotion based on scores.",
+    "For every declared origin, annual tax equals opening reported tax times the cumulative actually nominal national tax-base forecast from the same December circular as PKV. Constant local share and constant tax rate are explicit assumptions.",
+    "Do not change the internal taxIndex or taxBaseGrowth. The original simplified grant calculation must be numerically unchanged; replacing taxIndex would inadvertently change its equalisation term.",
+    "External tax is not multiplied by local population or income exposure. National aggregate growth already includes national demographics. This diagnostic does not estimate local tax-demographic effects.",
+    "Keep all costs, notes, stocks, outcomes, PKV paths, horizons and comparators. Run both note scenarios and all missing-WIP alternatives. Report tax, grants, total income, net cost and result errors separately for all horizons.",
+    "Do not infer local forecasts from political proposals or later annual outcomes. No fitting, blends, selective years, or renaming a sensitivity as an approved forecast.",
+    "Opening tax settlements and compensated tax-rule changes remain limitations. This is not a reconstruction of SKR Skatter och bidrag."
+  ],
+  "macroSha256": "4459b31ffe5a88bbb9afdd680f19b817576458d2323ad9a9cd09512a8dd44f29"
+}

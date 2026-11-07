@@ -1,0 +1,152 @@
+{
+  "vintage": "2026-10-06",
+  "populationReference": "1 November of the preceding year (Blad 2 Indata C29:J29); not year-end population.",
+  "municipalityCheck": {
+    "sheet": "Prognosunderlag",
+    "cell": "B1",
+    "expected": 583
+  },
+  "calculatedMunicipalityCheck": {
+    "sheet": "Prognosunderlag",
+    "cell": "C1"
+  },
+  "rows": [
+    {
+      "year": 2026,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "B38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "B40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "C29"
+      }
+    },
+    {
+      "year": 2027,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "C38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "C40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "D29"
+      }
+    },
+    {
+      "year": 2028,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "D38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "D40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "E29"
+      }
+    },
+    {
+      "year": 2029,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "E38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "E40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "F29"
+      }
+    },
+    {
+      "year": 2030,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "F38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "F40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "G29"
+      }
+    },
+    {
+      "year": 2031,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "G38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "G40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "H29"
+      }
+    },
+    {
+      "year": 2032,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "H38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "H40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "I29"
+      }
+    },
+    {
+      "year": 2033,
+      "tax": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "I38",
+        "scale": 0.001
+      },
+      "grants": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "I40",
+        "scale": 0.001
+      },
+      "population": {
+        "sheet": "Blad 2 Indata",
+        "cell": "J29"
+      }
+    }
+  ],
+  "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Original workbook units tkr; converted to mnkr."
+}

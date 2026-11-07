@@ -1,0 +1,84 @@
+Oberoende granskning av skatteavräkning och kassabrygga, 2026-10-15
+
+Omfattning
+Revenue.mo, Finance.mo, Continuous.mo, Parameters.mo, Examples.mo,
+annual_rows/write_report/main i motala_lab/dynamics.py, relevanta native-test,
+och runs/dynamics-20261015-tax-settlement. Inga modellfiler, tester eller
+frysta arkiv har ändrats av granskaren.
+
+Teknisk bedömning
+Den implementerade kassabryggan är algebraiskt korrekt för de explicit
+angivna indata. Ett kvarvarande metadatafel i exemplet beskrivs nedan.
+Detta är inte ett godkännande av Motala-prognosens empiriska kvalitet.
+
+Kontrollerad algebra och enheter
+Skatteintäkt T och betalning P anges i mnkr/år. Q är mnkr.
+Finance beräknar taxAccrualRate=T-P, der(Q)=(T-P)/yearSeconds.
+Driftens kassaflöde drar av T-P från det redan intäktsförda resultatet.
+Förskjutningen påverkar därmed kassaflöde och finansiering vid betalningen;
+intäkten förs inte in en andra gång. Positivt Q är en fordran och negativt
+Q en nettoskatteskuld. Ingen positivitetsspärr förstör negativa avräkningar.
+
+Continuous inkluderar +Q i nettoställningen och +Q0 i öppningsställningen.
+Inkassering av Q0 ökar kassaflödet och minskar fordran utan ny intäkt.
+Den kombinerade balansidentiteten har rätt tecken även när Q är negativt.
+Ränteeffekter från förändrad finansiering kan senare påverka resultatet;
+likhet i resultat efter olika betalningsbanor gäller därför endast före
+sådana följdeffekter, eller i test med nollränta.
+
+Revenue multiplicerar endast extern referensskatt med taxRate/taxRate0.
+externalTaxSettlement läggs därefter till utan egen skattesatsfaktor.
+Avräkningen aktiveras vid useExternalRevenue eller useExternalTax; den är
+noll i intern intäktsmodell. Bidragsekvationen är oförändrad. Dokumentation
+kräver att en separat avräkning inte samtidigt ingår i externalTax.
+
+Förval och tidigare modell
+Q0=0, P=T och separat avräkning=0 innebär exakt oförändrade analytiska
+ekvationer för äldre scenarier. Jag jämförde källorna mot fryst v5 och
+körde själv samma åttaårs Base-scenario mot båda paketversionerna i /tmp.
+Maximal absolut differens bland alla gemensamma exporterade årsvariabler
+och alla gemensamma native-variabler vid årsgränser var 0,00007798070146,
+i kapacitet för verksamhet3 år4. Fordran och separat avräkning var exakt
+noll i den nya baskörningen. Det är en numerisk regressionskontroll, inte
+en full omkörning av alla historiska prognoser. De frysta arkiven är orörda.
+
+Rapport och återkompatibilitet
+Årsavräkning och årsbetalning exporteras som differenser av kumulativa
+integraler, fordran som årets slutstock. Äldre CSV som saknar hela bryggan
+får inga fabricerade kolumner; en delvis närvarande brygga avvisas.
+Rapporten anger saldo- och betalningsplan som antaganden utan lokalt stöd.
+
+Självständig testkörning
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=modelica python3 -m unittest
+discover -s modelica/tests -p test_dynamics.py -v
+Resultat: 25 tester PASS, 45,844 sekunder. Det omfattar uppskjuten positiv
+och negativ avräkning, egen skattesats, öppningsfordran, exporter samt
+de övriga befintliga dynamik- och bevarandetesten. Jag har inte här
+återkört alla 89 projekttester.
+
+Exemplets sparade årsflöden kontrollerades direkt:
+2026: intäkt2330, separat avräkning0, betalning2330, Qslut0.
+2027: intäkt2380, separat avräkning50, betalning2330, Qslut50.
+2028: intäkt2330, separat avräkning0, betalning2380, Qslut≈0.
+Manifestets maximala balansrest är 1,37845e-12 mnkr.
+Samtliga 29 artefakthashar i manifestet verifierades utan avvikelse.
+
+Kvarvarande konkret fynd
+runs/dynamics-20261015-tax-settlement/manifest.json anger
+externalRevenue=false trots att Examples.TaxSettlement ärver
+useExternalRevenue=true. main() använder bara
+overrides.get('useExternalRevenue', False), vilket missar ett ärvt
+scenariovärde. Detta fel ändrar inte native-resultatet men felbeskriver
+vilken intäktsmekanism som användes och försvagar spårbarheten.
+
+Begärd rättning: läs effektiva useExternalRevenue och useExternalTax från
+native/resolved-parameters.json när manifestet byggs; testa det ärvda
+tax-settlement-scenariot. Spara rättad körning under nytt namn och bevara
+första arkivet. Granskaren har meddelat implementeraren detta fynd.
+
+Kvarstående empiriska krav
+En redovisningsmässigt korrekt brygga bestämmer inte Motalas faktiska
+betalningsplan, öppningsfordran, skatteavräkningar eller bidrag. Dessa
+måste komma från datum- och definitionskontrollerade underlag innan
+historisk intäkts-/likviditetsprecision kan påstås. Kostnads- och
+intäktsfelens tidigare utjämning och svaga flerårsresultat kvarstår.

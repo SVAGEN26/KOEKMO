@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-23",
+  "tableId": "TAB6777",
+  "municipality": "0583",
+  "scope": "kommunen",
+  "itemDimension": "Resultatraknposter",
+  "contentsCode": "000008H2",
+  "inputUnit": "tkr",
+  "outputUnit": "mnkr_current_prices",
+  "scale": 0.001,
+  "years": [1998, 2025],
+  "expectedLabels": {
+    "030": "verksamhetens nettokostnader",
+    "040": "skatteintäkter",
+    "050": "generella statsbidrag och utjämning",
+    "060": "finansiella intäkter",
+    "072": "finansiella kostnader",
+    "071": "ränta på pensionsskulden",
+    "080": "resultat efter finansiella poster",
+    "085": "extraordinära poster (netto)",
+    "100": "extraordinära intäkter",
+    "110": "extraordinära kostnader",
+    "120": "årets resultat"
+  },
+  "equations": {
+    "taxAndGrants": "(040 + 050) / 1000",
+    "netCost": "-030 / 1000; includes depreciation/write-downs in SCB's net-cost total",
+    "financeNetThrough2010": "(060 + 072 + 071) / 1000; all expense cells already have negative signs",
+    "financeNetFrom2011": "(060 + 072) / 1000; 071 is no longer separately populated",
+    "result": "120 / 1000; retain the reported result, including extraordinary items",
+    "extraordinaryThrough2018": "(100 + 110) / 1000; expense cell 110 is signed",
+    "extraordinaryFrom2019": "085 / 1000"
+  },
+  "checks": [
+    "Every required cell is numeric, finite, in tkr and for Motala. Missing values are not filled.",
+    "071 must be populated through 2010 and missing from 2011 in this reviewed table vintage. Missing does not mean zero pension interest.",
+    "Extraordinary cells must follow the reviewed 2019 presentation change. Missing cells in the unused presentation are not converted to observations.",
+    "040+050+030+financeNet_in_tkr must equal 080 exactly at the source's integer-tkr precision.",
+    "120-080 must equal the separately reported extraordinary total. Preserve that difference as the result accounting residual."
+  ],
+  "interpretation": [
+    "The mapping was specified before scoring this imported series. No estimator, protocol threshold or forecast rule is changed.",
+    "Keep this revised SCB series separate from the annual-report series. Compare overlapping observations explicitly; do not splice the series or describe all discrepancies as rounding.",
+    "The reported-unadjusted experiment retains extraordinary items and changes in reporting definitions. Accounting reconciliation does not establish comparability across all institutional or accounting changes.",
+    "The download date and SCB update date are not original historical release dates. Evaluation remains retrospective development evidence."
+  ]
+}

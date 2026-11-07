@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "retrievedAt": "2026-10-15",
+  "selectionRule": "December planning circular of each origin year, fixed before the PKV replay. All origins retained; no choice of vintage based on accuracy.",
+  "unit": "annual percent change",
+  "primaryDefinition": "https://skr.se/ekonomiochbudgetplanering/prisindex.8274.html",
+  "limitations": [
+    "National labour cost index includes payroll charges and pension effects. Applying it to local combined personnel expense is an approximation, not a local KPA forecast.",
+    "2020 and 2021 tables explicitly include quality adjustment. No extra quality-growth assumption is added.",
+    "Annual rates are held constant within each model year; no unobserved monthly price timing is invented.",
+    "Original PDF text/tables accessed through the web tool; original PDF files are not locally archived.",
+    "Circular dates are verified; this does not verify historical publication dates of opening municipal accounts."
+  ],
+  "vintages": [
+    {
+      "originYear": 2020,
+      "circular": "20:57",
+      "publicationDate": "2020-12-15",
+      "source": "https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2021-02-09/agenda/cirkular-2057-fran-skr-budgetforutsattningar-for-aren-2020-2023pdf?downloadMode=open",
+      "locator": "Printed page 11, table 9; original SKR circular archived by Gavle",
+      "rows": [
+        {
+          "year": 2021,
+          "laborPercent": 2.2,
+          "otherPercent": 1.7
+        },
+        {
+          "year": 2022,
+          "laborPercent": 2.0,
+          "otherPercent": 1.8
+        },
+        {
+          "year": 2023,
+          "laborPercent": 2.4,
+          "otherPercent": 2.0
+        }
+      ]
+    },
+    {
+      "originYear": 2021,
+      "circular": "21:49",
+      "publicationDate": "2021-12-16",
+      "source": "https://skr.se/download/18.3bf105b617db3dab4fe18617/1639652701859/21049.pdf",
+      "locator": "Printed page 12, table 9; indexed primary PDF table",
+      "rows": [
+        {
+          "year": 2022,
+          "laborPercent": 1.6,
+          "otherPercent": 2.2
+        },
+        {
+          "year": 2023,
+          "laborPercent": 3.4,
+          "otherPercent": 2.0
+        },
+        {
+          "year": 2024,
+          "laborPercent": 2.1,
+          "otherPercent": 2.2
+        }
+      ],
+      "verifiedMirror": "https://insynsverige.se/documentHandler.ashx?did=2017024"
+    },
+    {
+      "originYear": 2022,
+      "circular": "22:54",
+      "publicationDate": "2022-12-15",
+      "source": "https://skr.se/download/18.2867e67f185050c7b9f1e723/1671105243834/22054.pdf",
+      "locator": "Printed page 14, table 13; indexed primary PDF table",
+      "rows": [
+        {
+          "year": 2023,
+          "laborPercent": 7.2,
+          "otherPercent": 4.5
+        },
+        {
+          "year": 2024,
+          "laborPercent": 4.2,
+          "otherPercent": 2.3
+        },
+        {
+          "year": 2025,
+          "laborPercent": -0.4,
+          "otherPercent": 2.4
+        }
+      ]
+    },
+    {
+      "originYear": 2023,
+      "circular": "23:56",
+      "publicationDate": "2023-12-14",
+      "source": "https://extra.skr.se/download/18.40b25ebf18c6245376516b5b/1702628339915/Cirkul%C3%A4r%2023056.pdf",
+      "locator": "Printed page 27, table 18",
+      "rows": [
+        {
+          "year": 2024,
+          "laborPercent": 5.7,
+          "otherPercent": 3.0
+        },
+        {
+          "year": 2025,
+          "laborPercent": 0.0,
+          "otherPercent": 2.5
+        },
+        {
+          "year": 2026,
+          "laborPercent": 2.5,
+          "otherPercent": 2.5
+        }
+      ]
+    },
+    {
+      "originYear": 2024,
+      "circular": "24:56",
+      "publicationDate": "2024-12-12",
+      "source": "https://extra.skr.se/download/18.72fac55919386070c95830a7/1733995400288/Cirkul%C3%A4r%2024056.pdf",
+      "locator": "Printed page 25, table 17",
+      "rows": [
+        {
+          "year": 2025,
+          "laborPercent": -1.5,
+          "otherPercent": 2.4
+        },
+        {
+          "year": 2026,
+          "laborPercent": 3.7,
+          "otherPercent": 2.5
+        },
+        {
+          "year": 2027,
+          "laborPercent": 3.2,
+          "otherPercent": 2.6
+        }
+      ]
+    }
+  ],
+  "definitionChange": {
+    "date": "2022-04-28",
+    "circular": "22:15",
+    "locator": "printed page 14",
+    "source": "https://extra.skr.se/download/18.542a096a18019210a48a9383/1651143815523/22015.pdf",
+    "description": "SKR removed the previously assumed labour quality adjustment starting April 2022. Earlier forecasts are retained without correction. Constant FTE is not identical to constant quality-adjusted labour volume."
+  }
+}

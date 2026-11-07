@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "retrievedCatalogAt": "2026-10-15",
+  "purpose": "Acquire administrative source tables for revenue reconciliation; downloading does not authorize historical forecast use.",
+  "catalog": "https://www.scb.se/oe0115",
+  "sources": [
+    {
+      "id": "population-november-2002-2024",
+      "filename": "TAB1267_sv.zip",
+      "kind": "csv_zip",
+      "url": "https://www.statistikdatabasen.scb.se/Resources/PX/bulk/ssd/sv/TAB1267_sv.zip",
+      "catalogPublicationDate": "2024-12-10",
+      "latestCorrectionDate": null,
+      "role": "Observed November population; current table, historical vintages not verified"
+    },
+    {
+      "id": "equalisation-2020",
+      "filename": "scb-equalisation-2020.xlsx",
+      "kind": "xlsx",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret-2020/kommunalekonomisk-utjamning-for-kommuner-2020-utfall/",
+      "catalogPublicationDate": "2019-12-20",
+      "latestCorrectionDate": null,
+      "role": "Administrative December table; publication and file contents must be verified before using as forecast input"
+    },
+    {
+      "id": "equalisation-2021",
+      "filename": "scb-equalisation-2021.xlsx",
+      "kind": "xlsx",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret-2021/kommunalekonomisk-utjamning-for-kommuner-2021-utfall/",
+      "catalogPublicationDate": "2020-12-21",
+      "latestCorrectionDate": null,
+      "role": "Administrative December table; publication and file contents must be verified before using as forecast input"
+    },
+    {
+      "id": "equalisation-2022",
+      "filename": "scb-equalisation-2022.xlsx",
+      "kind": "xlsx",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret-2022/kommunalekonomisk-utjamning-for-kommuner-2022-utfall-korrigerad-2023-02-01/",
+      "catalogPublicationDate": "2023-02-01",
+      "latestCorrectionDate": "2023-02-01",
+      "role": "Later corrected table; not a pre-outcome forecast vintage"
+    },
+    {
+      "id": "equalisation-2023",
+      "filename": "scb-equalisation-2023.xlsx",
+      "kind": "xlsx",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret-2023/kommunalekonomisk-utjamning-for-kommuner-2023-utfall-korrigerad-2023-02-01/",
+      "catalogPublicationDate": "2023-02-01",
+      "latestCorrectionDate": "2023-02-01",
+      "role": "Later corrected table; not a pre-outcome forecast vintage"
+    },
+    {
+      "id": "equalisation-2024",
+      "filename": "scb-equalisation-2024.xlsx",
+      "kind": "xlsx",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret--2024/kommunalekonomisk-utjamning-for-kommuner-2024-utfall/",
+      "catalogPublicationDate": "2023-12-22",
+      "latestCorrectionDate": null,
+      "role": "Administrative December table; publication and file contents must be verified before using as forecast input"
+    },
+    {
+      "id": "equalisation-2025",
+      "filename": "scb-equalisation-2025.xlsx",
+      "kind": "xlsx",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret-2025/kommunalekonomisk-utjamning-for-kommuner-2025-utfall/",
+      "catalogPublicationDate": "2024-12-23",
+      "latestCorrectionDate": "2025-02-10",
+      "role": "Later corrected table; not a pre-outcome forecast vintage"
+    }
+  ]
+}

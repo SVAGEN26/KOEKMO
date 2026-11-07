@@ -1,0 +1,171 @@
+Oberoende granskning av daterade skatteavräkningar, 2026-10-15
+
+Beslut
+V7 godkänns som tekniskt korrekt och självständigt reproducerat,
+retrospektivt utvecklingsexperiment. Den godkänns inte som ersättande
+huvudprognos eller som uppfyllelse av målet om en tillförlitlig flerårsmodell
+för Motala. Avräknings- och skattefelen förbättras på två och tre års sikt,
+men intäktssummans fel försämras. Resultatvinsten mot v6 innehåller därför
+förnyad utjämning mellan intäkts- och kostnadsfel. Inga modeller, källdata
+eller frysta arkiv har ändrats av granskaren.
+
+Omfattning och förhandsregel
+Arkiv: runs/historical-v7-20261015-settlements
+Parent: arkivets reference, motsvarande fryst v6-reviewed.
+Förhandsprotokollets SHA-256 är oförändrad:
+08e508e4bcbadc371b7c8c94825b16878c1cd6835e87288e56005c531eefb786
+Regeln granskades före scoring. V6:s P/I-prognoser behålls och hela den
+ärvda skatteresten ersätts. H1 använder nästa års avräkning i samma daterade
+decembercirkulär: 8, 9, -317, -7 respektive 163 kr/person för ursprung
+2020-2024. Dessa multipliceras med respektive ursprungsårsslut:
+43 640, 43 674, 43 728, 43 728 och 43 505 personer, och divideras med 1e6.
+Årsslut är uttryckligen proxy för 1 november samma ursprungsår. Senare
+aktuella avräkningar och samtliga framtida revisionsdifferenser har
+deklarerad förväntan noll. Källornas null bevaras i ett separat källfält.
+
+Informationsgräns och redovisning
+Endast vald öppningsbokslutsrad och dess makrovintage används i prognosen.
+Komponentmålen för 2025 är separata och kommer in i scoring, efter de nya
+native-körningarna. Mutation av övriga års bokslut, lokala komponenter och
+makrovintager ändrar inte den valda prognosen. Positiv kontroll av vald
+avräkningskälla påverkar däremot rätt års skatt med rätt belopp. Populationens
+positiva kontroll och de angivna känsligheterna är också verifierade.
+
+Den gamla inheritedTax är noll, inte en ytterligare intäkt bredvid den nya
+avräkningen. externalTaxSettlement ligger utanför egen skattesatsfaktor.
+Preliminär skatt, inkomstutjämning, bidragsrest, notankare och kostnader
+bevaras. Historisk egen skattesats är referensskattesatsen. Samma års
+skattebetalning och noll ingående skattefordran kvarstår som antaganden;
+ingen empirisk validering av likviditet följer av resultatprovet.
+
+Målmåttet för avräkning är summan av de två källnoternas komponenter,
+aktuell avräkning och föregåendeårs revisionsdifferens. Båda sparas också
+separat; eventuell skatteavrundning hålls utanför avräkningsmåttet. De
+aktuella målens sourceTaxRoundingResidual är samtliga noll. Parentens
+tax-P jämförs som dess ärvda rest, inte som en tidigare administrativ
+prognos. Denna precisering före första scoring följer protokollets definition.
+
+Oberoende tekniska kontroller
+Samtliga 1 043 hashvärden i v7 stämmer. Samtliga 814 hashvärden i dess
+v6-parent och 599 i den underliggande v5-referensen stämmer också.
+Alla tidigare prognoser, komponentfel och målutfall är exakt bevarade.
+Samtliga 12 fall finns: 5/4/3 vid h1/h2/h3. Samtliga 18 nya native-körningar
+finns, med båda notpolicys och båda WIP-alternativen för båda berörda starter.
+24 nya WIP-rader kompletterar 96 bevarade rader. Alla nya run.mos laddar
+Modelica från v7-arkivets egen sources-katalog.
+
+Jag återkörde före scoring de fyra fokuserade settlement-testerna: PASS
+på 8,205 s. De omfattar fyra native-körningar, negativ avräkning,
+framtidsmutation och positiv källkontroll. Uppgiften om 99 projekttester
+PASS kommer från implementeraren; hela projektets testsvit har inte
+duplicerats i denna granskning.
+
+Jag återkörde därefter hela experimentet från /tmp, utan PYTHONPATH:
+PYTHONDONTWRITEBYTECODE=1 python3 <v7-arkiv>/sources/run_settlements.py
+  --parent-run <v7-arkiv>/reference
+  --out /tmp/motala-independent-v7-replay-20261015
+Hela evaluation.json är byteidentisk. Alla 18 native.csv är byteidentiska.
+Återkörningens samtliga 1 043 hashvärden stämmer.
+
+En separat kontroll utan projektets scoringfunktioner räknade om MAE,
+bias, RMSE, parskillnader och utelämningsintervall, även för delurvalen med
+känd WIP. Tillsammans med komponent- och bokföringskontroller verifierades
+9 599 tal; största avvikelsen var 1,07e-14. Integrerade P/I-, rest-, skatt-,
+bidrags- och avräkningsbelopp stämmer exakt med native.csv:s kumulativa
+flöden. Maximala kontrollerade avvikelser:
+  balansidentiteter                         4,36557e-11
+  oförändrade komponenter mot v6            3,13955e-6
+  ändrat resultat mot ändrade intäkter,
+    finansnetto och nettokostnad             1,03650e-11
+Accounting-varianternas finansnetto och övriga komponenter är exakt
+oförändrade. Native-finansnettots förändring ligger mellan -1,592 och
++0,671 mnkr över båda notpolicys; det förklarar inte huvudeffekterna.
+
+Cachefiler i parent
+Den kopierade v6-referensen innehåller 13 __pycache__-filer som inte listas
+i v6-manifestet. V7 importerar inte reference/sources, och alla dessa filer
+omfattas av v7:s eget verifierade manifest. Självständig återkörning med
+skrivning av bytekod avstängd gav samma utfall. Detta är arkivhygien, inte
+ett blockerande beräkningsfel. Ändra inte den frysta v7-körningen för att
+städa. Framtida kopiering kan utesluta __pycache__, samtidigt som samtliga
+hashade parentfiler fortfarande kontrolleras. Använd
+PYTHONDONTWRITEBYTECODE=1 vid återkörningar av frysta källor.
+
+Resultat: M2-PKV-costbase-normalized-PI, före -> efter avräkningsbyte
+MAE i mnkr                         h1             h2             h3
+Preliminär skatt                  8,72->8,72     19,50->19,50    37,29->37,29
+Avräkning och revision           37,84->40,98    65,29->32,00    81,76->21,00
+Hela skatten                     41,88->37,65    77,22->51,50    95,42->56,29
+Skatt plus bidrag                22,25->50,27    55,34->83,53   103,06->132,84
+Hela resultatet                  45,52->29,13    88,00->65,11   102,00->90,46
+
+H1-avräkningen försämras i medeltal. H1-skattens förbättring är skör:
+utelämningsintervallet för MAE-skillnaden är [-18,63,+6,68] mnkr.
+Avräkning och hela skatten förbättras vid h2/h3 för varje utelämnat målår.
+Det betyder att nollförväntan för senare avräkningar är bättre än den
+ärvda restens upprepning på dessa observerade mål. Det bevisar inte att
+noll är en optimalt skattad förväntan eller att prognosfelet är litet.
+
+Skatt plus bidrag försämras vid varje målårsutelämning på samtliga
+horisonter. MAE-skillnadens intervall är [+16,40,+45,96],
+[+14,31,+52,54] och [+8,46,+67,90] mnkr. Bidragsfelet ändras inte.
+Resultatet förbättras mot v6 vid varje utelämning vid h1/h2, men h3-vinsten
+är skör: [-40,89,+14,84] mnkr. Dessa är beskrivande känsligheter; överlappande
+horisonter och redan använda mål ger inte nya oberoende observationer.
+
+Felutjämningen är materiell
+V7:s bias för skatt plus bidrag är -40,96/-83,53/-132,84 mnkr, samtidigt
+som nettokostnadernas bias är -35,89/-78,35/-199,19. De låga resultatbiasen
+vid h1/h2, -4,58/-3,83, betyder således inte att modellen prognostiserar
+intäkter och kostnader rätt. H3-resultatet överskattas i genomsnitt med
+71,60 mnkr. Bidragens bias är -18,21/-53,84/-91,74; personalens MAE är
+oförändrat 37,20/98,69/137,04. Alla tre h3-personalkostnader underskattas.
+
+Jämförelser som behövs för hela Motala-målet
+Resultat-MAE i mnkr                 h1       h2       h3
+V7 native, costbase                29,13    65,11    90,46
+V7 accounting, costbase            31,88    54,38   108,10
+Tidigare M2-PKV                    25,21    49,20    83,02
+Tidigare M2-PKV-costbase            16,03    57,61   104,24
+Historiskt medel                   51,47    54,09    32,43
+Oförändrat resultat                58,92    76,28    40,87
+
+V7:s h1-fördel mot medel och oförändrat resultat överlever alla utelämningar.
+Vid h2 är den sämre än medel i MAE och jämförelsen mot båda enkla baslinjerna
+är instabil. Vid h3 är den sämre än båda baslinjerna vid varje utelämning.
+Mot den tidigare costbase-kandidaten är v7 sämre vid h1/h2 för varje
+utelämning och bättre vid h3 för varje utelämning. Detta ger inget skäl att
+välja en ny huvudmodell eller att välja olika vinnare per horisont efteråt.
+Native har heller inget enhetligt precisionsövertag mot accounting:
+h1-fördelen är skör, h2 är sämre vid varje utelämning, h3 bättre vid varje
+utelämning. No-repeat behålls och ger resultat-MAE 57,11/98,35/84,99.
+
+Mest motiverade fortsättning
+Den största kvarvarande sakfrågan för flerårsresultatet är kostnadsbanan,
+framför allt personal och pension. Ett större ekvationssystem eller fler
+justerbara parametrar löser inte att daterade lokala prognosunderlag saknas.
+Nästa datakrav är antingen en daterad lokal prognos för hela personalkostnaden,
+eller separata, definitionsmässigt förenliga banor för lönekostnader,
+pensionskostnader inklusive tillhörande löneskatt, och bemanning/volymer.
+En lokal pension får inte läggas ovanpå PKV arbetskraft inklusive PO utan
+att pensionsdelen först skiljs bort; det skulle dubbelräkna den.
+Först behövs en källstyrd uppdelning av kvarstående personal- och övrigkostnadsfel,
+utan att passa någon korrektionsrest mot målutfallen.
+
+En genomförbar, separat intäktsprövning kan samtidigt riktas mot
+regleringsposten. Dess daterade kr/inv-bana finns redan i samma cirkulär,
+och öppningsnoternas lokala regleringsbelopp är observerade. Behåll då P/I,
+avräkning och kostnader; ersätt endast den uttryckligt allokerade regleringsdelen
+med en i förväg deklarerad befolkningsregel. Märk årsslut som proxy även där,
+och redovisa dess större känslighet separat. Kategoriskiftet 2020 års 11,2 mnkr
+flyktingrelaterade bidrag in i 2021 års reglering måste hanteras en gång,
+med stöd i det redan daterade cirkuläret; posten får inte leva kvar dessutom
+i den ärvda bidragsresten. Pröva regleringsfel och hela bidragsfelet, inte
+enbart resultatpoängen. Detta är ett möjligt nästa avgränsat regeltest,
+inte ett förhandsgodkännande eller en ersättning för kostnadsarbetet.
+
+En tillförlitlig Motala-prognos är fortfarande inte visad. Teknisk
+reproducerbarhet, förbättrade enskilda komponenter och dokumenterade
+begränsningar är nödvändiga men räcker inte för det större målet. Efter
+fortsatt källstyrd utveckling behövs ett orört eller prospektivt utfall
+innan starka påståenden om prognosförmåga kan försvaras.

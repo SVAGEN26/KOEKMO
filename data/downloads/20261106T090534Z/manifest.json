@@ -1,0 +1,845 @@
+{
+  "retrieved_at": "2026-11-06T09:05:34.092851+00:00",
+  "municipality": "0583",
+  "files": [
+    {
+      "file": "budget-2026-plan-2027-2028.pdf",
+      "url": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf",
+      "query": null,
+      "bytes": 6355937,
+      "sha256": "3996880fdb3007ef471f6059077f39f20cc3bf391cacb204941c9d4aa5c3dd5b",
+      "originalBytes": 6244590,
+      "originalSha256": "8cd365f12b7224253535882fbab0ec38749f3f084e6a512f97a8cf10c9356e10",
+      "imagesRemoved": true,
+      "imagesReplaced": 8
+    },
+    {
+      "file": "budget-2025-plan-2026-2027.pdf",
+      "url": "https://www.motala.se/media/uploads/Budget_260323.pdf",
+      "query": null,
+      "bytes": 4120756,
+      "sha256": "60b51c2caf5490978c74af7d16e1e2e11f626f7d6d59c7779220c6ef01dce29d",
+      "originalBytes": 11197782,
+      "originalSha256": "fbcc7bbdc15dbde06efff6a0ed9c2e972f1ff9f7d0407068e1e53cb33a1f750a",
+      "imagesRemoved": true,
+      "imagesReplaced": 38
+    },
+    {
+      "file": "arsredovisning-2025.pdf",
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+      "query": null,
+      "bytes": 1417055,
+      "sha256": "71c44788ce7ae0b41ecd45a1baa38342bb57e03280a0b50ded7e7b7d831e9ab0",
+      "originalBytes": 2798977,
+      "originalSha256": "9e7da181711066b351979f85ff5a12a810bc1199bee4844dd63eeb59191ac6f7",
+      "imagesRemoved": true,
+      "imagesReplaced": 28
+    },
+    {
+      "file": "arsredovisning-2024.pdf",
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "query": null,
+      "bytes": 3819414,
+      "sha256": "022faf74434e026028bffec24080163b27e76065aa4f9ecb87da8bf6a8b0a497",
+      "originalBytes": 31841250,
+      "originalSha256": "d4592895d669511023a0a99e27b41de011bd338c166a0d9cb3fa9d2b57170181",
+      "imagesRemoved": true,
+      "imagesReplaced": 29
+    },
+    {
+      "file": "arsredovisning-2023.pdf",
+      "url": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf",
+      "query": null,
+      "bytes": 1463755,
+      "sha256": "f3ec0822cada7ce7d37f7c8715318bb668e096569209001d4a40b1f380a3e677",
+      "originalBytes": 2784468,
+      "originalSha256": "5b9a0fcdf26e3007c1dc3acf858e140d6d9353f52355387d7985dff08319db05",
+      "imagesRemoved": true,
+      "imagesReplaced": 27
+    },
+    {
+      "file": "arsredovisning-2022.pdf",
+      "url": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "query": null,
+      "bytes": 1044692,
+      "sha256": "98f4f49a08ff20bc5c633a67e7b5090f859f0b82f0e4086dee5cf610fbc1d04f",
+      "originalBytes": 1750119,
+      "originalSha256": "81dc1d13bca6901fd104bbb065f790818228d3ff8a08f996630052a578bb490e",
+      "imagesRemoved": true,
+      "imagesReplaced": 20
+    },
+    {
+      "file": "bep6001-metadata.json",
+      "url": "https://statistik.linkoping.se/PXWeb/api/v1/sv/Samlad_planering/LevaBo/bep6001.px",
+      "query": null,
+      "bytes": 1984,
+      "sha256": "58616f61f703dddfa6147fa7db18ff284051b13ba1b8608cf2e0915b62f0c7b4"
+    },
+    {
+      "file": "bep6001-motala.json",
+      "url": "https://statistik.linkoping.se/PXWeb/api/v1/sv/Samlad_planering/LevaBo/bep6001.px",
+      "query": {
+        "query": [
+          {
+            "code": "område",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2005",
+                "2006",
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028",
+                "2029",
+                "2030",
+                "2031",
+                "2032",
+                "2033",
+                "2034",
+                "2035"
+              ]
+            }
+          },
+          {
+            "code": "ålder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 30740,
+      "sha256": "95b53d84c0297f6157313cb85134ec2e4cc75b3db69e5abf62ac7aa17da8fc5d"
+    },
+    {
+      "file": "bep6001-motala.csv",
+      "url": "https://statistik.linkoping.se/PXWeb/api/v1/sv/Samlad_planering/LevaBo/bep6001.px",
+      "query": {
+        "query": [
+          {
+            "code": "område",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2005",
+                "2006",
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028",
+                "2029",
+                "2030",
+                "2031",
+                "2032",
+                "2033",
+                "2034",
+                "2035"
+              ]
+            }
+          },
+          {
+            "code": "ålder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 12085,
+      "sha256": "2693b15b5816b46d04bca19c6bc4fdd0b383a2587fe6d1e29ee8288f1c858e21"
+    },
+    {
+      "file": "bep6006-metadata.json",
+      "url": "https://statistik.linkoping.se/PXWeb/api/v1/sv/Samlad_planering/LevaBo/bep6006.px",
+      "query": null,
+      "bytes": 1733,
+      "sha256": "f6164ca78b78b1f1914c8c7c9fc74da6fc92b6969937ef3f689bfb2770d6ee7a"
+    },
+    {
+      "file": "bep6006-motala.json",
+      "url": "https://statistik.linkoping.se/PXWeb/api/v1/sv/Samlad_planering/LevaBo/bep6006.px",
+      "query": {
+        "query": [
+          {
+            "code": "tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2005",
+                "2006",
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028",
+                "2029",
+                "2030",
+                "2031",
+                "2032",
+                "2033",
+                "2034",
+                "2035"
+              ]
+            }
+          },
+          {
+            "code": "område",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "åldersgrupp",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0-19",
+                "20-64",
+                "65-w",
+                "Tot"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 6658,
+      "sha256": "1a4fffa602b96542cc9b787a2e5e9e925b42f5b5633afd38306364f87c7452d5"
+    },
+    {
+      "file": "bep6006-motala.csv",
+      "url": "https://statistik.linkoping.se/PXWeb/api/v1/sv/Samlad_planering/LevaBo/bep6006.px",
+      "query": {
+        "query": [
+          {
+            "code": "tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2005",
+                "2006",
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028",
+                "2029",
+                "2030",
+                "2031",
+                "2032",
+                "2033",
+                "2034",
+                "2035"
+              ]
+            }
+          },
+          {
+            "code": "område",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "åldersgrupp",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0-19",
+                "20-64",
+                "65-w",
+                "Tot"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 2753,
+      "sha256": "f37c2a5277cb82f445d191680342004a294803b64c7ca0ba6d41c1fcd58d5faf"
+    },
+    {
+      "file": "kolada-kpi-metadata.json",
+      "url": "https://api.kolada.se/v3/kpi/N11004,N11006,N11008,N11010,N11807,N15025,N15027,N15028,N15034,N15829,N15832,N20007,N20014,N20043,N20048,N20050,N21702,N21703,N21705,N21826",
+      "query": null,
+      "bytes": 13529,
+      "sha256": "9109e3a75d7c703dc562e729812843710718ae07796ab74c2ff02815e3a140f9"
+    },
+    {
+      "file": "kolada-data-page-1.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N11004,N11006,N11008,N11010,N11807,N15025,N15027,N15028,N15034,N15829,N15832,N20007,N20014,N20043,N20048,N20050,N21702,N21703,N21705,N21826/municipality/0583/year/2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025?per_page=5000",
+      "query": null,
+      "bytes": 46919,
+      "sha256": "42bff9bab999a20dae855603fd9697deade05358c527ac93d4f842f4eb9d9466"
+    },
+    {
+      "file": "kolada-motala-2010-2025.csv",
+      "url": "https://api.kolada.se/v3/",
+      "query": null,
+      "bytes": 36041,
+      "sha256": "0446bfdc3a4904e7eb93cdccaf948f0e32f278f075ff522c438623ce17f3fccd"
+    }
+  ],
+  "errors": [],
+  "notes": [
+    "Archived source data only; not imported into the model. Current source vintage is not historical real-time data.",
+    "PDF images are removed (scripts/strip_pdf_images.py): photos and other images can carry third-party rights. originalSha256 identifies the downloaded file; the source URL has the original."
+  ],
+  "kolada_coverage": {
+    "N11004": {
+      "title": "Nettokostnad förskola, kr/inv",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N11006": {
+      "title": "Kostnad förskola, kr/inv",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N11008": {
+      "title": "Kostnad förskola, kr/inskrivet barn",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N11010": {
+      "title": "Inskrivna barn per årsarbetare i förskolan, kommunal regi, antal",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N11807": {
+      "title": "Inskrivna barn på förskola, hemkommun, antal",
+      "years_with_values": [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N15025": {
+      "title": "Kostnad grundskola F-9, hemkommun, kr/inv",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N15027": {
+      "title": "Kostnad grundskola F-9, hemkommun, kr/elev",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N15028": {
+      "title": "Nettokostnad grundskola F-9, kr/inv",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N15034": {
+      "title": "Elever/lärare (heltidstjänst) i kommunal grundskola åk 1-9, antal",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N15829": {
+      "title": "Elever i grundskola åk. 1-9, hemkommun, antal",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N15832": {
+      "title": "Elever i grundskola F-9, lägeskommun, antal",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N20007": {
+      "title": "Kostnad äldreomsorg, kr/inv 65+",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N20014": {
+      "title": "Nettokostnad äldreomsorg, kr/inv",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N20043": {
+      "title": "Kostnad äldreomsorg, kr/inv",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N20048": {
+      "title": "Kostnad äldreomsorg, kr/inv 80+",
+      "years_with_values": [
+        2010,
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N20050": {
+      "title": "Personalkostnad äldreomsorg, egen regi, andel (%)",
+      "years_with_values": [
+        2011,
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N21702": {
+      "title": "Hemtjänsttagare 65+ i ordinärt boende, antal",
+      "years_with_values": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N21703": {
+      "title": "Hemtjänsttagare 65-79 i ordinärt boende, antal",
+      "years_with_values": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N21705": {
+      "title": "Hemtjänsttagare 80+ i ordinärt boende, antal",
+      "years_with_values": [
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    },
+    "N21826": {
+      "title": "Beviljade antal hemtjänsttimmar per brukare och månad för timregistrerade hemtjänsttagare 65+ i ordinärt boende, timmar/hemtjänsttagare",
+      "years_with_values": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ]
+    }
+  },
+  "outstanding": [
+    {
+      "item": "Delårsrapport/tertialrapport 2026",
+      "source": "https://diariet.motala.se/",
+      "status": "Not downloaded. Public Search for delårsrapport, type 64, dates 2026-01-01 to 2026-11-06 returned zero hits; this does not establish that the report is absent."
+    },
+    {
+      "item": "Detailed local facility capacity, debt maturity/rate schedule and pension forecast",
+      "status": "Not acquired separately; review downloaded budgets/accounts first."
+    }
+  ]
+}

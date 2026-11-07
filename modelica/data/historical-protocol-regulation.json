@@ -1,0 +1,63 @@
+{
+  "version": 8,
+  "registeredAt": "2026-10-15T19:35:52.855607+00:00",
+  "status": "regulation_diagnostic_locked_before_first_scoring",
+  "notBlind": "All target years have already informed development. This is not an independent final test or verified real-time replay. No promotion based only on total-result scores.",
+  "municipality": "0583",
+  "scope": "kommunen",
+  "originYears": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "horizons": [
+    1,
+    2,
+    3
+  ],
+  "eventScenarios": [
+    "costbase",
+    "no-repeat"
+  ],
+  "candidateUnchanged": "M2-PKV-costbase",
+  "parentRun": "runs/historical-v7-20261015-settlements",
+  "parentManifestSha256": "6216e2828a3755b596d09b571a97d36e9797e5092e0f32a25ff9e5c37b4e6c4b",
+  "sources": {
+    "motala-revenue-components.json": "425bb05e72347cda813e67555faf638eb1cf880af9757ff4b623296cdebc31b6",
+    "skr-revenue-vintages.json": "4877c15a24f1eb61b5de5fddc805f800b2bb984099697cd926f7a5a29cec8f90",
+    "revenue-component-targets-2025.json": "45abfe92a65570526930b829331d3c13c19b8fed2ce556d139954651c28caa6a"
+  },
+  "populationSensitivityPersons": [
+    -1000,
+    -100,
+    0,
+    100,
+    1000
+  ],
+  "rules": [
+    "Keep v7 preliminary tax, income equalisation, signed settlements, costs, stocks, demography, capital parameters, both note policies, macro vintages and accounting assumptions. Historical own tax rate equals the reference rate.",
+    "For each forecast year h, regulationGrant_h equals municipalRegulationPerCapita for origin+h from the same December SKR circular times opening-ledger year-end population, divided by 1e6. No growth adjustment or fitted coefficient.",
+    "Use constant opening year-end population at every horizon as an explicit proxy for November 1 of targetYear-1, consistent with the fixed fiscal-population P/I experiment. No national same-column population, inferred population or later observed count is substituted. Historical availability of opening reports remains unestablished.",
+    "Remove only the prior proportionally allocated regulation and transferred refugee-welfare categories from the v7 grant remainder: inheritedGrants_v8=(1-(I0+R0+F0)/Ganchor)*referenceGrants. Then grants=I_h+R_h+inheritedGrants_v8. Ganchor is the actual note-adjusted opening grant anchor, not the unadjusted reported total.",
+    "F0 is 11.2 only at origin2020, following the sourced 2021 category transition from refugeeWelfareGrant into regulationGrant. Future separate refugeeWelfareGrant is zero. The transfer does not assert that the same local amount is added to regulation. Other origins have F0=0. The 82.1 temporary grant already removed by no-repeat must not be removed again.",
+    "Export separately R_h, zero future refugee category, remaining inherited grants, and removed proportional parent regulation and refugee allocations. Reconstruct the parent allocations from inheritedGrants_v7 using denominator Ganchor-I0; require a strictly positive denominator. These are allocations, not earlier administrative component forecasts.",
+    "The accounting variants replace the same two allocated categories and retain their finance net. Native variants propagate changed income through existing financing dynamics. Retain same-year cash and zero opening tax receivable assumptions; result scores do not validate cash dates.",
+    "Keep every prior prediction, outcome, model score, WIP sensitivity and metadata. Add both native note-policy variants and their accounting counterparts on all12cases, plus both WIP alternatives at both missing-WIP origins. Copy only manifest-listed parent files plus the manifest; historical hash-listed cache files are retained without execution.",
+    "Score regulation plus transferred category as the primary category-comparable component; also show separate regulation, income equalisation, and remainingGrants=reportedGrants-I-R-F. Preserve source category zeros as normalized absence, not explicit reported zero cells, and retain grant rounding residuals separately. Total grants, personnel, tax-and-grants, net cost, finance net, population and full result keep all cases and MAE/bias/RMSE and paired leave-one-target-out ranges.",
+    "Use revenue-component-targets-2025.json only for scoring after prospective simulations. Do not modify pinned source data, clean outcomes, fit parameters, select horizons or promote a candidate based only on total-result errors. This is retrospective development, not a blind final validation.",
+    "For every forecast horizon report r_h*deltaN/1e6 for the preregistered -1000,-100,0,100,1000-person differences. These are hypothetical direct revenue sensitivities without subsequent financing, not observed proxy errors, statistical bounds or complete-result intervals."
+  ],
+  "requiredChecks": [
+    "all_parent_hashes_valid_and_prior_predictions_and_outcomes_unchanged",
+    "native_balance_grant_tax_and_result_identities",
+    "unchanged_P_I_settlements_costs_demography_within_1e-3",
+    "regulation_integral_matches_dated_rate_times_constant_local_proxy",
+    "both_note_policies_remove_2020_transferred_category_once_only",
+    "future_information_and_unselected_vintage_mutations_invariant",
+    "positive_controls_selected_signed_regulation_rate_and_local_population",
+    "accounting_finance_net_unchanged",
+    "reproduction_from_saved_sources"
+  ]
+}

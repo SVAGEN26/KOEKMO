@@ -1,0 +1,147 @@
+{
+  "date": "2026-10-15",
+  "auditStatus": "superseded_after_user_challenge_and_independent_reconsideration",
+  "supersededBy": "../reviews/full-goal-reconsideration-20261015.txt",
+  "scope": "Current Motala forecast goal after the independent full-goal review; separate from the historical M1 completion-audit.json",
+  "goalComplete": false,
+  "independentFullGoalReview": "../reviews/full-goal-status-20261015.txt",
+  "lastMaterialProgress": {
+    "source": "motala-property-fee-vintage-2025.json",
+    "review": "../reviews/property-fee-vintage-2025-20261015.txt",
+    "historicalPredictionsChanged": false,
+    "description": "A later property-fee vintage was transcribed and independently checked. It is not an input for the existing 2020-2024 origins."
+  },
+  "consecutiveGoalTurnsWithoutProgressSinceThatWork": 3,
+  "currentBlocker": "No newly accessible, dated local personnel forecasts or original municipal grant inputs, and no complete earlier Motala accounts suitable for a new historical evaluation. The independent review identifies no further verified arithmetic or code correction that resolves forecast precision with the existing aggregate data.",
+  "latestChecks": [
+    {
+      "route": "Local original PDF, XLSX, XLS, ZIP and CSV inventory",
+      "outcome": "No new relevant original files found."
+    },
+    {
+      "route": "Direct shell access to SCB and Motala's public diary",
+      "outcome": "Temporary DNS failure. The web reader shows only a JavaScript requirement for the diary."
+    },
+    {
+      "route": "Motala's public budget and accounts page",
+      "url": "https://www.motala.se/kommun-och-politik/kommunfakta/ekonomi-och-budget/",
+      "outcome": "The visible links cover budgets 2025-2026 and accounts 2022-2025; no missing older original was recovered."
+    },
+    {
+      "route": "Search for original Motala accounts 2018 and 2019",
+      "outcome": "No complete Motala original recovered. A forum list of municipal annual-report URLs did not supply a Motala report; the separate 2020 politician-blog lead could not be opened. No secondary-source financial values were imported."
+    }
+  ],
+  "predictionsOrParametersChanged": false,
+  "modelTestsRepeated": false,
+  "secondNoProgressTurn": {
+    "previousTurnClassification": "no_progress",
+    "sameBlockerRevalidated": true,
+    "checks": [
+      "The current local file inventory still contains no new relevant original reports or workbooks.",
+      "Fresh shell requests to SCB and Motala's diary both fail DNS resolution.",
+      "Additional searches for Motala annual accounts 2017-2019 return the already used later comparative reports or unrelated entities.",
+      "Candidate older annual-report page and file URLs could not be read with the web tool. These guessed addresses are not registered as verified sources."
+    ],
+    "newIdentifyingEvidenceRecovered": false,
+    "goalStatusChanged": false
+  },
+  "thirdNoProgressTurn": {
+    "previousTurnClassification": "no_progress",
+    "sameBlockerRevalidated": true,
+    "checks": [
+      "The local original-file inventory remains unchanged.",
+      "Fresh direct requests to SCB and Motala's public diary again fail DNS resolution.",
+      "The web reader rejects the SCB 2021 municipal equalisation workbook because its XLSX content type is unsupported.",
+      "The web reader still receives only the JavaScript requirement from Motala's public diary.",
+      "No applicable browser or arbitrary file-download capability is exposed by the available tools.",
+      "The independent review agent is confirmed completed, not running or awaiting a source-review result. Its latest approval covers the later property-fee transcription only, not the full forecast goal."
+    ],
+    "scbWorkbookUrl": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/pong/tabell-och-diagram/utjamningsaret-2021/kommunalekonomisk-utjamning-for-kommuner-2021-utfall/",
+    "newIdentifyingEvidenceRecovered": false,
+    "blockedAuditPassed": true,
+    "reason": "Three consecutive goal turns confirm the same missing identifying data and source-access blocker. No further evidence-supported model correction or pending live review can currently advance the full objective. Progress requires accessible original source files or another external access change."
+  },
+  "nextUsefulChange": "Obtain a verifiable dated local component source or complete unused earlier Motala accounts, then register a bounded evaluation before selecting further model variants.",
+  "statusNote": "The three no-progress turns and access failures above are a historical record. The subsequent independent reconsideration withdraws the general inference that further modelling must wait for dated local forecast paths. That inference must not be reused as a current blocking condition. The full forecast objective is still unachieved.",
+  "resumedGoal20261016": {
+    "previousTurnClassification": "progress",
+    "previousTurnEvidence": "SCB fetching script completed, tested and independently reviewed; no live SCB values retrieved.",
+    "currentTurnClassification": "progress",
+    "currentTurnEvidence": "A locked one-parameter budget-response experiment is implemented and passes thirteen synthetic equation, temporal-leakage, accounting and coverage tests. The actual annual-ledger run records insufficient older training and no forecast scores.",
+    "protocol": "budget-response-protocol.json",
+    "coverageReport": "../runs/budget-response-20261016-final-coverage/report.json",
+    "independentTechnicalReview": "../reviews/budget-response-20261016.txt",
+    "technicalExperimentApproved": true,
+    "sourceAccessAttempt": "raw/scb-accounts/20261016T084004219211Z/receipts.json",
+    "sourceAccessOutcome": "TAB6777 metadata still fails DNS resolution; web access also did not recover SCB rows or older Motala aggregate accounts.",
+    "nextAction": "Obtain and reconcile the longer observed series, execute the locked experiment, compare common cases with frozen M2 and have the independent reviewer assess actual predictive evidence.",
+    "forecastPrecisionApproved": false,
+    "consecutiveNoProgressGoalTurnsSinceResume": 3,
+    "subsequentNoProgressChecks": [
+      {
+        "turn": 1,
+        "previousTurnClassification": "progress",
+        "currentTurnClassification": "no_progress",
+        "checks": [
+          "No new SCB data JSON or CSV files exist; only the two previously failed receipt packets are present.",
+          "Fresh SCB TAB6777 metadata request still fails with Temporary failure in name resolution.",
+          "Additional searches for older Motala accounts and result tables recover no new verifiable aggregate observations.",
+          "Motala's public media API is inaccessible through the web reader; a third-party 2010 report lead is a cache miss and supplies no verified Motala values."
+        ],
+        "predictionsChanged": false,
+        "testsRepeated": false,
+        "goalLeftActive": true,
+        "remainingNeed": "Accessible older observed accounts, not old KPA/SKR forecast paths."
+      },
+      {
+        "turn": 2,
+        "previousTurnClassification": "no_progress",
+        "currentTurnClassification": "no_progress",
+        "checks": [
+          "No new SCB observation JSON or CSV files are present locally.",
+          "SCB's historical 2011-2013 publication page is readable, but its PDF reports are explicitly national totals. The 2010-2014 result table likewise contains national amounts, not Motala.",
+          "The SKL 2013 VKV analysis report contains no Motala row and states that municipal tables moved to Excel and public databases.",
+          "The official municipal VKV Excel links for 2011, 2012 and 2013 produce no usable content through the web reader (cache miss, failed fetch and unsupported Excel content type).",
+          "Fresh direct access to SCB still fails DNS resolution."
+        ],
+        "officialArchive": "https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/rakenskapssammandrag-for-kommuner-och-regioner/pong/tabell-och-diagram/tidigare-publicerad-statistik/statistik-20112013/",
+        "workbooks": [
+          "https://www.scb.se/contentassets/a61dbd29a01f4fe2b35ead7e7bb5063f/vad-kostar-verksamheten-i-din-kommun-2011.xls",
+          "https://www.scb.se/contentassets/a61dbd29a01f4fe2b35ead7e7bb5063f/vad-kostar-verksamheten-i-din-kommun-2012.xls",
+          "https://www.scb.se/contentassets/a61dbd29a01f4fe2b35ead7e7bb5063f/vad-kostar-verksamheten-i-din-kommun-2013.xls"
+        ],
+        "newObservationsRetrieved": false,
+        "predictionsChanged": false,
+        "testsRepeated": false,
+        "goalLeftActive": true
+      },
+      {
+        "turn": 3,
+        "previousTurnClassification": "no_progress",
+        "currentTurnClassification": "no_progress",
+        "checks": [
+          "The raw-data inventory still contains no retrieved observation CSV, workbook, PDF or data JSON.",
+          "Fresh direct requests to both SCB TAB6777 metadata and the official 2011 municipal workbook still fail with Temporary failure in name resolution.",
+          "The current locked budget-response report still has only 2020-2025 accounts, no evaluable cases and forecastPrecisionApproved=false.",
+          "The independent review agent is confirmed completed. Its latest review approves the separate experiment technically, explicitly not full forecast precision. No live retrieval or review job is pending."
+        ],
+        "newObservationsRetrieved": false,
+        "predictionsChanged": false,
+        "testsRepeated": false,
+        "blockedAuditPassed": true,
+        "reason": "Three consecutive no-progress turns since the completed budget-response implementation confirm the same source-access barrier. No verified remaining code correction or accessible unused observation set currently supports further predictive evaluation. Progress requires accessible older observed municipal accounts or restored source access. This is not a requirement for historical KPA/SKR forecast paths and does not establish completion."
+      }
+    ],
+    "goalComplete": false
+  },
+  "reconsideration": {
+    "date": "2026-10-15",
+    "materialProgress": "A newly reviewed lagged-budget-response hypothesis and verified longer SCB outcome-table routes change the next action. Neither requires historical KPA forecast paths.",
+    "researchCatalogue": "municipal-economics-research.json",
+    "consecutiveNoProgressTurnsSinceReconsideration": 0,
+    "nextAction": "Acquire and reconcile the longer observed Motala series, lock a one-parameter budget-response comparison, and estimate only on earlier observations. The original access failures remain technical limitations, not proof that the independent-model route is exhausted.",
+    "goalToolStatusChangedByThisFile": false,
+    "forecastPrecisionApproved": false
+  }
+}

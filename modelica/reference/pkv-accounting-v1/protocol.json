@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "registeredAt": "2026-10-15T16:53:36.775326+00:00",
+  "status": "locked_before_panel_financial_outcomes_retrieval",
+  "candidate": "PKV-accounting",
+  "mechanisticRole": "M2-PKV remains a separate scenario/mechanism model; no claim of incremental forecast accuracy.",
+  "municipalities": [
+    {
+      "id": "0584",
+      "name": "Vadstena"
+    },
+    {
+      "id": "0586",
+      "name": "Mjölby"
+    },
+    {
+      "id": "0581",
+      "name": "Norrköping"
+    }
+  ],
+  "selectionReason": "Three predetermined neighboring Ostergotland municipalities spanning smaller and larger administrations; no selection on financial outcomes.",
+  "originYears": [
+    2022,
+    2023,
+    2024
+  ],
+  "targetEndYear": 2025,
+  "horizons": [
+    1,
+    2,
+    3
+  ],
+  "historyStartYear": 2020,
+  "scope": "kommunen",
+  "moneyUnit": "mnkr",
+  "parameters": {
+    "wageGrowth": 0.03,
+    "priceGrowth": 0.02,
+    "productivityGrowth": 0,
+    "taxBaseGrowth": 0.035,
+    "grantGrowth": 0.02,
+    "feeGrowth": 0.02,
+    "pensionGrowth": 0.02,
+    "sectorShares": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "hiringYears": [
+      1,
+      1,
+      1
+    ],
+    "reductionYears": [
+      3,
+      3,
+      3
+    ],
+    "fixedCostShare": [
+      0.15,
+      0.15,
+      0.15
+    ],
+    "facilityCostShare": [
+      0.25,
+      0.25,
+      0.25
+    ],
+    "constructionYears": [
+      2,
+      2,
+      2
+    ],
+    "closureYears": [
+      8,
+      8,
+      8
+    ],
+    "planningYears": [
+      2,
+      2,
+      2
+    ],
+    "physicalLifeYears": [
+      40,
+      40,
+      40
+    ],
+    "compensationPerFTE": [
+      0.65,
+      0.65,
+      0.65
+    ],
+    "incomeWeights": [
+      0,
+      0,
+      0,
+      1,
+      0.55
+    ],
+    "taxLagYears": 1,
+    "equalisationOffset": 0.95,
+    "rateAdjustmentYears": 3,
+    "liquidityYears": 0.25,
+    "repaymentYears": 0.25,
+    "limitStaffChanges": false,
+    "limitExternalService": false,
+    "automaticInvestment": false,
+    "allowClosure": true,
+    "staffReductionCost": [
+      0,
+      0,
+      0
+    ],
+    "capacityClosureCost": [
+      0,
+      0,
+      0
+    ]
+  },
+  "candidateSource": "motala_lab/macro.py",
+  "sourceHash": "0a4fdfe4c34ec96fafa9eb6522b7dd3a615360896ec67d23c9bd749df106a1ae",
+  "macroSourceHash": "4459b31ffe5a88bbb9afdd680f19b817576458d2323ad9a9cd09512a8dd44f29",
+  "rules": [
+    "Use precisely the frozen accounting_projection implementation; no new coefficients, bias correction, growth tuning or candidate search after results.",
+    "Retain all named municipalities, origins and horizons. Missing data must be recorded explicitly and not silently exclude a poor result.",
+    "Primary comparisons are previous result unchanged and unweighted historical mean using observations from 2020 through origin only.",
+    "Score each municipality in mnkr and absolute error divided by origin tax+grants, expressed in percentage points. The latter is the primary cross-municipality metric.",
+    "Report equal-municipality averages, by-target-year differences and leave-one-target-year-out descriptive ranges. Shared macro years are not independent shocks.",
+    "Use gross personnel including pensions exactly once; other operating expense is gross operating expense less total personnel. Preserve rounding/reclassifications and disclose source revisions.",
+    "No calibration to public budgets or target-year data. External PKV forecasts remain the frozen original December vintages.",
+    "This is a separately acquired retrospective external-municipality check, not historical real-time validation and not independent macro-regime evidence.",
+    "All h1/h2/h3 results must remain visible. A positive one-year result must not be advertised as validated three-year accuracy."
+  ]
+}

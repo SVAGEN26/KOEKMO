@@ -1,0 +1,10 @@
+{
+  "circular": "26:28",
+  "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d572/1791283712510/Prognosunderlag-K-2026-2033-26028.xlsm",
+  "publishedAt": "2026-10-06",
+  "attemptedAt": "2026-10-13T15:04:52.248450+00:00",
+  "role": "external_benchmark_only",
+  "extractionStatus": "not_extracted",
+  "status": "download_failed",
+  "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+}

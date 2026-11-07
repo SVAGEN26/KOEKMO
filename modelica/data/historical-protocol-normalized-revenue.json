@@ -1,0 +1,54 @@
+{
+  "version": 6,
+  "registeredAt": "2026-10-15T18:44:00.920740+00:00",
+  "status": "normalized_revenue_diagnostic_locked_before_scoring",
+  "notBlind": "All target years have already informed development. This is not an independent final test or verified real-time replay. No promotion based only on total-result scores.",
+  "municipality": "0583",
+  "scope": "kommunen",
+  "originYears": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "horizons": [
+    1,
+    2,
+    3
+  ],
+  "eventScenarios": [
+    "costbase",
+    "no-repeat"
+  ],
+  "candidateUnchanged": "M2-PKV-costbase",
+  "parentRun": "runs/historical-v5-20261015-tax",
+  "parentManifestSha256": "86df3069eb3709bdcbf5a344abd0eea2e8702a215e83604d92f497eb1d9cfe5c",
+  "sources": {
+    "motala-revenue-components.json": "425bb05e72347cda813e67555faf638eb1cf880af9757ff4b623296cdebc31b6",
+    "skr-revenue-vintages.json": "4877c15a24f1eb61b5de5fddc805f800b2bb984099697cd926f7a5a29cec8f90",
+    "revenue-component-targets-2025.json": "45abfe92a65570526930b829331d3c13c19b8fed2ce556d139954651c28caa6a"
+  },
+  "rules": [
+    "P is preliminary municipal tax; I is income equalisation. At fixed own tax rate, county rate, guarantee and relative local tax capacity, both scale by K_h/K_origin times the fiscal-reference population ratio.",
+    "Population ratio is exactly 1 for all horizons: a declared constant-reference-population scenario, not an observed November series or estimate of local relative capacity.",
+    "Use the government capacity in the original December circular at origin and horizon 1. At horizons 2 and 3 use the SKR capacity directly divided by origin government capacity. This is a declared approximation of future administrative bases; do not level-adjust, fit, or choose between alternatives after scoring.",
+    "Annual reference components in each parent are allocated proportionally: P_old=P_origin*T_parent/T_origin; I_old=I_origin*G_parent/G_anchor. G_anchor is the note-adjusted opening grants0 for that exact policy, including removal of 82.1 only once in no-repeat.",
+    "Native replacement uses the same allocation continuously: T_new=(1-P_origin/T_origin)*referenceTax + P_origin*Kfactor; G_new=(1-I_origin/G_anchor)*referenceGrants + I_origin*Kfactor. The new P/I terms are constant within each year. Own tax rate equals reference rate.",
+    "ReferenceGrants retains the entire former internal grant equation and referenceTax, never the new tax. Remaining tax/grant components are named inherited baseline residuals, not newly validated settlement or regulation forecasts. No population-level proxy or new category-transition claim.",
+    "Keep PKV, cost policy, demographic and capital parameters, opening stocks, all target outcomes and all old comparisons fixed. Repeat both note policies and both alternative WIP fractions for every parent with missing opening WIP.",
+    "Also apply the same component replacement to each fixed-quantity PKV-accounting comparator; hold its finance net unchanged. Report this separately from native financing response and annual timing effects.",
+    "Score P, I and P+I against notes 6/7, together with tax, grants, total income, net cost, personnel, finance net and full result on exactly the previous 12 cases. Report MAE, RMSE, bias and leave-one-target-out descriptive stability. No fitting, horizon selection, outcome cleaning or selective origins.",
+    "2025 component data are target outcomes only for origins through 2024. The predictor selects only the requested opening component row and dated national vintage; mutation tests must demonstrate this.",
+    "Preserve the parent archive and validate all its hashes before use. Copy its evaluation and manifest into the new archive; save new native sources, runtime parameters, input audits and hashes. No claim that P/I improvement alone validates the full model."
+  ],
+  "requiredChecks": [
+    "native_balance_residuals_below_1e-3",
+    "component_identity_and_integrated_rates",
+    "unchanged_costs_and_demography_against_parent_with_numerical_tolerance_1e-3",
+    "unchanged_inherited_residuals_against_parent_with_numerical_tolerance_1e-3",
+    "future_component_and_unselected_vintage_mutation",
+    "positive_control_for_opening_component_and_selected_vintage",
+    "preserve_parent_predictions_and_actuals_exactly"
+  ]
+}

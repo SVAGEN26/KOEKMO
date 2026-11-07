@@ -1,0 +1,159 @@
+{
+  "version": 3,
+  "registeredAt": "2026-10-15",
+  "status": "development_extension_locked_before_first_PKV_replay",
+  "notBlind": "The original outcomes and M2 errors have already been examined. December PKV input mapping and all origins are fixed before the first PKV simulation. This is development evidence, not a blind test.",
+  "scope": "kommunen",
+  "primaryMetric": "result",
+  "horizons": [
+    1,
+    2,
+    3
+  ],
+  "originYears": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "candidate": "M2-PKV",
+  "comparators": [
+    "frozen M2-v2",
+    "M1",
+    "persistence",
+    "fixed 0.5 damped trend",
+    "unweighted expanding historical mean, no window or decay parameter",
+    "M2 with original fixed price assumptions",
+    "PKV-accounting: same gross ledger and SKR costs, fixed quantities, fixed depreciation and finance net"
+  ],
+  "parameters": {
+    "wageGrowth": 0.03,
+    "priceGrowth": 0.02,
+    "productivityGrowth": 0,
+    "taxBaseGrowth": 0.035,
+    "grantGrowth": 0.02,
+    "feeGrowth": 0.02,
+    "pensionGrowth": 0.02,
+    "sectorShares": [
+      0.3333333333333333,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "hiringYears": [
+      1,
+      1,
+      1
+    ],
+    "reductionYears": [
+      3,
+      3,
+      3
+    ],
+    "fixedCostShare": [
+      0.15,
+      0.15,
+      0.15
+    ],
+    "facilityCostShare": [
+      0.25,
+      0.25,
+      0.25
+    ],
+    "constructionYears": [
+      2,
+      2,
+      2
+    ],
+    "closureYears": [
+      8,
+      8,
+      8
+    ],
+    "planningYears": [
+      2,
+      2,
+      2
+    ],
+    "physicalLifeYears": [
+      40,
+      40,
+      40
+    ],
+    "compensationPerFTE": [
+      0.65,
+      0.65,
+      0.65
+    ],
+    "incomeWeights": [
+      0,
+      0,
+      0,
+      1,
+      0.55
+    ],
+    "taxLagYears": 1,
+    "equalisationOffset": 0.95,
+    "rateAdjustmentYears": 3,
+    "liquidityYears": 0.25,
+    "repaymentYears": 0.25,
+    "limitStaffChanges": false,
+    "limitExternalService": false,
+    "automaticInvestment": false,
+    "allowClosure": true,
+    "staffReductionCost": [
+      0,
+      0,
+      0
+    ],
+    "capacityClosureCost": [
+      0,
+      0,
+      0
+    ]
+  },
+  "missingWIP": {
+    "nominal": 0,
+    "sensitivityFractionsOfTotalTangibleAssets": [
+      0.1,
+      0.2
+    ],
+    "interpretation": "Scenario assumptions only, not observed zero, confidence bounds or fitted values. Main report must show known-WIP subset separately."
+  },
+  "rules": [
+    "No fitting or optimization against target outcomes. Do not change the PKV mapping after examining its results; retain unfavorable cases.",
+    "Only observations with period <= origin enter the forecast; source revisions are disclosed separately.",
+    "No 2025 money, population or derived demand defaults may fill historical opening values.",
+    "Equal sector shares are fixed uncalibrated assumptions, replacing the 2025-specific allocation.",
+    "Fixed growth assumptions are tested as assumptions; they are not historical SKR forecasts.",
+    "Every run saves resolved parameters, input hash, native log and annual integrals.",
+    "Report identical target sets, signed component errors, MAE, RMSE, bias and leave-one-year-out sensitivity.",
+    "Budgets remain a separately labelled descriptive benchmark until matching information dates are verified.",
+    "A historical win alone does not establish generalisation with five development targets.",
+    "Retain all five original native origins and add a separately scored aggregate-only set2019–2025. Do not present these as independent samples or select a favorable starting year.",
+    "Report M2-PKV against both fixed-input M2 and PKV-accounting so national input gains are not attributed solely to dynamics."
+  ],
+  "additionalBaselines": [
+    "historical_mean"
+  ],
+  "include2017": true,
+  "aggregateOriginYears": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "macroFile": "skr-pkv-vintages.json",
+  "macroSha256": "4459b31ffe5a88bbb9afdd680f19b817576458d2323ad9a9cd09512a8dd44f29",
+  "macroMapping": {
+    "personnel": "Apply the same cumulative PKV labor index to payroll and pension partitions; no separate pension growth. Compare only the combined personnel total; individual payroll/pension allocations are bookkeeping proxies.",
+    "other": "Apply cumulative PKV other-consumption index to other operating expenses and replacement unit costs; no separate price growth.",
+    "timing": "Annual cumulative factors held constant within each model year. At fixed quantities, integrated annual cost equals opening annual total times product(1+growth/100).",
+    "unmodified": "Tax/grant/fee growth, demography, staffing and capital adjustment mechanisms retain the original protocol parameters.",
+    "uncertainty": "PKV local applicability and opening publication vintages remain limitations; no local pension calibration.",
+    "accountingComparator": "Same annual cost indices; tax, grants and operating revenue compound original fixed growth, depreciation and financial net held at opening values, no demographic or capital dynamics."
+  }
+}

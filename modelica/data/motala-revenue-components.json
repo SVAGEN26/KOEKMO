@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "municipality": "0583",
+  "scope": "kommunen",
+  "unit": "mnkr",
+  "retrievedAt": "2026-10-15",
+  "status": "source_collection_reconciled_not_yet_forecast_input",
+  "sources": {
+    "2021": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2021_webb.pdf",
+      "locator": "Notes6 and7, kommunen columns2021 and2020; indexed primary PDF tables",
+      "publicationDate": null,
+      "access": "Indexed PDF text. Original PDF bytes not archived."
+    },
+    "2022": {
+      "url": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "locator": "Notes6 and7, printed page42, PDF zero-based page21, kommunen2022 column",
+      "publicationDate": null,
+      "access": "Primary PDF text through web tool. Original PDF bytes not archived."
+    },
+    "2023": {
+      "url": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf",
+      "locator": "Notes6 and7, printed page52, PDF zero-based page51, kommunen2023 column",
+      "publicationDate": null,
+      "access": "Primary PDF text through web tool. Original PDF bytes not archived."
+    },
+    "2024": {
+      "url": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "locator": "Notes6 and7, kommunen2024 column (column order2023,2024)",
+      "publicationDate": null,
+      "access": "Indexed PDF text. Original PDF bytes not archived."
+    }
+  },
+  "rows": [
+    {
+      "year": 2020,
+      "reportingPrecisionMnkr": 0.1,
+      "sourceId": "2021",
+      "scope": "kommunen",
+      "moneyUnit": "mnkr",
+      "taxComponents": {
+        "preliminaryTax": 1971.8,
+        "estimatedCurrentYearSettlement": -31.2,
+        "priorYearSettlementDifference": -10.7
+      },
+      "grantComponents": {
+        "incomeEqualisation": 491,
+        "costEqualisation": 18.7,
+        "regulationGrant": 44.7,
+        "lssEqualisation": 21.1,
+        "propertyFee": 91.7,
+        "refugeeWelfareGrant": 11.2,
+        "otherGeneralGrants": 82.1
+      },
+      "reportedTax": 1929.9,
+      "reportedGrants": 760.5,
+      "taxRoundingResidual": 0.0,
+      "grantRoundingResidual": 0.0,
+      "laterComparativeSource": true
+    },
+    {
+      "year": 2021,
+      "reportingPrecisionMnkr": 0.1,
+      "sourceId": "2021",
+      "scope": "kommunen",
+      "moneyUnit": "mnkr",
+      "taxComponents": {
+        "preliminaryTax": 1975.2,
+        "estimatedCurrentYearSettlement": 49.9,
+        "priorYearSettlementDifference": 7.1
+      },
+      "grantComponents": {
+        "incomeEqualisation": 496,
+        "costEqualisation": 15.7,
+        "regulationGrant": 129.7,
+        "lssEqualisation": 17.7,
+        "propertyFee": 99.1,
+        "refugeeWelfareGrant": 0,
+        "otherGeneralGrants": 5.2
+      },
+      "reportedTax": 2032.2,
+      "reportedGrants": 763.5,
+      "taxRoundingResidual": 0.0,
+      "grantRoundingResidual": 0.1,
+      "laterComparativeSource": false,
+      "roundingNote": "Itemised grants sum763.4, printed total763.5. Preserve0.1mnkr residual; do not silently adjust a component."
+    },
+    {
+      "year": 2022,
+      "reportingPrecisionMnkr": 0.1,
+      "sourceId": "2022",
+      "scope": "kommunen",
+      "moneyUnit": "mnkr",
+      "taxComponents": {
+        "preliminaryTax": 2072.6,
+        "estimatedCurrentYearSettlement": 51.1,
+        "priorYearSettlementDifference": 13.9
+      },
+      "grantComponents": {
+        "incomeEqualisation": 531.1,
+        "costEqualisation": 13.3,
+        "regulationGrant": 120.5,
+        "lssEqualisation": 19.8,
+        "propertyFee": 102,
+        "refugeeWelfareGrant": 0,
+        "otherGeneralGrants": 7.6
+      },
+      "reportedTax": 2137.6,
+      "reportedGrants": 794.3,
+      "taxRoundingResidual": 0.0,
+      "grantRoundingResidual": -0.0,
+      "laterComparativeSource": false
+    },
+    {
+      "year": 2023,
+      "reportingPrecisionMnkr": 1,
+      "sourceId": "2023",
+      "scope": "kommunen",
+      "moneyUnit": "mnkr",
+      "taxComponents": {
+        "preliminaryTax": 2181,
+        "estimatedCurrentYearSettlement": 34,
+        "priorYearSettlementDifference": 12
+      },
+      "grantComponents": {
+        "incomeEqualisation": 581,
+        "costEqualisation": 29,
+        "regulationGrant": 102,
+        "lssEqualisation": 39,
+        "propertyFee": 106,
+        "refugeeWelfareGrant": 0,
+        "otherGeneralGrants": 8
+      },
+      "reportedTax": 2227,
+      "reportedGrants": 865,
+      "taxRoundingResidual": 0,
+      "grantRoundingResidual": 0,
+      "laterComparativeSource": false,
+      "versionNote": "Use original2023 kommunen otherGeneralGrants8. Later2024 comparative and2023 group column give7. Do not mix columns or source versions."
+    },
+    {
+      "year": 2024,
+      "reportingPrecisionMnkr": 1,
+      "sourceId": "2024",
+      "scope": "kommunen",
+      "moneyUnit": "mnkr",
+      "taxComponents": {
+        "preliminaryTax": 2254,
+        "estimatedCurrentYearSettlement": 8,
+        "priorYearSettlementDifference": -11
+      },
+      "grantComponents": {
+        "incomeEqualisation": 614,
+        "costEqualisation": 31,
+        "regulationGrant": 134,
+        "lssEqualisation": 39,
+        "propertyFee": 114,
+        "refugeeWelfareGrant": 0,
+        "otherGeneralGrants": 21
+      },
+      "reportedTax": 2251,
+      "reportedGrants": 953,
+      "taxRoundingResidual": 0,
+      "grantRoundingResidual": 0,
+      "laterComparativeSource": false
+    }
+  ],
+  "categoryTransitions": [
+    {
+      "effectiveYear": 2021,
+      "fromComponent": "refugeeWelfareGrant",
+      "toComponent": "regulationGrant",
+      "openingYear": 2020,
+      "openingAmount": 11.2,
+      "unit": "mnkr",
+      "rule": "Do not carry the separate 2020 refugee welfare grant forward alongside the 2021 regulation rate. The programme moves into regulation; this does not imply an equal local amount is added there.",
+      "source": "https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2021-02-09/agenda/cirkular-2057-fran-skr-budgetforutsattningar-for-aren-2020-2023pdf?downloadMode=open",
+      "locator": "SKR circular 20:57, printed page 10, PDF zero-based page 11"
+    }
+  ],
+  "limitations": [
+    "Unknown original publication dates;2020 comes from a later comparative. These observations alone are not historically available forecast vintages.",
+    "No revised forecast has used these components yet. A separate protocol must define the grant/tax settlement mapping before scoring.",
+    "Annual accounts report tax revenue using preliminary payments, estimated current-year settlement and prior-year difference. National tax-base growth cannot simply be applied to all three as recurring revenue.",
+    "The2020 general-grant item82.1 is also in note10. A future grant-component forecast must avoid removing it twice.",
+    "The refugeeWelfareGrant zeros after 2020 normalize a component no longer separately reported; they are not explicit zero cells verified in every source. The categoryTransitions rule is evidence for future mapping, not an implemented forecast rule.",
+    "Subsequent reclassification between operating revenue and general grants can affect component scores without changing total income or result. Preserve reported full outcomes and use explicit comparability diagnostics."
+  ]
+}

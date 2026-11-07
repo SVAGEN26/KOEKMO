@@ -1,0 +1,142 @@
+Oberoende granskning av Motala, skatteprövningen 2026-10-15
+
+Granskare: separat agent /root/independent_review.
+Granskat arkiv: modelica/runs/historical-v5-20261015-tax/.
+Denna anteckning ligger utanför körningsarkivet. Ingen modell, parameter,
+utvärderingsregel eller fryst artefakt ändrades under granskningen.
+
+BEDÖMNING
+
+Prövningen är tekniskt korrekt och användbar som diagnostik. Jag finner
+ingen grund för att ersätta M2-PKV-costbase med skattevarianten. Skattens
+MAE försämras vid samtliga tre horisonter. Den tidigare kandidaten har
+lovande ettårsresultat i utvecklingsmaterialet, men tillräcklig evidens för
+god flerårsprediktion för Motala saknas fortfarande. Detta omdöme bygger på
+Motala. Norrköping eller annan kommunöverförbarhet är inget separat hinder
+för att godkänna en framtida väl validerad Motala-modell.
+
+VAD JAG SJÄLV KONTROLLERAT
+
+- Alla 599 filhashar stämmer, även efter granskningens testkörning.
+- 59 native-körningar finns. Samtliga run.mos pekar på arkiverade källor.
+- Protokollets innehållshash stämmer med evaluation.json. Protokollet är
+  registrerat 2026-10-15 kl. 17:47:17 UTC. Källor och avgränsning granskades
+  oberoende före första scoring; denna anteckning gäller även resultaten.
+- Tolv fall finns kvar: fem ettårs-, fyra tvåårs- och tre treårsprognoser.
+  De 72 känslighetsraderna behåller båda WIP-alternativen och båda
+  notvarianterna, inklusive skattevarianterna.
+- Alla tidigare prognosobjekt är exakt lika motsvarande objekt i v4.
+  Faktiska totaler och komponentutfall är också exakt lika. Huvudbok,
+  aggregerade observationer, notunderlag och PKV-underlag är byteidentiska.
+- Jag räknade själv om MAE, bias och RMSE från fallens prognoser och utfall.
+  Samtliga värden i scores och componentScores stämmer exakt.
+- För 48 årsprognoser i de fyra skattevarianterna stämmer skatten med
+  öppningsskatt gånger kumulativ nationell prognosfaktor. Största avvikelse
+  är 2,32e-11 mnkr. Ingen extra lokal befolkningsmultiplikator används.
+- Största skillnad i bidrag, nettokostnad, befolkning och personal mellan
+  M2:s skattevariant och motsvarande tidigare notvariant är 2,41e-6.
+  Finansnetto får ändras genom ändrad skuld och ränta.
+- De 27 arkiverade testerna kördes självständigt från /tmp med arkivets
+  Python-kod och Modelica-källor: alla godkända. Detta inkluderar native-
+  tester, framtida datamutation och positiva kontroller. Jag återkörde
+  inte alla 59 historiska simuleringar från början under denna granskning.
+- Det kända avrundningsgapet 1 mnkr i 2025 års resultaträkning är kvar som
+  resultRounding/accountingAdjustment. Komponentfelens summa får därför
+  inte påstås vara exakt lika resultatfelet utan denna avstämningspost.
+
+RESULTAT, MNKR
+
+                                      Ett år     Två år     Tre år
+M2-PKV-costbase, resultat-MAE          16,0318    57,6096   104,2424
+Samma med skattevarianten              20,9419    55,6322    93,4733
+M2-PKV-no-repeat, resultat-MAE         35,0102    90,8746    86,5176
+Samma med skattevarianten              47,0073    88,8972    74,6977
+Historiskt medel, resultat-MAE         51,4698    54,0899    32,4278
+Oförändrat resultat, resultat-MAE      58,9200    76,2750    40,8667
+
+Costbase, skattens MAE                 27,4756    55,1907    49,1868
+Skattevarianten, skattens MAE          30,9436    62,3657    57,0324
+Costbase, skattens bias                -5,6329    -3,4049    -8,8738
+Costbase, bidragens bias              -29,5101   -74,7645  -120,4412
+Costbase, nettokostnadens bias        -35,8855   -78,3490  -199,1873
+Costbase, personalens bias             -0,4648   -31,7943  -137,0374
+
+Bias är prognos minus utfall. Nettokostnad och personal är kostnader;
+negativt fel där höjer det prognostiserade resultatet.
+
+Ettårsresultatets försämring med skattevarianten överlever utelämning av
+varje enskilt målår: MAE-skillnaden mot costbase ligger då mellan +0,90 och
++10,00 mnkr. Tvåårsresultatets lilla förbättring är skör: motsvarande
+intervall är -6,10 till +2,99. Treårs-MAE förbättras, men bias försämras
+från +75,19 till +84,25 mnkr och felet är fortsatt mycket större än de
+enkla jämförelsernas. Detta motiverar ingen horisontberoende selektion.
+Utelämningskontrollerna är beskrivande, inte konfidensintervall.
+
+VETENSKAPLIG TOLKNING
+
+Bidragsbanan dominerar den systematiska underskattningen på intäktssidan.
+Skattens relativt lilla bias betyder däremot inte att skatteprognosen är
+precis: positiva och negativa skattefel tar ut varandra. Skattevarianten
+tillför dessutom både nya makrotal och antagandet om konstant lokal andel;
+den isolerar inte enbart nyttan av en bättre tillväxtprognos.
+
+De små ettårsfelen i resultatet sammanfaller med nästan lika stora
+underskattningar av bidrag och nettokostnad. En förbättrad bidragsprognos
+kan därför tillfälligt öka resultatfelet när kostnadsunderskattningen
+består. Det är ett skäl att bedöma komponenter och resultat tillsammans,
+inte ett skäl att behålla en känd brist för att skydda resultatets MAE.
+På tre års sikt är personalfelet ensamt omkring -137 mnkr. Det vore
+felaktigt att beskriva intäktsmodellen som det enda kvarvarande problemet.
+
+Materialet är fortsatt retrospektiv utveckling med fem målår för ett år
+framåt, överlappande flerårsutfall, delvis reviderade öppningsdata och
+osäkra WIP-stockar. Flera alternativa konstruktioner har redan prövats
+på samma utfall. Ett låst delprotokoll gör inte dessa utfall till ett nytt
+oberoende sluttest. Kassaflöde, skuld och lokala policyeffekter har heller
+inte validerats av träffsäkerhet i årsresultat.
+
+MINSTA MOTIVERADE NÄSTA STEG
+
+Gör först en källspårbar avstämning av Motalas skatte- och bidragsdelar vid
+varje öppningsår 2020-2024. Börja med not 6 och 7 i originalrapporterna:
+
+1. Preliminär kommunalskatt, preliminär slutavräkning för innevarande år
+   och korrigering av föregående års slutavräkning, var för sig.
+2. Inkomstutjämning, kostnadsutjämning, regleringspost, LSS-utjämning,
+   kommunal fastighetsavgift och övriga generella bidrag. Eventuella
+   strukturbidrag och införandebidrag ska också få egna identifierbara
+   poster. Bevara tillfälliga bidrag och omklassificeringar uttryckligt.
+3. Knyt varje möjlig framåtbana till rätt datum, beloppsenhet och
+   befolkningsreferens. En nationell post i kronor per invånare behöver
+   rätt lokal befolkningsbas; ett belopp i miljoner för hela riket får
+   inte användas direkt som Motala-belopp. Skilj kommuner från regioner.
+
+Exempel på direkt tillgängligt underlag: Årsredovisning 2023, tryckt s.52,
+not 6 anger för kommunen 2181 + 34 + 12 = 2227 mnkr i skatt. Not 7 anger
+581 + 29 + 102 + 106 + 39 + 8 = 865 mnkr i bidrag och utjämning.
+Källa: https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf
+
+SKR:s cirkulär 23:56, daterat 2023-12-14, har nationell novemberbefolkning
+och medelskattekraft i tabell 8 på s.13, kommunernas slutavräkningar på
+s.23 samt kommunernas regleringspost i tabell 15-16 på s.24. Regionernas
+liknande tabeller på s.18 ska inte förväxlas med kommunernas. Dessa ger
+daterade byggstenar, men utgör inte i sig en full Motala-prognos.
+Källa: https://extra.skr.se/download/18.40b25ebf18c6245376516b5b/1702628339915/Cirkul%C3%A4r%2023056.pdf
+
+Avstämningsunderlaget bör finnas innan en ny bidragsregel och dess
+antaganden låses. Ändra inte grantGrowth eller en lokal kompensationsfaktor
+för att passa den observerade residualen. Modellera inte slutavräkningar
+som återkommande tillväxt. Utfallskomponenter får användas för diagnos och
+senare scoring, men ska hållas åtskilda från daterade prognosindata.
+
+Därefter är ett avgränsat försök med en daterad intäktsbrygga sakligt
+motiverat, med samma tidigare jämförelser, båda notantagandena och
+oförändrade utfall. Saknade lokala budgetvintages behöver förbli synliga;
+politiska förslag eller senare återgivna budgetkolumner får inte ersätta
+dem. Nationella delserier räcker för en tydligt märkt delprövning.
+
+För att nå god flerårsprediktion behövs också bättre underlag för lokala
+personalkostnader/pensioner och avskrivningar samt ny prövning på data som
+inte har styrt dessa modellval. Framtida verkligt daterade Motala-prognoser
+är ett lämpligt slutprov. En ny kommunpanel är inte det minsta nästa
+steget för användarens Motala-mål.

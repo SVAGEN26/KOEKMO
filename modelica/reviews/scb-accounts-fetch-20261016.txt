@@ -1,0 +1,71 @@
+Oberoende granskning av SCB-hämtning, 2026-10-16
+
+Granskat: modelica/fetch_scb_accounts.py
+SHA256:
+f5a492c1b0be8b9bf71a163e3e200e3c9b64f2791397dc1271b156285de1f899
+Testfil: modelica/tests/test_scb_accounts_fetch.py
+SHA256:
+40881b582e2bf08e1e148da1eb7a3b8a329aac59e1cfd3874754f8252f27e557
+Källkatalog: modelica/data/municipal-economics-research.json
+SHA256:
+761fd98e51a5c00d1b76531e170b115ba54deb3d61c5bbe948e484aa8901927b
+
+Beslut: inga blockerande fel hittades i den granskade versionen. Skriptets
+kontrakt och offlinefunktion godkänns inom nedanstående omfattning.
+Detta är inte verifierad integration mot ett fungerande SCB-svar, inte
+godkännande av några hämtade historiska belopp och inte modellprecision.
+
+API-kontraktet kontrollerades självständigt i SCB:s publicerade Swagger:
+https://statistikdatabasen.scb.se/swagger/v2/swagger.json
+Basen är /api/v2. GET /tables/{id}/metadata returnerar JSON-stat-strukturen
+Dataset; skriptet använder lang=sv och defaultSelection=false. POST
+/tables/{id}/data tar lang och outputFormat i query. Body använder
+selection med variableCode och valueCodes, i överensstämmelse med v2.
+Formatet json-stat2 är ett dokumenterat alternativ.
+
+Ordning och saknadmarkering kontrollerades även mot JSON-stat-specifikationen:
+https://json-stat.org/format/
+Sista dimensionen varierar snabbast. Kategorier följer sina uttryckliga
+indexpositioner, inte objektens insättningsordning. Null och utelämnade
+celler i gles representation är saknade observationer, inte noll.
+
+Skriptet väljer uttryckligen kommunkod 0583, alla deklarerade år och
+övriga tillgängliga kategorier. Det kontrollerar att svaret har exakt
+de begärda dimensionerna och kategorierna. CSV-exporten bevarar värdenas
+tecken, nollor, saknade celler, status och kategoriernas enhetsmetadata.
+Ingen beloppskonvertering, summering eller automatisk modellimport sker.
+Råsvar, metadata, POST-body, källkatalog och kvitton sparas separat.
+
+De sex befintliga riktade offlinetesterna kördes självständigt och passerade:
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s modelica/tests -p test_scb_accounts_fetch.py -v
+
+Därutöver skapades en fristående syntetisk kontroll i:
+/tmp/motala-independent-scb-fetch-review.py
+Den kördes från /tmp med PYTHONDONTWRITEBYTECODE=1 och mockade endast
+HTTP-svaren. Den verkliga main-funktionen producerade hela utmatningen.
+Alla fyra tabeller prövades, sammanlagt åtta HTTP-anrop och 146 celler:
+TAB6777:56; TAB4202:30; TAB6782:30; TAB4199:30.
+
+Kontrollen omfattade en annan kommun i metadata, omvänd insättningsordning
+för kategorikartan, ändrad dimensionsordning mellan metadata och svar,
+två olika kategorienheter, negativa belopp, nollor, glesa saknade värden
+och separata statuskoder. Varje CSV-cell kontrollerades mot sin oberoende
+förväntade koordinat, värde, enhet och status. Sparade råbytes och POST-body
+var exakta; request-, svars-, katalog- och CSV-hashar stämde med kvittona.
+Samtliga kontroller passerade. Det syntetiska paketet finns i:
+/tmp/motala-independent-scb-fetch-_l09_k74/packet
+Detta paket är endast ett funktionstest, aldrig historiska SCB-observationer.
+
+Den verkliga körningens paket granskades separat:
+modelica/data/raw/scb-accounts/20261016T072920642373Z/
+Det innehåller endast source-catalogue.json och receipts.json.
+Alla fyra metadataanrop och tabellstatusar är failed med uttryckligt
+Temporary failure in name resolution. Kataloghashen verifierades.
+Inga dataanrop lyckades och inga SCB-observationer eller CSV-tabeller
+hämtades där. En fungerande riktig nedladdning och efterföljande avstämning
+mot årsredovisningar återstår. Aktuella hämtade data får då inte märkas
+som ursprungliga historiska prognosvintager.
+
+Granskningen ändrade inga modeller, parametrar, historiska utfall eller
+frysta arkiv. Denna anteckning dokumenterar redan avslutad kontroll;
+inga ytterligare tester kördes när anteckningen sparades.

@@ -1,0 +1,133 @@
+Oberoende granskning av bidragsdiagnos, 2026-10-15
+
+Granskat paket: runs/grant-audit-20261015
+Fryst prognoskälla: runs/historical-v8-20261015-regulation
+
+Beslut
+
+Diagnosen godkänns som tekniskt korrekt och reproducerbar uppdelning
+av redan sparade prognoser. Ingen blockerande avvikelse hittades.
+Detta är inte en ny prognos, ny oberoende validering eller grund för
+kandidatpromotion. Full Motala-prognosprecision är fortsatt inte
+tillräckligt belagd, enligt reviews/regulation-20261015.txt.
+
+Reproduktion och källkopior
+
+Paketets fyra manifestposter verifierades. Full fristående återkörning
+gjordes med /tmp som cwd, utan projektimporter eller PYTHONPATH:
+
+PYTHONDONTWRITEBYTECODE=1 python3 /home/johti17/MOTALA/modelica/runs/grant-audit-20261015/run_grant_audit.py --input-packet /home/johti17/MOTALA/modelica/runs/grant-audit-20261015/input-packet.json --out /tmp/motala-independent-grant-audit-20261015
+
+Samtliga fem filer blev byteidentiska, inklusive manifest, rapport,
+program, input-packet.json och evaluation.json.
+
+Jag verifierade åter samtliga 1 262 hashposter i v8. De är oförändrade.
+Paketets kopior av cases, regulationComponents, de tio öppningsauditerna
+och båda lokala komponentfilerna är exakt lika motsvarande parsade
+v8-filer. De 13 angivna källfilshasharna och manifesthashen stämmer.
+V8:s manifesthash är:
+503222ea0ebe554fa1a91bf692121f85c44dcd23224b2dbf38c76c0bdcfbdcd5
+
+Detta verifierar obruten kopiering från det granskade källpaketet.
+Originalårsredovisningarnas PDF-bytes finns fortfarande inte arkiverade
+i paketet; de tidigare dokumenterade käll- och publiceringsbegränsningarna
+kvarstår. Inga nya primärkällor har införts eller påståtts verifierade
+genom denna numeriska diagnos.
+
+Oberoende räknekontroll
+
+48 unika rader finns: de tolv nominella fallen gånger två notpolicyer
+och två beräkningsvarianter. Varje variant har 5/4/3 mål vid horisont
+1/2/3. Dessa är inte 48 oberoende observationer. WIP-alternativen har
+varken ändrats eller räknats som nya observationer.
+
+Jag räknade själv 1 494 allokerings-, fel-, summerings- och poängtal
+med ett separat program som inte använder diagnosens funktioner.
+Största avvikelsen var 2,8421709430404007e-12. Tillfälligt kontrollprogram:
+/tmp/motala-independent-grant-check.py.
+
+De deklarerade öppningsandelarna använder rätt notjusterade restankare.
+82,1 mnkr tas bort enbart från 2020 års otherGeneralGrants under
+no-repeat. Identiteten kontrolleras mot notens item-id, exkluderade
+poster, recurringBase, reported, modellens grants0 och grantAnchor0.
+Costbase behåller beloppet. De signerade avrundningarna ingår i sina
+respektive summor. Restankarna är strikt positiva.
+
+Varje allokerat belopp är öppningskomponenten multiplicerad med
+remainingGrants_h / (Ganchor-I0-R0-F0). Summan blir den redan sparade
+restprognosen. Skillnaden mot målårets komponenter summerar till dess
+restfel. Tillsammans med separata fel i I, R och F blir summan hela
+bidragsfelet. Hela målutfallet har lämnats oförändrat, inklusive 2021
+års +0,1 och 2025 års -1 mnkr i publicerad avrundning.
+
+Kontrollerade största identitetsrester:
+- Allokerade prognoser: 1,14e-13 mnkr.
+- Summerade restfel: 1,21e-13 mnkr.
+- Hela bidragsfelet: 2,84e-12 mnkr.
+- Källornas bidragsidentitet: 5,68e-14 mnkr.
+- Skillnad mot frysta komponentvärden: exakt noll.
+- Summerade komponentbias: 7,11e-14 mnkr.
+
+MAE, bias och RMSE för alla komponenter, hela resten och hela bidraget
+räknades om självständigt. Signerade fel och bias är additiva.
+Komponenternas MAE är inte additiva; rapporten anger detta korrekt.
+Programmet kontrollerar också att indataobjektet förblir oförändrat.
+
+Vad diagnosen visar
+
+Alla följande tal gäller native och mnkr, med den uttryckligt valda
+proportionella allokeringen. De är inte administrativt identifierade
+delprognoser eller kausala effekter.
+
+Costbase:s rest-MAE är 34,101 / 56,891 / 64,582 vid h1/h2/h3.
+No-repeat:s motsvarande tal är 18,857 / 38,738 / 64,598.
+Skillnaden i restpoäng får inte användas för att i efterhand utse en
+notpolicy för hela modellen; policyerna påverkar också andra poster.
+
+2020 -> 2021, costbase:
+Andra generella bidrag har allokerat fel +78,500. De övriga signerade
+felen är kostnadsutjämning +3,364, LSS +3,811, fastighetsavgift -5,613
+och avrundning -0,100. Summan är restfel +79,963. No-repeat har i
+samma fall andra generella bidrag -5,200 och restfel -3,743.
+Det stora costbase-felet ligger alltså, under denna allokering, i
+fortsättningen av den uttryckligt kvarhållna 82,1-posten. Detta visar
+inte att framtida nya eller ersättande bidrag alltid ska sättas till noll.
+
+Senare starter visar en annan bild. 2022 -> 2023 har kostnadsutjämning
+och LSS felen -15,444 respektive -18,818, medan andra generella bidrag
+bara har -0,254. 2022 -> 2025 har däremot andra generella bidrag
+-43,008, kostnadsutjämning -18,014, LSS -19,179, fastighetsavgift
+-11,741 och avrundning +1. Summan är -90,943.
+
+Costbase:s h3-bias är för kostnadsutjämning -13,903, LSS -18,744,
+fastighetsavgift -10,123, andra generella bidrag +6,695 och avrundning
++0,369; tillsammans -35,706. Den positiva genomsnittliga biasen för
+andra generella bidrag döljer stora fel med motsatta tecken: komponentens
+h3-MAE är 45,706. Under no-repeat blir denna komponents h3-bias
+-22,172; restens h3-bias blir -64,598. En liten genomsnittlig totalbias
+skulle därför inte heller här bevisa goda komponentprognoser.
+
+Fortsatt arbete och precisionsmål
+
+Diagnosen gör databehovet mer konkret. Kostnadsutjämning och
+LSS-utjämning behöver egna daterade lokala underlag eller en uttrycklig
+administrativ beräkning. Fastighetsavgiften behöver motsvarande
+kommunvisa prognos och rätt informationsdatum. Andra generella bidrag
+behöver program- och beslutsidentifiering, giltighetsperiod samt en
+tydlig kategoriövergång till eller från reglering. Det är olika
+mekanismer; den gemensamma restfaktorn beskriver dem inte tillräckligt.
+
+Redan tillgängliga noter och budgettexter kan nu katalogiseras mot
+dessa specifika kategorier och beslutsdatum, utan att ändra prognoser.
+En framtida regel måste bestämma vilka belopp som var kända vid sin
+informationsdag. Senare utfall får inte användas som om de då var
+beslutade eller prognostiserade. En enda ny tillväxtfaktor för hela
+bidragsresten är inte motiverad av denna uppdelning.
+
+Den fortsatta bristen i Motala-modellen gäller också de betydligt större
+fleråriga personal- och kostnadsfelen. Denna bidragsdiagnos löser inte
+de lokala pensions-, löneskatte-, löne- eller bemanningsunderlagen och
+ökar inte antalet oberoende observationsår. V8:s resultat, baslinjer
+och prognosavslag står därför fast. Nya mekanismer bör motiveras med
+komponentdefinitioner och daterade källor, därefter låsas före prövning.
+Slutlig prognosevidens behöver senare, ännu oanvända Motala-utfall.

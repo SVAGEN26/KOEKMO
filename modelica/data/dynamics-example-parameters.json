@@ -1,0 +1,10 @@
+{
+  "hiringYears": [1, 1, 1],
+  "reductionYears": [2, 3, 3],
+  "constructionYears": [2, 3, 2],
+  "closureYears": [8, 8, 8],
+  "fixedCostShare": [0.15, 0.15, 0.15],
+  "facilityCostShare": [0.25, 0.25, 0.25],
+  "automaticInvestment": true,
+  "rateAdjustmentYears": 3
+}
