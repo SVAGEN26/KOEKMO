@@ -3,7 +3,7 @@
 Version 3, 15 oktober 2026. Detta är en mekanismbaserad scenariomodell för
 kommunens egna verksamheter. Den kompletterar den äldre årliga scenariomodellen
 och M1:s statistiska prognosförsök. Ekvationerna nedan implementeras i
-`modelica/MotalaDynamics`; de utländska studierna bestämmer inga Motala-parametrar.
+`research/MotalaDynamics`; de utländska studierna bestämmer inga Motala-parametrar.
 
 ## Forskningsgrund och val av samband
 
@@ -215,7 +215,7 @@ föregående års belopp är en separat approximation.
 
 `annualFlowAnchoring=false` behåller v2:s äldre konvention där öppningsflödet
 likställdes med föregående årsbelopp. Den frysta v2-källan finns i
-`modelica/reference/dynamics-v2`. Ett analytiskt native-test kontrollerar
+`research/reference/dynamics-v2`. Ett analytiskt native-test kontrollerar
 integrerade årstotaler för positiv, negativ, noll och nästan noll tillväxt.
 
 Omställning kan ha en engångskostnad per minskad årsarbetare eller avvecklad
@@ -304,8 +304,8 @@ regelbryggan är ännu inte inkopplad i `Continuous.mo` och har inte fått
 någon prognospoäng. Separat avräkning och skattefordran är implementerade
 som indata respektive tillstånd; de väljer inga prognosantaganden. De tidigare
 frysta prövningarna behåller schablonen ovan. Underlaget finns i
-`modelica/data/motala-revenue-components.json` och
-`modelica/data/skr-revenue-vintages.json`. Ingen koefficient nedan har valts
+`research/data/motala-revenue-components.json` och
+`research/data/skr-revenue-vintages.json`. Ingen koefficient nedan har valts
 för att minska de observerade prognosfelen.
 
 Låt y beteckna räkenskapsår och v prognosens informationsdatum. N_{i,y-1}
@@ -438,8 +438,8 @@ saldo betecknar en nettoskatteskuld.
 
 SCB:s novemberbefolkning och administrativa Excel-underlag behövs för
 nästa lokala avstämning. Filernas publicering och korrigeringar listas i
-`modelica/data/revenue-source-downloads.json`; en engångshämtning finns i
-`modelica/fetch_revenue_sources.py`. En senare korrigerad tabell kan
+`research/data/revenue-source-downloads.json`; en engångshämtning finns i
+`research/fetch_revenue_sources.py`. En senare korrigerad tabell kan
 användas som tydligt märkt kontrollunderlag men blir inte därmed en
 historiskt tillgänglig prognosversion.
 
@@ -699,7 +699,7 @@ i förväg.
 
 ### Låst försök med rapporterad budgetsignal
 
-`modelica/run_budget_response.py` prövar den reducerade årsmodellen separat
+`research/run_budget_response.py` prövar den reducerade årsmodellen separat
 från Modelica. [Protokollet](../modelica/data/budget-response-protocol.json)
 registrerades före någon skattning mot nya Motala-data. Huvudförsöket använder
 orensade rapporterade poster konsekvent över hela serien: R=T+G, C är positiv
@@ -748,11 +748,11 @@ integration i Modelicas driftbeslut.
 
 ## Historisk prövning
 
-`modelica/run_historical.py` kör M2 och fryst v2 från historiska bokslut och
+`research/run_historical.py` kör M2 och fryst v2 från historiska bokslut och
 jämför på samma målår med M1, oförändrat värde och en fast dämpad trend.
-`modelica/data/historical-protocol.json` låser antagandena; inga parametrar
+`research/data/historical-protocol.json` låser antagandena; inga parametrar
 optimeras mot utfallen. Bruttobokslut och källversioner finns i
-`modelica/data/annual-ledgers.json`. Ursprungliga avrundningsskillnader bevaras.
+`research/data/annual-ledgers.json`. Ursprungliga avrundningsskillnader bevaras.
 
 Fem ettårsmål, 2021–2025, ger utvecklingsevidens. Publiceringsdatum är inte
 verifierade och vissa poster är senare reviderade. Byggprojekt saknas för
@@ -814,7 +814,7 @@ kommunvisa intäktsmodell har visats.
 
 ## Parade experiment och känslighetsanalys
 
-`modelica/run_experiments.py` läser en namngiven referens, beslutsalternativ och
+`research/run_experiments.py` läser en namngiven referens, beslutsalternativ och
 ändrade antaganden. Varje omvärldsvariant körs med både referens och alternativ;
 resultatskillnader beräknas inom samma variant. Motstridiga ändringar av samma
 parameter i beslut och känslighetsantagande avvisas. Misslyckade körningar finns

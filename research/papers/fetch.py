@@ -125,7 +125,7 @@ def fetch(directory=DIRECTORY, *, sources=None, timeout=30, retries=2):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DIRECTORY,
-                        help="PDF and receipt directory (default: modelica/papers)")
+                        help="PDF and receipt directory (default: research/papers)")
     parser.add_argument("--list", action="store_true", help="List papers without downloading or writing files")
     parser.add_argument("--only", action="append", metavar="ID", help="Download one paper ID; repeat to select several")
     parser.add_argument("--timeout", type=float, default=30, help="Network timeout in seconds (default: 30)")

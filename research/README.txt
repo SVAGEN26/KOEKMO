@@ -1,5 +1,9 @@
-MOTALA: MODELL OCH REPRODUCERBARA PROGNOSFÖRSÖK
-=============================================
+MOTALA: FORSKNINGSSPÅR OCH REPRODUCERBARA PROGNOSFÖRSÖK
+=======================================================
+
+Inget här används av webbplatsen. Sajten kör bara ../modelica/Motala.mo.
+M1 (MotalaResearch) och M2 (MotalaDynamics) är experiment som inte har slagit
+enkla jämförelsemodeller; de finns kvar så att resultaten går att återskapa.
 
 Visa modellerna i OMEdit
 -----------------------
@@ -10,7 +14,7 @@ komponentikoner, placeringar och namngivna pilar som beskriver ekvationsbindning
 Pilarna är grafiska förklaringar; ändra indatabindningar i Modelica-texten.
 M2 använder sekunder: åtta år motsvarar 252460800 sekunder.
 
-Motala.mo innehåller webbmodellens diagram under Motala.Annual.
+Webbmodellen ligger inte här utan i ../modelica/Motala.mo (Motala.Annual).
 MotalaResearch/package.mo innehåller M1:s diagram under Annual. M1 kräver
 en genererad Scenario.mo med skattade indata för simulering, se snabbstarten nedan.
 Frysta modeller i reference/ används av testerna och uppdateras inte med nya diagram.
@@ -480,9 +484,9 @@ bättre: skatt plus bidrags MAE ökar där från 83,53 till 92,08 mnkr. Kostnads
 intäktsfel måste fortsatt bedömas separat. Ingen huvudkandidat har bytts.
 
 Återkör enbart de sparade källorna, från projektets rot:
-PYTHONDONTWRITEBYTECODE=1 python3 modelica/runs/historical-v8-20261015-regulation/sources/run_regulation.py \
-  --protocol modelica/runs/historical-v8-20261015-regulation/protocol.json \
-  --parent-run modelica/runs/historical-v8-20261015-regulation/reference \
+PYTHONDONTWRITEBYTECODE=1 python3 research/runs/historical-v8-20261015-regulation/sources/run_regulation.py \
+  --protocol research/runs/historical-v8-20261015-regulation/protocol.json \
+  --parent-run research/runs/historical-v8-20261015-regulation/reference \
   --out /tmp/motala-v8-egen-aterkorning
 Utmatningskatalogen måste vara ny. Äldre hashlistade cachefiler bevaras endast
 som historiska artefakter; körkommandot skriver inte nya Python-cachefiler.

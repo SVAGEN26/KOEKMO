@@ -1,6 +1,6 @@
 """Compare independently supplied forecasts; never feeds SKR values to Motala.
 
-Usage: python3 modelica/benchmark/compare.py observations.json --output report.json
+Usage: python3 research/benchmark/compare.py observations.json --output report.json
 
 JSON has forecasts and outcomes arrays. All rows require municipality, scope,
 metric, unit, definition, targetYear, value and source. Forecasts additionally

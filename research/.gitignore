@@ -1,0 +1,22 @@
+# Local reports include source snapshots, compiler output and large CSV files.
+# Keep reference/, data/*.json, reviews/ and tests/ as reproducible source inputs.
+/runs/
+/data/raw/
+
+# OMEdit/OMC output when simulating directly beside the source files.
+# This package has no authored C source; these are generated simulation files.
+*.c
+*.h
+*_external_functions.json
+*.makefile
+*.libs
+*.bin
+*.fmu
+*.mo.bak
+*.bak-mo
+/Scenario
+/Motala.Annual
+/MotalaDynamics.Examples.*
+/MotalaResearch.Annual
+.OMEdit/
+OMEdit/

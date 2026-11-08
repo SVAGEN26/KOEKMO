@@ -21,7 +21,7 @@ using the suggested filenames. Alternatively, in a network-enabled environment:
 
 Run that command from the project root, or use the script's absolute path from
 another working directory. The original
-python3 papers/fetch.py command also works when run from modelica/.
+python3 papers/fetch.py command also works when run from research/.
 Options:
 
   --list                      List the catalogue without accessing the network

@@ -23,7 +23,7 @@ SOFTWARE.
 ---------------------------------------------------------------------------
 
 Scope. The MIT License above covers this project's own work: the Modelica
-models (modelica/*.mo, modelica/MotalaDynamics, modelica/MotalaResearch), the
+models (modelica/*.mo, research/MotalaDynamics, research/MotalaResearch), the
 web app (site/src), scripts, tests and documentation.
 
 It does not cover:
@@ -42,5 +42,5 @@ It does not cover:
   - SCB and Kolada data are open data, used with attribution.
   - SKR's figures are used with attribution. SKR's workbooks are not
     redistributed; data/skr-motala/README.md links to SKR's original.
-- Research papers in modelica/papers/ are not redistributed; fetch.py retrieves
+- Research papers in research/papers/ are not redistributed; fetch.py retrieves
   them from their publishers.

@@ -1,6 +1,6 @@
 """Archive a public SKR comparison workbook, without modifying model inputs.
 
-Usage: python3 modelica/benchmark/fetch.py --circular 26:28
+Usage: python3 research/benchmark/fetch.py --circular 26:28
 The source index and inspection status are separate from download receipts.
 A successful download is not a validated extraction of Motala's forecasts.
 """

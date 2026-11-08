@@ -7,6 +7,6 @@ import sys
 
 if __name__ == "__main__":
     downloader = runpy.run_path(
-        str(Path(__file__).resolve().parents[1] / "modelica/papers/fetch.py"),
+        str(Path(__file__).resolve().parents[1] / "research/papers/fetch.py"),
     )
     sys.exit(downloader["main"]())

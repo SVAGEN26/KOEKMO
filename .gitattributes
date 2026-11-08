@@ -2,7 +2,7 @@
 * text=auto eol=lf
 
 # Frozen reference hashes depend on the exact original bytes.
-modelica/reference/** -text
+research/reference/** -text
 
 # Downloaded sources are hashed in their manifests; keep their bytes (CRLF) as fetched.
 data/downloads/** -text

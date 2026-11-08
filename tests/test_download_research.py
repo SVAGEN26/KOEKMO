@@ -13,7 +13,7 @@ from urllib.error import HTTPError, URLError
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("paper_fetch", ROOT / "modelica/papers/fetch.py")
+SPEC = importlib.util.spec_from_file_location("paper_fetch", ROOT / "research/papers/fetch.py")
 fetch = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(fetch)
 PDF = b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\n%%EOF\n"
