@@ -78,6 +78,15 @@ systemet mot det anslag riksdagen beslutat. Höjda generella statsbidrag kommer 
 utjämningen tillbaka det mesta. Det är en förenklad känslighet, inte lagens beräkning. Kostnadsutjämningen för ett
 snabbare åldrande än rikets ingår ännu inte.</p>
 
+<h4>Befolkningen och intäkterna</h4>
+<p>Skatten är ungefär antalet invånare gånger inkomsten per invånare gånger skattesatsen, och de flesta bidragen räknas per
+invånare. Rikets skatteunderlag växer både av högre inkomster och av att rikets befolkning ökar; Motalas skatt växer av
+samma inkomstökning men av Motalas egen befolkningsförändring. När Motala krymper medan riket växer, växer Motalas skatt
+långsammare än rikets skatteunderlag. Utjämningen skyddar mot låga inkomster per invånare, inte mot färre invånare: med
+2025 års belopp betyder varje invånare cirka 77 000 kr per år i skatt och bidrag. Minskningen med 374 invånare under 2025
+ger cirka 29 mnkr mindre från 2026. I modellen: <code>taxGrowth</code>, <code>nationalPopulationPath</code> och komponenten
+Intäkter.</p>
+
 <h4>SKR:s prognos</h4>
 <p>Sveriges Kommuner och Regioner beräknar skatteintäkter och bidrag för varje kommun några gånger per år. Kommunen
 använder den i sin budget. I modellen är den en referensbana in i Intäkter, inte en del av modellen själv.</p>
@@ -756,8 +765,8 @@ dödlighet och restflöden från den (se Assumptions). Starta från ett annat å
     parameter Real financialIncome = base.financialIncome "Finansiella intäkter per år, mnkr";
     parameter Real otherFinancialExpense = base.otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
     // Tillväxt och priser
-    parameter Real taxGrowth = 0.035 "Skatteunderlagets årliga tillväxt, andel";
-    parameter Real grantGrowth = 0.02 "Generella bidragens årliga tillväxt, andel";
+    parameter Real taxGrowth = 0.035 "Rikets skatteunderlag, årlig tillväxt, andel; inklusive rikets befolkningsökning, så Motalas skatt växer långsammare när Motala krymper och riket växer";
+    parameter Real grantGrowth = 0.02 "Generella bidrag i riket, årlig tillväxt, andel; Motalas del följer folkmängden i förhållande till rikets";
     parameter Real wageGrowth = 0.03 "Årlig löneökning, andel";
     parameter Real priceGrowth = 0.02 "Årlig prisökning för övriga kostnader, andel";
     parameter Real productivityGrowth = 0 "Årlig produktivitetsökning, andel; minskar lönekostnaden för samma volym";
@@ -766,7 +775,7 @@ dödlighet och restflöden från den (se Assumptions). Starta från ett annat å
     parameter Real taxRate = base.taxRate "Kommunal skattesats i scenariot, procent";
     parameter Real baseTaxRate = base.taxRate "Kommunal skattesats i basåret, procent";
     parameter Real equalisationOffset = 0.95 "Andel av en lokal avvikelse i skatteunderlaget som utjämningen tar tillbaka (förenklad)";
-    parameter Real populationRevenueElasticity = 1 "Hur starkt skatt och bidrag följer folkmängden (1 = proportionellt)";
+    parameter Real populationRevenueElasticity = 1 "Hur starkt skatt och bidrag följer Motalas folkmängd i förhållande till rikets (1 = proportionellt: en invånare färre ger cirka 77 000 kr mindre per år, 2025 års nivå)";
     parameter Real interestRate = base.interestExpense/base.openingDebt "Genomsnittlig låneränta på ingående skuld, andel; basårets räntekostnad delad med skulden vid basårets början";
     parameter Real investment = base.investment "Årliga investeringar, mnkr";
     // Årsvisa banor; första värdet gäller år 1
@@ -775,8 +784,8 @@ dödlighet och restflöden från den (se Assumptions). Starta från ett annat å
     parameter Real priceGrowthPath[horizon] = fill(priceGrowth, horizon) "Prisökning per år, andel";
     parameter Real pensionExpensePath[horizon] = {pension0*(1 + pensionGrowth)^i for i in 1:horizon} "Pensionskostnad per år, mnkr";
     parameter Real pensionCashPaymentsPath[horizon] = pensionExpensePath "Pensionsutbetalningar per år, mnkr; illustrativa tills en egen källa finns";
-    parameter Real referenceTax[horizon] = {tax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr (SKR eller illustrativ)";
-    parameter Real referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr (SKR eller illustrativ)";
+    parameter Real referenceTax[horizon] = {tax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr; växer i rikets takt och skalas i Intäkter med Motalas folkmängd i förhållande till rikets (en importerad SKR-bana är redan Motalas egen)";
+    parameter Real referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr; växer i rikets takt och skalas i Intäkter med Motalas folkmängd i förhållande till rikets (en importerad SKR-bana är redan Motalas egen)";
     parameter Real referencePopulation[horizon] = fill(sum(p0), horizon) "Folkmängd som referensbanan bygger på, personer";
     parameter Real nationalPopulation0 = Data.SCB.nationalPopulationAt(base.year - 1) "Rikets folkmängd vid slutet av året före basåret, personer (SCB)";
     parameter Real nationalPopulationPath[horizon] = {Data.SCB.nationalPopulationAt(base.year + i - 1) for i in 1:horizon}
@@ -1253,8 +1262,8 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
         Placement(transformation(origin = {-240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
       Interfaces.TaxAndGrantsOutput taxAndGrants "Skatt och bidrag till finansieringen" annotation(
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
-      discrete output Real tax(start = tax0, fixed = true) "Skatteintäkter, mnkr";
-      discrete output Real grants(start = grants0, fixed = true) "Generella statsbidrag och utjämning, mnkr";
+      discrete output Real tax(start = tax0, fixed = true) "Skatteintäkter, mnkr: referensbana · Motalas folkmängd i förhållande till rikets · ålderseffekt · skattesats / basårets skattesats";
+      discrete output Real grants(start = grants0, fixed = true) "Generella statsbidrag och utjämning, mnkr: referensbana · Motalas folkmängd i förhållande till rikets, minus utjämning av ålderseffekten";
     protected
       discrete Real popFactor(start = 1, fixed = true) "Motalas folkmängd i förhållande till rikets, jämfört med året före basåret";
       discrete Real standardTax(start = 0, fixed = true) "Skatt vid basårets skattesats och sammansättning, mnkr";
@@ -1286,7 +1295,11 @@ till; banan skalas bara med modellens folkmängd mot SKR:s.</p>
 <p>Befolkningseffekten jämför med <code>p0</code>, folkmängden vid slutet av året före basåret, eftersom basårets skatt
 bygger på folkbokföringen den 1 november året före. Referensbanans tillväxt (till exempel <code>taxGrowth</code>) gäller
 hela rikets skatteunderlag och bidrag, så Motalas del skalas med Motalas folkmängd i förhållande till rikets: växer riket
-medan Motala krymper, minskar Motalas andel.</p></html>"));
+medan Motala krymper, minskar Motalas andel.</p>
+<p>Både skatten och de flesta bidragen räknas per invånare. Utjämningen skyddar mot låga inkomster per invånare, inte mot
+färre invånare. Varje invånare som försvinner tar därför med sig både sin skatt och sin del av bidragen: med 2025 års
+belopp (2 330 + 987 mnkr för 43 131 invånare) cirka 77 000 kr per år. Motala minskade med 374 invånare under 2025, vilket
+ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     end Revenue;
 
     model Capital "Tillgångar och avskrivningar med en sammanvägd avskrivningstid"
@@ -1416,8 +1429,8 @@ härledd ur bokslutet (tillgångar / avskrivningar, cirka 17 år):</p>
     Real operatingRevenue "Verksamhetens intäkter, mnkr";
     Real cost "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
     // Intäkter, kapital och finansiering
-    Real tax "Skatteintäkter, mnkr";
-    Real grants "Generella statsbidrag och utjämning, mnkr";
+    Real tax "Skatteintäkter, mnkr; följer rikets skatteunderlag och Motalas folkmängd i förhållande till rikets (se komponenten Intäkter)";
+    Real grants "Generella statsbidrag och utjämning, mnkr; följer referensbanan och Motalas folkmängd i förhållande till rikets (se komponenten Intäkter)";
     Real depreciation "Avskrivningar, mnkr";
     Real assets "Tillgångar vid årets slut, mnkr";
     Real interest "Räntekostnader, mnkr";

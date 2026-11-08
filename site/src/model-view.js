@@ -45,12 +45,13 @@ export const COMPONENTS=[
   {id:'revenues',model:'Revenue',name:'Intäkter',sub:'Skatt och bidrag',x:40,y:330,color:'#285f8c',
     keys:['taxGrowth','grantGrowth','taxRate','equalisationOffset'],
     values:r=>[['Skatt',fmt(r.tax)],['Bidrag',fmt(r.grants)],['Summa',fmt(r.tax+r.grants)]],
-    text:`Skatt och generella bidrag utgår från en referensbana: SKR:s beräkning för Motala när planeringsunderlagen är aktiva, annars en illustrativ tillväxt. Banan skalas med föregående års befolkning. Fler eller färre i arbetsför ålder ändrar skatten, och utjämningen tar tillbaka det mesta av den avvikelsen via bidragen. En annan skattesats ändrar bara skatten.`,
-    eq:['befolkningsfaktor = befolkning fg år / referensbefolkning',
-      'avvikelse = referensskatt · befolkningsfaktor · (andel 19–64 / andel 2025 − 1)',
+    text:`Skatt och generella bidrag utgår från en referensbana: SKR:s beräkning för Motala när planeringsunderlagen är aktiva, annars en illustrativ tillväxt. En illustrativ bana växer i rikets takt, och rikets skatteunderlag växer också av att rikets befolkning ökar. Motalas del skalas därför med Motalas folkmängd i förhållande till rikets: när Motala krymper och riket växer, minskar Motalas andel. Både skatten och de flesta bidragen räknas per invånare, så varje invånare betyder cirka 77 000 kr per år. Fler eller färre i arbetsför ålder ändrar skatten, och utjämningen tar tillbaka det mesta av den avvikelsen via bidragen. En annan skattesats ändrar bara skatten.`,
+    eq:['befolkningsfaktor = (Motala fg år / Motala året före basåret) / (riket fg år / riket året före basåret)',
+      'med SKR:s bana: befolkningsfaktor = Motala fg år / SKR:s befolkning',
+      'avvikelse = referensskatt · befolkningsfaktor · (andel 19–64 / andel året före basåret − 1); noll med SKR:s bana',
       'skatt = (referensskatt · befolkningsfaktor + avvikelse) · skattesats / 21,70',
       'bidrag = referensbidrag · befolkningsfaktor − utjämning · avvikelse'],
-    limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning.'},
+    limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning. Rikets folkmängd: SCB, utfall till 2025 och därefter SCB:s framskrivning.'},
   {id:'capital',model:'Capital',name:'Kapital',sub:'Tillgångar och avskrivning',x:380,y:330,color:'#9b5f23',
     keys:['investment'],
     values:r=>[['Investering',fmt(r.investment)],['Avskrivning',fmt(r.depreciation)],['Tillgångar',fmt(r.assets)]],
@@ -68,7 +69,7 @@ export const COMPONENTS=[
       'kassaflöde = resultat + avskrivning + pensionskostnad − pensionsutbetalning',
       'behov = investering − kassaflöde → lån om positivt, amortering om negativt',
       'låneskuld = fg år + nya lån − amortering'],
-    limits:'15 mnkr finansiella intäkter och 4 mnkr övriga finansiella kostnader hålls fasta. Rörelsekapital, borgen och leasing ingår inte.'}
+    limits:'Standardräntan 2,23 % är räntekostnaden 2025 (21 mnkr) delad med låneskulden vid årets början (940 mnkr). 15 mnkr finansiella intäkter och 4 mnkr övriga finansiella kostnader hålls fasta. Rörelsekapital, borgen och leasing ingår inte.'}
 ];
 const W=260,H=150,byId=Object.fromEntries(COMPONENTS.map(c=>[c.id,c]));
 
