@@ -2,6 +2,7 @@ import {sum,validateRevenuePath} from './scenario-inputs.js';
 import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
 import {openScenarioReport} from './pdf-report.js';
+import {createModelView} from './model-view.js';
 const $=id=>document.getElementById(id),nf=new Intl.NumberFormat('sv-SE',{maximumFractionDigits:0}),fmt=x=>nf.format(x),decimal=x=>new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}).format(x);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const definitions=[
@@ -15,7 +16,7 @@ const definitions=[
   ['productivity','Årlig produktivitetsökning',0,2,.1,'%', 'Scenario, ej belagd effektivisering']
 ];
 const advanced=[['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
-let engine,b,history,planning,overrides={},path=null,run,base,version=0,modelSource=null;
+let engine,b,history,planning,overrides={},path=null,run,base,version=0,modelSource=null,modelView=null;
 const sourcedRates={taxGrowth:['Skatteunderlag, avvikelse mot SKR','taxBaseGrowth'],wageGrowth:['Arbetskraft, avvikelse mot SKR','labourCostGrowth'],priceGrowth:['Övriga priser, avvikelse mot SKR','otherPriceGrowth']};
 function controlDefinitions(defs){return defs.map(d=>b.planningInputs&&sourcedRates[d[0]]?[d[0],sourcedRates[d[0]][0],-3,3,.1,'pp','Procentenheter mot SKR:s årsvisa bana']:d);}
 function planningControls(){makeControls(controlDefinitions(definitions),'sliders');makeControls(controlDefinitions(advanced),'advanced');syncControls();}
@@ -60,7 +61,7 @@ async function drawOnce() {
     const results=await engine.simulateMany(b,history,requests);
     if(dirty) return;
     for(const r of results.slice(0,2)) if(r.error) throw Error(r.error);
-    run=results[0].run;base=results[1].run;version++;$('error').hidden=true;$('engine').textContent=ENGINE;
+    run=results[0].run;base=results[1].run;version++;modelView?.update(run);$('error').hidden=true;$('engine').textContent=ENGINE;
     const stressRuns=results.slice(2,2+stressed.length),sensitivityRuns=results.slice(2+stressed.length);
     const end=run.rows.at(-1),initial=run.rows[0],margin=end.result/(end.tax+end.grants)*100;
     $('metrics').innerHTML=[['Resultat '+end.year,fmt(end.result),'mnkr',`${decimal(margin)} % av skatt och bidrag`],['Banklåneskuld '+end.year,fmt(end.debt),'mnkr',`${fmt(end.debt-initial.debt)} mnkr förändring från 2025`],['Invånare '+end.year,fmt(end.population),'pers.',`${fmt(end.population-initial.population)} personer från 2025`]].map(([label,value,unit,detail])=>`<div class="metric"><div class="metric-label">${label}</div><div class="metric-number">${value}<small>${unit}</small></div><div class="metric-detail">${detail}</div></div>`).join('');
@@ -97,6 +98,7 @@ async function boot(){try{
     onProgress:(loaded,total)=>{$('engine').textContent=total?`Hämtar OpenModelica ${Math.round(loaded/total*100)} % (${mib(total)} MB)`:`Hämtar OpenModelica ${mib(loaded)} MB`;},
     onCompiling:()=>{$('engine').textContent='Kompilerar Motala.mo…';}});
   engine.ready.catch(report);
+  modelView=createModelView($('model-view'),{source:fetch('Motala.mo').then(r=>r.ok?r.text():Promise.reject(Error('Motala.mo')))});
   modelSource=fetch('Motala.mo').then(r=>r.text()).then(async text=>({file:'Motala.mo',sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(x=>x.toString(16).padStart(2,'0')).join('')})).catch(()=>null);
   const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   [b,{rows:history}]=files;planning=files[5];b.planningInputs=planning;path=planning.revenuePath?validateRevenuePath(planning.revenuePath,b.baseYear):null;planningControls();draw();renderEvidence(files[2],files[3]);renderPlanning();
@@ -110,6 +112,7 @@ async function boot(){try{
   document.querySelector('.controls').addEventListener('change',event=>{if(event.target.dataset.key)syncControls();});
   $('planning-enabled').onchange=()=>{const enabled=$('planning-enabled').checked;b.planningInputs=enabled?planning:null;path=enabled?(planning.revenuePath??null):null;planningControls();draw();};
   document.querySelectorAll('.tab').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!==el.dataset.tab);document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t===el);t.setAttribute('aria-pressed',String(t===el));});}));
+  $('docs-link').onclick=e=>{e.preventDefault();document.querySelector('.tab[data-tab="model"]').click();$('model').scrollIntoView({behavior:'smooth'});};
   $('reset').onclick=()=>{overrides={};$('preset').value='base';syncControls();draw();};
   $('preset').onchange=()=>{overrides=({base:{},adverse:{taxGrowth:2.5,wageGrowth:4,priceGrowth:3,interestRate:4,migrationDelta:-100},migration:{migrationDelta:300},investment:{investment:250}})[$('preset').value];syncControls();draw();};
   $('import').onchange=async e=>{try{const next=validateRevenuePath(JSON.parse(await e.target.files[0].text()),b.baseYear);await engine.simulate(b,history,overrides,next);path=next;draw();}catch(e){report(e);}finally{$('import').value='';}};
