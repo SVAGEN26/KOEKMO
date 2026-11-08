@@ -22,7 +22,7 @@ for n, assumptions in enumerate(scenarios):
     directory = Path(tempfile.mkdtemp(prefix=f'modelica-{n}-',dir=ROOT/'build'))
     (directory/'Scenario.mo').write_text(ref['source'])
     quote = lambda p: json.dumps(str(p))
-    (directory/'run.mos').write_text(f'loadFile({quote(ROOT/"modelica/Motala.mo")});\nloadFile("Scenario.mo");\ncheckModel(Scenario);\ngetErrorString();\nsimulate(Scenario,stopTime=8,numberOfIntervals=8,outputFormat="csv");\ngetErrorString();\n')
+    (directory/'run.mos').write_text(f'loadFile({quote(ROOT/"modelica/Motala.mo")});\nloadFile("Scenario.mo");\ncheckModel(Scenario);\ngetErrorString();\nsimulate(Scenario,startTime=2025,stopTime=2033,numberOfIntervals=8,outputFormat="csv");\ngetErrorString();\n')
     process = subprocess.run([omc,'run.mos'],cwd=directory,text=True,capture_output=True,timeout=120)
     (directory/'omc.log').write_text(process.stdout+process.stderr)
     result = directory/'Scenario_res.csv'
@@ -30,7 +30,7 @@ for n, assumptions in enumerate(scenarios):
         raise SystemExit(f'Modelica validation failed in {directory}\n{process.stdout}\n{process.stderr}')
     with result.open() as f: rows=list(csv.DictReader(f))
     for year,row in enumerate(ref['run']['rows'][1:],1):
-        matching=[r for r in rows if math.isclose(float(r['time']),year,abs_tol=1e-7)]
+        matching=[r for r in rows if math.isclose(float(r['time']),2025+year,abs_tol=1e-7)]  # time is the calendar year
         if not matching: raise AssertionError(f'Missing simulation year {year}')
         actual=matching[-1] # last row at a discrete event is the post-event state
         for name in output_names:

@@ -1,11 +1,15 @@
 // Independent legacy reference for regression tests only; not shipped to the dashboard.
-import {sum,validate,validateRevenuePath,calibrate,naturalStep,planningSeries} from "./scenario-inputs.js";
+import {sum,validate,validateRevenuePath,calibrate,naturalStep,planningSeries,reconcileHistory} from "./scenario-inputs.js";
 export {sum,validate,validateRevenuePath,calibrate,naturalStep,planningSeries,reconcileHistory,mortality} from "./scenario-inputs.js";
 export function simulate(b,history,overrides={},revenuePath=null) {
   const a={...b.assumptions,...overrides}; validate(b,a);
   if(history.length<2||history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
   if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
   const c=calibrate(history), p0=b.population, total0=sum(p0), life=b.assets/b.depreciation;
+  // Base-year tax and grants rest on the population a year earlier (folkbokförda 1 november).
+  const pTax0=reconcileHistory(history).find(r=>r.year===b.baseYear-1).population, totalTax0=sum(pTax0);
+  // Reference growth is national: scale by Motala's population relative to Sweden's.
+  const national=year=>b.nationalPopulation.population[year], national0=national(b.baseYear-1);
   const inputs=planningSeries(b,a,c);
   const o=b.operatingAccounts;
   let p=[...p0],capacity=[1,1,1],tax=b.tax,grants=b.grants,wageIndex=1,priceIndex=1,revenueIndex=1,productivity=1,debt=b.debt,cash=b.cash,assets=b.assets;
@@ -33,8 +37,8 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     const cost=payroll+pensionExpense+otherOperatingExpense-operatingRevenue+o.netCostRoundingAdjustment;
     const depreciation=(previousAssets+0.5*a.investment)/life;
     assets=previousAssets+a.investment-depreciation;
-    // Population base is lagged one year. Exact November reference date is not yet modelled.
-    const popFactor=Math.pow(sum(previousP)/total0,a.populationRevenueElasticity);
+    // Population base is lagged one year: last year's population against the one the base-year tax rested on.
+    const popFactor=Math.pow((sum(previousP)/totalTax0)/(national(b.baseYear+t-1)/national0),a.populationRevenueElasticity);
     const imported=revenuePath?.rows.find(r=>r.year===b.baseYear+t);
     const referencePop=imported?.population??total0;
     const referenceTax=imported?.tax??annual.referenceTax;
@@ -42,8 +46,9 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     const localPopFactor=imported?sum(previousP)/referencePop:popFactor;
     const standardTax=referenceTax*localPopFactor;
     // Working-age composition is a local deviation around the population-based reference.
-    const composition=(previousP[3]/p0[3])/(sum(previousP)/total0);
-    const deviation=standardTax*(composition-1);
+    const composition=(previousP[3]/pTax0[3])/(sum(previousP)/totalTax0);
+    // An imported SKR path already reflects the population's composition.
+    const deviation=imported?0:standardTax*(composition-1);
     tax=(standardTax+deviation)*a.taxRate/b.taxRate;
     grants=referenceGrants*localPopFactor-a.equalisationOffset*deviation;
     const interest=previousDebt*a.interestRate/100;

@@ -77,9 +77,15 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   if(history.length<2||history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
   if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
   const c=calibrate(history),inputs=planningSeries(b,a,c),o=b.operatingAccounts;
+  const revenuePopulation0=reconcileHistory(history).find(r=>r.year===b.baseYear-1).population;
+  const national=year=>{const v=b.nationalPopulation?.population?.[year];if(!Number.isFinite(v))throw Error(`Rikets folkmängd saknas för ${year}`);return v;};
   const fields={p0:b.population,deathRates:c.deathRates,residualMigration:c.migration,migrationWeights:a.migrationWeights,educationWeights:a.educationWeights,sectorCosts:a.sectorCosts,tax0:b.tax,grants0:b.grants,debt0:b.debt,cash0:b.cash,assets0:b.assets,depreciation0:b.depreciation,financialIncome:b.financialIncome,otherFinancialExpense:b.otherFinancialExpense,payroll0:o.payrollExcludingPensions,pension0:o.pensionExpense,otherOperatingExpense0:o.otherOperatingExpense,operatingRevenue0:o.operatingRevenue,netCostRoundingAdjustment:o.netCostRoundingAdjustment,births0:b.births,migrationDelta:a.migrationDelta,taxRate:a.taxRate,baseTaxRate:b.taxRate,investment:a.investment,adjustment:a.adjustment,equalisationOffset:a.equalisationOffset,fixedShare:a.fixedShare,populationRevenueElasticity:a.populationRevenueElasticity};
   for(const k of ['taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','interestRate','birthChange']) fields[k]=a[k]/100;
   fields.productivityGrowth=a.productivity/100;
+  fields.revenuePopulation0=revenuePopulation0;
+  // Reference growth is national; Motala's share follows its population relative to Sweden's (end of the previous year).
+  fields.nationalPopulation0=national(b.baseYear-1);
+  fields.nationalPopulationPath=inputs.map(r=>national(r.year-1));
   fields.residualMigrationPath=inputs.map(r=>r.migration);
   fields.wageGrowthPath=inputs.map(r=>r.wageGrowth/100);
   fields.priceGrowthPath=inputs.map(r=>r.priceGrowth/100);

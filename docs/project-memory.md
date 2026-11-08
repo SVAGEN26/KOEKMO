@@ -132,3 +132,40 @@ OpenModelicas webbkompilator (wasm-jit). Detta är nu genomfört.
 - Git-historiken (commit 95f2df9) innehåller fortfarande originalen. Repot har ingen
   remote; historiken bör rensas innan den första pushen.
 
+
+## Katalogstruktur (2026-11-08)
+
+- `modelica/` innehåller bara det sajten kör: `Motala.mo`, `MotalaBrowser.mo` och `validate.py`.
+- `research/` (tidigare under `modelica/`) innehåller M1 (`MotalaResearch`), M2 (`MotalaDynamics`),
+  frysta versioner, historiska omkörningar, deras data, granskningar och tester. Inget där används av sajten.
+  Sökvägar i arkiverade JSON-protokoll och granskningar är historiska och anger fortfarande `modelica/`.
+- Forskningstester: `PYTHONPATH=research python3 -m unittest discover -s research/tests -p 'test_*.py'`.
+- Simuleringstiden är kalenderår (ändrat 2026-11-08): `Annual` startar 2025, `Hindcast2025` 2024, `DemographyOnly` 2020. Webbläsaren bygger med startTime=2025 (`BASE_YEAR` i site/src/omc-session.js).
+- Beskrivningar, dokumentation och assert-meddelanden i Motala.mo är på svenska (användarens val). Namn i koden är ASCII: Modelica 3.x och Base Modelica tillåter bara ASCII i namn, även citerade (spec 2.1, Q-CHAR; ModelicaSpecification #1176). Rust-parsern i webbläsaren accepterar å/ä/ö, den inbyggda OpenModelica-lexern gör det inte.
+- Webbplatsen har fliken Modellen (`site/src/model-view.js`): flödesdiagram, ekvationer, Modelica-kod
+  och redigerbara antaganden kopplade till Scenariolabbets kontroller.
+
+## Demografi per ettårsålder (2026-11-08)
+
+- SCB-data hämtade till `data/downloads/20261108T124756Z/` (README där). Källa: SCB, CC BY 4.0; användaren har godkänt användning med källhänvisning.
+- `Motala.Components.CohortDemography`: kohort-komponentmetoden. Väljbar fertilitetsmodell; användarens önskade standard är summerad fruktsamhet 1,41.
+- Kalibrering per basår 2020–2025 utan framtidsdata. Testet mot historien: `scripts/hindcast_demography.py` → `data/demography-hindcast.json`.
+- `Annual` och sajten använder fortfarande femgruppsdemografin; `Examples.AnnualCohort` använder den nya.
+- Nästa steg enligt plan: åldersviktad omsorgsefterfrågan (Kolada: hemtjänsttagare 65–79 och 80+), antaganden per prognostillfälle (hösten 2024) för ett rättvist test av ekonomin, klockade ekvationer.
+- OMEdit från `OpenModelica/build/` skriver över `Motala.mo` vid sparande; använd den installerade (PATH i ~/.bashrc).
+- Åldersviktad omsorg genomförd 2026-11-08: Kolada-arkiv `data/downloads/20261108T131731Z/`, vikter i `data/care-weights.json`, `Services.careWeights`. 80+ kostar 7,1 gånger 65–79 (2023–2025). Sektorvikterna (`sectorCosts`, äldreomsorg 600 mnkr) är fortfarande illustrativa; Kolada anger cirka 790 mnkr för äldreomsorgen 2025.
+
+## Granskning och rättningar (2026-11-08)
+
+En fristående granskning (Opus) hittade inga fel i bokföringens kärna men åtta brister, alla rättade i modellen och,
+där sajten påverkas, i JavaScript-referensen:
+- Skatt och bidrag skalas nu mot folkmängden året före basåret (`revenuePopulation0`), som basårets skatt bygger på.
+- Räntesatsen räknas på ingående skuld: 21/940 = 2,23 % (`Data.BaseYear.openingDebt`; baseline.json ändrad).
+- Med importerad SKR-bana eller `revenueFromReference` läggs ingen ålderseffekt ovanpå banan.
+- `AnnualCohort` hämtar SCB-data för basåret (`Data.SCB.forYear`); verksamhetens index räknas mot befolkningen vid start.
+- Basårets rad visar bokslutets ränta, investering och resultat; `Budget2026` har `financialCost` att jämföra med budgeten.
+- Restflödet per ettårsålder kan inte göra en ålder negativ.
+- Kvar: OpenModelicas runtime ignorerar assert som fallerar mellan samplade händelser ("Found event, previous asserts are
+  ignored"); bara sluttiden stoppar. Gäller både ekvations- och when-placering (i when ignoreras även sluttiden). Möjlig OM-issue.
+- Skatt och bidrag skalas med Motalas folkmängd i förhållande till rikets (SCB, `data/national-population.json`), eftersom referenstillväxten är nationell.
+- Nya siffror med standardantaganden: `Annual` resultat 76 (2026) och 8 (2033); `AnnualCohort` 72 och -42. Testet 2024→2025 ger skatt 2 299 mot utfallet 2 330: den illustrativa tillväxten räcker inte, så nästa steg är antaganden per prognostillfälle (SKR hösten 2024).

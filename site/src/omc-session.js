@@ -9,6 +9,8 @@ export const OUTPUTS=['population','births','deaths','migration','cost','payroll
   'repayment','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
 export const MODEL='MotalaBrowser';
 export const MAX_YEARS=30;
+// Simulation time is the calendar year: MotalaBrowser starts at the 2025 accounts.
+export const BASE_YEAR=2025;
 
 // fields: {name: number | boolean | nested arrays} → "name=…,name[i]=…,name[i,j]=…"
 export function overrideFlags(fields) {
@@ -28,18 +30,18 @@ export function createSession(omc,sources) {
     const reply=String(omc.omc_eval(`loadString(${JSON.stringify(text)},${JSON.stringify(name)})`)).trim();
     if(reply!=='true') throw Error(`OpenModelica kunde inte läsa ${name}: ${errors()||reply}`);
   }
-  const built=String(omc.omc_eval(`buildModel(${MODEL},stopTime=${MAX_YEARS},numberOfIntervals=${MAX_YEARS},method="euler")`));
+  const built=String(omc.omc_eval(`buildModel(${MODEL},startTime=${BASE_YEAR},stopTime=${BASE_YEAR+MAX_YEARS},numberOfIntervals=${MAX_YEARS},method="euler")`));
   if(!built.includes(`${MODEL}_init.xml`)) throw Error(`OpenModelica kunde inte kompilera modellen: ${errors()||built}`);
 
   // One simulation; returns per-year rows of OUTPUTS plus cohorts and investment.
   function run(fields,years) {
     if(!Number.isInteger(years)||years<1||years>MAX_YEARS) throw Error(`Modellen stöder 1–${MAX_YEARS} år.`);
-    const flags=`-override=stopTime=${years},${overrideFlags(fields)}`;
+    const flags=`-override=stopTime=${BASE_YEAR+years},${overrideFlags(fields)}`;
     if(!omc.omc_sim_start(MODEL,`${MODEL}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
     let code;
     do code=omc.omc_sim_advance(10000); while(code===0);
     if(code!==1) {
-      // Prefer the model's own assertion text, e.g. "wageGrowthPath … must exceed -1".
+      // Prefer the model's own assertion text, e.g. "wageGrowthPath … måste vara större än -1".
       const text=`${errors()}\n${String(omc.omc_sim_log()??'')}`;
       const message=text.match(/Error:\s*([^\n[]+)/)?.[1]??text.match(/assert[^\n]*\|\s*([^\n]+)/i)?.[1];
       throw Error(`Modelica: ${(message??'beräkningen avbröts').trim().slice(0,300)}`);
@@ -57,10 +59,11 @@ export function createSession(omc,sources) {
     const columns=Object.fromEntries(names.map(n=>[n,column(n)]));
     const rows=[];
     for(let t=1;t<=years;t++) {
-      if(at[t]===undefined) throw Error(`Simuleringen saknar år ${t}`);
+      const y=BASE_YEAR+t;
+      if(at[y]===undefined) throw Error(`Simuleringen saknar år ${y}`);
       const row={};
       for(const n of names) {
-        const c=columns[n],v=c.length===1?c[0]:c[at[t]];
+        const c=columns[n],v=c.length===1?c[0]:c[at[y]];
         if(!Number.isFinite(v)) throw Error(`Modelica gav ett ogiltigt värde för ${n}.`);
         row[n]=v;
       }

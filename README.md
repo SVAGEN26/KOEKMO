@@ -27,7 +27,11 @@ Open http://127.0.0.1:8000. No npm installation is required. Python 3, Node 18+ 
 `npm start` also builds the static files, so it works from a fresh checkout.
 If port 8000 is occupied, use `npm start -- --port 8001`.
 
-- `modelica/Motala.mo`: annual stock and flow model.
+- `modelica/`: the model the site runs, and nothing else. `Motala.mo` is the annual stock and flow model,
+  `MotalaBrowser.mo` the wrapper the browser compiles, `validate.py` the native parity check.
+- `research/`: experiments that are not part of the site: the M1 and M2 models (`MotalaResearch`,
+  `MotalaDynamics`), frozen model versions in `research/reference/`, historical replays, their data,
+  reviews and tests. Kept so the results quoted in this README and on the site can be reproduced.
 - `site/src/omc-worker.js`, `omc-session.js`, `jit-engine.js`: the browser engine. A worker loads OpenModelica, compiles `Motala.mo` once and re-runs it with `-override` per scenario.
 - `site/src/engine.js`: independent JavaScript reference used only by the tests (`tests/jit-parity.test.mjs`, native parity). The site does not ship it. Other editable dashboard assets are also in `site/src/`.
 - `data/baseline.json`, `data/history.json`, `data/sources.json`: facts, provenance and explicit assumptions.
@@ -103,13 +107,58 @@ values, source-off mode, missing graph fallback and escaping imported text.
 Actual Firefox export was checked with a changed interest rate and a six-page
 PDF. This is an export of scenario calculations, not a validated forecast.
 
+## Demography: single years of age (SCB)
+
+`Motala.Components.CohortDemography` is the cohort-component method SCB uses: single years of
+age 0–100+ by sex, deaths from the national life table scaled to Motala's level, births from a
+selectable fertility model, and calibrated residual flows. `Examples.AnnualCohort` runs the whole
+model with it; `Annual` keeps the five-cohort demography, which the site uses.
+
+- Data: SCB (CC BY 4.0), archived in `data/downloads/20261108T124756Z/` by
+  `scripts/fetch_mortality_data.py`, prepared by `scripts/prepare_demography.py` into
+  `data/demography-inputs.json`, written into `Motala.Data.SCB` by `scripts/write_demography_modelica.py`.
+- Each base year 2020–2025 has its own calibration from data up to that year: Motala's mortality
+  relative to Sweden (five years), the national mortality trend (ten years, by age band), and residual
+  flows by age (three transitions).
+- Birth models (`Components.Fertility`): `Constant` (default 1.41 children per woman), `Projected`
+  (SCB's national projection), `Legacy` (the five-cohort rule).
+- `scripts/hindcast_demography.py` starts from each base year 2020–2024 and compares births, deaths
+  and population with SCB's outcome up to 2025 (`data/demography-hindcast.json`). Fertility 1.41
+  gave the smallest birth errors (mean absolute error 11–34 births a year); deaths were within
+  12–40 a year. Population errors, 96–302 persons, are mostly migration.
+- From base year 2024, 2025 came out at 327 births, 455 deaths and 43 395 inhabitants. SCB's regional
+  projection said 356, 466 and 43 575; the outcome was 337, 459 and 43 113. One year is not evidence
+  of a better projection.
+
+## Care demand by age (Kolada)
+
+Care demand weights 65–79, 80–89 and 90+ by elderly-care cost per inhabitant: home-care and
+residential-care users per inhabitant in each group, times the cost per user. Kolada data for Motala
+(`data/downloads/20261108T131731Z/`, `scripts/fetch_care_data.py`, `scripts/prepare_care.py` →
+`data/care-weights.json`), three-year mean per base year. For 2023–2025 a person 80+ costs 7.1 times
+as much as a person 65–79 (166 483 against 23 331 kr a year); the ratio was about 10 in 2018–2020.
+Kolada has no split of 80+, so 90+ gets the 80–89 weight unless `oldestRelativeCare` is set.
+
+With single-year ages (`Examples.AnnualCohort`), care demand grows 22 % by 2033 instead of the 10 %
+that counting everyone 65+ gives, which lowers the 2033 result by about 80 mnkr with the model's default assumptions. The five-cohort model
+splits 65+ in fixed shares, so its care index and the site's results are unchanged.
+
+## Revenue relative to Sweden
+
+Reference growth for tax and grants (`taxGrowth`, `grantGrowth`, SKR's national tax-base growth) is national.
+Motala's share therefore follows its population relative to Sweden's, comparing the end of the previous year with
+the end of the year before the base year (the 1 November population behind the base year's tax). Sweden's
+population, outcome to 2025 and SCB's projection after, is archived by `scripts/fetch_national_population.py`
+in `data/national-population.json` and `Motala.Data.SCB.nationalPopulation`. An imported SKR path for Motala is
+already Motala's own and is scaled only by the model's population against SKR's.
+
 ## Inspect the models in OMEdit
 
 | Model | Open | Inspect or simulate |
 | --- | --- | --- |
-| Continuous scenarios (M2) | `modelica/MotalaDynamics/package.mo` | Open `Continuous` in Diagram view to see the five components. Simulate `Examples.Base` or another example. In an example, double-click `plant` to inspect the model. |
-| Annual dashboard model | `modelica/Motala.mo` | Open `Motala.Annual` in Diagram view, or simulate it for eight model years. |
-| Annual statistical candidate (M1) | `modelica/MotalaResearch/package.mo` | Open `Annual` in Diagram view. Simulation requires a fitted `Scenario.mo`, generated by the M1 runner documented in `modelica/README.txt`. |
+| Annual dashboard model (the site) | `modelica/Motala.mo` | Open `Motala.Annual` in Diagram view, or simulate it. Time is the calendar year: start 2025 (the 2025 accounts), stop 2033; with another base year, start in that year. Its defaults are illustrative; download `Scenario.mo` from the site to reproduce a scenario with the planning inputs. Descriptions and documentation are in Swedish. |
+| Continuous scenarios (M2, research) | `research/MotalaDynamics/package.mo` | Open `Continuous` in Diagram view to see the five components. Simulate `Examples.Base` or another example. In an example, double-click `plant` to inspect the model. |
+| Annual statistical candidate (M1, research) | `research/MotalaResearch/package.mo` | Open `Annual` in Diagram view. Simulation requires a fitted `Scenario.mo`, generated by the M1 runner documented in `research/README.txt`. |
 
 The models have component icons, placements and labelled schematic arrows.
 Arrows describe the existing equation bindings; they are graphical annotations,
@@ -123,14 +172,14 @@ annual model `Motala.Annual` (through `MotalaBrowser`); M2 produces separate rep
 ## Repository contents and generated files
 
 Keep the Modelica/Python/JavaScript sources, tests, documentation, reviewed JSON
-inputs, research catalogues and `modelica/reference/` under version control.
+inputs, research catalogues and `research/reference/` under version control.
 The reference directories are frozen, hash-checked inputs used by the comparison
 tests, rather than disposable copies of the active models.
 
 Git ignores the generated `site/dist/` and `build/` directories, Python caches,
-local environments, `modelica/runs/`, raw downloads, downloaded research PDFs and
+local environments, `research/runs/`, raw downloads, downloaded research PDFs and
 local tool/hosting metadata. Existing simulation runs stay available locally.
-Research originals belong in `modelica/papers/`, with the filenames listed in
+Research originals belong in `research/papers/`, with the filenames listed in
 `sources.json`; `python3 scripts/download_research.py` retrieves them separately.
 The build only writes static assets and does not modify hosting metadata.
 
@@ -145,8 +194,8 @@ Run the dashboard and data-import checks with `npm test`. Run the model research
 checks from the project root with:
 
 ```sh
-PYTHONPATH=modelica python3 -m unittest discover -s modelica/tests -p 'test_*.py'
-python3 -m unittest discover -s modelica/benchmark -p 'test_*.py'
+PYTHONPATH=research python3 -m unittest discover -s research/tests -p 'test_*.py'
+python3 -m unittest discover -s research/benchmark -p 'test_*.py'
 ```
 
 The model research suite needs NumPy and OpenModelica. Basic dashboard checks
@@ -154,7 +203,7 @@ and the build have no third-party package dependencies.
 
 ## Continuous Modelica scenarios (M2)
 
-`modelica/MotalaDynamics` implements the derived continuous equations for population,
+`research/MotalaDynamics` implements the derived continuous equations for population,
 staffing, service capacity, construction, costs, tax/grants, assets, debt and cash.
 Staffing and facilities adjust separately; lower staffing can produce purchased
 service costs or unmet demand. Debt affects interest expense. See the
@@ -163,20 +212,20 @@ service costs or unmet demand. Debt affects interest expense. See the
 Run from the project root with Python 3.9+ and OpenModelica:
 
 ```sh
-python3 modelica/run_dynamics.py --scenario base
-python3 modelica/run_dynamics.py --scenario school-decline
-python3 modelica/run_dynamics.py --scenario fast-adjustment
-python3 modelica/run_dynamics.py --scenario base --parameters modelica/data/dynamics-example-parameters.json
-python3 modelica/run_dynamics.py --scenario supply-constraint
-python3 modelica/run_dynamics.py --parameters modelica/data/extra-cost-example.json
-python3 modelica/run_experiments.py modelica/data/dynamics-sensitivity.json
+python3 research/run_dynamics.py --scenario base
+python3 research/run_dynamics.py --scenario school-decline
+python3 research/run_dynamics.py --scenario fast-adjustment
+python3 research/run_dynamics.py --scenario base --parameters research/data/dynamics-example-parameters.json
+python3 research/run_dynamics.py --scenario supply-constraint
+python3 research/run_dynamics.py --parameters research/data/extra-cost-example.json
+python3 research/run_experiments.py research/data/dynamics-sensitivity.json
 ```
 
 Each command prints the path to a local HTML report, with annual CSV/JSON, native
 results, frozen sources and balance checks. Fixed assumptions are ordinary Modelica
-parameters in [Parameters.mo](modelica/MotalaDynamics/Parameters.mo). Override them
+parameters in [Parameters.mo](research/MotalaDynamics/Parameters.mo). Override them
 with a JSON object; time-dependent decisions are input bindings in
-[Examples.mo](modelica/MotalaDynamics/Examples.mo). Open `MotalaDynamics/package.mo`
+[Examples.mo](research/MotalaDynamics/Examples.mo). Open `MotalaDynamics/package.mo`
 in OMEdit and simulate `Examples.Base` or another example.
 
 Additional operating costs can be supplied as ordinary parameters. For example,
@@ -197,15 +246,15 @@ the observed 99 mnkr. Compiler-resolved parameters and their evidence are export
 
 This is a tested mechanism model with illustrative, unestimated service parameters.
 It is not yet connected to the dashboard. The separate M1 statistical experiments
-and SKR comparison workflow remain documented in [modelica/README.txt](modelica/README.txt).
+and SKR comparison workflow remain documented in [research/README.txt](research/README.txt).
 
 V3 corrects the conversion from previous annual totals to continuous opening rates.
 At constant quantities, 3% annual growth now produces exactly 3% growth in the next
 integrated annual amount. Historical replay (also requires NumPy for M1) is available:
 
 ```sh
-python3 modelica/run_historical.py --out modelica/runs/my-historical-check
-PYTHONPATH=modelica python3 -m unittest discover -s modelica/tests -p 'test_*.py'
+python3 research/run_historical.py --out research/runs/my-historical-check
+PYTHONPATH=research python3 -m unittest discover -s research/tests -p 'test_*.py'
 ```
 
 The output directory must be new. The report includes common-target comparisons,
@@ -213,16 +262,16 @@ component errors, uncertain construction-stock scenarios, frozen native sources,
 resolved opening parameters and source/version conflicts. The first five-target
 comparison gave result MAE **61.93 mnkr for M2 versus 58.92 for persistence**.
 This is retrospective development evidence. See the
-[original protocol](modelica/data/historical-protocol.json) and
-[annual ledgers](modelica/data/annual-ledgers.json).
+[original protocol](research/data/historical-protocol.json) and
+[annual ledgers](research/data/annual-ledgers.json).
 
 A subsequent fixed protocol uses dated December SKR cost forecasts for every origin:
 
 ```sh
-python3 modelica/run_historical.py --protocol modelica/data/historical-protocol-pkv.json --out modelica/runs/my-pkv-check
+python3 research/run_historical.py --protocol research/data/historical-protocol-pkv.json --out research/runs/my-pkv-check
 ```
 
-The [PKV replay report](modelica/runs/historical-v3-20261015-pkv/report.html) gives:
+The [PKV replay report](research/runs/historical-v3-20261015-pkv/report.html) gives:
 
 | Result MAE, mnkr | One year (5 targets) | Two years (4 targets) | Three years (3 targets) |
 | --- | ---: | ---: | ---: |
@@ -241,10 +290,10 @@ a small, theory-based test of lagged budget adjustment. That series is now
 prepared and tested below. Historical local KPA/SKR forecast paths are
 optional inputs to an independent model, not a prerequisite for modelling.
 They are needed to compare against those forecasters' actual historical
-predictions. The [independent reconsideration](modelica/reviews/full-goal-reconsideration-20261015.txt)
+predictions. The [independent reconsideration](research/reviews/full-goal-reconsideration-20261015.txt)
 supersedes the earlier recommendation to wait for those forecast paths, while
 retaining the finding that full forecast precision is unproven.
-The [research and data catalogue](modelica/data/municipal-economics-research.json)
+The [research and data catalogue](research/data/municipal-economics-research.json)
 records Swedish municipal-economics research and SCB outcome tables covering
 1998–2025 for results and 2011–2025 for cost/revenue components. The archived
 2026-10-16 download contains Motala values for the result table and two component
@@ -256,36 +305,36 @@ alone does not establish accurate components or policy effects.
 Fetch the four SCB accounts tables for **Motala (0583)** with Python's standard library:
 
 ```sh
-python3 modelica/fetch_scb_accounts.py
+python3 research/fetch_scb_accounts.py
 ```
 
 The script requests all published items for 1998–2025 in the result table and
 2011–2025 in the three component tables. It saves raw JSON-stat responses,
-metadata, exact queries, hashes and CSV files under `modelica/data/raw/scb-accounts/`.
+metadata, exact queries, hashes and CSV files under `research/data/raw/scb-accounts/`.
 It checks the returned municipality, years and dimensions, and preserves negative
 values, zeroes, missing observations and unit metadata. It does not change model
 inputs. Use `--table TAB6777` to fetch only the result table. Retrieval attempts
 early on 2026-10-16 and again on 2026-10-23 failed at DNS resolution in this environment. The six
 offline tests and an independent synthetic end-to-end check passed; see the
-[independent review](modelica/reviews/scb-accounts-fetch-20261016.txt).
-The [latest acquisition and evaluation status](modelica/data/history-extension-status.json)
+[independent review](research/reviews/scb-accounts-fetch-20261016.txt).
+The [latest acquisition and evaluation status](research/data/history-extension-status.json)
 preserves the failed requests and corrects the earlier conclusion that data were
 absent: a later 2026-10-16 download had already succeeded for three tables.
 The reviewed result-table source packet is preserved under
-`modelica/reference/scb-accounts-20261016/`, with original responses, query and
+`research/reference/scb-accounts-20261016/`, with original responses, query and
 receipts. Its file hashes have been verified. A fresh network transfer still
 fails here; the aggregate experiment can now run entirely offline.
 
 The reduced annual budget-response experiment is now implemented separately
-from Modelica, with a [locked protocol](modelica/data/budget-response-protocol.json):
+from Modelica, with a [locked protocol](research/data/budget-response-protocol.json):
 
 ```sh
-python3 modelica/run_budget_response.py --out modelica/runs/my-budget-response-check
+python3 research/run_budget_response.py --out research/runs/my-budget-response-check
 ```
 
 It uses the existing annual ledgers by default. Those contain full accounts for
 2020–2025 and do not satisfy the required older training sample: the original
-[coverage report](modelica/runs/budget-response-20261016-final-coverage/report.json)
+[coverage report](research/runs/budget-response-20261016-final-coverage/report.json)
 contains no fitted parameter or forecast score. Exit code 2 means no evaluable
 cases. The minimum is eight earlier transitions, each with five consecutive
 years for its base forecast; it is not relaxed to accommodate short data.
@@ -306,20 +355,20 @@ an explicit reviewed definition/unit mapping before this step. The experiment
 compares one bounded coefficient with the identical zero-response base and two
 simple result baselines. It reports component errors and retains missing cases.
 Technical tests use synthetic accounts and establish no Motala accuracy gain.
-The [independent technical review](modelica/reviews/budget-response-20261016.txt)
+The [independent technical review](research/reviews/budget-response-20261016.txt)
 passed all 13 focused tests, checked the equations independently and reproduced
 the frozen CLI outside the repository. That technical review did not score
 long-series observed forecasts; the new SCB experiment below now does so.
 
-The separate [reviewed SCB input](modelica/data/scb-budget-response-accounts.json)
+The separate [reviewed SCB input](research/data/scb-budget-response-accounts.json)
 now supplies all 28 observed years, 1998–2025. Rebuild and evaluate it offline:
 
 ```sh
-python3 modelica/prepare_scb_accounts.py --out /tmp/motala-scb-accounts.json
-python3 modelica/run_budget_response.py --format aggregate --accounts /tmp/motala-scb-accounts.json --out /tmp/motala-budget-response-scb
+python3 research/prepare_scb_accounts.py --out /tmp/motala-scb-accounts.json
+python3 research/run_budget_response.py --format aggregate --accounts /tmp/motala-scb-accounts.json --out /tmp/motala-budget-response-scb
 ```
 
-Both output paths must be new. The [explicit mapping](modelica/data/scb-budget-response-mapping.json)
+Both output paths must be new. The [explicit mapping](research/data/scb-budget-response-mapping.json)
 converts signed tkr to mnkr, includes the separately reported pension interest
 through 2010, and preserves extraordinary items in reported result. Every year's
 result after finance and reported-result bridge reconcile exactly at source
@@ -327,7 +376,7 @@ precision. Missing cells in superseded column layouts remain missing. The input
 also records differences from all six overlapping annual-report ledgers, including
 about 19.5 mnkr in 2021 grants and net cost. No source series is spliced or replaced.
 
-The [new report](modelica/runs/budget-response-20261023-scb/report.json) evaluates
+The [new report](research/runs/budget-response-20261023-scb/report.json) evaluates
 42 origin/horizon cases from 15 origins, with four models per case and no skips.
 The coefficient for origins 2020–2024 is 0.8813, estimated using 17 transitions
 ending by 2019. The locked protocol and forecast rules are unchanged.
@@ -350,16 +399,16 @@ All targets were already examined during development; original publication dates
 the municipal accounts remain unverified. These are not blind tests or a comparison
 against SKR's municipal tax-and-grant model. National PKV is an approximation for
 local personnel costs, and only the combined payroll/pension forecast is evaluated.
-The [source file](modelica/data/skr-pkv-vintages.json) retains every vintage and definition.
+The [source file](research/data/skr-pkv-vintages.json) retains every vintage and definition.
 
 A further fixed Motala experiment separates charges explicitly listed in note 10
 from the recurring cost base, retaining every observed result and closing stock:
 
 ```sh
-python3 modelica/run_historical.py --protocol modelica/data/historical-protocol-events.json --out modelica/runs/my-notes-check
+python3 research/run_historical.py --protocol research/data/historical-protocol-events.json --out research/runs/my-notes-check
 ```
 
-The [note-separation report](modelica/runs/historical-v4-20261015-notes/report.html)
+The [note-separation report](research/runs/historical-v4-20261015-notes/report.html)
 shows result MAE of **16.03 / 57.61 / 104.24 mnkr** at one/two/three years for M2
 with the note 10 cost base. The corresponding simple accounting comparison gives
 21.80 / 48.13 / 117.63. One-year error improves, but longer horizons deteriorate;
@@ -367,7 +416,7 @@ income and cost errors still partly cancel. These are development results, not
 independent validation. A mandatory separate sensitivity also removes temporary
 note 10 receipts without replacement financing: its M2 MAE is 35.01 / 90.87 / 86.52.
 Both scenarios and the original PKV results remain in the report. The
-[itemised source ledger](modelica/data/motala-noted-events.json) identifies scope,
+[itemised source ledger](research/data/motala-noted-events.json) identifies scope,
 signs and ambiguities. This is not a full adjustment of all exceptional items or
 a forecast of future provision payments. Extra cost paths remain zero in this
 experiment; their scenario support is tested separately.
@@ -376,10 +425,10 @@ A subsequent locked **tax-only diagnostic** uses the same five December SKR
 circulars for national nominal tax-base growth:
 
 ```sh
-python3 modelica/run_historical.py --protocol modelica/data/historical-protocol-tax.json --out modelica/runs/my-tax-check
+python3 research/run_historical.py --protocol research/data/historical-protocol-tax.json --out research/runs/my-tax-check
 ```
 
-The [tax diagnostic report](modelica/runs/historical-v5-20261015-tax/report.html)
+The [tax diagnostic report](research/runs/historical-v5-20261015-tax/report.html)
 retains all 12 targets, both note scenarios, WIP sensitivities and prior comparisons.
 All previous predictions are unchanged. The new variants assume a constant local
 share of the national tax base and keep each parent's grant path unchanged.
@@ -400,8 +449,8 @@ Net-cost biases remain −35.89/−78.35/−199.19; lower result error at some h
 still depends on offsetting component errors. The diagnostic is not promoted to
 a validated forecast. National tax growth applied to reported opening tax also
 retains tax settlements and omits compensating grant changes. The
-[dated inputs](modelica/data/skr-tax-vintages.json) and
-[local-source catalog](modelica/data/local-forecast-catalog.json) preserve these
+[dated inputs](research/data/skr-tax-vintages.json) and
+[local-source catalog](research/data/local-forecast-catalog.json) preserve these
 limits and the missing original local finance plans. A grant-component and tax-settlement
 reconciliation is the next source-based revenue task. Later outcomes must not be
 used to choose its parameters.
@@ -410,16 +459,16 @@ As a supplementary test, the simple PKV accounting rule was frozen and tested on
 panel of Vadstena, Mjölby and Norrköping, origins 2022–2024 and targets through 2025:
 
 ```sh
-python3 modelica/run_external_pkv.py --out modelica/runs/my-external-pkv-check
+python3 research/run_external_pkv.py --out research/runs/my-external-pkv-check
 ```
 
 This uses only Python's standard library. The
-[external report](modelica/runs/external-pkv-v1-20261015-audited/report.html)
+[external report](research/runs/external-pkv-v1-20261015-audited/report.html)
 retains all 18 cases; 15 can currently be scored. The exact Norrköping 2025 annual
 result is unavailable in accessible primary tables, and the superseded preliminary
 result is deliberately not used. Data gaps are visible, including all three affected
 horizons. Later comparative columns are identified in the
-[source ledger](modelica/data/external-pkv-ledgers.json).
+[source ledger](research/data/external-pkv-ledgers.json).
 
 One-year result MAE in mnkr is 4.26 / 13.77 / 12.34 in Vadstena, 46.01 / 54.17 /
 68.46 in Mjölby, and 1942.71 / 1680.50 / 727.62 in Norrköping, in the order
@@ -528,8 +577,8 @@ branch's history, and each deployment replaces the previous one.
 python3 scripts/download_research.py
 ```
 
-Uses Python 3's standard library and the catalogue in `modelica/papers/sources.json`.
-PDFs and dated download receipts go into `modelica/papers/`. Existing files are
+Uses Python 3's standard library and the catalogue in `research/papers/sources.json`.
+PDFs and dated download receipts go into `research/papers/`. Existing files are
 preserved; transient network failures are retried and HTML error pages are rejected.
 Use `--list` to inspect the sources, `--only cellier-2008` to select a paper, or
 `--output /path/to/papers` to change the destination. `--timeout 30 --retries 2`
@@ -538,7 +587,7 @@ are the defaults. Run from a machine with internet access.
 Four papers have direct PDF links. The optional Lund thesis requires a manual
 download; the script prints its repository link and expected filename. Exit code
 1 means at least one paper remains unavailable, including manual downloads.
-See `modelica/papers/README.txt` for the reading order and research context.
+See `research/papers/README.txt` for the reading order and research context.
 
 ## Research findings
 

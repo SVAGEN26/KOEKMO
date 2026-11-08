@@ -1,470 +1,1492 @@
-within ;
-package Motala "Annual municipal scenario model; money in mnkr, time in model years"
-  partial model Assumptions "Shared public scenario parameters"
-    parameter Integer horizon(min=1)=8 "Number of annual transitions; time is measured in model years";
-    parameter Real p0[5]={2894,4629,1575,23019,11022}*(43131/43139)
-      "Published cohorts proportionally reconciled to published total";
-    parameter Real deathRates[5]={0.0004,0.0001,0.0002,0.0018,0.03853357878008014};
-    parameter Real residualMigration[5]={-44.63234187162425,62.14678281833085,11.894277120084553,-238.86311941128406,37.964246056899356}
-      "Calibrated cohort residuals, including statistical adjustments";
-    parameter Real migrationWeights[5]={0.15,0.12,0.03,0.65,0.05};
-    parameter Real educationWeights[3]={0.25,0.60,0.15};
-    parameter Real sectorCosts[3]={1250,600,1173};
-    parameter Real tax0=2330, grants0=987, debt0=1040, cash0=81, assets0=2997;
-    parameter Real depreciation0=180, financialIncome=15, otherFinancialExpense=4, births0=334;
-    parameter Real payroll0=2288, pension0=190, otherOperatingExpense0=1297, operatingRevenue0=751;
-    parameter Real netCostRoundingAdjustment=-1 "Reconciles rounded gross components to reported net cost";
-    parameter Real taxGrowth=0.035, grantGrowth=0.02, wageGrowth=0.03, priceGrowth=0.02;
-    parameter Real productivityGrowth=0, migrationDelta=0, birthChange=0;
-    parameter Real residualMigrationPath[horizon,5]={residualMigration for i in 1:horizon}
-      "Annual residuals derived from an external population path, or fixed historical calibration";
-    parameter Real wageGrowthPath[horizon]=fill(wageGrowth,horizon);
-    parameter Real priceGrowthPath[horizon]=fill(priceGrowth,horizon);
-    parameter Real interestRate=21/1040, taxRate=21.7, baseTaxRate=21.7;
-    parameter Real investment=413, adjustment=0.5, equalisationOffset=0.95;
-    parameter Real fixedShare=0.25, populationRevenueElasticity=1;
-    parameter Real pensionGrowth=0.02, operatingRevenueGrowth=0.02;
-    parameter Real pensionExpensePath[horizon]={pension0*(1+pensionGrowth)^i for i in 1:horizon};
-    parameter Real pensionCashPaymentsPath[horizon]=pensionExpensePath
-      "Illustrative until an independently sourced pension cash-payment path is available";
-    parameter Real referenceTax[horizon]={tax0*(1+taxGrowth)^i for i in 1:horizon};
-    parameter Real referenceGrants[horizon]={grants0*(1+grantGrowth)^i for i in 1:horizon};
-    parameter Real referencePopulation[horizon]=fill(sum(p0),horizon);
-    parameter Boolean importedRevenue=false;
-    parameter Real investmentPath[horizon]=fill(investment,horizon)
-      "Annual investment, mnkr; commissioned in the same year";
-    parameter Real interestRatePath[horizon]=fill(interestRate,horizon)
-      "Annual effective interest rate on opening debt, fraction";
-    parameter Real migrationDeltaPath[horizon]=fill(migrationDelta,horizon);
-    parameter Real birthChangePath[horizon]=fill(birthChange,horizon);
-    parameter Real serviceAdjustment[3]=fill(adjustment,3)
-      "Annual capacity adaptation by education, care, other services";
-    parameter Real serviceFixedShare[3]=fill(fixedShare,3);
-    final parameter Real life=assets0/depreciation0;
+package Motala "Motala ekonomilabb: kommunens ekonomi år för år; belopp i mnkr, tid i kalenderår"
+  package Handledning "Handledning: ordlista och hur modellen läses"
+    class Ordlista "Ordlista: ekonomiska begrepp i modellen"
+      annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html>
+<h3>Ordlista</h3>
+<p>Begreppen i kommunens ekonomi, med Motalas utfall för 2025 i miljoner kronor (mnkr). Ett hushåll är en bra jämförelse
+rätt långt.</p>
+
+<h4>Årets resultat</h4>
+<p>Intäkter minus kostnader under året, som i kommunens resultaträkning:</p>
+<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">
+<tr><td>Skatteintäkter</td><td align=\"right\">2 330</td></tr>
+<tr><td>Generella statsbidrag och utjämning</td><td align=\"right\">987</td></tr>
+<tr><td>Verksamhetens nettokostnad</td><td align=\"right\">−3 023</td></tr>
+<tr><td>Avskrivningar</td><td align=\"right\">−180</td></tr>
+<tr><td>Finansiella intäkter och kostnader, netto</td><td align=\"right\">−10</td></tr>
+<tr><td><b>Årets resultat</b></td><td align=\"right\"><b>105</b></td></tr>
+</table>
+<p>De avrundade posterna summerar till 104; bokslutet anger 105. I modellen: <code>result</code> i komponenten Finans.</p>
+
+<h4>Skatteintäkter och skatteunderlag</h4>
+<p>Kommunalskatten tas ut på den beskattningsbara inkomsten för dem som var folkbokförda i kommunen den 1 november året
+före. Summan av inkomsterna är <b>skatteunderlaget</b>; skatten är skatteunderlaget gånger <b>skattesatsen</b>, i Motala
+21,70 kronor per hundralapp.</p>
+<p>Pengarna kommer i förskott, innan inkomsterna är kända. Staten betalar ut skatten varje månad utifrån skatteunderlaget
+två år tidigare, uppräknat med regeringens prognos. När de verkliga inkomsterna är kända görs en <b>slutavräkning</b>; i
+bokslutet tar kommunen upp en uppskattad slutavräkning enligt SKR:s prognos i december och kan få rätta den året efter.
+Därför ändras skatteintäkterna ofta mellan budget, prognoser och bokslut.</p>
+<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">
+<tr><th>Motala, mnkr</th><th>2024</th><th>2025</th></tr>
+<tr><td>Preliminär kommunalskatt (förskotten)</td><td align=\"right\">2 254</td><td align=\"right\">2 344</td></tr>
+<tr><td>Preliminär slutavräkning innevarande år</td><td align=\"right\">8</td><td align=\"right\">−14</td></tr>
+<tr><td>Slutavräkningsdifferens föregående år</td><td align=\"right\">−11</td><td align=\"right\">0</td></tr>
+<tr><td><b>Skatteintäkter</b></td><td align=\"right\"><b>2 251</b></td><td align=\"right\"><b>2 330</b></td></tr>
+</table>
+<p>Källa: årsredovisning 2025, not 6.</p>
+<p><b>I modellen</b> (komponenten Intäkter, <code>tax</code>) räknas skatten från en <b>referensbana</b>
+(<code>referenceTax</code>): bokslutets skatt som växer med <code>taxGrowth</code>, SKR:s beräkning för Motala, eller
+budgetens belopp. Banan justeras på tre sätt:</p>
+<ul><li>befolkningen: referensbanans tillväxt gäller hela riket, så banan skalas med Motalas folkmängd i förhållande till
+rikets, förra året jämfört med året före basåret (folkbokföringen den 1 november räknas);</li>
+<li>åldern: ändras andelen 19-64-åringar, som har de flesta förvärvsinkomsterna, ändras skatten;</li>
+<li>skattesatsen: skatten ändras i samma proportion som <code>taxRate</code> mot basårets 21,70.</li></ul>
+<p>skatt = referens · befolkningsfaktor · (1 + ålderseffekt) · skattesats / 21,70. Med en importerad SKR-bana, som redan är
+Motalas egen, skalas den bara med modellens folkmängd mot SKR:s, och med <code>revenueFromReference</code> tas referensen
+rakt av, som i <code>Examples.Budget2026</code>. Förskott och slutavräkning hålls inte isär i modellen.</p>
+
+<h4>Generella statsbidrag och utjämning</h4>
+<p>Pengar från staten och, via utjämningssystemet, från andra kommuner. De är generella, alltså inte öronmärkta för en viss
+verksamhet. Det kommunalekonomiska utjämningssystemet ska ge alla kommuner ungefär samma förutsättningar, oavsett
+invånarnas inkomster och hur dyr befolkningen är att ge service. Det har flera delar:</p>
+<ul><li><b>Inkomstutjämning</b>: kommuner vars skattekraft (skatteunderlag per invånare) är lägre än en garantinivå på
+115 procent av rikets genomsnitt får ett bidrag som fyller upp större delen av skillnaden; kommuner över den betalar en
+avgift. Motala har lägre skattekraft än genomsnittet, och detta är den största delen.</li>
+<li><b>Kostnadsutjämning</b>: jämnar ut skillnader i vad verksamheterna kostar på grund av struktur, till exempel
+åldersfördelning, socioekonomi och hur glest kommunen är befolkad. Den kostar staten ingenting; kommuner med dyrare
+struktur än genomsnittet får bidrag och de andra betalar.</li>
+<li><b>LSS-utjämning</b>: samma tanke för kostnaderna för stöd och service till personer med funktionsnedsättning.</li>
+<li><b>Regleringsbidrag eller regleringsavgift</b>: ett lika stort belopp per invånare i alla kommuner som stämmer av
+systemet mot det anslag riksdagen beslutat. Höjda generella statsbidrag kommer ofta ut här.</li>
+<li><b>Kommunal fastighetsavgift</b>: avgiften på bostäder i kommunen går till kommunen.</li>
+<li><b>Övriga generella bidrag från staten</b>, till exempel tillfälliga bidrag.</li></ul>
+<table border=\"1\" cellspacing=\"0\" cellpadding=\"3\">
+<tr><th>Motala, mnkr</th><th>2024</th><th>2025</th></tr>
+<tr><td>Inkomstutjämning</td><td align=\"right\">614</td><td align=\"right\">631</td></tr>
+<tr><td>Kostnadsutjämning</td><td align=\"right\">31</td><td align=\"right\">32</td></tr>
+<tr><td>Regleringsbidrag</td><td align=\"right\">134</td><td align=\"right\">115</td></tr>
+<tr><td>Kommunal fastighetsavgift</td><td align=\"right\">114</td><td align=\"right\">119</td></tr>
+<tr><td>LSS-utjämning</td><td align=\"right\">39</td><td align=\"right\">40</td></tr>
+<tr><td>Övriga generella bidrag från staten</td><td align=\"right\">21</td><td align=\"right\">51</td></tr>
+<tr><td><b>Summa</b></td><td align=\"right\"><b>953</b></td><td align=\"right\"><b>987</b></td></tr>
+</table>
+<p>Källa: årsredovisning 2025, not 7. Beräkningarna görs av SCB och SKR efter lagen om kommunalekonomisk utjämning
+(2004:773) och bygger på folkmängden den 1 november året före.</p>
+<p><b>I modellen</b> (komponenten Intäkter, <code>grants</code>) delas bidragen inte upp. De utgår från en referensbana
+(<code>referenceGrants</code>), skalas med Motalas folkmängd i förhållande till rikets och minskas med 95 procent av
+ålderseffekten på skatten (<code>equalisationOffset</code>): får kommunen mer skatt för att fler är i arbetsför ålder, tar
+utjämningen tillbaka det mesta. Det är en förenklad känslighet, inte lagens beräkning. Kostnadsutjämningen för ett
+snabbare åldrande än rikets ingår ännu inte.</p>
+
+<h4>SKR:s prognos</h4>
+<p>Sveriges Kommuner och Regioner beräknar skatteintäkter och bidrag för varje kommun några gånger per år. Kommunen
+använder den i sin budget. I modellen är den en referensbana in i Intäkter, inte en del av modellen själv.</p>
+
+<h4>Verksamhetens nettokostnad</h4>
+<p>Vad skola, omsorg och annan verksamhet kostar när avgifter och andra egna intäkter har dragits av. Den största delen
+är löner. I modellen: komponenten Drift, <code>cost</code> = löner + pensionskostnad + övriga kostnader −
+verksamhetens intäkter.</p>
+
+<h4>Avskrivning</h4>
+<p>Kostnaden för en investering fördelad över de år den används. En skola för 100 mnkr som håller i 33 år ger cirka
+3 mnkr i kostnad per år i stället för 100 mnkr det år den byggs. Motala skriver av cirka 180 mnkr per år på allt som
+byggts tidigare. I modellen: komponenten Kapital, <code>depreciation</code>.</p>
+
+<h4>Investering</h4>
+<p>Pengar till sådant som varar länge: skolor, vägar, vatten och avlopp. Investeringen syns inte i resultatet det år den
+görs, bara som avskrivningar de kommande åren, men den kostar pengar direkt. I modellen: <code>investmentPath</code>.</p>
+
+<h4>Kassaflöde</h4>
+<p>Pengar in minus pengar ut. Resultatet är inte samma sak, eftersom avskrivningen är en kostnad utan utbetalning:
+kassaflöde från verksamheten = resultat + avskrivningar (plus pensionskostnad minus pensionsutbetalningar).
+I modellen: <code>operatingCash</code>.</p>
+
+<h4>Lån, amortering och ränta</h4>
+<p>Räcker kassaflödet inte till investeringarna lånar kommunen mellanskillnaden (<code>borrowing</code>). Ett överskott
+används till att betala av lån, att <b>amortera</b> (<code>repayment</code>). <b>Räntan</b> betalas på skulden vid
+årets början och minskar resultatet. Budget 2026 planerar investeringar på 755 mnkr mot ett kassaflöde på 280 mnkr,
+alltså 411 mnkr i nya lån. I modellen: komponenten Finans, <code>debt</code> (låneskulden) och <code>interest</code>
+(årets räntekostnad). Vad lånen kostar i förhållande till intäkterna visar <code>interestShare</code>, räntekostnaderna i
+procent av skatter och bidrag; <code>cumulativeInterest</code> är räntekostnaderna sammanlagt sedan basåret.</p>
+
+<h4>Balansräkning, tillgångar, skulder och eget kapital</h4>
+<p>En ögonblicksbild den 31 december. <b>Tillgångar</b> är det kommunen äger: byggnader, anläggningar, kassa.
+<b>Skulder</b> är det kommunen är skyldig, främst banklån (1 040 mnkr vid slutet av 2025). <b>Eget kapital</b> är
+tillgångar minus skulder och växer med årets resultat. Resultaträkningen beskriver året, balansräkningen läget vid
+årets slut.</p>
+
+<h4>Pensionskostnad och pensionsutbetalning</h4>
+<p>Kommunen bokför en kostnad för de pensioner de anställda tjänar in nu; pengarna betalas ut först när de går i
+pension. Modellen håller isär dem: kostnaden påverkar resultatet, utbetalningen kassan. I modellen:
+<code>pensionExpense</code> och <code>pensionCashPayments</code>.</p>
+
+<h4>Balanskravet och det finansiella målet</h4>
+<p>Kommunallagens <b>balanskrav</b> säger att intäkterna ska vara större än kostnaderna, alltså ett positivt resultat
+efter vissa justeringar. Motala har dessutom ett eget <b>finansiellt mål</b>: resultatet i procent av skatter och
+bidrag, 2,5 procent i budget 2026 (86 mnkr). I modellen: <code>resultShare</code>.</p>
+
+<h4>Löpande priser och index</h4>
+<p>Alla belopp är i <b>löpande priser</b>, alltså kronor det året, utan omräkning för inflation. Ett <b>index</b> visar en
+nivå i förhållande till basåret, där basåret är 1: ett löneindex på 1,03 betyder tre procent högre löner än basåret.</p>
+
+<h4>Basår, bokslut, budget och prognos</h4>
+<p><b>Bokslutet</b> (årsredovisningen) visar vad som faktiskt hände ett år. <b>Basåret</b> är det bokslut modellen startar
+från, i dag 2025. <b>Budgeten</b> är fullmäktiges plan för kommande år. En <b>prognos</b> är en bedömning av vad som
+kommer att hända; kommunen gör prognoser för innevarande år i april och augusti.</p>
+
+<h4>Hur begreppen hänger ihop i modellen</h4>
+<p>Demografi ger befolkningen. Verksamhet räknar behovet av skola och omsorg. Drift ger nettokostnaden, Intäkter ger
+skatt och bidrag och Kapital ger avskrivningarna. I Finans möts allt: resultat, kassaflöde, nya lån och skuld. Pilarna i
+diagrammet för <a href=\"modelica://Motala.Annual\">Motala.Annual</a> följer den kedjan.</p>
+</html>"));
+    end Ordlista;
+    annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html><p>Börja med <a href=\"modelica://Motala.Handledning.Ordlista\">ordlistan</a>
+om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.Examples\">Examples</a>.</p></html>"));
+  end Handledning;
+  package Data "Utfall för basåren: bokslut (kommunen) och befolkning; en konstant per basår"
+    record BaseYear "Utfall vid basårets slut; mnkr och personer"
+      Integer year "Basår";
+      Real cohorts[3, 5] "Redovisade invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid slutet av de två föregående åren och basåret";
+      Real reportedPopulation[3] "Redovisad folkmängd samma tre år";
+      Real births[2] "Födda föregående år och basåret";
+      Real deaths "Döda under basåret";
+      Real tax "Skatteintäkter, mnkr";
+      Real grants "Generella statsbidrag och utjämning, mnkr";
+      Real payroll "Lönekostnader exklusive pensioner, mnkr";
+      Real pension "Pensionskostnad, mnkr";
+      Real otherOperatingExpense "Verksamhetens bruttokostnader minus löner och pensioner, mnkr";
+      Real operatingRevenue "Verksamhetens intäkter (avgifter, försäljning, riktade bidrag), mnkr";
+      Real netCostRoundingAdjustment "Avrundning som stämmer av delposterna mot redovisad nettokostnad, mnkr";
+      Real depreciation "Avskrivningar, mnkr";
+      Real financialIncome "Finansiella intäkter, mnkr";
+      Real interestExpense "Räntekostnader, mnkr";
+      Real otherFinancialExpense "Finansiella kostnader utöver räntor, mnkr";
+      Real debt "Låneskuld till banker och kreditinstitut vid årets slut, mnkr";
+      Real openingDebt "Låneskuld vid årets början (föregående års slut), mnkr";
+      Real cash "Kassa och bank, mnkr";
+      Real assets "Byggnader, anläggningar, maskiner och inventarier exklusive pågående investeringar, mnkr";
+      Real investment "Investeringar, mnkr";
+      Real taxRate "Kommunal skattesats, procent";
+      Real careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
+    end BaseYear;
+
+    constant BaseYear motala2025 = BaseYear(
+      year = 2025,
+      cohorts = {{3202, 4654, 1569, 23540, 10763}, {3008, 4671, 1592, 23311, 10923}, {2894, 4629, 1575, 23019, 11022}},
+      reportedPopulation = {43728, 43505, 43131},
+      births = {336, 334}, deaths = 468,
+      tax = 2330, grants = 987,
+      payroll = 2288, pension = 190, otherOperatingExpense = 1297, operatingRevenue = 751, netCostRoundingAdjustment = -1,
+      depreciation = 180, financialIncome = 15, interestExpense = 21, otherFinancialExpense = 4,
+      debt = 1040, openingDebt = 940, cash = 81, assets = 2997, investment = 413, taxRate = 21.7,
+      careCostPerInhabitant = {23331, 166483})
+      "Årsredovisning 2025 (kommunen), s. 6-7, 47-53, 70; resultat 105 mnkr (avrundade poster ger 104)";
+    constant BaseYear motala2024 = BaseYear(
+      year = 2024,
+      cohorts = {{3277, 4664, 1530, 23694, 10563}, {3202, 4654, 1569, 23540, 10763}, {3008, 4671, 1592, 23311, 10923}},
+      reportedPopulation = {43728, 43728, 43505},
+      births = {381, 336}, deaths = 402,
+      tax = 2251, grants = 953,
+      payroll = 2258, pension = 275, otherOperatingExpense = 1269, operatingRevenue = 774, netCostRoundingAdjustment = 0,
+      depreciation = 168, financialIncome = 17, interestExpense = 13, otherFinancialExpense = 11,
+      debt = 940, openingDebt = 663, cash = 229, assets = 2782, investment = 417, taxRate = 21.7,
+      careCostPerInhabitant = {22275, 168850})
+      "Jämförelsekolumnen i årsredovisning 2025 (kommunen), s. 48-49 och not 8-9; resultat 1 mnkr";
+
+    record Budget "Kommunens budget: tre år, belopp i mnkr (kostnader som positiva tal)"
+      Integer year "Budgetår; planen gäller detta år och de två följande";
+      Real tax[3] "Skatteintäkter";
+      Real grants[3] "Generella statsbidrag och utjämning";
+      Real netCost[3] "Verksamhetens nettokostnad exklusive avskrivningar";
+      Real depreciation[3] "Avskrivningar";
+      Real financialIncome[3] "Finansiella intäkter";
+      Real financialCost[3] "Finansiella kostnader";
+      Real result[3] "Årets resultat";
+      Real investment[3] "Investeringsram";
+      Real operatingCash[3] "Kassaflöde från den löpande verksamheten";
+      Real newLoans[3] "Nya lån";
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Budget"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
+    end Budget;
+
+    constant Budget budget2026 = Budget(
+      year = 2026,
+      tax = {2410, 2485, 2570}, grants = {1014, 1046, 1071},
+      netCost = {3122, 3182, 3238}, depreciation = {194, 220, 248},
+      financialIncome = {9, 8, 8}, financialCost = {31, 49, 71}, result = {86, 88, 92},
+      investment = {755, 897, 961}, operatingCash = {280, 308, 340}, newLoans = {411, 589, 621})
+      "Budget 2026 med plan 2027-2028 (kommunen), s. 25, 28 och 32; skatt och bidrag enligt SKR:s prognos oktober 2025 (data/municipal-budgets.json)";
+
+    function reconcile "Skala redovisade åldersgrupper till redovisad folkmängd"
+      input Real cohorts[5] "Redovisade invånare per åldersgrupp";
+      input Real total "Redovisad folkmängd";
+      output Real reconciled[5] "Invånare per åldersgrupp, summerade till folkmängden";
+    algorithm
+      reconciled := cohorts*total/sum(cohorts);
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {90, 110, 130}, extent = {{-92, -50}, {92, 50}}, textString = "f(x)")}));
+    end reconcile;
+
+    function mortality "Illustrativa dödsrisker under 65 år; risken för 65+ ger observerat antal döda"
+      input Real p[5] "Invånare per åldersgrupp";
+      input Real deaths "Döda under året";
+      output Real rates[5] "Dödsrisk per åldersgrupp och år";
+    algorithm
+      rates := {0.0004, 0.0001, 0.0002, 0.0018, 0};
+      rates[5] := (deaths - sum(p[1:4] .* rates[1:4]))/p[5];
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {90, 110, 130}, extent = {{-92, -50}, {92, 50}}, textString = "f(x)")}));
+    end mortality;
+
+    function naturalStep "Ett år av överlevnad, åldrande och födslar, utan flyttningar"
+      input Real p[5] "Invånare per åldersgrupp vid årets början";
+      input Real births "Födda under året";
+      input Real deathRates[5] "Dödsrisk per åldersgrupp";
+      output Real next[5] "Invånare per åldersgrupp vid årets slut, utan flyttningar";
+    protected
+      Real survivors[5] "Överlevande";
+      Real ageOut[5] "Åldras upp till nästa grupp";
+    algorithm
+      survivors := p .* (ones(5) - deathRates);
+      ageOut := {survivors[1]/7, survivors[2]/9, survivors[3]/3, survivors[4]/46, 0};
+      next := {survivors[i] - ageOut[i] + (if i == 1 then births else ageOut[i - 1]) for i in 1:5};
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {90, 110, 130}, extent = {{-92, -50}, {92, 50}}, textString = "f(x)")}));
+    end naturalStep;
+
+    function calibratedMigration "Genomsnittligt restflöde per åldersgrupp under de två senaste åren"
+      input Real cohorts[3, 5] "Redovisade invånare per åldersgrupp, tre år i följd";
+      input Real totals[3] "Redovisad folkmängd samma tre år";
+      input Real births[2] "Födda de två senare åren";
+      input Real deathRates[5] "Dödsrisk per åldersgrupp";
+      output Real residual[5] "Genomsnittligt restflöde per åldersgrupp och år, personer";
+    algorithm
+      residual := zeros(5);
+      for k in 1:2 loop
+        residual := residual + (reconcile(cohorts[k + 1, :], totals[k + 1])
+          - naturalStep(reconcile(cohorts[k, :], totals[k]), births[k], deathRates))/2;
+      end for;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {90, 110, 130}, extent = {{-92, -50}, {92, 50}}, textString = "f(x)")}));
+    end calibratedMigration;
+
+    package SCB "Demografiska data från SCB. Genereras av scripts/write_demography_modelica.py; redigera inte för hand"
+      record DemographyYear "Motala vid ett basårs slut, ettårsåldrar 0-100+ (index 1-101) per kön (1 män, 2 kvinnor)"
+        Integer year "Basår";
+        Real population[2, 101] "Befolkning vid årets slut";
+        Real deathRisk[2, 101] "Rikets dödsrisk vid basåret: fem livslängdstabeller flyttade längs trenden och medelvärdesbildade, andel";
+        Real mortalityImprovement[2, 101] "Årlig minskning av dödsrisken, rikets trend de tio åren fram till basåret";
+        Real mortalityRatio[2] "Motalas dödlighet i förhållande till rikets livslängdstabell, de fem åren fram till basåret";
+        Real residualMigration[2, 101] "Genomsnittlig årlig förändring som inte förklaras av döda, åldrande och födda, de tre åren fram till basåret";
+        Real shareBoys "Andel pojkar bland de födda, de tio åren fram till basåret";
+        Real totalFertility "Motalas summerade fruktsamhet basåret";
+        Real totalFertilityMean5 "Motalas genomsnittliga summerade fruktsamhet de fem åren fram till basåret";
+        Real births "Födda under basåret";
+        Real deaths "Döda under basåret";
+        annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "SCB-år"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
+      end DemographyYear;
+
+      constant DemographyYear motala2020 = DemographyYear(
+        year = 2020,
+        population = {{223, 257, 267, 257, 270, 276, 270, 243, 263, 252, 274, 264, 275, 287, 257, 270, 250,
+            277, 256, 245, 245, 251, 228, 203, 229, 249, 235, 273, 250, 297, 292, 236, 280, 273,
+            266, 296, 241, 229, 248, 236, 234, 254, 250, 252, 233, 256, 288, 280, 299, 305, 321,
+            303, 311, 295, 317, 308, 344, 297, 257, 277, 256, 268, 298, 275, 255, 274, 255, 267,
+            263, 257, 259, 302, 268, 260, 263, 234, 220, 229, 197, 157, 140, 145, 131, 107, 93,
+            94, 63, 51, 55, 46, 41, 37, 28, 20, 13, 7, 9, 2, 1, 1, 2},
+           {209, 211, 219, 252, 250, 246, 241, 224, 247, 237, 260, 246, 241, 253, 247, 219, 267,
+            251, 258, 219, 217, 153, 159, 166, 184, 198, 217, 232, 230, 261, 285, 251, 259, 248,
+            262, 233, 229, 219, 233, 232, 250, 245, 229, 240, 241, 253, 274, 265, 277, 279, 292,
+            310, 295, 314, 313, 312, 272, 261, 242, 280, 280, 255, 283, 292, 249, 268, 284, 268,
+            251, 283, 268, 284, 263, 252, 271, 259, 277, 221, 187, 182, 167, 167, 163, 157, 138,
+            128, 98, 103, 88, 85, 72, 64, 56, 35, 43, 21, 23, 9, 7, 5, 11}},
+        deathRisk = {{0.00237151, 0.000182678, 0.000100977, 6.20426e-05, 0.000100746, 9.26088e-05, 6.18775e-05, 4.68211e-05, 7.35537e-05, 2.13968e-05, 5.87313e-05, 7.42975e-05, 9.19203e-05, 8.85817e-05, 0.000132252, 0.000152206, 0.000194033,
+            0.000287396, 0.000422966, 0.000482836, 0.000555137, 0.000575781, 0.000558924, 0.000557741, 0.000671656, 0.000777387, 0.000623974, 0.000674561, 0.000739791, 0.000656351, 0.000676327, 0.000641865, 0.00071708, 0.000704093,
+            0.000708045, 0.000726379, 0.000788186, 0.000751241, 0.000754643, 0.00085752, 0.00101092, 0.000924522, 0.00106955, 0.0010343, 0.00112724, 0.00125385, 0.0014226, 0.00135682, 0.00158098, 0.00185766, 0.00197277,
+            0.00209704, 0.0025169, 0.00276105, 0.00311523, 0.00344983, 0.00396463, 0.00417102, 0.00448439, 0.00510822, 0.00590733, 0.00635284, 0.00742634, 0.00797082, 0.00910655, 0.00992899, 0.01123, 0.0119806,
+            0.0131699, 0.0148228, 0.0162641, 0.0173504, 0.0196838, 0.0213962, 0.0238463, 0.0266521, 0.0304742, 0.0339035, 0.0382977, 0.0432246, 0.0493186, 0.0563612, 0.0647402, 0.0724184, 0.0827747,
+            0.0941901, 0.107286, 0.121527, 0.135277, 0.152831, 0.18138, 0.197283, 0.217237, 0.241453, 0.265382, 0.286653, 0.311966, 0.338658, 0.366694, 0.396012, 0.599048},
+           {0.00204595, 0.000184069, 9.56017e-05, 0.000101664, 9.9973e-05, 7.25164e-05, 7.76484e-05, 5.86041e-05, 4.29527e-05, 3.3085e-05, 6.46238e-05, 6.66034e-05, 6.20864e-05, 7.64531e-05, 0.000128465, 9.23077e-05, 0.000119283,
+            0.000134782, 0.000199026, 0.000207247, 0.000248747, 0.000225203, 0.000191137, 0.000279205, 0.000259887, 0.000244026, 0.0002463, 0.000283762, 0.000283469, 0.000235434, 0.000335518, 0.000347013, 0.00037076, 0.000312107,
+            0.000367603, 0.000386785, 0.000416668, 0.000430273, 0.000443371, 0.000483258, 0.00056932, 0.000564763, 0.000625831, 0.000731549, 0.000725959, 0.000779844, 0.000946721, 0.00102846, 0.00111804, 0.00131886, 0.00133085,
+            0.00152337, 0.00164799, 0.00173058, 0.00195519, 0.00214827, 0.00253017, 0.00268798, 0.00310738, 0.00350483, 0.00382636, 0.00447962, 0.00470272, 0.00530257, 0.00575452, 0.00647198, 0.00741085, 0.00786705,
+            0.00899397, 0.00955468, 0.0108171, 0.0121462, 0.0139723, 0.0155316, 0.0168574, 0.0184772, 0.0208633, 0.0234806, 0.0268214, 0.03036, 0.0341482, 0.0396693, 0.0459579, 0.0515532, 0.059675,
+            0.0675989, 0.078082, 0.0887122, 0.102444, 0.117831, 0.135861, 0.151816, 0.16947, 0.191495, 0.214936, 0.231998, 0.255349, 0.280421, 0.307227, 0.335747, 0.511872}},
+        mortalityImprovement = {{0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01471, 0.01272, 0.01272,
+            0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272,
+            0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01272, 0.01923,
+            0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01923, 0.01658, 0.01658, 0.01658,
+            0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01658, 0.01063, 0.01063, 0.01063, 0.01063, 0.01063,
+            0.01063, 0.01063, 0.01063, 0.01063, 0.01063, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448, 0.0001448},
+           {0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01109, 0.01161, 0.01161,
+            0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161,
+            0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.01161, 0.02085,
+            0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.02085, 0.009572, 0.009572, 0.009572,
+            0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.009572, 0.01014, 0.01014, 0.01014, 0.01014, 0.01014,
+            0.01014, 0.01014, 0.01014, 0.01014, 0.01014, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042, 0.004042}},
+        mortalityRatio = {1.06264, 1.04809},
+        residualMigration = {{8.888, 10.96, 3.718, 1.699, 6.351, 2.695, 0.353, -0.9858, 0.3483, -1.65, 2.672, 1.354, 1.027, 0.03367, 0.6846, 3.707, -1.288,
+            1.729, 0.7593, -1.887, -1.856, -14.84, -12.16, -3.2, -10.18, -4.465, 6.194, 1.854, -2.157, 2.892, 1.509, 4.51, 9.162, 5.537,
+            4.171, 3.874, -0.81, -0.4822, 0.204, -1.149, 1.205, -2.716, 2.892, -1.051, -2.053, -0.6741, 1.72, -0.5479, 0.4504, 3.489, -0.0943,
+            0.3359, -1.646, 0.1823, -2.636, 1.374, -3.858, 0.5231, -1.435, 1.667, -1.395, -1.479, 1.219, 1.16, 2.918, -0.6955, -0.02174, 0.2974,
+            2.169, -1.487, -1.723, -0.2907, 0.875, -0.2301, -1.221, -2.596, 1.818, -1.912, -2.778, 2.748, -0.3127, -1.385, 1.697, 1.409, 0.6927,
+            -3.126, 2.252, -1.492, -0.5908, 1.466, 0.3541, 0.7763, -0.461, 1.829, -1.025, 0.7605, -0.1713, -0.2239, -0.9896, -0.5917, 0.3867},
+           {-1.554, 9.768, 1.722, 4.02, 0.3599, 9.359, 1.354, 5.344, 0.3487, 2.679, 0.6727, 5.02, 2.017, 0.3419, 2.356, 0.6973, 4.031,
+            -2.299, 4.036, -14.29, -11.95, -17.95, -3.95, -3.628, -0.6053, -3.936, -1.613, 1.061, 3.086, 5.083, 3.721, 1.418, 6.765, 3.423,
+            5.406, 4.089, -0.903, -0.9031, 7.776, 1.797, -1.203, 2.127, -0.1853, -2.498, -2.454, 2.211, 1.226, 0.5944, -0.009244, -0.3641, 1.077,
+            0.4179, -0.8538, -0.4593, 2.229, 2.587, 0.9445, -2.319, -0.2261, -0.7394, 0.01119, -0.233, -0.6527, 0.01398, 0.5137, 1.376, 0.4948, -2.583,
+            -1.044, -0.9771, -1.486, 1.791, -0.908, -2.7, -1.086, -1.879, -0.233, -1.86, 2.62, -0.431, -2.172, -1.34, -0.05496, 1.88, -1.124,
+            1.732, -2.35, -1.822, 0.258, -0.1656, 0.03828, 2.149, 0.2233, 2.146, -2.259, -0.965, -1.497, -2.173, -0.4226, 0.3588, 1.305}},
+        shareBoys = 0.52374,
+        totalFertility = 1.82,
+        totalFertilityMean5 = 1.946,
+        births = 430,
+        deaths = 451)
+        "Motala vid slutet av 2020; dödlighetskvot 2016-2020, restflöden 2018-2020";
+      constant DemographyYear motala2021 = DemographyYear(
+        year = 2021,
+        population = {{224, 235, 257, 267, 264, 274, 275, 275, 242, 272, 251, 283, 263, 276, 286, 267, 272,
+            254, 277, 243, 235, 229, 239, 218, 210, 223, 240, 239, 284, 244, 298, 296, 237, 281,
+            274, 264, 304, 242, 232, 254, 236, 227, 260, 252, 253, 230, 258, 293, 275, 299, 306,
+            320, 299, 314, 292, 320, 307, 347, 290, 260, 271, 257, 268, 295, 275, 249, 275, 254,
+            263, 260, 253, 254, 300, 257, 254, 257, 225, 211, 223, 194, 153, 132, 130, 125, 93,
+            83, 90, 56, 47, 51, 37, 35, 29, 23, 18, 8, 5, 7, 0, 1, 1},
+           {208, 208, 214, 218, 252, 246, 244, 241, 221, 251, 238, 264, 248, 245, 256, 254, 226,
+            267, 254, 233, 198, 187, 163, 161, 169, 185, 197, 224, 230, 239, 252, 278, 258, 267,
+            246, 261, 240, 236, 221, 234, 230, 259, 250, 236, 242, 240, 254, 275, 263, 280, 276,
+            292, 309, 297, 319, 305, 311, 274, 262, 241, 279, 276, 247, 284, 296, 244, 266, 281,
+            267, 241, 282, 263, 277, 256, 248, 268, 254, 270, 218, 184, 174, 159, 160, 159, 152,
+            123, 115, 90, 95, 81, 77, 68, 58, 48, 27, 33, 13, 15, 6, 5, 9}},
+        deathRisk = {{0.00221465, 0.000177804, 0.000103195, 6.69421e-05, 0.000104826, 7.19561e-05, 4.60647e-05, 5.41118e-05, 6.98733e-05, 3.71976e-05, 5.72165e-05, 8.21363e-05, 9.48679e-05, 8.20111e-05, 0.000126344, 0.000156052, 0.000189689,
+            0.000316859, 0.000413656, 0.000510688, 0.000552646, 0.000597287, 0.000529661, 0.000555627, 0.000693785, 0.000728378, 0.000577072, 0.000655598, 0.000770426, 0.00065859, 0.000658825, 0.000626945, 0.000688784, 0.000665756,
+            0.000680616, 0.000709758, 0.000790653, 0.000758071, 0.000709224, 0.000811344, 0.00101148, 0.000878139, 0.00099932, 0.000985006, 0.00112494, 0.00121715, 0.00138793, 0.00138805, 0.00152578, 0.0018108, 0.00196091,
+            0.00214086, 0.00253717, 0.00265762, 0.00305436, 0.00340288, 0.00389649, 0.00410571, 0.00442974, 0.00510722, 0.00592003, 0.00615679, 0.00725894, 0.00797727, 0.00899832, 0.00978744, 0.0112965, 0.0118816,
+            0.0132652, 0.0148351, 0.0161937, 0.0172755, 0.0194955, 0.0210949, 0.024087, 0.0266854, 0.0297255, 0.0339074, 0.0376788, 0.0424603, 0.0478922, 0.0546635, 0.063569, 0.0716545, 0.081168,
+            0.0933384, 0.105305, 0.119121, 0.136121, 0.151253, 0.179508, 0.193582, 0.215246, 0.237814, 0.262173, 0.284145, 0.310099, 0.33758, 0.366562, 0.396979, 0.60477},
+           {0.00186049, 0.000185624, 9.31958e-05, 8.51778e-05, 8.82742e-05, 6.28994e-05, 6.25666e-05, 5.33909e-05, 3.801e-05, 3.25014e-05, 6.28573e-05, 7.07747e-05, 4.8016e-05, 6.75527e-05, 0.000121035, 0.000101699, 0.000123041,
+            0.000146588, 0.000201221, 0.000196223, 0.000267921, 0.000244647, 0.000222748, 0.000253944, 0.00024651, 0.000230381, 0.00023474, 0.000298648, 0.000274809, 0.000228339, 0.000318626, 0.000375623, 0.000335014, 0.000324245,
+            0.000369329, 0.000375867, 0.000413944, 0.000465168, 0.000472337, 0.000503908, 0.000523464, 0.000602256, 0.000633298, 0.000697717, 0.000721403, 0.00079436, 0.000920928, 0.00104492, 0.00101888, 0.00126906, 0.00126227,
+            0.00153569, 0.00162924, 0.00167129, 0.00197209, 0.00198801, 0.00244724, 0.00267313, 0.00302327, 0.00339829, 0.00361518, 0.00433916, 0.00451493, 0.00522854, 0.00568751, 0.00629531, 0.00721323, 0.00785888,
+            0.00885987, 0.00959729, 0.0107205, 0.0119472, 0.0134529, 0.0150635, 0.0168678, 0.0185613, 0.0204596, 0.0231379, 0.0268695, 0.0299356, 0.0332351, 0.0393377, 0.0448361, 0.0504995, 0.0586923,
+            0.065789, 0.0766279, 0.0865184, 0.101849, 0.114268, 0.132176, 0.146071, 0.165778, 0.188404, 0.207953, 0.22633, 0.249425, 0.274262, 0.300865, 0.329215, 0.503542}},
+        mortalityImprovement = {{0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.0244, 0.01389, 0.01389,
+            0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389,
+            0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01389, 0.01762,
+            0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01762, 0.01427, 0.01427, 0.01427,
+            0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01427, 0.01205, 0.01205, 0.01205, 0.01205, 0.01205,
+            0.01205, 0.01205, 0.01205, 0.01205, 0.01205, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581, 0.001581},
+           {0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.02288, 0.01158, 0.01158,
+            0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158,
+            0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.01158, 0.02219,
+            0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.02219, 0.01065, 0.01065, 0.01065,
+            0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01065, 0.01227, 0.01227, 0.01227, 0.01227, 0.01227,
+            0.01227, 0.01227, 0.01227, 0.01227, 0.01227, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887, 0.00887}},
+        mortalityRatio = {1.05794, 1.05567},
+        residualMigration = {{6.47, 10.92, 2.053, 2.693, 6.019, 5.03, 0.02089, 1.348, 0.01772, 2.684, 0.01545, 3.685, -0.9749, 1.359, 1.022, 5.693, -0.9501,
+            0.07026, -0.9175, -7.56, -6.846, -15.83, -11.19, -3.546, -7.536, -0.1614, -4.134, 4.488, -0.1729, 0.5595, 1.851, 1.515, 6.509, 5.21,
+            3.5, 2.856, 1.859, -1.14, 0.8584, 0.8412, -1.472, -4.413, 4.558, 0.931, -1.745, -1.376, 0.6997, 1.424, -2.212, 1.824, 0.2489,
+            -1.002, -3.272, 1.132, -3.127, 2.079, -3.128, 0.6153, -2.776, 2.628, -3.147, 0.1253, 1.559, 0.5189, 3.593, -0.8243, 1.178, 0.2717,
+            1.067, -2.05, -0.9148, 0.878, 1.323, -0.6834, -0.6165, -2.151, -0.8071, -1.433, -2.55, 3.141, 1.415, -1.662, -0.3051, 1.958, -0.5351,
+            -1.984, 3.856, -1.184, 0.1057, 1.663, -0.2059, 1.666, -0.1787, 2.103, -0.06482, -0.06356, -0.2332, -0.2442, -1.591, -0.3153, -0.144},
+           {2.863, 6.408, 1.046, 2.353, -0.6454, 3.36, -0.9851, 2.014, -2.321, 4.008, 1.342, 4.682, 0.01999, 1.347, 0.3556, 1.355, 3.362,
+            -2.634, 0.7018, -18.61, -18.63, -23.95, 0.04504, 0.3694, 3.047, -1.607, -0.6108, 1.397, -1.593, 6.735, 0.7208, -1.58, 5.441, 5.074,
+            3.743, 3.094, 2.1, 2.767, 5.448, 0.8049, -0.5171, 6.8, 1.486, 1.165, -2.143, 0.8759, 0.5689, -0.3964, -1.697, 1.934, -1.277,
+            -1.258, -0.8275, 0.533, 3.248, -0.04075, 0.3009, -0.6605, -0.2702, -0.4668, 0.3486, -0.3235, -1.706, 0.9907, 1.84, 0.6744, 0.8065, -1.289,
+            -0.06028, -2.165, -2.5, 0.4526, -0.6597, -1.86, -1.775, 0.2425, 0.4757, -1.88, 4.539, 1.918, -1.58, -2.746, 0.6962, 3.186, -0.491,
+            -0.9656, -2.218, -0.3593, -0.09866, 1.439, 1.565, 4.087, 0.6882, 1.527, -1.376, -1.443, -1.841, -1.709, -0.7821, 0.6373, 1.189}},
+        shareBoys = 0.523749,
+        totalFertility = 1.85,
+        totalFertilityMean5 = 1.908,
+        births = 420,
+        deaths = 455)
+        "Motala vid slutet av 2021; dödlighetskvot 2017-2021, restflöden 2019-2021";
+      constant DemographyYear motala2022 = DemographyYear(
+        year = 2022,
+        population = {{189, 233, 242, 260, 268, 273, 267, 279, 277, 244, 277, 250, 285, 262, 274, 294, 263,
+            274, 249, 270, 223, 219, 221, 242, 218, 207, 224, 229, 240, 291, 259, 309, 307, 244,
+            277, 278, 266, 298, 245, 238, 249, 237, 228, 262, 247, 257, 235, 257, 295, 271, 301,
+            307, 322, 300, 311, 297, 320, 306, 341, 285, 257, 273, 257, 267, 290, 275, 248, 277,
+            248, 261, 263, 251, 252, 295, 249, 254, 249, 217, 207, 210, 185, 147, 127, 130, 121,
+            85, 74, 84, 52, 40, 44, 33, 30, 19, 17, 14, 7, 4, 4, 0, 1},
+           {180, 214, 212, 218, 220, 257, 244, 246, 244, 223, 253, 238, 266, 247, 247, 258, 252,
+            229, 263, 238, 202, 173, 168, 158, 157, 169, 194, 218, 232, 233, 244, 265, 289, 258,
+            262, 255, 263, 242, 237, 228, 228, 232, 265, 253, 240, 239, 245, 249, 275, 263, 284,
+            271, 287, 315, 297, 320, 302, 310, 274, 266, 239, 273, 275, 245, 285, 297, 245, 262,
+            282, 258, 237, 285, 261, 272, 254, 244, 262, 249, 262, 217, 175, 168, 155, 155, 150,
+            143, 114, 108, 82, 86, 72, 69, 57, 49, 36, 20, 29, 7, 11, 5, 11}},
+        deathRisk = {{0.00220404, 0.000187332, 0.000105518, 8.55056e-05, 0.000111906, 5.93631e-05, 5.22159e-05, 6.61057e-05, 6.18608e-05, 4.90642e-05, 5.37176e-05, 8.07921e-05, 8.61195e-05, 8.72211e-05, 0.000121022, 0.000151119, 0.000204191,
+            0.000321373, 0.000381594, 0.000532408, 0.000541124, 0.000611262, 0.000532032, 0.000548391, 0.000651605, 0.000670348, 0.000588836, 0.000590993, 0.000741949, 0.000606703, 0.000629761, 0.000629275, 0.000654049, 0.000616561,
+            0.000686336, 0.000744877, 0.000709258, 0.000761743, 0.00072794, 0.000765324, 0.000978069, 0.00089109, 0.00101206, 0.000981432, 0.00109481, 0.00120244, 0.00127206, 0.00141921, 0.00144009, 0.00172992, 0.00192791,
+            0.00212411, 0.00236222, 0.00254027, 0.00302616, 0.00332897, 0.00374079, 0.00399575, 0.00434372, 0.00507885, 0.00584536, 0.00614056, 0.00715336, 0.00762048, 0.0087018, 0.0098361, 0.0112035, 0.011823,
+            0.0133353, 0.0146293, 0.0159299, 0.0175581, 0.0194685, 0.0212555, 0.0238678, 0.0266337, 0.0295574, 0.0336062, 0.0367511, 0.0421958, 0.0482912, 0.0537638, 0.0632831, 0.0707642, 0.0795445,
+            0.0925362, 0.103395, 0.117722, 0.1343, 0.148131, 0.17665, 0.194991, 0.214839, 0.239573, 0.264258, 0.284191, 0.310226, 0.337805, 0.366895, 0.397437, 0.60587},
+           {0.00183575, 0.000207663, 7.50632e-05, 9.83271e-05, 8.06328e-05, 6.3244e-05, 5.23695e-05, 5.78096e-05, 3.22369e-05, 3.70779e-05, 5.92105e-05, 6.56958e-05, 3.87556e-05, 8.71656e-05, 0.000125171, 0.000120487, 0.000111868,
+            0.000149186, 0.000193688, 0.000184869, 0.000249017, 0.000227299, 0.000215165, 0.000269116, 0.000223542, 0.000227309, 0.000236809, 0.000285719, 0.000248314, 0.000222981, 0.000327527, 0.000346637, 0.000314608, 0.000327994,
+            0.000350338, 0.000380974, 0.000363894, 0.000427569, 0.000508438, 0.000521968, 0.000490014, 0.000604973, 0.000600249, 0.000664157, 0.000689041, 0.00075339, 0.00088348, 0.00100775, 0.000945212, 0.00120436, 0.00125476,
+            0.00151149, 0.00161861, 0.00170494, 0.00188695, 0.00201314, 0.00239641, 0.00262321, 0.00299884, 0.00338222, 0.00353565, 0.0041891, 0.00446246, 0.00508149, 0.00549796, 0.00625218, 0.00702966, 0.00785577,
+            0.00865169, 0.00965769, 0.0108036, 0.0118749, 0.0133767, 0.0148431, 0.0166301, 0.0184708, 0.0205615, 0.0228535, 0.0265748, 0.0300315, 0.0331329, 0.0389156, 0.0443576, 0.0502107, 0.0579679,
+            0.0656165, 0.0754421, 0.0854544, 0.100275, 0.112779, 0.129848, 0.145385, 0.164163, 0.187285, 0.206264, 0.224329, 0.247303, 0.272033, 0.298537, 0.326804, 0.500246}},
+        mortalityImprovement = {{0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.01831, 0.0156, 0.0156,
+            0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156,
+            0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0156, 0.0194,
+            0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.0194, 0.01281, 0.01281, 0.01281,
+            0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01281, 0.01102, 0.01102, 0.01102, 0.01102, 0.01102,
+            0.01102, 0.01102, 0.01102, 0.01102, 0.01102, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635, -0.0005635},
+           {0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01818, 0.01592, 0.01592,
+            0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592,
+            0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.01592, 0.02204,
+            0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.02204, 0.008683, 0.008683, 0.008683,
+            0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.008683, 0.0105, 0.0105, 0.0105, 0.0105, 0.0105,
+            0.0105, 0.0105, 0.0105, 0.0105, 0.0105, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795, 0.00795}},
+        mortalityRatio = {1.02622, 1.0482},
+        residualMigration = {{1.161, 10.89, 5.721, 0.02781, 5.694, 8.029, -0.9888, 2.684, 1.691, 4.016, 1.353, 3.015, 0.3577, 1.023, 0.02844, 7.033, -0.2913,
+            2.401, -1.914, -8.562, -14.51, -16.52, -9.192, -4.204, -7.536, 0.1424, -1.839, -2.184, 2.161, 3.881, 7.176, 5.515, 6.515, 5.831,
+            -0.1461, 3.182, 3.539, -2.809, 0.8556, 2.851, -2.147, -3.758, 4.229, 2.932, -2.079, 0.6074, 3.327, 2.011, -1.528, -0.5568, 0.9087,
+            0.2996, -0.9256, 1.739, -3.562, 3.023, -1.505, 0.2747, -3.748, 1.949, -4.217, 0.9867, 1.792, 0.4323, 1.87, 1.193, 1.001, 2.109,
+            -0.4054, -0.6169, 0.7363, 0.9364, 0.909, -0.7452, -2.297, 0.1217, -0.3663, -0.3627, 0.104, 0.5666, 0.6161, -0.04379, -0.9881, 3.378, 0.1479,
+            -3.022, 2.023, 0.8309, 0.8106, 1.948, -0.1594, 1.736, 0.1211, 0.1907, -0.2948, -0.03391, 0.9105, -0.4125, -0.9302, 0.05346, -0.05097},
+           {6.505, 4.086, 1.041, 2.686, 0.6859, 3.688, -0.6514, 2.347, -0.9858, 4.338, 2.345, 3.011, 1.019, 1.013, 0.6936, 1.029, 0.7008,
+            -1.307, 0.3757, -18.29, -21.96, -26.28, -4.634, -0.2967, -0.2845, -2.295, 2.384, 7.059, 1.06, 6.049, 0.06197, 2.76, 9.767, 3.409,
+            2.094, 6.424, 3.424, 2.091, 2.764, 3.136, -3.523, 5.791, 2.83, 3.823, 0.4912, -0.1545, 2.88, -2.072, -1.058, 1.927, 0.369,
+            -2.588, -1.822, 4.206, 5.223, -0.6956, -0.7216, -0.592, -0.2824, 1.527, -0.3391, -1.315, -1.139, -0.05129, 2.166, 1.608, 0.765, -2.62,
+            0.985, -3.616, -1.62, 2.22, -0.5805, -1.883, 1.073, 1.532, -0.03768, -2, 1.841, 2.98, -3.145, -1.516, 1.344, 2.673, 0.2916,
+            -1.891, -2.538, -0.2504, -0.197, 2.497, 2.163, 5.385, 0.4738, 1.429, -1.793, -1.604, 0.3841, -2.709, -0.04779, 0.6724, 2.546}},
+        shareBoys = 0.52274,
+        totalFertility = 1.57,
+        totalFertilityMean5 = 1.806,
+        births = 360,
+        deaths = 420)
+        "Motala vid slutet av 2022; dödlighetskvot 2018-2022, restflöden 2020-2022";
+      constant DemographyYear motala2023 = DemographyYear(
+        year = 2023,
+        population = {{186, 191, 238, 246, 262, 272, 280, 280, 281, 277, 246, 274, 249, 290, 263, 273, 294,
+            267, 272, 255, 267, 206, 206, 210, 224, 203, 196, 219, 223, 249, 291, 259, 309, 312,
+            248, 290, 283, 279, 300, 249, 239, 252, 243, 224, 257, 248, 258, 241, 258, 296, 274,
+            302, 313, 324, 302, 310, 292, 320, 300, 339, 284, 257, 269, 256, 262, 285, 276, 249,
+            274, 249, 260, 258, 244, 247, 290, 241, 250, 241, 213, 203, 205, 174, 142, 122, 125,
+            111, 80, 64, 74, 46, 35, 39, 29, 19, 12, 15, 11, 4, 3, 2, 0},
+           {209, 181, 222, 216, 222, 220, 257, 248, 249, 242, 225, 254, 242, 270, 246, 245, 252,
+            252, 232, 240, 218, 173, 164, 162, 145, 155, 161, 198, 214, 242, 244, 249, 275, 296,
+            270, 267, 261, 268, 239, 239, 234, 227, 233, 264, 253, 241, 232, 239, 244, 274, 266,
+            282, 274, 292, 312, 294, 314, 301, 307, 277, 263, 241, 272, 282, 244, 286, 295, 248,
+            264, 281, 257, 235, 282, 258, 272, 247, 241, 251, 244, 247, 212, 172, 163, 148, 147,
+            142, 135, 102, 98, 74, 73, 62, 58, 49, 37, 27, 18, 22, 4, 7, 13}},
+        deathRisk = {{0.00227577, 0.000174251, 8.42929e-05, 0.00010053, 0.000113859, 6.24177e-05, 6.8968e-05, 5.6768e-05, 6.2672e-05, 6.49863e-05, 5.47716e-05, 8.03738e-05, 7.82366e-05, 8.65497e-05, 0.000123957, 0.000172611, 0.00021798,
+            0.000286527, 0.000353517, 0.000545862, 0.000551424, 0.000567165, 0.000529212, 0.000536954, 0.000589974, 0.000661924, 0.00057066, 0.000554684, 0.000707706, 0.000625912, 0.000617335, 0.00063904, 0.00068219, 0.00056597,
+            0.000663968, 0.000722793, 0.000706669, 0.000727167, 0.000757398, 0.000791773, 0.000916146, 0.000879687, 0.000978475, 0.0010121, 0.00104598, 0.00118088, 0.00121103, 0.00144706, 0.00146622, 0.00168706, 0.00183357,
+            0.00207071, 0.00223678, 0.00239196, 0.00294799, 0.00329339, 0.00367971, 0.00396508, 0.00421427, 0.00492493, 0.00561754, 0.00597333, 0.00694406, 0.00752824, 0.00840104, 0.00960653, 0.0110812, 0.0114459,
+            0.0131287, 0.0143836, 0.0157766, 0.0175189, 0.0191669, 0.0210864, 0.0237204, 0.0262538, 0.0289995, 0.0329925, 0.0367306, 0.0413928, 0.0474162, 0.052335, 0.0613535, 0.0690751, 0.0781148,
+            0.0906687, 0.101303, 0.115044, 0.132331, 0.146538, 0.17328, 0.192833, 0.215394, 0.238238, 0.264152, 0.283986, 0.310238, 0.338073, 0.367463, 0.398342, 0.607947},
+           {0.00182262, 0.000177185, 7.35298e-05, 0.000106411, 9.85108e-05, 4.9911e-05, 5.20125e-05, 5.22169e-05, 3.70766e-05, 3.87971e-05, 5.39488e-05, 6.94643e-05, 5.44556e-05, 8.4913e-05, 0.000103012, 0.000123033, 0.000107135,
+            0.000146856, 0.000202618, 0.000164024, 0.000249748, 0.000219878, 0.000235274, 0.000251819, 0.000227388, 0.000245774, 0.000237379, 0.00026274, 0.000227682, 0.000209273, 0.000312309, 0.000350266, 0.000312712, 0.000320675,
+            0.000360833, 0.000407971, 0.0003697, 0.000424269, 0.000514479, 0.000549935, 0.00049298, 0.000605312, 0.000612185, 0.000660074, 0.000674883, 0.000744105, 0.000849676, 0.000973989, 0.000947042, 0.00122106, 0.00126951,
+            0.00154426, 0.00161204, 0.00172281, 0.00188635, 0.00192652, 0.00237565, 0.00258747, 0.00296763, 0.00341435, 0.00341401, 0.00409748, 0.00420078, 0.00497023, 0.00548035, 0.00621775, 0.00685181, 0.00792362,
+            0.00852593, 0.00942477, 0.0105492, 0.0114562, 0.0132611, 0.0144322, 0.0164215, 0.0182697, 0.0204965, 0.0231236, 0.026195, 0.0298501, 0.0327236, 0.038075, 0.0433849, 0.049693, 0.056653,
+            0.0646206, 0.0737524, 0.0841833, 0.0979023, 0.110038, 0.126897, 0.144076, 0.162777, 0.185431, 0.205196, 0.222196, 0.244977, 0.269507, 0.295803, 0.323865, 0.495736}},
+        mortalityImprovement = {{0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01006, 0.01644, 0.01644,
+            0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644,
+            0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.01644, 0.02063,
+            0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.02063, 0.01265, 0.01265, 0.01265,
+            0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01265, 0.01201, 0.01201, 0.01201, 0.01201, 0.01201,
+            0.01201, 0.01201, 0.01201, 0.01201, 0.01201, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078, -0.001078},
+           {0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01759, 0.01259, 0.01259,
+            0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259,
+            0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.01259, 0.02107,
+            0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.02107, 0.007989, 0.007989, 0.007989,
+            0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.007989, 0.01162, 0.01162, 0.01162, 0.01162, 0.01162,
+            0.01162, 0.01162, 0.01162, 0.01162, 0.01162, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257, 0.007257}},
+        mortalityRatio = {1.00427, 1.03923},
+        residualMigration = {{-0.7316, 8.14, 4.042, 2.357, 3.368, 5.702, -0.3196, 7.355, 1.016, 3.683, 2.023, 1.678, 0.02029, 1.683, -0.6352, 5.704, -0.6151,
+            3.382, -2.253, -4.577, -10.86, -16.22, -10.86, -5.87, -3.54, -7.88, -6.194, -3.87, 2.154, 3.517, 5.52, 5.177, 4.195, 4.52,
+            0.4963, 5.183, 5.221, 2.868, 2.854, 5.542, -1.12, -0.7861, 4.56, 0.2424, -2.724, 0.9445, 2.953, 3.639, -0.2229, -0.553, 2.538,
+            0.9154, 2.025, 2.711, -0.6403, 3.287, -0.9604, 1.865, -5.069, -0.08613, -1.953, 2.502, 0.3127, 0.2683, -1.163, -1.303, 2.872, 3.606,
+            -1.233, 2.065, 3.132, 0.1538, 1.232, -1.674, -0.4769, 1.496, -0.4643, -1.616, 2.739, 1.195, 1.692, -0.7669, -0.919, 4.173, 0.7458,
+            -1.319, 1.955, -0.0895, 1.336, 1.214, -0.2604, 1.809, 0.9836, -2.485, -0.2011, 0.5686, 0.7298, 0.1614, -0.5323, -0.05409, -0.2398},
+           {12.4, 2.381, 5.039, 2.351, 2.025, 0.3542, -1.324, 2.014, 1.014, 1.344, 1.679, 1.68, 2.685, 2.351, 1.355, 2.369, -0.2999,
+            1.027, 0.7122, -21.28, -23.96, -27.95, -5.964, -2.948, -4.623, -0.2985, 0.04762, 10.71, 0.7251, 7.382, 2.398, 3.758, 9.42, 5.091,
+            1.768, 4.43, 5.11, 4.75, 0.09912, 3.453, -0.5305, 3.454, 4.17, 3.156, 2.151, -0.8489, -0.1466, -3.102, -2.073, 0.9533, 1.677,
+            -1.936, -0.4916, 4.864, 1.238, -2.709, -2.723, 0.7761, 0.1454, 2.827, -1.037, -1.684, -2.199, 3.186, 2.809, 0.5869, 0.7846, 0.5525,
+            2.952, -4.278, 0.6431, 1.58, -0.6121, -1.341, 1.821, -0.2442, 0.2422, -1.991, 0.6148, -0.1973, -1.215, 0.1805, 1.261, 1.855, 0.7893,
+            -2.035, -1.146, -0.6203, 0.1133, 0.9027, -0.4628, 2.333, 0.6741, 1.264, -2.213, -1.218, 1.043, -1.496, -0.4241, 0.1324, 2.692}},
+        shareBoys = 0.517825,
+        totalFertility = 1.71,
+        totalFertilityMean5 = 1.764,
+        births = 381,
+        deaths = 445)
+        "Motala vid slutet av 2023; dödlighetskvot 2019-2023, restflöden 2021-2023";
+      constant DemographyYear motala2024 = DemographyYear(
+        year = 2024,
+        population = {{181, 194, 190, 237, 251, 262, 270, 275, 278, 276, 281, 242, 270, 259, 284, 264, 278,
+            293, 268, 265, 243, 246, 196, 192, 190, 216, 192, 182, 220, 226, 250, 293, 264, 312,
+            312, 250, 291, 286, 275, 294, 249, 239, 258, 244, 221, 256, 247, 254, 235, 256, 295,
+            271, 295, 316, 324, 302, 309, 289, 320, 297, 341, 280, 250, 267, 256, 261, 285, 274,
+            250, 274, 241, 252, 256, 239, 245, 290, 236, 242, 235, 207, 197, 198, 167, 131, 117,
+            117, 105, 74, 63, 63, 43, 33, 32, 23, 15, 10, 10, 8, 3, 2, 2},
+           {154, 209, 183, 223, 216, 218, 220, 249, 250, 254, 246, 233, 255, 241, 268, 246, 248,
+            252, 253, 224, 219, 182, 156, 144, 149, 142, 146, 168, 195, 214, 253, 258, 256, 278,
+            288, 278, 272, 262, 270, 232, 246, 231, 234, 231, 259, 253, 238, 236, 242, 242, 275,
+            269, 278, 275, 294, 307, 295, 310, 296, 308, 279, 266, 235, 274, 286, 242, 279, 296,
+            251, 258, 283, 254, 234, 278, 259, 269, 245, 238, 250, 235, 239, 204, 166, 154, 142,
+            137, 129, 130, 98, 91, 66, 64, 54, 45, 39, 29, 23, 11, 14, 3, 14}},
+        deathRisk = {{0.00226146, 0.000178362, 0.000106136, 0.000102293, 0.000112186, 5.52463e-05, 7.47083e-05, 6.45489e-05, 7.09414e-05, 7.4761e-05, 5.48364e-05, 8.03337e-05, 8.64064e-05, 0.000110348, 0.00014174, 0.000160958, 0.000217671,
+            0.000263192, 0.000337976, 0.00049978, 0.000463188, 0.000528457, 0.000522042, 0.000546952, 0.000519141, 0.000602438, 0.000552346, 0.000561231, 0.00069259, 0.000628038, 0.000583284, 0.000587656, 0.00061796, 0.000568884,
+            0.000656983, 0.000696656, 0.000674035, 0.000695506, 0.000755697, 0.000784723, 0.000861052, 0.000891498, 0.00092703, 0.00103679, 0.00104458, 0.00115216, 0.0011588, 0.00148872, 0.00142855, 0.00161823, 0.00181065,
+            0.00202151, 0.00219416, 0.00230122, 0.00285766, 0.00314059, 0.00358259, 0.00369941, 0.00415369, 0.00478617, 0.00535857, 0.00568848, 0.00648124, 0.00730747, 0.00830236, 0.00925332, 0.0104891, 0.0111845,
+            0.0127348, 0.0140435, 0.0152679, 0.0172665, 0.0185696, 0.0208805, 0.0232168, 0.0256931, 0.0282457, 0.0322036, 0.0362893, 0.0400916, 0.0457995, 0.051008, 0.0587613, 0.0669111, 0.0762833,
+            0.0879337, 0.0978278, 0.11198, 0.12861, 0.144378, 0.168201, 0.189793, 0.210052, 0.231226, 0.259088, 0.278132, 0.304026, 0.331505, 0.360545, 0.391084, 0.597272},
+           {0.00177278, 0.000151632, 7.58488e-05, 9.03082e-05, 8.49771e-05, 5.29832e-05, 6.75504e-05, 6.13572e-05, 4.04792e-05, 4.60369e-05, 6.3653e-05, 6.03366e-05, 6.11616e-05, 8.11668e-05, 0.000109327, 0.000112675, 9.71373e-05,
+            0.000153755, 0.000163346, 0.000173945, 0.000260818, 0.000206302, 0.000244015, 0.000242733, 0.000194331, 0.000211567, 0.00021925, 0.000241273, 0.000196382, 0.000224104, 0.000313056, 0.000325505, 0.000307891, 0.000332941,
+            0.000353979, 0.000385593, 0.000373288, 0.000380843, 0.00051672, 0.000550307, 0.000482628, 0.000565134, 0.00061861, 0.000634048, 0.000620945, 0.000776213, 0.000846781, 0.000905984, 0.000951688, 0.00120775, 0.00130625,
+            0.00146868, 0.00156031, 0.00167058, 0.00177229, 0.00186295, 0.00231066, 0.00245676, 0.00295328, 0.00330504, 0.00340354, 0.00392319, 0.00415228, 0.00483285, 0.0053868, 0.00609082, 0.00666306, 0.00786335,
+            0.00820198, 0.00944504, 0.0102304, 0.0112246, 0.0129928, 0.0141483, 0.0158571, 0.0178467, 0.0199075, 0.0225772, 0.0258717, 0.0296012, 0.0320301, 0.0377163, 0.0423185, 0.0485027, 0.0556811,
+            0.0630832, 0.0712725, 0.0833298, 0.0956639, 0.108611, 0.125974, 0.1427, 0.160465, 0.184443, 0.201937, 0.220193, 0.242784, 0.267117, 0.293203, 0.321045, 0.491483}},
+        mortalityImprovement = {{0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.009089, 0.02112, 0.02112,
+            0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112,
+            0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02112, 0.02534,
+            0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.02534, 0.01597, 0.01597, 0.01597,
+            0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01597, 0.01686, 0.01686, 0.01686, 0.01686, 0.01686,
+            0.01686, 0.01686, 0.01686, 0.01686, 0.01686, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023, 0.005023},
+           {0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.02539, 0.01379, 0.01379,
+            0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379,
+            0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.01379, 0.02226,
+            0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.02226, 0.0123, 0.0123, 0.0123,
+            0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.0123, 0.01512, 0.01512, 0.01512, 0.01512, 0.01512,
+            0.01512, 0.01512, 0.01512, 0.01512, 0.01512, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001, 0.01001}},
+        mortalityRatio = {0.96813, 1.02617},
+        residualMigration = {{-1.414, 6.772, 3.701, 2.024, 2.698, 4.366, -0.65, 4.022, 0.6801, -0.9784, 3.687, -2.655, -0.982, 4.688, -2.299, 2.712, 0.3771,
+            1.721, -1.936, -2.585, -11.55, -17.9, -10.22, -7.206, -12.54, -8.567, -6.879, -9.872, -1.207, 6.494, 5.502, 4.491, 5.5, 5.178,
+            0.145, 6.515, 2.87, 3.514, 0.5228, 1.547, -1.124, 1.538, 4.562, -0.1049, -4.055, 1.605, 1.95, 0.6033, -0.6189, -1.271, 1.77,
+            0.1753, 0.924, 2.656, 0.3741, 2.159, -1.057, -0.279, -2.817, -2.098, 0.6836, 0.7096, -2.221, 0.3175, -1.373, 0.2225, 2.4, 2.979,
+            0.09751, 2.836, 1.455, -1.194, 0.6221, -0.1287, 0.4365, 3.194, 0.5662, -1.399, 2.209, -0.1034, 1.195, -0.02358, 1.809, 2.036, 3.481,
+            -0.4068, 1.035, 0.2902, 2.362, -0.962, 1.461, 2.457, 1.132, -3.109, -1.175, 1.313, 0.2687, -0.1234, -0.06644, -0.2, 0.08915},
+           {8.748, 2.718, 4.699, 3.016, 2.029, 0.351, -0.6546, -0.6451, 2.685, 1.679, 2.681, 3.019, 2.347, 0.6833, -0.3127, 0.03599, -1.635,
+            1.023, 0.0407, -15.62, -23.95, -29.95, -14.97, -10.29, -9.959, -1.639, -2.628, 10.71, 0.3866, 4.379, 9.059, 10.75, 9.407, 3.431,
+            -0.2344, 7.428, 4.44, 2.76, 0.09009, 0.7857, 2.461, -0.5514, 4.803, 0.1568, -0.1718, -0.5242, -1.484, -2.137, -0.4313, -0.7119, 3.01,
+            -0.9398, -1.565, 4.485, 0.2139, -1.767, -2.07, -1.232, -1.878, 3.543, -0.08831, 0.6369, -1.585, 3.497, 2.69, 1.526, -0.9051, 1.817,
+            4.099, -3.019, 1.595, 2.053, 0.9986, -0.3163, 3.47, -0.4773, 0.9511, -1.162, 1.352, -1.982, -0.7073, 0.5046, 1.391, 0.006988, 0.07796,
+            -0.4257, -1.208, 0.839, 1.414, 0.8947, -1.029, 0.5575, -0.2494, -0.3574, -2.188, -1.142, 2.751, -1.637, -0.9569, 0.1433, 3.501}},
+        shareBoys = 0.520189,
+        totalFertility = 1.47,
+        totalFertilityMean5 = 1.684,
+        births = 336,
+        deaths = 402)
+        "Motala vid slutet av 2024; dödlighetskvot 2020-2024, restflöden 2022-2024";
+      constant DemographyYear motala2025 = DemographyYear(
+        year = 2025,
+        population = {{180, 183, 199, 196, 241, 262, 261, 263, 276, 275, 276, 280, 242, 270, 259, 285, 255,
+            275, 298, 251, 243, 223, 216, 195, 191, 193, 214, 191, 173, 222, 227, 248, 290, 258,
+            311, 307, 248, 301, 289, 274, 291, 250, 242, 256, 249, 221, 252, 242, 253, 236, 250,
+            291, 266, 292, 308, 322, 298, 304, 284, 319, 295, 341, 278, 245, 259, 252, 260, 278,
+            272, 241, 271, 237, 248, 252, 233, 240, 283, 223, 236, 230, 192, 190, 189, 160, 118,
+            109, 106, 98, 66, 58, 56, 38, 24, 31, 17, 12, 8, 4, 3, 3, 4},
+           {163, 150, 217, 190, 217, 216, 217, 219, 249, 247, 258, 243, 230, 252, 242, 263, 244,
+            245, 249, 234, 196, 183, 176, 151, 142, 165, 138, 150, 167, 196, 218, 255, 249, 257,
+            278, 291, 280, 277, 267, 270, 232, 246, 226, 239, 228, 256, 250, 236, 241, 240, 238,
+            270, 265, 273, 273, 291, 298, 287, 310, 296, 309, 281, 261, 241, 274, 287, 242, 280,
+            290, 248, 255, 284, 251, 232, 278, 254, 262, 240, 228, 242, 222, 236, 194, 149, 145,
+            134, 128, 114, 114, 96, 81, 58, 51, 46, 34, 33, 19, 19, 8, 11, 9}},
+        deathRisk = {{0.00207355, 0.000158727, 0.000108964, 0.000118402, 0.00012408, 5.43765e-05, 7.7932e-05, 5.59708e-05, 6.59338e-05, 7.129e-05, 4.48773e-05, 6.58185e-05, 6.2138e-05, 0.000108373, 0.000122362, 0.000185461, 0.000188406,
+            0.000227493, 0.000304839, 0.000427119, 0.000416501, 0.000493011, 0.00053261, 0.000498113, 0.000468582, 0.000545598, 0.000526701, 0.000567414, 0.000632076, 0.000592982, 0.000567652, 0.000579602, 0.000589389, 0.000546025,
+            0.000663152, 0.00067511, 0.000668891, 0.000653403, 0.00075867, 0.00079572, 0.000785959, 0.000882537, 0.000875566, 0.00099299, 0.00104689, 0.00115536, 0.001111, 0.00142655, 0.0013828, 0.00157736, 0.00172928,
+            0.00199536, 0.00210802, 0.00215384, 0.00270772, 0.00296911, 0.00337198, 0.00355233, 0.00395854, 0.00444667, 0.00501413, 0.00542901, 0.00614793, 0.00694098, 0.00785558, 0.00880495, 0.0100161, 0.010752,
+            0.012036, 0.0135399, 0.0146184, 0.0167047, 0.0179765, 0.0203771, 0.0224516, 0.0247097, 0.027234, 0.0310273, 0.0347532, 0.0383324, 0.0439892, 0.048778, 0.0545883, 0.0635745, 0.0716966,
+            0.0833656, 0.0927464, 0.106106, 0.122933, 0.137902, 0.157393, 0.180744, 0.202134, 0.220083, 0.247034, 0.267403, 0.293084, 0.320441, 0.34945, 0.380056, 0.582038},
+           {0.00171741, 0.000143013, 6.60244e-05, 8.71519e-05, 8.436e-05, 4.20045e-05, 7.05117e-05, 6.49583e-05, 4.81474e-05, 5.5313e-05, 6.72007e-05, 5.06738e-05, 6.47643e-05, 7.39224e-05, 0.000123183, 0.000115117, 8.99284e-05,
+            0.000149104, 0.000161903, 0.000167761, 0.000221909, 0.000199453, 0.000268263, 0.000201955, 0.000188138, 0.000210645, 0.000195011, 0.000237797, 0.00018817, 0.000207599, 0.000286413, 0.000275227, 0.000325953, 0.00034484,
+            0.000337756, 0.000395537, 0.000324316, 0.000393121, 0.00046955, 0.000508857, 0.000505913, 0.000586013, 0.000563506, 0.000572138, 0.000539368, 0.000724709, 0.000788537, 0.000857731, 0.000943543, 0.00118621, 0.0012976,
+            0.00142095, 0.00149376, 0.0016292, 0.00169925, 0.00180679, 0.00226239, 0.00242411, 0.00273344, 0.00307284, 0.00332311, 0.00370312, 0.00401364, 0.00469699, 0.00503341, 0.00591905, 0.00624811, 0.00750551,
+            0.00816209, 0.00916428, 0.0100345, 0.0111186, 0.0124575, 0.0136372, 0.0153954, 0.0171792, 0.019109, 0.0219212, 0.0251317, 0.0288019, 0.0313392, 0.0360721, 0.0409338, 0.046851, 0.0531295,
+            0.0608351, 0.0690991, 0.0811102, 0.0920682, 0.104318, 0.123329, 0.138694, 0.15742, 0.178304, 0.195214, 0.215042, 0.237162, 0.261003, 0.28658, 0.313899, 0.480401}},
+        mortalityImprovement = {{0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.01508, 0.02595, 0.02595,
+            0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595,
+            0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02595, 0.02829,
+            0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.02829, 0.018, 0.018, 0.018,
+            0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.018, 0.01995, 0.01995, 0.01995, 0.01995, 0.01995,
+            0.01995, 0.01995, 0.01995, 0.01995, 0.01995, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992, 0.008992},
+           {0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02585, 0.02081, 0.02081,
+            0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081,
+            0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02081, 0.02647,
+            0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.02647, 0.01493, 0.01493, 0.01493,
+            0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01493, 0.01685, 0.01685, 0.01685, 0.01685, 0.01685,
+            0.01685, 0.01685, 0.01685, 0.01685, 0.01685, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017, 0.01017}},
+        mortalityRatio = {0.953743, 1.06303},
+        residualMigration = {{0.07489, 4.378, 3.027, 3.025, 3.695, 5.031, 1.35, 0.3583, 0.343, -2.649, 2.015, -2.652, -1.65, 5.018, -1.639, 0.3704, -1.274,
+            0.05339, 1.384, -5.926, -12.24, -19.24, -17.57, -8.558, -12.89, -6.579, -7.892, -6.558, -4.552, 4.802, 0.8212, 0.1471, 0.814, 0.8447,
+            1.146, 3.533, 1.502, 8.848, 0.508, -0.7968, -0.4544, 1.512, 5.207, -1.468, -0.7533, 0.2458, -1.039, -0.7201, -1.653, 0.3667, -0.9383,
+            -1.511, -1.463, 1.315, -1.307, -0.2228, -2.474, -1.646, -2.603, -0.7529, 0.9742, 0.02783, -2.942, -1.166, -2.551, -1.297, 2.315, -0.1794,
+            1.371, 0.2563, -0.6333, -2.115, -0.2881, -0.3387, 0.7021, 1.333, 0.9003, -3.16, 1.471, 2.334, -1.021, -0.08941, 1.182, -0.2834, 0.07282,
+            -0.3415, 0.876, 0.06051, 1.279, 0.03888, 1.675, 1.986, -0.7179, -0.1657, -1.414, 1.127, -0.02178, -1.419, -0.7214, 0.1117, 0.6901},
+           {6.258, -0.6604, 6.025, 4.015, -0.6458, -1.307, -0.3221, -1.647, 1.686, 0.01926, 3.348, 2.023, 0.6777, 0.02175, -0.6488, -2.302, -1.637,
+            -0.9751, 0.3711, -16.63, -22.95, -33.61, -10.62, -10.28, -9.304, 3.701, -6.967, 5.031, -2.616, 3.714, 8.712, 7.069, 2.74, 3.779,
+            1.432, 5.439, 4.458, 3.765, 1.443, -1.544, 4.459, -1.196, 1.139, 0.8212, -2.497, -0.5284, -4.138, -1.14, 1.218, -1.401, 0.355,
+            -0.9261, -1.267, 0.771, -0.4636, -3.124, -4.05, -3.605, -1.876, 2.211, 0.9173, 3.28, -2.941, 6.124, 2.354, 1.494, -1.248, 3.428,
+            1.823, -0.997, 1.927, 1.402, 0.6868, 0.4773, 4.294, -0.7048, 0.6537, -1.325, 0.5642, -3.952, -1.462, 2.423, -0.08715, -3.951, 0.03717,
+            -0.3122, -0.8471, -1.424, 0.07558, 3.498, -0.8747, 0.354, -1.011, 0.007874, -2.006, 0.188, 0.5242, -0.01791, -0.9329, 0.3227, 2.574}},
+        shareBoys = 0.518762,
+        totalFertility = 1.57,
+        totalFertilityMean5 = 1.634,
+        births = 337,
+        deaths = 459)
+        "Motala vid slutet av 2025; dödlighetskvot 2021-2025, restflöden 2023-2025";
+
+      constant Real fertilityProfile[101] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0.000139247, 0.00020887, 0.000556987, 0.00125322, 0.0029938, 0.00591798, 0.00995614, 0.0147601, 0.0190768,
+          0.0232542, 0.0307039, 0.0409385, 0.0511732, 0.06099, 0.0696233, 0.0766553, 0.0808327, 0.0811808, 0.0779085, 0.0718513, 0.0635661,
+          0.0537492, 0.0433057, 0.0337673, 0.025691, 0.0184502, 0.0132284, 0.0104435, 0.0074497, 0.00452552, 0.00257606, 0.00146209, 0.000765857,
+          0.000556987, 0.000487363, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0}
+        "Andel av en kvinnas barn som föds vid varje ålder, SCB:s framskrivning 2026; summerar till 1";
+      constant Integer projectionFirstYear = 2026 "Första året i SCB:s framskrivning";
+      constant Real projectedTotalFertility[30] = {1.4363, 1.4414, 1.4489, 1.4811, 1.5138, 1.5478, 1.5829, 1.6175, 1.6229, 1.629,
+          1.6317, 1.6342, 1.6366, 1.6399, 1.6431, 1.6428, 1.6432, 1.6442, 1.6453, 1.6471,
+          1.6495, 1.6522, 1.6556, 1.6594, 1.6626, 1.667, 1.6715, 1.6763, 1.6806, 1.6854}
+        "Rikets summerade fruktsamhet enligt SCB:s antagande, 2026-2055";
+      constant Real mortalityImprovement[2, 101] = {{0.009534, 0.01171, 0.008234, 0, 0, 0.01484, 0, 0.01713, 0, 0, 0.02026, 0, 0.01484, 0.01171, 0.008894, 0.01391, 0.01112,
+          0.01362, 0.01484, 0.01236, 0.01141, 0.01011, 0.009668, 0.009462, 0.009265, 0.006736, 0.006603, 0.006474, 0.00839, 0.008084, 0.008084, 0.009839, 0.009668, 0.01131,
+          0.01112, 0.01076, 0.01413, 0.01189, 0.01309, 0.01104, 0.01059, 0.01004, 0.01213, 0.01264, 0.01436, 0.01558, 0.01568, 0.01653, 0.01713, 0.01738, 0.01875,
+          0.01913, 0.01902, 0.01925, 0.01881, 0.01943, 0.01959, 0.01979, 0.01983, 0.0201, 0.02006, 0.02017, 0.02045, 0.02047, 0.02026, 0.02053, 0.02018, 0.02037,
+          0.02036, 0.02063, 0.02071, 0.02069, 0.02067, 0.02065, 0.02045, 0.02061, 0.02041, 0.0203, 0.02004, 0.01963, 0.01912, 0.01854, 0.01788, 0.01719, 0.01635,
+          0.01548, 0.01442, 0.01342, 0.01242, 0.01131, 0.01016, 0.009025, 0.007987, 0.007027, 0.006138, 0.005218, 0.004068, 0.00295, 0.002043, 0.000988, -0.0005757},
+         {0.009762, 0.005421, 0.01059, 0.01484, 0.01713, 0.01713, 0, 0.02026, 0, 0, 0, 0.02026, 0, 0, 0, 0.01171, 0.009668,
+          0.008234, 0.007171, 0.01236, 0.01171, 0.01059, 0.01059, 0.01059, 0.01059, 0.005169, 0.005169, 0.01011, 0.01011, 0.004729, 0.009265, 0.008551, 0.01213, 0.01131,
+          0.01059, 0.009957, 0.01236, 0.01171, 0.01112, 0.01309, 0.009883, 0.01171, 0.01101, 0.01236, 0.01331, 0.01391, 0.0159, 0.016, 0.01713, 0.01786, 0.01747,
+          0.01881, 0.01894, 0.01863, 0.01905, 0.0194, 0.01861, 0.01897, 0.01963, 0.0193, 0.01896, 0.01815, 0.0176, 0.01721, 0.01636, 0.01651, 0.01569, 0.01531,
+          0.01503, 0.01484, 0.01465, 0.01447, 0.01461, 0.01473, 0.01438, 0.01462, 0.01438, 0.01436, 0.01424, 0.01407, 0.01398, 0.01367, 0.01349, 0.0133, 0.01297,
+          0.01268, 0.01212, 0.01164, 0.01102, 0.01031, 0.00961, 0.008822, 0.008016, 0.007261, 0.006533, 0.005831, 0.004935, 0.004223, 0.003529, 0.002624, 0.0002209}}
+        "Årlig minskning av dödsrisken per ålder och kön i SCB:s framskrivning 2026-2035; ett alternativ till basårets historiska trend";
+
+      function forYear "SCB-data för ett basår"
+        input Integer year "Basår";
+        output DemographyYear data "Motala vid basårets slut";
+      algorithm
+        assert(year >= 2020 and year <= 2025, "Data.SCB har basåren 2020-2025, inte " + String(year));
+        data := if year == 2020 then motala2020 elseif year == 2021 then motala2021 elseif year == 2022 then motala2022 elseif year == 2023 then motala2023 elseif year == 2024 then motala2024 else motala2025;
+      end forYear;
+
+      function populationForYear "Befolkning per ettårsålder och kön vid ett basårs slut"
+        input Integer year "Basår";
+        output Real population[2, 101] "Befolkning per ettårsålder och kön";
+      protected
+        DemographyYear data;
+      algorithm
+        data := forYear(year);
+        population := data.population;
+      end populationForYear;
+
+      function groups "Ettårsåldrar summerade till 0-6, 7-15, 16-18, 19-64 och 65+, båda könen"
+        input Real population[2, 101] "Befolkning per ettårsålder och kön";
+        output Real cohorts[5] "Invånare per åldersgrupp";
+      algorithm
+        cohorts := {sum(population[:, 1:7]), sum(population[:, 8:16]), sum(population[:, 17:19]), sum(population[:, 20:65]), sum(population[:, 66:101])};
+      end groups;
+
+      constant Integer nationalFirstYear = 2010 "Första året i tabellen över rikets folkmängd";
+      constant Real nationalPopulation[61] = {9415570, 9482855, 9555893, 9644864, 9747355, 9851017, 9995153, 10120242,
+          10230185, 10327589, 10379295, 10452326, 10521556, 10551707, 10587710, 10605529,
+          10617229, 10590195, 10595683, 10607632, 10633822, 10660739, 10688729, 10717978,
+          10747029, 10776335, 10806015, 10836448, 10867945, 10900804, 10935214, 10970081,
+          11005383, 11041168, 11077299, 11113669, 11150098, 11186370, 11222294, 11257590,
+          11292060, 11325460, 11357521, 11388169, 11417275, 11444857, 11470900, 11495591,
+          11519087, 11541712, 11563698, 11585398, 11607075, 11629002, 11651376, 11674358,
+          11698073, 11722553, 11747835, 11773818, 11800473}
+        "Rikets folkmängd 31 december 2010-2070: utfall till 2025, sedan SCB:s framskrivning (data/downloads/20261108T145741Z)";
+
+      function nationalPopulationAt "Rikets folkmängd 31 december ett visst år"
+        input Integer year "Kalenderår";
+        output Real population "Folkmängd";
+      algorithm
+        assert(year >= nationalFirstYear and year < nationalFirstYear + size(nationalPopulation, 1), "Data.SCB.nationalPopulation saknar år " + String(year));
+        population := nationalPopulation[year - nationalFirstYear + 1];
+      end nationalPopulationAt;
+
+      function olderShares "Andelar av 65+ som är 65-79, 80-89 och 90+"
+        input Real population[2, 101] "Befolkning per ettårsålder och kön";
+        output Real shares[3] "Andel av 65+ som är 65-79, 80-89 och 90+";
+      algorithm
+        shares := {sum(population[:, 66:80]), sum(population[:, 81:90]), sum(population[:, 91:101])}/sum(population[:, 66:101]);
+        annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {90, 110, 130}, extent = {{-92, -50}, {92, 50}}, textString = "f(x)")}));
+      end olderShares;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -30}, {92, 40}}, textString = "SCB"), Text(textColor = {90, 110, 130}, extent = {{-92, -80}, {92, -35}}, textString = "demografi")}), Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0). Tabeller: BefProgDodstalNb, BefProgFruktTotNb, BefProgOsiktRegN, BefolkningCKM, BefolkningNy, DodaHandelseK, DodaHandelseKCKM, FoddaK, FoddaKCKM, FruktsamhetSum, LivslangdEttariga.
+  Arkiv data/downloads/20261108T124756Z; bearbetat av scripts/prepare_demography.py till data/demography-inputs.json.</p>
+  <p>Varje basår använder bara data fram till det året, så att en prognos från det kan jämföras med det som hände sedan.
+  Varje basår har en egen dödlighetstrend, skattad ur rikets livslängdstabeller de tio åren fram till basåret.
+  SCB:s framskrivna dödlighet och fruktsamhet kommer från framskrivningen 2026 och är bara rättvisa för basåret 2025.</p></html>"));
+    end SCB;
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -30}, {92, 40}}, textString = "Data"), Text(textColor = {90, 110, 130}, extent = {{-92, -80}, {92, -35}}, textString = "basår")}), 
+      Documentation(info = "<html><p>Varje konstant innehåller det som publicerats för ett basår. Modellen kalibrerar
+dödlighet och restflöden från den (se Assumptions). Starta från ett annat år med
+<code>Annual(base = Data.motala2024)</code>. Värdena avser kommunen, inte koncernen.</p>
+<p>Källor: Motala kommuns årsredovisningar, SCB och Kolada; se respektive post och paketet <code>SCB</code>.</p></html>"));
+  end Data;
+
+  partial model Assumptions "Gemensamma scenarioparametrar: basår, antaganden och årsvisa banor"
+    parameter Integer horizon(min = 1) = 8 "Antal årssteg som räknas fram; tiden mäts i år från basåret";
+    parameter Data.BaseYear base = Data.motala2025 "Basår med utfall från bokslutet; Data.motala2024 startar modellen ett år tidigare";
+    // Befolkning och demografi
+    parameter Real p0[5] = Data.reconcile(base.cohorts[3, :], base.reportedPopulation[3]) "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid basårets slut, avstämda mot redovisad folkmängd";
+    parameter Real revenuePopulation0[5] = Data.reconcile(base.cohorts[2, :], base.reportedPopulation[2]) "Invånare per åldersgrupp vid slutet av året före basåret: den folkmängd basårets skatt och bidrag bygger på";
+    parameter Real deathRates[5] = Data.mortality(p0, base.deaths) "Dödsrisk per åldersgrupp och år; 65+ ger basårets observerade antal döda";
+    parameter Real residualMigration[5] = Data.calibratedMigration(base.cohorts, base.reportedPopulation, base.births, deathRates) "Kalibrerat restflöde per åldersgrupp, personer per år (flyttningar och statistiska justeringar)";
+    parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på åldersgrupperna; summerar till 1";
+    parameter Real births0 = base.births[2] "Födda under basåret";
+    parameter Real migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer";
+    parameter Real birthChange = 0 "Relativ förändring av antalet födda, andel (0,1 = tio procent fler)";
+    // Verksamhet
+    parameter Real educationWeights[3] = {0.25, 0.60, 0.15} "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet; summerar till 1";
+    parameter Real sectorCosts[3] = {1250, 600, 1173} "Kostnadsvikter för utbildning, äldreomsorg och övrig verksamhet, mnkr (illustrativa)";
+    parameter Real adjustment = 0.5 "Andel av glappet mellan behov och kapacitet som stängs varje år (0 = låst, 1 = direkt)";
+    parameter Real fixedShare = 0.25 "Andel av kapaciteten som inte följer behovet";
+    parameter Real serviceAdjustment[3] = fill(adjustment, 3) "Årlig kapacitetsanpassning för utbildning, äldreomsorg och övrigt";
+    parameter Real serviceFixedShare[3] = fill(fixedShare, 3) "Fast andel av kapaciteten för utbildning, äldreomsorg och övrigt";
+    parameter Real oldestRelativeCare = 1 "Omsorgskostnad per invånare 90+ jämfört med 80-89; Kolada saknar uppdelning, därför 1 tills data finns";
+    parameter Real careWeights[3] = {base.careCostPerInhabitant[1], base.careCostPerInhabitant[2], base.careCostPerInhabitant[2]*oldestRelativeCare}
+      "Äldreomsorgens kostnad per invånare 65-79, 80-89 och 90+, kr (Kolada)";
+    // Drift: utfall i basåret
+    parameter Real payroll0 = base.payroll "Lönekostnader exklusive pensioner i basåret, mnkr";
+    parameter Real pension0 = base.pension "Pensionskostnad i basåret, mnkr";
+    parameter Real otherOperatingExpense0 = base.otherOperatingExpense "Övriga verksamhetskostnader i basåret, mnkr";
+    parameter Real operatingRevenue0 = base.operatingRevenue "Verksamhetens intäkter i basåret (avgifter, försäljning, riktade bidrag), mnkr";
+    parameter Real netCostRoundingAdjustment = base.netCostRoundingAdjustment "Avrundningsjustering som stämmer av delposterna mot redovisad nettokostnad, mnkr";
+    // Intäkter, kapital och finansiering: utfall i basåret
+    parameter Real tax0 = base.tax "Skatteintäkter i basåret, mnkr";
+    parameter Real grants0 = base.grants "Generella statsbidrag och utjämning i basåret, mnkr";
+    parameter Real debt0 = base.debt "Låneskuld till banker och kreditinstitut vid basårets slut, mnkr";
+    parameter Real cash0 = base.cash "Kassa och bank vid basårets slut, mnkr";
+    parameter Real assets0 = base.assets "Byggnader, anläggningar, maskiner och inventarier vid basårets slut, exklusive pågående investeringar, mnkr";
+    parameter Real depreciation0 = base.depreciation "Avskrivningar i basåret, mnkr";
+    parameter Real financialIncome = base.financialIncome "Finansiella intäkter per år, mnkr";
+    parameter Real otherFinancialExpense = base.otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
+    // Tillväxt och priser
+    parameter Real taxGrowth = 0.035 "Skatteunderlagets årliga tillväxt, andel";
+    parameter Real grantGrowth = 0.02 "Generella bidragens årliga tillväxt, andel";
+    parameter Real wageGrowth = 0.03 "Årlig löneökning, andel";
+    parameter Real priceGrowth = 0.02 "Årlig prisökning för övriga kostnader, andel";
+    parameter Real productivityGrowth = 0 "Årlig produktivitetsökning, andel; minskar lönekostnaden för samma volym";
+    parameter Real pensionGrowth = 0.02 "Pensionskostnadens årliga ökning, andel";
+    parameter Real operatingRevenueGrowth = 0.02 "Verksamhetsintäkternas årliga ökning, andel";
+    parameter Real taxRate = base.taxRate "Kommunal skattesats i scenariot, procent";
+    parameter Real baseTaxRate = base.taxRate "Kommunal skattesats i basåret, procent";
+    parameter Real equalisationOffset = 0.95 "Andel av en lokal avvikelse i skatteunderlaget som utjämningen tar tillbaka (förenklad)";
+    parameter Real populationRevenueElasticity = 1 "Hur starkt skatt och bidrag följer folkmängden (1 = proportionellt)";
+    parameter Real interestRate = base.interestExpense/base.openingDebt "Genomsnittlig låneränta på ingående skuld, andel; basårets räntekostnad delad med skulden vid basårets början";
+    parameter Real investment = base.investment "Årliga investeringar, mnkr";
+    // Årsvisa banor; första värdet gäller år 1
+    parameter Real residualMigrationPath[horizon, 5] = {residualMigration for i in 1:horizon} "Restflöde per år och åldersgrupp, personer; från en extern befolkningsbana eller kalibreringen";
+    parameter Real wageGrowthPath[horizon] = fill(wageGrowth, horizon) "Löneökning per år, andel";
+    parameter Real priceGrowthPath[horizon] = fill(priceGrowth, horizon) "Prisökning per år, andel";
+    parameter Real pensionExpensePath[horizon] = {pension0*(1 + pensionGrowth)^i for i in 1:horizon} "Pensionskostnad per år, mnkr";
+    parameter Real pensionCashPaymentsPath[horizon] = pensionExpensePath "Pensionsutbetalningar per år, mnkr; illustrativa tills en egen källa finns";
+    parameter Real referenceTax[horizon] = {tax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr (SKR eller illustrativ)";
+    parameter Real referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr (SKR eller illustrativ)";
+    parameter Real referencePopulation[horizon] = fill(sum(p0), horizon) "Folkmängd som referensbanan bygger på, personer";
+    parameter Real nationalPopulation0 = Data.SCB.nationalPopulationAt(base.year - 1) "Rikets folkmängd vid slutet av året före basåret, personer (SCB)";
+    parameter Real nationalPopulationPath[horizon] = {Data.SCB.nationalPopulationAt(base.year + i - 1) for i in 1:horizon}
+      "Rikets folkmängd vid slutet av året före varje prognosår, personer (SCB: utfall, sedan framskrivning)";
+    parameter Boolean importedRevenue = false "Sant när referensbanan är importerad från SKR";
+    parameter Boolean revenueFromReference = false "Skatt och bidrag följer referensbanan exakt (till exempel budgetens belopp)";
+    parameter Real investmentPath[horizon] = fill(investment, horizon) "Investeringar per år, mnkr; tas i bruk samma år";
+    parameter Real interestRatePath[horizon] = fill(interestRate, horizon) "Låneränta på ingående skuld per år, andel";
+    parameter Real migrationDeltaPath[horizon] = fill(migrationDelta, horizon) "Förändrat flyttnetto per år, personer";
+    parameter Real birthChangePath[horizon] = fill(birthChange, horizon) "Relativ förändring av födda per år, andel";
+    final parameter Real life = assets0/depreciation0 "Sammanvägd avskrivningstid, år";
   initial equation
-    assert(horizon >= 1,"horizon must be at least one year");
-    assert(min(p0) > 0,"Every initial cohort must be positive");
-    assert(min(deathRates) >= 0 and max(deathRates) <= 1,"deathRates must lie in [0,1]");
-    assert(min(migrationWeights) >= 0 and abs(sum(migrationWeights)-1) < 1e-10,
-      "migrationWeights must be nonnegative and sum to one");
-    assert(min(educationWeights) >= 0 and abs(sum(educationWeights)-1) < 1e-10,
-      "educationWeights must be nonnegative and sum to one");
-    assert(min(sectorCosts) >= 0 and sum(sectorCosts) > 0,"sectorCosts must define positive total service weights");
-    assert(min(serviceAdjustment) >= 0 and max(serviceAdjustment) <= 1,"serviceAdjustment must lie in [0,1]");
-    assert(min(serviceFixedShare) >= 0 and max(serviceFixedShare) <= 1,"serviceFixedShare must lie in [0,1]");
-    assert(assets0 > 0 and depreciation0 > 0 and depreciation0 <= assets0,
-      "Initial depreciable assets and depreciation must imply a life of at least one year");
-    assert(debt0 >= 0 and cash0 >= 0,"Initial debt and cash must be nonnegative");
-    assert(baseTaxRate > 0 and taxRate >= 0,"baseTaxRate must be positive and taxRate nonnegative");
-    assert(min(referencePopulation) > 0,"referencePopulation must be positive in every year");
-    assert(min(investmentPath) >= 0,"investmentPath must be nonnegative; disposals are not modelled");
-    assert(births0 >= 0 and min(birthChangePath) >= -1,"Birth assumptions must not produce negative births");
-    assert(min(pensionExpensePath) >= 0 and min(pensionCashPaymentsPath) >= 0,"Pension paths must be nonnegative");
-    assert(taxGrowth > -1 and grantGrowth > -1 and wageGrowth > -1 and priceGrowth > -1
-      and productivityGrowth > -1 and pensionGrowth > -1 and operatingRevenueGrowth > -1,
-      "Annual growth rates must exceed -1 (rates are fractions, not percentages)");
-    // The year-by-year paths override the scalars above, so they need the same limits.
-    // Without these, wageGrowthPath[k]=-1 zeroes payroll and a negative interest rate books interest as income.
-    assert(min(wageGrowthPath) > -1 and min(priceGrowthPath) > -1,
-      "wageGrowthPath and priceGrowthPath must exceed -1 in every year (fractions, not percentages)");
-    assert(min(interestRatePath) >= 0 and max(interestRatePath) <= 0.3,
-      "interestRatePath must lie in [0,0.3] in every year (fractions, not percentages)");
-    assert(min(referenceTax) > 0 and min(referenceGrants) > 0,
-      "referenceTax and referenceGrants must be positive in every year");
-    assert(equalisationOffset >= 0 and equalisationOffset <= 1,"equalisationOffset must lie in [0,1]");
-    assert(payroll0 >= 0 and pension0 >= 0 and otherOperatingExpense0 >= 0 and operatingRevenue0 >= 0,
-      "Initial operating components must be nonnegative");
+    assert(horizon >= 1, "horizon måste vara minst ett år");
+    assert(min(p0) > 0, "p0: varje åldersgrupp måste ha invånare");
+    assert(min(deathRates) >= 0 and max(deathRates) <= 1, "deathRates måste ligga mellan 0 och 1");
+    assert(min(migrationWeights) >= 0 and abs(sum(migrationWeights) - 1) < 1e-10, "migrationWeights måste vara icke-negativa och summera till 1");
+    assert(min(educationWeights) >= 0 and abs(sum(educationWeights) - 1) < 1e-10, "educationWeights måste vara icke-negativa och summera till 1");
+    assert(min(sectorCosts) >= 0 and sum(sectorCosts) > 0, "sectorCosts måste ge positiva kostnadsvikter");
+    assert(min(serviceAdjustment) >= 0 and max(serviceAdjustment) <= 1, "serviceAdjustment måste ligga mellan 0 och 1");
+    assert(min(serviceFixedShare) >= 0 and max(serviceFixedShare) <= 1, "serviceFixedShare måste ligga mellan 0 och 1");
+    assert(assets0 > 0 and depreciation0 > 0 and depreciation0 <= assets0, "assets0 och depreciation0 måste ge en avskrivningstid på minst ett år");
+    assert(debt0 >= 0 and cash0 >= 0, "debt0 och cash0 får inte vara negativa");
+    assert(baseTaxRate > 0 and taxRate >= 0, "baseTaxRate måste vara positiv och taxRate icke-negativ");
+    assert(min(referencePopulation) > 0, "referencePopulation måste vara positiv varje år");
+    assert(min(investmentPath) >= 0, "investmentPath får inte vara negativ; försäljningar av tillgångar modelleras inte");
+    assert(births0 >= 0 and min(birthChangePath) >= -1, "births0 och birthChangePath får inte ge negativt antal födda");
+    assert(min(pensionExpensePath) >= 0 and min(pensionCashPaymentsPath) >= 0, "pensionExpensePath och pensionCashPaymentsPath får inte vara negativa");
+    assert(taxGrowth > -1 and grantGrowth > -1 and wageGrowth > -1 and priceGrowth > -1 and productivityGrowth > -1 and pensionGrowth > -1 and operatingRevenueGrowth > -1, "Årliga tillväxttakter måste vara större än -1 (andelar, inte procent)");
+// Årsbanorna ersätter skalärerna ovan och behöver samma gränser.
+// Utan dem nollställer wageGrowthPath[k] = -1 lönerna och en negativ ränta bokförs som intäkt.
+    assert(min(wageGrowthPath) > -1 and min(priceGrowthPath) > -1, "wageGrowthPath och priceGrowthPath måste vara större än -1 varje år (andelar, inte procent)");
+    assert(min(interestRatePath) >= 0 and max(interestRatePath) <= 0.3, "interestRatePath måste ligga mellan 0 och 0,3 varje år (andelar, inte procent)");
+    assert(min(referenceTax) > 0 and min(referenceGrants) > 0, "referenceTax och referenceGrants måste vara positiva varje år");
+    assert(equalisationOffset >= 0 and equalisationOffset <= 1, "equalisationOffset måste ligga mellan 0 och 1");
+    assert(payroll0 >= 0 and pension0 >= 0 and otherOperatingExpense0 >= 0 and operatingRevenue0 >= 0, "Driftens utgångsvärden får inte vara negativa");
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, pattern = LinePattern.Dash, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 8), Text(textColor = {35, 50, 65}, extent = {{-92, 0}, {92, 60}}, textString = "Antaganden"), Text(textColor = {90, 110, 130}, extent = {{-92, -70}, {92, -10}}, textString = "basklass")}), Documentation(info = "<html><p>Alla parametrar som ett scenario kan ändra. Utgångsvärdena hämtas från basårsposten
+<code>base</code> (bokslutet), antagandena har illustrativa standardvärden och de årsvisa banorna gör det möjligt att ange
+ett värde per prognosår. Tillväxt anges som andel (0,03 = tre procent), belopp i mnkr och löpande priser.</p></html>"));
   end Assumptions;
 
-  package Components "Annual components sharing one event clock"
-    model Demography "Five cohorts with explicit population conservation"
-      parameter Real p0[5];
-      parameter Real deathRates[5];
-      parameter Real residualMigration[5];
-      input Real residualMigrationInput[5]=residualMigration;
-      parameter Real migrationWeights[5];
-      parameter Real births0;
-      input Boolean tick;
-      input Real migrationDelta;
-      input Real birthChange;
-      discrete output Real p[5](start=p0,each fixed=true);
-      discrete output Real population(start=sum(p0),fixed=true);
-      discrete output Real births(start=births0,fixed=true);
-      discrete output Real deaths(start=0,fixed=true);
-      discrete output Real migration(start=0,fixed=true);
-      discrete output Real populationBalance(start=0,fixed=true) "Persons; must be zero";
-    protected
-      discrete Real survivors[5](each start=0,each fixed=true);
-      discrete Real ageOut[5](each start=0,each fixed=true);
+  package Interfaces "Riktade årsvärden mellan komponenterna"
+    connector Signal = Real "Ett värde för året" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
+
+    connector Cohorts "Befolkning per åldersgrupp, de äldre uppdelade och totalt, personer"
+      Real p[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+";
+      Real older[3] "Invånare 65-79, 80-89 och 90+";
+      Real population "Folkmängd";
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid)}));
+    end Cohorts;
+
+    connector DemographyDrivers "Årets demografiska antaganden"
+      Real residualMigration[5] "Restflöde per åldersgrupp, personer";
+      Real migrationDelta "Förändrat flyttnetto, personer";
+      Real birthChange "Relativ förändring av antalet födda, andel";
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
+    end DemographyDrivers;
+
+    connector CostDrivers "Årets kostnadsantaganden"
+      Real wageGrowth "Löneökning, andel";
+      Real priceGrowth "Prisökning, andel";
+      Real pensionExpense "Pensionskostnad, mnkr";
+      Real pensionCashPayments "Pensionsutbetalningar, mnkr";
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
+    end CostDrivers;
+
+    connector RevenueReference "Årets referensvärden för skatt och bidrag (SKR eller illustrativa) och folkmängden de bygger på"
+      Real tax "Skatteintäkter, mnkr";
+      Real grants "Generella bidrag och utjämning, mnkr";
+      Real population "Folkmängd, personer";
+      Real nationalPopulation "Rikets folkmängd vid slutet av föregående år, personer";
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
+    end RevenueReference;
+
+    connector OperatingCost "Driftens nettokostnad och dess pensionsdelar, mnkr"
+      Real cost "Verksamhetens nettokostnad, mnkr";
+      Real pensionExpense "Pensionskostnad, mnkr";
+      Real pensionCashPayments "Pensionsutbetalningar, mnkr";
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid)}));
+    end OperatingCost;
+
+    connector TaxAndGrants "Skatteintäkter och generella bidrag, mnkr"
+      Real tax "Skatteintäkter, mnkr";
+      Real grants "Generella statsbidrag och utjämning, mnkr";
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid)}));
+    end TaxAndGrants;
+    connector SignalInput = input Signal "Ingång: årsvärde" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector SignalOutput = output Signal "Utgång: årsvärde" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector CohortsInput = input Cohorts "Ingång: befolkning" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector CohortsOutput = output Cohorts "Utgång: befolkning" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector DemographyDriversInput = input DemographyDrivers "Ingång: demografiska antaganden" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector DemographyDriversOutput = output DemographyDrivers "Utgång: demografiska antaganden" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector CostDriversInput = input CostDrivers "Ingång: kostnadsantaganden" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector CostDriversOutput = output CostDrivers "Utgång: kostnadsantaganden" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector RevenueReferenceInput = input RevenueReference "Ingång: referens för skatt och bidrag" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector RevenueReferenceOutput = output RevenueReference "Utgång: referens för skatt och bidrag" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector OperatingCostInput = input OperatingCost "Ingång: driftens kostnader" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector OperatingCostOutput = output OperatingCost "Utgång: driftens kostnader" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {35, 115, 85}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector TaxAndGrantsInput = input TaxAndGrants "Ingång: skatt och bidrag" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    connector TaxAndGrantsOutput = output TaxAndGrants "Utgång: skatt och bidrag" annotation(
+      Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Polygon(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-100, 100}, {100, 0}, {-100, -100}, {-100, 100}})}));
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Polygon(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, points = {{-80, 40}, {-20, 0}, {-80, -40}, {-80, 40}}), Line(points = {{-20, 0}, {20, 0}}, color = {40, 95, 140}, thickness = 0.5), Polygon(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, points = {{20, 40}, {80, 0}, {20, -40}, {20, 40}})}), 
+      Documentation(info = "<html><p>Kopplingarna för årets värden från en komponent till nästa. Varje koppling har en
+avsändare (utgång, ihålig triangel) och en eller flera mottagare (ingång, fylld triangel). Det är orsakssamband, inte
+fysiska flöden: bokföringens samband skrivs ut i komponenterna.</p></html>"));
+  end Interfaces;
+
+  package Components "Modellens delar; alla räknar ett steg per år med samma kalender"
+    model Calendar "Gemensam årskalender: ett steg per år, inga efter prognoshorisonten"
+      parameter Integer horizon(min = 1) "Antal årssteg";
+      parameter Integer baseYear "Basår: simuleringen startar vid tiden baseYear, som är bokslutet 31 december detta år";
+      Integer year = baseYear + yearIndex "Kalenderår för det senast beräknade året";
+      Boolean tick "Sant i det ögonblick ett år räknas fram";
+      discrete Integer yearIndex(start = 0, fixed = true) "Antal beräknade år";
+      Integer pathIndex "Vilket värde i de årsvisa banorna som gäller; första årets värde vid tiden 0";
     equation
-      assert(min(p) >= 0,"Scenario exhausts an age cohort");
-      assert(population > 0,"Scenario exhausts the population");
-      assert(abs(populationBalance) < 1e-7*max(1,population),"Population balance failed");
-    algorithm
+      tick = sample(baseYear + 1, 1) and time <= baseYear + horizon;
       when tick then
-        births := births0*pre(p[4])/p0[4]*(1+birthChange);
+        yearIndex = pre(yearIndex) + 1;
+      end when;
+      pathIndex = max(1, yearIndex);
+      annotation(
+        defaultComponentName = "calendar",
+        defaultComponentPrefixes = "inner",
+        Icon(coordinateSystem(extent = {{-100, -60}, {100, 60}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 5}, {95, 50}}, textString = "Kalender", fontSize = 18, textColor = {35, 50, 65}), Text(extent = {{-95, -50}, {95, 0}}, textString = "Start: bokslut %baseYear", fontSize = 14, textColor = {90, 110, 130})}),
+        Documentation(info = "<html><p>Deklareras en gång som <code>inner</code>; alla komponenter läser den som <code>outer</code>.
+Tiden är kalenderår: simuleringen startar vid <code>baseYear</code> (bokslutet 31 december det året) och räknar fram ett år
+i taget, så att tiden 2026 är 31 december 2026. Sätt simuleringens starttid till basåret och sluttiden till basåret plus
+antalet år.</p></html>"));
+    end Calendar;
+
+    model Scenario "Årets antaganden, hämtade ur de årsvisa banorna"
+      outer Calendar calendar;
+      parameter Integer horizon(min = 1) "Antal årssteg";
+      parameter Real residualMigrationPath[horizon, 5] "Restflöde per år och åldersgrupp, personer";
+      parameter Real migrationDeltaPath[horizon] "Förändrat flyttnetto per år, personer";
+      parameter Real birthChangePath[horizon] "Relativ förändring av födda per år, andel";
+      parameter Real wageGrowthPath[horizon] "Löneökning per år, andel";
+      parameter Real priceGrowthPath[horizon] "Prisökning per år, andel";
+      parameter Real pensionExpensePath[horizon] "Pensionskostnad per år, mnkr";
+      parameter Real pensionCashPaymentsPath[horizon] "Pensionsutbetalningar per år, mnkr";
+      parameter Real referenceTax[horizon] "Referensbana för skatteintäkter, mnkr";
+      parameter Real referenceGrants[horizon] "Referensbana för generella bidrag, mnkr";
+      parameter Real referencePopulation[horizon] "Folkmängd som referensbanan bygger på, personer";
+      parameter Real nationalPopulationPath[horizon] "Rikets folkmängd vid slutet av året före varje prognosår, personer";
+      parameter Real investmentPath[horizon] "Investeringar per år, mnkr";
+      parameter Real interestRatePath[horizon] "Låneränta per år, andel";
+      Interfaces.DemographyDriversOutput demography "Årets demografiska antaganden" annotation(
+        Placement(transformation(origin = {-624, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-260, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.CostDriversOutput operations "Årets löne-, pris- och pensionsantaganden" annotation(
+        Placement(transformation(origin = {648, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {270, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.RevenueReferenceOutput revenue "Årets referens för skatt och bidrag" annotation(
+        Placement(transformation(origin = {-720, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 180), iconTransformation(origin = {-300, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 180)));
+      Interfaces.SignalOutput investment "Årets investeringar, mnkr" annotation(
+        Placement(transformation(origin = {240, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {100, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.SignalOutput interestRate "Årets låneränta på ingående skuld, andel" annotation(
+        Placement(transformation(origin = {720, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {300, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+    equation
+      demography.residualMigration = residualMigrationPath[calendar.pathIndex, :];
+      demography.migrationDelta = migrationDeltaPath[calendar.pathIndex];
+      demography.birthChange = birthChangePath[calendar.pathIndex];
+      operations.wageGrowth = wageGrowthPath[calendar.pathIndex];
+      operations.priceGrowth = priceGrowthPath[calendar.pathIndex];
+      operations.pensionExpense = pensionExpensePath[calendar.pathIndex];
+      operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex];
+      revenue.tax = referenceTax[calendar.pathIndex];
+      revenue.grants = referenceGrants[calendar.pathIndex];
+      revenue.population = referencePopulation[calendar.pathIndex];
+      revenue.nationalPopulation = nationalPopulationPath[calendar.pathIndex];
+      investment = investmentPath[calendar.pathIndex];
+      interestRate = interestRatePath[calendar.pathIndex];
+      annotation(
+        Icon(coordinateSystem(extent = {{-300, -25}, {300, 25}}), graphics = {Rectangle(extent = {{-300, -25}, {300, 25}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-290, -20}, {290, 20}}, textString = "Scenario: årets antaganden", fontSize = 16, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Plockar ut årets värden ur de årsvisa banorna. Beslutsparametrar (investeringar,
+skattesats) och yttre antaganden (löner, priser, ränta, SKR:s referens för skatt och bidrag, befolkningsbanan) kommer in i
+modellen här, så att varje komponent får dem genom en koppling.</p></html>"));
+    end Scenario;
+
+    partial model DemographyBase "Det varje demografimodell ska ge: antaganden in, befolkning ut"
+      outer Calendar calendar;
+      Interfaces.DemographyDriversInput drivers "Årets demografiska antaganden" annotation(
+        Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.CohortsOutput cohorts "Befolkning per åldersgrupp vid årets slut" annotation(
+        Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      discrete output Real population "Folkmängd vid årets slut";
+      discrete output Real births "Födda under året";
+      discrete output Real deaths "Döda under året";
+      discrete output Real migration "Flyttnetto och restflöden under året";
+      discrete output Real populationBalance "Kontroll av befolkningsbalansen, personer; ska vara noll";
+    equation
+      assert(population > 0, "Scenariot tömmer befolkningen");
+      assert(abs(populationBalance) < 1e-7*max(1, population), "Befolkningsbalansen stämmer inte");
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, pattern = LinePattern.Dash, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 8), Text(textColor = {35, 50, 65}, extent = {{-92, 0}, {92, 60}}, textString = "Demografi"), Text(textColor = {90, 110, 130}, extent = {{-92, -70}, {92, -10}}, textString = "basklass")}), Documentation(info = "<html><p>En demografimodell som bygger på denna klass kan ersätta den i
+<code>Annual</code> (<code>redeclare</code>). Resten av modellen ser bara kopplingen <code>cohorts</code>.</p></html>"));
+    end DemographyBase;
+
+    package Fertility "Valbara födelsemodeller för CohortDemography"
+      partial model Partial "Födda under året utifrån befolkningen vid årets början"
+        outer Calendar calendar;
+        input Real population[2, 101] "Befolkning vid årets början, ettårsåldrar 0-100+ per kön (1 män, 2 kvinnor)";
+        parameter Real births0 "Födda under basåret";
+        parameter Real population0[2, 101] "Befolkning vid basårets slut";
+        output Real births "Födda under året";
+      protected
+        Real exposure[101] = cat(1, {0.5*population[2, 1]}, {0.5*(population[2, a] + population[2, a - 1]) for a in 2:101})
+          "Kvinnor i varje ålder under året: hälften av dem i åldern och hälften av dem ett år yngre vid årets början";
+        annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, pattern = LinePattern.Dash, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 8), Text(textColor = {35, 50, 65}, extent = {{-92, 0}, {92, 60}}, textString = "Födda"), Text(textColor = {90, 110, 130}, extent = {{-92, -70}, {92, -10}}, textString = "basklass")}), Documentation(info = "<html><p>Barn föds under året, så en kvinna räknas till hälften i sin ålder vid årets
+början och till hälften i nästa. CohortDemography delar upp de födda i pojkar och flickor.</p></html>"));
+      end Partial;
+
+      model Constant "Konstant summerad fruktsamhet; standard 1,41 barn per kvinna"
+        extends Partial;
+        parameter Real totalFertility = 1.41 "Summerad fruktsamhet: barn per kvinna under ett liv med årets fruktsamhet";
+        parameter Real profile[101] = Data.SCB.fertilityProfile "Andel av de födda vid varje ålder hos modern";
+      equation
+        births = totalFertility*profile*exposure;
+        annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 15), Text(textColor = {40, 95, 140}, extent = {{-92, 10}, {92, 70}}, textString = "Födda"), Text(textColor = {35, 50, 65}, extent = {{-92, -70}, {92, -5}}, textString = "TFR %totalFertility")}));
+      end Constant;
+
+      model Projected "Summerad fruktsamhet enligt SCB:s riksframskrivning, år för år"
+        extends Partial;
+        parameter Integer firstYear "Kalenderår för det första årssteget";
+        parameter Real scale = 1 "Motalas fruktsamhet i förhållande till rikets";
+        parameter Real profile[101] = Data.SCB.fertilityProfile "Andel av de födda vid varje ålder hos modern";
+        Real totalFertility = scale*Data.SCB.projectedTotalFertility[max(1, min(size(Data.SCB.projectedTotalFertility, 1), firstYear - Data.SCB.projectionFirstYear + max(1, calendar.yearIndex)))] "Årets summerade fruktsamhet";
+      equation
+        births = totalFertility*profile*exposure;
+        annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 15), Text(textColor = {40, 95, 140}, extent = {{-92, 10}, {92, 70}}, textString = "Födda"), Text(textColor = {35, 50, 65}, extent = {{-92, -70}, {92, -5}}, textString = "SCB-prognos")}));
+      end Projected;
+
+      model Legacy "Födda följer antalet 19-64-åringar, som i femgruppsmodellen"
+        extends Partial;
+      equation
+        births = births0*sum(population[:, 20:65])/sum(population0[:, 20:65]);
+        annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 15), Text(textColor = {40, 95, 140}, extent = {{-92, 10}, {92, 70}}, textString = "Födda"), Text(textColor = {35, 50, 65}, extent = {{-92, -70}, {92, -5}}, textString = "följer 19-64")}));
+      end Legacy;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -30}, {92, 40}}, textString = "Födda"), Text(textColor = {90, 110, 130}, extent = {{-92, -80}, {92, -35}}, textString = "modeller")}), Documentation(info = "<html><p>Välj med till exempel <code>redeclare Fertility.Projected fertility(firstYear = 2026)</code>.
+Alla utom Legacy använder SCB:s åldersprofil för fruktsamheten. Prövning mot utfallet 2021-2025
+(scripts/hindcast_demography.py) gav minst fel med Constant och 1,41.</p></html>"));
+    end Fertility;
+
+    model CohortDemography "Kohort-komponentmodell: ettårsåldrar 0-100+ per kön, som i SCB:s framskrivningar"
+      extends DemographyBase(population(start = sum(population0), fixed = true), births(start = data.births, fixed = true),
+        deaths(start = data.deaths, fixed = true), migration(start = 0, fixed = true), populationBalance(start = 0, fixed = true));
+      parameter Data.SCB.DemographyYear data = Data.SCB.motala2025 "Basår: befolkning, dödsrisk och kalibrering (SCB)";
+      parameter Real reportedTotal = sum(data.population) "Folkmängd att starta från; ettårsåldrarna skalas till den";
+      parameter Real population0[2, 101] = data.population*reportedTotal/sum(data.population) "Befolkning vid basårets slut, ettårsåldrar per kön";
+      parameter Real mortalityRatio[2] = data.mortalityRatio "Motalas dödlighet i förhållande till rikets livslängdstabell, män och kvinnor";
+      parameter Boolean mortalityImprovement = true "Låt dödsriskerna fortsätta sjunka";
+      parameter Real improvement[2, 101] = if mortalityImprovement then data.mortalityImprovement else zeros(2, 101)
+        "Årlig minskning av dödsrisken; basårets historiska trend, eller Data.SCB.mortalityImprovement för SCB:s framskrivning";
+      parameter Real residualMigration[2, 101] = data.residualMigration "Kalibrerat restflöde per ålder och kön, personer per år";
+      parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på 0-6, 7-15, 16-18, 19-64 och 65+";
+      parameter Real shareBoys = data.shareBoys "Andel pojkar bland de födda";
+      replaceable Fertility.Constant fertility constrainedby Fertility.Partial(births0 = data.births, population0 = population0)
+        "Födelsemodell" annotation(choicesAllMatching = true);
+      discrete output Real p[2, 101](start = population0, each fixed = true) "Befolkning vid årets slut, ettårsåldrar per kön";
+      discrete output Real older[3](start = {sum(population0[:, 66:80]), sum(population0[:, 81:90]), sum(population0[:, 91:101])}, each fixed = true)
+        "Invånare 65-79, 80-89 och 90+";
+    protected
+      parameter Integer width[5] = {7, 9, 3, 46, 36} "Antal ettårsåldrar i varje åldersgrupp";
+      parameter Integer group[101] = {if a <= 7 then 1 elseif a <= 16 then 2 elseif a <= 19 then 3 elseif a <= 65 then 4 else 5 for a in 1:101} "Åldersgrupp för varje ettårsålder";
+      parameter Real deltaShape[2, 101] = {{0.5*migrationWeights[group[a]]/width[group[a]] for a in 1:101} for s in 1:2}
+        "Ett förändrat flyttnetto på en person, fördelat på ålder och kön";
+      discrete Real q[2, 101](start = zeros(2, 101), each fixed = true) "Årets dödsrisk";
+      discrete Real survivors[2, 101](start = zeros(2, 101), each fixed = true) "Överlevande från årets början";
+      discrete Real delta[2, 101](start = zeros(2, 101), each fixed = true) "Årets förändrade flyttnetto per ålder och kön";
+      discrete Real natural[2, 101](start = zeros(2, 101), each fixed = true) "Befolkning vid årets slut utan flyttningar";
+    equation
+      fertility.population = pre(p);
+      cohorts.p = {sum(p[:, 1:7]), sum(p[:, 8:16]), sum(p[:, 17:19]), sum(p[:, 20:65]), sum(p[:, 66:101])};
+      cohorts.older = older;
+      cohorts.population = population;
+    algorithm
+      when calendar.tick then
+        q := {{min(1, data.deathRisk[s, a]*mortalityRatio[s]*exp(-improvement[s, a]*calendar.yearIndex)) for a in 1:101} for s in 1:2};
+        births := fertility.births*(1 + drivers.birthChange);
+        survivors := pre(p) .* (ones(2, 101) - q);
+        deaths := sum(pre(p)) - sum(survivors);
+        delta := drivers.migrationDelta*deltaShape;
+        for s in 1:2 loop
+          natural[s, 1] := births*(if s == 1 then shareBoys else 1 - shareBoys);
+          for a in 2:100 loop
+            natural[s, a] := survivors[s, a - 1];
+          end for;
+          natural[s, 101] := survivors[s, 100] + survivors[s, 101];
+        end for;
+        // Restflödet kan inte ta bort fler än som finns i en ålder; det som inte kan tas bort räknas inte som flyttning.
+        p := {{max(0, natural[s, a] + residualMigration[s, a] + delta[s, a]) for a in 1:101} for s in 1:2};
+        older := {sum(p[:, 66:80]), sum(p[:, 81:90]), sum(p[:, 91:101])};
+        population := sum(p);
+        migration := sum(p) - sum(natural);
+        populationBalance := population - pre(population) - births + deaths - migration;
+      end when;
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -75}, {100, 75}}, radius = 8), Text(textColor = {40, 95, 140}, extent = {{-95, 30}, {95, 65}}, textString = "Demography", fontSize = 21), Text(textColor = {35, 50, 65}, extent = {{-95, -27}, {95, 25}}, textString = "Åldrar 0-100+ per kön", fontSize = 16), Text(textColor = {40, 95, 140}, extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14)}),
+        Documentation(info = "<html><p>Kohort-komponentmetoden som SCB använder. Varje år blir alla ett år äldre, en andel dör
+enligt rikets livslängdstabell skalad till Motalas nivå, födslarna kommer från en valbar fruktsamhetsmodell, och
+kalibrerade restflöden plus scenariots förändrade flyttnetto läggs till. Data: <code>Data.SCB</code> (Källa: SCB).</p>
+<p>Dödsrisken vid basåret är de fem senaste livslängdstabellerna flyttade längs trenden och medelvärdesbildade, så att
+ett enskilt ovanligt år inte sätter nivån. Trenden fortsätter framåt om <code>mortalityImprovement</code> är sant.</p>
+<p>Den externa befolkningsbanan i <code>drivers.residualMigration</code> används inte; modellen kalibrerar egna
+restflöden per ettårsålder. <code>older</code> delar 65+ i 65-79, 80-89 och 90+.</p></html>"));
+    end CohortDemography;
+
+    model Demography "Fem åldersgrupper med kontrollerad befolkningsbalans"
+      parameter Real p0[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid basårets slut";
+      parameter Real deathRates[5] "Dödsrisk per åldersgrupp och år";
+      parameter Real migrationWeights[5] "Fördelning av ett förändrat flyttnetto på åldersgrupperna";
+      parameter Real births0 "Födda under basåret";
+      extends DemographyBase(population(start = sum(p0), fixed = true), births(start = births0, fixed = true),
+        deaths(start = 0, fixed = true), migration(start = 0, fixed = true), populationBalance(start = 0, fixed = true));
+      discrete output Real p[5](start = p0, each fixed = true) "Invånare per åldersgrupp vid årets slut";
+      parameter Real olderShares[3] = Data.SCB.olderShares(Data.SCB.motala2025.population) "Fast uppdelning av 65+ i 65-79, 80-89 och 90+ (SCB 2025)";
+    protected
+      discrete Real survivors[5](each start = 0, each fixed = true) "Överlevande från årets början";
+      discrete Real ageOut[5](each start = 0, each fixed = true) "Åldras upp till nästa grupp under året";
+    equation
+      assert(min(p) >= 0, "Scenariot tömmer en åldersgrupp");
+      cohorts.p = p;
+      cohorts.older = p[5]*olderShares;
+      cohorts.population = population;
+    algorithm
+      when calendar.tick then
+        births := births0*pre(p[4])/p0[4]*(1 + drivers.birthChange);
         deaths := sum(pre(p).*deathRates);
-        survivors := pre(p).*(ones(5)-deathRates);
-        ageOut := {survivors[1]/7,survivors[2]/9,survivors[3]/3,survivors[4]/46,0};
+        survivors := pre(p).*(ones(5) - deathRates);
+        ageOut := {survivors[1]/7, survivors[2]/9, survivors[3]/3, survivors[4]/46, 0};
         for i in 1:5 loop
-          p[i] := survivors[i]-ageOut[i]+(if i==1 then births else ageOut[i-1])
-            +residualMigrationInput[i]+migrationDelta*migrationWeights[i];
+          p[i] := survivors[i] - ageOut[i] + (if i == 1 then births else ageOut[i - 1]) + drivers.residualMigration[i] + drivers.migrationDelta*migrationWeights[i];
         end for;
         population := sum(p);
-        migration := sum(residualMigrationInput)+migrationDelta*sum(migrationWeights);
-        populationBalance := population-pre(population)-births+deaths-migration;
+        migration := sum(drivers.residualMigration) + drivers.migrationDelta*sum(migrationWeights);
+        populationBalance := population - pre(population) - births + deaths - migration;
       end when;
-      annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-          Rectangle(extent={{-100,-75},{100,75}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-95,30},{95,65}},textString="Demography",fontSize=21,textColor={40,95,140}),
-          Text(extent={{-95,-27},{95,25}},textString="Five annual cohorts",fontSize=16,textColor={35,50,65}),
-          Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={40,95,140})}),
-        Diagram(coordinateSystem(extent={{-240,-130},{240,130}}),graphics={
-          Text(extent={{-235,85},{235,125}},textString="Demography",fontSize=22,textColor={35,50,65}),
-          Rectangle(extent={{-230,-55},{-100,65}},lineColor={90,110,130},fillColor={245,248,250},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{-65,-55},{65,65}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{100,-55},{230,65}},lineColor={50,120,90},fillColor={236,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-225,35},{-105,60}},textString="Inputs / assumptions",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,35},{60,60}},textString="States / update",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,35},{225,60}},textString="Outputs",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-225,-48},{-105,32}},textString="tick / migration\nBirth change\nAge / death rates",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,-48},{60,32}},textString="p[1:5]\nAnnual cohort step",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,-48},{225,32}},textString="Population\nBirths / deaths\nNet migration",fontSize=13,textColor={35,50,65}),
-          Line(points={{-100,5},{-65,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Line(points={{65,5},{100,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Text(extent={{-235,-125},{235,-75}},textString="Annual cohort balance, in persons; residual migration includes statistical adjustments.",fontSize=12,textColor={35,50,65})}),
-        Documentation(info="<html><p>Annual cohort balance, in persons; residual migration includes statistical adjustments.</p></html>"));
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Demography", fontSize = 21, textColor = {40, 95, 140}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Fem åldersgrupper", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {40, 95, 140})}),
+        Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Demography", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Antaganden\nFödda, flyttnetto\nDödsrisker", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "p[1:5]\nÅrets steg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Folkmängd\nFödda / döda\nFlyttnetto", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Befolkningsbalans per år i personer; restflödet innehåller statistiska justeringar.", fontSize = 12, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Befolkningsbalans för fem breda åldersgrupper, i personer. Varje år åldras en jämnt fördelad
+andel upp till nästa grupp, födda tillkommer i 0-6 och restflödet lägger till flyttningar och statistiska justeringar.
+Används av sajten; CohortDemography är den finare modellen.</p></html>"));
     end Demography;
 
-    model Services "Demand and separate sector capacity adjustment"
-      parameter Real p0[5];
-      parameter Real educationWeights[3];
-      parameter Real sectorCosts[3];
-      parameter Real adjustment[3];
-      parameter Real fixedShare[3];
-      input Boolean tick;
-      input Real p[5];
-      discrete output Real capacity[3](each start=1,each fixed=true);
-      discrete output Real demand[3](each start=1,each fixed=true);
-      discrete output Real educationIndex(start=1,fixed=true);
-      discrete output Real careIndex(start=1,fixed=true);
-      discrete output Real serviceVolume(start=1,fixed=true);
+    model Services "Verksamhetens behov och kapacitet per sektor"
+      parameter Real educationWeights[3] "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet";
+      parameter Real sectorCosts[3] "Kostnadsvikter för utbildning, äldreomsorg och övrigt, mnkr";
+      parameter Real adjustment[3] "Årlig kapacitetsanpassning per sektor (0 = låst, 1 = direkt)";
+      parameter Real fixedShare[3] "Fast andel av kapaciteten per sektor";
+      parameter Real careWeights[3] = {1, 1, 1} "Äldreomsorgens kostnad per invånare 65-79, 80-89 och 90+; bara förhållandet mellan dem spelar roll";
+      outer Calendar calendar;
+      Interfaces.CohortsInput cohorts "Befolkning per åldersgrupp" annotation(
+        Placement(transformation(origin = {-240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      discrete output Real capacity[3](each start = 1, each fixed = true) "Kapacitet för utbildning, äldreomsorg och övrigt, index (basår = 1)";
+      discrete output Real demand[3](each start = 1, each fixed = true) "Behov för utbildning, äldreomsorg och övrigt, index (basår = 1)";
+      discrete output Real educationIndex(start = 1, fixed = true) "Utbildningsbehov, index (basår = 1)";
+      discrete output Real careIndex(start = 1, fixed = true) "Äldreomsorgsbehov viktat efter ålder, index (basår = 1)";
+      discrete Interfaces.SignalOutput serviceVolume(start = 1, fixed = true) "Verksamhetens volym: kostnadsviktad kapacitet, index (basår = 1)" annotation(
+        Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+    protected
+      parameter Real careBase(fixed = false) "Viktat antal äldre vid start";
+      parameter Real cohorts0[5](each fixed = false) "Invånare per åldersgrupp vid start";
+    initial equation
+      careBase = careWeights*cohorts.older;
+      cohorts0 = cohorts.p;
     algorithm
-      when tick then
-        educationIndex := sum({educationWeights[i]*p[i]/p0[i] for i in 1:3});
-        careIndex := p[5]/p0[5];
-        demand := {educationIndex,careIndex,sum(p)/sum(p0)};
-        capacity := pre(capacity)+adjustment.*(fixedShare+(ones(3)-fixedShare).*demand-pre(capacity));
+      when calendar.tick then
+        educationIndex := sum({educationWeights[i]*cohorts.p[i]/cohorts0[i] for i in 1:3});
+        careIndex := careWeights*cohorts.older/careBase;
+        demand := {educationIndex, careIndex, sum(cohorts.p)/sum(cohorts0)};
+        capacity := pre(capacity) + adjustment.*(fixedShare + (ones(3) - fixedShare).*demand - pre(capacity));
         serviceVolume := sum(sectorCosts.*capacity)/sum(sectorCosts);
       end when;
-      annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-          Rectangle(extent={{-100,-75},{100,75}},lineColor={35,115,85},fillColor={234,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-95,30},{95,65}},textString="Services",fontSize=21,textColor={35,115,85}),
-          Text(extent={{-95,-27},{95,25}},textString="Demand / capacity",fontSize=16,textColor={35,50,65}),
-          Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={35,115,85})}),
-        Diagram(coordinateSystem(extent={{-240,-130},{240,130}}),graphics={
-          Text(extent={{-235,85},{235,125}},textString="Services",fontSize=22,textColor={35,50,65}),
-          Rectangle(extent={{-230,-55},{-100,65}},lineColor={90,110,130},fillColor={245,248,250},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{-65,-55},{65,65}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{100,-55},{230,65}},lineColor={50,120,90},fillColor={236,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-225,35},{-105,60}},textString="Inputs / assumptions",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,35},{60,60}},textString="States / update",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,35},{225,60}},textString="Outputs",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-225,-48},{-105,32}},textString="tick / cohorts\nService weights\nAdjustment rates",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,-48},{60,32}},textString="capacity[1:3]\nAnnual adjustment",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,-48},{225,32}},textString="Service demand\nEducation / care\nService volume",fontSize=13,textColor={35,50,65}),
-          Line(points={{-100,5},{-65,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Line(points={{65,5},{100,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Text(extent={{-235,-125},{235,-75}},textString="Three service indices track education, care and other services.",fontSize=12,textColor={35,50,65})}),
-        Documentation(info="<html><p>Three service indices track education, care and other services.</p></html>"));
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {35, 115, 85}, fillColor = {234, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Verksamhet", fontSize = 21, textColor = {35, 115, 85}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Behov / kapacitet", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {35, 115, 85})}),
+        Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Verksamhet", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Befolkning\nKostnadsvikter\nAnpassningstakt", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "capacity[1:3]\nÅrlig anpassning", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Behov\nUtbildning / omsorg\nVolym", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Tre index för utbildning, äldreomsorg och övrig verksamhet.", fontSize = 12, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Behovet av utbildning, äldreomsorg och övrig verksamhet räknas som index från
+befolkningen. Kapaciteten följer behovet med fördröjning, och en fast andel ändras inte. Kapaciteten vägs ihop med
+kostnadsvikterna till verksamhetens volym, som styr driftens kostnader.</p>
+<p>Äldreomsorgens behov viktar 65-79, 80-89 och 90+ efter kostnad per invånare (careWeights, från Kolada). En person 80+
+kostar ungefär sju gånger så mycket som en person 65-79. Med lika vikter blir det antalet invånare 65+.</p></html>"));
     end Services;
 
-    model OperatingAccounts "Accrual expenses separated from pension payments"
-      parameter Real population0;
-      parameter Real payroll0;
-      parameter Real pension0;
-      parameter Real otherOperatingExpense0;
-      parameter Real operatingRevenue0;
-      parameter Real netCostRoundingAdjustment;
-      parameter Real wageGrowth;
-      parameter Real priceGrowth;
-      input Real wageGrowthInput=wageGrowth;
-      input Real priceGrowthInput=priceGrowth;
-      parameter Real operatingRevenueGrowth;
-      parameter Real productivityGrowth;
-      input Boolean tick;
-      input Real population;
-      input Real serviceVolume;
-      input Real pensionExpenseInput;
-      input Real pensionCashPaymentsInput;
-      discrete output Real wageIndex(start=1,fixed=true);
-      discrete output Real priceIndex(start=1,fixed=true);
-      discrete output Real revenueIndex(start=1,fixed=true);
-      discrete output Real productivity(start=1,fixed=true);
-      discrete output Real payroll(start=payroll0,fixed=true);
-      discrete output Real pensionExpense(start=pension0,fixed=true);
-      discrete output Real pensionCashPayments(start=pension0,fixed=true)
-        "Initial value is an illustrative placeholder, not an observed payment";
-      discrete output Real otherOperatingExpense(start=otherOperatingExpense0,fixed=true);
-      discrete output Real operatingRevenue(start=operatingRevenue0,fixed=true);
-      discrete output Real cost(start=payroll0+pension0+otherOperatingExpense0-operatingRevenue0+netCostRoundingAdjustment,fixed=true);
+    model OperatingAccounts "Driftens kostnader och intäkter; pensionskostnad skild från pensionsutbetalning"
+      parameter Real population0 "Folkmängd vid basårets slut";
+      parameter Real payroll0 "Lönekostnader exklusive pensioner i basåret, mnkr";
+      parameter Real pension0 "Pensionskostnad i basåret, mnkr";
+      parameter Real otherOperatingExpense0 "Övriga verksamhetskostnader i basåret, mnkr";
+      parameter Real operatingRevenue0 "Verksamhetens intäkter i basåret, mnkr";
+      parameter Real netCostRoundingAdjustment "Avrundningsjustering, mnkr";
+      parameter Real operatingRevenueGrowth "Verksamhetsintäkternas årliga ökning, andel";
+      parameter Real productivityGrowth "Årlig produktivitetsökning, andel";
+      outer Calendar calendar;
+      Interfaces.CohortsInput cohorts "Befolkning" annotation(
+        Placement(transformation(origin = {-240, -87}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, -50}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      Interfaces.SignalInput serviceVolume "Verksamhetens volym, index" annotation(
+        Placement(transformation(origin = {-240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      Interfaces.CostDriversInput drivers "Årets löne-, pris- och pensionsantaganden" annotation(
+        Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.OperatingCostOutput accounts "Nettokostnad och pensioner till finansieringen" annotation(
+        Placement(transformation(origin = {0, -130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, -75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      discrete output Real wageIndex(start = 1, fixed = true) "Lönenivå, index (basår = 1)";
+      discrete output Real priceIndex(start = 1, fixed = true) "Prisnivå för övriga kostnader, index (basår = 1)";
+      discrete output Real revenueIndex(start = 1, fixed = true) "Taxor och avgifter, index (basår = 1)";
+      discrete output Real productivity(start = 1, fixed = true) "Produktivitet, index (basår = 1)";
+      discrete output Real payroll(start = payroll0, fixed = true) "Lönekostnader exklusive pensioner, mnkr";
+      discrete output Real pensionExpense(start = pension0, fixed = true) "Pensionskostnad, mnkr";
+      discrete output Real pensionCashPayments(start = pension0, fixed = true) "Pensionsutbetalningar, mnkr; utgångsvärdet är illustrativt, inte ett utfall";
+      discrete output Real otherOperatingExpense(start = otherOperatingExpense0, fixed = true) "Övriga verksamhetskostnader, mnkr";
+      discrete output Real operatingRevenue(start = operatingRevenue0, fixed = true) "Verksamhetens intäkter, mnkr";
+      discrete output Real cost(start = payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment, fixed = true) "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
+    equation
+      accounts.cost = cost;
+      accounts.pensionExpense = pensionExpense;
+      accounts.pensionCashPayments = pensionCashPayments;
     algorithm
-      when tick then
-        wageIndex := pre(wageIndex)*(1+wageGrowthInput);
-        priceIndex := pre(priceIndex)*(1+priceGrowthInput);
-        revenueIndex := pre(revenueIndex)*(1+operatingRevenueGrowth);
-        productivity := pre(productivity)*(1+productivityGrowth);
+      when calendar.tick then
+        wageIndex := pre(wageIndex)*(1 + drivers.wageGrowth);
+        priceIndex := pre(priceIndex)*(1 + drivers.priceGrowth);
+        revenueIndex := pre(revenueIndex)*(1 + operatingRevenueGrowth);
+        productivity := pre(productivity)*(1 + productivityGrowth);
         payroll := payroll0*wageIndex*serviceVolume/productivity;
         otherOperatingExpense := otherOperatingExpense0*priceIndex*serviceVolume;
-        operatingRevenue := operatingRevenue0*revenueIndex*population/population0;
-        pensionExpense := pensionExpenseInput;
-        pensionCashPayments := pensionCashPaymentsInput;
-        cost := payroll+pensionExpense+otherOperatingExpense-operatingRevenue+netCostRoundingAdjustment;
+        operatingRevenue := operatingRevenue0*revenueIndex*cohorts.population/population0;
+        pensionExpense := drivers.pensionExpense;
+        pensionCashPayments := drivers.pensionCashPayments;
+        cost := payroll + pensionExpense + otherOperatingExpense - operatingRevenue + netCostRoundingAdjustment;
       end when;
-      annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-          Rectangle(extent={{-100,-75},{100,75}},lineColor={35,115,85},fillColor={234,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-95,30},{95,65}},textString="Operations",fontSize=21,textColor={35,115,85}),
-          Text(extent={{-95,-27},{95,25}},textString="Payroll / pensions\nOther costs / fees",fontSize=16,textColor={35,50,65}),
-          Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={35,115,85})}),
-        Diagram(coordinateSystem(extent={{-240,-130},{240,130}}),graphics={
-          Text(extent={{-235,85},{235,125}},textString="Operations",fontSize=22,textColor={35,50,65}),
-          Rectangle(extent={{-230,-55},{-100,65}},lineColor={90,110,130},fillColor={245,248,250},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{-65,-55},{65,65}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{100,-55},{230,65}},lineColor={50,120,90},fillColor={236,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-225,35},{-105,60}},textString="Inputs / assumptions",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,35},{60,60}},textString="States / update",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,35},{225,60}},textString="Outputs",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-225,-48},{-105,32}},textString="tick / population\nService volume\nPension paths",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,-48},{60,32}},textString="Price / wage indices\nProductivity\nAnnual accounts",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,-48},{225,32}},textString="Payroll / pension\nOther costs / fees\nNet operating cost",fontSize=13,textColor={35,50,65}),
-          Line(points={{-100,5},{-65,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Line(points={{65,5},{100,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Text(extent={{-235,-125},{235,-75}},textString="Pension expense and payments are separate; amounts are nominal mnkr.",fontSize=12,textColor={35,50,65})}),
-        Documentation(info="<html><p>Pension expense and payments are separate; amounts are nominal mnkr.</p></html>"));
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {35, 115, 85}, fillColor = {234, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Drift", fontSize = 21, textColor = {35, 115, 85}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Löner / pensioner\nÖvrigt / avgifter", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {35, 115, 85})}),
+        Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Drift", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Befolkning\nVolym\nPensionsbanor", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "Löne- och prisindex\nProduktivitet\nÅrets bokslut", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Löner / pension\nÖvrigt / avgifter\nNettokostnad", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Pensionskostnad och utbetalning hålls isär; belopp i mnkr, löpande priser.", fontSize = 12, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Driftens nettokostnad byggs upp från bokslutets delar i basåret:</p>
+<ul><li>löner = löner<sub>0</sub> · löneindex · volym / produktivitet</li>
+<li>övriga kostnader = övrigt<sub>0</sub> · prisindex · volym</li>
+<li>verksamhetsintäkter = intäkter<sub>0</sub> · intäktsindex · folkmängd / folkmängd<sub>0</sub></li>
+<li>nettokostnad = löner + pensionskostnad + övriga kostnader - verksamhetsintäkter + avrundning</li></ul>
+<p>Pensionskostnaden och pensionsutbetalningarna hålls isär, eftersom kostnaden påverkar resultatet och utbetalningen
+kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
     end OperatingAccounts;
 
-    model Revenue "Lagged population and illustrative tax-base equalisation"
-      parameter Real p0[5];
-      parameter Real tax0;
-      parameter Real grants0;
-      parameter Real taxRate;
-      parameter Real baseTaxRate;
-      parameter Real equalisationOffset;
-      parameter Real populationRevenueElasticity;
-      parameter Boolean importedRevenue;
-      input Boolean tick;
-      input Real p[5];
-      input Real referenceTax;
-      input Real referenceGrants;
-      input Real referencePopulation;
-      discrete output Real tax(start=tax0,fixed=true);
-      discrete output Real grants(start=grants0,fixed=true);
+    model Revenue "Skatt och generella bidrag: referensbana, föregående års befolkning och förenklad utjämning"
+      parameter Real p0[5] "Invånare per åldersgrupp som basårets skatt och bidrag bygger på (slutet av året före basåret)";
+      parameter Real tax0 "Skatteintäkter i basåret, mnkr";
+      parameter Real grants0 "Generella bidrag och utjämning i basåret, mnkr";
+      parameter Real taxRate "Kommunal skattesats i scenariot, procent";
+      parameter Real baseTaxRate "Kommunal skattesats i basåret, procent";
+      parameter Real equalisationOffset "Andel av en lokal avvikelse i skatteunderlaget som utjämningen tar tillbaka";
+      parameter Real populationRevenueElasticity "Hur starkt skatt och bidrag följer folkmängden";
+      parameter Boolean importedRevenue "Sant när referensbanan är importerad från SKR";
+      parameter Boolean followReference = false "Skatt och bidrag följer referensbanan exakt, utan befolkningseffekt (till exempel budgetens belopp)";
+      parameter Real nationalPopulation0 "Rikets folkmängd vid slutet av året före basåret, personer";
+      outer Calendar calendar;
+      Interfaces.CohortsInput cohorts "Befolkning" annotation(
+        Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.RevenueReferenceInput reference "Årets referens för skatt och bidrag" annotation(
+        Placement(transformation(origin = {-240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      Interfaces.TaxAndGrantsOutput taxAndGrants "Skatt och bidrag till finansieringen" annotation(
+        Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      discrete output Real tax(start = tax0, fixed = true) "Skatteintäkter, mnkr";
+      discrete output Real grants(start = grants0, fixed = true) "Generella statsbidrag och utjämning, mnkr";
     protected
-      discrete Real popFactor(start=1,fixed=true);
-      discrete Real standardTax(start=0,fixed=true);
-      discrete Real composition(start=1,fixed=true);
-      discrete Real deviation(start=0,fixed=true);
+      discrete Real popFactor(start = 1, fixed = true) "Motalas folkmängd i förhållande till rikets, jämfört med året före basåret";
+      discrete Real standardTax(start = 0, fixed = true) "Skatt vid basårets skattesats och sammansättning, mnkr";
+      discrete Real composition(start = 1, fixed = true) "Andel 19-64 år i förhållande till basåret";
+      discrete Real deviation(start = 0, fixed = true) "Skatteeffekt av en ändrad andel i arbetsför ålder, mnkr";
+    equation
+      taxAndGrants.tax = tax;
+      taxAndGrants.grants = grants;
     algorithm
-      when tick then
-        popFactor := if importedRevenue then sum(pre(p))/referencePopulation
-          else (sum(pre(p))/sum(p0))^populationRevenueElasticity;
-        standardTax := referenceTax*popFactor;
-        composition := (pre(p[4])/p0[4])/(sum(pre(p))/sum(p0));
-        deviation := standardTax*(composition-1);
-        tax := (standardTax+deviation)*taxRate/baseTaxRate;
-        grants := referenceGrants*popFactor-equalisationOffset*deviation;
+      when calendar.tick then
+        // Referensbanans tillväxt gäller hela riket; Motalas del följer folkmängden i förhållande till rikets.
+        popFactor := if importedRevenue then sum(pre(cohorts.p))/reference.population else ((sum(pre(cohorts.p))/sum(p0))/(reference.nationalPopulation/nationalPopulation0))^populationRevenueElasticity;
+        standardTax := reference.tax*popFactor;
+        composition := (pre(cohorts.p[4])/p0[4])/(sum(pre(cohorts.p))/sum(p0));
+        deviation := if importedRevenue or followReference then 0 else standardTax*(composition - 1);
+        tax := if followReference then reference.tax*taxRate/baseTaxRate else (standardTax + deviation)*taxRate/baseTaxRate;
+        grants := if followReference then reference.grants else reference.grants*popFactor - equalisationOffset*deviation;
       end when;
-      annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-          Rectangle(extent={{-100,-75},{100,75}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-95,30},{95,65}},textString="Revenue",fontSize=21,textColor={40,95,140}),
-          Text(extent={{-95,-27},{95,25}},textString="Tax / grants",fontSize=16,textColor={35,50,65}),
-          Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={40,95,140})}),
-        Diagram(coordinateSystem(extent={{-240,-130},{240,130}}),graphics={
-          Text(extent={{-235,85},{235,125}},textString="Revenue",fontSize=22,textColor={35,50,65}),
-          Rectangle(extent={{-230,-55},{-100,65}},lineColor={90,110,130},fillColor={245,248,250},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{-65,-55},{65,65}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{100,-55},{230,65}},lineColor={50,120,90},fillColor={236,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-225,35},{-105,60}},textString="Inputs / assumptions",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,35},{60,60}},textString="States / update",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,35},{225,60}},textString="Outputs",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-225,-48},{-105,32}},textString="tick / cohorts\nTax rate\nReference paths",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,-48},{60,32}},textString="Annual tax\nAnnual grants",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,-48},{225,32}},textString="Tax / grants",fontSize=13,textColor={35,50,65}),
-          Line(points={{-100,5},{-65,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Line(points={{65,5},{100,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Text(extent={{-235,-125},{235,-75}},textString="Illustrative demographic response and equalisation, or imported reference paths.",fontSize=12,textColor={35,50,65})}),
-        Documentation(info="<html><p>Illustrative demographic response and equalisation, or imported reference paths.</p></html>"));
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Intäkter", fontSize = 21, textColor = {40, 95, 140}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Skatt / bidrag", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {40, 95, 140})}),
+        Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Intäkter", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Befolkning\nSkattesats\nReferensbanor", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "Årets skatt\nÅrets bidrag", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Skatt / bidrag", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Förenklad befolkningseffekt och utjämning kring en referensbana (SKR eller illustrativ).", fontSize = 12, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Skatt och generella bidrag utgår från en referensbana: SKR:s beräkning för Motala när den
+är importerad, annars en illustrativ tillväxt. Banan skalas med föregående års folkmängd. En ändrad andel i arbetsför ålder
+ändrar skatten, och utjämningen tar tillbaka det mesta av avvikelsen via bidragen. En annan skattesats ändrar bara skatten.</p>
+<p>Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning.</p>
+<p>Med <code>followReference</code> tas referensbanan rakt av, till exempel budgetens belopp; bara en ändrad skattesats
+påverkar då skatten. En importerad SKR-bana innehåller redan befolkningens sammansättning, så då läggs ingen ålderseffekt
+till; banan skalas bara med modellens folkmängd mot SKR:s.</p>
+<p>Befolkningseffekten jämför med <code>p0</code>, folkmängden vid slutet av året före basåret, eftersom basårets skatt
+bygger på folkbokföringen den 1 november året före. Referensbanans tillväxt (till exempel <code>taxGrowth</code>) gäller
+hela rikets skatteunderlag och bidrag, så Motalas del skalas med Motalas folkmängd i förhållande till rikets: växer riket
+medan Motala krymper, minskar Motalas andel.</p></html>"));
     end Revenue;
 
-    model Capital "Blended depreciation proxy; no asset-vintage data assumed"
-      parameter Real assets0;
-      parameter Real depreciation0;
-      parameter Real life;
-      input Boolean tick;
-      input Real investment;
-      discrete output Real assets(start=assets0,fixed=true);
-      discrete output Real depreciation(start=depreciation0,fixed=true);
-      discrete output Real assetBalance(start=0,fixed=true) "mnkr; must be zero";
+    model Capital "Tillgångar och avskrivningar med en sammanvägd avskrivningstid"
+      parameter Real assets0 "Tillgångar vid basårets slut, mnkr";
+      parameter Real depreciation0 "Avskrivningar i basåret, mnkr";
+      parameter Real life "Sammanvägd avskrivningstid, år";
+      outer Calendar calendar;
+      Interfaces.SignalInput investment "Årets investeringar, mnkr" annotation(
+        Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      discrete output Real assets(start = assets0, fixed = true) "Tillgångar vid årets slut, mnkr";
+      discrete Interfaces.SignalOutput depreciation(start = depreciation0, fixed = true) "Årets avskrivningar, mnkr" annotation(
+        Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      discrete output Real assetBalance(start = 0, fixed = true) "Kontroll av tillgångsbalansen, mnkr; ska vara noll";
     equation
-      assert(assets >= 0,"Depreciation exhausts assets");
-      assert(abs(assetBalance) < 1e-7*max(1,assets),"Asset balance failed");
+      assert(assets >= 0, "Avskrivningarna tömmer tillgångarna");
+      assert(abs(assetBalance) < 1e-7*max(1, assets), "Tillgångsbalansen stämmer inte");
     algorithm
-      when tick then
-        depreciation := (pre(assets)+0.5*investment)/life;
-        assets := pre(assets)+investment-depreciation;
-        assetBalance := assets-pre(assets)-investment+depreciation;
+      when calendar.tick then
+        depreciation := (pre(assets) + 0.5*investment)/life;
+        assets := pre(assets) + investment - depreciation;
+        assetBalance := assets - pre(assets) - investment + depreciation;
       end when;
-      annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-          Rectangle(extent={{-100,-75},{100,75}},lineColor={155,95,35},fillColor={255,246,230},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-95,30},{95,65}},textString="Capital",fontSize=21,textColor={155,95,35}),
-          Text(extent={{-95,-27},{95,25}},textString="Assets / depreciation",fontSize=16,textColor={35,50,65}),
-          Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={155,95,35})}),
-        Diagram(coordinateSystem(extent={{-240,-130},{240,130}}),graphics={
-          Text(extent={{-235,85},{235,125}},textString="Capital",fontSize=22,textColor={35,50,65}),
-          Rectangle(extent={{-230,-55},{-100,65}},lineColor={90,110,130},fillColor={245,248,250},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{-65,-55},{65,65}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{100,-55},{230,65}},lineColor={50,120,90},fillColor={236,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-225,35},{-105,60}},textString="Inputs / assumptions",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,35},{60,60}},textString="States / update",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,35},{225,60}},textString="Outputs",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-225,-48},{-105,32}},textString="tick / investment\nBlended asset life",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,-48},{60,32}},textString="assets\nAnnual roll-forward",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,-48},{225,32}},textString="Depreciation\nAsset residual",fontSize=13,textColor={35,50,65}),
-          Line(points={{-100,5},{-65,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Line(points={{65,5},{100,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Text(extent={{-235,-125},{235,-75}},textString="Investment is commissioned in the same year; amounts are in mnkr.",fontSize=12,textColor={35,50,65})}),
-        Documentation(info="<html><p>Investment is commissioned in the same year; amounts are in mnkr.</p></html>"));
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {155, 95, 35}, fillColor = {255, 246, 230}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Kapital", fontSize = 21, textColor = {155, 95, 35}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Tillgångar / avskrivning", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {155, 95, 35})}),
+        Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Kapital", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Investeringar\nAvskrivningstid", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "Tillgångar\nÅrets steg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Avskrivningar\nKontroll", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Investeringar tas i bruk samma år; belopp i mnkr.", fontSize = 12, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Investeringar tas i bruk samma år. Avskrivningen räknas med en sammanvägd avskrivningstid
+härledd ur bokslutet (tillgångar / avskrivningar, cirka 17 år):</p>
+<ul><li>avskrivning = (tillgångar föregående år + halva årets investering) / avskrivningstid</li>
+<li>tillgångar = föregående år + investering - avskrivning</li></ul>
+<p>Ingen uppdelning på anläggningar, pågående projekt eller försäljningar.</p></html>"));
     end Capital;
 
-    model Finance "Result, cash bridge and debt repayment waterfall"
-      parameter Real debt0;
-      parameter Real cash0;
-      parameter Real interestRate0;
-      parameter Real result0;
-      parameter Real financialIncome;
-      parameter Real otherFinancialExpense;
-      input Boolean tick;
-      input Real tax;
-      input Real grants;
-      input Real cost;
-      input Real depreciation;
-      input Real pensionExpense;
-      input Real pensionCashPayments;
-      input Real investment;
-      input Real interestRate;
-      discrete output Real result(start=result0,fixed=true);
-      discrete output Real interest(start=debt0*interestRate0,fixed=true);
-      discrete output Real operatingCash(start=0,fixed=true);
-      discrete output Real debt(start=debt0,fixed=true);
-      discrete output Real cash(start=cash0,fixed=true);
-      discrete output Real borrowing(start=0,fixed=true);
-      discrete output Real repayment(start=0,fixed=true);
-      discrete output Real cashBalance(start=0,fixed=true) "mnkr; must be zero";
-      discrete output Real debtBalance(start=0,fixed=true) "mnkr; must be zero";
+    model Finance "Årets resultat, kassaflöde, upplåning och amortering"
+      parameter Real debt0 "Låneskuld vid basårets slut, mnkr";
+      parameter Real cash0 "Kassa vid basårets slut, mnkr";
+      parameter Real interest0 "Räntekostnader i basåret, mnkr (bokslut)";
+      parameter Real result0 "Årets resultat i basåret enligt modellens poster, mnkr";
+      parameter Real financialIncome "Finansiella intäkter per år, mnkr";
+      parameter Real otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
+      parameter Real revenue0 "Skatt och generella bidrag i basåret, mnkr";
+      outer Calendar calendar;
+      Interfaces.TaxAndGrantsInput taxAndGrants "Skatt och bidrag" annotation(
+        Placement(transformation(origin = {0, -130}, extent = {{-18, -18}, {18, 18}}, rotation = 90), iconTransformation(origin = {0, -75}, extent = {{-9, -9}, {9, 9}}, rotation = 90)));
+      Interfaces.OperatingCostInput operations "Nettokostnad och pensioner" annotation(
+        Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.SignalInput depreciation "Avskrivningar, mnkr" annotation(
+        Placement(transformation(origin = {-240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
+      Interfaces.SignalInput investment "Investeringar, mnkr" annotation(
+        Placement(transformation(origin = {-144, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-60, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
+      Interfaces.SignalInput interestRate "Låneränta, andel" annotation(
+        Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 180), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 180)));
+      discrete output Real result(start = result0, fixed = true) "Årets resultat, mnkr";
+      discrete output Real interest(start = interest0, fixed = true) "Räntekostnader, mnkr";
+      discrete output Real operatingCash(start = 0, fixed = true) "Kassaflöde från den löpande verksamheten, mnkr";
+      discrete output Real debt(start = debt0, fixed = true) "Låneskuld vid årets slut, mnkr";
+      discrete output Real cash(start = cash0, fixed = true) "Kassa vid årets slut, mnkr";
+      discrete output Real borrowing(start = 0, fixed = true) "Nya lån under året, mnkr";
+      discrete output Real repayment(start = 0, fixed = true) "Amortering under året, mnkr";
+      discrete output Real cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
+      discrete output Real debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
+      discrete output Real resultShare(start = 100*result0/revenue0, fixed = true) "Årets resultat i procent av skatter och bidrag (Motalas finansiella mål)";
+      discrete output Real interestShare(start = 100*interest0/revenue0, fixed = true) "Räntekostnader i procent av skatter och bidrag";
+      discrete output Real cumulativeInterest(start = 0, fixed = true) "Räntekostnader sammanlagt sedan basåret, mnkr";
     protected
-      discrete Real financingGap(start=0,fixed=true);
+      discrete Real financingGap(start = 0, fixed = true) "Investeringar som kassaflödet inte täcker, mnkr";
     equation
-      assert(debt >= 0,"Debt must not become negative");
-      assert(abs(debtBalance) < 1e-7*max(1,debt),"Debt balance failed");
-      assert(abs(cashBalance) < 1e-7*max(1,abs(operatingCash)),"Cash balance failed");
+      assert(debt >= 0, "Låneskulden får inte bli negativ");
+      assert(abs(debtBalance) < 1e-7*max(1, debt), "Skuldbalansen stämmer inte");
+      assert(abs(cashBalance) < 1e-7*max(1, abs(operatingCash)), "Kassabalansen stämmer inte");
     algorithm
-      when tick then
+      when calendar.tick then
         interest := pre(debt)*interestRate;
-        result := tax+grants-cost-depreciation+financialIncome-interest-otherFinancialExpense;
-        operatingCash := result+depreciation+pensionExpense-pensionCashPayments;
-        financingGap := investment-operatingCash;
-        borrowing := max(0,financingGap);
-        repayment := min(pre(debt),max(0,-financingGap));
-        debt := pre(debt)+borrowing-repayment;
-        cash := pre(cash)+operatingCash-investment+borrowing-repayment;
-        debtBalance := debt-pre(debt)-borrowing+repayment;
-        cashBalance := cash-pre(cash)-operatingCash+investment-borrowing+repayment;
+        result := taxAndGrants.tax + taxAndGrants.grants - operations.cost - depreciation + financialIncome - interest - otherFinancialExpense;
+        operatingCash := result + depreciation + operations.pensionExpense - operations.pensionCashPayments;
+        resultShare := 100*result/(taxAndGrants.tax + taxAndGrants.grants);
+        interestShare := 100*interest/(taxAndGrants.tax + taxAndGrants.grants);
+        cumulativeInterest := pre(cumulativeInterest) + interest;
+        financingGap := investment - operatingCash;
+        borrowing := max(0, financingGap);
+        repayment := min(pre(debt), max(0, -financingGap));
+        debt := pre(debt) + borrowing - repayment;
+        cash := pre(cash) + operatingCash - investment + borrowing - repayment;
+        debtBalance := debt - pre(debt) - borrowing + repayment;
+        cashBalance := cash - pre(cash) - operatingCash + investment - borrowing + repayment;
       end when;
-      annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-          Rectangle(extent={{-100,-75},{100,75}},lineColor={105,75,145},fillColor={245,238,252},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-95,30},{95,65}},textString="Finance",fontSize=21,textColor={105,75,145}),
-          Text(extent={{-95,-27},{95,25}},textString="Result / cash / debt",fontSize=16,textColor={35,50,65}),
-          Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={105,75,145})}),
-        Diagram(coordinateSystem(extent={{-240,-130},{240,130}}),graphics={
-          Text(extent={{-235,85},{235,125}},textString="Finance",fontSize=22,textColor={35,50,65}),
-          Rectangle(extent={{-230,-55},{-100,65}},lineColor={90,110,130},fillColor={245,248,250},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{-65,-55},{65,65}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-          Rectangle(extent={{100,-55},{230,65}},lineColor={50,120,90},fillColor={236,248,240},fillPattern=FillPattern.Solid,radius=8),
-          Text(extent={{-225,35},{-105,60}},textString="Inputs / assumptions",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,35},{60,60}},textString="States / update",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,35},{225,60}},textString="Outputs",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-225,-48},{-105,32}},textString="tick / tax / grants\nCosts / investment\nPension / interest",fontSize=13,textColor={35,50,65}),
-          Text(extent={{-60,-48},{60,32}},textString="debt / cash\nAnnual cash bridge",fontSize=13,textColor={35,50,65}),
-          Text(extent={{105,-48},{225,32}},textString="Result / interest\nBorrowing / repay\nBalance residuals",fontSize=13,textColor={35,50,65}),
-          Line(points={{-100,5},{-65,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Line(points={{65,5},{100,5}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-          Text(extent={{-235,-125},{235,-75}},textString="Interest is charged on opening debt. Pension expense and cash payments remain separate.",fontSize=12,textColor={35,50,65})}),
-        Documentation(info="<html><p>Interest is charged on opening debt. Pension expense and cash payments remain separate.</p></html>"));
+      annotation(
+        Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {105, 75, 145}, fillColor = {245, 238, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Finans", fontSize = 21, textColor = {105, 75, 145}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Resultat / kassa / lån", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {105, 75, 145})}),
+        Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Finans", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Skatt / bidrag\nKostnader / investering\nPension / ränta", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "Lån / kassa\nÅrets kassaflöde", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Resultat / ränta\nNya lån / amortering\nKontroller", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Ränta på ingående skuld. Pensionskostnad och pensionsutbetalning hålls isär.", fontSize = 12, textColor = {35, 50, 65})}),
+        Documentation(info = "<html><p>Här möts allt:</p>
+<ul><li>ränta = låneskuld vid årets början · ränta</li>
+<li>årets resultat = skatt + bidrag - nettokostnad - avskrivningar + finansiella intäkter - ränta - övriga finansiella kostnader</li>
+<li>kassaflöde = resultat + avskrivningar + pensionskostnad - pensionsutbetalningar</li>
+<li>räcker kassaflödet inte till investeringarna lånar kommunen mellanskillnaden; ett överskott amorterar, och det som blir
+över läggs i kassan</li></ul>
+<p>Nyckeltal: <code>resultShare</code> (resultatet i procent av skatter och bidrag, Motalas finansiella mål),
+<code>interestShare</code> (räntekostnaderna i procent av skatter och bidrag) och <code>cumulativeInterest</code>
+(räntekostnaderna sammanlagt sedan basåret).</p>
+<p>Rörelsekapital, borgen och leasing ingår inte.</p></html>"));
     end Finance;
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -40}, {92, 40}}, textString = "Delar")}));
   end Components;
 
-  model Annual "Composed annual scenario; public parameters and outputs remain compatible"
+  model Annual "Motalas ekonomi år för år: demografi, verksamhet, drift, intäkter, kapital och finans"
     extends Assumptions;
-    discrete Integer yearIndex(start=0,fixed=true);
-    Real p[5], population, capacity[3], demand[3];
-    Real wageIndex, priceIndex, revenueIndex, productivity, serviceVolume;
-    Real payroll, pensionExpense, pensionCashPayments, otherOperatingExpense, operatingRevenue;
-    Real operatingCash, tax, grants, cost, depreciation, result, interest;
-    Real debt, cash, assets, educationIndex, careIndex, births, deaths, migration, borrowing, repayment;
-    Real populationBalance "Population conservation residual, persons";
-    Real assetBalance, cashBalance, debtBalance "Accounting residuals, mnkr";
-    Real annualInvestment, annualInterestRate "Current forecast inputs; first-year inputs at time zero";
-    Components.Demography demography(
-      p0=p0,deathRates=deathRates,residualMigration=residualMigration,
-      residualMigrationInput=residualMigrationPath[pathIndex,:],
-      migrationWeights=migrationWeights,births0=births0,
-      tick=tick,migrationDelta=migrationDeltaPath[pathIndex],birthChange=birthChangePath[pathIndex])
-      annotation(Placement(transformation(origin={-280,110},extent={{-75,-56},{75,56}})));
-    Components.Services services(
-      p0=p0,educationWeights=educationWeights,sectorCosts=sectorCosts,
-      adjustment=serviceAdjustment,fixedShare=serviceFixedShare,tick=tick,p=demography.p)
-      annotation(Placement(transformation(origin={-20,110},extent={{-75,-56},{75,56}})));
-    Components.OperatingAccounts operations(
-      population0=sum(p0),payroll0=payroll0,pension0=pension0,
-      otherOperatingExpense0=otherOperatingExpense0,operatingRevenue0=operatingRevenue0,
-      netCostRoundingAdjustment=netCostRoundingAdjustment,wageGrowth=wageGrowth,
-      priceGrowth=priceGrowth,operatingRevenueGrowth=operatingRevenueGrowth,
-      wageGrowthInput=wageGrowthPath[pathIndex],priceGrowthInput=priceGrowthPath[pathIndex],
-      productivityGrowth=productivityGrowth,tick=tick,population=demography.population,
-      serviceVolume=services.serviceVolume,pensionExpenseInput=pensionExpensePath[pathIndex],
-      pensionCashPaymentsInput=pensionCashPaymentsPath[pathIndex])
-      annotation(Placement(transformation(origin={250,110},extent={{-75,-56},{75,56}})));
-    Components.Revenue revenues(
-      p0=p0,tax0=tax0,grants0=grants0,taxRate=taxRate,baseTaxRate=baseTaxRate,
-      equalisationOffset=equalisationOffset,populationRevenueElasticity=populationRevenueElasticity,
-      importedRevenue=importedRevenue,tick=tick,p=demography.p,
-      referenceTax=referenceTax[pathIndex],referenceGrants=referenceGrants[pathIndex],
-      referencePopulation=referencePopulation[pathIndex])
-      annotation(Placement(transformation(origin={-280,-110},extent={{-75,-56},{75,56}})));
-    Components.Capital capital(
-      assets0=assets0,depreciation0=depreciation0,life=life,tick=tick,investment=annualInvestment)
-      annotation(Placement(transformation(origin={-20,-110},extent={{-75,-56},{75,56}})));
-    Components.Finance finance(
-      debt0=debt0,cash0=cash0,interestRate0=interestRate,
-      result0=tax0+grants0-(payroll0+pension0+otherOperatingExpense0-operatingRevenue0+netCostRoundingAdjustment)
-        -depreciation0+financialIncome-debt0*interestRate-otherFinancialExpense,
-      financialIncome=financialIncome,otherFinancialExpense=otherFinancialExpense,tick=tick,
-      tax=revenues.tax,grants=revenues.grants,cost=operations.cost,depreciation=capital.depreciation,
-      pensionExpense=operations.pensionExpense,pensionCashPayments=operations.pensionCashPayments,
-      investment=annualInvestment,interestRate=annualInterestRate)
-      annotation(Placement(transformation(origin={250,-110},extent={{-75,-56},{75,56}})));
-  protected
-    Boolean tick "One common event per forecast year; no updates beyond horizon";
-    Integer pathIndex;
+    Integer yearIndex "Antal beräknade år";
+    Integer year "Kalenderår för det senast beräknade året (samma som tiden)";
+    // Befolkning och verksamhet
+    Real p[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid årets slut";
+    Real population "Folkmängd vid årets slut";
+    Real births "Födda under året";
+    Real deaths "Döda under året";
+    Real migration "Flyttnetto och restflöden under året";
+    Real educationIndex "Utbildningsbehov, index (basår = 1)";
+    Real careIndex "Äldreomsorgsbehov viktat efter ålder, index (basår = 1)";
+    Real demand[3] "Behov för utbildning, äldreomsorg och övrigt, index";
+    Real capacity[3] "Kapacitet för utbildning, äldreomsorg och övrigt, index";
+    Real serviceVolume "Verksamhetens volym, index (basår = 1)";
+    // Drift
+    Real wageIndex "Lönenivå, index (basår = 1)";
+    Real priceIndex "Prisnivå för övriga kostnader, index (basår = 1)";
+    Real revenueIndex "Taxor och avgifter, index (basår = 1)";
+    Real productivity "Produktivitet, index (basår = 1)";
+    Real payroll "Lönekostnader exklusive pensioner, mnkr";
+    Real pensionExpense "Pensionskostnad, mnkr";
+    Real pensionCashPayments "Pensionsutbetalningar, mnkr";
+    Real otherOperatingExpense "Övriga verksamhetskostnader, mnkr";
+    Real operatingRevenue "Verksamhetens intäkter, mnkr";
+    Real cost "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
+    // Intäkter, kapital och finansiering
+    Real tax "Skatteintäkter, mnkr";
+    Real grants "Generella statsbidrag och utjämning, mnkr";
+    Real depreciation "Avskrivningar, mnkr";
+    Real assets "Tillgångar vid årets slut, mnkr";
+    Real interest "Räntekostnader, mnkr";
+    Real result "Årets resultat, mnkr";
+    Real operatingCash "Kassaflöde från den löpande verksamheten, mnkr";
+    Real borrowing "Nya lån under året, mnkr";
+    Real repayment "Amortering under året, mnkr";
+    Real debt "Låneskuld vid årets slut, mnkr";
+    Real cash "Kassa vid årets slut, mnkr";
+    // Nyckeltal
+    Real resultShare "Årets resultat i procent av skatter och bidrag (Motalas finansiella mål)";
+    Real interestShare "Räntekostnader i procent av skatter och bidrag";
+    Real cumulativeInterest "Räntekostnader sammanlagt sedan basåret, mnkr";
+    // Kontroller: ska vara noll
+    Real populationBalance "Kontroll av befolkningsbalansen, personer";
+    Real assetBalance "Kontroll av tillgångsbalansen, mnkr";
+    Real cashBalance "Kontroll av kassabalansen, mnkr";
+    Real debtBalance "Kontroll av skuldbalansen, mnkr";
+    Real annualInvestment "Årets investeringar, mnkr";
+    Real annualInterestRate "Årets låneränta, andel";
+    inner Components.Calendar calendar(horizon = horizon, baseYear = base.year) "Gemensam årskalender" annotation(
+      Placement(transformation(origin = {370, 305}, extent = {{-40, -20}, {40, 20}})));
+    Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, interestRatePath = interestRatePath) "Årets antaganden" annotation(
+      Placement(transformation(origin = {-20, 240}, extent = {{-300, -25}, {300, 25}})));
+    replaceable Components.Demography demography(p0 = p0, deathRates = deathRates, migrationWeights = migrationWeights, births0 = births0) constrainedby Components.DemographyBase "Demografi: fem åldersgrupper som standard; Examples.AnnualCohort använder ettårsåldrar" annotation(choicesAllMatching = true, 
+      Placement(transformation(origin = {-280, 110}, extent = {{-75, -56}, {75, 56}})));
+    Components.Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare) "Verksamhet" annotation(
+      Placement(transformation(origin = {-20, 110}, extent = {{-75, -56}, {75, 56}})));
+    Components.OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth) "Drift" annotation(
+      Placement(transformation(origin = {250, 110}, extent = {{-75, -56}, {75, 56}})));
+    Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0) "Intäkter" annotation(
+      Placement(transformation(origin = {-280, -110}, extent = {{-75, -56}, {75, 56}})));
+    Components.Capital capital(assets0 = assets0, depreciation0 = depreciation0, life = life) "Kapital" annotation(
+      Placement(transformation(origin = {-20, -110}, extent = {{-75, -56}, {75, 56}})));
+    Components.Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, result0 = tax0 + grants0 - (payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment) - depreciation0 + financialIncome - base.interestExpense - otherFinancialExpense, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, revenue0 = tax0 + grants0) "Finans" annotation(
+      Placement(transformation(origin = {250, -110}, extent = {{-75, -56}, {75, 56}})));
   equation
-    tick = sample(1,1) and time <= horizon;
-    when tick then
-      yearIndex = pre(yearIndex)+1;
-    end when;
-    pathIndex = max(1,yearIndex);
-    annualInvestment = investmentPath[pathIndex];
-    annualInterestRate = interestRatePath[pathIndex];
-    p = demography.p;
+    connect(scenario.demography, demography.drivers) annotation(
+      Line(points = {{-280, 215}, {-280, 166}}, color = {90, 110, 130}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(scenario.operations, operations.drivers) annotation(
+      Line(points = {{250, 215}, {250, 166}}, color = {90, 110, 130}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(scenario.revenue, revenues.reference) annotation(
+      Line(points = {{-320, 240}, {-400, 240}, {-400, -110}, {-355, -110}}, color = {90, 110, 130}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(scenario.investment, capital.investment) annotation(
+      Line(points = {{80, 215}, {80, -20}, {-20, -20}, {-20, -54}}, color = {155, 95, 35}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(scenario.investment, finance.investment) annotation(
+      Line(points = {{80, -20}, {205, -20}, {205, -54}}, color = {155, 95, 35}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(scenario.interestRate, finance.interestRate) annotation(
+      Line(points = {{280, 240}, {400, 240}, {400, -110}, {325, -110}}, color = {90, 110, 130}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(demography.cohorts, services.cohorts) annotation(
+      Line(points = {{-205, 110}, {-95, 110}}, color = {40, 95, 140}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(demography.cohorts, operations.cohorts) annotation(
+      Line(points = {{-205, 110}, {-190, 110}, {-190, 40}, {165, 40}, {165, 73}, {175, 73}}, color = {40, 95, 140}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(demography.cohorts, revenues.cohorts) annotation(
+      Line(points = {{-190, 40}, {-190, -20}, {-280, -20}, {-280, -54}}, color = {40, 95, 140}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(services.serviceVolume, operations.serviceVolume) annotation(
+      Line(points = {{55, 110}, {175, 110}}, color = {35, 115, 85}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(operations.accounts, finance.operations) annotation(
+      Line(points = {{250, 54}, {250, -54}}, color = {35, 115, 85}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(revenues.taxAndGrants, finance.taxAndGrants) annotation(
+      Line(points = {{-205, -110}, {-190, -110}, {-190, -195}, {250, -195}, {250, -166}}, color = {40, 95, 140}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    connect(capital.depreciation, finance.depreciation) annotation(
+      Line(points = {{55, -110}, {175, -110}}, color = {155, 95, 35}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}, arrowSize = 6));
+    yearIndex = calendar.yearIndex;
+    year = calendar.year;
+    // Vid starttiden visas basårets utfall, därefter scenariots värden.
+    annualInvestment = if yearIndex == 0 then base.investment else scenario.investment;
+    annualInterestRate = if yearIndex == 0 then base.interestExpense/base.openingDebt else scenario.interestRate;
+    p = demography.cohorts.p;
     population = demography.population;
     births = demography.births;
     deaths = demography.deaths;
@@ -499,41 +1521,106 @@ package Motala "Annual municipal scenario model; money in mnkr, time in model ye
     repayment = finance.repayment;
     cashBalance = finance.cashBalance;
     debtBalance = finance.debtBalance;
-    annotation(Icon(coordinateSystem(extent={{-100,-75},{100,75}}),graphics={
-      Rectangle(extent={{-100,-75},{100,75}},lineColor={40,95,140},fillColor={235,245,252},fillPattern=FillPattern.Solid,radius=8),
-      Text(extent={{-95,30},{95,65}},textString="Motala",fontSize=21,textColor={40,95,140}),
-      Text(extent={{-95,-27},{95,25}},textString="Annual dashboard\nscenario model",fontSize=16,textColor={35,50,65}),
-      Text(extent={{-95,-68},{95,-35}},textString="%name",fontSize=14,textColor={40,95,140})}),
-    Diagram(coordinateSystem(extent={{-430,-285},{430,245}}),graphics={
-      Text(extent={{-420,195},{420,235}},textString="Motala: annual dashboard model",fontSize=24,textColor={35,50,65}),
-      Line(points={{-205,110},{-95,110}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-      Text(extent={{-205,120},{-95,150}},textString="Cohorts",fontSize=13,textColor={35,50,65}),
-      Line(points={{55,110},{175,110}},color={35,115,85},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-      Text(extent={{55,120},{175,150}},textString="Service volume",fontSize=13,textColor={35,50,65}),
-      Line(points={{-280,54},{-280,-54}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-      Text(extent={{-420,-25},{-285,25}},textString="Population /\nincome exposure",fontSize=13,textColor={35,50,65}),
-      Line(points={{250,54},{250,-54}},color={35,115,85},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-      Text(extent={{260,-25},{420,25}},textString="Cost / pension\nexpense / payments",fontSize=13,textColor={35,50,65}),
-      Line(points={{55,-110},{175,-110}},color={155,95,35},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-      Text(extent={{55,-155},{175,-120}},textString="Depreciation",fontSize=13,textColor={35,50,65}),
-      Line(points={{-280,-166},{-280,-195},{250,-195},{250,-166}},color={70,95,120},thickness=0.5,arrow={Arrow.None,Arrow.Filled}),
-      Text(extent={{-155,-220},{135,-195}},textString="Tax / grants",fontSize=13,textColor={35,50,65}),
-      Text(extent={{-420,-280},{420,-235}},textString="Selected equation bindings. All six components share one annual event clock.\nTime: model years. Amounts: nominal mnkr. Investment and interest rates are scenario inputs.",fontSize=13,textColor={35,50,65})}),
-      experiment(StartTime=0,StopTime=8,Interval=1),
-      Documentation(info="<html><p>Annual scenario model with a shared clock and six separately inspectable components.
-Time zero is the closing base-year balance; each integer time advances one year. All amounts are nominal mnkr.
-Set the simulation stop time to horizon; longer runs hold the final state. No annual transition occurs at initialization.
-The default experiment is eight years and does not automatically follow a changed horizon.</p>
-<p>The original Annual parameter and output names remain available. Optional investmentPath, interestRatePath,
-migrationDeltaPath and birthChangePath accept one value per forecast year. serviceAdjustment and serviceFixedShare
-allow independent responses for education, care and other services. These new inputs are currently Modelica-only.
-Initial cost and result reconcile from operating components; sectorCosts only weight service volume.
-Population, asset, debt and cash residuals are exposed and asserted at annual transitions.</p>
-<p>This is not a validated municipal forecast. Five broad cohorts assume uniform ageing; births use working-age
-population as a proxy. Migration residuals include statistical adjustments. The 65+ care index, illustrative service
-weights, approximate equalisation, blended depreciation, opening-debt interest and simplified liquidity policy still
-require better data. Pension cash payments default to expense and the initial payment is not an observation.
-No working-capital, asset-vintage, debt-maturity or complete pension-liability model is implied.
-Agreement with a reference implementation establishes numerical compatibility, not forecasting accuracy.</p></html>"));
+    resultShare = finance.resultShare;
+    interestShare = finance.interestShare;
+    cumulativeInterest = finance.cumulativeInterest;
+    annotation(
+      Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Motala", fontSize = 21, textColor = {40, 95, 140}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Ekonomin\når för år", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {40, 95, 140})}),
+      Diagram(coordinateSystem(extent = {{-430, -285}, {430, 335}}), graphics = {Text(textColor = {35, 50, 65}, extent = {{-420, 290}, {300, 330}}, textString = "Motala: ekonomin år för år", fontSize = 24), Text(textColor = {35, 50, 65}, extent = {{-185, 115}, {-110, 140}}, textString = "Åldersgrupper", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{60, 115}, {170, 140}}, textString = "Volym", fontSize = 13), Text(origin = {-132, 20}, textColor = {35, 50, 65}, extent = {{-60, 25}, {60, 50}}, textString = "Befolkning", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{255, -25}, {390, 25}}, textString = "Nettokostnad / pensioner", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{85, 0}, {190, 25}}, textString = "Investeringar", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{60, -140}, {170, -115}}, textString = "Avskrivningar", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{-155, -220}, {135, -195}}, textString = "Skatt / bidrag", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{-425, 60}, {-405, 140}}, textString = "Referens skatt/bidrag", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{405, 60}, {425, 140}}, textString = "Ränta", fontSize = 13), Text(textColor = {35, 50, 65}, extent = {{-420, -280}, {420, -235}}, textString = "Varje pil är en koppling (connect) från en utgång till en ingång. En gemensam kalender styr alla årssteg.
+Tid: kalenderår från basårets bokslut. Belopp: mnkr, löpande priser. Antagandena kommer in via Scenario.", fontSize = 13)}),
+      experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
+      Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Med ett annat basår
+(<code>base</code>) ska starttiden vara det året.</p>
+<p>Kommunens ekonomi år för år, i sex delar som delar en kalender: demografi, verksamhet, drift, intäkter, kapital och
+finans. Antagandena kommer in via Scenario och flödar längs kopplingarna. Alla belopp i mnkr, löpande priser.</p>
+<p>Utgångsläget är bokslutet för basåret (<code>Data.motala2025</code>). Årsvisa banor (<code>investmentPath</code>,
+<code>interestRatePath</code>, <code>migrationDeltaPath</code> med flera) tar ett värde per prognosår. Befolknings-,
+tillgångs-, skuld- och kassabalansen kontrolleras varje år.</p>
+<p>Detta är inte en validerad prognos. Fem breda åldersgrupper, illustrativa kostnadsvikter, förenklad utjämning,
+sammanvägd avskrivning och ränta på ingående skuld behöver bättre data. Pensionsutbetalningarna sätts lika med
+kostnaden tills en egen källa finns. Rörelsekapital, anläggningsregister, lånens löptider och pensionsskulden modelleras
+inte. Att modellen stämmer med en referensimplementation visar att räkningen är rätt, inte att prognosen är träffsäker.</p></html>"));
   end Annual;
+  package Examples "Färdiga modeller att simulera"
+    model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet 105 och budgeten 96 mnkr"
+      extends Annual(base = Data.motala2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1),
+        Documentation(info = "<html><p><b>Tid: start 2024 (bokslutet 2024), slut 2025.</b></p>
+<p>Ett år från bokslutet 2024 med modellens standardantaganden. Utfall 2025: resultat 105 mnkr. Budget 2025: 96 mnkr.
+De antaganden som var kända hösten 2024 (SKR, budget, pensionsprognos) är ännu inte inlagda.</p></html>"));
+    end Hindcast2025;
+
+    model AnnualCohort "Annual med ettårsåldrar per kön (SCB-data); summerad fruktsamhet 1,41 om inget annat anges"
+      extends Annual(revenuePopulation0 = Data.SCB.groups(Data.SCB.populationForYear(base.year - 1)),
+        redeclare Components.CohortDemography demography(data = Data.SCB.forYear(base.year), reportedTotal = sum(p0),
+        migrationWeights = migrationWeights));
+      annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
+        Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 2025), slut 2033.</b></p>
+<p>Samma ekonomi som Annual, men demografin är Components.CohortDemography: ettårsåldrar per kön, dödsrisker som fortsätter
+sjunka i den historiska takten (sätt <code>improvement = Data.SCB.mortalityImprovement</code> för SCB:s framskrivning) och
+äldreomsorgen viktad efter 65-79, 80-89 och 90+. Byt födelsemodell i demografins parameterdialog eller med
+<code>redeclare Components.Fertility.Projected fertility(firstYear = 2026)</code>.</p></html>"));
+    end AnnualCohort;
+
+    model Budget2026 "Kommunens budget 2026-2028: budgetens investeringar, skatt och bidrag; modellens kostnader, räntor och lån"
+      extends AnnualCohort(horizon = 3, investmentPath = Data.budget2026.investment, referenceTax = Data.budget2026.tax,
+        referenceGrants = Data.budget2026.grants, revenueFromReference = true);
+      // Budgetens siffror för samma år, att plotta mot modellens. Vid starttiden 2025 visas modellens värden.
+      Real budgetResult = if year > 2025 then Data.budget2026.result[year - 2025] else result "Årets resultat enligt budgeten, mnkr";
+      Real budgetNetCost = if year > 2025 then Data.budget2026.netCost[year - 2025] else cost "Verksamhetens nettokostnad enligt budgeten, mnkr";
+      Real budgetDepreciation = if year > 2025 then Data.budget2026.depreciation[year - 2025] else depreciation "Avskrivningar enligt budgeten, mnkr";
+      Real financialCost = interest + otherFinancialExpense "Finansiella kostnader i modellen: räntor och övriga, mnkr";
+      Real budgetFinancialCost = if year > 2025 then Data.budget2026.financialCost[year - 2025] else financialCost "Finansiella kostnader enligt budgeten, mnkr";
+      Real budgetNewLoans = if year > 2025 then Data.budget2026.newLoans[year - 2025] else 0 "Nya lån enligt budgeten, mnkr";
+      Real resultDifference = result - budgetResult "Modellens resultat minus budgetens, mnkr";
+      Real netCostDifference = cost - budgetNetCost "Modellens nettokostnad minus budgetens, mnkr";
+      annotation(experiment(StartTime = 2025, StopTime = 2028, Interval = 1),
+        Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 2025), slut 2028.</b></p>
+<p>Följer kommunens budget 2026 med plan 2027-2028 där budgeten fattar beslut eller gör antaganden: investeringarna
+(755, 897 och 961 mnkr) och skatt och bidrag enligt budgetens belopp, som bygger på SKR:s prognos från oktober 2025.
+Modellen räknar resten: verksamhetens kostnader utifrån befolkning, löner och priser, avskrivningar, räntor och nya lån.</p>
+<p>Jämför med budgetens egna siffror: plotta <code>result</code> mot <code>budgetResult</code>, <code>cost</code> mot
+<code>budgetNetCost</code>, <code>depreciation</code> mot <code>budgetDepreciation</code>, <code>financialCost</code> mot
+<code>budgetFinancialCost</code> och <code>borrowing</code> mot <code>budgetNewLoans</code>.</p>
+<p>Kända skillnader: modellen startar i bokslutet 2025 (kassa 81 mnkr), medan budgeten räknade med 164 mnkr och tar 64 mnkr
+ur kassan 2026; modellen lånar i stället hela gapet. Räntan är modellens standardantagande, 2,23 procent på
+ingående skuld (basårets räntekostnad delad med skulden vid årets början). Löne- och prisökningar är modellens standardvärden, inte budgetens.</p></html>"));
+    end Budget2026;
+
+    model Hindcast2025Cohort "Starta i bokslutet 2024 med ettårsåldrar och räkna fram 2025"
+      extends AnnualCohort(base = Data.motala2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1),
+        Documentation(info = "<html><p><b>Tid: start 2024 (bokslutet 2024), slut 2025.</b></p></html>"));
+    end Hindcast2025Cohort;
+
+    model DemographyOnly "Demografin ensam, från valfritt basår 2020-2025, utan scenarioförändringar"
+      parameter Integer horizon = 5 "Antal år att räkna fram";
+      inner Components.Calendar calendar(horizon = horizon, baseYear = demography.data.year) "Gemensam årskalender";
+      replaceable Components.CohortDemography demography(data = Data.SCB.motala2020) constrainedby Components.DemographyBase "Demografi"
+        annotation(choicesAllMatching = true);
+    equation
+      demography.drivers.residualMigration = zeros(5);
+      demography.drivers.migrationDelta = 0;
+      demography.drivers.birthChange = 0;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -30}, {92, 40}}, textString = "Befolkning"), Text(textColor = {90, 110, 130}, extent = {{-92, -80}, {92, -35}}, textString = "pröva 2020-2025")}), experiment(StartTime = 2020, StopTime = 2025, Interval = 1),
+        Documentation(info = "<html><p><b>Tid: start 2020 (basåret), slut 2025.</b> Med ett annat basår ska starttiden vara det
+året.</p>
+<p>För att pröva demografin mot det som hände: starta i ett basår och jämför födda, döda och folkmängd med SCB:s utfall
+åren efter (scripts/hindcast_demography.py).</p></html>"));
+    end DemographyOnly;
+    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Polygon(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, points = {{-35, 55}, {55, 0}, {-35, -55}, {-35, 55}})}));
+  end Examples;
+  annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-70, -70}, {-35, 0}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-17, -70}, {18, 30}}), Rectangle(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, extent = {{35, -70}, {70, 60}})}), Documentation(info = "<html>
+<p><b>Motala ekonomilabb</b> räknar Motala kommuns ekonomi år för år: befolkning, verksamhet, drift, skatt och bidrag,
+investeringar, resultat och lån. Belopp i mnkr och löpande priser; tiden är kalenderår.</p>
+<ul>
+<li><a href=\"modelica://Motala.Handledning.Ordlista\">Ordlista</a>: de ekonomiska begreppen.</li>
+<li><a href=\"modelica://Motala.Annual\">Annual</a>: modellen som webbplatsen kör, från bokslutet 2025.</li>
+<li><a href=\"modelica://Motala.Examples.AnnualCohort\">Examples.AnnualCohort</a>: samma modell med ettårsåldrar och
+äldreomsorgen viktad efter ålder.</li>
+<li><a href=\"modelica://Motala.Examples.Hindcast2025\">Examples.Hindcast2025</a>: från bokslutet 2024 fram till 2025,
+för att jämföra med utfallet.</li>
+</ul>
+<p>Källor: Motala kommuns årsredovisningar och budgetar, SCB och Kolada; se <a href=\"modelica://Motala.Data\">Data</a>.
+Detta är en forskningsmodell, inte kommunens officiella prognos.</p></html>"));
 end Motala;

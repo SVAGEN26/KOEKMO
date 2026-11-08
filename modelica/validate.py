@@ -27,6 +27,7 @@ if not OMC:
     raise SystemExit("Set OMC to an OpenModelica compiler executable")
 
 BUILD = Path(tempfile.mkdtemp(prefix="motala-validation-"))
+START = 2025  # simulation time is the calendar year; Motala.Annual starts at the 2025 accounts
 OUTPUTS = [
     "population", "tax", "grants", "cost", "depreciation", "interest",
     "result", "debt", "cash", "assets", "educationIndex", "careIndex",
@@ -54,7 +55,7 @@ def simulate(name, source, stop=10, error=None):
     (directory / "run.mos").write_text(
         f"loadFile({json.dumps(str(HERE / 'Motala.mo'))});\n"
         'loadFile("Scenario.mo");\ncheckModel(Scenario);\ngetErrorString();\n'
-        f'simulate(Scenario,stopTime={stop},numberOfIntervals={stop},outputFormat="csv");\n'
+        f'simulate(Scenario,startTime={START},stopTime={START + stop},numberOfIntervals={stop},outputFormat="csv");\n'
         "getErrorString();\n"
     )
     process = subprocess.run(
@@ -74,7 +75,7 @@ def simulate(name, source, stop=10, error=None):
     # Keep post-event values. Multiple rows at an annual boundary are expected.
     rows = []
     for year in range(stop + 1):
-        matching = [r for r in raw if math.isclose(float(r["time"]), year, abs_tol=1e-8)]
+        matching = [r for r in raw if math.isclose(float(r["time"]), START + year, abs_tol=1e-8)]
         check(matching, f"Missing year {year} in {name}")
         rows.append({k: float(v) for k, v in matching[-1].items() if k})
     return rows
@@ -107,8 +108,7 @@ def balances(rows, horizon):
     for row in rows[horizon + 1:]:
         # Every exported variable, including internal state, must stay frozen.
         for key, value in rows[horizon].items():
-            if key not in ("time", "tick", "demography.tick", "services.tick",
-                           "operations.tick", "revenues.tick", "capital.tick", "finance.tick"):
+            if key not in ("time", "calendar.tick"):
                 close(row[key], value, f"frozen after horizon: {key}")
 
 
@@ -160,7 +160,7 @@ def main():
     balances(rows, 1)
     close(rows[0]["yearIndex"], 0, "no transition at initialization")
     close(rows[0]["cost"], 3023, "initial cost is independent of service weights")
-    close(rows[0]["result"], 2330 + 987 - 3023 - 180 + 15 - 21/1040 - 4, "initial result")
+    close(rows[0]["result"], 2330 + 987 - 3023 - 180 + 15 - 21 - 4, "initial result is the observed ledger")
     close(rows[1]["debt"], 0, "surplus clears debt")
     check(rows[1]["cash"] > rows[0]["cash"], "Surplus after repayment must accumulate as cash")
     print("PASS: one-year horizon, consistent initial ledger, debt payoff and excess cash")
@@ -178,12 +178,12 @@ def main():
     print("PASS: imported revenue benchmark with stationary population")
 
     invalid = [
-        ("migrationWeights={1,1,1,1,1}", "migrationWeights must"),
-        ("serviceAdjustment={0,1.1,0}", "serviceAdjustment must"),
-        ("productivityGrowth=-1", "Annual growth rates must"),
-        ("referencePopulation=fill(0,horizon)", "referencePopulation must"),
-        ("pensionCashPaymentsPath=fill(-1,horizon)", "Pension paths must"),
-        ("migrationDelta=-30000", "Scenario exhausts an age cohort"),
+        ("migrationWeights={1,1,1,1,1}", "migrationWeights måste"),
+        ("serviceAdjustment={0,1.1,0}", "serviceAdjustment måste"),
+        ("productivityGrowth=-1", "Årliga tillväxttakter måste"),
+        ("referencePopulation=fill(0,horizon)", "referencePopulation måste"),
+        ("pensionCashPaymentsPath=fill(-1,horizon)", "pensionCashPaymentsPath får inte"),
+        ("migrationDelta=-30000", "Scenariot tömmer en åldersgrupp"),
     ]
     for index, (modifiers, message) in enumerate(invalid):
         simulate(f"invalid-{index}", scenario(modifiers), stop=1, error=message)
