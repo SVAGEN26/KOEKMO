@@ -1,0 +1,237 @@
+{
+  "retrieved_at": "2026-11-08T14:57:41.488727+00:00",
+  "region": "00 (riket)",
+  "source": "Statistics Sweden (SCB), Statistikdatabasen, CC BY 4.0",
+  "files": [
+    {
+      "file": "national-population-2010-2024.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "00"
+              ]
+            }
+          },
+          {
+            "code": "Civilstand",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "OG",
+                "G",
+                "SK",
+                "ÄNKL"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "tot"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "BE0101N1"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "cells": 120,
+      "bytes": 7512,
+      "sha256": "0da56bf3fcc7d1da41ad14f71ea16b45d1d1483bb66bf94cc57e237fcb1440b9"
+    },
+    {
+      "file": "national-population-2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningCKM",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "00"
+              ]
+            }
+          },
+          {
+            "code": "Civilstand",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "SC"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSA"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSa"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000007ME"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "cells": 1,
+      "bytes": 543,
+      "sha256": "e70b003d8d3ec32b09ca7bea69b76197cbc81d2ce7b5d7ca5eac7af9c23702d0"
+    },
+    {
+      "file": "national-population-projection.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0401/BE0401A/BefPrognosOversiktN",
+      "query": {
+        "query": [
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0000028T"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2026",
+                "2027",
+                "2028",
+                "2029",
+                "2030",
+                "2031",
+                "2032",
+                "2033",
+                "2034",
+                "2035",
+                "2036",
+                "2037",
+                "2038",
+                "2039",
+                "2040",
+                "2041",
+                "2042",
+                "2043",
+                "2044",
+                "2045",
+                "2046",
+                "2047",
+                "2048",
+                "2049",
+                "2050",
+                "2051",
+                "2052",
+                "2053",
+                "2054",
+                "2055",
+                "2056",
+                "2057",
+                "2058",
+                "2059",
+                "2060",
+                "2061",
+                "2062",
+                "2063",
+                "2064",
+                "2065",
+                "2066",
+                "2067",
+                "2068",
+                "2069",
+                "2070"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "cells": 45,
+      "bytes": 2015,
+      "sha256": "36d945f88c2c73d55944546b783dff7887e3caba61c4b3ecf4adc3831483c8ec"
+    }
+  ]
+}

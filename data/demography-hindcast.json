@@ -1,0 +1,1108 @@
+{
+ "source": "Källa: SCB (CC BY 4.0); model Motala.Examples.DemographyOnly",
+ "note": "Calibration per base year uses data up to that year only. No scenario changes. Births, deaths and population are compared with SCB outcomes.",
+ "summaryByHorizon": {
+  "fertility 1.41": {
+   "1": {
+    "cases": 5,
+    "birthsMeanAbsError": 33.753090297515044,
+    "deathsMeanAbsError": 25.554017232403577,
+    "populationMeanAbsError": 158.45191444974188,
+    "birthsMeanError": -33.753090297515044,
+    "deathsMeanError": 23.838750831193455,
+    "populationMeanError": 26.152253671294602
+   },
+   "2": {
+    "cases": 4,
+    "birthsMeanAbsError": 21.46443629362666,
+    "deathsMeanAbsError": 34.58872156488904,
+    "populationMeanAbsError": 282.03905585466055,
+    "birthsMeanError": -21.46443629362666,
+    "deathsMeanError": 34.58872156488904,
+    "populationMeanError": 23.728164447446034
+   },
+   "3": {
+    "cases": 3,
+    "birthsMeanAbsError": 21.925613423775115,
+    "deathsMeanAbsError": 34.70157570885931,
+    "populationMeanAbsError": 301.69901622320566,
+    "birthsMeanError": -21.925613423775115,
+    "deathsMeanError": 34.70157570885931,
+    "populationMeanError": -31.388978454463842
+   },
+   "4": {
+    "cases": 2,
+    "birthsMeanAbsError": 11.132998940687798,
+    "deathsMeanAbsError": 40.08242985916152,
+    "populationMeanAbsError": 140.75713833008194,
+    "birthsMeanError": -11.132998940687798,
+    "deathsMeanError": 40.08242985916152,
+    "populationMeanError": -54.349978515150724
+   },
+   "5": {
+    "cases": 1,
+    "birthsMeanAbsError": 13.367988257889522,
+    "deathsMeanAbsError": 12.138741347014673,
+    "populationMeanAbsError": 95.68482954985666,
+    "birthsMeanError": -13.367988257889522,
+    "deathsMeanError": 12.138741347014673,
+    "populationMeanError": 95.68482954985666
+   }
+  },
+  "Motala base year": {
+   "1": {
+    "cases": 5,
+    "birthsMeanAbsError": 34.382997891882,
+    "deathsMeanAbsError": 25.554017232403577,
+    "populationMeanAbsError": 127.41986555454642,
+    "birthsMeanError": 31.214581692789988,
+    "deathsMeanError": 23.838750831193455,
+    "populationMeanError": 91.11992566159897
+   },
+   "2": {
+    "cases": 4,
+    "birthsMeanAbsError": 55.69826701761619,
+    "deathsMeanAbsError": 34.7536432471079,
+    "populationMeanAbsError": 235.54816450224462,
+    "birthsMeanError": 55.69826701761619,
+    "deathsMeanError": 34.7536432471079,
+    "populationMeanError": 178.4610884446738
+   },
+   "3": {
+    "cases": 3,
+    "birthsMeanAbsError": 56.78868407229978,
+    "deathsMeanAbsError": 34.883829179571556,
+    "populationMeanAbsError": 229.99475971385982,
+    "birthsMeanError": 56.78868407229978,
+    "deathsMeanError": 34.883829179571556,
+    "populationMeanError": 206.50981782468685
+   },
+   "4": {
+    "cases": 2,
+    "birthsMeanAbsError": 86.9008770123491,
+    "deathsMeanAbsError": 40.318020238595665,
+    "populationMeanAbsError": 343.89512138535065,
+    "birthsMeanError": 86.9008770123491,
+    "deathsMeanError": 40.318020238595665,
+    "populationMeanError": 343.89512138535065
+   },
+   "5": {
+    "cases": 1,
+    "birthsMeanAbsError": 80.73777402173141,
+    "deathsMeanAbsError": 12.383216710841225,
+    "populationMeanAbsError": 576.4198805993801,
+    "birthsMeanError": 80.73777402173141,
+    "deathsMeanError": 12.383216710841225,
+    "populationMeanError": 576.4198805993801
+   }
+  },
+  "Motala 5-year mean": {
+   "1": {
+    "cases": 5,
+    "birthsMeanAbsError": 63.65195588659058,
+    "deathsMeanAbsError": 25.554017232403577,
+    "populationMeanAbsError": 140.59404342374037,
+    "birthsMeanError": 63.65195588659058,
+    "deathsMeanError": 23.838750831193455,
+    "populationMeanError": 123.55729985539656
+   },
+   "2": {
+    "cases": 4,
+    "birthsMeanAbsError": 83.6519392166987,
+    "deathsMeanAbsError": 34.812760042284935,
+    "populationMeanAbsError": 254.08773235112858,
+    "birthsMeanError": 83.6519392166987,
+    "deathsMeanError": 34.812760042284935,
+    "populationMeanError": 234.5101650806373
+   },
+   "3": {
+    "cases": 3,
+    "birthsMeanAbsError": 89.49665911108224,
+    "deathsMeanAbsError": 34.95861158792591,
+    "populationMeanAbsError": 305.42522628275765,
+    "birthsMeanError": 89.49665911108224,
+    "deathsMeanError": 34.95861158792591,
+    "populationMeanError": 305.42522628275765
+   },
+   "4": {
+    "cases": 2,
+    "birthsMeanAbsError": 108.21603604687985,
+    "deathsMeanAbsError": 40.3703529884406,
+    "populationMeanAbsError": 430.33902472165573,
+    "birthsMeanError": 108.21603604687985,
+    "deathsMeanError": 40.3703529884406,
+    "populationMeanError": 430.33902472165573
+   },
+   "5": {
+    "cases": 1,
+    "birthsMeanAbsError": 109.65808145400513,
+    "deathsMeanAbsError": 12.45834816410212,
+    "populationMeanAbsError": 724.1579694584871,
+    "birthsMeanError": 109.65808145400513,
+    "deathsMeanError": 12.45834816410212,
+    "populationMeanError": 724.1579694584871
+   }
+  },
+  "old rule (19-64)": {
+   "1": {
+    "cases": 5,
+    "birthsMeanAbsError": 27.4,
+    "deathsMeanAbsError": 25.554017232403577,
+    "populationMeanAbsError": 128.8900112052419,
+    "birthsMeanError": 18.6,
+    "deathsMeanError": 23.838750831193455,
+    "populationMeanError": 78.50534396880539
+   },
+   "2": {
+    "cases": 4,
+    "birthsMeanAbsError": 42.6392566383915,
+    "deathsMeanAbsError": 34.723486381321024,
+    "populationMeanAbsError": 229.4068505331361,
+    "birthsMeanError": 42.6392566383915,
+    "deathsMeanError": 34.723486381321024,
+    "populationMeanError": 150.7879744974034
+   },
+   "3": {
+    "cases": 3,
+    "birthsMeanAbsError": 48.2946165388557,
+    "deathsMeanAbsError": 34.8593208307017,
+    "populationMeanAbsError": 205.40594770436533,
+    "birthsMeanError": 48.2946165388557,
+    "deathsMeanError": 34.8593208307017,
+    "populationMeanError": 175.32895194971206
+   },
+   "4": {
+    "cases": 2,
+    "birthsMeanAbsError": 82.4466214165987,
+    "deathsMeanAbsError": 40.298148413749004,
+    "populationMeanAbsError": 309.4864921277622,
+    "birthsMeanError": 82.4466214165987,
+    "deathsMeanError": 40.298148413749004,
+    "populationMeanError": 309.4864921277622
+   },
+   "5": {
+    "cases": 1,
+    "birthsMeanAbsError": 86.20605773664158,
+    "deathsMeanAbsError": 12.382696064370975,
+    "populationMeanAbsError": 572.278284961103,
+    "birthsMeanError": 86.20605773664158,
+    "deathsMeanError": 12.382696064370975,
+    "populationMeanError": 572.278284961103
+   }
+  }
+ },
+ "scbProjection2025": {
+  "source": "SCB regional projection for Motala, base year 2024 (BefProgOsiktRegN)",
+  "year": 2025,
+  "births": 356.0799,
+  "deaths": 466.2698,
+  "population": 43575.37810000004,
+  "observed": {
+   "population": 43113.0,
+   "births": 337.0,
+   "deaths": 459.0
+  }
+ },
+ "runs": [
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2020,
+   "year": 2021,
+   "horizon": 1,
+   "population": 43563.72802737447,
+   "births": 335.9400770883149,
+   "deaths": 458.5107257138443,
+   "migration": 46.29867599999125,
+   "observed": {
+    "population": 43674.0,
+    "births": 420.0,
+    "deaths": 455.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2020,
+   "year": 2022,
+   "horizon": 2,
+   "population": 43485.41131768883,
+   "births": 335.1776066114305,
+   "deaths": 460.2071974174032,
+   "migration": 46.71288112032926,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2020,
+   "year": 2023,
+   "horizon": 3,
+   "population": 43401.29810482769,
+   "births": 332.8530517288406,
+   "deaths": 463.2649405899865,
+   "migration": 46.2986760000058,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2020,
+   "year": 2024,
+   "horizon": 4,
+   "population": 43309.89288315477,
+   "births": 328.9143581543617,
+   "deaths": 466.6740924131809,
+   "migration": 46.35451258590183,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2020,
+   "year": 2025,
+   "horizon": 5,
+   "population": 43208.68482954986,
+   "births": 323.6320117421105,
+   "deaths": 471.1387413470147,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2021,
+   "year": 2022,
+   "horizon": 1,
+   "population": 43567.36650697446,
+   "births": 334.214265236145,
+   "deaths": 461.1714382616919,
+   "migration": 20.32368000000133,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2021,
+   "year": 2023,
+   "horizon": 2,
+   "population": 43453.96689949674,
+   "births": 331.4908888004375,
+   "deaths": 464.8988762781519,
+   "migration": 20.00837999999931,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2021,
+   "year": 2024,
+   "horizon": 3,
+   "population": 43332.0699031558,
+   "births": 327.2589639985674,
+   "deaths": 469.223591710288,
+   "migration": 20.06763137078087,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2021,
+   "year": 2025,
+   "horizon": 4,
+   "population": 43199.40715981493,
+   "births": 321.8196439642627,
+   "deaths": 474.4907673051421,
+   "migration": 20.00838000000658,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2022,
+   "year": 2023,
+   "horizon": 1,
+   "population": 43668.15631370495,
+   "births": 335.05817382051,
+   "deaths": 463.8055101155624,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2022,
+   "year": 2024,
+   "horizon": 2,
+   "population": 43599.06645747814,
+   "births": 332.3092209396921,
+   "deaths": 470.3027271665123,
+   "migration": 68.90365000000747,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2022,
+   "year": 2025,
+   "horizon": 3,
+   "population": 43518.46505665311,
+   "births": 328.1111440012666,
+   "deaths": 477.6161948263034,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2023,
+   "year": 2024,
+   "horizon": 1,
+   "population": 43684.83962004964,
+   "births": 333.4239561175349,
+   "deaths": 461.994246067894,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2023,
+   "year": 2025,
+   "horizon": 2,
+   "population": 43630.46798312607,
+   "births": 329.1645384739332,
+   "deaths": 468.9460853974888,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "fertility 1.41",
+   "base": 2024,
+   "year": 2025,
+   "horizon": 1,
+   "population": 43394.67080025295,
+   "births": 326.59807624992,
+   "deaths": 454.7118339969747,
+   "migration": 17.78455799999938,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2020,
+   "year": 2021,
+   "horizon": 1,
+   "population": 43661.41273064128,
+   "births": 433.62478035513,
+   "deaths": 458.5107257138443,
+   "migration": 46.29867599999125,
+   "observed": {
+    "population": 43674.0,
+    "births": 420.0,
+    "deaths": 455.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2020,
+   "year": 2022,
+   "horizon": 2,
+   "population": 43680.33624753791,
+   "births": 432.6405986048252,
+   "deaths": 460.4299628285371,
+   "migration": 46.71288112032926,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2020,
+   "year": 2023,
+   "horizon": 3,
+   "population": 43692.77258716624,
+   "births": 429.6401093237517,
+   "deaths": 463.5024456954197,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2020,
+   "year": 2024,
+   "horizon": 4,
+   "population": 43696.76664728849,
+   "births": 424.5561218730059,
+   "deaths": 466.9165743366684,
+   "migration": 46.35451258590911,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2020,
+   "year": 2025,
+   "horizon": 5,
+   "population": 43689.41988059938,
+   "births": 417.7377740217314,
+   "deaths": 471.3832167108412,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2021,
+   "year": 2022,
+   "horizon": 1,
+   "population": 43671.66032023964,
+   "births": 438.508078501325,
+   "deaths": 461.1714382616919,
+   "migration": 20.32367999999406,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2021,
+   "year": 2023,
+   "horizon": 2,
+   "population": 43661.48960034695,
+   "births": 434.9348540998648,
+   "deaths": 465.1139539925498,
+   "migration": 20.00837999999931,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2021,
+   "year": 2024,
+   "horizon": 3,
+   "population": 43641.48904947103,
+   "births": 429.3823286506026,
+   "deaths": 469.4505108973026,
+   "migration": 20.06763137078815,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2021,
+   "year": 2025,
+   "horizon": 4,
+   "population": 43609.02359548221,
+   "births": 422.2456321516923,
+   "deaths": 474.7194661405229,
+   "migration": 20.00838000000658,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2022,
+   "year": 2023,
+   "horizon": 1,
+   "population": 43706.17709938671,
+   "births": 373.07895950227,
+   "deaths": 463.8055101155624,
+   "migration": 68.90364999999292,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2022,
+   "year": 2024,
+   "horizon": 2,
+   "population": 43674.71908354024,
+   "births": 370.0180687058984,
+   "deaths": 470.3797345523635,
+   "migration": 68.90365000000747,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2022,
+   "year": 2025,
+   "horizon": 3,
+   "population": 43631.26781683679,
+   "births": 365.3436142425451,
+   "deaths": 477.6985309459924,
+   "migration": 68.90364999999292,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2023,
+   "year": 2024,
+   "horizon": 1,
+   "population": 43755.78088730869,
+   "births": 404.365223376585,
+   "deaths": 461.994246067894,
+   "migration": 85.40991000000213,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2023,
+   "year": 2025,
+   "horizon": 2,
+   "population": 43771.29942235359,
+   "births": 399.1995466598764,
+   "deaths": 469.0909216149812,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala base year",
+   "base": 2024,
+   "year": 2025,
+   "horizon": 1,
+   "population": 43408.56859073167,
+   "births": 340.49586672864,
+   "deaths": 454.7118339969747,
+   "migration": 17.78455799999938,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2020,
+   "year": 2021,
+   "horizon": 1,
+   "population": 43691.4329077428,
+   "births": 463.644957456639,
+   "deaths": 458.5107257138443,
+   "migration": 46.2986760000058,
+   "observed": {
+    "population": 43674.0,
+    "births": 420.0,
+    "deaths": 455.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2020,
+   "year": 2022,
+   "horizon": 2,
+   "population": 43740.24000646714,
+   "births": 462.5926400466977,
+   "deaths": 460.498422442688,
+   "migration": 46.71288112032926,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2020,
+   "year": 2023,
+   "horizon": 3,
+   "population": 43782.34767198248,
+   "births": 459.3844245846269,
+   "deaths": 463.5754350692805,
+   "migration": 46.2986760000058,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2020,
+   "year": 2024,
+   "horizon": 4,
+   "population": 43815.6595601686,
+   "births": 453.9484687719063,
+   "deaths": 466.991093171695,
+   "migration": 46.35451258590911,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2020,
+   "year": 2025,
+   "horizon": 5,
+   "population": 43837.15796945849,
+   "births": 446.6580814540051,
+   "deaths": 471.4583481641021,
+   "migration": 46.29867599999125,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2021,
+   "year": 2022,
+   "horizon": 1,
+   "population": 43685.40814107914,
+   "births": 452.2558993408259,
+   "deaths": 461.1714382616919,
+   "migration": 20.32368000000133,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2021,
+   "year": 2023,
+   "horizon": 2,
+   "population": 43688.84486545902,
+   "births": 448.5706495256984,
+   "deaths": 465.1423051458114,
+   "migration": 20.00837999999203,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2021,
+   "year": 2024,
+   "horizon": 3,
+   "population": 43682.27611875805,
+   "births": 442.844044900189,
+   "deaths": 469.4804229719521,
+   "migration": 20.06763137078087,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2021,
+   "year": 2025,
+   "horizon": 4,
+   "population": 43663.01848927471,
+   "births": 435.4836033218534,
+   "deaths": 474.7496128051862,
+   "migration": 20.00838000000658,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2022,
+   "year": 2023,
+   "horizon": 1,
+   "population": 43762.2577582673,
+   "births": 429.159618382866,
+   "deaths": 463.8055101155624,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2022,
+   "year": 2024,
+   "horizon": 2,
+   "population": 43786.30670698185,
+   "births": 425.6386191610525,
+   "deaths": 470.4933204465124,
+   "migration": 68.90365000000747,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2022,
+   "year": 2025,
+   "horizon": 3,
+   "population": 43797.65188810774,
+   "births": 420.2615078484308,
+   "deaths": 477.8199767225451,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2023,
+   "year": 2024,
+   "horizon": 1,
+   "population": 43768.55031541532,
+   "births": 417.134651483214,
+   "deaths": 461.994246067894,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2023,
+   "year": 2025,
+   "horizon": 2,
+   "population": 43796.64908141454,
+   "births": 411.8058481333462,
+   "deaths": 469.1169921341279,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "Motala 5-year mean",
+   "base": 2024,
+   "year": 2025,
+   "horizon": 1,
+   "population": 43458.13737677243,
+   "births": 390.064652769408,
+   "deaths": 454.7118339969747,
+   "migration": 17.78455799999938,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2020,
+   "year": 2021,
+   "horizon": 1,
+   "population": 43657.78795028616,
+   "births": 430.0,
+   "deaths": 458.5107257138443,
+   "migration": 46.2986760000058,
+   "observed": {
+    "population": 43674.0,
+    "births": 420.0,
+    "deaths": 455.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2020,
+   "year": 2022,
+   "horizon": 2,
+   "population": 43673.0042637178,
+   "births": 428.9251289972553,
+   "deaths": 460.4216966859531,
+   "migration": 46.71288112032926,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2020,
+   "year": 2023,
+   "horizon": 3,
+   "population": 43682.88450636802,
+   "births": 427.07497662497,
+   "deaths": 463.4934099747479,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2020,
+   "year": 2024,
+   "horizon": 4,
+   "population": 43687.15624728883,
+   "births": 424.827066670213,
+   "deaths": 466.9098383353048,
+   "migration": 46.35451258590911,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2020,
+   "year": 2025,
+   "horizon": 5,
+   "population": 43685.2782849611,
+   "births": 423.2060577366416,
+   "deaths": 471.382696064371,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2021,
+   "year": 2022,
+   "horizon": 1,
+   "population": 43653.15224173831,
+   "births": 420.0,
+   "deaths": 461.1714382616919,
+   "migration": 20.32367999999406,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2021,
+   "year": 2023,
+   "horizon": 2,
+   "population": 43625.75798421074,
+   "births": 417.6731485708558,
+   "deaths": 465.0757860984231,
+   "migration": 20.00837999999931,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2021,
+   "year": 2024,
+   "horizon": 3,
+   "population": 43591.4286392959,
+   "births": 415.0154716039324,
+   "deaths": 469.4124478895537,
+   "migration": 20.06763137078815,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2021,
+   "year": 2025,
+   "horizon": 4,
+   "population": 43549.81673696669,
+   "births": 413.0661761629844,
+   "deaths": 474.6864584921932,
+   "migration": 20.00838000000658,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2022,
+   "year": 2023,
+   "horizon": 1,
+   "population": 43693.09813988444,
+   "births": 360.0,
+   "deaths": 463.8055101155624,
+   "migration": 68.90364999999292,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2022,
+   "year": 2024,
+   "horizon": 2,
+   "population": 43649.64876342536,
+   "births": 358.0002179389451,
+   "deaths": 470.3532443980221,
+   "migration": 68.90364999999292,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2022,
+   "year": 2025,
+   "horizon": 3,
+   "population": 43597.67371018522,
+   "births": 356.7934013876647,
+   "deaths": 477.6721046278035,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2023,
+   "year": 2024,
+   "horizon": 1,
+   "population": 43732.4156639321,
+   "births": 381.0,
+   "deaths": 461.994246067894,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2023,
+   "year": 2025,
+   "horizon": 2,
+   "population": 43728.74088663572,
+   "births": 379.9585310465098,
+   "deaths": 469.0432183428857,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "old rule (19-64)",
+   "base": 2024,
+   "year": 2025,
+   "horizon": 1,
+   "population": 43404.07272400302,
+   "births": 336.0,
+   "deaths": 454.7118339969747,
+   "migration": 17.78455799999938,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  }
+ ]
+}

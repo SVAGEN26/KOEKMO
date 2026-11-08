@@ -1,0 +1,26 @@
+{
+  "municipality": "0583",
+  "scope": "kommunen",
+  "unit": "mnkr; costs as positive magnitudes",
+  "note": "Read visually from the archived budget PDF (its text is images). Budget years are forecasts made in autumn 2025, before the 2025 accounts.",
+  "budgets": [
+    {
+      "budget": 2026,
+      "years": [2026, 2027, 2028],
+      "source": "data/downloads/20261106T090534Z/budget-2026-plan-2027-2028.pdf",
+      "sourceUrl": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf",
+      "pages": {"resultBudget": 25, "investmentFrame": 28, "financingBudget": 32},
+      "tax": [2410, 2485, 2570],
+      "grants": [1014, 1046, 1071],
+      "netCost": [3122, 3182, 3238],
+      "depreciation": [194, 220, 248],
+      "financialIncome": [9, 8, 8],
+      "financialCost": [31, 49, 71],
+      "result": [86, 88, 92],
+      "investment": [755, 897, 961],
+      "operatingCash": [280, 308, 340],
+      "newLoans": [411, 589, 621],
+      "taxAssumption": "SKR:s prognos från oktober 2025"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+"""Write data/demography-inputs.json into Motala.Data.SCB in modelica/Motala.mo.
+
+    python3 scripts/write_demography_modelica.py
+
+Replaces the package Motala.Data.SCB (or adds it before `end Data;`). Run it after
+scripts/prepare_demography.py. tests/test_demography.py checks that the two agree.
+"""
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+MODEL = ROOT / 'modelica/Motala.mo'
+HORIZON = 30  # years of projected fertility to carry, from the first projection year
+
+
+def num(x, digits):
+    text = f'{x:.{digits}g}'
+    return '0' if text in ('0', '-0') else text
+
+
+def vector(values, digits, per_line=None, indent=''):
+    items = [num(v, digits) for v in values]
+    if not per_line:
+        return '{' + ', '.join(items) + '}'
+    lines = [', '.join(items[i:i + per_line]) for i in range(0, len(items), per_line)]
+    return '{' + (',\n' + indent).join(lines) + '}'
+
+
+def by_sex(table, digits, indent):
+    inner = indent + '  '
+    return ('{' + vector(table['1'], digits, 17, inner) + ',\n' + indent + ' '
+            + vector(table['2'], digits, 17, inner) + '}')
+
+
+def main():
+    d = json.loads((ROOT / 'data/demography-inputs.json').read_text())
+    national = json.loads((ROOT / 'data/national-population.json').read_text())
+    nat_years = sorted(int(y) for y in national['population'])
+    nat_values = [national['population'][str(y)] for y in nat_years]
+    pad = '      '
+    years = []
+    for base, c in sorted(d['baseYears'].items()):
+        years.append(f'''    constant DemographyYear motala{base} = DemographyYear(
+      year = {base},
+      population = {by_sex(c['population'], 6, pad + '  ')},
+      deathRisk = {by_sex(c['deathRisk'], 6, pad + '  ')},
+      mortalityImprovement = {by_sex(c['mortalityImprovement'], 4, pad + '  ')},
+      mortalityRatio = {vector(c['mortalityRatio'], 6)},
+      residualMigration = {by_sex(c['residualMigration'], 4, pad + '  ')},
+      shareBoys = {num(c['shareBoys'], 6)},
+      totalFertility = {num(c['totalFertility'], 4)},
+      totalFertilityMean5 = {num(c['totalFertilityMean5'], 4)},
+      births = {num(c['births'], 6)},
+      deaths = {num(c['deaths'], 6)})
+      "Motala vid slutet av {base}; dödlighetskvot {c['mortalityWindow'][0]}-{c['mortalityWindow'][1]}, restflöden {c['migrationTransitions'][0]}-{c['migrationTransitions'][1]}";''')
+    bases = sorted(d['baseYears'])
+    chain = ' elseif '.join(f'if year == {b} then motala{b}' if i == 0 else f'year == {b} then motala{b}' for i, b in enumerate(bases[:-1]))
+    chain = f'{chain} else motala{bases[-1]}'
+    first_base, last_base = bases[0], bases[-1]
+    first = d['fertilityProfile']['year']
+    tfr = [d['projectedTotalFertility'][str(first + i)] for i in range(HORIZON)]
+    improve = d['mortalityImprovement']
+    package = f'''  package SCB "Demografiska data från SCB. Genereras av scripts/write_demography_modelica.py; redigera inte för hand"
+    record DemographyYear "Motala vid ett basårs slut, ettårsåldrar 0-100+ (index 1-101) per kön (1 män, 2 kvinnor)"
+      Integer year "Basår";
+      Real population[2, 101] "Befolkning vid årets slut";
+      Real deathRisk[2, 101] "Rikets dödsrisk vid basåret: fem livslängdstabeller flyttade längs trenden och medelvärdesbildade, andel";
+      Real mortalityImprovement[2, 101] "Årlig minskning av dödsrisken, rikets trend de tio åren fram till basåret";
+      Real mortalityRatio[2] "Motalas dödlighet i förhållande till rikets livslängdstabell, de fem åren fram till basåret";
+      Real residualMigration[2, 101] "Genomsnittlig årlig förändring som inte förklaras av döda, åldrande och födda, de tre åren fram till basåret";
+      Real shareBoys "Andel pojkar bland de födda, de tio åren fram till basåret";
+      Real totalFertility "Motalas summerade fruktsamhet basåret";
+      Real totalFertilityMean5 "Motalas genomsnittliga summerade fruktsamhet de fem åren fram till basåret";
+      Real births "Födda under basåret";
+      Real deaths "Döda under basåret";
+      annotation(Icon(coordinateSystem(extent = {{{{-100, -100}}, {{100, 100}}}}), graphics = {{Rectangle(lineColor = {{40, 95, 140}}, fillColor = {{255, 255, 255}}, fillPattern = FillPattern.Solid, extent = {{{{-100, -100}}, {{100, 100}}}}), Rectangle(lineColor = {{40, 95, 140}}, fillColor = {{40, 95, 140}}, fillPattern = FillPattern.Solid, extent = {{{{-100, 50}}, {{100, 100}}}}), Text(textColor = {{255, 255, 255}}, extent = {{{{-92, 55}}, {{92, 95}}}}, textString = "SCB-år"), Line(points = {{{{-100, 0}}, {{100, 0}}}}, color = {{40, 95, 140}}), Line(points = {{{{-100, -50}}, {{100, -50}}}}, color = {{40, 95, 140}}), Line(points = {{{{0, 50}}, {{0, -100}}}}, color = {{40, 95, 140}})}}));
+    end DemographyYear;
+
+{chr(10).join(years)}
+
+    constant Real fertilityProfile[101] = {vector(d['fertilityProfile']['shares'], 6, 12, pad + '  ')}
+      "Andel av en kvinnas barn som föds vid varje ålder, SCB:s framskrivning {first}; summerar till 1";
+    constant Integer projectionFirstYear = {first} "Första året i SCB:s framskrivning";
+    constant Real projectedTotalFertility[{HORIZON}] = {vector(tfr, 5, 10, pad + '  ')}
+      "Rikets summerade fruktsamhet enligt SCB:s antagande, {first}-{first + HORIZON - 1}";
+    constant Real mortalityImprovement[2, 101] = {by_sex(improve['bySex'], 4, pad)}
+      "Årlig minskning av dödsrisken per ålder och kön i SCB:s framskrivning {improve['from'][0]}-{improve['from'][1]}; ett alternativ till basårets historiska trend";
+
+    function forYear "SCB-data för ett basår"
+      input Integer year "Basår";
+      output DemographyYear data "Motala vid basårets slut";
+    algorithm
+      assert(year >= {first_base} and year <= {last_base}, "Data.SCB har basåren {first_base}-{last_base}, inte " + String(year));
+      data := {chain};
+    end forYear;
+
+    function populationForYear "Befolkning per ettårsålder och kön vid ett basårs slut"
+      input Integer year "Basår";
+      output Real population[2, 101] "Befolkning per ettårsålder och kön";
+    protected
+      DemographyYear data;
+    algorithm
+      data := forYear(year);
+      population := data.population;
+    end populationForYear;
+
+    function groups "Ettårsåldrar summerade till 0-6, 7-15, 16-18, 19-64 och 65+, båda könen"
+      input Real population[2, 101] "Befolkning per ettårsålder och kön";
+      output Real cohorts[5] "Invånare per åldersgrupp";
+    algorithm
+      cohorts := {{sum(population[:, 1:7]), sum(population[:, 8:16]), sum(population[:, 17:19]), sum(population[:, 20:65]), sum(population[:, 66:101])}};
+    end groups;
+
+    constant Integer nationalFirstYear = {nat_years[0]} "Första året i tabellen över rikets folkmängd";
+    constant Real nationalPopulation[{len(nat_years)}] = {vector(nat_values, 9, 8, pad + '  ')}
+      "Rikets folkmängd 31 december {nat_years[0]}-{nat_years[-1]}: utfall till {national['lastOutcome']}, sedan SCB:s framskrivning ({national['archive']})";
+
+    function nationalPopulationAt "Rikets folkmängd 31 december ett visst år"
+      input Integer year "Kalenderår";
+      output Real population "Folkmängd";
+    algorithm
+      assert(year >= nationalFirstYear and year < nationalFirstYear + size(nationalPopulation, 1), "Data.SCB.nationalPopulation saknar år " + String(year));
+      population := nationalPopulation[year - nationalFirstYear + 1];
+    end nationalPopulationAt;
+
+    function olderShares "Andelar av 65+ som är 65-79, 80-89 och 90+"
+      input Real population[2, 101] "Befolkning per ettårsålder och kön";
+      output Real shares[3] "Andel av 65+ som är 65-79, 80-89 och 90+";
+    algorithm
+      shares := {{sum(population[:, 66:80]), sum(population[:, 81:90]), sum(population[:, 91:101])}}/sum(population[:, 66:101]);
+      annotation(Icon(coordinateSystem(extent = {{{{-100, -100}}, {{100, 100}}}}), graphics = {{Ellipse(lineColor = {{90, 110, 130}}, fillColor = {{255, 255, 255}}, fillPattern = FillPattern.Solid, extent = {{{{-100, -100}}, {{100, 100}}}}), Text(textColor = {{90, 110, 130}}, extent = {{{{-92, -50}}, {{92, 50}}}}, textString = "f(x)")}}));
+    end olderShares;
+    annotation(Icon(coordinateSystem(extent = {{{{-100, -100}}, {{100, 100}}}}), graphics = {{Rectangle(lineColor = {{90, 110, 130}}, fillColor = {{245, 248, 250}}, fillPattern = FillPattern.Solid, extent = {{{{-100, -100}}, {{100, 100}}}}, radius = 25), Text(textColor = {{35, 50, 65}}, extent = {{{{-92, -30}}, {{92, 40}}}}, textString = "SCB"), Text(textColor = {{90, 110, 130}}, extent = {{{{-92, -80}}, {{92, -35}}}}, textString = "demografi")}}), Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0). Tabeller: {', '.join(sorted(set(u.rsplit('/', 1)[1] for u in d['tables'].values())))}.
+Arkiv {d['archive']}; bearbetat av scripts/prepare_demography.py till data/demography-inputs.json.</p>
+<p>Varje basår använder bara data fram till det året, så att en prognos från det kan jämföras med det som hände sedan.
+Varje basår har en egen dödlighetstrend, skattad ur rikets livslängdstabeller de tio åren fram till basåret.
+SCB:s framskrivna dödlighet och fruktsamhet kommer från framskrivningen {first} och är bara rättvisa för basåret 2025.</p></html>"));
+  end SCB;
+'''
+    package = ''.join('  ' + line if line.strip() else line for line in package.splitlines(keepends=True))  # nested in Data
+    text = MODEL.read_text()
+    existing = re.compile(r'^    package SCB\b.*?^    end SCB;\n', re.S | re.M)
+    if existing.search(text):
+        text = existing.sub(lambda m: package, text, count=1)
+    else:
+        end = re.search(r'^  end Data;', text, re.M)
+        text = text[:end.start()] + package + text[end.start():]
+    MODEL.write_text(text)
+    print(f'Motala.Data.SCB: base years {", ".join(sorted(d["baseYears"]))}')
+
+
+if __name__ == '__main__':
+    main()
