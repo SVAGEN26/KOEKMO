@@ -74,6 +74,12 @@ def extract(filename,mapping):
             scale=entry[field].get('scale',1)
             row[field]=value*scale
             if not math.isfinite(row[field]) or row[field]<=0: raise ValueError(f'Nonpositive or nonfinite {field}; mapping must use positive revenue totals')
+        # Optional components that may be negative, such as the regulation grant (a fee when negative).
+        for field in ['regulation']:
+            if field in entry:
+                value=get(entry[field])
+                if not isinstance(value,(int,float)) or not math.isfinite(value): raise ValueError(f'Non-numeric {field}: {value}')
+                row[field]=value*entry[field].get('scale',1)
         rows.append(row)
     if len({r['year'] for r in rows})!=len(rows): raise ValueError('Duplicate mapped year')
     return {'municipality':'0583','vintage':mapping['vintage'],'populationReference':mapping['populationReference'],'rows':rows,'provenance':{'workbook':filename.name,'sha256':hashlib.sha256(filename.read_bytes()).hexdigest(),'cellMap':mapping,'cachedFormulasNotRecalculated':True,'calculatedMunicipalityVerified':bool(calculated)}}

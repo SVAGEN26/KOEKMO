@@ -1,0 +1,25 @@
+{
+  "retrieved_at": "2026-11-09T16:02:34.799045+00:00",
+  "region": "all municipalities",
+  "source": "Statistics Sweden (SCB), Statistikdatabasen, CC BY 4.0",
+  "files": [
+    {
+      "file": "equalisation.json",
+      "table": "TAB1981",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB1981/data?lang=sv&outputFormat=json-stat2&valueCodes[ContentsCode]=OE0115B1&valueCodes[ContentsCode]=OE0115B2&valueCodes[ContentsCode]=OE0115B3&valueCodes[ContentsCode]=OE0115B4&valueCodes[ContentsCode]=OE0115B6&valueCodes[ContentsCode]=OE0115B7&valueCodes[Region]=*&valueCodes[Tid]=*",
+      "cells": 41052,
+      "bytes": 186693,
+      "sha256": "5c449f31b2861e3b77f386f48106210ebbcdd7ffb9e16cb6eeb0be83e65c7fa9",
+      "updated": "2026-04-15T06:00:00Z"
+    },
+    {
+      "file": "lss-equalisation.json",
+      "table": "TAB4011",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4011/data?lang=sv&outputFormat=json-stat2&valueCodes[ContentsCode]=OE0115G6&valueCodes[Region]=*&valueCodes[Tid]=*",
+      "cells": 6670,
+      "bytes": 42830,
+      "sha256": "ebb9877d21ffe61a4d84db9aecd2273a05cd046a4e6c9e440bddd919231722d2",
+      "updated": "2026-04-15T06:00:00Z"
+    }
+  ]
+}

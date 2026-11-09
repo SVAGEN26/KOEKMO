@@ -61,7 +61,7 @@ def main():
     mapping={'vintage':'2026-10-06','populationReference':'1 November of the preceding year (Blad 2 Indata C29:J29); not year-end population.',
              'municipalityCheck':{'sheet':'Prognosunderlag','cell':'B1','expected':583},
              'calculatedMunicipalityCheck':{'sheet':'Prognosunderlag','cell':'C1'},'rows':[],
-             'definition':'Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Original workbook units tkr; converted to mnkr.'}
+             'definition':'Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Regulation is row 18, the regulation grant (negative: fee) within the grants. Original workbook units tkr; converted to mnkr.'}
     components=[]
     for i,year in enumerate(range(2026,2034)):
         col='BCDEFGHI'[i];popcol='CDEFGHIJ'[i]
@@ -70,7 +70,7 @@ def main():
         if any(not isinstance(v,(int,float)) for v in values.values()):raise ValueError('Formula error in revenue components')
         checks=[(values[38],sum(values[r] for r in [12,28,30,32])),(values[40],sum(values[r] for r in [14,16,18,20,22,24,34])),(values[38]+values[40],values[36])]
         if any(abs(a-b)>0.01 for a,b in checks):raise ValueError('Revenue components fail reconciliation')
-        mapping['rows'].append({'year':year,'tax':{'sheet':'Blad 1 Totala intäkter','cell':col+'38','scale':0.001},'grants':{'sheet':'Blad 1 Totala intäkter','cell':col+'40','scale':0.001},'population':{'sheet':'Blad 2 Indata','cell':popcol+'29'}})
+        mapping['rows'].append({'year':year,'regulation':{'sheet':'Blad 1 Totala intäkter','cell':col+'18','scale':0.001},'tax':{'sheet':'Blad 1 Totala intäkter','cell':col+'38','scale':0.001},'grants':{'sheet':'Blad 1 Totala intäkter','cell':col+'40','scale':0.001},'population':{'sheet':'Blad 2 Indata','cell':popcol+'29'}})
         components.append({'year':year,'tkrByOutputRow':values})
     (DIRECTORY/'skr-map.json').write_text(json.dumps(mapping,ensure_ascii=False,indent=2)+'\n')
     path=extract(calculated,mapping)

@@ -11,6 +11,14 @@ assumptions are run from every base year:
             growth, the labour-cost index (payroll and pensions) and the price index
             for other costs, and Sweden's population. Grants still grow 2 % a year,
             because the circulars give no figure for Motala's grants.
+  components  as skr, but the grants are computed per component (grantsByComponent):
+            income equalisation follows the circular's mean tax capacity per inhabitant,
+            the regulation grant is the circular's amount per inhabitant, cost and LSS
+            equalisation stay at the base year's amount per inhabitant, the property fee
+            grows 3.5 % a year, and other general grants are zero.
+  hold      as components, but the regulation grant per inhabitant is the circular's for the
+            first year only and then stays at that amount: the rule for forecast years that
+            the state has not yet decided.
   standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,
             pensions 2 %, grants 2 %), with the same population as above.
 
@@ -35,7 +43,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
 LAST = 2025
 ORIGINS = range(2020, 2025)
-OUTPUTS = ('tax', 'grants', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'population', 'debt')
+OUTPUTS = ('tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', 'grantParts[4]', 'grantParts[5]', 'grantParts[6]', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'population', 'debt')
 
 
 def load(path):
@@ -52,6 +60,8 @@ def vintage(origin):
             'labour': {r['year']: r['laborPercent'] / 100 for r in pkv['rows']},
             'other': {r['year']: r['otherPercent'] / 100 for r in pkv['rows']},
             'nationalNovember': {r['year']: r['nationalNovemberPopulation'] for r in rev['rows']},
+            'capacity': {r['year']: r['skrMeanTaxCapacity'] for r in rev['rows']},
+            'regulation': {r['year']: r['municipalRegulationPerCapita'] for r in rev['rows']},
             'sources': {'tax': tax['source'], 'taxLocator': tax['locator'], 'pkvLocator': pkv['locator'],
                         'populationLocator': rev['locators']['populationAndCapacity']}}
 
@@ -74,7 +84,7 @@ def model_source(origin, horizon, v, assumptions):
     years = [origin + i for i in range(1, horizon + 1)]
     lines = [f'base = Motala.Data.motala{origin}', f'horizon = {horizon}',
              f'nationalPopulation0 = {n0:.10g}', f'nationalPopulationPath = {modelica_array(path)}']
-    if assumptions == 'skr':
+    if assumptions in ('skr', 'components', 'hold'):
         cum_tax, cum_labour, tax, pension = 1.0, 1.0, [], []
         for y in years:
             cum_tax *= 1 + v['taxBase'][y]
@@ -85,6 +95,14 @@ def model_source(origin, horizon, v, assumptions):
                   f'wageGrowthPath = {modelica_array([v["labour"][y] for y in years])}',
                   f'priceGrowthPath = {modelica_array([v["other"][y] for y in years])}',
                   f'pensionExpensePath = {modelica_array(pension)}*pension0']
+    if assumptions in ('components', 'hold'):
+        regulation = [v['regulation'][y] for y in years]
+        if assumptions == 'hold':
+            regulation = [regulation[0]] * len(regulation)
+        capacity = [v['capacity'][y] / v['capacity'][origin] for y in years]
+        lines += ['grantsByComponent = true',
+                  f'incomeEqualisationPerCapitaPath = {modelica_array(capacity)}*grantPerCapita0[1]',
+                  f'regulationPerCapitaPath = {modelica_array(regulation)}']
     return 'model Run\n  extends Motala.Annual(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
@@ -116,7 +134,7 @@ def main():
         for origin in ORIGINS:
             v = vintage(origin)
             horizon = min(3, LAST - origin)
-            for assumptions in ('skr', 'standard'):
+            for assumptions in ('skr', 'components', 'hold', 'standard'):
                 directory = Path(tmp) / f'{origin}-{assumptions}'
                 directory.mkdir()
                 for year, m in simulate(origin, horizon, model_source(origin, horizon, v, assumptions), directory).items():
@@ -126,7 +144,8 @@ def main():
                         'assumptions': assumptions, 'year': year, 'horizon': year - origin,
                         'model': {'tax': m['tax'], 'grants': m['grants'], 'netCost': m['cost'] + m['depreciation'],
                                   'personnel': m['payroll'] + m['pensionExpense'], 'result': m['result'],
-                                  'population': m['population']},
+                                  'population': m['population'],
+                                  **({'grantParts': [m[f'grantParts[{j}]'] for j in range(1, 7)]} if assumptions in ('components', 'hold') else {})},
                         'outcome': {'tax': o['tax'], 'grants': o['grants'], 'netCost': o['netCost'],
                                     'personnel': o['payroll'] + o['pension'], 'result': o['result'],
                                     'population': o['population'], 'source': ledger_sources[o['sourceId']]['url']},
@@ -135,7 +154,7 @@ def main():
                     })
     keys = ('tax', 'grants', 'netCost', 'result')
     summary = {}
-    for assumptions in ('skr', 'standard'):
+    for assumptions in ('skr', 'components', 'hold', 'standard'):
         for horizon in (1, 2, 3):
             cases = [r for r in runs if r['assumptions'] == assumptions and r['horizon'] == horizon]
             if cases:
@@ -143,7 +162,7 @@ def main():
                     'cases': len(cases),
                     **{f'{k}MeanError': sum(r['model'][k] - r['outcome'][k] for r in cases) / len(cases) for k in keys},
                     **{f'{k}MeanAbsError': sum(abs(r['model'][k] - r['outcome'][k]) for r in cases) / len(cases) for k in keys}}
-    one = [r for r in runs if r['horizon'] == 1 and r['assumptions'] == 'skr']
+    one = [r for r in runs if r['horizon'] == 1 and r['assumptions'] == 'skr']  # budget and persistence: once per origin
     summary['budget'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['budgetResult'] - r['outcome']['result']) for r in one) / len(one),
                              'resultMeanError': sum(r['budgetResult'] - r['outcome']['result'] for r in one) / len(one)}}
     summary['persistence'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['persistenceResult'] - r['outcome']['result']) for r in one) / len(one)}}
@@ -154,7 +173,9 @@ def main():
            'limitations': [
                'The base-year accounts were published in spring after the circular. The test uses the closing accounts '
                'and the December circular as the information set, as a budget revision in spring would.',
-               'Grants grow 2 % a year in both sets; the circulars have no Motala figure for grants.',
+               'In the skr and standard sets grants grow 2 % a year; the circulars have no Motala figure for grants. '
+               'The components set uses the circular\'s national figures per inhabitant; cost and LSS equalisation '
+               'for Motala are not in the circular and stay at the base year\'s level.',
                'One-off items in the base year (for example an impairment of 12.1 mnkr in 2022 and tax settlements) '
                'carry into the forecast.',
                'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',

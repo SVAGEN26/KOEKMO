@@ -92,6 +92,22 @@ class BaseYears(unittest.TestCase):
             self.assertAlmostEqual(result, o['result'], places=6, msg=f'{year} result')
 
 
+    def test_grant_components_match_the_notes(self):
+        """Note 7 of each annual report (research/data); SCB's amounts per inhabitant agree (data/equalisation.json)."""
+        notes = {r['year']: r['grantComponents'] for r in json.loads((ROOT / 'research/data/motala-revenue-components.json').read_text())['rows']}
+        notes[2025] = json.loads((ROOT / 'research/data/revenue-component-targets-2025.json').read_text())['rows'][0]['grantComponents']
+        scb = json.loads((ROOT / 'data/equalisation.json').read_text())['municipalities']['0583']['years']
+        for year in range(2020, 2026):
+            r, n = record(f'motala{year}'), notes[year]
+            self.assertEqual(r['grantComponents'], [n['incomeEqualisation'], n['costEqualisation'], n['regulationGrant'],
+                                                    n['lssEqualisation'], n['propertyFee']], year)
+            self.assertGreaterEqual(r['grants'] - sum(r['grantComponents']), 0, f'{year}: other general grants')
+            # SCB per inhabitant times the population a year earlier (31 December; SCB uses 1 November).
+            population = r['reportedPopulation'][1]
+            for k, key in [(0, 'income'), (2, 'regulation')]:
+                self.assertAlmostEqual(scb[str(year)][key] * population / 1e6, r['grantComponents'][k], delta=2, msg=f'{year} {key}')
+
+
 class Budgets(unittest.TestCase):
     def test_budget_2026_matches_the_data_file(self):
         budget = json.loads((ROOT / 'data/municipal-budgets.json').read_text())['budgets'][0]

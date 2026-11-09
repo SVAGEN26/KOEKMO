@@ -88,6 +88,10 @@ def prepare():
         if revenue['municipality']!='0583' or revenue['rows']!=expected['rows'] or [r['year'] for r in revenue['rows']]!=list(range(2026,2034)):
             raise ValueError('Revenue artifact does not match verified workbook cells')
         data['revenuePath']=revenue
+        # SKR keeps the state's grant frame fixed in kronor after the budget bill's years. The site holds the
+        # regulation grant per inhabitant from the year after the circular instead (see holdRegulation in scenario-inputs.js).
+        data['regulationRule']={'heldFrom':int(revenue['vintage'][:4])+1,
+            'evidence':'SCB TAB1981: regleringsbidraget per invånare 2005-2026 utan trend utom omföringen 2020-2021; SKR:s belopp för år två och tre för lågt i cirkulären 21:49, 22:54 och 23:56 (data/vintage-hindcast.json, research/data/skr-revenue-vintages.json).'}
         data['revenueImport']={'status':'active-recalculated-motala','selectionCell':'Prognosunderlag!B1','cachedSelection':583,'originalSelection':selection,
                                'message':'Motala (0583) är valt i en omräknad arbetskopia. SKR-referensen 2026–2033 är aktiv och inkluderar slutavräkningar och fastighetsavgift. Scenariot justerar beloppen med modellens förenklade befolknings- och skattesamband. Originalfilen är bevarad och inga makron har körts.'}
         data['limitations'][2]='SKR:s omräknade Motala-belopp är referens. Modellens scenariobelopp kan avvika genom förenklad befolknings-, skattesats- och utjämningsjustering; detta är inte en ny officiell SKR-prognos.'

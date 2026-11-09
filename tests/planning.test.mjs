@@ -66,3 +66,18 @@ test('recalculated municipality revenue is traceable and remains distinct from s
   const legacy=simulate(b,history,{},null);
   assert.equal(legacy.rows[1].officialRevenue,null);
 });
+
+test('the regulation grant is held per inhabitant after the decided year, and nothing else changes',async()=>{
+  const {holdRegulation}=await import('../site/src/scenario-inputs.js');
+  const skr=planning.revenuePath,rule=planning.regulationRule;
+  assert.equal(rule.heldFrom,Number(skr.vintage.slice(0,4))+1);
+  const held=holdRegulation(skr,rule.heldFrom),from=skr.rows.find(r=>r.year===rule.heldFrom);
+  for(const [i,r] of held.rows.entries()) {
+    const s=skr.rows[i];
+    assert.equal(r.tax,s.tax);assert.equal(r.population,s.population);
+    if(r.year<=rule.heldFrom) assert.equal(r.grants,s.grants);
+    else close(r.grants-s.grants,from.regulation/from.population*s.population-s.regulation);
+  }
+  assert.ok(held.rows.at(-1).grants>skr.rows.at(-1).grants,'SKR lets the regulation grant shrink; holding it raises the grants');
+  assert.equal(holdRegulation({...skr,rows:skr.rows.map(({regulation,...r})=>r)},rule.heldFrom).rows[3].grants,skr.rows[3].grants,'without regulation data the path is unchanged');
+});

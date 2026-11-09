@@ -1,10 +1,10 @@
 {
  "source": "Model Motala.Annual; outcomes from Motala kommun annual reports (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
- "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent):\n            income equalisation follows the circular's mean tax capacity per inhabitant,\n            the regulation grant is the circular's amount per inhabitant, cost and LSS\n            equalisation stay at the base year's amount per inhabitant, the property fee\n            grows 3.5 % a year, and other general grants are zero.\n  hold      as components, but the regulation grant per inhabitant is the circular's for the\n            first year only and then stays at that amount: the rule for forecast years that\n            the state has not yet decided.\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
  "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
  "limitations": [
   "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
-  "Grants grow 2 % a year in both sets; the circulars have no Motala figure for grants.",
+  "In the skr and standard sets grants grow 2 % a year; the circulars have no Motala figure for grants. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation for Motala are not in the circular and stay at the base year's level.",
   "One-off items in the base year (for example an impairment of 12.1 mnkr in 2022 and tax settlements) carry into the forecast.",
   "The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.",
   "Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.",
@@ -45,6 +45,76 @@
     "grantsMeanAbsError": 103.73390082128174,
     "netCostMeanAbsError": 186.6208115446149,
     "resultMeanAbsError": 53.00703294279765
+   }
+  },
+  "components": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -32.65440075747988,
+    "grantsMeanError": -31.425076456436226,
+    "netCostMeanError": -20.065718264359383,
+    "resultMeanError": -43.85161928901981,
+    "taxMeanAbsError": 37.680254611110605,
+    "grantsMeanAbsError": 36.389406969502126,
+    "netCostMeanAbsError": 35.44649476025734,
+    "resultMeanAbsError": 43.85161928901981
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -45.25634686427679,
+    "grantsMeanError": -74.33074522017682,
+    "netCostMeanError": -63.661054599351814,
+    "resultMeanError": -54.06641140136153,
+    "taxMeanAbsError": 63.62805538564771,
+    "grantsMeanAbsError": 74.33074522017682,
+    "netCostMeanAbsError": 92.94223411702467,
+    "resultMeanAbsError": 54.06641140136153
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -67.55766353450251,
+    "grantsMeanError": -134.77364006030598,
+    "netCostMeanError": -186.6208115446149,
+    "resultMeanError": -10.502657731610574,
+    "taxMeanAbsError": 80.21277510956664,
+    "grantsMeanAbsError": 134.77364006030598,
+    "netCostMeanAbsError": 186.6208115446149,
+    "resultMeanAbsError": 33.79043532297904
+   }
+  },
+  "hold": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -32.65440075747988,
+    "grantsMeanError": -31.425076456436226,
+    "netCostMeanError": -20.065718264359383,
+    "resultMeanError": -43.85161928901981,
+    "taxMeanAbsError": 37.680254611110605,
+    "grantsMeanAbsError": 36.389406969502126,
+    "netCostMeanAbsError": 35.44649476025734,
+    "resultMeanAbsError": 43.85161928901981
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -45.25634686427679,
+    "grantsMeanError": -53.08082841142502,
+    "netCostMeanError": -63.661054599351814,
+    "resultMeanError": -32.81649459260975,
+    "taxMeanAbsError": 63.62805538564771,
+    "grantsMeanAbsError": 58.22809091799169,
+    "netCostMeanAbsError": 92.94223411702467,
+    "resultMeanAbsError": 46.08287512548841
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -67.55766353450251,
+    "grantsMeanError": -96.09300194577384,
+    "netCostMeanError": -186.6208115446149,
+    "resultMeanError": 28.295565509145717,
+    "taxMeanAbsError": 80.21277510956664,
+    "grantsMeanAbsError": 96.09300194577384,
+    "netCostMeanAbsError": 186.6208115446149,
+    "resultMeanAbsError": 55.118417142425564
    }
   },
   "standard": {
@@ -165,6 +235,216 @@
     "personnel": 2280.263131614554,
     "result": 74.95833126924754,
     "population": 43516.42644767348
+   },
+   "outcome": {
+    "tax": 2227,
+    "grants": 865,
+    "netCost": 3063,
+    "personnel": 2431,
+    "result": 23,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 64.8
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "components",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1954.918386619092,
+    "grants": 775.9108262826647,
+    "netCost": 2680.5175792186574,
+    "personnel": 2181.416515632158,
+    "result": 46.68964441565959,
+    "population": 43605.60316121085,
+    "grantParts": [
+     511.4460397834547,
+     18.68586998832231,
+     129.78536,
+     21.08405651088773,
+     94.9095,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2032.2,
+    "grants": 763.5,
+    "netCost": 2732.8,
+    "personnel": 2143.5,
+    "result": 61.7,
+    "population": 43674,
+    "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+   },
+   "budgetResult": 40.1,
+   "persistenceResult": 64.8
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "components",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 2005.94813966854,
+    "grants": 780.3062040523389,
+    "netCost": 2735.8246717531433,
+    "personnel": 2225.9932221493523,
+    "result": 46.63104160153307,
+    "population": 43564.28609275857,
+    "grantParts": [
+     536.9415486778912,
+     18.67114187517786,
+     105.3947428406466,
+     21.06743815862315,
+     98.2313325,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2137.6,
+    "grants": 794.3,
+    "netCost": 2807.3,
+    "personnel": 2187.1,
+    "result": 125.1,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 64.8
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "components",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 2061.728133624142,
+    "grants": 775.8273898025027,
+    "netCost": 2802.9032656512627,
+    "personnel": 2280.263131614554,
+    "result": 30.70185360318737,
+    "population": 43516.42644767348,
+    "grantParts": [
+     563.3601187245088,
+     18.65345064306517,
+     71.09691490338199,
+     21.0474763940468,
+     101.6694291375,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2227,
+    "grants": 865,
+    "netCost": 3063,
+    "personnel": 2431,
+    "result": 23,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 64.8
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hold",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1954.918386619092,
+    "grants": 775.9108262826647,
+    "netCost": 2680.5175792186574,
+    "personnel": 2181.416515632158,
+    "result": 46.68964441565959,
+    "population": 43605.60316121085,
+    "grantParts": [
+     511.4460397834547,
+     18.68586998832231,
+     129.78536,
+     21.08405651088773,
+     94.9095,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2032.2,
+    "grants": 763.5,
+    "netCost": 2732.8,
+    "personnel": 2143.5,
+    "result": 61.7,
+    "population": 43674,
+    "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+   },
+   "budgetResult": 40.1,
+   "persistenceResult": 64.8
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hold",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 2005.94813966854,
+    "grants": 804.5945250131333,
+    "netCost": 2735.8246717531433,
+    "personnel": 2225.9932221493523,
+    "result": 70.91936256232748,
+    "population": 43564.28609275857,
+    "grantParts": [
+     536.9415486778912,
+     18.67114187517786,
+     129.6830638014411,
+     21.06743815862315,
+     98.2313325,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2137.6,
+    "grants": 794.3,
+    "netCost": 2807.3,
+    "personnel": 2187.1,
+    "result": 125.1,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 64.8
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hold",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 2061.728133624142,
+    "grants": 834.2906617389847,
+    "netCost": 2802.9032656512627,
+    "personnel": 2280.263131614554,
+    "result": 89.30758792393976,
+    "population": 43516.42644767348,
+    "grantParts": [
+     563.3601187245088,
+     18.65345064306517,
+     129.560186839864,
+     21.0474763940468,
+     101.6694291375,
+     0.0
+    ]
    },
    "outcome": {
     "tax": 2227,
@@ -344,6 +624,216 @@
    "origin": 2021,
    "circular": "21:49",
    "published": "2021-12-16",
+   "assumptions": "components",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 2083.458668385696,
+    "grants": 765.3573054896958,
+    "netCost": 2789.308276050789,
+    "personnel": 2179.399172272532,
+    "result": 58.02922066724273,
+    "population": 43664.09294559435,
+    "grantParts": [
+     520.308805491529,
+     15.71223189734189,
+     109.053978,
+     17.71379010082493,
+     102.5685,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2137.6,
+    "grants": 794.3,
+    "netCost": 2807.3,
+    "personnel": 2187.1,
+    "result": 125.1,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+   },
+   "budgetResult": 56.3,
+   "persistenceResult": 61.7
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "components",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 2140.883055831611,
+    "grants": 764.0943781291486,
+    "netCost": 2883.8198869060793,
+    "personnel": 2255.62558389011,
+    "result": 19.22988056151462,
+    "population": 43648.96387005461,
+    "grantParts": [
+     545.7911814427687,
+     15.7086677187404,
+     78.72635958090662,
+     17.70977188673281,
+     106.1583975,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2227,
+    "grants": 865,
+    "netCost": 3063,
+    "personnel": 2431,
+    "result": 23,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 61.7
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "components",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 2194.616208409754,
+    "grants": 790.0823852497695,
+    "netCost": 2953.885348041422,
+    "personnel": 2305.094692357697,
+    "result": 28.22981278386533,
+    "population": 43628.95998354401,
+    "grantParts": [
+     569.193725552485,
+     15.70322485700864,
+     77.60785776095709,
+     17.70363566681866,
+     109.8739414125,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2251,
+    "grants": 953,
+    "netCost": 3196,
+    "personnel": 2533,
+    "result": 1,
+    "population": 43505,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 61.7
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hold",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 2083.458668385696,
+    "grants": 765.3573054896958,
+    "netCost": 2789.308276050789,
+    "personnel": 2179.399172272532,
+    "result": 58.02922066724273,
+    "population": 43664.09294559435,
+    "grantParts": [
+     520.308805491529,
+     15.71223189734189,
+     109.053978,
+     17.71379010082493,
+     102.5685,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2137.6,
+    "grants": 794.3,
+    "netCost": 2807.3,
+    "personnel": 2187.1,
+    "result": 125.1,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+   },
+   "budgetResult": 56.3,
+   "persistenceResult": 61.7
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hold",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 2140.883055831611,
+    "grants": 794.3972586333911,
+    "netCost": 2883.8198869060793,
+    "personnel": 2255.62558389011,
+    "result": 49.53276106575731,
+    "population": 43648.96387005461,
+    "grantParts": [
+     545.7911814427687,
+     15.7086677187404,
+     109.0292400851491,
+     17.70977188673281,
+     106.1583975,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2227,
+    "grants": 865,
+    "netCost": 3063,
+    "personnel": 2431,
+    "result": 23,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 61.7
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hold",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 2194.616208409754,
+    "grants": 821.4659902723387,
+    "netCost": 2953.885348041422,
+    "personnel": 2305.094692357697,
+    "result": 59.81338605341716,
+    "population": 43628.95998354401,
+    "grantParts": [
+     569.193725552485,
+     15.70322485700864,
+     108.9914627835263,
+     17.70363566681866,
+     109.8739414125,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2251,
+    "grants": 953,
+    "netCost": 3196,
+    "personnel": 2533,
+    "result": 1,
+    "population": 43505,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 61.7
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
    "assumptions": "standard",
    "year": 2022,
    "horizon": 1,
@@ -506,6 +996,216 @@
    "origin": 2022,
    "circular": "22:54",
    "published": "2022-12-15",
+   "assumptions": "components",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 2193.317294533406,
+    "grants": 796.8784185545708,
+    "netCost": 3013.918504289874,
+    "personnel": 2345.488803356762,
+    "result": -22.10508462516827,
+    "population": 43732.68014143709,
+    "grantParts": [
+     556.3249806032038,
+     13.31644456656134,
+     101.842512,
+     19.82448138480561,
+     105.57,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2227,
+    "grants": 865,
+    "netCost": 3063,
+    "personnel": 2431,
+    "result": 23,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+   },
+   "budgetResult": 29,
+   "persistenceResult": 125.1
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "components",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 2270.460732049059,
+    "grants": 827.187860310962,
+    "netCost": 3133.4488639080246,
+    "personnel": 2444.96247782864,
+    "result": -34.88925924279056,
+    "population": 43731.28110942414,
+    "grantParts": [
+     584.4556690921598,
+     13.31786980540169,
+     100.3227682444567,
+     19.82660316894387,
+     109.26495,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2251,
+    "grants": 953,
+    "netCost": 3196,
+    "personnel": 2533,
+    "result": 1,
+    "population": 43505,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 125.1
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "components",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 2348.982667362596,
+    "grants": 834.7693047668099,
+    "netCost": 3145.3489516734708,
+    "personnel": 2435.708582555537,
+    "result": 38.56036041811558,
+    "population": 43724.06520558268,
+    "grantParts": [
+     612.8815525327186,
+     13.31744375956727,
+     75.65511631930376,
+     19.82596890522045,
+     113.08922325,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2330,
+    "grants": 987,
+    "netCost": 3203,
+    "personnel": 2478,
+    "result": 105,
+    "population": 43131,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 125.1
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hold",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 2193.317294533406,
+    "grants": 796.8784185545708,
+    "netCost": 3013.918504289874,
+    "personnel": 2345.488803356762,
+    "result": -22.10508462516827,
+    "population": 43732.68014143709,
+    "grantParts": [
+     556.3249806032038,
+     13.31644456656134,
+     101.842512,
+     19.82448138480561,
+     105.57,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2227,
+    "grants": 865,
+    "netCost": 3063,
+    "personnel": 2431,
+    "result": 23,
+    "population": 43728,
+    "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+   },
+   "budgetResult": 29,
+   "persistenceResult": 125.1
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hold",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 2270.460732049059,
+    "grants": 828.7185041159123,
+    "netCost": 3133.4488639080246,
+    "personnel": 2444.96247782864,
+    "result": -33.3586154378404,
+    "population": 43731.28110942414,
+    "grantParts": [
+     584.4556690921598,
+     13.31786980540169,
+     101.853412049407,
+     19.82660316894387,
+     109.26495,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2251,
+    "grants": 953,
+    "netCost": 3196,
+    "personnel": 2533,
+    "result": 1,
+    "population": 43505,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 125.1
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hold",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 2348.982667362596,
+    "grants": 860.9643421513551,
+    "netCost": 3145.3489516734708,
+    "personnel": 2435.708582555537,
+    "result": 64.76572255008023,
+    "population": 43724.06520558268,
+    "grantParts": [
+     612.8815525327186,
+     13.31744375956727,
+     101.8501537038488,
+     19.82596890522045,
+     113.08922325,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2330,
+    "grants": 987,
+    "netCost": 3203,
+    "personnel": 2478,
+    "result": 105,
+    "population": 43131,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 125.1
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
    "assumptions": "standard",
    "year": 2023,
    "horizon": 1,
@@ -641,6 +1341,146 @@
    "origin": 2023,
    "circular": "23:56",
    "published": "2023-12-14",
+   "assumptions": "components",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 2263.564634634077,
+    "grants": 918.8750410902024,
+    "netCost": 3234.451941239745,
+    "personnel": 2570.759980990425,
+    "result": -57.9874348156909,
+    "population": 43754.27570457586,
+    "grantParts": [
+     607.9695530902025,
+     29.0,
+     133.195488,
+     39.0,
+     109.71,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2251,
+    "grants": 953,
+    "netCost": 3196,
+    "personnel": 2533,
+    "result": 1,
+    "population": 43505,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+   },
+   "budgetResult": -15,
+   "persistenceResult": 23
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "components",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 2347.282684993683,
+    "grants": 930.3885766268431,
+    "netCost": 3261.5623590353457,
+    "personnel": 2572.130721958217,
+    "result": 6.862691474296753,
+    "population": 43771.85066346428,
+    "grantParts": [
+     644.4001642964762,
+     29.0174258011503,
+     104.397701831118,
+     39.02343469809868,
+     113.54985,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2330,
+    "grants": 987,
+    "netCost": 3203,
+    "personnel": 2478,
+    "result": 105,
+    "population": 43131,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 23
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hold",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 2263.564634634077,
+    "grants": 918.8750410902024,
+    "netCost": 3234.451941239745,
+    "personnel": 2570.759980990425,
+    "result": -57.9874348156909,
+    "population": 43754.27570457586,
+    "grantParts": [
+     607.9695530902025,
+     29.0,
+     133.195488,
+     39.0,
+     109.71,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2251,
+    "grants": 953,
+    "netCost": 3196,
+    "personnel": 2533,
+    "result": 1,
+    "population": 43505,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+   },
+   "budgetResult": -15,
+   "persistenceResult": 23
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hold",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 2347.282684993683,
+    "grants": 959.2663985918632,
+    "netCost": 3261.5623590353457,
+    "personnel": 2572.130721958217,
+    "result": 35.7405134393166,
+    "population": 43771.85066346428,
+    "grantParts": [
+     644.4001642964762,
+     29.0174258011503,
+     133.2755237961381,
+     39.02343469809868,
+     113.54985,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2330,
+    "grants": 987,
+    "netCost": 3203,
+    "personnel": 2478,
+    "result": 105,
+    "population": 43131,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+   },
+   "budgetResult": null,
+   "persistenceResult": 23
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
    "assumptions": "standard",
    "year": 2024,
    "horizon": 1,
@@ -705,6 +1545,76 @@
     "personnel": 2492.119302695703,
     "result": 97.37471632622828,
     "population": 43363.11100568525
+   },
+   "outcome": {
+    "tax": 2330,
+    "grants": 987,
+    "netCost": 3203,
+    "personnel": 2478,
+    "result": 105,
+    "population": 43131,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+   },
+   "budgetResult": 96,
+   "persistenceResult": 1
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "components",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 2319.26901204033,
+    "grants": 948.653026300685,
+    "netCost": 3183.575107879138,
+    "personnel": 2492.119302695703,
+    "result": 71.91555791285782,
+    "population": 43363.11100568525,
+    "grantParts": [
+     646.3408258103813,
+     30.84190907427735,
+     114.67918,
+     38.80111141602634,
+     117.99,
+     0.0
+    ]
+   },
+   "outcome": {
+    "tax": 2330,
+    "grants": 987,
+    "netCost": 3203,
+    "personnel": 2478,
+    "result": 105,
+    "population": 43131,
+    "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+   },
+   "budgetResult": 96,
+   "persistenceResult": 1
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "hold",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 2319.26901204033,
+    "grants": 948.653026300685,
+    "netCost": 3183.575107879138,
+    "personnel": 2492.119302695703,
+    "result": 71.91555791285782,
+    "population": 43363.11100568525,
+    "grantParts": [
+     646.3408258103813,
+     30.84190907427735,
+     114.67918,
+     38.80111141602634,
+     117.99,
+     0.0
+    ]
    },
    "outcome": {
     "tax": 2330,

@@ -421,49 +421,57 @@
         "year": 2026,
         "tax": 2403.874358,
         "grants": 982.773537739798,
-        "population": 43155.0
+        "population": 43155.0,
+        "regulation": 120.773636477522
       },
       {
         "year": 2027,
         "tax": 2512.8949559999996,
         "grants": 1019.5394917055901,
-        "population": 43203.0
+        "population": 43203.0,
+        "regulation": 109.82572502906399
       },
       {
         "year": 2028,
         "tax": 2618.968228,
         "grants": 1037.99152248903,
-        "population": 43093.0
+        "population": 43093.0,
+        "regulation": 101.915211812508
       },
       {
         "year": 2029,
         "tax": 2724.123062,
         "grants": 1049.57000117674,
-        "population": 43115.0
+        "population": 43115.0,
+        "regulation": 85.3577395002218
       },
       {
         "year": 2030,
         "tax": 2830.923552,
         "grants": 1061.4225445678198,
-        "population": 43164.0
+        "population": 43164.0,
+        "regulation": 68.5476108913036
       },
       {
         "year": 2031,
         "tax": 2939.891037,
         "grants": 1073.5617207161902,
-        "population": 43270.0
+        "population": 43270.0,
+        "regulation": 51.3870790396724
       },
       {
         "year": 2032,
         "tax": 3053.38875,
         "grants": 1086.22587751536,
-        "population": 43379.0
+        "population": 43379.0,
+        "regulation": 33.5133538388408
       },
       {
         "year": 2033,
         "tax": 3172.086697,
         "grants": 1099.43326482028,
-        "population": 43492.0
+        "population": 43492.0,
+        "regulation": 14.8219711437628
       }
     ],
     "provenance": {
@@ -493,6 +501,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "C29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "B18",
+              "scale": 0.001
             }
           },
           {
@@ -510,6 +523,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "D29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "C18",
+              "scale": 0.001
             }
           },
           {
@@ -527,6 +545,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "E29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "D18",
+              "scale": 0.001
             }
           },
           {
@@ -544,6 +567,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "F29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "E18",
+              "scale": 0.001
             }
           },
           {
@@ -561,6 +589,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "G29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "F18",
+              "scale": 0.001
             }
           },
           {
@@ -578,6 +611,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "H29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "G18",
+              "scale": 0.001
             }
           },
           {
@@ -595,6 +633,11 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "I29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "H18",
+              "scale": 0.001
             }
           },
           {
@@ -612,10 +655,15 @@
             "population": {
               "sheet": "Blad 2 Indata",
               "cell": "J29"
+            },
+            "regulation": {
+              "sheet": "Blad 1 Totala intäkter",
+              "cell": "I18",
+              "scale": 0.001
             }
           }
         ],
-        "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Original workbook units tkr; converted to mnkr."
+        "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Regulation is row 18, the regulation grant (negative: fee) within the grants. Original workbook units tkr; converted to mnkr."
       },
       "cachedFormulasNotRecalculated": true,
       "recalculation": {
@@ -794,5 +842,9 @@
         ]
       }
     }
+  },
+  "regulationRule": {
+    "heldFrom": 2027,
+    "evidence": "SCB TAB1981: regleringsbidraget per invånare 2005-2026 utan trend utom omföringen 2020-2021; SKR:s belopp för år två och tre för lågt i cirkulären 21:49, 22:54 och 23:56 (data/vintage-hindcast.json, research/data/skr-revenue-vintages.json)."
   }
 }

@@ -208,3 +208,19 @@ där sajten påverkas, i JavaScript-referensen:
 - `scripts/write_demography_modelica.py` skriver båda SCB-paketen. Delningen verifierad: alla sju exempelmodeller gav
   bit för bit samma resultat före och efter, liksom båda testerna mot historien och wasm-jit-pariteten.
 - Nästa: en andra kommun som pilot (skripten tar ännu inte kommunkod), och bidragen per del som utbytbar komponent.
+
+## Generella bidrag per del och regleringsregeln (2026-11-09)
+
+- `scripts/fetch_equalisation.py` → `data/equalisation.json` (arkiv `data/downloads/20261109T160234Z`): SCB TAB1981 och
+  TAB4011, alla 290 kommuner, kr/inv 2005-2026 (2026 preliminärt). Motala 2023: inkomstutjämning 13 293 kr ger 581 mnkr = not 7.
+  Regleringsbidraget per invånare (lika för alla): -490 till +1 024 kr 2005-2019 utan trend, 2 336-3 055 kr 2021-2026.
+- `BaseYear.grantComponents` (inkomst, kostnad, reglering, LSS, fastighetsavgift; resten övriga). Kontrollerat mot AR 2022 not 7
+  (2021-2022), AR 2023-2025 not 7 och SCB per invånare (2020).
+- `Revenue` har `grantsByComponent` (standard av) och `grantParts[6]`; banor per invånare i Assumptions.
+- Hindcast med tre nya varianter (`components`, `hold`): regleringsbidraget ett år fram träffar exakt ur cirkuläret, men totalen
+  blir inte bättre än 2 %-regeln år 1 (MAE 36 mot 31) eftersom övriga bidrag (21, 50 mnkr 2024-2025) och kostnads-/LSS-utjämningens
+  hopp 2023 (+35) saknas. År 2-3: hålla regleringsbidraget per invånare (MAE 58, 96) slår cirkulärets frysta ram (74, 135).
+  Alla varianter underskattar bidragen 2021-2025 (+6,6 %/år i utfall).
+- SKR:s regleringspost (rad 18) importeras nu per år (`regulation` i skr-revenue-path.json). Webbens standard: regleringsbidraget
+  per invånare ligger kvar efter 2027 (`holdRegulation`, kryssruta). 2033: bidrag 1 178 i stället för 1 083 mnkr, resultat 155
+  i stället för 56, skuld 1 541 i stället för 1 853 (headless Firefox).

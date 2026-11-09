@@ -26,6 +26,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "C29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "B18",
+        "scale": 0.001
       }
     },
     {
@@ -43,6 +48,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "D29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "C18",
+        "scale": 0.001
       }
     },
     {
@@ -60,6 +70,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "E29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "D18",
+        "scale": 0.001
       }
     },
     {
@@ -77,6 +92,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "F29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "E18",
+        "scale": 0.001
       }
     },
     {
@@ -94,6 +114,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "G29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "F18",
+        "scale": 0.001
       }
     },
     {
@@ -111,6 +136,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "H29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "G18",
+        "scale": 0.001
       }
     },
     {
@@ -128,6 +158,11 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "I29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "H18",
+        "scale": 0.001
       }
     },
     {
@@ -145,8 +180,13 @@
       "population": {
         "sheet": "Blad 2 Indata",
         "cell": "J29"
+      },
+      "regulation": {
+        "sheet": "Blad 1 Totala intäkter",
+        "cell": "I18",
+        "scale": 0.001
       }
     }
   ],
-  "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Original workbook units tkr; converted to mnkr."
+  "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Regulation is row 18, the regulation grant (negative: fee) within the grants. Original workbook units tkr; converted to mnkr."
 }

@@ -8,6 +8,7 @@ package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; be
       Real deaths "Döda under basåret";
       Real tax "Skatteintäkter, mnkr";
       Real grants "Generella statsbidrag och utjämning, mnkr";
+      Real grantComponents[5] "Därav inkomstutjämning, kostnadsutjämning, regleringsbidrag (avgift negativ), LSS-utjämning och fastighetsavgift, mnkr; resten är övriga generella bidrag";
       Real payroll "Lönekostnader exklusive pensioner, mnkr";
       Real pension "Pensionskostnad, mnkr";
       Real otherOperatingExpense "Verksamhetens bruttokostnader minus löner och pensioner, mnkr";
@@ -246,6 +247,19 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real nationalPopulationPath[horizon] = {Data.SCB.nationalPopulationAt(base.year + i - 1) for i in 1:horizon}
       "Rikets folkmängd vid slutet av året före varje prognosår, personer (SCB: utfall, sedan framskrivning)";
     parameter Boolean importedRevenue = false "Sant när referensbanan är importerad från SKR";
+    // Generella bidrag per del (används med grantsByComponent)
+    parameter Boolean grantsByComponent = false "Bidragen räknas per del: inkomstutjämning, kostnads- och LSS-utjämning, regleringsbidrag, fastighetsavgift och övriga";
+    parameter Real grantComponents0[5] = base.grantComponents "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
+    final parameter Real grantPerCapita0[4] = grantComponents0[1:4]*1e6/sum(revenuePopulation0) "Basårets inkomst-, kostnads-, reglerings- och LSS-del, kr per invånare";
+    parameter Real incomeEqualisationPerCapitaPath[horizon] = {grantPerCapita0[1]*(referenceTax[i]/tax0)/(nationalPopulationPath[i]/nationalPopulation0) for i in 1:horizon}
+      "Inkomstutjämning per år, kr per invånare; följer rikets skatteunderlag per invånare (referensbanans tillväxt delad med rikets folkmängd)";
+    parameter Real costEqualisationPerCapitaPath[horizon] = fill(grantPerCapita0[2], horizon) "Kostnadsutjämning per år, kr per invånare; basårets belopp om inget annat anges";
+    parameter Real regulationPerCapitaPath[horizon] = fill(grantPerCapita0[3], horizon)
+      "Regleringsbidrag per år, kr per invånare; basårets belopp om inget annat anges. Samma för alla kommuner; staten beslutar det i budgeten";
+    parameter Real lssEqualisationPerCapitaPath[horizon] = fill(grantPerCapita0[4], horizon) "LSS-utjämning per år, kr per invånare; basårets belopp om inget annat anges";
+    parameter Real propertyFeeGrowth = 0.035 "Fastighetsavgiftens årliga ökning, andel; taket följer inkomstbasbeloppet (3,8 procent om året 2020-2026)";
+    parameter Real propertyFeePath[horizon] = {grantComponents0[5]*(1 + propertyFeeGrowth)^i for i in 1:horizon} "Kommunal fastighetsavgift per år, mnkr";
+    parameter Real otherGeneralGrantsPath[horizon] = zeros(horizon) "Övriga generella bidrag per år, mnkr; noll om inget annat anges, eftersom de oftast är tillfälliga";
     parameter Boolean revenueFromReference = false "Skatt och bidrag följer referensbanan exakt (till exempel budgetens belopp)";
     parameter Real investmentPath[horizon] = fill(investment, horizon) "Investeringar per år, mnkr; tas i bruk samma år";
     parameter Real interestRatePath[horizon] = fill(interestRate, horizon) "Låneränta på ingående skuld per år, andel";
@@ -710,6 +724,15 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
       parameter Boolean importedRevenue "Sant när referensbanan är importerad från SKR";
       parameter Boolean followReference = false "Skatt och bidrag följer referensbanan exakt, utan befolkningseffekt (till exempel budgetens belopp)";
       parameter Real nationalPopulation0 "Rikets folkmängd vid slutet av året före basåret, personer";
+      parameter Boolean grantsByComponent = false "Bidragen räknas per del i stället för som en referensbana (gäller inte en importerad SKR-bana eller budgetens belopp)";
+      parameter Integer horizon(min = 1) = 1 "Antal årssteg i bidragsbanorna";
+      parameter Real grantComponents0[5] = zeros(5) "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
+      parameter Real incomeEqualisationPerCapita[horizon] = zeros(horizon) "Inkomstutjämning per år, kr per invånare";
+      parameter Real costEqualisationPerCapita[horizon] = zeros(horizon) "Kostnadsutjämning per år, kr per invånare (avgift negativ)";
+      parameter Real regulationPerCapita[horizon] = zeros(horizon) "Regleringsbidrag per år, kr per invånare (avgift negativ)";
+      parameter Real lssEqualisationPerCapita[horizon] = zeros(horizon) "LSS-utjämning per år, kr per invånare (avgift negativ)";
+      parameter Real propertyFee[horizon] = zeros(horizon) "Kommunal fastighetsavgift per år, mnkr";
+      parameter Real otherGeneralGrants[horizon] = zeros(horizon) "Övriga generella bidrag per år, mnkr";
       outer Calendar calendar;
       Interfaces.CohortsInput cohorts "Befolkning" annotation(
         Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
@@ -719,6 +742,8 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
       discrete output Real tax(start = tax0, fixed = true) "Skatteintäkter, mnkr: referensbana · kommunens folkmängd i förhållande till rikets · ålderseffekt · skattesats / basårets skattesats";
       discrete output Real grants(start = grants0, fixed = true) "Generella statsbidrag och utjämning, mnkr: referensbana · kommunens folkmängd i förhållande till rikets, minus utjämning av ålderseffekten";
+      discrete output Real grantParts[6](start = cat(1, grantComponents0, {grants0 - sum(grantComponents0)}), each fixed = true)
+        "Bidragen per del med grantsByComponent: inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning, fastighetsavgift och övriga, mnkr";
     protected
       discrete Real popFactor(start = 1, fixed = true) "kommunens folkmängd i förhållande till rikets, jämfört med året före basåret";
       discrete Real standardTax(start = 0, fixed = true) "Skatt vid basårets skattesats och sammansättning, mnkr";
@@ -735,7 +760,12 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
         composition := (pre(cohorts.p[4])/p0[4])/(sum(pre(cohorts.p))/sum(p0));
         deviation := if importedRevenue or followReference then 0 else standardTax*(composition - 1);
         tax := if followReference then reference.tax*taxRate/baseTaxRate else (standardTax + deviation)*taxRate/baseTaxRate;
-        grants := if followReference then reference.grants else reference.grants*popFactor - equalisationOffset*deviation;
+        // Per del: belopp per invånare gånger folkmängden året före; inkomstutjämningen tar tillbaka ålderseffekten.
+        grantParts := if grantsByComponent then {incomeEqualisationPerCapita[calendar.pathIndex]*sum(pre(cohorts.p))/1e6 - equalisationOffset*deviation,
+          costEqualisationPerCapita[calendar.pathIndex]*sum(pre(cohorts.p))/1e6, regulationPerCapita[calendar.pathIndex]*sum(pre(cohorts.p))/1e6,
+          lssEqualisationPerCapita[calendar.pathIndex]*sum(pre(cohorts.p))/1e6, propertyFee[calendar.pathIndex], otherGeneralGrants[calendar.pathIndex]} else zeros(6);
+        grants := if followReference then reference.grants elseif grantsByComponent and not importedRevenue then sum(grantParts)
+          else reference.grants*popFactor - equalisationOffset*deviation;
       end when;
       annotation(
         Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Intäkter", fontSize = 21, textColor = {40, 95, 140}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Skatt / bidrag", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {40, 95, 140})}),
@@ -744,6 +774,10 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
 är importerad, annars en illustrativ tillväxt. Banan skalas med föregående års folkmängd. En ändrad andel i arbetsför ålder
 ändrar skatten, och utjämningen tar tillbaka det mesta av avvikelsen via bidragen. En annan skattesats ändrar bara skatten.</p>
 <p>Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning.</p>
+<p>Med <code>grantsByComponent</code> räknas bidragen per del: inkomstutjämning, kostnadsutjämning, regleringsbidrag och
+LSS-utjämning som belopp per invånare gånger folkmängden året före, fastighetsavgiften och övriga bidrag i mnkr. Banorna
+kommer från Assumptions. Inkomstutjämningen följer rikets skattekraft per invånare, regleringsbidraget statens beslut;
+SCB publicerar alla delar per kommun (tabell TAB1981 och TAB4011). <code>grantParts</code> visar delarna.</p>
 <p>Med <code>followReference</code> tas referensbanan rakt av, till exempel budgetens belopp; bara en ändrad skattesats
 påverkar då skatten. En importerad SKR-bana innehåller redan befolkningens sammansättning, så då läggs ingen ålderseffekt
 till; banan skalas bara med modellens folkmängd mot SKR:s.</p>
@@ -886,6 +920,7 @@ härledd ur bokslutet (tillgångar / avskrivningar, cirka 17 år):</p>
     // Intäkter, kapital och finansiering
     Real tax "Skatteintäkter, mnkr; följer rikets skatteunderlag och kommunens folkmängd i förhållande till rikets (se komponenten Intäkter)";
     Real grants "Generella statsbidrag och utjämning, mnkr; följer referensbanan och kommunens folkmängd i förhållande till rikets (se komponenten Intäkter)";
+    Real grantParts[6] "Bidragen per del med grantsByComponent: inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning, fastighetsavgift och övriga, mnkr";
     Real depreciation "Avskrivningar, mnkr";
     Real assets "Tillgångar vid årets slut, mnkr";
     Real interest "Räntekostnader, mnkr";
@@ -916,7 +951,7 @@ härledd ur bokslutet (tillgångar / avskrivningar, cirka 17 år):</p>
       Placement(transformation(origin = {-20, 110}, extent = {{-75, -56}, {75, 56}})));
     Components.OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth) "Drift" annotation(
       Placement(transformation(origin = {250, 110}, extent = {{-75, -56}, {75, 56}})));
-    Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0) "Intäkter" annotation(
+    Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0, grantsByComponent = grantsByComponent, horizon = horizon, grantComponents0 = grantComponents0, incomeEqualisationPerCapita = incomeEqualisationPerCapitaPath, costEqualisationPerCapita = costEqualisationPerCapitaPath, regulationPerCapita = regulationPerCapitaPath, lssEqualisationPerCapita = lssEqualisationPerCapitaPath, propertyFee = propertyFeePath, otherGeneralGrants = otherGeneralGrantsPath) "Intäkter" annotation(
       Placement(transformation(origin = {-280, -110}, extent = {{-75, -56}, {75, 56}})));
     Components.Capital capital(assets0 = assets0, depreciation0 = depreciation0, life = life) "Kapital" annotation(
       Placement(transformation(origin = {-20, -110}, extent = {{-75, -56}, {75, 56}})));
@@ -977,6 +1012,7 @@ härledd ur bokslutet (tillgångar / avskrivningar, cirka 17 år):</p>
     cost = operations.cost;
     tax = revenues.tax;
     grants = revenues.grants;
+    grantParts = revenues.grantParts;
     assets = capital.assets;
     depreciation = capital.depreciation;
     assetBalance = capital.assetBalance;

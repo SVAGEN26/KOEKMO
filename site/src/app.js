@@ -1,4 +1,4 @@
-import {sum,validateRevenuePath} from './scenario-inputs.js';
+import {sum,validateRevenuePath,holdRegulation} from './scenario-inputs.js';
 import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
 import {openScenarioReport} from './pdf-report.js';
@@ -19,6 +19,12 @@ const advanced=[['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'F
 let engine,b,history,planning,overrides={},path=null,run,base,version=0,modelSource=null,modelView=null;
 const sourcedRates={taxGrowth:['Skatteunderlag, avvikelse mot SKR','taxBaseGrowth'],wageGrowth:['Arbetskraft, avvikelse mot SKR','labourCostGrowth'],priceGrowth:['Övriga priser, avvikelse mot SKR','otherPriceGrowth']};
 function controlDefinitions(defs){return defs.map(d=>b.planningInputs&&sourcedRates[d[0]]?[d[0],sourcedRates[d[0]][0],-3,3,.1,'pp','Procentenheter mot SKR:s årsvisa bana']:d);}
+// The imported SKR path, with the regulation grant held per inhabitant after the decided budget year unless unchecked.
+function selectPath(enabled){
+  if(!enabled||!planning.revenuePath) return null;
+  const skr=validateRevenuePath(planning.revenuePath,b.baseYear);
+  return $('regulation-held').checked&&planning.regulationRule?holdRegulation(skr,planning.regulationRule.heldFrom):skr;
+}
 function planningControls(){makeControls(controlDefinitions(definitions),'sliders');makeControls(controlDefinitions(advanced),'advanced');syncControls();}
 function report(e){$('error').textContent=e.message;$('error').hidden=false;}
 function makeControls(defs,id){$(id).innerHTML=defs.map(([key,label,min,max,step,unit,help])=>`<div class="slider"><div class="slider-top"><label for="${key}">${label}</label><div class="number"><input id="${key}" data-key="${key}" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}"><span>${unit}</span></div></div><input id="${key}-range" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" aria-label="${label}, reglage"><div class="slider-help"><span>${help}</span></div></div>`).join('');}
@@ -135,7 +141,7 @@ async function boot(){try{
   // Provenance for the exported scenario: the library and Motala's package, with their hashes.
   modelSource=Promise.all(['Kommunekonomi.mo','Motala.mo'].map(file=>fetch(file).then(r=>r.text()).then(async text=>({file,sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(x=>x.toString(16).padStart(2,'0')).join('')})))).catch(()=>null);
   const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
-  [b,{rows:history}]=files;planning=files[5];b.planningInputs=planning;path=planning.revenuePath?validateRevenuePath(planning.revenuePath,b.baseYear):null;planningControls();draw();renderEvidence(files[2],files[3]);renderPlanning();
+  [b,{rows:history}]=files;planning=files[5];b.planningInputs=planning;path=selectPath(true);planningControls();draw();renderEvidence(files[2],files[3]);renderPlanning();
   $('municipal-benchmarks').innerHTML=`<thead><tr><th scope="col">2025</th><th scope="col">Budget/prognos</th><th scope="col">Utfall</th><th scope="col">Absolut fel</th></tr></thead><tbody>${files[4].rows.map(r=>`<tr><th scope="row">${({budget:'Budget',april:'Aprilprognos',august:'Augustiprognos'})[r.stage]}</th><td>${fmt(r.forecast)}</td><td>${fmt(r.actual)}</td><td>${fmt(Math.abs(r.forecast-r.actual))}</td></tr>`).join('')}</tbody>`;
   document.querySelector('.controls').addEventListener('input',event=>{const el=event.target;if(!el.dataset.key)return;
     // An empty or half-typed number ("", "-", "2,") is not a value yet; wait for more input instead of computing with 0.
@@ -144,7 +150,8 @@ async function boot(){try{
     const k=el.dataset.key;overrides[k]=Number(el.value)+(b.planningInputs&&sourcedRates[k]?b.assumptions[k]:0);$('preset').value='custom';syncControls(el);draw();});
   // Normalise the number field's text once the user leaves it.
   document.querySelector('.controls').addEventListener('change',event=>{if(event.target.dataset.key)syncControls();});
-  $('planning-enabled').onchange=()=>{const enabled=$('planning-enabled').checked;b.planningInputs=enabled?planning:null;path=enabled?(planning.revenuePath??null):null;planningControls();draw();};
+  $('planning-enabled').onchange=()=>{const enabled=$('planning-enabled').checked;b.planningInputs=enabled?planning:null;path=selectPath(enabled);$('regulation-held').disabled=!enabled;planningControls();draw();};
+  $('regulation-held').onchange=()=>{path=selectPath($('planning-enabled').checked);draw();};
   document.querySelectorAll('.tab').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('.view').forEach(v=>v.hidden=v.id!==el.dataset.tab);document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t===el);t.setAttribute('aria-pressed',String(t===el));});}));
   $('docs-link').onclick=e=>{e.preventDefault();document.querySelector('.tab[data-tab="model"]').click();$('model').scrollIntoView({behavior:'smooth'});};
   $('reset').onclick=()=>{overrides={};$('preset').value='base';syncControls();draw();};

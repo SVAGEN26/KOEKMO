@@ -63,6 +63,21 @@ export function planningSeries(b,a,c) {
   }
   return rows;
 }
+// SKR's revenue path assumes the state's grant frame stays fixed in kronor after the years the
+// budget bill has decided, so the regulation grant shrinks each year. Over 2005-2026 the regulation
+// grant per inhabitant had no such trend (SCB TAB1981), and SKR's figure for the second and third
+// year was too low in every December circular 2021-2023. This keeps the regulation grant per
+// inhabitant from `heldFrom` and adds the difference to the grants. The original stays in skrGrants.
+export function holdRegulation(path,heldFrom) {
+  const from=path?.rows.find(r=>r.year===heldFrom);
+  if(!from||!Number.isFinite(from.regulation)) return path;
+  const perInhabitant=from.regulation/from.population;
+  return {...path,regulationHeldFrom:heldFrom,rows:path.rows.map(r=>{
+    if(r.year<=heldFrom||!Number.isFinite(r.regulation)) return r;
+    const adjustment=perInhabitant*r.population-r.regulation;
+    return {...r,grants:r.grants+adjustment,skrGrants:r.grants,regulationAdjustment:adjustment};
+  })};
+}
 export function validateRevenuePath(path,baseYear) {
   if(path?.municipality!=='0583'||!/^\d{4}-\d{2}-\d{2}$/.test(path?.vintage??'')||!Array.isArray(path.rows)||!path.rows.length) throw Error('Expected municipality 0583, vintage YYYY-MM-DD and nonempty rows');
   const years=new Set();
