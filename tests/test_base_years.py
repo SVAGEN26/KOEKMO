@@ -111,6 +111,21 @@ class BaseYears(unittest.TestCase):
                 self.assertAlmostEqual(scb[str(year)][key] * population / 1e6, r['grantComponents'][k], delta=2, msg=f'{year} {key}')
 
 
+    def test_sector_weights_come_from_kolada(self):
+        """The base year's sector shares are Kolada's (data/sector-costs.json); the site's baseline uses the same for 2025."""
+        sectors = json.loads((ROOT / 'data/sector-costs.json').read_text())['years']
+        for year in range(2020, 2026):
+            r, k = record(f'motala{year}'), sectors[str(year)]
+            self.assertEqual(r['sectorShares'], [round(k['shares'][x], 4) for x in ('education', 'elderly', 'other')], year)
+            self.assertEqual(r['educationShares'], [round(x, 4) for x in k['educationSplit']], year)
+        r, a = record('motala2025'), BASELINE['assumptions']
+        net = r['payroll'] + r['pension'] + r['otherOperatingExpense'] - r['operatingRevenue'] + r['netCostRoundingAdjustment']
+        for model, site in zip([x / sum(r['sectorShares']) * net for x in r['sectorShares']], a['sectorCosts']):
+            self.assertAlmostEqual(model, site, places=9)
+        for model, site in zip([x / sum(r['educationShares']) for x in r['educationShares']], a['educationWeights']):
+            self.assertAlmostEqual(model, site, places=12)
+
+
 class Budgets(unittest.TestCase):
     def test_budget_2026_matches_the_data_file(self):
         budget = json.loads((ROOT / 'data/municipal-budgets.json').read_text())['budgets'][0]

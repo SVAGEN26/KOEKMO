@@ -55,9 +55,9 @@
     "equalisationOffset": 0.95,
     "fixedShare": 0.25,
     "sectorCosts": [
-      1250,
-      600,
-      1173
+      1304.1222,
+      650.2473,
+      1068.6305
     ],
     "migrationWeights": [
       0.15,
@@ -67,9 +67,9 @@
       0.05
     ],
     "educationWeights": [
-      0.25,
-      0.6,
-      0.15
+      0.2647,
+      0.5462,
+      0.1891
     ],
     "populationRevenueElasticity": 1.0,
     "pensionGrowth": 2.0,

@@ -25,6 +25,8 @@ package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; be
       Real assets "Byggnader, anläggningar, maskiner och inventarier exklusive pågående investeringar, mnkr";
       Real investment "Investeringar, mnkr";
       Real taxRate "Kommunal skattesats, procent";
+      Real sectorShares[3] "Utbildning (0-18 år), äldreomsorg och övrig verksamhet, andel av nettokostnaden; Kolada (SCB:s räkenskapssammandrag)";
+      Real educationShares[3] "Utbildningens fördelning på 0-6, 7-15 och 16-18 år, andel; Kolada";
       Real careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
     end BaseYear;
@@ -197,8 +199,9 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer";
     parameter Real birthChange = 0 "Relativ förändring av antalet födda, andel (0,1 = tio procent fler)";
     // Verksamhet
-    parameter Real educationWeights[3] = {0.25, 0.60, 0.15} "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet; summerar till 1";
-    parameter Real sectorCosts[3] = {1250, 600, 1173} "Kostnadsvikter för utbildning, äldreomsorg och övrig verksamhet, mnkr (illustrativa)";
+    parameter Real educationWeights[3] = base.educationShares/sum(base.educationShares) "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet; basårets nettokostnader (Kolada), summerar till 1";
+    parameter Real sectorCosts[3] = base.sectorShares/sum(base.sectorShares)*(base.payroll + base.pension + base.otherOperatingExpense - base.operatingRevenue + base.netCostRoundingAdjustment)
+      "Kostnadsvikter för utbildning, äldreomsorg och övrig verksamhet, mnkr; basårets nettokostnad fördelad efter Kolada";
     parameter Real adjustment = 0.5 "Andel av glappet mellan behov och kapacitet som stängs varje år (0 = låst, 1 = direkt)";
     parameter Real fixedShare = 0.25 "Andel av kapaciteten som inte följer behovet";
     parameter Real serviceAdjustment[3] = fill(adjustment, 3) "Årlig kapacitetsanpassning för utbildning, äldreomsorg och övrigt";

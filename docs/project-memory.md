@@ -224,3 +224,15 @@ där sajten påverkas, i JavaScript-referensen:
 - SKR:s regleringspost (rad 18) importeras nu per år (`regulation` i skr-revenue-path.json). Webbens standard: regleringsbidraget
   per invånare ligger kvar efter 2027 (`holdRegulation`, kryssruta). 2033: bidrag 1 178 i stället för 1 083 mnkr, resultat 155
   i stället för 56, skuld 1 541 i stället för 1 853 (headless Firefox).
+
+## Slutavräkning och sektorvikter (2026-11-09)
+
+- `BaseYear.priorYearSettlement` (not 6: 2020 -10,7; 2021 7,1; 2022 13,9; 2023 12; 2024 -11; 2025 0, två årsredovisningar per år
+  utom 2020). Referensbanan växer från skatten utan korrigeringen (`recurringTax0`). Skattefel i testet mot cirkulären 35/56/74
+  i stället för 38/64/80 mnkr (1-3 år).
+- `scripts/fetch_sector_costs.py` → `data/sector-costs.json` (Kolada, SCB:s räkenskapssammandrag; tar kommunkod). Andelar av
+  nettokostnaden 2025: utbildning 43,1 %, äldreomsorg 21,5 %, övrigt 35,4 %; utbildning 0-6/7-15/16-18 = 0,26/0,55/0,19.
+  `BaseYear.sectorShares` och `educationShares` per basår; biblioteket räknar `sectorCosts` och `educationWeights` ur basåret.
+  `data/baseline.json` har samma vikter för 2025. Effekt 2033: Annual 8 → 6, AnnualCohort -42 → -56 mnkr.
+- Nettokostnadens fel i testet mot cirkulären kommer främst från pensionskostnadens svängningar och enskilda år för övriga
+  kostnader; ingen robust rättning med fem år.
