@@ -24,15 +24,48 @@ function report(e){$('error').textContent=e.message;$('error').hidden=false;}
 function makeControls(defs,id){$(id).innerHTML=defs.map(([key,label,min,max,step,unit,help])=>`<div class="slider"><div class="slider-top"><label for="${key}">${label}</label><div class="number"><input id="${key}" data-key="${key}" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}"><span>${unit}</span></div></div><input id="${key}-range" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" aria-label="${label}, reglage"><div class="slider-help"><span>${help}</span></div></div>`).join('');}
 // `editing` is the field the user is typing in. Rewriting its value mid-edit drops a trailing decimal point ("2." → "2").
 function syncControls(editing=null){for(const [k] of [...definitions,...advanced]){const value=(overrides[k]??b.assumptions[k])-(b.planningInputs&&sourcedRates[k]?b.assumptions[k]:0);if($(k)!==editing)$(k).value=Number(value.toFixed(2));$(k).step='any';if($(k+'-range')!==editing)$(k+'-range').value=value;}}
-function chart(id,series,{unit='',height=255}={}) {
+// Y-axis with round steps (1, 2 or 5 times a power of ten). It starts at zero when the values are
+// all on one side of it and not far from it; otherwise it hugs the data.
+export function niceAxis(low,high) {
+  if(low===high){low-=1;high+=1;}
+  if(low>=0&&low<=0.3*high) low=0;
+  if(high<=0&&high>=0.3*low) high=0;
+  const raw=(high-low)/5, magnitude=10**Math.floor(Math.log10(raw)), norm=raw/magnitude;
+  const step=(norm<1.5?1:norm<3?2:norm<7?5:10)*magnitude;
+  return {low:Math.floor(low/step+1e-9)*step,high:Math.ceil(high/step-1e-9)*step,step};
+}
+const scales={},chartArgs={};
+function scaleControl(id) {
+  if($(id+'-scale')) return;
+  const box=document.createElement('div');box.id=id+'-scale';box.className='scale-control';
+  box.innerHTML=`<span>Skala</span><input type="number" step="any" aria-label="Y-axelns minsta värde" placeholder="auto" data-end="min"><span>till</span><input type="number" step="any" aria-label="Y-axelns största värde" placeholder="auto" data-end="max"><button type="button" class="text-button">Auto</button>`;
+  $(id).after(box);
+  const apply=()=>{
+    const [lo,hi]=[...box.querySelectorAll('input')].map(el=>el.value===''?null:Number(el.value));
+    if(lo===null&&hi===null) delete scales[id];
+    else scales[id]={min:lo,max:hi};
+    if(chartArgs[id]) chart(id,...chartArgs[id]);
+  };
+  box.addEventListener('change',apply);
+  box.querySelector('button').onclick=()=>{box.querySelectorAll('input').forEach(el=>el.value='');apply();};
+}
+function chart(id,series,options={}) {
+  chartArgs[id]=[series,options];scaleControl(id);
+  const {unit='',height=255}=options;
   const width=760,left=62,right=22,top=20,bottom=38,values=series.flatMap(s=>s.values).filter(Number.isFinite);
-  let low=Math.min(...values),high=Math.max(...values);if(low===high){low-=1;high+=1;}const pad=(high-low)*.15;low-=pad;high+=pad;
+  const auto=niceAxis(Math.min(...values),Math.max(...values)),manual=scales[id];
+  // A chosen end replaces the automatic one; round steps are kept between them.
+  let low=manual?.min??auto.low,high=manual?.max??auto.high;
+  if(!(high>low)){low=auto.low;high=auto.high;}
+  const {step}=niceAxis(low,high);
   const x=i=>left+i*(width-left-right)/(run.rows.length-1),y=v=>top+(high-v)*(height-top-bottom)/(high-low);
-  const lines=Array.from({length:5},(_,i)=>{const v=low+(high-low)*i/4;return `<line x1="${left}" y1="${y(v)}" x2="${width-right}" y2="${y(v)}" stroke="#e8ede5"/><text x="${left-11}" y="${y(v)+4}" text-anchor="end" fill="#78837d" font-size="11">${fmt(v)}</text>`;}).join('');
+  const ticks=[];for(let v=Math.ceil(low/step-1e-9)*step;v<=high+1e-9*step;v+=step) ticks.push(Math.abs(v)<1e-9*step?0:v);
+  const lines=ticks.map(v=>`<line x1="${left}" y1="${y(v)}" x2="${width-right}" y2="${y(v)}" stroke="#e8ede5"/><text x="${left-11}" y="${y(v)+4}" text-anchor="end" fill="#78837d" font-size="11">${fmt(v)}</text>`).join('');
   const zero=low<0&&high>0?`<line x1="${left}" x2="${width-right}" y1="${y(0)}" y2="${y(0)}" stroke="#aab7a2" stroke-dasharray="3 4"/>`:'';
-  const paths=series.map(s=>`<path d="${s.values.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.thin?'':s.values.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${s.color}"><title>${safe(s.name)} ${run.rows[i].year}: ${fmt(v)} ${unit}</title></circle>`).join('')}`).join('');
+  const clip=`clip-${id}`;
+  const paths=series.map(s=>`<path d="${s.values.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.thin?'':s.values.map((v,i)=>v<low||v>high?'':`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${s.color}"><title>${safe(s.name)} ${run.rows[i].year}: ${fmt(v)} ${unit}</title></circle>`).join('')}`).join('');
   const labels=run.rows.map((r,i)=>`<text x="${x(i)}" y="${height-10}" text-anchor="middle" fill="#78837d" font-size="11">${r.year}</text>`).join('');
-  $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title>${lines}${zero}${paths}${labels}</svg>`;
+  $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${lines}${zero}<g clip-path="url(#${clip})">${paths}</g>${labels}</svg>`;
 }
 function ledger() {
   const cols=[['year','År'],['tax','Skatt'],['grants','Bidrag & utj.'],['cost','Nettodrift'],['depreciation','Avskr.'],['interest','Ränta'],['result','Resultat'],['investment','Invest.'],['debt','Låneskuld'],['cash','Kassa']];

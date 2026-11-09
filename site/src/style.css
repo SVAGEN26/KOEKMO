@@ -46,3 +46,5 @@ header{padding-top:14px;padding-bottom:14px}@media(max-width:720px){header{paddi
 .model-panel-params input[type=range]{width:100%;accent-color:var(--node)}
 .model-panel-params input[type=number]{width:64px}
 @media(max-width:720px){.model-panel{grid-template-columns:1fr;gap:8px}.model-toolbar input{flex:1}}
+.scale-control{display:flex;align-items:center;gap:6px;justify-content:flex-end;font-size:10px;color:var(--muted);margin-top:4px}
+.scale-control input{width:70px;border:1px solid var(--line);border-radius:5px;padding:3px 5px;font-size:11px;color:var(--ink);background:#fafbf7;text-align:right}
