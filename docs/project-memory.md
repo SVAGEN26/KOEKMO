@@ -266,3 +266,12 @@ där sajten påverkas, i JavaScript-referensen:
   prognosfelen kommer från SKR:s pris- och skatteunderlagsprognoser och, för Motala, statens bidragsbeslut (+6,6 %/år 2020-2025).
 - SKR:s arbetsbok har själv ett val "värdesäkrat" för statens ram (131,9 → 150,2 mdkr 2025-2030) mot "ej värdesäkrat" (127,4 mdkr
   fryst). Regeln att hålla regleringsbidraget per invånare ligger mellan dem.
+
+## Bidragens ökning: Motala jämfört med riket (2026-11-09)
+
+- SCB TAB6777 (generella statsbidrag och utjämning): riket 130 805 → 146 053 mnkr 2021-2025 (+2,8 %/år); Motala 783 → 987
+  (+6,0 %/år; +6,6 % räknat från årsredovisningens 763,5, där SCB bokför 19,5 mnkr annorlunda 2021); Mjölby +4,6 %/år.
+  Medianen bland 280 kommuner +3,8 %/år; Motala plats 242 av 280.
+- Motalas extra ökning per invånare 2021-2025 jämfört med medianen: inkomstutjämning +3 107 mot +2 760 kr (skattekraften föll
+  från 89,2 till 87,3-87,6 % av riket, SCB SkatteKraft), LSS-utjämning +518 mot +84 kr, kostnadsutjämning +364 mot +299 kr.
+  Regleringsbidraget är lika för alla (-329 kr). Övriga generella bidrag 5 → 51 mnkr.
