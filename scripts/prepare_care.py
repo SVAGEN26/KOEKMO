@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Care cost per inhabitant by age group, from archived Kolada data for Motala.
+"""Care cost per inhabitant by age group, from archived Kolada data for a municipality.
 
-    python3 scripts/prepare_care.py data/downloads/<archive>
+    python3 scripts/prepare_care.py data/downloads/<archive> [--output path]
 
 Reads an archive written by fetch_care_data.py, checks it against its manifest and writes
 data/care-weights.json. Källa: Kolada (RKA); statistics from Socialstyrelsen and SCB.
@@ -30,13 +30,14 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('archive', type=Path)
+    parser.add_argument('--output', type=Path, default=ROOT / 'data/care-weights.json')
     args = parser.parse_args()
     archive = args.archive.resolve()
     manifest = json.loads((archive / 'manifest.json').read_text())
-    entry = next(f for f in manifest['files'] if f['file'] == 'kolada-care-motala.json')
+    entry = next(f for f in manifest['files'] if f['file'].startswith('kolada-care-') and 'metadata' not in f['file'])
     raw = (archive / entry['file']).read_bytes()
     if hashlib.sha256(raw).hexdigest() != entry['sha256']:
-        raise SystemExit('kolada-care-motala.json does not match its manifest')
+        raise SystemExit(f"{entry['file']} does not match its manifest")
     series = {}
     for item in json.loads(raw)['values']:
         total = [x['value'] for x in item['values'] if x['gender'] == 'T' and x['value'] is not None]
@@ -73,7 +74,8 @@ def main():
                     if k == 'values'},
            'method': __doc__.split('For each year', 1)[1].strip(),
            'yearly': {str(y): yearly[y] for y in sorted(yearly)}, 'baseYears': bases}
-    (ROOT / 'data/care-weights.json').write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     for base, b in bases.items():
         print(f'{base}: kr per inhabitant 65-79 {b["costPerInhabitant"]["65-79"]:8.0f}, '
               f'80+ {b["costPerInhabitant"]["80+"]:8.0f}, ratio {b["ratio80to6579"]:.2f} ({b["years"][0]}-{b["years"][-1]})')

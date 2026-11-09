@@ -236,3 +236,19 @@ där sajten påverkas, i JavaScript-referensen:
   `data/baseline.json` har samma vikter för 2025. Effekt 2033: Annual 8 → 6, AnnualCohort -42 → -56 mnkr.
 - Nettokostnadens fel i testet mot cirkulären kommer främst från pensionskostnadens svängningar och enskilda år för övriga
   kostnader; ingen robust rättning med fem år.
+
+## Andra kommun: Mjölby (0586) som pilot (2026-11-09)
+
+- `scripts/fetch_municipality.py CODE` arkiverar SCB TAB6777, TAB6779, TAB6782, TAB4202, TAB5179, befolkning per ettårsålder,
+  födda/döda och skattesats 2017-2025. `scripts/prepare_municipality.py` bygger basår 2020-2025 och skriver
+  `modelica/municipalities/<Paket>.mo`. Omsorgsvikter och sektorandelar via `fetch_care_data.py CODE`, `prepare_care.py
+  --output`, `fetch_sector_costs.py CODE`. Allt under `data/municipalities/<kod>/`.
+- Kontroll mot Motalas årsredovisningar (`tests/test_municipality.py`): SCB-vägen ger samma skatt, bidrag, avskrivning, ränta
+  (post 380; 390 är koncernens), skuld (081+082+136+134), kassa och investering inom 2 mnkr. Löner/pension skiljer 2020-2022
+  (annan uppdelning, summan inom 16 mnkr). 2021 bokar SCB 19,5 mnkr som generellt bidrag där årsredovisningen har
+  verksamhetsintäkt. Anläggningar inkl. pågående arbeten (85-177 mnkr mer).
+- Folkmängd Motala 31 dec 2025: SCB ettårsåldrar 43 113, årsredovisningen 43 131, årsredovisningens åldersgrupper 43 139.
+- `hindcast_vintages.py 0586 Mjolby` → `data/municipalities/0586/vintage-hindcast.json`. Samma mönster som Motala: skatt
+  -22/-39/-52 och nettokostnad -24/-63/-153 mnkr i medelfel 1-3 år; bidragsfelen små (11-23). Resultat MAE år 1: 33-41 mot 44
+  för förra årets utfall.
+- Gemensam kvarvarande felkälla: kostnaderna växte 2021-2024 snabbare än PKV och demografi förklarar; SKR:s skatteunderlag låg lågt.

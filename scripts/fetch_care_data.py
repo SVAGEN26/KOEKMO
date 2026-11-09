@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Archive Kolada elderly-care data for Motala (0583): users and costs by age group.
+"""Archive Kolada elderly-care data for a municipality (default Motala, 0583): users and costs by age group.
 
-    python3 scripts/fetch_care_data.py
+    python3 scripts/fetch_care_data.py [municipality code]
 
 Writes a new timestamped folder under data/downloads/ with the raw Kolada responses,
 KPI metadata and a manifest (URL, bytes, SHA-256). Källa: Kolada (RKA), open data;
@@ -9,6 +9,7 @@ the underlying statistics are Socialstyrelsen's and SCB's.
 """
 import hashlib
 import json
+import sys
 import time
 import urllib.request
 from datetime import datetime, timezone
@@ -16,7 +17,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 API = 'https://api.kolada.se/v3/'
-MOTALA = '0583'
+MOTALA = sys.argv[1] if len(sys.argv) > 1 else '0583'
+NAME = 'motala' if MOTALA == '0583' else MOTALA
 YEARS = ','.join(str(y) for y in range(2015, 2026))
 KPIS = {
     'N21702': 'Hemtjänsttagare 65+ i ordinärt boende, antal',
@@ -75,7 +77,7 @@ def main():
     body = json.loads(data)
     if body.get('next_url'):
         raise SystemExit('Kolada paged the response; fetch the remaining pages')
-    save('kolada-care-motala.json', data, url)
+    save(f'kolada-care-{NAME}.json', data, url)
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
     print(f'{len(body["values"])} KPI-years -> {out}')
 

@@ -31,6 +31,11 @@ If port 8000 is occupied, use `npm start -- --port 8001`.
   Swedish municipality's annual finances (record types, Sweden-wide SCB data, components, the partial model `Annual`).
   `Motala.mo` holds Motala's data and examples; `Motala.Annual` extends `Kommunekonomi.Annual` with Motala's base year.
   `MotalaBrowser.mo` is the wrapper the browser compiles, `validate.py` the native parity check. Load the library first.
+  `modelica/municipalities/` holds packages for other municipalities, generated from SCB and Kolada (Mjölby, 0586, is the
+  pilot). To add one: `scripts/fetch_municipality.py CODE`, `scripts/fetch_care_data.py CODE` and
+  `scripts/prepare_care.py ARCHIVE --output data/municipalities/CODE/care-weights.json`, `scripts/fetch_sector_costs.py CODE`,
+  then `scripts/prepare_municipality.py CODE Package "Name" ARCHIVE --modelica`, and test it against the SKR circulars with
+  `scripts/hindcast_vintages.py CODE Package`. For Motala the SCB route reproduces the annual reports within 2-3 mnkr from 2023.
 - `research/`: experiments that are not part of the site: the M1 and M2 models (`MotalaResearch`,
   `MotalaDynamics`), frozen model versions in `research/reference/`, historical replays, their data,
   reviews and tests. Kept so the results quoted in this README and on the site can be reproduced.

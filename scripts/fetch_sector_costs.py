@@ -108,7 +108,9 @@ def main():
                         '(ages 0-6), school-age childcare and compulsory school including adapted (7-15), upper '
                         'secondary including adapted (16-18). Each base year uses its own year only.',
               'years': years}
-    (ROOT / 'data/sector-costs.json').write_text(json.dumps(result, indent=1, ensure_ascii=False) + '\n')
+    target = ROOT / ('data/sector-costs.json' if municipality == '0583' else f'data/municipalities/{municipality}/sector-costs.json')
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(result, indent=1, ensure_ascii=False) + '\n')
     for year, y in years.items():
         print(year, {k: round(v, 3) for k, v in y['shares'].items()}, [round(x, 3) for x in y['educationSplit']])
 
