@@ -1,0 +1,32 @@
+{
+  "retrieved_at": "2026-11-09T16:29:23.666336+00:00",
+  "source": "SKR, Prisindex för kommunal verksamhet (PKV), oktober 2026 (skr.se/ekonomiochbudgetplanering/prisindex.8274.html); SCB TAB6777 (CC BY 4.0)",
+  "files": [
+    {
+      "file": "PKV-2610.xlsx",
+      "bytes": 22863,
+      "sha256": "05092b2e8d41d3dd8f99eeb91e64572fbaf3805d2c0405dcc90ed5a56ccfa489",
+      "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d340/1791283397264/PKV-2610.xlsx"
+    },
+    {
+      "file": "TAB6777-0583.json",
+      "bytes": 5165,
+      "sha256": "7c36a981445b18027e9781955975645584384af8a56fb39ef0b83b3a07111657",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/data?lang=sv&outputFormat=json-stat2&valueCodes[Region]=0583&valueCodes[Resultatraknposter]=030,025,010,022&valueCodes[ContentsCode]=*&valueCodes[Tid]=*"
+    },
+    {
+      "file": "TAB6777-0586.json",
+      "bytes": 5144,
+      "sha256": "b7fc3370781cd275ac4612c1fbee9f4dab057645b89a669d0cff3135f885d8d9",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/data?lang=sv&outputFormat=json-stat2&valueCodes[Region]=0586&valueCodes[Resultatraknposter]=030,025,010,022&valueCodes[ContentsCode]=*&valueCodes[Tid]=*"
+    },
+    {
+      "file": "skatteunderlag-riket.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/OE/OE0101/SkatteKraft",
+      "query": "Region 00, OE0101A5 (skatteunderlag, kronor), Tid 2018-2026",
+      "bytes": 778,
+      "sha256": "ec28fb792aaee7b91ea50ada5d2ec3f23dd23266ae0abc5f3d78471c25477480",
+      "note": "SCB year t is income year t-2: the 2026 value equals SKR prognosunderlag Blad 2 row 19 (inkomstår 2024, 2 868 946 mnkr). Growth matches SKR definitive outcomes 5.3 (2021, cirkulär 22:54), 5.8 (2022, 23:56), 4.8 (2023, 24:56)."
+    }
+  ]
+}

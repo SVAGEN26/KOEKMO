@@ -1,7 +1,7 @@
 {
  "municipality": "0586",
  "source": "Model Mjolby.Annual; outcomes from SCB:s räkenskapssammandrag (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
- "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nno budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent):\n            income equalisation follows the circular's mean tax capacity per inhabitant,\n            the regulation grant is the circular's amount per inhabitant, cost and LSS\n            equalisation stay at the base year's amount per inhabitant, the property fee\n            grows 3.5 % a year, and other general grants are zero.\n  hold      as components, but the regulation grant per inhabitant is the circular's for the\n            first year only and then stays at that amount: the rule for forecast years that\n            the state has not yet decided.\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nno budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent):\n            income equalisation follows the circular's mean tax capacity per inhabitant,\n            the regulation grant is the circular's amount per inhabitant, cost and LSS\n            equalisation stay at the base year's amount per inhabitant, the property fee\n            grows 3.5 % a year, and other general grants are zero.\n  hold      as components, but the regulation grant per inhabitant is the circular's for the\n            first year only and then stays at that amount: the rule for forecast years that\n            the state has not yet decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
  "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
  "limitations": [
   "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
@@ -116,6 +116,76 @@
     "grantsMeanAbsError": 22.980952225118585,
     "netCostMeanAbsError": 152.5001907513255,
     "resultMeanAbsError": 114.4445906131567
+   }
+  },
+  "prices": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -22.43323758142019,
+    "grantsMeanError": -6.579663825107161,
+    "netCostMeanError": -7.757136841750253,
+    "resultMeanError": -16.162994450925815,
+    "taxMeanAbsError": 33.0812756210938,
+    "grantsMeanAbsError": 11.388413793524672,
+    "netCostMeanAbsError": 32.695334846476,
+    "resultMeanAbsError": 48.93718988343925
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -38.87988252714672,
+    "grantsMeanError": -15.00527246223443,
+    "netCostMeanError": -11.277023985426354,
+    "resultMeanError": -24.67803131662157,
+    "taxMeanAbsError": 42.39247786976375,
+    "grantsMeanAbsError": 19.261856428261225,
+    "netCostMeanAbsError": 32.830456595126975,
+    "resultMeanAbsError": 46.44330331152777
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -51.86368958463095,
+    "grantsMeanError": -17.105321289723367,
+    "netCostMeanError": -34.616638305679466,
+    "resultMeanError": -2.755182859664348,
+    "taxMeanAbsError": 51.86368958463095,
+    "grantsMeanAbsError": 17.105321289723367,
+    "netCostMeanAbsError": 34.616638305679466,
+    "resultMeanAbsError": 42.486304857065214
+   }
+  },
+  "hindsight": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -5.649671054188593,
+    "grantsMeanError": -6.531775851317979,
+    "netCostMeanError": -7.757136841750253,
+    "resultMeanError": 0.6684600500946971,
+    "taxMeanAbsError": 11.937928613242956,
+    "grantsMeanAbsError": 11.435223935713111,
+    "netCostMeanAbsError": 32.695334846476,
+    "resultMeanAbsError": 33.6091888832681
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -11.420375534933669,
+    "grantsMeanError": -14.937524665161789,
+    "netCostMeanError": -11.277023985426354,
+    "resultMeanError": 3.014040507598912,
+    "taxMeanAbsError": 13.14737188833874,
+    "grantsMeanAbsError": 19.310119127178893,
+    "netCostMeanAbsError": 32.830456595126975,
+    "resultMeanAbsError": 44.855698777694975
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -12.501296069989243,
+    "grantsMeanError": -17.047530082790235,
+    "netCostMeanError": -34.616638305679466,
+    "resultMeanError": 37.02088069907231,
+    "taxMeanAbsError": 12.501296069989243,
+    "grantsMeanAbsError": 17.047530082790235,
+    "netCostMeanAbsError": 34.616638305679466,
+    "resultMeanAbsError": 37.02088069907231
    }
   },
   "standard": {
@@ -439,6 +509,168 @@
      63.97302138749999,
      0.0
     ]
+   },
+   "outcome": {
+    "tax": 1517.128,
+    "grants": 454.945,
+    "netCost": 1952.4959999999999,
+    "personnel": 1488.2959999999998,
+    "result": 4.253999999999998,
+    "population": 28576.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 72.47599999999996
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "prices",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1311.046653733529,
+    "grants": 435.4313006297236,
+    "netCost": 1679.9262493532028,
+    "personnel": 1297.709842848831,
+    "result": 69.2961494544943,
+    "population": 28248.14609799932
+   },
+   "outcome": {
+    "tax": 1347.195,
+    "grants": 435.01,
+    "netCost": 1669.192,
+    "personnel": 1296.208,
+    "result": 116.47499999999992,
+    "population": 28269.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 72.47599999999996
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "prices",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1368.516153517709,
+    "grants": 443.7729408893321,
+    "netCost": 1791.0200999198603,
+    "personnel": 1339.443443132753,
+    "result": 23.42441856181949,
+    "population": 28538.24147491167
+   },
+   "outcome": {
+    "tax": 1434.068,
+    "grants": 447.915,
+    "netCost": 1757.854,
+    "personnel": 1351.4769999999999,
+    "result": 128.2349999999999,
+    "population": 28471.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 72.47599999999996
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "prices",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1430.567615324706,
+    "grants": 452.4658129211633,
+    "netCost": 1922.770718835444,
+    "personnel": 1436.554453886255,
+    "result": -38.38028710891172,
+    "population": 28830.1908462398
+   },
+   "outcome": {
+    "tax": 1517.128,
+    "grants": 454.945,
+    "netCost": 1952.4959999999999,
+    "personnel": 1488.2959999999998,
+    "result": 4.253999999999998,
+    "population": 28576.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 72.47599999999996
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hindsight",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1346.823300634651,
+    "grants": 435.4795945500073,
+    "netCost": 1679.9262493532028,
+    "personnel": 1297.709842848831,
+    "result": 105.1210902758994,
+    "population": 28248.14609799932
+   },
+   "outcome": {
+    "tax": 1347.195,
+    "grants": 435.01,
+    "netCost": 1669.192,
+    "personnel": 1296.208,
+    "result": 116.47499999999992,
+    "population": 28269.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 72.47599999999996
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hindsight",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1430.237373327343,
+    "grants": 443.7876403119875,
+    "netCost": 1791.0200999198603,
+    "personnel": 1339.443443132753,
+    "result": 85.3593652431166,
+    "population": 28538.24147491167
+   },
+   "outcome": {
+    "tax": 1434.068,
+    "grants": 447.915,
+    "netCost": 1757.854,
+    "personnel": 1351.4769999999999,
+    "result": 128.2349999999999,
+    "population": 28471.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 72.47599999999996
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hindsight",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1504.895710193803,
+    "grants": 452.4026065918444,
+    "netCost": 1922.770718835444,
+    "personnel": 1436.554453886255,
+    "result": 36.42771191699308,
+    "population": 28830.1908462398
    },
    "outcome": {
     "tax": 1517.128,
@@ -828,6 +1060,168 @@
    "origin": 2021,
    "circular": "21:49",
    "published": "2021-12-16",
+   "assumptions": "prices",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1390.020259377658,
+    "grants": 450.3249209912722,
+    "netCost": 1772.8137814995448,
+    "personnel": 1335.722074543135,
+    "result": 70.6463988693854,
+    "population": 28528.47491324186
+   },
+   "outcome": {
+    "tax": 1434.068,
+    "grants": 447.915,
+    "netCost": 1757.854,
+    "personnel": 1351.4769999999999,
+    "result": 128.2349999999999,
+    "population": 28471.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 116.47499999999992
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "prices",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1445.809488568161,
+    "grants": 463.4581679320536,
+    "netCost": 1899.0176155180422,
+    "personnel": 1431.508070008767,
+    "result": 13.27423631812871,
+    "population": 28787.83351840993
+   },
+   "outcome": {
+    "tax": 1517.128,
+    "grants": 454.945,
+    "netCost": 1952.4959999999999,
+    "personnel": 1488.2959999999998,
+    "result": 4.253999999999998,
+    "population": 28576.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 116.47499999999992
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "prices",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1500.123560082683,
+    "grants": 476.63545669161,
+    "netCost": 2002.3419296396937,
+    "personnel": 1515.649730115144,
+    "result": -22.91394446618256,
+    "population": 29047.14187932252
+   },
+   "outcome": {
+    "tax": 1561.134,
+    "grants": 499.112,
+    "netCost": 2016.508,
+    "personnel": 1553.986,
+    "result": 2.314000000000057,
+    "population": 28695.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 116.47499999999992
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hindsight",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1420.953412987926,
+    "grants": 450.4329804534523,
+    "netCost": 1772.8137814995448,
+    "personnel": 1335.722074543135,
+    "result": 101.6876119418341,
+    "population": 28528.47491324186
+   },
+   "outcome": {
+    "tax": 1434.068,
+    "grants": 447.915,
+    "netCost": 1757.854,
+    "personnel": 1351.4769999999999,
+    "result": 128.2349999999999,
+    "population": 28471.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 116.47499999999992
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hindsight",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1493.41865960333,
+    "grants": 463.6901889240342,
+    "netCost": 1899.0176155180422,
+    "personnel": 1431.508070008767,
+    "result": 61.27063441064092,
+    "population": 28787.83351840993
+   },
+   "outcome": {
+    "tax": 1517.128,
+    "grants": 454.945,
+    "netCost": 1952.4959999999999,
+    "personnel": 1488.2959999999998,
+    "result": 4.253999999999998,
+    "population": 28576.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 116.47499999999992
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hindsight",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1550.953730944233,
+    "grants": 476.9388402391064,
+    "netCost": 2002.3419296396937,
+    "personnel": 1515.649730115144,
+    "result": 28.6147979986888,
+    "population": 29047.14187932252
+   },
+   "outcome": {
+    "tax": 1561.134,
+    "grants": 499.112,
+    "netCost": 2016.508,
+    "personnel": 1553.986,
+    "result": 2.314000000000057,
+    "population": 28695.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 116.47499999999992
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
    "assumptions": "standard",
    "year": 2022,
    "horizon": 1,
@@ -1200,6 +1594,168 @@
    "origin": 2022,
    "circular": "22:54",
    "published": "2022-12-15",
+   "assumptions": "prices",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1469.862005569253,
+    "grants": 464.135653300048,
+    "netCost": 1880.7266811556042,
+    "personnel": 1445.74272497743,
+    "result": 57.44461788106059,
+    "population": 28723.18294668342
+   },
+   "outcome": {
+    "tax": 1517.128,
+    "grants": 454.945,
+    "netCost": 1952.4959999999999,
+    "personnel": 1488.2959999999998,
+    "result": 4.253999999999998,
+    "population": 28576.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 128.2349999999999
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "prices",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1535.459637120309,
+    "grants": 479.170627936183,
+    "netCost": 1981.771423320851,
+    "personnel": 1529.10622058361,
+    "result": 36.82430767168375,
+    "population": 28973.27819277758
+   },
+   "outcome": {
+    "tax": 1561.134,
+    "grants": 499.112,
+    "netCost": 2016.508,
+    "personnel": 1553.986,
+    "result": 2.314000000000057,
+    "population": 28695.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 128.2349999999999
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "prices",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1603.684755838718,
+    "grants": 493.9767665180566,
+    "netCost": 2002.781436607824,
+    "personnel": 1533.727056362424,
+    "result": 98.53968299610096,
+    "population": 29221.49712713187
+   },
+   "outcome": {
+    "tax": 1611.705,
+    "grants": 520.337,
+    "netCost": 2062.7400000000002,
+    "personnel": 1606.401,
+    "result": 38.94299999999967,
+    "population": 28838.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 128.2349999999999
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hindsight",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1486.645287208844,
+    "grants": 464.2160452075283,
+    "netCost": 1880.7266811556042,
+    "personnel": 1445.74272497743,
+    "result": 74.30829142813195,
+    "population": 28723.18294668342
+   },
+   "outcome": {
+    "tax": 1517.128,
+    "grants": 454.945,
+    "netCost": 1952.4959999999999,
+    "personnel": 1488.2959999999998,
+    "result": 4.253999999999998,
+    "population": 28576.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 128.2349999999999
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hindsight",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1539.538472222782,
+    "grants": 479.200842343442,
+    "netCost": 1981.771423320851,
+    "personnel": 1529.10622058361,
+    "result": 41.0368441599469,
+    "population": 28973.27819277758
+   },
+   "outcome": {
+    "tax": 1561.134,
+    "grants": 499.112,
+    "netCost": 2016.508,
+    "personnel": 1553.986,
+    "result": 2.314000000000057,
+    "population": 28695.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 128.2349999999999
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hindsight",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1596.613670651996,
+    "grants": 493.9099629206785,
+    "netCost": 2002.781436607824,
+    "personnel": 1533.727056362424,
+    "result": 91.53113218153476,
+    "population": 29221.49712713187
+   },
+   "outcome": {
+    "tax": 1611.705,
+    "grants": 520.337,
+    "netCost": 2062.7400000000002,
+    "personnel": 1606.401,
+    "result": 38.94299999999967,
+    "population": 28838.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 128.2349999999999
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
    "assumptions": "standard",
    "year": 2023,
    "horizon": 1,
@@ -1475,6 +2031,114 @@
    "origin": 2023,
    "circular": "23:56",
    "published": "2023-12-14",
+   "assumptions": "prices",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1549.809798313275,
+    "grants": 464.8678907285523,
+    "netCost": 2053.159464159067,
+    "personnel": 1568.824233470328,
+    "result": -55.66900915979249,
+    "population": 28702.050693585
+   },
+   "outcome": {
+    "tax": 1561.134,
+    "grants": 499.112,
+    "netCost": 2016.508,
+    "personnel": 1553.986,
+    "result": 2.314000000000057,
+    "population": 28695.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 4.253999999999998
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "prices",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1618.730190685234,
+    "grants": 475.8861733934936,
+    "netCost": 2072.6807652995412,
+    "personnel": 1568.38489596814,
+    "result": 1.510912181881395,
+    "population": 28825.5760789758
+   },
+   "outcome": {
+    "tax": 1611.705,
+    "grants": 520.337,
+    "netCost": 2062.7400000000002,
+    "personnel": 1606.401,
+    "result": 38.94299999999967,
+    "population": 28838.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 4.253999999999998
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hindsight",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1563.338011005423,
+    "grants": 464.8721628955306,
+    "netCost": 2053.159464159067,
+    "personnel": 1568.824233470328,
+    "result": -42.13652430066713,
+    "population": 28702.050693585
+   },
+   "outcome": {
+    "tax": 1561.134,
+    "grants": 499.112,
+    "netCost": 2016.508,
+    "personnel": 1553.986,
+    "result": 2.314000000000057,
+    "population": 28695.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 4.253999999999998
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hindsight",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1615.15899270681,
+    "grants": 475.8802297598892,
+    "netCost": 2072.6807652995412,
+    "personnel": 1568.38489596814,
+    "result": -1.864681783309152,
+    "population": 28825.5760789758
+   },
+   "outcome": {
+    "tax": 1611.705,
+    "grants": 520.337,
+    "netCost": 2062.7400000000002,
+    "personnel": 1606.401,
+    "result": 38.94299999999967,
+    "population": 28838.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 4.253999999999998
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
    "assumptions": "standard",
    "year": 2024,
    "horizon": 1,
@@ -1609,6 +2273,60 @@
      73.79549999999999,
      0.0
     ]
+   },
+   "outcome": {
+    "tax": 1611.705,
+    "grants": 520.337,
+    "netCost": 2062.7400000000002,
+    "personnel": 1606.401,
+    "result": 38.94299999999967,
+    "population": 28838.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 2.314000000000057
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "prices",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1638.325095099184,
+    "grants": 509.6609152248681,
+    "netCost": 2033.3781396238303,
+    "personnel": 1551.6134456055481,
+    "result": 67.68787070022267,
+    "population": 28811.98266207334
+   },
+   "outcome": {
+    "tax": 1611.705,
+    "grants": 520.337,
+    "netCost": 2062.7400000000002,
+    "personnel": 1606.401,
+    "result": 38.94299999999967,
+    "population": 28838.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+   },
+   "budgetResult": null,
+   "persistenceResult": 2.314000000000057
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "hindsight",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1625.221632892213,
+    "grants": 509.6593376368917,
+    "netCost": 2033.3781396238303,
+    "personnel": 1551.6134456055481,
+    "result": 54.5828309052747,
+    "population": 28811.98266207334
    },
    "outcome": {
     "tax": 1611.705,

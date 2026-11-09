@@ -58,5 +58,6 @@ data/*.xlsm
 data/skr-motala/*.xlsx
 data/skr-motala/*.xlsm
 data/skr-motala/recalculated/
+data/downloads/**/PKV-*.xlsx
 # Original budget PDF with its images; the archive keeps an image-free copy.
 data/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf

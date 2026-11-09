@@ -24,6 +24,11 @@ assumptions are run from every base year:
   hold      as components, but the regulation grant per inhabitant is the circular's for the
             first year only and then stays at that amount: the rule for forecast years that
             the state has not yet decided.
+  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow
+            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the
+            price forecast and how much is the model.
+  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its
+            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).
   standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,
             pensions 2 %, grants 2 %), with the same population as above.
 
@@ -56,6 +61,20 @@ OUTPUTS = ('tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', '
 
 def load(path):
     return json.loads((ROOT / path).read_text())
+
+
+def pkv_outcomes():
+    """PKV outcomes as extracted by scripts/cost_residual.py (SKR's workbook itself is not in git)."""
+    return {int(y): v for y, v in load('data/cost-residual.json')['pkv'].items()}
+
+
+def tax_base_outcomes():
+    """Growth of Sweden's tax base by income year. SCB's year t is income year t-2."""
+    t = load('data/downloads/20261109T162833Z/skatteunderlag-riket.json')
+    level = {int(r['key'][1]) - 2: float(r['values'][0]) for r in t['data']}
+    growth = {y: level[y] / level[y - 1] - 1 for y in level if y - 1 in level}
+    growth.setdefault(2025, 0.03565)  # no outcome yet: SKR's estimate, prognosunderlag 2026-10-06, Blad 2 row 9
+    return growth
 
 
 def vintage(origin):
@@ -92,7 +111,12 @@ def model_source(origin, horizon, v, assumptions):
     years = [origin + i for i in range(1, horizon + 1)]
     lines = [f'base = {PACKAGE}.Data.{PREFIX}{origin}', f'horizon = {horizon}',
              f'nationalPopulation0 = {n0:.10g}', f'nationalPopulationPath = {modelica_array(path)}']
-    if assumptions in ('skr', 'components', 'hold'):
+    if assumptions in ('prices', 'hindsight'):
+        outcome = pkv_outcomes()
+        v = {**v, 'labour': {y: outcome[y]['labour'] for y in years}, 'other': {y: outcome[y]['other'] for y in years}}
+    if assumptions == 'hindsight':
+        v = {**v, 'taxBase': tax_base_outcomes()}
+    if assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight'):
         cum_tax, cum_labour, tax, pension = 1.0, 1.0, [], []
         for y in years:
             cum_tax *= 1 + v['taxBase'][y]
@@ -151,7 +175,7 @@ def main():
         for origin in ORIGINS:
             v = vintage(origin)
             horizon = min(3, LAST - origin)
-            for assumptions in ('skr', 'components', 'hold', 'standard'):
+            for assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight', 'standard'):
                 directory = Path(tmp) / f'{origin}-{assumptions}'
                 directory.mkdir()
                 for year, m in simulate(origin, horizon, model_source(origin, horizon, v, assumptions), directory).items():
@@ -171,7 +195,7 @@ def main():
                     })
     keys = ('tax', 'grants', 'netCost', 'result')
     summary = {}
-    for assumptions in ('skr', 'components', 'hold', 'standard'):
+    for assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight', 'standard'):
         for horizon in (1, 2, 3):
             cases = [r for r in runs if r['assumptions'] == assumptions and r['horizon'] == horizon]
             if cases:

@@ -252,3 +252,17 @@ där sajten påverkas, i JavaScript-referensen:
   -22/-39/-52 och nettokostnad -24/-63/-153 mnkr i medelfel 1-3 år; bidragsfelen små (11-23). Resultat MAE år 1: 33-41 mot 44
   för förra årets utfall.
 - Gemensam kvarvarande felkälla: kostnaderna växte 2021-2024 snabbare än PKV och demografi förklarar; SKR:s skatteunderlag låg lågt.
+
+## Var felen kommer ifrån (2026-11-09)
+
+- `scripts/cost_residual.py` → `data/cost-residual.json`: nettokostnad exkl. avskrivning (SCB TAB6777) deflaterad med SKR:s
+  PKV-utfall 2009-2025 (`data/downloads/20261109T162833Z/PKV-2610.xlsx`, oktober 2026) minus demografiskt behov viktat som
+  modellens sektorer. Resten är i snitt 0,2 %/år i Motala (2016-2025) och -0,2 % i Mjölby (2018-2025), men ±4 % enskilda år
+  (2022 ned, 2023 upp i båda). Ingen systematisk standardökning saknas i modellen.
+- Rikets skatteunderlag, utfall per inkomstår: 2021 5,3; 2022 5,8; 2023 4,8; 2024 3,5 %. SCB SkatteKraft år t = inkomstår t-2
+  (2026-värdet = SKR:s arbetsbok Blad 2 rad 19, inkomstår 2024); stämmer med SKR:s cirkulär 22:54, 23:56, 24:56. 2025 saknar utfall.
+- Testet mot cirkulären med facit för priser och skatteunderlag (`prices`, `hindsight`, diagnostik, inte prognos): medelfel
+  skatt -10/-11/-14 (Motala) och -6/-11/-13 (Mjölby), nettokostnad +8/+21/+5 och -8/-11/-35 mnkr. Modellens struktur håller;
+  prognosfelen kommer från SKR:s pris- och skatteunderlagsprognoser och, för Motala, statens bidragsbeslut (+6,6 %/år 2020-2025).
+- SKR:s arbetsbok har själv ett val "värdesäkrat" för statens ram (131,9 → 150,2 mdkr 2025-2030) mot "ej värdesäkrat" (127,4 mdkr
+  fryst). Regeln att hålla regleringsbidraget per invånare ligger mellan dem.
