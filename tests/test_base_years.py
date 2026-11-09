@@ -102,6 +102,9 @@ class BaseYears(unittest.TestCase):
             self.assertEqual(r['grantComponents'], [n['incomeEqualisation'], n['costEqualisation'], n['regulationGrant'],
                                                     n['lssEqualisation'], n['propertyFee']], year)
             self.assertGreaterEqual(r['grants'] - sum(r['grantComponents']), 0, f'{year}: other general grants')
+            settlements = {r['year']: r['taxComponents'] for r in json.loads((ROOT / 'research/data/motala-revenue-components.json').read_text())['rows']}
+            settlements[2025] = json.loads((ROOT / 'research/data/revenue-component-targets-2025.json').read_text())['rows'][0]['taxComponents']
+            self.assertEqual(r['priorYearSettlement'], settlements[year]['priorYearSettlementDifference'], f'{year}: prior-year settlement')
             # SCB per inhabitant times the population a year earlier (31 December; SCB uses 1 November).
             population = r['reportedPopulation'][1]
             for k, key in [(0, 'income'), (2, 'regulation')]:

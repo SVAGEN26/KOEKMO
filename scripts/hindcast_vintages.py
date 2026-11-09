@@ -91,7 +91,7 @@ def model_source(origin, horizon, v, assumptions):
             cum_labour *= 1 + v['labour'][y]
             tax.append(cum_tax)
             pension.append(cum_labour)
-        lines += [f'referenceTax = {modelica_array(tax)}*tax0',
+        lines += [f'referenceTax = {modelica_array(tax)}*recurringTax0',
                   f'wageGrowthPath = {modelica_array([v["labour"][y] for y in years])}',
                   f'priceGrowthPath = {modelica_array([v["other"][y] for y in years])}',
                   f'pensionExpensePath = {modelica_array(pension)}*pension0']
@@ -176,8 +176,8 @@ def main():
                'In the skr and standard sets grants grow 2 % a year; the circulars have no Motala figure for grants. '
                'The components set uses the circular\'s national figures per inhabitant; cost and LSS equalisation '
                'for Motala are not in the circular and stay at the base year\'s level.',
-               'One-off items in the base year (for example an impairment of 12.1 mnkr in 2022 and tax settlements) '
-               'carry into the forecast.',
+               'One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. '
+               'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
                'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',
                'Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.',
                'The budget result is the adopted budget for the following year, set in November before the circular.',

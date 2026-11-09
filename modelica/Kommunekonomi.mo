@@ -7,6 +7,7 @@ package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; be
       Real births[2] "Födda föregående år och basåret";
       Real deaths "Döda under basåret";
       Real tax "Skatteintäkter, mnkr";
+      Real priorYearSettlement "Därav korrigering av föregående års slutavräkning (slutavräkningsdifferens), mnkr; återkommer inte";
       Real grants "Generella statsbidrag och utjämning, mnkr";
       Real grantComponents[5] "Därav inkomstutjämning, kostnadsutjämning, regleringsbidrag (avgift negativ), LSS-utjämning och fastighetsavgift, mnkr; resten är övriga generella bidrag";
       Real payroll "Lönekostnader exklusive pensioner, mnkr";
@@ -213,6 +214,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real netCostRoundingAdjustment = base.netCostRoundingAdjustment "Avrundningsjustering som stämmer av delposterna mot redovisad nettokostnad, mnkr";
     // Intäkter, kapital och finansiering: utfall i basåret
     parameter Real tax0 = base.tax "Skatteintäkter i basåret, mnkr";
+    parameter Real recurringTax0 = tax0 - base.priorYearSettlement "Basårets skatt utan korrigeringen av föregående års slutavräkning, mnkr; utgångspunkten för referensbanan";
     parameter Real grants0 = base.grants "Generella statsbidrag och utjämning i basåret, mnkr";
     parameter Real debt0 = base.debt "Låneskuld till banker och kreditinstitut vid basårets slut, mnkr";
     parameter Real cash0 = base.cash "Kassa och bank vid basårets slut, mnkr";
@@ -240,7 +242,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real priceGrowthPath[horizon] = fill(priceGrowth, horizon) "Prisökning per år, andel";
     parameter Real pensionExpensePath[horizon] = {pension0*(1 + pensionGrowth)^i for i in 1:horizon} "Pensionskostnad per år, mnkr";
     parameter Real pensionCashPaymentsPath[horizon] = pensionExpensePath "Pensionsutbetalningar per år, mnkr; illustrativa tills en egen källa finns";
-    parameter Real referenceTax[horizon] = {tax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
+    parameter Real referenceTax[horizon] = {recurringTax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
     parameter Real referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
     parameter Real referencePopulation[horizon] = fill(sum(p0), horizon) "Folkmängd som referensbanan bygger på, personer";
     parameter Real nationalPopulation0 = Data.SCB.nationalPopulationAt(base.year - 1) "Rikets folkmängd vid slutet av året före basåret, personer (SCB)";
@@ -251,7 +253,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Boolean grantsByComponent = false "Bidragen räknas per del: inkomstutjämning, kostnads- och LSS-utjämning, regleringsbidrag, fastighetsavgift och övriga";
     parameter Real grantComponents0[5] = base.grantComponents "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
     final parameter Real grantPerCapita0[4] = grantComponents0[1:4]*1e6/sum(revenuePopulation0) "Basårets inkomst-, kostnads-, reglerings- och LSS-del, kr per invånare";
-    parameter Real incomeEqualisationPerCapitaPath[horizon] = {grantPerCapita0[1]*(referenceTax[i]/tax0)/(nationalPopulationPath[i]/nationalPopulation0) for i in 1:horizon}
+    parameter Real incomeEqualisationPerCapitaPath[horizon] = {grantPerCapita0[1]*(referenceTax[i]/recurringTax0)/(nationalPopulationPath[i]/nationalPopulation0) for i in 1:horizon}
       "Inkomstutjämning per år, kr per invånare; följer rikets skatteunderlag per invånare (referensbanans tillväxt delad med rikets folkmängd)";
     parameter Real costEqualisationPerCapitaPath[horizon] = fill(grantPerCapita0[2], horizon) "Kostnadsutjämning per år, kr per invånare; basårets belopp om inget annat anges";
     parameter Real regulationPerCapitaPath[horizon] = fill(grantPerCapita0[3], horizon)

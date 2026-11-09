@@ -58,7 +58,7 @@ export function planningSeries(b,a,c) {
     const taxGrowth=row?row.taxBaseGrowth+a.taxGrowth-b.assumptions.taxGrowth:a.taxGrowth;
     if([wageGrowth,priceGrowth,taxGrowth].some(x=>x<=-100||x>100)) throw Error('Adjusted annual planning rate outside supported range');
     taxFactor*=1+taxGrowth/100;
-    rows.push({year:b.baseYear+t,migration:[...migration],wageGrowth,priceGrowth,taxGrowth,referenceTax:b.tax*taxFactor});
+    rows.push({year:b.baseYear+t,migration:[...migration],wageGrowth,priceGrowth,taxGrowth,referenceTax:(b.tax-(b.priorYearSettlement??0))*taxFactor});
     if(row) previous=row.cohorts;
   }
   return rows;
