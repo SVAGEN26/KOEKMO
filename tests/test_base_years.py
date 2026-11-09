@@ -118,6 +118,13 @@ class BaseYears(unittest.TestCase):
             self.assertEqual(record(f'motala{year}')['relativeTaxCapacity'],
                              [round(capacity[str(year)]['relative'], 4), round(capacity[str(year + 1)]['relative'], 4)], year)
 
+    def test_next_years_equalisation_is_scbs(self):
+        """Utjämningen per invånare året efter basåret, som SCB publicerar i december under basåret (data/equalisation.json)."""
+        eq = json.loads((ROOT / 'data/equalisation.json').read_text())['municipalities']['0583']['years']
+        for year in range(2020, 2026):
+            e = eq[str(year + 1)]
+            self.assertEqual(record(f'motala{year}')['equalisationNextYear'], [round(e[k]) for k in ('income', 'cost', 'regulation', 'lss')], year)
+
     def test_sector_weights_come_from_kolada(self):
         """The base year's sector shares are Kolada's (data/sector-costs.json); the site's baseline uses the same for 2025."""
         sectors = json.loads((ROOT / 'data/sector-costs.json').read_text())['years']

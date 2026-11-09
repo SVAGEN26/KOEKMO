@@ -1,7 +1,7 @@
 {
  "municipality": "0586",
  "source": "Model Mjolby.Annual; outcomes from SCB:s räkenskapssammandrag (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
- "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nno budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent):\n            income equalisation follows the circular's mean tax capacity per inhabitant,\n            the regulation grant is the circular's amount per inhabitant, cost and LSS\n            equalisation stay at the base year's amount per inhabitant, the property fee\n            grows 3.5 % a year, and other general grants are zero.\n  hold      as components, but the regulation grant per inhabitant is the circular's for the\n            first year only and then stays at that amount: the rule for forecast years that\n            the state has not yet decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nno budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
  "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
  "limitations": [
   "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
@@ -52,70 +52,70 @@
    "1": {
     "cases": 5,
     "taxMeanError": -22.43323758142019,
-    "grantsMeanError": -10.354834112227014,
+    "grantsMeanError": 8.75335499999992,
     "netCostMeanError": -24.420226632347795,
-    "resultMeanError": -3.275074947448007,
+    "resultMeanError": 15.83311416477888,
     "taxMeanAbsError": 33.0812756210938,
-    "grantsMeanAbsError": 11.996214960347583,
+    "grantsMeanAbsError": 10.991650999999933,
     "netCostMeanAbsError": 42.591292623671734,
-    "resultMeanAbsError": 37.15411247751468
+    "resultMeanAbsError": 31.07745044781364
    },
    "2": {
     "cases": 4,
     "taxMeanError": -38.87988252714672,
-    "grantsMeanError": -27.388920537277045,
+    "grantsMeanError": -6.674046015216476,
     "netCostMeanError": -62.953082123684794,
-    "resultMeanError": 14.664745928920814,
+    "resultMeanError": 35.53851713261895,
     "taxMeanAbsError": 42.39247786976375,
-    "grantsMeanAbsError": 27.388920537277045,
+    "grantsMeanAbsError": 19.691316212133557,
     "netCostMeanAbsError": 74.31177560012736,
-    "resultMeanAbsError": 56.310920409018784
+    "resultMeanAbsError": 51.05188440445666
    },
    "3": {
     "cases": 3,
     "taxMeanError": -51.86368958463095,
-    "grantsMeanError": -40.7760785301975,
+    "grantsMeanError": -19.999776577576466,
     "netCostMeanError": -152.5001907513255,
-    "resultMeanError": 91.82728147255587,
+    "resultMeanError": 112.82870707254993,
     "taxMeanAbsError": 51.86368958463095,
-    "grantsMeanAbsError": 40.7760785301975,
+    "grantsMeanAbsError": 27.329678919240752,
     "netCostMeanAbsError": 152.5001907513255,
-    "resultMeanAbsError": 91.82728147255587
+    "resultMeanAbsError": 112.82870707254993
    }
   },
   "hold": {
    "1": {
     "cases": 5,
     "taxMeanError": -22.43323758142019,
-    "grantsMeanError": -10.354834112227014,
+    "grantsMeanError": 10.37192059999992,
     "netCostMeanError": -24.420226632347795,
-    "resultMeanError": -3.275074947448007,
+    "resultMeanError": 17.451679764778884,
     "taxMeanAbsError": 33.0812756210938,
-    "grantsMeanAbsError": 11.996214960347583,
+    "grantsMeanAbsError": 12.507342999999935,
     "netCostMeanAbsError": 42.591292623671734,
-    "resultMeanAbsError": 37.15411247751468
+    "resultMeanAbsError": 32.59314244781372
    },
    "2": {
     "cases": 4,
     "taxMeanError": -38.87988252714672,
-    "grantsMeanError": -13.518509580458101,
+    "grantsMeanError": 9.17989531484082,
     "netCostMeanError": -62.953082123684794,
-    "resultMeanError": 28.535156885739696,
+    "resultMeanError": 51.40297641860206,
     "taxMeanAbsError": 42.39247786976375,
-    "grantsMeanAbsError": 16.239873021645934,
+    "grantsMeanAbsError": 22.128651003792157,
     "netCostMeanAbsError": 74.31177560012736,
-    "resultMeanAbsError": 52.842545948661744
+    "resultMeanAbsError": 57.313592533435504
    },
    "3": {
     "cases": 3,
     "taxMeanError": -51.86368958463095,
-    "grantsMeanError": -15.325489864683542,
+    "grantsMeanError": 8.032637061676306,
     "netCostMeanError": -152.5001907513255,
-    "resultMeanError": 117.34206193863837,
+    "resultMeanError": 140.95098777906358,
     "taxMeanAbsError": 51.86368958463095,
-    "grantsMeanAbsError": 24.326316129080663,
+    "grantsMeanAbsError": 24.81045315855897,
     "netCostMeanAbsError": 152.5001907513255,
-    "resultMeanAbsError": 117.34206193863837
+    "resultMeanAbsError": 140.95098777906358
    }
   },
   "prices": {
@@ -321,18 +321,18 @@
    "horizon": 1,
    "model": {
     "tax": 1311.046653733529,
-    "grants": 439.1134521203014,
+    "grants": 475.9453,
     "netCost": 1666.6196512421539,
     "personnel": 1301.1184824280901,
-    "result": 86.28489905612105,
+    "result": 123.1167469358195,
     "population": 28248.14609799932,
     "grantParts": [
-     296.442367556572,
-     -5.439296779306866,
+     286.00284,
+     -19.04076,
      83.15303999999999,
-     5.237841343036242,
+     9.31068,
      59.7195,
-     0.0
+     56.80000000000001
     ]
    },
    "outcome": {
@@ -356,18 +356,18 @@
    "horizon": 2,
    "model": {
     "tax": 1368.516153517709,
-    "grants": 437.6235095057901,
+    "grants": 473.9495403938342,
     "netCost": 1711.7686785652184,
     "personnel": 1334.326776106981,
-    "result": 96.62079047515044,
+    "result": 133.1514427403042,
     "population": 28538.24147491167,
     "grantParts": [
-     307.7415894533066,
-     -5.495352292283174,
+     296.8944436170735,
+     -19.23698749273754,
      68.27576911886437,
-     5.291820725902316,
+     9.406632650633775,
      61.80968249999999,
-     0.0
+     56.80000000000001
     ]
    },
    "outcome": {
@@ -391,18 +391,18 @@
    "horizon": 3,
    "model": {
     "tax": 1430.567615324706,
-    "grants": 430.1479193372642,
+    "grants": 465.9398535124964,
     "netCost": 1765.976301414599,
     "personnel": 1374.911653143465,
-    "result": 96.59726518089451,
+    "result": 132.7967688013757,
     "population": 28830.1908462398,
     "grantParts": [
-     319.8061096040075,
-     -5.551787015077564,
+     308.5237300712097,
+     -19.43454244441485,
      46.57441008705585,
-     5.346165273778396,
+     9.503234411145586,
      63.97302138749999,
-     0.0
+     56.80000000000001
     ]
    },
    "outcome": {
@@ -426,18 +426,18 @@
    "horizon": 1,
    "model": {
     "tax": 1311.046653733529,
-    "grants": 439.1134521203014,
+    "grants": 475.91734,
     "netCost": 1666.6196512421539,
     "personnel": 1301.1184824280901,
-    "result": 86.28489905612105,
+    "result": 123.0887869358196,
     "population": 28248.14609799932,
     "grantParts": [
-     296.442367556572,
-     -5.439296779306866,
-     83.15303999999999,
-     5.237841343036242,
+     286.00284,
+     -19.04076,
+     83.12508,
+     9.31068,
      59.7195,
-     0.0
+     56.80000000000001
     ]
    },
    "outcome": {
@@ -461,18 +461,18 @@
    "horizon": 2,
    "model": {
     "tax": 1368.516153517709,
-    "grants": 453.3577268823757,
+    "grants": 489.6555096243218,
     "netCost": 1711.7686785652184,
     "personnel": 1334.326776106981,
-    "result": 112.3550078517362,
+    "result": 148.8572566374582,
     "population": 28538.24147491167,
     "grantParts": [
-     307.7415894533066,
-     -5.495352292283174,
-     84.00998649544998,
-     5.291820725902316,
+     296.8944436170735,
+     -19.23698749273754,
+     83.98173834935199,
+     9.406632650633775,
      61.80968249999999,
-     0.0
+     56.80000000000001
     ]
    },
    "outcome": {
@@ -496,18 +496,18 @@
    "horizon": 3,
    "model": {
     "tax": 1430.567615324706,
-    "grants": 468.4462393965957,
+    "grants": 504.2096353303529,
     "netCost": 1765.976301414599,
     "personnel": 1374.911653143465,
-    "result": 134.9829975589846,
+    "result": 171.1536498075498,
     "population": 28830.1908462398,
     "grantParts": [
-     319.8061096040075,
-     -5.551787015077564,
-     84.87273014638731,
-     5.346165273778396,
+     308.5237300712097,
+     -19.43454244441485,
+     84.84419190491239,
+     9.503234411145586,
      63.97302138749999,
-     0.0
+     56.80000000000001
     ]
    },
    "outcome": {
@@ -855,18 +855,18 @@
    "horizon": 1,
    "model": {
     "tax": 1390.020259377658,
-    "grants": 428.0418129112472,
+    "grants": 450.6690399999998,
     "netCost": 1705.6765176379888,
     "personnel": 1321.9292512498919,
-    "result": 115.5005546509162,
+    "result": 138.1277817396688,
     "population": 28528.47491324186,
     "grantParts": [
-     303.7123194820627,
-     -19.20997854077253,
+     309.2063219999998,
+     -15.632757,
      70.587693,
-     9.402778969957081,
+     7.858782,
      63.54899999999999,
-     0.0
+     15.09999999999997
     ]
    },
    "outcome": {
@@ -890,18 +890,18 @@
    "horizon": 2,
    "model": {
     "tax": 1445.809488568161,
-    "grants": 425.577738227929,
+    "grants": 448.5198325209718,
     "netCost": 1768.5047623389912,
     "personnel": 1374.426029702678,
-    "result": 106.1309305719624,
+    "result": 129.1861610004487,
     "population": 28787.83351840993,
     "grantParts": [
-     318.2649006510008,
-     -19.38630269497837,
+     324.0551078535383,
+     -15.77624662702275,
      51.43684026857507,
-     9.48908500333152,
+     7.930916025881236,
      65.773215,
-     0.0
+     15.09999999999997
     ]
    },
    "outcome": {
@@ -925,18 +925,18 @@
    "horizon": 3,
    "model": {
     "tax": 1500.123560082683,
-    "grants": 441.0491982311382,
+    "grants": 464.2826803247268,
     "netCost": 1818.4332789435307,
     "personnel": 1412.0732410751739,
-    "result": 126.097002019686,
+    "result": 149.5588964008605,
     "population": 29047.14187932252,
     "grantParts": [
-     331.7763481728008,
-     -19.56254781293951,
+     337.8392890215567,
+     -15.91967193568069,
      51.18476799573285,
-     9.575352350544074,
+     8.00301771811796,
      68.07527752499998,
-     0.0
+     15.09999999999997
     ]
    },
    "outcome": {
@@ -960,18 +960,18 @@
    "horizon": 1,
    "model": {
     "tax": 1390.020259377658,
-    "grants": 428.0418129112472,
+    "grants": 458.1037869999998,
     "netCost": 1705.6765176379888,
     "personnel": 1321.9292512498919,
-    "result": 115.5005546509162,
+    "result": 145.5625287396688,
     "population": 28528.47491324186,
     "grantParts": [
-     303.7123194820627,
-     -19.20997854077253,
-     70.587693,
-     9.402778969957081,
+     309.2063219999998,
+     -15.632757,
+     78.02244,
+     7.858782,
      63.54899999999999,
-     0.0
+     15.09999999999997
     ]
    },
    "outcome": {
@@ -995,18 +995,18 @@
    "horizon": 2,
    "model": {
     "tax": 1445.809488568161,
-    "grants": 445.3764998177189,
+    "grants": 475.8215830129442,
     "netCost": 1768.5047623389912,
     "personnel": 1374.426029702678,
-    "result": 125.9296921617522,
+    "result": 156.5250852274214,
     "population": 28787.83351840993,
     "grantParts": [
-     318.2649006510008,
-     -19.38630269497837,
-     71.23560185836492,
-     9.48908500333152,
+     324.0551078535383,
+     -15.77624662702275,
+     78.73859076054752,
+     7.930916025881236,
      65.773215,
-     0.0
+     15.09999999999997
     ]
    },
    "outcome": {
@@ -1030,18 +1030,18 @@
    "horizon": 3,
    "model": {
     "tax": 1500.123560082683,
-    "grants": 461.7476505308749,
+    "grants": 492.5523328398054,
     "netCost": 1818.4332789435307,
     "personnel": 1412.0732410751739,
-    "result": 146.8944481273713,
+    "result": 178.0024172720741,
     "population": 29047.14187932252,
     "grantParts": [
-     331.7763481728008,
-     -19.56254781293951,
-     71.88322029546958,
-     9.575352350544074,
+     337.8392890215567,
+     -15.91967193568069,
+     79.4544205108114,
+     8.00301771811796,
      68.07527752499998,
-     0.0
+     15.09999999999997
     ]
    },
    "outcome": {
@@ -1389,18 +1389,18 @@
    "horizon": 1,
    "model": {
     "tax": 1469.862005569253,
-    "grants": 454.0436965347734,
+    "grants": 457.2045499999999,
     "netCost": 1889.3289337763854,
     "personnel": 1454.121593446186,
-    "result": 38.75040849500488,
+    "result": 41.91126196023129,
     "population": 28723.18294668342,
     "grantParts": [
-     329.8679734999649,
-     -15.7114719303831,
+     330.092774,
+     -17.822846,
      66.308959,
-     7.855735965191552,
+     7.203163,
      65.7225,
-     0.0
+     5.699999999999932
     ]
    },
    "outcome": {
@@ -1424,18 +1424,18 @@
    "horizon": 2,
    "model": {
     "tax": 1535.459637120309,
-    "grants": 475.1328630880578,
+    "grants": 478.3712631693566,
     "netCost": 1972.054843648166,
     "personnel": 1523.07098894111,
-    "result": 42.38840210391686,
+    "result": 45.64619933339827,
     "population": 28973.27819277758,
     "grantParts": [
-     349.1444123484995,
-     -15.85063688026677,
+     349.4712412287778,
+     -17.98071252462382,
      65.89098167969176,
-     7.925318440133385,
+     7.266965285510905,
      68.02278749999999,
-     0.0
+     5.699999999999932
     ]
    },
    "outcome": {
@@ -1459,18 +1459,18 @@
    "horizon": 3,
    "model": {
     "tax": 1603.684755838718,
-    "grants": 480.8686468410051,
+    "grants": 484.1721364300474,
     "netCost": 1989.833847387894,
     "personnel": 1525.702110551605,
-    "result": 98.29857721708686,
+    "result": 101.6414560154133,
     "population": 29221.49712713187,
     "grantParts": [
-     368.3356153804347,
-     -15.98864975086951,
+     368.7518128599483,
+     -18.13727214867876,
      50.1237712735052,
-     7.994324875434754,
+     7.330239382772727,
      70.40358506249999,
-     0.0
+     5.699999999999932
     ]
    },
    "outcome": {
@@ -1494,18 +1494,18 @@
    "horizon": 1,
    "model": {
     "tax": 1469.862005569253,
-    "grants": 454.0436965347734,
+    "grants": 457.4038469999999,
     "netCost": 1889.3289337763854,
     "personnel": 1454.121593446186,
-    "result": 38.75040849500488,
+    "result": 42.1105589602314,
     "population": 28723.18294668342,
     "grantParts": [
-     329.8679734999649,
-     -15.7114719303831,
-     66.308959,
-     7.855735965191552,
+     330.092774,
+     -17.822846,
+     66.508256,
+     7.203163,
      65.7225,
-     0.0
+     5.699999999999932
     ]
    },
    "outcome": {
@@ -1529,18 +1529,18 @@
    "horizon": 2,
    "model": {
     "tax": 1535.459637120309,
-    "grants": 476.1381744911918,
+    "grants": 479.5776368531173,
     "netCost": 1972.054843648166,
     "personnel": 1523.07098894111,
-    "result": 43.39371350705073,
+    "result": 46.85379603919546,
     "population": 28973.27819277758,
     "grantParts": [
-     349.1444123484995,
-     -15.85063688026677,
-     66.89629308282568,
-     7.925318440133385,
+     349.4712412287778,
+     -17.98071252462382,
+     67.09735536345246,
+     7.266965285510905,
      68.02278749999999,
-     0.0
+     5.699999999999932
     ]
    },
    "outcome": {
@@ -1564,18 +1564,18 @@
    "horizon": 3,
    "model": {
     "tax": 1603.684755838718,
-    "grants": 498.2236404784788,
+    "grants": 501.7299430148706,
     "netCost": 1989.833847387894,
     "personnel": 1525.702110551605,
-    "result": 115.6597401295589,
+    "result": 119.2078962575665,
     "population": 29221.49712713187,
     "grantParts": [
-     368.3356153804347,
-     -15.98864975086951,
-     67.47876491097897,
-     7.994324875434754,
+     368.7518128599483,
+     -18.13727214867876,
+     67.68157785832841,
+     7.330239382772727,
      70.40358506249999,
-     0.0
+     5.699999999999932
     ]
    },
    "outcome": {
@@ -1896,18 +1896,18 @@
    "horizon": 1,
    "model": {
     "tax": 1549.809798313275,
-    "grants": 473.4786784381429,
+    "grants": 493.51626,
     "netCost": 2061.93566497831,
     "personnel": 1575.993203521476,
-    "result": -55.83442226944408,
+    "result": -35.79684070758685,
     "population": 28702.050693585,
     "grantParts": [
-     328.0407748479635,
-     -17.86564574479295,
+     332.967552,
+     -8.658528,
      87.042496,
-     7.226553334972428,
+     10.43024,
      69.0345,
-     0.0
+     2.699999999999989
     ]
    },
    "outcome": {
@@ -1931,18 +1931,18 @@
    "horizon": 2,
    "model": {
     "tax": 1618.730190685234,
-    "grants": 474.419207029115,
+    "grants": 494.7721798549715,
     "netCost": 2085.4573869528854,
     "personnel": 1579.837946749798,
-    "result": -12.73513943534681,
+    "result": 7.916265456324254,
     "population": 28825.5760789758,
     "grantParts": [
-     345.1714287494873,
-     -17.94445233205061,
+     350.3588522570755,
+     -8.696721360156255,
      68.4830929548938,
-     7.258430156784518,
+     10.47624850315852,
      71.4507075,
-     0.0
+     2.699999999999989
     ]
    },
    "outcome": {
@@ -1966,18 +1966,18 @@
    "horizon": 1,
    "model": {
     "tax": 1549.809798313275,
-    "grants": 473.4786784381429,
+    "grants": 493.773444,
     "netCost": 2061.93566497831,
     "personnel": 1575.993203521476,
-    "result": -55.83442226944408,
+    "result": -35.53965670758703,
     "population": 28702.050693585,
     "grantParts": [
-     328.0407748479635,
-     -17.86564574479295,
-     87.042496,
-     7.226553334972428,
+     332.967552,
+     -8.658528,
+     87.29968,
+     10.43024,
      69.0345,
-     0.0
+     2.699999999999989
     ]
    },
    "outcome": {
@@ -2001,18 +2001,18 @@
    "horizon": 2,
    "model": {
     "tax": 1618.730190685234,
-    "grants": 493.3625604868812,
+    "grants": 513.97385176898,
     "netCost": 2085.4573869528854,
     "personnel": 1579.837946749798,
-    "result": 6.20821402241927,
+    "result": 27.12176777033278,
     "population": 28825.5760789758,
     "grantParts": [
-     345.1714287494873,
-     -17.94445233205061,
-     87.42644641265991,
-     7.258430156784518,
+     350.3588522570755,
+     -8.696721360156255,
+     87.68476486890218,
+     10.47624850315852,
      71.4507075,
-     0.0
+     2.699999999999989
     ]
    },
    "outcome": {
@@ -2225,18 +2225,18 @@
    "horizon": 1,
    "model": {
     "tax": 1638.325095099184,
-    "grants": 510.8671894344001,
+    "grants": 523.7506249999999,
     "netCost": 2013.1280992034233,
     "personnel": 1532.496896289669,
-    "result": 89.14418533016146,
+    "result": 102.0276208957612,
     "population": 28811.98266207334,
     "grantParts": [
-     359.7245900670989,
-     -8.73622970324748,
+     360.495285,
+     0.11478,
      75.64001999999999,
-     10.44330907054871,
+     7.80504,
      73.79549999999999,
-     0.0
+     5.900000000000034
     ]
    },
    "outcome": {
@@ -2260,18 +2260,18 @@
    "horizon": 1,
    "model": {
     "tax": 1638.325095099184,
-    "grants": 510.8671894344001,
+    "grants": 523.9801849999999,
     "netCost": 2013.1280992034233,
     "personnel": 1532.496896289669,
-    "result": 89.14418533016146,
+    "result": 102.2571808957612,
     "population": 28811.98266207334,
     "grantParts": [
-     359.7245900670989,
-     -8.73622970324748,
-     75.64001999999999,
-     10.44330907054871,
+     360.495285,
+     0.11478,
+     75.86958,
+     7.80504,
      73.79549999999999,
-     0.0
+     5.900000000000034
     ]
    },
    "outcome": {

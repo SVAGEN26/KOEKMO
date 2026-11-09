@@ -289,3 +289,9 @@ där sajten påverkas, i JavaScript-referensen:
   (Motala); bidragens MAE 36/58/96 → 31/52/92. Standard (webben, Motala.Annual) är fortfarande av; webbens SKR-bana har redan
   SKR:s egen inkomstutjämning.
 - Användaren vill ha svenska för ekonomiska begrepp.
+- Uppföljning samma dag: `BaseYear.equalisationNextYear` (inkomst-, kostnads-, reglerings- och LSS-del per invånare året efter
+  basåret, SCB TAB1981/TAB4011, publiceras i december under basåret). Med dem träffar utjämningsdelarna år 1 inom 1 mnkr i
+  testet mot cirkulären; ålderseffekten räknas bara från år 2 (`incomeEqualisationComposition`). Övriga generella bidrag ligger
+  kvar på basårets nivå: Motalas 51 mnkr 2025 är ett riktat statsbidrag som omklassats till generellt (AR 2025 s. 29). Rikets
+  övriga generella bidrag var 225 kr/inv 2025, Motalas 1 155 kr. Bidragens MAE (hold) Motala 27/48/67 mnkr mot 31/65/104 med 2 %;
+  Mjölby 13/22/25 mot 11/19/17 (pandemibidraget 2020 följer med som övriga bidrag). `grantsByComponent` är fortfarande av som standard.

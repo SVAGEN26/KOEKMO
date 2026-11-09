@@ -46,6 +46,12 @@
     430.0
    ],
    "deaths": 451.0,
+   "equalisationNextYear": [
+    11366,
+    360,
+    2973,
+    406
+   ],
    "relativeTaxCapacity": [
     0.8867,
     0.8878
@@ -125,6 +131,12 @@
     420.0
    ],
    "deaths": 455.0,
+   "equalisationNextYear": [
+    12169,
+    338,
+    2760,
+    453
+   ],
    "relativeTaxCapacity": [
     0.8878,
     0.8836
@@ -204,6 +216,12 @@
     360.0
    ],
    "deaths": 420.0,
+   "equalisationNextYear": [
+    13293,
+    631,
+    2336,
+    885
+   ],
    "relativeTaxCapacity": [
     0.8836,
     0.8768
@@ -283,6 +301,12 @@
     381.0
    ],
    "deaths": 445.0,
+   "equalisationNextYear": [
+    14022,
+    704,
+    3055,
+    888
+   ],
    "relativeTaxCapacity": [
     0.8768,
     0.8744
@@ -362,6 +386,12 @@
     336.0
    ],
    "deaths": 402.0,
+   "equalisationNextYear": [
+    14473,
+    724,
+    2644,
+    924
+   ],
    "relativeTaxCapacity": [
     0.8744,
     0.8729
@@ -441,6 +471,12 @@
     334.0
    ],
    "deaths": 468.0,
+   "equalisationNextYear": [
+    14734,
+    1175,
+    2799,
+    1230
+   ],
    "relativeTaxCapacity": [
     0.8729,
     0.8759

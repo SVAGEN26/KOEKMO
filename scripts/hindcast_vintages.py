@@ -16,14 +16,14 @@ assumptions are run from every base year:
             growth, the labour-cost index (payroll and pensions) and the price index
             for other costs, and Sweden's population. Grants still grow 2 % a year,
             because the circulars give no figure for Motala's grants.
-  components  as skr, but the grants are computed per component (grantsByComponent):
-            income equalisation follows the circular's mean tax capacity per inhabitant,
-            the regulation grant is the circular's amount per inhabitant, cost and LSS
-            equalisation stay at the base year's amount per inhabitant, the property fee
-            grows 3.5 % a year, and other general grants are zero.
-  hold      as components, but the regulation grant per inhabitant is the circular's for the
-            first year only and then stays at that amount: the rule for forecast years that
-            the state has not yet decided.
+  components  as skr, but the grants are computed per component (grantsByComponent). Year one's
+            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in
+            December of the base year; later income equalisation grows with the circular's mean
+            tax capacity and follows the law's formula for the relative tax capacity; the
+            regulation grant follows the circular; cost and LSS equalisation stay at year one's
+            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.
+  hold      as components, but the regulation grant stays at year one's amount per inhabitant:
+            the rule for years the state has not decided.
   prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow
             the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the
             price forecast and how much is the model.
@@ -129,12 +129,13 @@ def model_source(origin, horizon, v, assumptions):
                   f'pensionExpensePath = {modelica_array(pension)}*pension0']
     if assumptions in ('components', 'hold'):
         regulation = [v['regulation'][y] for y in years]
-        if assumptions == 'hold':
-            regulation = [regulation[0]] * len(regulation)
         capacity = [v['capacity'][y] / v['capacity'][origin] for y in years]
+        # Year one's equalisation is known from SCB in December of the base year (BaseYear.equalisationNextYear);
+        # later years grow with the circular's mean tax capacity.
         lines += ['grantsByComponent = true',
-                  f'incomeEqualisationPerCapitaPath = {modelica_array(capacity)}*grantPerCapita0[1]',
-                  f'regulationPerCapitaPath = {modelica_array(regulation)}']
+                  f'incomeEqualisationPerCapitaPath = {modelica_array([c / capacity[0] for c in capacity])}*base.equalisationNextYear[1]']
+        if assumptions == 'components':
+            lines += [f'regulationPerCapitaPath = {modelica_array(regulation)}']
     return f'model Run\n  extends {PACKAGE}.Annual(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 

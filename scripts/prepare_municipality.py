@@ -75,6 +75,7 @@ def build(code, archive):
     care = json.loads((folder / 'care-weights.json').read_text())['baseYears']
     sectors = json.loads((folder / 'sector-costs.json').read_text())['years']
     capacity = json.loads((ROOT / 'data/tax-capacity.json').read_text())['municipalities'][code]
+    equalisation = json.loads((ROOT / 'data/equalisation.json').read_text())['municipalities'][code]['years']
 
     def g(table, item, year):
         return table.get(item, {}).get(year, 0.0)
@@ -94,6 +95,7 @@ def build(code, archive):
             'cohorts': [groups(population[x]) for x in (y - 2, y - 1, y)],
             'reportedPopulation': [sum(population[x]) for x in (y - 2, y - 1, y)],
             'births': [changes[y - 1]['births'], changes[y]['births']], 'deaths': changes[y]['deaths'],
+            'equalisationNextYear': [round(equalisation[str(y + 1)][k]) for k in ('income', 'cost', 'regulation', 'lss')],
             'relativeTaxCapacity': [round(capacity[str(y)]['relative'], 4), round(capacity[str(y + 1)]['relative'], 4)],
             'tax': g(rr, '040', y), 'priorYearSettlement': g(tx, '040', y), 'grants': g(rr, '050', y),
             'grantComponents': [g(tx, '090', y) - g(tx, '170', y), g(tx, '130', y) - g(tx, '190', y),
@@ -140,6 +142,7 @@ def modelica(package, name, code, archive, years, older_shares):
       cohorts = {{{', '.join(vector(c, 0) for c in r['cohorts'])}}},
       reportedPopulation = {vector(r['reportedPopulation'], 0)},
       births = {vector(r['births'], 0)}, deaths = {number(r['deaths'], 0)},
+      equalisationNextYear = {vector(r['equalisationNextYear'], 0)},
       relativeTaxCapacity = {vector(r['relativeTaxCapacity'], 4)},
       tax = {number(r['tax'])}, priorYearSettlement = {number(r['priorYearSettlement'])}, grants = {number(r['grants'])},
       grantComponents = {vector(r['grantComponents'])},
