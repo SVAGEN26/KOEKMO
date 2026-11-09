@@ -22,7 +22,7 @@ for n, assumptions in enumerate(scenarios):
     directory = Path(tempfile.mkdtemp(prefix=f'modelica-{n}-',dir=ROOT/'build'))
     (directory/'Scenario.mo').write_text(ref['source'])
     quote = lambda p: json.dumps(str(p))
-    (directory/'run.mos').write_text(f'loadFile({quote(ROOT/"modelica/Motala.mo")});\nloadFile("Scenario.mo");\ncheckModel(Scenario);\ngetErrorString();\nsimulate(Scenario,startTime=2025,stopTime=2033,numberOfIntervals=8,outputFormat="csv");\ngetErrorString();\n')
+    (directory/'run.mos').write_text(f'loadFile({quote(ROOT/"modelica/Kommunekonomi.mo")});\nloadFile({quote(ROOT/"modelica/Motala.mo")});\nloadFile("Scenario.mo");\ncheckModel(Scenario);\ngetErrorString();\nsimulate(Scenario,startTime=2025,stopTime=2033,numberOfIntervals=8,outputFormat="csv");\ngetErrorString();\n')
     process = subprocess.run([omc,'run.mos'],cwd=directory,text=True,capture_output=True,timeout=120)
     (directory/'omc.log').write_text(process.stdout+process.stderr)
     result = directory/'Scenario_res.csv'

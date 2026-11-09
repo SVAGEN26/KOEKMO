@@ -1,16 +1,16 @@
 // The model view draws Motala.Annual by hand. These checks keep it tied to the model:
-// every arrow is a connect() in Motala.mo, and every component's code can be shown.
+// every arrow is a connect() in Kommunekonomi.Annual, and every component's code can be shown.
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {COMPONENTS,FLOWS,modelicaSection} from '../site/src/model-view.js';
 
-const source=fs.readFileSync(new URL('../modelica/Motala.mo',import.meta.url),'utf8');
-const annual=source.slice(source.indexOf('model Annual'));
+const source=fs.readFileSync(new URL('../modelica/Kommunekonomi.mo',import.meta.url),'utf8');
+const annual=source.slice(source.indexOf('partial model Annual'));
 const compact=annual.replace(/\s+/g,'');
 const app=fs.readFileSync(new URL('../site/src/app.js',import.meta.url),'utf8');
 
-test('every component is a model in Motala.Components and instantiated in Annual',()=>{
+test('every component is a model in Kommunekonomi.Components and instantiated in Annual',()=>{
   for(const c of COMPONENTS) {
     const section=modelicaSection(source,c.model);
     assert.ok(section?.startsWith(`model ${c.model}`),c.model);
@@ -19,7 +19,7 @@ test('every component is a model in Motala.Components and instantiated in Annual
   }
 });
 
-test('every arrow is a connect() in Motala.Annual',()=>{
+test('every arrow is a connect() in Kommunekonomi.Annual',()=>{
   for(const f of FLOWS) {
     const m=f.binding.match(/^connect\((\w+)\.(\w+), (\w+)\.(\w+)\)$/);
     assert.ok(m,f.binding);

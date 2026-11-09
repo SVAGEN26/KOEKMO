@@ -12,19 +12,22 @@ INPUTS = json.loads((ROOT / 'data/demography-inputs.json').read_text())
 
 class Demography(unittest.TestCase):
     def test_modelica_data_matches_the_json(self):
-        """Regenerating Motala.Data.SCB from the JSON must leave Motala.mo unchanged."""
+        """Regenerating the SCB packages from the JSON must leave Kommunekonomi.mo and Motala.mo unchanged."""
         spec = importlib.util.spec_from_file_location('writer', ROOT / 'scripts/write_demography_modelica.py')
         writer = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(writer)
         with tempfile.TemporaryDirectory() as tmp:
-            copy = Path(tmp) / 'Motala.mo'
-            shutil.copy(ROOT / 'modelica/Motala.mo', copy)
-            writer.MODEL = copy
+            copies = {}
+            for name in ('Kommunekonomi.mo', 'Motala.mo'):
+                copies[name] = Path(tmp) / name
+                shutil.copy(ROOT / 'modelica' / name, copies[name])
+            writer.LIBRARY, writer.MUNICIPALITY = copies['Kommunekonomi.mo'], copies['Motala.mo']
             writer.main()
             # Compare without whitespace: OMEdit reformats the file when it saves.
             squeeze = lambda text: ''.join(text.split())
-            self.assertEqual(squeeze(copy.read_text()), squeeze((ROOT / 'modelica/Motala.mo').read_text()),
-                             'Run scripts/write_demography_modelica.py after prepare_demography.py')
+            for name, copy in copies.items():
+                self.assertEqual(squeeze(copy.read_text()), squeeze((ROOT / 'modelica' / name).read_text()),
+                                 f'{name}: run scripts/write_demography_modelica.py after prepare_demography.py')
 
     def test_each_base_year_uses_its_own_observations(self):
         observed = INPUTS['observed']['population']

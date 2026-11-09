@@ -182,3 +182,29 @@ där sajten påverkas, i JavaScript-referensen:
   Modellen ligger i snitt 36 mnkr för lågt, budgeten 22. Bidragen underskattas 2023-2024 (+71 och +88 mnkr i utfall).
 - SKR:s egen Motalaprognos från respektive tillfälle finns inte: de gamla prognosunderlagen är borta från SKR:s webb.
 - Budgetens skatt och bidrag för 2021-2025 är inte hämtade; bara budgetens resultat finns.
+
+## Generella bidrag per del: underlag för antaganden (2026-11-09)
+
+- Motala, not 7 (AR 2023 PDF-s. 52, AR 2024 PDF-s. 27): 2022→2024 inkomstutjämning 531→581→614, regleringsbidrag
+  120→102→134, kostnadsutj. 13→29→31, LSS 20→39→39, fastighetsavgift 102→106→114, övriga 8→7→21.
+- SKR:s Motalaprognos (arbetsboken 2026-10-06, Blad 1): inkomstutjämning 636→847 (2026→2033, +4,2 %/år), regleringspost
+  121→15 (oförändrad statlig ram i kronor), kostnadsutj. ~51-54, LSS ~53-57, fastighetsavgift 122→127, sedan oförändrad.
+  Summa bidrag +1,6 %/år mot skatt +3,9 %/år.
+- Regleringsbidrag per invånare: SKR:s år 1 har träffat (23:56 för 2024: 3046 mot 3055). År 2-3 har varje gång varit för
+  lågt: 21:49 för 2023 1803 mot 2336; 22:54 för 2024 2294 mot 3055; 23:56 för 2025 2386 mot ~2643. Motalas regleringsbidrag
+  2021-2025: 130, 121, 102, 134, 115 mnkr, ingen trend.
+- SCB TAB6777 (research/data/scb-budget-response-accounts.json): bidrag/skatt 0,30 (1998), 0,22 (2004), 0,31 (2010),
+  0,32 (2019), 0,42 (2025). 2010-2019 växte både skatt och bidrag 3,3 %/år.
+- Inkomstbasbeloppet (styr fastighetsavgiftens tak) 66 800 (2020) → 83 400 (2026), 3,8 %/år.
+- Inga modelländringar gjorda ännu; förslag lämnat till användaren.
+
+## Bibliotek: Kommunekonomi (2026-11-09)
+
+- `modelica/Kommunekonomi.mo` (version 0.1.0): posttyper (`Data.BaseYear`, `Data.Budget`, `Data.SCB.DemographyYear`), rikets
+  SCB-data, kalibreringsfunktioner, `Assumptions`, `Interfaces`, `Components` och `partial model Annual`. Inget Motala-specifikt.
+- `modelica/Motala.mo`: Handledning, `Data` (basår, budget, `SCB extends Kommunekonomi.Data.SCB` med ettårsdata),
+  `Annual extends Kommunekonomi.Annual(base = Data.motala2025, olderShares = ...)`, Examples. `uses(Kommunekonomi(version = "0.1.0"))`.
+- Ladda alltid Kommunekonomi.mo före Motala.mo (skript, tester, webbläsaren, OMEdit).
+- `scripts/write_demography_modelica.py` skriver båda SCB-paketen. Delningen verifierad: alla sju exempelmodeller gav
+  bit för bit samma resultat före och efter, liksom båda testerna mot historien och wasm-jit-pariteten.
+- Nästa: en andra kommun som pilot (skripten tar ännu inte kommunkod), och bidragen per del som utbytbar komponent.

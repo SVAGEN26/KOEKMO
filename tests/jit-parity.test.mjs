@@ -20,7 +20,7 @@ if(staged) {
   omc.omc_set_env('OPENMODELICAHOME','/usr');
   assert.ok(omc.omc_init());
   omc.omc_enable_wasm_blobs?.();
-  session=createSession(omc,['Motala.mo','MotalaBrowser.mo'].map(name=>({name,text:fs.readFileSync(url(`../modelica/${name}`),'utf8')})));
+  session=createSession(omc,['Kommunekonomi.mo','Motala.mo','MotalaBrowser.mo'].map(name=>({name,text:fs.readFileSync(url(`../modelica/${name}`),'utf8')})));
   simulate=createDirectSimulator(session);
 }
 const skip=!staged&&'OpenModelica web compiler not staged (scripts/stage_omc.py)';

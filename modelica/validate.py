@@ -53,6 +53,7 @@ def simulate(name, source, stop=10, error=None):
     directory.mkdir()
     (directory / "Scenario.mo").write_text(source)
     (directory / "run.mos").write_text(
+        f"loadFile({json.dumps(str(HERE / 'Kommunekonomi.mo'))});\n"
         f"loadFile({json.dumps(str(HERE / 'Motala.mo'))});\n"
         'loadFile("Scenario.mo");\ncheckModel(Scenario);\ngetErrorString();\n'
         f'simulate(Scenario,startTime={START},stopTime={START + stop},numberOfIntervals={stop},outputFormat="csv");\n'

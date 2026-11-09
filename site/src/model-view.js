@@ -1,4 +1,4 @@
-// The "Modellen" tab: a flow diagram of Motala.Annual, documentation per component and
+// The "Modellen" tab: a flow diagram of Kommunekonomi.Annual (which Motala.Annual extends), documentation per component and
 // a result-to-debt waterfall, all for one chosen year of the current scenario.
 // Assumptions are edited through the scenario lab's own controls, so both views share
 // one scenario and one validation path.
@@ -10,7 +10,7 @@ const idx=v=>Number.isFinite(v)?df.format(v*100):'—';
 const signed=v=>(v>0?'+':'')+fmt(v);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-// Positions follow the Placement annotations in Motala.Annual (same grid, y flipped).
+// Positions follow the Placement annotations in Kommunekonomi.Annual (same grid, y flipped).
 // Colours are the components' Modelica icon colours.
 export const COMPONENTS=[
   {id:'demography',model:'Demography',name:'Demografi',sub:'Fem åldersgrupper',x:40,y:40,color:'#285f8c',
@@ -73,7 +73,7 @@ export const COMPONENTS=[
 ];
 const W=260,H=150,byId=Object.fromEntries(COMPONENTS.map(c=>[c.id,c]));
 
-// Arrows are the connect() statements in Motala.Annual. `value` gives mnkr for money flows (drawn
+// Arrows are the connect() statements in Kommunekonomi.Annual. `value` gives mnkr for money flows (drawn
 // to scale) and a label for the others.
 export const FLOWS=[
   {from:'demography',to:'services',binding:'connect(demography.cohorts, services.cohorts)',label:'Åldersgrupper',d:'M300,105 L380,105'},
@@ -122,7 +122,7 @@ export function createModelView(root,{source}) {
 
   root.innerHTML=`<div class="model-toolbar"><label for="model-year">År</label><input id="model-year" type="range" min="1" max="1" step="1"><output id="model-year-label"></output></div>
 <div class="model-diagram" id="model-diagram"></div>
-<p class="chart-note">Klicka på en del för att läsa hur den räknar och ändra dess antaganden. Pilarna är modellens kopplingar; pengaflödenas tjocklek motsvarar beloppet för valt år. Diagrammet följer placeringen i <code>Motala.Annual</code>.</p>
+<p class="chart-note">Klicka på en del för att läsa hur den räknar och ändra dess antaganden. Pilarna är modellens kopplingar; pengaflödenas tjocklek motsvarar beloppet för valt år. Diagrammet följer placeringen i <code>Kommunekonomi.Annual</code>, som <code>Motala.Annual</code> ärver.</p>
 <div class="model-detail" id="model-detail" aria-live="polite"></div>
 <section class="panel"><p class="eyebrow">FRÅN INTÄKTER TILL LÅN</p><h2 id="waterfall-title">Resultat och finansiering</h2><div id="model-waterfall"></div><p class="chart-note">Samma beräkning som i Finans. Positiva poster ökar, negativa minskar. Kassaflödet räknas från resultatet; investeringar som inte täcks lånas.</p></section>`;
   const $=id=>root.querySelector('#'+id);

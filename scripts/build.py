@@ -42,6 +42,7 @@ def main():
             shutil.copy2(source, DIST / source.name)
     for name in DATA:
         shutil.copy2(ROOT / 'data' / name, DIST / name)
+    shutil.copy2(ROOT / 'modelica/Kommunekonomi.mo', DIST / 'Kommunekonomi.mo')
     shutil.copy2(ROOT / 'modelica/Motala.mo', DIST / 'Motala.mo')
     shutil.copy2(ROOT / 'modelica/MotalaBrowser.mo', DIST / 'MotalaBrowser.mo')
     shutil.copytree(OMC, DIST / 'omc-web')

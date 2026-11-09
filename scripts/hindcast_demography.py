@@ -22,10 +22,10 @@ ROOT = Path(__file__).resolve().parents[1]
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
 LAST = 2025
 BIRTH_MODELS = {
-    'fertility 1.41': 'Motala.Components.Fertility.Constant fertility(totalFertility = 1.41)',
-    'Motala base year': 'Motala.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertility)',
-    'Motala 5-year mean': 'Motala.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertilityMean5)',
-    'old rule (19-64)': 'Motala.Components.Fertility.Legacy fertility',
+    'fertility 1.41': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = 1.41)',
+    'Motala base year': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertility)',
+    'Motala 5-year mean': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertilityMean5)',
+    'old rule (19-64)': 'Kommunekonomi.Components.Fertility.Legacy fertility',
 }
 
 
@@ -33,12 +33,13 @@ def simulate(base, birth_model, directory):
     horizon = LAST - base
     source = f'''model Run
   extends Motala.Examples.DemographyOnly(horizon = {horizon},
-    redeclare Motala.Components.CohortDemography demography(data = Motala.Data.SCB.motala{base},
+    redeclare Kommunekonomi.Components.CohortDemography demography(data = Motala.Data.SCB.motala{base},
       redeclare {birth_model.format(base=base)}));
 end Run;
 '''
     (directory / 'Run.mo').write_text(source)
     (directory / 'run.mos').write_text(
+        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
         f'loadFile({json.dumps(str(ROOT / "modelica/Motala.mo"))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {base}, stopTime = {LAST}, numberOfIntervals = {horizon}, outputFormat = "csv",'

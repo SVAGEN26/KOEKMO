@@ -129,10 +129,11 @@ async function boot(){try{
   const mib=x=>(x/1048576).toFixed(0);
   engine=createWorkerEngine({
     onProgress:(loaded,total)=>{$('engine').textContent=total?`Hämtar OpenModelica ${Math.round(loaded/total*100)} % (${mib(total)} MB)`:`Hämtar OpenModelica ${mib(loaded)} MB`;},
-    onCompiling:()=>{$('engine').textContent='Kompilerar Motala.mo…';}});
+    onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
-  modelView=createModelView($('model-view'),{source:fetch('Motala.mo').then(r=>r.ok?r.text():Promise.reject(Error('Motala.mo')))});
-  modelSource=fetch('Motala.mo').then(r=>r.text()).then(async text=>({file:'Motala.mo',sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(x=>x.toString(16).padStart(2,'0')).join('')})).catch(()=>null);
+  modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
+  // Provenance for the exported scenario: the library and Motala's package, with their hashes.
+  modelSource=Promise.all(['Kommunekonomi.mo','Motala.mo'].map(file=>fetch(file).then(r=>r.text()).then(async text=>({file,sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(x=>x.toString(16).padStart(2,'0')).join('')})))).catch(()=>null);
   const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   [b,{rows:history}]=files;planning=files[5];b.planningInputs=planning;path=planning.revenuePath?validateRevenuePath(planning.revenuePath,b.baseYear):null;planningControls();draw();renderEvidence(files[2],files[3]);renderPlanning();
   $('municipal-benchmarks').innerHTML=`<thead><tr><th scope="col">2025</th><th scope="col">Budget/prognos</th><th scope="col">Utfall</th><th scope="col">Absolut fel</th></tr></thead><tbody>${files[4].rows.map(r=>`<tr><th scope="row">${({budget:'Budget',april:'Aprilprognos',august:'Augustiprognos'})[r.stage]}</th><td>${fmt(r.forecast)}</td><td>${fmt(r.actual)}</td><td>${fmt(Math.abs(r.forecast-r.actual))}</td></tr>`).join('')}</tbody>`;
@@ -164,7 +165,7 @@ async function boot(){try{
   $('csv').onclick=()=>{const keys=['year','population','tax','grants','payroll','pensionExpense','pensionCashPayments','otherOperatingExpense','operatingRevenue','cost','depreciation','interest','otherFinancialExpense','result','operatingCash','investment','debt','cash'];download('motala-scenario.csv',keys.join(',')+'\n'+run.rows.map(r=>keys.map(k=>r[k]).join(',')).join('\n'),'text/csv');};
   $('json').onclick=async()=>download('motala-scenario.json',JSON.stringify({municipality:'0583',baseYear:b.baseYear,baseline:b,history,overrides:run.assumptions,revenuePath:path,calibration:run.calibration,annualInputs:run.inputs,planningStatus:run.planningStatus,engine:run.engine,modelSource:await modelSource,rows:run.rows,status:'Illustrative scenario, not validated forecast'},null,2),'application/json');
   $('modelica').onclick=()=>download('Scenario.mo',modelicaSource(b,history,overrides,path));
-  $('wasm-status').textContent='OpenModelica kompilerar Motala.mo i din webbläsare (wasm-jit). Ändrade antaganden kör den kompilerade modellen igen; inget skickas till någon server.';
+  $('wasm-status').textContent='OpenModelica kompilerar Kommunekonomi.mo och Motala.mo i din webbläsare (wasm-jit). Ändrade antaganden kör den kompilerade modellen igen; inget skickas till någon server.';
   // The compiler is OSMC-PL/AGPL software: name its exact revision, source and licence.
   fetch('omc-web/manifest.json').then(r=>r.ok?r.json():null).then(m=>{if(!m)return;
     const commit=m.commit?`<a href="https://github.com/OpenModelica/OpenModelica/commit/${safe(m.commit)}">${safe(m.revision)}</a>`:safe(m.revision);
