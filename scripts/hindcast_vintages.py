@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Test the economy against what happened: one run per SKR December circular, 2020-2024.
+
+    OMC=/path/to/omc python3 scripts/hindcast_vintages.py
+
+Each run starts in the closing accounts of a base year (Motala.Data.motala<year>) and
+simulates Motala.Annual up to three years ahead, but not past 2025. Two sets of
+assumptions are run from every base year:
+
+  skr       what SKR's December circular of the base year said: national tax-base
+            growth, the labour-cost index (payroll and pensions) and the price index
+            for other costs, and Sweden's population. Grants still grow 2 % a year,
+            because the circulars give no figure for Motala's grants.
+  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,
+            pensions 2 %, grants 2 %), with the same population as above.
+
+Sweden's population after the base year comes from the circular, not from SCB's later
+outcome. Motala's own population is the model's projection from the base year. Nothing
+after the base year is used as input.
+
+The outcome is the municipality's annual report (research/data/annual-ledgers.json).
+The budget result is from research/benchmark/municipal-budget-history.json. SKR's own
+forecast for Motala at the time is not available: the old municipal workbooks
+(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.
+"""
+import csv
+import json
+import os
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
+LAST = 2025
+ORIGINS = range(2020, 2025)
+OUTPUTS = ('tax', 'grants', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'population', 'debt')
+
+
+def load(path):
+    return json.loads((ROOT / path).read_text())
+
+
+def vintage(origin):
+    tax = next(v for v in load('research/data/skr-tax-vintages.json')['vintages'] if v['originYear'] == origin)
+    pkv = next(v for v in load('research/data/skr-pkv-vintages.json')['vintages'] if v['originYear'] == origin)
+    rev = next(v for v in load('research/data/skr-revenue-vintages.json')['vintages'] if v['originYear'] == origin)
+    assert tax['circular'] == pkv['circular'] == rev['circular']
+    return {'circular': tax['circular'], 'published': tax['publicationDate'],
+            'taxBase': {r['year']: r['taxBasePercent'] / 100 for r in tax['rows']},
+            'labour': {r['year']: r['laborPercent'] / 100 for r in pkv['rows']},
+            'other': {r['year']: r['otherPercent'] / 100 for r in pkv['rows']},
+            'nationalNovember': {r['year']: r['nationalNovemberPopulation'] for r in rev['rows']},
+            'sources': {'tax': tax['source'], 'taxLocator': tax['locator'], 'pkvLocator': pkv['locator'],
+                        'populationLocator': rev['locators']['populationAndCapacity']}}
+
+
+def national_path(origin, horizon, v):
+    """Sweden at 31 December before each forecast year: SCB at the base year, then SKR's growth."""
+    scb = load('data/national-population.json')
+    observed = {int(y): p for y, p in scb['population'].items() if int(y) <= scb['lastOutcome']}
+    n0, nb = observed[origin - 1], observed[origin]
+    path = [nb * v['nationalNovember'][origin + i] / v['nationalNovember'][origin] for i in range(horizon)]
+    return n0, path
+
+
+def modelica_array(values):
+    return '{' + ', '.join(f'{x:.10g}' for x in values) + '}'
+
+
+def model_source(origin, horizon, v, assumptions):
+    n0, path = national_path(origin, horizon, v)
+    years = [origin + i for i in range(1, horizon + 1)]
+    lines = [f'base = Motala.Data.motala{origin}', f'horizon = {horizon}',
+             f'nationalPopulation0 = {n0:.10g}', f'nationalPopulationPath = {modelica_array(path)}']
+    if assumptions == 'skr':
+        cum_tax, cum_labour, tax, pension = 1.0, 1.0, [], []
+        for y in years:
+            cum_tax *= 1 + v['taxBase'][y]
+            cum_labour *= 1 + v['labour'][y]
+            tax.append(cum_tax)
+            pension.append(cum_labour)
+        lines += [f'referenceTax = {modelica_array(tax)}*tax0',
+                  f'wageGrowthPath = {modelica_array([v["labour"][y] for y in years])}',
+                  f'priceGrowthPath = {modelica_array([v["other"][y] for y in years])}',
+                  f'pensionExpensePath = {modelica_array(pension)}*pension0']
+    return 'model Run\n  extends Motala.Annual(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+
+
+def simulate(origin, horizon, source, directory):
+    (directory / 'Run.mo').write_text(source)
+    (directory / 'run.mos').write_text(
+        f'loadFile({json.dumps(str(ROOT / "modelica/Motala.mo"))}); getErrorString();\n'
+        'loadFile("Run.mo"); getErrorString();\n'
+        f'simulate(Run, startTime = {origin}, stopTime = {origin + horizon}, numberOfIntervals = {horizon},'
+        ' outputFormat = "csv"); getErrorString();\n')
+    process = subprocess.run([OMC, 'run.mos'], cwd=directory, capture_output=True, text=True, timeout=600)
+    result = directory / 'Run_res.csv'
+    if not result.exists():
+        raise SystemExit(f'Simulation failed for {origin}:\n{source}\n{process.stdout[-3000:]}')
+    rows = {}
+    for row in csv.DictReader(result.open()):
+        rows[round(float(row['time']))] = row  # the last row at each whole year is the post-event state
+    return {year: {k: float(row[k]) for k in OUTPUTS} for year, row in rows.items() if year > origin}
+
+
+def main():
+    ledgers = {r['year']: r for r in load('research/data/annual-ledgers.json')['rows']}
+    ledger_sources = load('research/data/annual-ledgers.json')['sources']
+    budgets = {b['targetYear']: b for b in load('research/benchmark/municipal-budget-history.json')['budgets']
+               if b['stage'] == 'budget'}
+    runs = []
+    with tempfile.TemporaryDirectory(prefix='motala-vintage-') as tmp:
+        for origin in ORIGINS:
+            v = vintage(origin)
+            horizon = min(3, LAST - origin)
+            for assumptions in ('skr', 'standard'):
+                directory = Path(tmp) / f'{origin}-{assumptions}'
+                directory.mkdir()
+                for year, m in simulate(origin, horizon, model_source(origin, horizon, v, assumptions), directory).items():
+                    o = ledgers[year]
+                    runs.append({
+                        'origin': origin, 'circular': v['circular'], 'published': v['published'],
+                        'assumptions': assumptions, 'year': year, 'horizon': year - origin,
+                        'model': {'tax': m['tax'], 'grants': m['grants'], 'netCost': m['cost'] + m['depreciation'],
+                                  'personnel': m['payroll'] + m['pensionExpense'], 'result': m['result'],
+                                  'population': m['population']},
+                        'outcome': {'tax': o['tax'], 'grants': o['grants'], 'netCost': o['netCost'],
+                                    'personnel': o['payroll'] + o['pension'], 'result': o['result'],
+                                    'population': o['population'], 'source': ledger_sources[o['sourceId']]['url']},
+                        'budgetResult': budgets[year]['value'] if year in budgets and year - origin == 1 else None,
+                        'persistenceResult': ledgers[origin]['result'],
+                    })
+    keys = ('tax', 'grants', 'netCost', 'result')
+    summary = {}
+    for assumptions in ('skr', 'standard'):
+        for horizon in (1, 2, 3):
+            cases = [r for r in runs if r['assumptions'] == assumptions and r['horizon'] == horizon]
+            if cases:
+                summary.setdefault(assumptions, {})[horizon] = {
+                    'cases': len(cases),
+                    **{f'{k}MeanError': sum(r['model'][k] - r['outcome'][k] for r in cases) / len(cases) for k in keys},
+                    **{f'{k}MeanAbsError': sum(abs(r['model'][k] - r['outcome'][k]) for r in cases) / len(cases) for k in keys}}
+    one = [r for r in runs if r['horizon'] == 1 and r['assumptions'] == 'skr']
+    summary['budget'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['budgetResult'] - r['outcome']['result']) for r in one) / len(one),
+                             'resultMeanError': sum(r['budgetResult'] - r['outcome']['result'] for r in one) / len(one)}}
+    summary['persistence'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['persistenceResult'] - r['outcome']['result']) for r in one) / len(one)}}
+    out = {'source': 'Model Motala.Annual; outcomes from Motala kommun annual reports (kommunen); '
+                     'SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56',
+           'method': __doc__.strip(),
+           'units': 'mnkr; population in persons; netCost includes depreciation as in the annual report',
+           'limitations': [
+               'The base-year accounts were published in spring after the circular. The test uses the closing accounts '
+               'and the December circular as the information set, as a budget revision in spring would.',
+               'Grants grow 2 % a year in both sets; the circulars have no Motala figure for grants.',
+               'One-off items in the base year (for example an impairment of 12.1 mnkr in 2022 and tax settlements) '
+               'carry into the forecast.',
+               'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',
+               'Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.',
+               'The budget result is the adopted budget for the following year, set in November before the circular.',
+               'SKR forecast for Motala at the time is not available; only the national assumptions are.'],
+           'summaryByHorizon': summary, 'runs': runs}
+    (ROOT / 'data/vintage-hindcast.json').write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
+    print(f'{"origin":>6s} {"year":>4s} {"set":8s} {"tax":>13s} {"grants":>13s} {"net cost":>13s} {"result":>13s} {"budget":>6s}')
+    for r in runs:
+        cell = lambda k: f'{r["model"][k]:6.0f}/{r["outcome"][k]:6.0f}'
+        b = '' if r['budgetResult'] is None else f'{r["budgetResult"]:6.0f}'
+        print(f'{r["origin"]:6d} {r["year"]:4d} {r["assumptions"]:8s} {cell("tax")} {cell("grants")} {cell("netCost")} {cell("result")} {b}')
+    print(json.dumps(summary, indent=1))
+
+
+if __name__ == '__main__':
+    main()

@@ -202,6 +202,53 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 940, openingDebt = 663, cash = 229, assets = 2782, investment = 417, taxRate = 21.7,
       careCostPerInhabitant = {22275, 168850})
       "Jämförelsekolumnen i årsredovisning 2025 (kommunen), s. 48-49 och not 8-9; resultat 1 mnkr";
+    // Basåren 2020-2023 finns för tester mot historien (scripts/hindcast_vintages.py). Pengar ur
+    // research/data/annual-ledgers.json (årsredovisningarna 2021-2024, kommunen); åldersgrupper, folkmängd,
+    // födda och döda ur SCB (data/downloads/20261108T124756Z), som stämmer med årsredovisningarnas tabeller.
+    constant BaseYear motala2023 = BaseYear(
+      year = 2023,
+      cohorts = {{3386, 4633, 1550, 23766, 10339}, {3277, 4664, 1530, 23694, 10563}, {3202, 4654, 1569, 23540, 10763}},
+      reportedPopulation = {43674, 43728, 43728},
+      births = {360, 381}, deaths = 445,
+      tax = 2227, grants = 865,
+      payroll = 2183, pension = 248, otherOperatingExpense = 1247, operatingRevenue = 765, netCostRoundingAdjustment = 0,
+      depreciation = 150, financialIncome = 11, interestExpense = 11, otherFinancialExpense = 6,
+      debt = 663, openingDebt = 664.5, cash = 115, assets = 2389, investment = 299, taxRate = 21.7,
+      careCostPerInhabitant = {20538, 170510})
+      "Årsredovisning 2023 (kommunen), s. 47-54; anläggningar i bruk ur jämförelsekolumnen i årsredovisning 2024, s. 48; resultat 23 mnkr";
+    constant BaseYear motala2022 = BaseYear(
+      year = 2022,
+      cohorts = {{3448, 4559, 1559, 23825, 10249}, {3386, 4633, 1550, 23766, 10339}, {3277, 4664, 1530, 23694, 10563}},
+      reportedPopulation = {43640, 43674, 43728},
+      births = {420, 360}, deaths = 420,
+      tax = 2137.6, grants = 794.3,
+      payroll = 2009.0, pension = 178.1, otherOperatingExpense = 1187.4, operatingRevenue = 729.5, netCostRoundingAdjustment = 0,
+      depreciation = 162.3, financialIncome = 8.1, interestExpense = 5.6, otherFinancialExpense = 2.0,
+      debt = 664.5, openingDebt = 830.2, cash = 85.8, assets = 2305.3, investment = 253.9, taxRate = 21.7,
+      careCostPerInhabitant = {18330, 169826})
+      "Årsredovisning 2022 (kommunen), s. 6 och 37-43, not 14; låneskulden inklusive kortfristig del (s. 32); avskrivningarna innehåller en nedskrivning på 12,1 mnkr; resultat 125,1 mnkr";
+    constant BaseYear motala2021 = BaseYear(
+      year = 2021,
+      cohorts = {{3418, 4593, 1531, 23988, 10143}, {3448, 4559, 1559, 23825, 10249}, {3386, 4633, 1550, 23766, 10339}},
+      reportedPopulation = {43673, 43640, 43674},
+      births = {430, 420}, deaths = 455,
+      tax = 2032.2, grants = 763.5,
+      payroll = 1976.2, pension = 167.3, otherOperatingExpense = 1179.4, operatingRevenue = 728.5, netCostRoundingAdjustment = 0,
+      depreciation = 138.4, financialIncome = 5.9, interestExpense = 5.2, otherFinancialExpense = 1.9,
+      debt = 830.2, openingDebt = 788.0, cash = 338.2, assets = 2328.5, investment = 272.6, taxRate = 21.7,
+      careCostPerInhabitant = {17287, 168919})
+      "Jämförelsekolumnen i årsredovisning 2022 (kommunen), s. 6 och 37-43; anläggningarna inklusive pågående arbeten, som inte är särredovisade; resultat 61,7 mnkr";
+    constant BaseYear motala2020 = BaseYear(
+      year = 2020,
+      cohorts = {{3441, 4611, 1519, 24130, 9986}, {3418, 4593, 1531, 23988, 10143}, {3448, 4559, 1559, 23825, 10249}},
+      reportedPopulation = {43687, 43673, 43640},
+      births = {438, 430}, deaths = 451,
+      tax = 1929.9, grants = 760.5,
+      payroll = 1926.0, pension = 207.7, otherOperatingExpense = 1044.5, operatingRevenue = 680.8, netCostRoundingAdjustment = 0,
+      depreciation = 124.5, financialIncome = 4.7, interestExpense = 4.7, otherFinancialExpense = 3.7,
+      debt = 788.0, openingDebt = 801.3, cash = 167.9, assets = 2224.7, investment = 207.1, taxRate = 21.7,
+      careCostPerInhabitant = {16848, 167639})
+      "Jämförelsekolumnen i årsredovisning 2021 (kommunen), s. 37-43, och femårsöversikten i årsredovisning 2022, s. 6; anläggningarna inklusive pågående arbeten; resultat 64,8 mnkr";
 
     record Budget "Kommunens budget: tre år, belopp i mnkr (kostnader som positiva tal)"
       Integer year "Budgetår; planen gäller detta år och de två följande";

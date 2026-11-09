@@ -169,3 +169,16 @@ där sajten påverkas, i JavaScript-referensen:
   ignored"); bara sluttiden stoppar. Gäller både ekvations- och when-placering (i when ignoreras även sluttiden). Möjlig OM-issue.
 - Skatt och bidrag skalas med Motalas folkmängd i förhållande till rikets (SCB, `data/national-population.json`), eftersom referenstillväxten är nationell.
 - Nya siffror med standardantaganden: `Annual` resultat 76 (2026) och 8 (2033); `AnnualCohort` 72 och -42. Testet 2024→2025 ger skatt 2 299 mot utfallet 2 330: den illustrativa tillväxten räcker inte, så nästa steg är antaganden per prognostillfälle (SKR hösten 2024).
+
+## Test mot SKR:s decembercirkulär 2020-2024 (2026-11-09)
+
+- `scripts/hindcast_vintages.py` → `data/vintage-hindcast.json`. Basår 2020-2024 (`Data.motala2020`-`motala2023` nya), `Annual`,
+  upp till tre år fram men inte efter 2025. Två uppsättningar: `skr` (cirkulärets skatteunderlag, PKV arbetskraft på löner och
+  pensioner, PKV övrigt, rikets befolkning) och `standard` (modellens 3,5/3/2/2/2 %). Bidrag 2 % i båda.
+- Basårens pengar ur `research/data/annual-ledgers.json`; åldersgrupper, födda och döda ur SCB-arkivet, som stämmer med
+  årsredovisningarna. AR 2022:s 4 644 i 7-15 år 2022 är fel, SCB och AR 2025 har 4 664. Låneskuld inklusive kortfristig del
+  (AR 2022 s. 32): 801,3 (2019), 788,0, 830,2, 664,5. Not 23 visar bara den långfristiga delen.
+- Ett år fram, resultat, medelabsolutfel: modellen med SKR 36 mnkr, standard 66, budgeten 24, förra årets utfall 59.
+  Modellen ligger i snitt 36 mnkr för lågt, budgeten 22. Bidragen underskattas 2023-2024 (+71 och +88 mnkr i utfall).
+- SKR:s egen Motalaprognos från respektive tillfälle finns inte: de gamla prognosunderlagen är borta från SKR:s webb.
+- Budgetens skatt och bidrag för 2021-2025 är inte hämtade; bara budgetens resultat finns.

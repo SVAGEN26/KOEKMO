@@ -58,6 +58,39 @@ class BaseYears(unittest.TestCase):
     def test_2024_matches_sources(self):
         self.check('motala2024', 2024)
 
+    def test_2020_to_2023_match_ledgers_and_scb(self):
+        """Base years for the hindcasts: money from the annual-report ledgers, people from SCB."""
+        ledgers = {r['year']: r for r in json.loads((ROOT / 'research/data/annual-ledgers.json').read_text())['rows']}
+        scb = json.loads((ROOT / 'data/downloads/20261108T124756Z/motala-population-2015-2024.json').read_text())
+        groups = {}
+        for row in scb['data']:
+            age, year = row['key'][2], int(row['key'][4])
+            a = min(int(age.rstrip('+')), 100)
+            g = 0 if a <= 6 else 1 if a <= 15 else 2 if a <= 18 else 3 if a <= 64 else 4
+            groups.setdefault(year, [0] * 5)[g] += int(row['values'][0])
+        # Loans including the short-term part, Årsredovisning 2022 p. 6 and 32; 2023 from report 2023.
+        debt = {2019: 801.3, 2020: 788.0, 2021: 830.2, 2022: 664.5, 2023: 663}
+        for year in range(2020, 2024):
+            r, o = record(f'motala{year}'), ledgers[year]
+            self.assertEqual(r['year'], year)
+            for k, y in enumerate((year - 2, year - 1, year)):
+                self.assertEqual(r['cohorts'][k], groups[y], f'{year} cohorts {y}')
+                self.assertEqual(r['reportedPopulation'][k], sum(groups[y]))
+            self.assertEqual(r['births'][1], o['births'])
+            self.assertEqual(r['deaths'], o['deaths'])
+            self.assertEqual((r['debt'], r['openingDebt']), (debt[year], debt[year - 1]))
+            for key in ('tax', 'grants', 'payroll', 'pension', 'operatingRevenue', 'depreciation', 'financialIncome',
+                        'investment', 'cash'):
+                self.assertEqual(r[key], o[key], f'{year} {key}')
+            self.assertEqual(r['otherOperatingExpense'], o['otherExpense'])
+            self.assertEqual(r['interestExpense'], o['interest'])
+            self.assertAlmostEqual(r['interestExpense'] + r['otherFinancialExpense'], o['financialExpense'], places=6)
+            net = (r['payroll'] + r['pension'] + r['otherOperatingExpense'] - r['operatingRevenue']
+                   + r['netCostRoundingAdjustment'] + r['depreciation'])
+            self.assertAlmostEqual(net, o['netCost'], places=6, msg=f'{year} net cost')
+            result = r['tax'] + r['grants'] - net + r['financialIncome'] - r['interestExpense'] - r['otherFinancialExpense']
+            self.assertAlmostEqual(result, o['result'], places=6, msg=f'{year} result')
+
 
 class Budgets(unittest.TestCase):
     def test_budget_2026_matches_the_data_file(self):
