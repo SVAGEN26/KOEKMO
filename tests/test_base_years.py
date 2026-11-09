@@ -111,6 +111,13 @@ class BaseYears(unittest.TestCase):
                 self.assertAlmostEqual(scb[str(year)][key] * population / 1e6, r['grantComponents'][k], delta=2, msg=f'{year} {key}')
 
 
+    def test_relative_tax_capacity_is_scbs(self):
+        """Skattekraft i förhållande till riket för basåret och året efter (data/tax-capacity.json, SCB SkatteKraft)."""
+        capacity = json.loads((ROOT / 'data/tax-capacity.json').read_text())['municipalities']['0583']
+        for year in range(2020, 2026):
+            self.assertEqual(record(f'motala{year}')['relativeTaxCapacity'],
+                             [round(capacity[str(year)]['relative'], 4), round(capacity[str(year + 1)]['relative'], 4)], year)
+
     def test_sector_weights_come_from_kolada(self):
         """The base year's sector shares are Kolada's (data/sector-costs.json); the site's baseline uses the same for 2025."""
         sectors = json.loads((ROOT / 'data/sector-costs.json').read_text())['years']

@@ -275,3 +275,17 @@ där sajten påverkas, i JavaScript-referensen:
 - Motalas extra ökning per invånare 2021-2025 jämfört med medianen: inkomstutjämning +3 107 mot +2 760 kr (skattekraften föll
   från 89,2 till 87,3-87,6 % av riket, SCB SkatteKraft), LSS-utjämning +518 mot +84 kr, kostnadsutjämning +364 mot +299 kr.
   Regleringsbidraget är lika för alla (-329 kr). Övriga generella bidrag 5 → 51 mnkr.
+
+## Inkomstutjämningen enligt lagen (2026-11-09)
+
+- `scripts/fetch_tax_capacity.py` → `data/tax-capacity.json` (SCB OE0101 SkatteKraft, alla kommuner 2010-2026). År t =
+  utjämningsår t (inkomster år t-2), känt i december år t-1. Motala 90,1 % av rikets medelskattekraft 2010, 87,3 % 2025, 87,6 % 2026.
+- Lag 2004:773: garanti 115 % av medelskattekraften (4 §); bidrag med 95 % och avgift med 85 % av länsvis skattesats byggd på
+  2003 års medelskattesats (7 §); regleringsbidraget är resten av anslaget, lika per invånare (15-16 §§); Skatteverket beslutar
+  (preliminärt 20 jan, fastställt 15 april); SCB räknar ur RTB, IoT, beskattningsutfallet och Socialstyrelsens LSS-statistik.
+- Implicit utjämningsskattesats ur SCB-data: Motala 19,3-20,6 %, Mjölby 19,6-20,7 % 2012-2026; avgiftskommuner (Stockholm) lägre.
+- `BaseYear.relativeTaxCapacity[2]` (basår, året efter). `Revenue` med `grantsByComponent`: inkomstutjämningen skalas med
+  `Data.equalisationShare(1,15 - r·composition)` mot basåret. Testet mot cirkulären: inkomstutjämningens MAE 19,8 → 15,0 mnkr
+  (Motala); bidragens MAE 36/58/96 → 31/52/92. Standard (webben, Motala.Annual) är fortfarande av; webbens SKR-bana har redan
+  SKR:s egen inkomstutjämning.
+- Användaren vill ha svenska för ekonomiska begrepp.

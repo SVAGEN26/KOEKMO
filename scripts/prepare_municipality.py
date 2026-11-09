@@ -6,7 +6,8 @@
 Reads an archive written by fetch_municipality.py (SCB's account summary, balance sheet,
 equalisation, operating costs, investment and population), and the municipality's care
 weights and sector shares (fetch_care_data.py + prepare_care.py, fetch_sector_costs.py) under
-data/municipalities/<code>/. Writes data/municipalities/<code>/base-years.json and, with
+data/municipalities/<code>/, and the relative tax capacity from data/tax-capacity.json (fetch_tax_capacity.py).
+Writes data/municipalities/<code>/base-years.json and, with
 --modelica, modelica/municipalities/<Package>.mo: Data (one BaseYear per year 2020-2025), Annual extending
 Kommunekonomi.Annual with the latest base year, and a one-year test against the outcome.
 
@@ -73,6 +74,7 @@ def build(code, archive):
     folder = ROOT / ('data' if code == '0583' else f'data/municipalities/{code}')
     care = json.loads((folder / 'care-weights.json').read_text())['baseYears']
     sectors = json.loads((folder / 'sector-costs.json').read_text())['years']
+    capacity = json.loads((ROOT / 'data/tax-capacity.json').read_text())['municipalities'][code]
 
     def g(table, item, year):
         return table.get(item, {}).get(year, 0.0)
@@ -92,6 +94,7 @@ def build(code, archive):
             'cohorts': [groups(population[x]) for x in (y - 2, y - 1, y)],
             'reportedPopulation': [sum(population[x]) for x in (y - 2, y - 1, y)],
             'births': [changes[y - 1]['births'], changes[y]['births']], 'deaths': changes[y]['deaths'],
+            'relativeTaxCapacity': [round(capacity[str(y)]['relative'], 4), round(capacity[str(y + 1)]['relative'], 4)],
             'tax': g(rr, '040', y), 'priorYearSettlement': g(tx, '040', y), 'grants': g(rr, '050', y),
             'grantComponents': [g(tx, '090', y) - g(tx, '170', y), g(tx, '130', y) - g(tx, '190', y),
                                 g(tx, '120', y) - g(tx, '180', y), g(tx, '140', y) - g(tx, '200', y), g(tx, '210', y)],
@@ -137,6 +140,7 @@ def modelica(package, name, code, archive, years, older_shares):
       cohorts = {{{', '.join(vector(c, 0) for c in r['cohorts'])}}},
       reportedPopulation = {vector(r['reportedPopulation'], 0)},
       births = {vector(r['births'], 0)}, deaths = {number(r['deaths'], 0)},
+      relativeTaxCapacity = {vector(r['relativeTaxCapacity'], 4)},
       tax = {number(r['tax'])}, priorYearSettlement = {number(r['priorYearSettlement'])}, grants = {number(r['grants'])},
       grantComponents = {vector(r['grantComponents'])},
       payroll = {number(r['payroll'])}, pension = {number(r['pension'])}, otherOperatingExpense = {number(r['otherOperatingExpense'])}, operatingRevenue = {number(r['operatingRevenue'])}, netCostRoundingAdjustment = 0,

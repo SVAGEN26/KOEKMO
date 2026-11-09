@@ -1,0 +1,63 @@
+{
+  "retrieved_at": "2026-11-09T17:20:17.267002+00:00",
+  "source": "Statistics Sweden (SCB), Statistikdatabasen, CC BY 4.0",
+  "files": [
+    {
+      "file": "skattekraft.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/OE/OE0101/SkatteKraft",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "all",
+              "values": [
+                "*"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "OE0101A5",
+                "OE0101A0"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 303479,
+      "sha256": "f86d64e4a828c1769dfe382456230d878d51dc472b04aae0a2acad6a754e2318"
+    }
+  ]
+}

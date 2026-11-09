@@ -46,6 +46,10 @@
     295.0
    ],
    "deaths": 273.0,
+   "relativeTaxCapacity": [
+    0.923,
+    0.9185
+   ],
    "tax": 1271.368,
    "priorYearSettlement": -6.648,
    "grants": 424.179,
@@ -121,6 +125,10 @@
     312.0
    ],
    "deaths": 256.0,
+   "relativeTaxCapacity": [
+    0.9185,
+    0.9179
+   ],
    "tax": 1347.195,
    "priorYearSettlement": 4.576,
    "grants": 435.01,
@@ -196,6 +204,10 @@
     318.0
    ],
    "deaths": 256.0,
+   "relativeTaxCapacity": [
+    0.9179,
+    0.9153
+   ],
    "tax": 1434.068,
    "priorYearSettlement": 8.909,
    "grants": 447.915,
@@ -271,6 +283,10 @@
     272.0
    ],
    "deaths": 288.0,
+   "relativeTaxCapacity": [
+    0.9153,
+    0.9227
+   ],
    "tax": 1517.128,
    "priorYearSettlement": 7.343,
    "grants": 454.945,
@@ -346,6 +362,10 @@
     291.0
    ],
    "deaths": 281.0,
+   "relativeTaxCapacity": [
+    0.9227,
+    0.9152
+   ],
    "tax": 1561.134,
    "priorYearSettlement": -7.242,
    "grants": 499.112,
@@ -421,6 +441,10 @@
     272.0
    ],
    "deaths": 256.0,
+   "relativeTaxCapacity": [
+    0.9152,
+    0.9114
+   ],
    "tax": 1611.705,
    "priorYearSettlement": -0.229,
    "grants": 520.337,
