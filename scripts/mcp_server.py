@@ -48,12 +48,16 @@ CHECKS = ('populationBalance', 'assetBalance', 'cashBalance', 'debtBalance', 'eq
 CORE_DECISIONS = ('taxRatePath', 'investmentPath', 'interestRatePath', 'wageGrowthPath', 'priceGrowthPath',
                   'productivityGrowth', 'migrationDeltaPath', 'serviceAdjustment', 'liquidityPolicy', 'cashReserve',
                   'constructionYears', 'constructionShare', 'workingCapitalEnabled', 'collectionDays', 'paymentDays',
-                  'rateShock', 'rateShockTime', 'rateFixingYears')
+                  'rateShock', 'rateShockTime', 'rateFixingYears', 'inflationShock', 'inflationPersistence',
+                  'inflationRateResponse', 'inflationGrantCompensation')
 RATE_FIXING = json.loads((ROOT / 'data' / 'rate-fixing.json').read_text())
 SCENARIOS = {
     'base': 'The model\'s default assumptions.',
     'higherInterest': 'The market rate for new and refixed loans 3 percentage points higher from 1 January of the first forecast year. '
                       'It reaches the average rate at the pace of the average fixed-rate period (from the annual report where known, else 3 years).',
+    'higherInflation': 'Inflation 3 percentage points above the price path in the first forecast year, half of it left each year after. '
+                       'Prices follow at once, wages and the tax base a year later, pensions at once, the market rate by 0.5 per point; '
+                       'general grants stay fixed in kronor unless inflationGrantCompensation is set.',
 }
 
 
@@ -66,6 +70,8 @@ def scenario_values(name, m, base_year):
         raise ValueError(f'scenario is one of {list(SCENARIOS)}')
     if name == 'higherInterest':
         return {'rateShock': 0.03, 'rateShockTime': float(base_year + 1), 'rateFixingYears': float(rate_fixing(m['code'], base_year)['years'])}
+    if name == 'higherInflation':
+        return {'inflationShock': 0.03, 'inflationPersistence': 0.5, 'rateFixingYears': float(rate_fixing(m['code'], base_year)['years'])}
     return {}
 
 

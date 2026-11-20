@@ -16,7 +16,7 @@
     <section id="scenario" class="view">
       <div class="lab-layout">
         <aside class="controls panel"><div class="panel-heading"><p class="eyebrow">DINA ANTAGANDEN</p><button id="reset" class="text-button">Återställ ↺</button></div><h2>Forma ett scenario</h2><label class="select-label" for="municipality">Kommun</label><select id="municipality"></select><label class="select-label" for="start-year">Första prognosår</label><select id="start-year"><option value="2026">2026</option><option value="2022">2022 · historisk körning</option></select><label class="select-label" for="end-year">Slutår</label><select id="end-year"></select><p id="period-status" class="small muted"></p><label class="planning-toggle"><input type="checkbox" id="planning-enabled" checked> Använd hämtade planeringsunderlag</label><div id="regulation-control"><label class="planning-toggle"><input type="checkbox" id="regulation-held" checked> Regleringsbidraget per invånare ligger kvar efter 2027</label><p class="small muted">SKR räknar med att statens ram ligger still i kronor, så att regleringsbidraget krymper från 110 till 15 mnkr till 2033. Sedan 2005 har det inte haft en sådan trend; staten har höjt ramen. Avmarkera för SKR:s antagande.</p></div><p id="planning-status" class="small muted" aria-live="polite"></p><p class="muted">Ändringarna gäller från första prognosåret.</p>
-          <label class="select-label" for="preset">Utgångspunkt</label><select id="preset"><option value="base">Grundbana</option><option value="adverse">Svagare ekonomi</option><option value="migration">Ökad inflyttning</option><option value="investment">Lägre investeringstakt</option><option value="higherInterest">Högre ränta</option><option value="custom" disabled hidden>Eget scenario</option></select>
+          <label class="select-label" for="preset">Utgångspunkt</label><select id="preset"><option value="base">Grundbana</option><option value="adverse">Svagare ekonomi</option><option value="migration">Ökad inflyttning</option><option value="investment">Lägre investeringstakt</option><option value="higherInterest">Högre ränta</option><option value="higherInflation">Högre inflation</option><option value="custom" disabled hidden>Eget scenario</option></select>
           <div id="sliders"></div>
           <details><summary>Modellens anpassning</summary><div id="advanced"></div><p class="small muted">Utjämning är en förenklad känslighet. Sektorkostnader och åldersvikter behöver kalibreras.</p></details>
           <details>
@@ -136,6 +136,7 @@
               <option value="latest">Senaste körning</option>
               <option value="previous" disabled>Föregående körning</option>
               <option value="higherInterest">Högre ränta</option>
+              <option value="higherInflation">Högre inflation</option>
               <option value="actual-2025">Bokslut 2025</option>
               <optgroup id="skr-options" label="SKR:s skatter och bidrag">
                 <option value="skr-2021">SKR 21:35 · september 2021</option>

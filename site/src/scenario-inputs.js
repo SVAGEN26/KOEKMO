@@ -52,6 +52,9 @@ export function validate(b,a) {
   if(a.ageTax&&(!Array.isArray(b.ageIncome?.weights)||b.ageIncome.weights.length!==5||!b.ageIncome.weights.every(x=>Number.isFinite(x)&&x>=0)||
     sum(b.ageIncome.weights)<=0||!Number.isFinite(b.ageIncome?.countyRate)||b.ageIncome.countyRate<=0)) throw Error('Åldersprofil för beskattningsbar inkomst saknas.');
   if(a.projectChoice!=null&&!['none','planned','delay'].includes(a.projectChoice)) throw Error('Ogiltigt projektval.');
+  if(a.inflationShock!=null&&(!Number.isFinite(a.inflationShock)||a.inflationShock<-5||a.inflationShock>20)) throw Error('Extra inflation ska vara mellan -5 och 20 procentenheter.');
+  for(const [k,low,high] of [['inflationPersistence',0,1],['inflationRateResponse',0,3],['inflationGrantCompensation',0,100]])
+    if(a[k]!=null&&(!Number.isFinite(a[k])||a[k]<low||a[k]>high)) throw Error(`${k} ska ligga mellan ${low} och ${high}.`);
   if(a.rateShock!=null&&(!Number.isFinite(a.rateShock)||a.rateShock<-5||a.rateShock>15)) throw Error('Räntehöjningen ska vara mellan -5 och 15 procentenheter.');
   if(a.rateShockMonth!=null&&(!Number.isInteger(a.rateShockMonth)||a.rateShockMonth<1||a.rateShockMonth>12)) throw Error('Räntehöjningens månad ska vara 1–12.');
   if(a.rateFixingYears!=null&&(!Number.isFinite(a.rateFixingYears)||a.rateFixingYears<0||a.rateFixingYears>15)) throw Error('Räntebindningen ska vara 0–15 år.');
@@ -248,6 +251,10 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   }
   fields.interestRatePath=inputs.map(()=>a.interestRate/100);
   // Med räntebindning är räntan ovan marknadsräntan för nya och omsatta lån; snitträntan startar där och följer efter.
+  // Extra inflation år för år; modellen fördelar den på priser, löner, pensioner, skatteunderlag och ränta (Components.Scenario).
+  fields.inflationShockPath=inputs.map((_,i)=>(a.inflationShock??0)/100*(a.inflationPersistence??0.5)**i);
+  fields.inflationRateResponse=a.inflationRateResponse??0.5;
+  fields.inflationGrantCompensation=(a.inflationGrantCompensation??0)/100;
   fields.rateFixingYears=a.rateFixingYears??0;
   fields.rateShock=(a.rateShock??0)/100;
   fields.rateShockTime=b.baseYear+1+((a.rateShockMonth??1)-1)/12;

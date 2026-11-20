@@ -231,6 +231,28 @@ from the 2025 accounts the average rate rises from 2.2 % to 3.0 % in 2026 and
 4.7 % in 2029, and interest from 23 to 32 and from 33 to 71 mnkr. Actual rates
 are not used as inputs in the hindcast; that would use the answer.
 
+## Higher inflation
+
+Extra inflation above the price path (`inflationShock` the first forecast year,
+`inflationPersistence` of it left each year after, or `inflationShockPath` year by
+year) reaches the municipality at different speeds (`Components.Scenario`):
+prices for other costs the same year, wages the year after (`inflationWagePassThrough`,
+the wage settlements follow), pension cost the same year
+(`inflationPensionPassThrough`, indexation of the pension provision), the tax base
+with the wages, and the market rate by `inflationRateResponse` points per point of
+inflation, which then passes through the fixed-rate period. General grants stay
+fixed in kronor unless `inflationGrantCompensation` gives the share of last year's
+extra inflation the state compensates. Fees (operating revenue) do not follow, and
+grants computed per component (`grantsByComponent`) are not compensated. The
+pass-through shares and the rate response are illustrative assumptions, not
+estimates.
+
+The scenario **Högre inflation** (3 percentage points the first year, half left
+each year) is on the site and in the MCP server (`higherInflation`). For Motala
+from the 2025 accounts the result is 49 mnkr below the base path in 2026 and 107
+mnkr below in 2033: costs rise at once, tax follows a year later, and grants do not
+follow.
+
 ## Local MCP server: let an AI run the budget
 
 `scripts/mcp_server.py` lets an AI assistant run the model year by year over the

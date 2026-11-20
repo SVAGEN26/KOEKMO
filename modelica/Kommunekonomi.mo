@@ -322,6 +322,13 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid för lånen, år (årsredovisningens avsnitt om finansiella risker); 0 = hela skulden till årets ränta. Med räntebindning är interestRatePath marknadsräntan för nya och omsatta lån";
     parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
     parameter Real rateShockTime = base.year + 1 "Datum för räntehöjningen som decimalår: 2026,0 = 1 januari 2026, 2026,5 = 1 juli 2026; i årsmodellen räknas den återstående delen av året";
+    parameter Real inflationShock = 0 "Extra inflation första prognosåret utöver prisbanan, andel (0,03 = tre procentenheter)";
+    parameter Real inflationPersistence(min = 0, max = 1) = 0.5 "Andel av den extra inflationen som finns kvar året därpå";
+    parameter Real inflationShockPath[horizon] = {inflationShock*inflationPersistence^(i - 1) for i in 1:horizon} "Extra inflation per år, andel";
+    parameter Real inflationWagePassThrough = 1 "Andel av förra årets extra inflation som når lönerna (avtalen följer efter)";
+    parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden (uppräkning av pensionsskulden)";
+    parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år (illustrativt)";
+    parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i de generella bidragen; 0 = bidragen fasta i kronor";
     parameter Real migrationDeltaPath[horizon] = fill(migrationDelta, horizon) "Förändrat flyttnetto per år, personer";
     parameter Real birthChangePath[horizon] = fill(birthChange, horizon) "Relativ förändring av födda per år, andel";
     final parameter Real life = assets0/depreciation0 "Sammanvägd avskrivningstid, år";
@@ -488,6 +495,15 @@ antalet år.</p></html>"));
       parameter Real projectPayment = 0;
       final parameter Real deferredAmount = investmentPath[1]*deferInvestmentShare;
       parameter Real interestRatePath[horizon] "Låneränta per år, andel";
+      parameter Real inflationShockPath[horizon] = zeros(horizon) "Extra inflation per år utöver prisbanan, andel";
+      parameter Real inflationWagePassThrough = 1 "Andel av förra årets extra inflation som når lönerna";
+      parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden";
+      parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år";
+      parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i bidragen";
+      final parameter Real inflationGrantFactor[horizon] = {product({1 + (if j == 1 then 0 else inflationGrantCompensation*inflationShockPath[j - 1]) for j in 1:i}) for i in 1:horizon} "Bidragens faktor mot referensbanan";
+      final parameter Real inflationWage[horizon] = {if i == 1 then 0 else inflationWagePassThrough*inflationShockPath[i - 1] for i in 1:horizon} "Extra löneökning per år, andel";
+      final parameter Real inflationTaxFactor[horizon] = {product({1 + inflationWage[j] for j in 1:i}) for i in 1:horizon} "Skatteunderlaget följer lönerna: faktor mot referensbanan";
+      final parameter Real inflationPensionFactor[horizon] = {product({1 + inflationPensionPassThrough*inflationShockPath[j] for j in 1:i}) for i in 1:horizon} "Pensionskostnadens faktor mot banan";
       Interfaces.DemographyDriversOutput demography "Årets demografiska antaganden" annotation(
         Placement(transformation(origin = {-624, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-260, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
       Interfaces.CostDriversOutput operations "Årets löne-, pris- och pensionsantaganden" annotation(
@@ -502,22 +518,26 @@ antalet år.</p></html>"));
       demography.residualMigration = residualMigrationPath[calendar.pathIndex, :];
       demography.migrationDelta = migrationDeltaPath[calendar.pathIndex];
       demography.birthChange = birthChangePath[calendar.pathIndex];
-      operations.wageGrowth = wageGrowthPath[calendar.pathIndex];
-      operations.priceGrowth = priceGrowthPath[calendar.pathIndex];
-      operations.pensionExpense = pensionExpensePath[calendar.pathIndex];
-      operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex];
-      revenue.tax = referenceTax[calendar.pathIndex];
-      revenue.grants = referenceGrants[calendar.pathIndex];
+      operations.wageGrowth = wageGrowthPath[calendar.pathIndex] + inflationWage[calendar.pathIndex];
+      operations.priceGrowth = priceGrowthPath[calendar.pathIndex] + inflationShockPath[calendar.pathIndex];
+      operations.pensionExpense = pensionExpensePath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
+      operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
+      revenue.tax = referenceTax[calendar.pathIndex]*inflationTaxFactor[calendar.pathIndex];
+      revenue.grants = referenceGrants[calendar.pathIndex]*inflationGrantFactor[calendar.pathIndex];
       revenue.population = referencePopulation[calendar.pathIndex];
       revenue.nationalPopulation = nationalPopulationPath[calendar.pathIndex];
       investment = investmentPath[calendar.pathIndex] +
         (if calendar.pathIndex == 1 then projectPayment - deferredAmount elseif calendar.pathIndex == 2 then deferredAmount else 0);
-      interestRate = interestRatePath[calendar.pathIndex];
+      interestRate = interestRatePath[calendar.pathIndex] + inflationRateResponse*inflationShockPath[calendar.pathIndex];
       annotation(
         Icon(coordinateSystem(extent = {{-300, -25}, {300, 25}}), graphics = {Rectangle(extent = {{-300, -25}, {300, 25}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-290, -20}, {290, 20}}, textString = "Scenario: årets antaganden", fontSize = 16, textColor = {35, 50, 65})}),
         Documentation(info = "<html><p>Plockar ut årets värden ur de årsvisa banorna. Beslutsparametrar (investeringar,
 skattesats) och yttre antaganden (löner, priser, ränta, SKR:s referens för skatt och bidrag, befolkningsbanan) kommer in i
-modellen här, så att varje komponent får dem genom en koppling.</p></html>"));
+modellen här, så att varje komponent får dem genom en koppling.</p>
+<p>En extra inflation (<code>inflationShockPath</code>) når kommunen i olika takt: priserna samma år, lönerna året därpå
+(avtalen), pensionskostnaden samma år (uppräkningen av pensionsskulden), skatteunderlaget med lönerna och marknadsräntan
+med <code>inflationRateResponse</code> per procentenhet. De generella bidragen är fasta i kronor tills staten beslutar annat;
+<code>inflationGrantCompensation</code> anger hur stor del av förra årets extra inflation staten kompenserar. Med noll extra inflation är banorna oförändrade.</p></html>"));
     end Scenario;
 
     partial model DemographyBase "Det varje demografimodell ska ge: antaganden in, befolkning ut"
@@ -1177,7 +1197,7 @@ marknadsräntan från <code>rateShockTime</code>.</li>
     extends Report;
     inner Components.Calendar calendar(horizon = horizon, baseYear = base.year) "Gemensam årskalender" annotation(
       Placement(transformation(origin = {370, 305}, extent = {{-40, -20}, {40, 20}})));
-    Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath) "Årets antaganden" annotation(
+    Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
       Placement(transformation(origin = {-20, 240}, extent = {{-300, -25}, {300, 25}})));
     replaceable Components.Demography demography(p0 = p0, olderShares = olderShares, deathRates = deathRates, migrationWeights = migrationWeights, births0 = births0) constrainedby Components.DemographyBase "Demografi: fem åldersgrupper som standard; Examples.AnnualCohort använder ettårsåldrar" annotation(choicesAllMatching = true, 
       Placement(transformation(origin = {-280, 110}, extent = {{-75, -56}, {75, 56}})));
@@ -1830,7 +1850,7 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
         Placement(transformation(origin = {-200, 140}, extent = {{-10, -10}, {10, 10}})));
       inner Clock clock(horizon = horizon, baseYear = base.year) "Bokslut vid årets slut" annotation(
         Placement(transformation(origin = {-170, 140}, extent = {{-10, -10}, {10, 10}})));
-      Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath) "Årets antaganden" annotation(
+      Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
         Placement(transformation(origin = {-200, 60}, extent = {{-20, -40}, {20, 40}})));
       replaceable Components.Demography demography(p0 = p0, olderShares = olderShares, deathRates = deathRates, migrationWeights = migrationWeights, births0 = births0) constrainedby Components.DemographyBase "Demografi: räknar fram årets slut när året börjar" annotation(
         Placement(transformation(origin = {-120, 100}, extent = {{-20, -15}, {20, 15}})));
