@@ -1,0 +1,11 @@
+{
+  "description": "Genomsnittlig räntebindning för kommunens lån och derivat vid basårets slut, år, enligt årsredovisningens avsnitt om finansiella risker (riktlinje 2–4 år). Används som tidskonstant för hur en ändrad marknadsränta slår igenom på snitträntan.",
+  "default": {"years": 3, "note": "Antagande: 3 år; årsredovisningens uppgift finns inte i projektet för valt basår"},
+  "municipalities": {
+    "0583": {
+      "2025": {"years": 3.19, "note": "Motala 2025: 3,19 år (årsredovisning 2025, s. 21)", "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf", "archive": "data/downloads/20261106T090534Z/arsredovisning-2025.pdf", "page": 21},
+      "2024": {"years": 3.5, "note": "Motala 2024: 3,5 år (årsredovisning 2024, s. 21)", "archive": "data/downloads/20261106T090534Z/arsredovisning-2024.pdf", "page": 21},
+      "2023": {"years": 3.77, "note": "Motala 2023: 3,77 år (årsredovisning 2023, s. 41)", "archive": "data/downloads/20261106T090534Z/arsredovisning-2023.pdf", "page": 41}
+    }
+  }
+}

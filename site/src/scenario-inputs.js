@@ -26,6 +26,10 @@ export function calibrate(history) {
   });
   return {deathRates:rates,migration:rates.map((_,i)=>sum(residuals.map(r=>r[i]))/residuals.length)};
 }
+// Genomsnittlig räntebindning vid basårets slut (data/rate-fixing.json, ur årsredovisningarna); annars tabellens antagande.
+export function rateFixing(table,code,year) {
+  return table?.municipalities?.[code]?.[year]??table?.default??{years:3,note:'Antagande: 3 år'};
+}
 export function validate(b,a) {
   const keys=['years','taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','productivity','migrationDelta','birthChange','interestRate','taxRate','investment','adjustment','equalisationOffset','fixedShare','populationRevenueElasticity'];
   for(const k of keys) if(!Number.isFinite(a[k])) throw Error(`Invalid assumption: ${k}`);
@@ -48,6 +52,9 @@ export function validate(b,a) {
   if(a.ageTax&&(!Array.isArray(b.ageIncome?.weights)||b.ageIncome.weights.length!==5||!b.ageIncome.weights.every(x=>Number.isFinite(x)&&x>=0)||
     sum(b.ageIncome.weights)<=0||!Number.isFinite(b.ageIncome?.countyRate)||b.ageIncome.countyRate<=0)) throw Error('Åldersprofil för beskattningsbar inkomst saknas.');
   if(a.projectChoice!=null&&!['none','planned','delay'].includes(a.projectChoice)) throw Error('Ogiltigt projektval.');
+  if(a.rateShock!=null&&(!Number.isFinite(a.rateShock)||a.rateShock<-5||a.rateShock>15)) throw Error('Räntehöjningen ska vara mellan -5 och 15 procentenheter.');
+  if(a.rateShockMonth!=null&&(!Number.isInteger(a.rateShockMonth)||a.rateShockMonth<1||a.rateShockMonth>12)) throw Error('Räntehöjningens månad ska vara 1–12.');
+  if(a.rateFixingYears!=null&&(!Number.isFinite(a.rateFixingYears)||a.rateFixingYears<0||a.rateFixingYears>15)) throw Error('Räntebindningen ska vara 0–15 år.');
   if(a.projectChoice&&a.projectChoice!=='none'&&(!b.project||b.project.openingStock>b.workInProgress)) throw Error('Projektunderlaget matchar inte valt basår.');
   if(a.demographyMode!=null&&!['legacy','observed','cohort','cohort-observed'].includes(a.demographyMode)) throw Error('Ogiltig befolkningsmodell.');
   if(a.employerContributionRate!=null&&a.employerContributionRate!==-1&&(!Number.isFinite(a.employerContributionRate)||a.employerContributionRate<0||a.employerContributionRate>100)) throw Error('Sociala avgifter måste anges i procent av lönen.');
@@ -240,6 +247,10 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     fields.projectPlaces=p.places;
   }
   fields.interestRatePath=inputs.map(()=>a.interestRate/100);
+  // Med räntebindning är räntan ovan marknadsräntan för nya och omsatta lån; snitträntan startar där och följer efter.
+  fields.rateFixingYears=a.rateFixingYears??0;
+  fields.rateShock=(a.rateShock??0)/100;
+  fields.rateShockTime=b.baseYear+1+((a.rateShockMonth??1)-1)/12;
   fields.migrationDeltaPath=inputs.map(()=>a.migrationDelta);
   fields.birthChangePath=inputs.map(()=>a.birthChange/100);
   fields.serviceAdjustment=Array(3).fill(a.adjustment);

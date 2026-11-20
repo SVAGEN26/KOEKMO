@@ -209,6 +209,28 @@ prints both models per account line). The continuous model is no more
 accurate; it shows what happens within the year. `tests/test_continuous.py` checks
 the identities and balances. The site still runs `Annual`.
 
+## Higher interest: fixed rates and a sudden rise
+
+A rise in the market rate reaches a municipality's interest cost gradually, as
+its loans are refixed or newly taken. `rateFixingYears` is the average fixed-rate
+period (loans and derivatives) from the annual report: 3.77, 3.5 and 3.19 years at
+the end of 2023, 2024 and 2025 for Motala (annual reports 2023 p. 41, 2024 p. 21,
+2025 p. 21; `data/rate-fixing.json`). Where the report is not in the project, 3
+years is an assumption. With a fixed-rate period, `interestRatePath` is the
+market rate for new and refixed loans and the average rate follows it.
+`rateShock` raises the market rate from the date `rateShockTime` (a decimal year,
+2026.5 = 1 July 2026). The annual model counts the rest of that year; the
+continuous model changes the rate on that day. With `rateFixingYears = 0` both
+models behave as before.
+
+The site's scenario **Högre ränta** raises the market rate by 3 percentage points
+from 1 January of the first forecast year; the size, first month and fixed-rate
+period are sliders under the advanced settings. It can also be chosen in the
+comparison. The MCP server offers it as `scenario: "higherInterest"`. For Motala
+from the 2025 accounts the average rate rises from 2.2 % to 3.0 % in 2026 and
+4.7 % in 2029, and interest from 23 to 32 and from 33 to 71 mnkr. Actual rates
+are not used as inputs in the hindcast; that would use the answer.
+
 ## Local MCP server: let an AI run the budget
 
 `scripts/mcp_server.py` lets an AI assistant run the model year by year over the

@@ -109,6 +109,22 @@ class Session(unittest.TestCase):
         finally:
             server.close()
 
+    def test_higher_interest_passes_through_gradually(self):
+        server = Stdio()
+        try:
+            base, _, _ = server.tool('run_scenario', municipality='0583', horizon=3)
+            high, error, text = server.tool('run_scenario', municipality='0583', horizon=3, scenario='higherInterest')
+            self.assertFalse(error, text)
+            rates = [y['annualInterestRate'] for y in high['years'][1:]]
+            self.assertEqual(rates, sorted(rates))  # the average rate climbs year by year
+            first, plain = high['years'][1], base['years'][1]
+            full = plain['annualInterestRate'] + 0.03
+            self.assertGreater(first['annualInterestRate'], plain['annualInterestRate'] + 0.005)
+            self.assertLess(first['annualInterestRate'], full - 0.01)  # 3.19 years of fixed rates: not all at once
+            self.assertLess(first['result'], plain['result'])
+        finally:
+            server.close()
+
 
 class Http(unittest.TestCase):
     def test_post_and_origin(self):

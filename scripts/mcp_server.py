@@ -47,7 +47,26 @@ REPORTED = ('population', 'tax', 'grants', 'cost', 'payroll', 'otherOperatingExp
 CHECKS = ('populationBalance', 'assetBalance', 'cashBalance', 'debtBalance', 'equityBalance')
 CORE_DECISIONS = ('taxRatePath', 'investmentPath', 'interestRatePath', 'wageGrowthPath', 'priceGrowthPath',
                   'productivityGrowth', 'migrationDeltaPath', 'serviceAdjustment', 'liquidityPolicy', 'cashReserve',
-                  'constructionYears', 'constructionShare', 'workingCapitalEnabled', 'collectionDays', 'paymentDays')
+                  'constructionYears', 'constructionShare', 'workingCapitalEnabled', 'collectionDays', 'paymentDays',
+                  'rateShock', 'rateShockTime', 'rateFixingYears')
+RATE_FIXING = json.loads((ROOT / 'data' / 'rate-fixing.json').read_text())
+SCENARIOS = {
+    'base': 'The model\'s default assumptions.',
+    'higherInterest': 'The market rate for new and refixed loans 3 percentage points higher from 1 January of the first forecast year. '
+                      'It reaches the average rate at the pace of the average fixed-rate period (from the annual report where known, else 3 years).',
+}
+
+
+def rate_fixing(code, year):
+    return RATE_FIXING['municipalities'].get(code, {}).get(str(year), RATE_FIXING['default'])
+
+
+def scenario_values(name, m, base_year):
+    if name not in SCENARIOS:
+        raise ValueError(f'scenario is one of {list(SCENARIOS)}')
+    if name == 'higherInterest':
+        return {'rateShock': 0.03, 'rateShockTime': float(base_year + 1), 'rateFixingYears': float(rate_fixing(m['code'], base_year)['years'])}
+    return {}
 
 
 def log(*args):
@@ -356,7 +375,7 @@ def tool_list_municipalities(_):
 
 def tool_list_parameters(args):
     names = CATALOGUE if args.get('all') else [n for n in CORE_DECISIONS if n in CATALOGUE]
-    return {'parameters': [CATALOGUE[n] for n in names],
+    return {'parameters': [CATALOGUE[n] for n in names], 'scenarios': SCENARIOS,
             'note': 'perYear parameters take one value per forecast year; set them year by year with set_decisions(year=...). '
                     'Growth rates are shares (0.03 = 3 %), taxRate is in percent, amounts in mnkr. '
                     'Pass all=true for every parameter of Kommunekonomi.Assumptions.'}
@@ -382,9 +401,15 @@ def tool_start_session(args):
     session = Session(m, base_year, model, horizon)
     series, _, _ = simulate(m, model, base_year, horizon, horizon, {})
     session.defaults = default_values(series, horizon)
+    scenario = args.get('scenario', 'base')
+    preset = scenario_values(scenario, m, base_year)
+    if preset:
+        session.decisions.update(preset)
+        session.log.append({'year': None, 'values': preset, 'reason': f'scenario {scenario}: {SCENARIOS[scenario]}'})
     SESSIONS[session.id] = session
     base_row = year_rows(series, base_year, 0, REPORTED)[0]
-    return {**session.describe(), 'accounts': base_row,
+    return {**session.describe(), 'scenario': scenario, 'scenarioValues': preset,
+            'rateFixing': rate_fixing(m['code'], base_year), 'accounts': base_row,
             'defaults': {n: session.defaults[n] for n in CORE_DECISIONS if n in session.defaults},
             'information': f'The base year is the accounts of {base_year}. Decide for {base_year + 1}, then call advance. '
                            'Defaults are the model\'s illustrative assumptions, not a forecast.'}
@@ -483,7 +508,8 @@ def tool_run_scenario(args):
     horizon = int(args.get('horizon', 8))
     if not 1 <= horizon <= MAX_HORIZON:
         raise ValueError(f'horizon is 1-{MAX_HORIZON} years')
-    overrides = {name: check_value(name, value, horizon, False) for name, value in (args.get('values') or {}).items()}
+    overrides = scenario_values(args.get('scenario', 'base'), m, base_year)
+    overrides.update({name: check_value(name, value, horizon, False) for name, value in (args.get('values') or {}).items()})
     series, _, _ = simulate(m, model, base_year, horizon, horizon, overrides)
     rows = year_rows(series, base_year, horizon, REPORTED + CHECKS)
     return {'municipality': m['code'], 'name': m['name'], 'model': model, 'baseYear': base_year, 'years': rows}
@@ -535,7 +561,8 @@ TOOLS = {
                       {'municipality': {'type': 'string', 'description': 'Municipality code, for example 0583 (Motala)'},
                        'baseYear': {'type': 'integer', 'description': 'Base year with closing accounts (2020-2025); default the latest'},
                        'model': {'type': 'string', 'enum': list(MODELS), 'description': 'Annual (default) or Continuous'},
-                       'horizon': {'type': 'integer', 'description': f'Years to plan, 1-{MAX_HORIZON}; default 8'}}),
+                       'horizon': {'type': 'integer', 'description': f'Years to plan, 1-{MAX_HORIZON}; default 8'},
+                       'scenario': {'type': 'string', 'enum': list(SCENARIOS), 'description': 'Starting scenario; higherInterest raises the market rate 3 percentage points'}}),
     'set_decisions': (tool_set_decisions, 'Set decisions before advancing. With year, per-year parameters (investmentPath, interestRatePath, wageGrowthPath ...) change from that year on (carryForward=false for that year only). Without year, set a whole parameter before the first advance. Give a reason; it is kept in the session log.',
                       {'session': {'type': 'string'}, 'year': {'type': 'integer'}, 'values': {'type': 'object'},
                        'carryForward': {'type': 'boolean'}, 'reason': {'type': 'string'}}),
@@ -545,7 +572,7 @@ TOOLS = {
                     {'session': {'type': 'string'}, 'variables': {'type': 'array', 'items': {'type': 'string'}}}),
     'run_scenario': (tool_run_scenario, 'Run a whole scenario at once without a session.',
                      {'municipality': {'type': 'string'}, 'baseYear': {'type': 'integer'}, 'model': {'type': 'string', 'enum': list(MODELS)},
-                      'horizon': {'type': 'integer'}, 'values': {'type': 'object'}}),
+                      'horizon': {'type': 'integer'}, 'scenario': {'type': 'string', 'enum': list(SCENARIOS)}, 'values': {'type': 'object'}}),
     'reference': (tool_reference, 'SKR 26:28 tax and grants for the municipality (with citation) and its closing accounts 2020-2025 from SCB.',
                   {'municipality': {'type': 'string'}}),
     'save_session': (tool_save_session, 'Save the session (decisions, reasons, results) as JSON and as a Modelica model that reproduces it in OMEdit.',

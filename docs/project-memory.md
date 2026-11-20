@@ -857,3 +857,11 @@ där sajten påverkas, i JavaScript-referensen:
 - `hindcast_vintages.py` poängsätter nu även löner, pensioner, övriga kostnader, verksamhetsintäkter, avskrivningar, ränta, skuld och kassa. Utfall: Motalas årsredovisningar (`research/data/annual-ledgers.json`) och SCB för övriga. `scripts/compare_hindcasts.py CODE` visar Annual och Continuous parvis.
 - Med SKR-antagandena (medelfel modell minus utfall efter 1/2/3 år, mnkr). Motala: löner −10/−24/−103, pensioner +10/−9/−38 (medelabsfel 41/65/43), övriga kostnader −18/−25/−50, ränta −2/−5/−9, skuld +57/+94/+22. Mjölby: löner −21/−34/−74, skuld +1/−69/−286. Kassan ändras inte i modellen utan kassapolicy, så kassafelet är kassans faktiska förändring.
 - Parvis skillnad Continuous − Annual: Motala inom 2 mnkr för alla poster utom skulden (−5 efter tre år). Mjölby: nettokostnaden −3/−8/−11, varav löner −3/−6/−8, och resultatet +3/+7/+11. Tecknet stämmer med att den kontinuerliga modellens efterfrågan släpar ett halvår efter befolkningen; mekanismen är inte isolerad i ett eget test.
+
+## Räntebindning och scenariot Högre ränta (2026-11-20)
+
+- Användaren: att lägga in de faktiska räntehöjningarna 2022–2023 i bakåttestet vore fusk. I stället kan modellen visa hur en plötslig höjning slår igenom, som ett scenario.
+- Motalas genomsnittliga räntebindning (lån och derivat) vid årets slut: 3,77 år 2023 (årsredovisning 2023 s. 41), 3,5 år 2024 (2024 s. 21), 3,19 år 2025 (2025 s. 21); riktlinje 2–4 år. Lagrat i `data/rate-fixing.json`. Andra kommuner: antagande 3 år.
+- Båda modellerna har `rateFixingYears`, `rateShock` och `rateShockTime` (decimalår). Med räntebindning är `interestRatePath` marknadsräntan för nya och omsatta lån. Årsmodellen omsätter andelen 1 - exp(-1/τ) av skulden per år; den kontinuerliga har en räntekostnad med bundna räntor som närmar sig marknadsräntan gånger skulden med tidskonstanten τ. Med τ = 0 är resultaten oförändrade (paritetstesten passerar).
+- Scenariot Högre ränta (+3 procentenheter från 1 januari första prognosåret) finns på webben och i MCP-servern. Motala från 2025: snitträntan 3,0 % 2026 och 4,7 % 2029; räntan 32 i stället för 23 mnkr 2026 och 71 i stället för 33 mnkr 2029.
+- `-override` når inte parametrar vars standard beror på basåret (OpenModelica fäller dem vid kompileringen); `MotalaBrowser.mo` har därför bokstavliga standardvärden.
