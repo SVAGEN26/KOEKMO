@@ -850,3 +850,10 @@ där sajten påverkas, i JavaScript-referensen:
 - Webbplatsen kör fortfarande Annual. Webbläsarens `buildModel` använder `method="euler"` med ett steg per år, vilket inte räcker för den kontinuerliga modellen.
 - Nästa steg enligt användaren: lokal MCP-server likt OMEdits (OMEdit/OMEditLIB/MCP, HTTP på localhost, generiska verktyg) men med projektets verktyg, så att en lokal AI kan fatta beslut år för år.
 - Lokal MCP-server: `scripts/mcp_server.py` (stdio eller `--http PORT`, endast 127.0.0.1, standardbibliotek). Verktyg: kommunlista, parameterkatalog ur `Assumptions`, session per kommun och basår, beslut per år med motivering, `advance` år för år, SKR-referens och SCB-utfall, `save_session` med Modelica-fil för OMEdit. `.mcp.json` registrerar den för Claude Code. Skattesatsen kan nu sättas per år (`taxRatePath`, standard `taxRate` varje år). Webbplatsen är ännu inte kopplad till servern.
+
+## Fler poster i bakåttestet (2026-11-20)
+
+- Användaren: målet är ett interaktivt verktyg för beslutsfattare, inte i första hand bättre prognoser än SKR. Bakåttestet är en kontroll, inte målet.
+- `hindcast_vintages.py` poängsätter nu även löner, pensioner, övriga kostnader, verksamhetsintäkter, avskrivningar, ränta, skuld och kassa. Utfall: Motalas årsredovisningar (`research/data/annual-ledgers.json`) och SCB för övriga. `scripts/compare_hindcasts.py CODE` visar Annual och Continuous parvis.
+- Med SKR-antagandena (medelfel modell minus utfall efter 1/2/3 år, mnkr). Motala: löner −10/−24/−103, pensioner +10/−9/−38 (medelabsfel 41/65/43), övriga kostnader −18/−25/−50, ränta −2/−5/−9, skuld +57/+94/+22. Mjölby: löner −21/−34/−74, skuld +1/−69/−286. Kassan ändras inte i modellen utan kassapolicy, så kassafelet är kassans faktiska förändring.
+- Parvis skillnad Continuous − Annual: Motala inom 2 mnkr för alla poster utom skulden (−5 efter tre år). Mjölby: nettokostnaden −3/−8/−11, varav löner −3/−6/−8, och resultatet +3/+7/+11. Tecknet stämmer med att den kontinuerliga modellens efterfrågan släpar ett halvår efter befolkningen; mekanismen är inte isolerad i ett eget test.

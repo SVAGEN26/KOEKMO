@@ -60,7 +60,9 @@ MODEL = os.environ.get('HINDCAST_MODEL', 'Annual')
 SUFFIX = '' if MODEL == 'Annual' else '-' + MODEL.lower()
 PREFIX = PACKAGE.lower()
 ORIGINS = range(2020, 2025)
-OUTPUTS = ('tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', 'grantParts[4]', 'grantParts[5]', 'grantParts[6]', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'population', 'debt')
+OUTPUTS = ('tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', 'grantParts[4]', 'grantParts[5]', 'grantParts[6]', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'otherOperatingExpense', 'operatingRevenue', 'population', 'debt', 'cash')
+# Lines scored besides the result. Debt and cash depend on the financing rule as much as on the forecast.
+LINES = ('payroll', 'pension', 'otherCosts', 'operatingRevenue', 'depreciation', 'interest', 'debt', 'cash')
 
 
 def load(path):
@@ -183,6 +185,8 @@ def main():
             net = r['payroll'] + r['pension'] + r['otherOperatingExpense'] - r['operatingRevenue'] + r['depreciation']
             ledgers[int(y)] = {'tax': r['tax'], 'grants': r['grants'], 'netCost': net, 'payroll': r['payroll'],
                                'pension': r['pension'], 'population': r['reportedPopulation'][-1], 'sourceId': 'scb',
+                               'otherExpense': r['otherOperatingExpense'], 'operatingRevenue': r['operatingRevenue'],
+                               'depreciation': r['depreciation'], 'interest': r['interestExpense'], 'debt': r['debt'], 'cash': r['cash'],
                                'result': r['tax'] + r['grants'] - net + r['financialIncome'] - r['interestExpense'] - r['otherFinancialExpense']}
     runs = []
     with tempfile.TemporaryDirectory(prefix='motala-vintage-') as tmp:
@@ -199,11 +203,16 @@ def main():
                         'assumptions': assumptions, 'year': year, 'horizon': year - origin,
                         'model': {'tax': m['tax'], 'grants': m['grants'], 'netCost': m['cost'] + m['depreciation'],
                                   'personnel': m['payroll'] + m['pensionExpense'], 'result': m['result'],
-                                  'population': m['population'],
+                                  'population': m['population'], 'payroll': m['payroll'], 'pension': m['pensionExpense'],
+                                  'otherCosts': m['otherOperatingExpense'], 'operatingRevenue': m['operatingRevenue'],
+                                  'depreciation': m['depreciation'], 'interest': m['interest'], 'debt': m['debt'], 'cash': m['cash'],
                                   **({'grantParts': [m[f'grantParts[{j}]'] for j in range(1, 7)]} if assumptions in ('components', 'hold') else {})},
                         'outcome': {'tax': o['tax'], 'grants': o['grants'], 'netCost': o['netCost'],
                                     'personnel': o['payroll'] + o['pension'], 'result': o['result'],
-                                    'population': o['population'], 'source': ledger_sources[o['sourceId']]},
+                                    'population': o['population'], 'payroll': o.get('payroll'), 'pension': o.get('pension'),
+                                    'otherCosts': o.get('otherExpense'), 'operatingRevenue': o.get('operatingRevenue'),
+                                    'depreciation': o.get('depreciation'), 'interest': o.get('interest'), 'debt': o.get('debt'),
+                                    'cash': o.get('cash'), 'source': ledger_sources[o['sourceId']]},
                         'budgetResult': budgets[year]['value'] if year in budgets and year - origin == 1 else None,
                         'budgetSource': budgets[year].get('source') if year in budgets and year - origin == 1 else None,
                         'persistenceResult': ledgers[origin]['result'],
@@ -218,6 +227,11 @@ def main():
                     'cases': len(cases),
                     **{f'{k}MeanError': sum(r['model'][k] - r['outcome'][k] for r in cases) / len(cases) for k in keys},
                     **{f'{k}MeanAbsError': sum(abs(r['model'][k] - r['outcome'][k]) for r in cases) / len(cases) for k in keys}}
+                for k in LINES:
+                    scored = [r for r in cases if r['outcome'].get(k) is not None]
+                    if scored:
+                        summary[assumptions][horizon][f'{k}MeanError'] = sum(r['model'][k] - r['outcome'][k] for r in scored) / len(scored)
+                        summary[assumptions][horizon][f'{k}MeanAbsError'] = sum(abs(r['model'][k] - r['outcome'][k]) for r in scored) / len(scored)
     one = [r for r in runs if r['horizon'] == 1 and r['assumptions'] == 'skr']  # budget and persistence: once per origin
     with_budget = [r for r in one if r['budgetResult'] is not None]
     if with_budget:

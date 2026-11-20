@@ -204,7 +204,8 @@ is 5 to 25 mnkr higher, because the annual model charges the whole year at the
 lower year-end population. Against Motala's annual reports from the five December
 circulars 2020–2024, mean result errors are within about 2 mnkr of the annual
 model's at one to three years (`HINDCAST_MODEL=Continuous python3 scripts/hindcast_vintages.py`
-writes `data/vintage-hindcast-continuous.json`). The continuous model is no more
+writes `data/vintage-hindcast-continuous.json`; `python3 scripts/compare_hindcasts.py [code]`
+prints both models per account line). The continuous model is no more
 accurate; it shows what happens within the year. `tests/test_continuous.py` checks
 the identities and balances. The site still runs `Annual`.
 
