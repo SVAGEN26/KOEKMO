@@ -136,10 +136,12 @@ jobs:
         with:
           path: site/dist
 
+  # Publishing is manual: a push to main builds and tests, but only a run started
+  # by hand (Actions > Site > Run workflow, on main) deploys.
   # GitHub Pages on the free plan needs a public repository.
   deploy:
     needs: build
-    if: github.ref == 'refs/heads/main' && !github.event.repository.private
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && !github.event.repository.private
     runs-on: ubuntu-24.04
     permissions:
       pages: write
