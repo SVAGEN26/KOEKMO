@@ -26,6 +26,8 @@ import argparse
 import json
 from pathlib import Path
 
+from prepare_county_cohorts import modelica_cohorts
+
 ROOT = Path(__file__).resolve().parents[1]
 YEARS = range(2020, 2026)
 
@@ -58,6 +60,12 @@ def groups(ages):
     return [sum(ages[0:7]), sum(ages[7:16]), sum(ages[16:19]), sum(ages[19:65]), sum(ages[65:])]
 
 
+def county_archive(code):
+    archive = ROOT / json.loads((ROOT / 'data/municipalities/ostergotland-sources.json').read_text())['archive']
+    manifest = json.loads((archive / 'manifest.json').read_text())
+    return archive if code in manifest['municipalities'] else None
+
+
 def build(code, archive):
     rr, bs, tx, ct, inv = (jsonstat(archive / f'{t}.json') for t in ('TAB6777', 'TAB6779', 'TAB6782', 'TAB4202', 'TAB5179'))
     population = {}
@@ -72,6 +80,21 @@ def build(code, archive):
             changes.setdefault(int(k['Tid']), {})[{'115': 'births', '130': 'deaths'}[k['Forandringar']]] = v
     rates = {int(k['Tid']): v for k, v in px(archive / 'tax-rate.json')}
     folder = ROOT / ('data' if code == '0583' else f'data/municipalities/{code}')
+    supplement_file = folder / 'annual-report-inputs.json'
+    supplement = json.loads(supplement_file.read_text()) if supplement_file.exists() else {}
+    official_totals = {}
+    archive_county = county_archive(code)
+    if archive_county:
+        for row in json.loads((archive_county / 'kolada-population.json').read_text())['values']:
+            if row['municipality'] == code and row['period'] == 2025:
+                official_totals['2025'] = next(v['value'] for v in row['values'] if v['gender'] == 'T')
+        if '2025' not in official_totals:
+            raise ValueError(f'Kolada missing population total for {code}')
+    for year, total in {**official_totals, **supplement.get('population', {})}.items():
+        ages = population[int(year)]
+        factor = total / sum(ages)
+        population[int(year)] = [age * factor for age in ages]
+
     care = json.loads((folder / 'care-weights.json').read_text())['baseYears']
     sectors = json.loads((folder / 'sector-costs.json').read_text())['years']
     capacity = json.loads((ROOT / 'data/tax-capacity.json').read_text())['municipalities'][code]
@@ -81,15 +104,19 @@ def build(code, archive):
         return table.get(item, {}).get(year, 0.0)
 
     def debt(year):
-        return sum(g(bs, i, year) for i in ('081', '082', '136', '134'))
+        official = supplement.get('externalBankDebt', {}).get(str(year))
+        return official if official is not None else sum(g(bs, i, year) for i in ('081', '082', '136', '134'))
 
     years = {}
     for y in YEARS:
         payroll = g(ct, '100', y) + g(ct, '110', y)
         pension = sum(g(ct, i, y) for i in ('115', '120', '180', '185', '186'))
         expense = -g(rr, '022', y)
-        interest = g(tx, '380', y)  # 390 is the group's (koncern), not the municipality's
+        interest = supplement.get('bankInterest', {}).get(str(y), g(tx, '380', y))
         financial_cost = -g(rr, '072', y)
+        latest_care_year = max((int(key) for key in care if int(key) <= y), default=None)
+        care_row = care[str(latest_care_year)] if latest_care_year else {
+            'years': [], 'costPerInhabitant': {'65-79': 1, '80+': 1}}
         record = {
             'year': y,
             'cohorts': [groups(population[x]) for x in (y - 2, y - 1, y)],
@@ -108,7 +135,8 @@ def build(code, archive):
             'investment': g(inv, '950', y), 'taxRate': rates[y],
             'sectorShares': [round(sectors[str(y)]['shares'][k], 4) for k in ('education', 'elderly', 'other')],
             'educationShares': [round(x, 4) for x in sectors[str(y)]['educationSplit']],
-            'careCostPerInhabitant': [round(care[str(y)]['costPerInhabitant'][k]) for k in ('65-79', '80+')],
+            'careCostPerInhabitant': [round(care_row['costPerInhabitant'][k]) for k in ('65-79', '80+')],
+            'careReferenceYears': care_row['years'],
         }
         # The accounts must add up: tax and grants minus net cost plus financial items is the result.
         net = record['payroll'] + record['pension'] + record['otherOperatingExpense'] - record['operatingRevenue'] + record['depreciation']
@@ -119,9 +147,10 @@ def build(code, archive):
         if abs(sum(record['reportedPopulation'][-1:]) - sum(record['cohorts'][-1])) > 0.5:
             raise SystemExit(f'{code} {y}: population groups do not add up')
         years[y] = record
-    older = population[max(YEARS)][65:]
-    older_shares = [sum(older[0:15]) / sum(older), sum(older[15:25]) / sum(older), sum(older[25:]) / sum(older)]
-    return years, older_shares
+    for year, record in years.items():
+        older = population[year][65:]
+        record['olderShares'] = [sum(older[:15]) / sum(older), sum(older[15:25]) / sum(older), sum(older[25:]) / sum(older)]
+    return years, years[max(YEARS)]['olderShares']
 
 
 def number(x, digits=1):
@@ -139,7 +168,7 @@ def modelica(package, name, code, archive, years, older_shares):
         r = years[y]
         constants.append(f'''    constant BaseYear {package.lower()}{y} = BaseYear(
       year = {y},
-      cohorts = {{{', '.join(vector(c, 0) for c in r['cohorts'])}}},
+      cohorts = {{{', '.join(vector(c, 4) for c in r['cohorts'])}}},
       reportedPopulation = {vector(r['reportedPopulation'], 0)},
       births = {vector(r['births'], 0)}, deaths = {number(r['deaths'], 0)},
       equalisationNextYear = {vector(r['equalisationNextYear'], 0)},
@@ -151,7 +180,9 @@ def modelica(package, name, code, archive, years, older_shares):
       debt = {number(r['debt'])}, openingDebt = {number(r['openingDebt'])}, cash = {number(r['cash'])}, assets = {number(r['assets'])}, investment = {number(r['investment'])}, taxRate = {number(r['taxRate'], 2)},
       sectorShares = {vector(r['sectorShares'], 4)}, educationShares = {vector(r['educationShares'], 4)},
       careCostPerInhabitant = {vector(r['careCostPerInhabitant'], 0)})
-      "SCB:s räkenskapssammandrag och befolkningsstatistik {y} (kommunen); Kolada för omsorgs- och sektorvikter";''')
+      "SCB:s räkenskapssammandrag och befolkningsstatistik {y} (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares{y}[3] = {vector(r['olderShares'], 6)};''')
+    cohort_package = modelica_cohorts(code, package, name, archive, years)
     newline = '\n'
     return f'''package {package} "{name}: kommunens ekonomi år för år med biblioteket Kommunekonomi; belopp i mnkr, tid i kalenderår"
   package Data "{name}s basår ur SCB:s räkenskapssammandrag och befolkningsstatistik; genereras av scripts/prepare_municipality.py"
@@ -159,10 +190,10 @@ def modelica(package, name, code, archive, years, older_shares):
 
 {newline.join(constants)}
 
-    constant Real olderShares[3] = {vector(older_shares, 6)} "Andel av 65+ som är 65-79, 80-89 och 90+ vid slutet av {last} (SCB)";
+{cohort_package}    constant Real olderShares[3] = {vector(older_shares, 6)} "Andel av 65+ som är 65-79, 80-89 och 90+ vid slutet av {last} (SCB)";
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
-och nettokostnad per verksamhet. Arkiv {archive}. Värdena avser kommunen, inte koncernen. Anläggningstillgångarna innehåller
+och nettokostnad per verksamhet. Arkiv {archive}. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
 pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
@@ -175,7 +206,7 @@ Starta från ett annat år med <code>Annual(base = Data.{package.lower()}{last -
 
   package Examples "Färdiga modeller att simulera"
     model Hindcast{last} "Starta i bokslutet {last - 1} och räkna fram {last}; jämför med utfallet i Data.{package.lower()}{last}"
-      extends Annual(base = Data.{package.lower()}{last - 1}, horizon = 1);
+      extends Annual(base = Data.{package.lower()}{last - 1}, olderShares = Data.olderShares{last - 1}, horizon = 1);
       annotation(experiment(StartTime = {last - 1}, StopTime = {last}, Interval = 1));
     end Hindcast{last};
   end Examples;
@@ -203,7 +234,7 @@ def main():
     folder.mkdir(parents=True, exist_ok=True)
     (folder / 'base-years.json').write_text(json.dumps(
         {'source': 'Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)', 'archive': str(archive.relative_to(ROOT)),
-         'municipality': args.code, 'name': args.name, 'unit': 'mnkr; persons',
+         'municipality': args.code, 'name': args.name, 'packageName': args.package, 'unit': 'mnkr; persons',
          'definitions': __doc__.split('Definitions (SCB item codes):', 1)[1].strip(),
          'olderShares': older_shares, 'years': {str(y): r for y, r in years.items()}}, indent=1, ensure_ascii=False) + '\n')
     if args.modelica:

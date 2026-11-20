@@ -1,12 +1,14 @@
+import {DEFAULT_MUNICIPALITY,municipalities,cohortModifiers} from './municipalities.js';
 // Drives OpenModelica's in-browser compiler (wasm-jit). It compiles Motala.mo once,
 // then re-runs the compiled model with -override for every scenario.
 // There are no forecast equations here: they live only in Motala.mo.
 
 // Annual outputs read from the simulation, per forecast year.
-export const OUTPUTS=['population','births','deaths','migration','cost','payroll','pensionExpense',
-  'pensionCashPayments','otherOperatingExpense','operatingRevenue','operatingCash',
-  'depreciation','tax','grants','result','debt','cash','assets','interest','borrowing',
-  'repayment','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
+export const OUTPUTS=['population','population80Plus','births','deaths','migration','cost','payroll','wages','employerContributions','pensionExpense',
+  'pensionCashPayments','otherOperatingExpense','operatingRevenue','operatingCash','tradeReceivables','tradePayables','deferredGrants','workingCapitalCash',
+  'depreciation','tax','grants','recurringTaxAdjustment','incomeEqualisationAdjustment','regulationPopulationAdjustment','result','debt','cash','assets','commissioned','workInProgress','interest','borrowing',
+  'repayment','prefinancing','outstandingDeferredInvestment','projectPaid','projectCommissioned','projectWorkInProgress',
+  'projectPlacesInUse','missingProjectPlaces','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
 export const MODEL='MotalaBrowser';
 export const MAX_YEARS=30;
 // Simulation time is the calendar year: MotalaBrowser starts at the 2025 accounts.
@@ -30,14 +32,42 @@ export function createSession(omc,sources) {
     const reply=String(omc.omc_eval(`loadString(${JSON.stringify(text)},${JSON.stringify(name)})`)).trim();
     if(reply!=='true') throw Error(`OpenModelica kunde inte läsa ${name}: ${errors()||reply}`);
   }
-  const built=String(omc.omc_eval(`buildModel(${MODEL},startTime=${BASE_YEAR},stopTime=${BASE_YEAR+MAX_YEARS},numberOfIntervals=${MAX_YEARS},method="euler")`));
-  if(!built.includes(`${MODEL}_init.xml`)) throw Error(`OpenModelica kunde inte kompilera modellen: ${errors()||built}`);
+  const models=new Map();
+  function compile(baseYear,cohort=false,observed=false,municipality=DEFAULT_MUNICIPALITY) {
+    const settings=municipalities[municipality];
+    if(!settings) throw Error('Kommunen saknar modellpaket.');
+    const key=`${municipality}/${baseYear}/${cohort}/${observed}`;
+    if(models.has(key)) return models.get(key);
+    if(!Number.isInteger(baseYear)||baseYear<2020||baseYear>BASE_YEAR) throw Error('Basåret saknar modellunderlag.');
+    const motala=municipality===DEFAULT_MUNICIPALITY;
+    if(!motala&&!settings.firstYears.includes(baseYear+1)) throw Error('Basåret eller demografin saknar underlag för kommunen.');
+    const model=`${motala?MODEL:settings.packageName+'Browser'}${baseYear===BASE_YEAR?'':baseYear}${cohort?'Cohort':''}${observed?'Observed':''}`;
+    if(model!==MODEL) {
+      const ageModel=cohort?`,
+        redeclare Kommunekonomi.Components.CohortDemography demography(
+          ${cohortModifiers(settings.packageName,baseYear)}
+          ${observed?', residualMigration=zeros(2,101), observedDeltaShape=zeros(2,101), useObservedDeltaShape=false':''})`:'';
+      const data=`${settings.packageName}.Data`;
+      const base=`${data}.${settings.packageName.toLowerCase()}${baseYear}`;
+      const olderShares=motala?`${data}.SCB.olderShares(${data}.SCB.motala${baseYear}.population)`:`${data}.olderShares${baseYear}`;
+      const source=`model ${model}
+        extends MotalaBrowser(base=${base}, olderShares=${olderShares}${ageModel});
+      end ${model};`;
+      if(String(omc.omc_eval(`loadString(${JSON.stringify(source)})`)).trim()!=='true') throw Error(errors());
+    }
+    const built=String(omc.omc_eval(`buildModel(${model},startTime=${baseYear},stopTime=${baseYear+MAX_YEARS},numberOfIntervals=${MAX_YEARS},method="euler")`));
+    if(!built.includes(`${model}_init.xml`)) throw Error(`OpenModelica kunde inte kompilera modellen: ${errors()||built}`);
+    models.set(key,model);
+    return model;
+  }
+  compile(BASE_YEAR);
 
   // One simulation; returns per-year rows of OUTPUTS plus cohorts and investment.
-  function run(fields,years) {
+  function run(fields,years,baseYear=BASE_YEAR,cohort=false,ageMigration=null,municipality=DEFAULT_MUNICIPALITY) {
     if(!Number.isInteger(years)||years<1||years>MAX_YEARS) throw Error(`Modellen stöder 1–${MAX_YEARS} år.`);
-    const flags=`-override=stopTime=${BASE_YEAR+years},${overrideFlags(fields)}`;
-    if(!omc.omc_sim_start(MODEL,`${MODEL}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
+    const model=compile(baseYear,cohort,!!ageMigration,municipality);
+    const flags=`-override=stopTime=${baseYear+years},${overrideFlags({...fields,...ageMigration})}`;
+    if(!omc.omc_sim_start(model,`${model}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
     let code;
     do code=omc.omc_sim_advance(10000); while(code===0);
     if(code!==1) {
@@ -59,7 +89,7 @@ export function createSession(omc,sources) {
     const columns=Object.fromEntries(names.map(n=>[n,column(n)]));
     const rows=[];
     for(let t=1;t<=years;t++) {
-      const y=BASE_YEAR+t;
+      const y=baseYear+t;
       if(at[y]===undefined) throw Error(`Simuleringen saknar år ${y}`);
       const row={};
       for(const n of names) {

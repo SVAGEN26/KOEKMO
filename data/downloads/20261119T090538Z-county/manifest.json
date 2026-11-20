@@ -1,0 +1,176 @@
+{
+  "retrieved_at": "2026-11-19T09:05:38.271183+00:00",
+  "municipalities": [
+    "0509",
+    "0512",
+    "0513",
+    "0560",
+    "0561",
+    "0562",
+    "0563",
+    "0580",
+    "0581",
+    "0582",
+    "0583",
+    "0584",
+    "0586"
+  ],
+  "files": [
+    {
+      "file": "november-2024.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/FolkmangdNov",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0583",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "tot"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "BE0101A9"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2024"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "e5ad70d2fc1e2ce6e28e087f565e7619653da8781472aa20ed52a01fcf61f778",
+      "bytes": 1909
+    },
+    {
+      "file": "november-2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/FolkmangdNovCKM",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0583",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSA"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSa"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000008DJ"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "4d3612a9de70c9bb045d88c495106d5de2afde3a6007adbfab8a6bbc70b0c559",
+      "bytes": 1310
+    },
+    {
+      "file": "kolada-population.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N01951/municipality/0509,0512,0513,0560,0561,0562,0563,0580,0581,0582,0583,0584,0586/year/2024,2025",
+      "query": null,
+      "sha256": "63bb7d969741cdfa47ed66556ceeefb015ac53640f1c10e355b10c5564cbbeac",
+      "bytes": 7221
+    },
+    {
+      "file": "kolada-accounts-check.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N03100,N03102/municipality/0509,0512,0513,0560,0561,0562,0563,0580,0581,0582,0583,0584,0586/year/2024,2025",
+      "query": null,
+      "sha256": "22aa416937cbb70def3aa799d993c02803937940eed408aaa55457b17b43a5da",
+      "bytes": 7158,
+      "retrieved_at": "2026-11-19T09:16:35.795038+00:00"
+    }
+  ]
+}

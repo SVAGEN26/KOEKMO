@@ -107,7 +107,23 @@
     "definition": "Positive expense magnitudes. Other operating expense = 3775 - 2288 - 190. Reported net operating cost excluding depreciation = 3203 - 180 = 3023; rounded gross components give 3024, reconciled by -1 mnkr. These are accrual expenses and revenues, not cash payments."
   },
   "otherFinancialExpense": 4,
+  "workingCapital": {
+    "receivables": 16.111,
+    "payables": 181.275,
+    "grantAdvances": 29,
+    "tradeSource": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6779",
+    "advanceSource": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
+  },
   "workInProgress": 99,
+  "project": {
+    "name": "Förskolan Bråta Hagar",
+    "openingYear": 2026,
+    "openingStock": 61,
+    "authorisedBudget": 65,
+    "places": 144,
+    "accountsSource": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+    "capacitySource": "https://www.motala.se/skola-och-forskola/forskola-och-barnomsorg/forskolor/forskolan-brata-hagar/"
+  },
   "workInProgressSource": {
     "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
     "printedPages": [

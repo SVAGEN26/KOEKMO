@@ -64,9 +64,9 @@ def main():
     bases = {}
     for base in range(2020, 2026):
         years = [y for y in (base - 2, base - 1, base) if y in yearly]
-        if len(years) < 3:
+        if not years:
             continue
-        mean = {g: sum(yearly[y][g]['costPerInhabitant'] for y in years) / 3 for g in ('65-79', '80+')}
+        mean = {g: sum(yearly[y][g]['costPerInhabitant'] for y in years) / len(years) for g in ('65-79', '80+')}
         bases[str(base)] = {'years': years, 'costPerInhabitant': mean, 'ratio80to6579': mean['80+'] / mean['65-79']}
 
     out = {'source': 'Källa: Kolada (RKA), Socialstyrelsen och SCB', 'archive': str(archive.relative_to(ROOT)),

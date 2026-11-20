@@ -1,0 +1,583 @@
+{
+ "source": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
+ "archive": "data/downloads/20261119T090404Z",
+ "municipality": "0513",
+ "name": "Kinda",
+ "packageName": "Kinda",
+ "unit": "mnkr; persons",
+ "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); debt is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
+ "olderShares": [
+  0.6857447564877355,
+  0.26555279061500175,
+  0.04870245289726271
+ ],
+ "years": {
+  "2020": {
+   "year": 2020,
+   "cohorts": [
+    [
+     738.0,
+     1041.0,
+     330.0,
+     5179.0,
+     2627.0
+    ],
+    [
+     753.0,
+     1013.0,
+     334.0,
+     5159.0,
+     2681.0
+    ],
+    [
+     772.0,
+     1001.0,
+     353.0,
+     5148.0,
+     2717.0
+    ]
+   ],
+   "reportedPopulation": [
+    9915.0,
+    9940.0,
+    9991.0
+   ],
+   "births": [
+    101.0,
+    90.0
+   ],
+   "deaths": 110.0,
+   "equalisationNextYear": [
+    11605,
+    2359,
+    2973,
+    297
+   ],
+   "relativeTaxCapacity": [
+    0.8943,
+    0.8884
+   ],
+   "tax": 426.186,
+   "priorYearSettlement": -2.411,
+   "grants": 186.263,
+   "grantComponents": [
+    110.069,
+    18.541,
+    10.188,
+    -1.196,
+    27.983
+   ],
+   "payroll": 411.647,
+   "pension": 30.25,
+   "otherOperatingExpense": 254.27000000000004,
+   "operatingRevenue": 130.783,
+   "netCostRoundingAdjustment": 0.0,
+   "depreciation": 24.462,
+   "financialIncome": 1.114,
+   "interestExpense": 1.314,
+   "otherFinancialExpense": 0.33399999999999985,
+   "debt": 140.0,
+   "openingDebt": 130.0,
+   "cash": 62.661,
+   "assets": 512.077,
+   "investment": 44.605,
+   "taxRate": 20.95,
+   "sectorShares": [
+    0.4594,
+    0.2033,
+    0.3373
+   ],
+   "educationShares": [
+    0.2591,
+    0.5458,
+    0.1951
+   ],
+   "careCostPerInhabitant": [
+    15006,
+    140429
+   ],
+   "careReferenceYears": [
+    2020
+   ],
+   "olderShares": [
+    0.7338976812661023,
+    0.21715126978284874,
+    0.04895104895104895
+   ]
+  },
+  "2021": {
+   "year": 2021,
+   "cohorts": [
+    [
+     753.0,
+     1013.0,
+     334.0,
+     5159.0,
+     2681.0
+    ],
+    [
+     772.0,
+     1001.0,
+     353.0,
+     5148.0,
+     2717.0
+    ],
+    [
+     775.0,
+     1003.0,
+     359.0,
+     5167.0,
+     2744.0
+    ]
+   ],
+   "reportedPopulation": [
+    9940.0,
+    9991.0,
+    10048.0
+   ],
+   "births": [
+    90.0,
+    88.0
+   ],
+   "deaths": 131.0,
+   "equalisationNextYear": [
+    12679,
+    2850,
+    2760,
+    96
+   ],
+   "relativeTaxCapacity": [
+    0.8884,
+    0.8794
+   ],
+   "tax": 457.758,
+   "priorYearSettlement": 1.643,
+   "grants": 204.793,
+   "grantComponents": [
+    116.038,
+    23.588,
+    29.728,
+    2.965,
+    31.374
+   ],
+   "payroll": 432.032,
+   "pension": 33.086,
+   "otherOperatingExpense": 256.99600000000004,
+   "operatingRevenue": 138.94,
+   "netCostRoundingAdjustment": 0.0,
+   "depreciation": 25.481,
+   "financialIncome": 1.496,
+   "interestExpense": 1.236,
+   "otherFinancialExpense": 0.30899999999999994,
+   "debt": 120.0,
+   "openingDebt": 140.0,
+   "cash": 65.579,
+   "assets": 522.64,
+   "investment": 35.347,
+   "taxRate": 21.45,
+   "sectorShares": [
+    0.4589,
+    0.21,
+    0.331
+   ],
+   "educationShares": [
+    0.2594,
+    0.5426,
+    0.198
+   ],
+   "careCostPerInhabitant": [
+    14530,
+    146306
+   ],
+   "careReferenceYears": [
+    2020,
+    2021
+   ],
+   "olderShares": [
+    0.7263119533527697,
+    0.2230320699708455,
+    0.05065597667638484
+   ]
+  },
+  "2022": {
+   "year": 2022,
+   "cohorts": [
+    [
+     772.0,
+     1001.0,
+     353.0,
+     5148.0,
+     2717.0
+    ],
+    [
+     775.0,
+     1003.0,
+     359.0,
+     5167.0,
+     2744.0
+    ],
+    [
+     808.0,
+     991.0,
+     371.0,
+     5147.0,
+     2751.0
+    ]
+   ],
+   "reportedPopulation": [
+    9991.0,
+    10048.0,
+    10068.0
+   ],
+   "births": [
+    88.0,
+    107.0
+   ],
+   "deaths": 122.0,
+   "equalisationNextYear": [
+    13169,
+    4009,
+    2336,
+    74
+   ],
+   "relativeTaxCapacity": [
+    0.8794,
+    0.8808
+   ],
+   "tax": 481.764,
+   "priorYearSettlement": 3.194,
+   "grants": 220.378,
+   "grantComponents": [
+    127.665,
+    28.697,
+    27.793,
+    0.971,
+    32.09
+   ],
+   "payroll": 452.469,
+   "pension": 41.389,
+   "otherOperatingExpense": 291.718,
+   "operatingRevenue": 147.221,
+   "netCostRoundingAdjustment": 0.0,
+   "depreciation": 27.189,
+   "financialIncome": 2.08,
+   "interestExpense": 1.36,
+   "otherFinancialExpense": 0.43699999999999983,
+   "debt": 100.199,
+   "openingDebt": 120.0,
+   "cash": 35.2,
+   "assets": 557.2,
+   "investment": 62.787,
+   "taxRate": 21.45,
+   "sectorShares": [
+    0.4357,
+    0.2178,
+    0.3465
+   ],
+   "educationShares": [
+    0.2591,
+    0.5415,
+    0.1993
+   ],
+   "careCostPerInhabitant": [
+    15173,
+    148922
+   ],
+   "careReferenceYears": [
+    2020,
+    2021,
+    2022
+   ],
+   "olderShares": [
+    0.7164667393675027,
+    0.23555070883315157,
+    0.04798255179934569
+   ]
+  },
+  "2023": {
+   "year": 2023,
+   "cohorts": [
+    [
+     775.0,
+     1003.0,
+     359.0,
+     5167.0,
+     2744.0
+    ],
+    [
+     808.0,
+     991.0,
+     371.0,
+     5147.0,
+     2751.0
+    ],
+    [
+     752.0,
+     1016.0,
+     345.0,
+     5112.0,
+     2767.0
+    ]
+   ],
+   "reportedPopulation": [
+    10048.0,
+    10068.0,
+    9992.0
+   ],
+   "births": [
+    107.0,
+    87.0
+   ],
+   "deaths": 134.0,
+   "equalisationNextYear": [
+    13256,
+    4124,
+    3055,
+    -247
+   ],
+   "relativeTaxCapacity": [
+    0.8808,
+    0.8824
+   ],
+   "tax": 508.829,
+   "priorYearSettlement": 2.621,
+   "grants": 234.022,
+   "grantComponents": [
+    132.717,
+    40.403,
+    23.54,
+    0.742,
+    34.579
+   ],
+   "payroll": 494.95,
+   "pension": 53.998000000000005,
+   "otherOperatingExpense": 308.7180000000001,
+   "operatingRevenue": 156.728,
+   "netCostRoundingAdjustment": 0.0,
+   "depreciation": 27.316,
+   "financialIncome": 6.419,
+   "interestExpense": 3.345,
+   "otherFinancialExpense": 1.0899999999999994,
+   "debt": 160.0,
+   "openingDebt": 100.199,
+   "cash": 64.135,
+   "assets": 637.11,
+   "investment": 113.717,
+   "taxRate": 21.45,
+   "sectorShares": [
+    0.4259,
+    0.2248,
+    0.3493
+   ],
+   "educationShares": [
+    0.2694,
+    0.5447,
+    0.1859
+   ],
+   "careCostPerInhabitant": [
+    15669,
+    160162
+   ],
+   "careReferenceYears": [
+    2021,
+    2022,
+    2023
+   ],
+   "olderShares": [
+    0.7090711962414167,
+    0.2486447415973979,
+    0.0422840621611854
+   ]
+  },
+  "2024": {
+   "year": 2024,
+   "cohorts": [
+    [
+     808.0,
+     991.0,
+     371.0,
+     5147.0,
+     2751.0
+    ],
+    [
+     752.0,
+     1016.0,
+     345.0,
+     5112.0,
+     2767.0
+    ],
+    [
+     735.0,
+     1024.0,
+     343.0,
+     5047.0,
+     2808.0
+    ]
+   ],
+   "reportedPopulation": [
+    10068.0,
+    9992.0,
+    9957.0
+   ],
+   "births": [
+    87.0,
+    69.0
+   ],
+   "deaths": 104.0,
+   "equalisationNextYear": [
+    13714,
+    4178,
+    2644,
+    -190
+   ],
+   "relativeTaxCapacity": [
+    0.8824,
+    0.8882
+   ],
+   "tax": 517.025,
+   "priorYearSettlement": -2.566,
+   "grants": 243.403,
+   "grantComponents": [
+    132.573,
+    41.244,
+    30.556,
+    -2.474,
+    39.067
+   ],
+   "payroll": 524.4,
+   "pension": 63.47,
+   "otherOperatingExpense": 322.88,
+   "operatingRevenue": 165.988,
+   "netCostRoundingAdjustment": 0.0,
+   "depreciation": 30.858,
+   "financialIncome": 4.494,
+   "interestExpense": 4.896,
+   "otherFinancialExpense": 1.1900000000000004,
+   "debt": 210.0,
+   "openingDebt": 160.0,
+   "cash": 47.235,
+   "assets": 701.708,
+   "investment": 88.422,
+   "taxRate": 21.45,
+   "sectorShares": [
+    0.4266,
+    0.2212,
+    0.3522
+   ],
+   "educationShares": [
+    0.2912,
+    0.5387,
+    0.1701
+   ],
+   "careCostPerInhabitant": [
+    17526,
+    164788
+   ],
+   "careReferenceYears": [
+    2022,
+    2023,
+    2024
+   ],
+   "olderShares": [
+    0.6969373219373219,
+    0.25783475783475784,
+    0.04522792022792023
+   ]
+  },
+  "2025": {
+   "year": 2025,
+   "cohorts": [
+    [
+     752.0,
+     1016.0,
+     345.0,
+     5112.0,
+     2767.0
+    ],
+    [
+     735.0,
+     1024.0,
+     343.0,
+     5047.0,
+     2808.0
+    ],
+    [
+     712.497432282751,
+     1012.2859732151848,
+     340.7596415265331,
+     5047.439734165743,
+     2811.0172188097877
+    ]
+   ],
+   "reportedPopulation": [
+    9992.0,
+    9957.0,
+    9924.0
+   ],
+   "births": [
+    69.0,
+    75.0
+   ],
+   "deaths": 104.0,
+   "equalisationNextYear": [
+    14175,
+    5308,
+    2799,
+    -107
+   ],
+   "relativeTaxCapacity": [
+    0.8882,
+    0.8905
+   ],
+   "tax": 535.537,
+   "priorYearSettlement": -0.08,
+   "grants": 243.02,
+   "grantComponents": [
+    136.715,
+    41.65,
+    26.362,
+    -1.895,
+    40.138
+   ],
+   "payroll": 541.874,
+   "pension": 48.972,
+   "otherOperatingExpense": 311.28099999999995,
+   "operatingRevenue": 168.229,
+   "netCostRoundingAdjustment": 0.0,
+   "depreciation": 35.543,
+   "financialIncome": 6.972,
+   "interestExpense": 12.612,
+   "otherFinancialExpense": 0.45899999999999963,
+   "debt": 240.0,
+   "openingDebt": 210.0,
+   "cash": 23.872,
+   "assets": 814.889,
+   "investment": 107.936,
+   "taxRate": 21.45,
+   "sectorShares": [
+    0.4377,
+    0.2067,
+    0.3555
+   ],
+   "educationShares": [
+    0.2818,
+    0.5394,
+    0.1789
+   ],
+   "careCostPerInhabitant": [
+    18564,
+    163062
+   ],
+   "careReferenceYears": [
+    2023,
+    2024,
+    2025
+   ],
+   "olderShares": [
+    0.6857447564877355,
+    0.26555279061500175,
+    0.04870245289726271
+   ]
+  }
+ }
+}

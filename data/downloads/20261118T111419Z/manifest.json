@@ -1,0 +1,66 @@
+{
+  "retrieved_at": "2026-11-18T11:14:19.761765+00:00",
+  "municipality": "0583",
+  "source": "SCB, Statistikdatabasen (CC BY 4.0)",
+  "table": "TAB6725",
+  "files": [
+    {
+      "file": "folkmangd-november-2025-motala.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/FolkmangdNovCKM",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSA"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSa"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000008DJ"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 606,
+      "sha256": "78700a8fb70f1cc0c6cdc1b57a0a4b143710f946323c40dbe00b4661512158e7"
+    }
+  ]
+}

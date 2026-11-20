@@ -1,0 +1,3061 @@
+{
+  "baseYears": [
+    2022,
+    2023,
+    2024
+  ],
+  "lastOutcome": 2025,
+  "metrics": [
+    "population",
+    "age7to15",
+    "age80to89",
+    "age90Plus"
+  ],
+  "sources": {
+    "scb2025": "data/downloads/20261120T121135Z-age-backtest",
+    "scbEarlier": "SCB BefolkningNy, municipality archives",
+    "migration": [
+      "data/downloads/20261120T121135Z-age-backtest",
+      "data/downloads/20261120T105146Z-migration"
+    ],
+    "kolada": "data/downloads/20261120T121135Z-age-backtest"
+  },
+  "summaryByHorizon": {
+    "1": {
+      "groups": {
+        "population": {
+          "mae": 93.13174673982012,
+          "bias": 69.73322827604193
+        },
+        "age7to15": {
+          "mae": 31.084117948717942,
+          "bias": 14.997882051282055
+        },
+        "age80to89": {
+          "mae": 83.53013883604855,
+          "bias": -83.53013883604855
+        },
+        "age90Plus": {
+          "mae": 9.50125627262148,
+          "bias": -2.6628796580651577
+        }
+      },
+      "cohort": {
+        "population": {
+          "mae": 125.37489778272236,
+          "bias": 114.605673755879
+        },
+        "age7to15": {
+          "mae": 24.354122737446875,
+          "bias": 15.291232048735134
+        },
+        "age80to89": {
+          "mae": 13.718732642751455,
+          "bias": -5.1500150326739895
+        },
+        "age90Plus": {
+          "mae": 6.81813662316654,
+          "bias": -2.2799852231417006
+        }
+      },
+      "observed": {
+        "population": {
+          "mae": 115.29765110548048,
+          "bias": 103.70138641971468
+        },
+        "age7to15": {
+          "mae": 23.547089866737572,
+          "bias": 14.1481940504447
+        },
+        "age80to89": {
+          "mae": 14.202453061101004,
+          "bias": -7.024117280537178
+        },
+        "age90Plus": {
+          "mae": 8.551318890016947,
+          "bias": -2.5068462729903542
+        }
+      }
+    },
+    "2": {
+      "groups": {
+        "population": {
+          "mae": 239.41947165815492,
+          "bias": 211.5252201904288
+        },
+        "age7to15": {
+          "mae": 65.65423519999992,
+          "bias": 43.47352095999996
+        },
+        "age80to89": {
+          "mae": 176.99798813882276,
+          "bias": -176.99798813882276
+        },
+        "age90Plus": {
+          "mae": 14.624498905799186,
+          "bias": -4.529490096006493
+        }
+      },
+      "cohort": {
+        "population": {
+          "mae": 298.6712450806165,
+          "bias": 278.8771269401026
+        },
+        "age7to15": {
+          "mae": 51.2376164627645,
+          "bias": 37.71028602395618
+        },
+        "age80to89": {
+          "mae": 24.735713039944322,
+          "bias": -12.825766501049895
+        },
+        "age90Plus": {
+          "mae": 13.082018357718878,
+          "bias": -7.143904508024033
+        }
+      },
+      "observed": {
+        "population": {
+          "mae": 276.81856701307197,
+          "bias": 252.5913297978456
+        },
+        "age7to15": {
+          "mae": 49.3351250405102,
+          "bias": 34.79944233090613
+        },
+        "age80to89": {
+          "mae": 25.371941312558082,
+          "bias": -16.225233289550797
+        },
+        "age90Plus": {
+          "mae": 11.45140519799019,
+          "bias": -6.620650575947831
+        }
+      }
+    },
+    "3": {
+      "groups": {
+        "population": {
+          "mae": 436.2259068829105,
+          "bias": 421.0989541355994
+        },
+        "age7to15": {
+          "mae": 116.97686463767351,
+          "bias": 87.92667380600281
+        },
+        "age80to89": {
+          "mae": 256.1158406460856,
+          "bias": -256.1158406460856
+        },
+        "age90Plus": {
+          "mae": 19.505405158847957,
+          "bias": -8.633885805695954
+        }
+      },
+      "cohort": {
+        "population": {
+          "mae": 487.2283366048539,
+          "bias": 466.36411297257354
+        },
+        "age7to15": {
+          "mae": 91.56390271681319,
+          "bias": 73.4270309928903
+        },
+        "age80to89": {
+          "mae": 33.32234189698569,
+          "bias": -18.79445360989669
+        },
+        "age90Plus": {
+          "mae": 16.316525173237984,
+          "bias": -7.3771877558534085
+        }
+      },
+      "observed": {
+        "population": {
+          "mae": 453.9878869904696,
+          "bias": 427.2335468715932
+        },
+        "age7to15": {
+          "mae": 87.8534889916204,
+          "bias": 68.36520508327033
+        },
+        "age80to89": {
+          "mae": 34.552255725232584,
+          "bias": -22.85215546616893
+        },
+        "age90Plus": {
+          "mae": 13.374388686643512,
+          "bias": -8.945178137244222
+        }
+      }
+    }
+  },
+  "summaryAll": {
+    "groups": {
+      "population": {
+        "mae": 199.07668173644677,
+        "bias": 175.5581798907638
+      },
+      "age7to15": {
+        "mae": 56.92294814730453,
+        "bias": 36.64456031330815
+      },
+      "age80to89": {
+        "mae": 143.4503722386461,
+        "bias": -143.4503722386461
+      },
+      "age90Plus": {
+        "mae": 12.876361964718463,
+        "bias": -4.280250828650735
+      }
+    },
+    "cohort": {
+      "population": {
+        "mae": 243.44925335237565,
+        "bias": 227.9892313534026
+      },
+      "age7to15": {
+        "mae": 44.5169173091138,
+        "bias": 32.45354986450134
+      },
+      "age80to89": {
+        "mae": 20.658327650854783,
+        "bias": -9.982671951669742
+      },
+      "age90Plus": {
+        "mae": 10.489161959695894,
+        "bias": -4.7508254068877624
+      }
+    },
+    "observed": {
+      "population": {
+        "mae": 225.58632905550917,
+        "bias": 207.25339428773808
+      },
+      "age7to15": {
+        "mae": 42.860834778808915,
+        "bias": 30.068111982736117
+      },
+      "age80to89": {
+        "mae": 21.317249588941962,
+        "bias": -12.729162314480343
+      },
+      "age90Plus": {
+        "mae": 10.321859292112455,
+        "bias": -4.951169684685158
+      }
+    }
+  },
+  "crossCheck": [
+    {
+      "municipality": "0509",
+      "year": 2023,
+      "koladaPopulation": 5279.0,
+      "kolada80Plus": 423.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0509",
+      "year": 2024,
+      "koladaPopulation": 5237.0,
+      "kolada80Plus": 457.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0509",
+      "year": 2025,
+      "koladaPopulation": 5221.0,
+      "kolada80Plus": 477.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -1.0
+    },
+    {
+      "municipality": "0512",
+      "year": 2023,
+      "koladaPopulation": 3637.0,
+      "kolada80Plus": 312.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0512",
+      "year": 2024,
+      "koladaPopulation": 3626.0,
+      "kolada80Plus": 338.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0512",
+      "year": 2025,
+      "koladaPopulation": 3619.0,
+      "kolada80Plus": 349.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -1.0
+    },
+    {
+      "municipality": "0513",
+      "year": 2023,
+      "koladaPopulation": 9992.0,
+      "kolada80Plus": 805.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0513",
+      "year": 2024,
+      "koladaPopulation": 9957.0,
+      "kolada80Plus": 851.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0513",
+      "year": 2025,
+      "koladaPopulation": 9924.0,
+      "kolada80Plus": 886.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -2.0
+    },
+    {
+      "municipality": "0560",
+      "year": 2023,
+      "koladaPopulation": 5523.0,
+      "kolada80Plus": 405.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0560",
+      "year": 2024,
+      "koladaPopulation": 5517.0,
+      "kolada80Plus": 419.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0560",
+      "year": 2025,
+      "koladaPopulation": 5451.0,
+      "kolada80Plus": 431.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -6.0
+    },
+    {
+      "municipality": "0561",
+      "year": 2023,
+      "koladaPopulation": 11460.0,
+      "kolada80Plus": 919.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0561",
+      "year": 2024,
+      "koladaPopulation": 11467.0,
+      "kolada80Plus": 984.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0561",
+      "year": 2025,
+      "koladaPopulation": 11490.0,
+      "kolada80Plus": 1010.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -6.0
+    },
+    {
+      "municipality": "0562",
+      "year": 2023,
+      "koladaPopulation": 21694.0,
+      "kolada80Plus": 1620.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0562",
+      "year": 2024,
+      "koladaPopulation": 21623.0,
+      "kolada80Plus": 1684.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0562",
+      "year": 2025,
+      "koladaPopulation": 21502.0,
+      "kolada80Plus": 1747.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -3.0
+    },
+    {
+      "municipality": "0563",
+      "year": 2023,
+      "koladaPopulation": 7541.0,
+      "kolada80Plus": 661.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0563",
+      "year": 2024,
+      "koladaPopulation": 7525.0,
+      "kolada80Plus": 708.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0563",
+      "year": 2025,
+      "koladaPopulation": 7526.0,
+      "kolada80Plus": 766.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -1.0
+    },
+    {
+      "municipality": "0580",
+      "year": 2023,
+      "koladaPopulation": 167404.0,
+      "kolada80Plus": 8983.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0580",
+      "year": 2024,
+      "koladaPopulation": 168035.0,
+      "kolada80Plus": 9482.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0580",
+      "year": 2025,
+      "koladaPopulation": 168714.0,
+      "kolada80Plus": 9907.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 3.0
+    },
+    {
+      "municipality": "0581",
+      "year": 2023,
+      "koladaPopulation": 145163.0,
+      "kolada80Plus": 7893.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0581",
+      "year": 2024,
+      "koladaPopulation": 144980.0,
+      "kolada80Plus": 8360.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0581",
+      "year": 2025,
+      "koladaPopulation": 144904.0,
+      "kolada80Plus": 8842.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 2.0
+    },
+    {
+      "municipality": "0582",
+      "year": 2023,
+      "koladaPopulation": 14867.0,
+      "kolada80Plus": 1020.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0582",
+      "year": 2024,
+      "koladaPopulation": 14789.0,
+      "kolada80Plus": 1098.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0582",
+      "year": 2025,
+      "koladaPopulation": 14741.0,
+      "kolada80Plus": 1209.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0583",
+      "year": 2023,
+      "koladaPopulation": 43728.0,
+      "kolada80Plus": 3075.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0583",
+      "year": 2024,
+      "koladaPopulation": 43505.0,
+      "kolada80Plus": 3265.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0583",
+      "year": 2025,
+      "koladaPopulation": 43131.0,
+      "kolada80Plus": 3399.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0584",
+      "year": 2023,
+      "koladaPopulation": 7434.0,
+      "kolada80Plus": 754.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0584",
+      "year": 2024,
+      "koladaPopulation": 7490.0,
+      "kolada80Plus": 798.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0584",
+      "year": 2025,
+      "koladaPopulation": 7484.0,
+      "kolada80Plus": 857.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 2.0
+    },
+    {
+      "municipality": "0586",
+      "year": 2023,
+      "koladaPopulation": 28576.0,
+      "kolada80Plus": 1866.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0586",
+      "year": 2024,
+      "koladaPopulation": 28695.0,
+      "kolada80Plus": 1935.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": 0.0
+    },
+    {
+      "municipality": "0586",
+      "year": 2025,
+      "koladaPopulation": 28823.0,
+      "kolada80Plus": 2027.0,
+      "populationScbMinusKolada": 0.0,
+      "age80PlusScbMinusKolada": -3.0
+    }
+  ],
+  "runs": [
+    {
+      "municipality": "0509",
+      "name": "Ödeshög",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 5279.0,
+        "age7to15": 525.0,
+        "age80to89": 334.0,
+        "age90Plus": 89.0
+      },
+      "model": {
+        "groups": {
+          "population": 5308.428,
+          "age7to15": 493.7729999999999,
+          "age80to89": 326.6101820394737,
+          "age90Plus": 81.14538684210525
+        },
+        "cohort": {
+          "population": 5312.010990541605,
+          "age7to15": 532.3352604606832,
+          "age80to89": 341.5664715002853,
+          "age90Plus": 82.09584147730106
+        },
+        "observed": {
+          "population": 5307.792536208271,
+          "age7to15": 531.9664394606832,
+          "age80to89": 339.3876078336186,
+          "age90Plus": 82.55772481063441
+        }
+      }
+    },
+    {
+      "municipality": "0509",
+      "name": "Ödeshög",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 5237.0,
+        "age7to15": 508.0,
+        "age80to89": 373.0,
+        "age90Plus": 84.0
+      },
+      "model": {
+        "groups": {
+          "population": 5299.077139386439,
+          "age7to15": 485.7104825599998,
+          "age80to89": 331.0405211458446,
+          "age90Plus": 82.24609221014772
+        },
+        "cohort": {
+          "population": 5305.310455846376,
+          "age7to15": 527.3386181986425,
+          "age80to89": 375.5146395241244,
+          "age90Plus": 81.13564244156358
+        },
+        "observed": {
+          "population": 5297.510596082036,
+          "age7to15": 525.9379210207533,
+          "age80to89": 371.9455733741437,
+          "age90Plus": 81.82603959142736
+        }
+      }
+    },
+    {
+      "municipality": "0509",
+      "name": "Ödeshög",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 5221,
+        "age7to15": 530,
+        "age80to89": 393,
+        "age90Plus": 83
+      },
+      "model": {
+        "groups": {
+          "population": 5288.994762360251,
+          "age7to15": 476.3534111774404,
+          "age80to89": 335.3030929946729,
+          "age90Plus": 83.30511627196842
+        },
+        "cohort": {
+          "population": 5296.000202603632,
+          "age7to15": 543.3376122359464,
+          "age80to89": 415.0740803792787,
+          "age90Plus": 79.62752288016331
+        },
+        "observed": {
+          "population": 5284.845767488603,
+          "age7to15": 540.9056039114574,
+          "age80to89": 410.8630822208966,
+          "age90Plus": 80.4097072303727
+        }
+      }
+    },
+    {
+      "municipality": "0509",
+      "name": "Ödeshög",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 5237.0,
+        "age7to15": 508.0,
+        "age80to89": 373.0,
+        "age90Plus": 84.0
+      },
+      "model": {
+        "groups": {
+          "population": 5259.313672900263,
+          "age7to15": 518.2316,
+          "age80to89": 337.5655098088502,
+          "age90Plus": 89.95009093708883
+        },
+        "cohort": {
+          "population": 5265.018951320392,
+          "age7to15": 516.6724453930669,
+          "age80to89": 367.0955491794215,
+          "age90Plus": 88.89980443697821
+        },
+        "observed": {
+          "population": 5259.012947653726,
+          "age7to15": 516.2993277264003,
+          "age80to89": 364.5484591794216,
+          "age90Plus": 87.56170110364486
+        }
+      }
+    },
+    {
+      "municipality": "0509",
+      "name": "Ödeshög",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 5221,
+        "age7to15": 530,
+        "age80to89": 393,
+        "age90Plus": 83
+      },
+      "model": {
+        "groups": {
+          "population": 5238.989106361216,
+          "age7to15": 508.6787471999999,
+          "age80to89": 340.9821736250389,
+          "age90Plus": 90.86051931924689
+        },
+        "cohort": {
+          "population": 5248.315824419173,
+          "age7to15": 529.3412239023353,
+          "age80to89": 401.6737419781182,
+          "age90Plus": 90.3306933650738
+        },
+        "observed": {
+          "population": 5237.444832542237,
+          "age7to15": 527.9338499294686,
+          "age80to89": 397.0719965841242,
+          "age90Plus": 87.57437850940616
+        }
+      }
+    },
+    {
+      "municipality": "0509",
+      "name": "Ödeshög",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 5221,
+        "age7to15": 530,
+        "age80to89": 393,
+        "age90Plus": 83
+      },
+      "model": {
+        "groups": {
+          "population": 5195.440799090909,
+          "age7to15": 509.2874,
+          "age80to89": 375.0165855265643,
+          "age90Plus": 84.45413722314049
+        },
+        "cohort": {
+          "population": 5214.39147284545,
+          "age7to15": 514.6704945326975,
+          "age80to89": 406.0377950999974,
+          "age90Plus": 87.45185852351015
+        },
+        "observed": {
+          "population": 5212.080071512117,
+          "age7to15": 514.9641585326975,
+          "age80to89": 404.3370950999974,
+          "age90Plus": 87.57097852351016
+        }
+      }
+    },
+    {
+      "municipality": "0512",
+      "name": "Ydre",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 3637.0,
+        "age7to15": 335.0,
+        "age80to89": 268.0,
+        "age90Plus": 44.0
+      },
+      "model": {
+        "groups": {
+          "population": 3655.630350506757,
+          "age7to15": 350.1902,
+          "age80to89": 256.1926792037128,
+          "age90Plus": 51.03439824775156
+        },
+        "cohort": {
+          "population": 3663.571075673183,
+          "age7to15": 336.6705722969591,
+          "age80to89": 273.9783238715364,
+          "age90Plus": 47.2666529719771
+        },
+        "observed": {
+          "population": 3656.242596573183,
+          "age7to15": 336.6453970636257,
+          "age80to89": 272.3155705382031,
+          "age90Plus": 46.1427429719771
+        }
+      }
+    },
+    {
+      "municipality": "0512",
+      "name": "Ydre",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 3626.0,
+        "age7to15": 351.0,
+        "age80to89": 288.0,
+        "age90Plus": 50.0
+      },
+      "model": {
+        "groups": {
+          "population": 3626.658281639,
+          "age7to15": 349.4840128,
+          "age80to89": 260.9705197549379,
+          "age90Plus": 51.98615931373265
+        },
+        "cohort": {
+          "population": 3642.063952933003,
+          "age7to15": 341.6717697318532,
+          "age80to89": 306.5169795780907,
+          "age90Plus": 50.03290763827273
+        },
+        "observed": {
+          "population": 3628.394865546068,
+          "age7to15": 341.6245914007136,
+          "age80to89": 302.1080072861517,
+          "age90Plus": 49.13432496677416
+        }
+      }
+    },
+    {
+      "municipality": "0512",
+      "name": "Ydre",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 3619,
+        "age7to15": 350,
+        "age80to89": 297,
+        "age90Plus": 51
+      },
+      "model": {
+        "groups": {
+          "population": 3596.199414291513,
+          "age7to15": 347.241631923987,
+          "age80to89": 265.3624722245009,
+          "age90Plus": 52.86105024392448
+        },
+        "cohort": {
+          "population": 3618.795429043311,
+          "age7to15": 332.6756997052143,
+          "age80to89": 320.341045743936,
+          "age90Plus": 48.26701200919969
+        },
+        "observed": {
+          "population": 3598.990458281015,
+          "age7to15": 332.2732377315159,
+          "age80to89": 313.1089830728759,
+          "age90Plus": 47.07066309849696
+        }
+      }
+    },
+    {
+      "municipality": "0512",
+      "name": "Ydre",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 3626.0,
+        "age7to15": 351.0,
+        "age80to89": 288.0,
+        "age90Plus": 50.0
+      },
+      "model": {
+        "groups": {
+          "population": 3605.653211340641,
+          "age7to15": 331.6212,
+          "age80to89": 270.3031303872611,
+          "age90Plus": 44.37812588447571
+        },
+        "cohort": {
+          "population": 3613.580518596566,
+          "age7to15": 343.0025396683923,
+          "age80to89": 293.2385848722321,
+          "age90Plus": 49.94793577237808
+        },
+        "observed": {
+          "population": 3608.710336603852,
+          "age7to15": 342.9779268683923,
+          "age80to89": 292.2720715388987,
+          "age90Plus": 50.77151824633034
+        }
+      }
+    },
+    {
+      "municipality": "0512",
+      "name": "Ydre",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 3619,
+        "age7to15": 350,
+        "age80to89": 297,
+        "age90Plus": 51
+      },
+      "model": {
+        "groups": {
+          "population": 3573.647292704693,
+          "age7to15": 326.86499552,
+          "age80to89": 272.3978623522556,
+          "age90Plus": 44.72203710260913
+        },
+        "cohort": {
+          "population": 3588.0518970716,
+          "age7to15": 333.0055863908191,
+          "age80to89": 304.139940605472,
+          "age90Plus": 48.18755238207371
+        },
+        "observed": {
+          "population": 3579.141808489183,
+          "age7to15": 333.2931602602929,
+          "age80to89": 302.384695189948,
+          "age90Plus": 50.81892481401135
+        }
+      }
+    },
+    {
+      "municipality": "0512",
+      "name": "Ydre",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 3619,
+        "age7to15": 350,
+        "age80to89": 297,
+        "age90Plus": 51
+      },
+      "model": {
+        "groups": {
+          "population": 3598.623181979695,
+          "age7to15": 348.4288,
+          "age80to89": 287.7780747970831,
+          "age90Plus": 49.96147131893805
+        },
+        "cohort": {
+          "population": 3608.759199921351,
+          "age7to15": 343.3361319499598,
+          "age80to89": 294.6161740630226,
+          "age90Plus": 50.15410678144473
+        },
+        "observed": {
+          "population": 3609.698872054683,
+          "age7to15": 342.9765637499598,
+          "age80to89": 295.0225373963559,
+          "age90Plus": 51.62123911477807
+        }
+      }
+    },
+    {
+      "municipality": "0513",
+      "name": "Kinda",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 9992.0,
+        "age7to15": 1016.0,
+        "age80to89": 688.0,
+        "age90Plus": 117.0
+      },
+      "model": {
+        "groups": {
+          "population": 10115.16681415849,
+          "age7to15": 992.1498,
+          "age80to89": 651.7536805433298,
+          "age90Plus": 132.7646386291968
+        },
+        "cohort": {
+          "population": 10114.8020734934,
+          "age7to15": 1027.004374744475,
+          "age80to89": 676.8699514606733,
+          "age90Plus": 131.2223027577783
+        },
+        "observed": {
+          "population": 10110.71063782673,
+          "age7to15": 1026.928347744475,
+          "age80to89": 680.8786147940068,
+          "age90Plus": 130.3967694244449
+        }
+      }
+    },
+    {
+      "municipality": "0513",
+      "name": "Kinda",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 9957.0,
+        "age7to15": 1024.0,
+        "age80to89": 724.0,
+        "age90Plus": 127.0
+      },
+      "model": {
+        "groups": {
+          "population": 10161.76388228586,
+          "age7to15": 996.3932531200002,
+          "age80to89": 655.3784711786498,
+          "age90Plus": 133.503021906762
+        },
+        "cohort": {
+          "population": 10161.11773259135,
+          "age7to15": 1025.676615784311,
+          "age80to89": 710.4281272489152,
+          "age90Plus": 135.8792310991341
+        },
+        "observed": {
+          "population": 10152.85953728037,
+          "age7to15": 1025.532188604717,
+          "age80to89": 716.5161747926578,
+          "age90Plus": 134.9551191635287
+        }
+      }
+    },
+    {
+      "municipality": "0513",
+      "name": "Kinda",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 9924,
+        "age7to15": 1003,
+        "age80to89": 752,
+        "age90Plus": 132
+      },
+      "model": {
+        "groups": {
+          "population": 10207.83008124062,
+          "age7to15": 1002.939113207467,
+          "age80to89": 658.8837891491585,
+          "age90Plus": 134.2170681600138
+        },
+        "cohort": {
+          "population": 10206.88540006161,
+          "age7to15": 1037.347161885032,
+          "age80to89": 728.630548545103,
+          "age90Plus": 136.7788187728913
+        },
+        "observed": {
+          "population": 10194.1729283333,
+          "age7to15": 1037.135738081724,
+          "age80to89": 738.0050350793848,
+          "age90Plus": 135.539297705556
+        }
+      }
+    },
+    {
+      "municipality": "0513",
+      "name": "Kinda",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 9957.0,
+        "age7to15": 1024.0,
+        "age80to89": 724.0,
+        "age90Plus": 127.0
+      },
+      "model": {
+        "groups": {
+          "population": 9953.222724900614,
+          "age7to15": 1014.7466,
+          "age80to89": 690.3987566070195,
+          "age90Plus": 117.4079280857868
+        },
+        "cohort": {
+          "population": 9995.842512636365,
+          "age7to15": 1010.673664389424,
+          "age80to89": 726.7799021004537,
+          "age90Plus": 118.7891248341673
+        },
+        "observed": {
+          "population": 9998.980874381425,
+          "age7to15": 1010.59383105609,
+          "age80to89": 729.8569754337866,
+          "age90Plus": 124.2048872458939
+        }
+      }
+    },
+    {
+      "municipality": "0513",
+      "name": "Kinda",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 9924,
+        "age7to15": 1003,
+        "age80to89": 752,
+        "age90Plus": 132
+      },
+      "model": {
+        "groups": {
+          "population": 9913.514221578209,
+          "age7to15": 1011.370112,
+          "age80to89": 692.5110958229244,
+          "age90Plus": 117.7671485629101
+        },
+        "cohort": {
+          "population": 9999.268090592086,
+          "age7to15": 1008.012243355509,
+          "age80to89": 750.4588718834716,
+          "age90Plus": 116.851770488061
+        },
+        "observed": {
+          "population": 10003.96258130554,
+          "age7to15": 1007.863448458958,
+          "age80to89": 753.8368927263306,
+          "age90Plus": 127.312304268267
+        }
+      }
+    },
+    {
+      "municipality": "0513",
+      "name": "Kinda",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 9924,
+        "age7to15": 1003,
+        "age80to89": 752,
+        "age90Plus": 132
+      },
+      "model": {
+        "groups": {
+          "population": 9891.019277065527,
+          "age7to15": 1031.7944,
+          "age80to89": 730.4617456536472,
+          "age90Plus": 128.1334830083055
+        },
+        "cohort": {
+          "population": 9926.86399773909,
+          "age7to15": 1024.675615616895,
+          "age80to89": 745.2599449768148,
+          "age90Plus": 127.201962523647
+        },
+        "observed": {
+          "population": 9925.009530405756,
+          "age7to15": 1024.586563283562,
+          "age80to89": 741.408418310148,
+          "age90Plus": 130.8991091903137
+        }
+      }
+    },
+    {
+      "municipality": "0560",
+      "name": "Boxholm",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 5523.0,
+        "age7to15": 566.0,
+        "age80to89": 343.0,
+        "age90Plus": 62.0
+      },
+      "model": {
+        "groups": {
+          "population": 5525.486271399594,
+          "age7to15": 560.815,
+          "age80to89": 307.0947664964678,
+          "age90Plus": 71.25401444852683
+        },
+        "cohort": {
+          "population": 5507.373957155877,
+          "age7to15": 557.6664613119444,
+          "age80to89": 340.8649132547967,
+          "age90Plus": 66.70617589559468
+        },
+        "observed": {
+          "population": 5505.333170455877,
+          "age7to15": 557.6265572786111,
+          "age80to89": 342.4177665881301,
+          "age90Plus": 65.79706256226135
+        }
+      }
+    },
+    {
+      "municipality": "0560",
+      "name": "Boxholm",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 5517.0,
+        "age7to15": 573.0,
+        "age80to89": 363.0,
+        "age90Plus": 56.0
+      },
+      "model": {
+        "groups": {
+          "population": 5552.777243219798,
+          "age7to15": 575.02405376,
+          "age80to89": 308.1524556251416,
+          "age90Plus": 71.49942597838252
+        },
+        "cohort": {
+          "population": 5515.878578588653,
+          "age7to15": 561.6677961986676,
+          "age80to89": 366.9554543690064,
+          "age90Plus": 65.36770378628043
+        },
+        "observed": {
+          "population": 5511.645946083856,
+          "age7to15": 561.5902243611771,
+          "age80to89": 369.7743717467434,
+          "age90Plus": 62.84771001871484
+        }
+      }
+    },
+    {
+      "municipality": "0560",
+      "name": "Boxholm",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 5451,
+        "age7to15": 564,
+        "age80to89": 376,
+        "age90Plus": 49
+      },
+      "model": {
+        "groups": {
+          "population": 5579.890617099198,
+          "age7to15": 587.7937746047645,
+          "age80to89": 309.1771472889199,
+          "age90Plus": 71.73718123370364
+        },
+        "cohort": {
+          "population": 5522.618563927832,
+          "age7to15": 566.0014011142264,
+          "age80to89": 390.7120755988079,
+          "age90Plus": 65.54909791301033
+        },
+        "observed": {
+          "population": 5516.318413044428,
+          "age7to15": 565.5530702486145,
+          "age80to89": 394.2986652977472,
+          "age90Plus": 61.5450803609276
+        }
+      }
+    },
+    {
+      "municipality": "0560",
+      "name": "Boxholm",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 5517.0,
+        "age7to15": 573.0,
+        "age80to89": 363.0,
+        "age90Plus": 56.0
+      },
+      "model": {
+        "groups": {
+          "population": 5522.100939130435,
+          "age7to15": 577.9982,
+          "age80to89": 343.5264623556783,
+          "age90Plus": 62.09516229169697
+        },
+        "cohort": {
+          "population": 5548.51776389931,
+          "age7to15": 579.0014331792185,
+          "age80to89": 367.3431617187377,
+          "age90Plus": 61.57616545273851
+        },
+        "observed": {
+          "population": 5550.466551565976,
+          "age7to15": 579.2916665125517,
+          "age80to89": 369.7260883854045,
+          "age90Plus": 61.24198211940521
+        }
+      }
+    },
+    {
+      "municipality": "0560",
+      "name": "Boxholm",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 5451,
+        "age7to15": 564,
+        "age80to89": 376,
+        "age90Plus": 49
+      },
+      "model": {
+        "groups": {
+          "population": 5520.963836647641,
+          "age7to15": 587.52031424,
+          "age80to89": 343.9777623367634,
+          "age90Plus": 62.17673838157241
+        },
+        "cohort": {
+          "population": 5573.032816672032,
+          "age7to15": 587.3345920500179,
+          "age80to89": 391.1817660503878,
+          "age90Plus": 59.6055753113466
+        },
+        "observed": {
+          "population": 5577.142490386348,
+          "age7to15": 587.9197652876594,
+          "age80to89": 395.5063728050725,
+          "age90Plus": 58.63673276341925
+        }
+      }
+    },
+    {
+      "municipality": "0560",
+      "name": "Boxholm",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 5451,
+        "age7to15": 564,
+        "age80to89": 376,
+        "age90Plus": 49
+      },
+      "model": {
+        "groups": {
+          "population": 5523.290548993964,
+          "age7to15": 581.9124,
+          "age80to89": 364.4622859723735,
+          "age90Plus": 56.22558681667469
+        },
+        "cohort": {
+          "population": 5523.546152119407,
+          "age7to15": 580.3357874134002,
+          "age80to89": 386.5751683677553,
+          "age90Plus": 50.25112291118999
+        },
+        "observed": {
+          "population": 5530.880330452739,
+          "age7to15": 580.9515034134002,
+          "age80to89": 389.1037517010886,
+          "age90Plus": 53.01363291118999
+        }
+      }
+    },
+    {
+      "municipality": "0561",
+      "name": "Åtvidaberg",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 11460.0,
+        "age7to15": 1147.0,
+        "age80to89": 784.0,
+        "age90Plus": 135.0
+      },
+      "model": {
+        "groups": {
+          "population": 11534.90954061178,
+          "age7to15": 1126.7376,
+          "age80to89": 744.640641241113,
+          "age90Plus": 139.4946753807476
+        },
+        "cohort": {
+          "population": 11514.66488753662,
+          "age7to15": 1148.006437378839,
+          "age80to89": 769.5318410997527,
+          "age90Plus": 136.4109067367009
+        },
+        "observed": {
+          "population": 11512.57997220329,
+          "age7to15": 1146.918472378839,
+          "age80to89": 771.5983410997526,
+          "age90Plus": 138.7623567367008
+        }
+      }
+    },
+    {
+      "municipality": "0561",
+      "name": "Åtvidaberg",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 11467.0,
+        "age7to15": 1145.0,
+        "age80to89": 841.0,
+        "age90Plus": 143.0
+      },
+      "model": {
+        "groups": {
+          "population": 11563.64098007474,
+          "age7to15": 1124.6442976,
+          "age80to89": 747.2703898119826,
+          "age90Plus": 139.9873102208431
+        },
+        "cohort": {
+          "population": 11522.14542580889,
+          "age7to15": 1131.351342452999,
+          "age80to89": 815.8322589865909,
+          "age90Plus": 136.6721549222106
+        },
+        "observed": {
+          "population": 11518.13651972761,
+          "age7to15": 1129.183642358012,
+          "age80to89": 820.8649708393208,
+          "age90Plus": 141.6172938942094
+        }
+      }
+    },
+    {
+      "municipality": "0561",
+      "name": "Åtvidaberg",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 11490,
+        "age7to15": 1179,
+        "age80to89": 852,
+        "age90Plus": 152
+      },
+      "model": {
+        "groups": {
+          "population": 11592.18966503992,
+          "age7to15": 1122.763341716551,
+          "age80to89": 749.8874819795707,
+          "age90Plus": 140.4775741174668
+        },
+        "cohort": {
+          "population": 11527.96307218781,
+          "age7to15": 1148.024754100661,
+          "age80to89": 849.0763310782422,
+          "age90Plus": 140.5201781222892
+        },
+        "observed": {
+          "population": 11521.27114916975,
+          "age7to15": 1145.445430377277,
+          "age80to89": 854.3194572990617,
+          "age90Plus": 149.6750311657904
+        }
+      }
+    },
+    {
+      "municipality": "0561",
+      "name": "Åtvidaberg",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 11467.0,
+        "age7to15": 1145.0,
+        "age80to89": 841.0,
+        "age90Plus": 143.0
+      },
+      "model": {
+        "groups": {
+          "population": 11459.858562132,
+          "age7to15": 1151.2692,
+          "age80to89": 786.1634220354207,
+          "age90Plus": 135.3725280290584
+        },
+        "cohort": {
+          "population": 11465.38970211195,
+          "age7to15": 1125.343128366831,
+          "age80to89": 833.7102973899049,
+          "age90Plus": 132.9831362465034
+        },
+        "observed": {
+          "population": 11460.63201944528,
+          "age7to15": 1123.918795366831,
+          "age80to89": 834.6176773899049,
+          "age90Plus": 137.3245595798367
+        }
+      }
+    },
+    {
+      "municipality": "0561",
+      "name": "Åtvidaberg",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 11490,
+        "age7to15": 1179,
+        "age80to89": 852,
+        "age90Plus": 152
+      },
+      "model": {
+        "groups": {
+          "population": 11459.12992806957,
+          "age7to15": 1154.89104832,
+          "age80to89": 788.1531814636743,
+          "age90Plus": 135.7151524204031
+        },
+        "cohort": {
+          "population": 11469.07753505633,
+          "age7to15": 1139.348678981654,
+          "age80to89": 864.7996000000297,
+          "age90Plus": 139.9339186674022
+        },
+        "observed": {
+          "population": 11458.58825970517,
+          "age7to15": 1136.51281658358,
+          "age80to89": 865.3807696768057,
+          "age90Plus": 148.635274180889
+        }
+      }
+    },
+    {
+      "municipality": "0561",
+      "name": "Åtvidaberg",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 11490,
+        "age7to15": 1179,
+        "age80to89": 852,
+        "age90Plus": 152
+      },
+      "model": {
+        "groups": {
+          "population": 11438.81254575943,
+          "age7to15": 1148.7944,
+          "age80to89": 844.4269179083143,
+          "age90Plus": 143.5826982888097
+        },
+        "cohort": {
+          "population": 11470.83711699197,
+          "age7to15": 1169.676236477143,
+          "age80to89": 871.9393153446022,
+          "age90Plus": 153.8225712960066
+        },
+        "observed": {
+          "population": 11473.9732423253,
+          "age7to15": 1168.910333477143,
+          "age80to89": 873.3272353446022,
+          "age90Plus": 154.9479612960066
+        }
+      }
+    },
+    {
+      "municipality": "0562",
+      "name": "Finspång",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 21694.0,
+        "age7to15": 2382.0,
+        "age80to89": 1369.0,
+        "age90Plus": 251.0
+      },
+      "model": {
+        "groups": {
+          "population": 21968.09669040682,
+          "age7to15": 2386.9406,
+          "age80to89": 1266.544718257982,
+          "age90Plus": 259.7269058027058
+        },
+        "cohort": {
+          "population": 21917.49291582884,
+          "age7to15": 2388.005034805973,
+          "age80to89": 1356.771464657663,
+          "age90Plus": 252.2899622895144
+        },
+        "observed": {
+          "population": 21905.3005084955,
+          "age7to15": 2385.828929805973,
+          "age80to89": 1357.91652132433,
+          "age90Plus": 253.0691089561811
+        }
+      }
+    },
+    {
+      "municipality": "0562",
+      "name": "Finspång",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 21623.0,
+        "age7to15": 2366.0,
+        "age80to89": 1433.0,
+        "age90Plus": 251.0
+      },
+      "model": {
+        "groups": {
+          "population": 22033.15638083516,
+          "age7to15": 2414.74028928,
+          "age80to89": 1270.15516594835,
+          "age90Plus": 260.4672905626466
+        },
+        "cohort": {
+          "population": 21927.35723925379,
+          "age7to15": 2402.345135591133,
+          "age80to89": 1429.922092193459,
+          "age90Plus": 252.2051423122344
+        },
+        "observed": {
+          "population": 21903.02256165702,
+          "age7to15": 2398.007744334245,
+          "age80to89": 1430.508327230772,
+          "age90Plus": 254.2072106865886
+        }
+      }
+    },
+    {
+      "municipality": "0562",
+      "name": "Finspång",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 21502,
+        "age7to15": 2355,
+        "age80to89": 1484,
+        "age90Plus": 260
+      },
+      "model": {
+        "groups": {
+          "population": 22098.19359752115,
+          "age7to15": 2434.475305571623,
+          "age80to89": 1273.838688393502,
+          "age90Plus": 261.2226605652549
+        },
+        "cohort": {
+          "population": 21932.60714388507,
+          "age7to15": 2399.692079291791,
+          "age80to89": 1493.690800891939,
+          "age90Plus": 262.5004522269427
+        },
+        "observed": {
+          "population": 21895.31752154433,
+          "age7to15": 2392.859373026602,
+          "age80to89": 1490.423035617442,
+          "age90Plus": 266.2657008151165
+        }
+      }
+    },
+    {
+      "municipality": "0562",
+      "name": "Finspång",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 21623.0,
+        "age7to15": 2366.0,
+        "age80to89": 1433.0,
+        "age90Plus": 251.0
+      },
+      "model": {
+        "groups": {
+          "population": 21584.75119547775,
+          "age7to15": 2410.255,
+          "age80to89": 1371.957852682174,
+          "age90Plus": 251.5423090016259
+        },
+        "cohort": {
+          "population": 21680.20176408254,
+          "age7to15": 2403.678092879899,
+          "age80to89": 1434.614899536298,
+          "age90Plus": 248.803365175921
+        },
+        "observed": {
+          "population": 21670.16447974921,
+          "age7to15": 2401.495778546567,
+          "age80to89": 1437.509859536298,
+          "age90Plus": 253.7830385092544
+        }
+      }
+    },
+    {
+      "municipality": "0562",
+      "name": "Finspång",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 21502,
+        "age7to15": 2355,
+        "age80to89": 1484,
+        "age90Plus": 260
+      },
+      "model": {
+        "groups": {
+          "population": 21474.00778060438,
+          "age7to15": 2424.64393536,
+          "age80to89": 1374.341174992642,
+          "age90Plus": 251.9792804405794
+        },
+        "cohort": {
+          "population": 21662.25794573043,
+          "age7to15": 2413.352140839204,
+          "age80to89": 1492.517160957187,
+          "age90Plus": 260.2986358296677
+        },
+        "observed": {
+          "population": 21640.33057000773,
+          "age7to15": 2409.009442512936,
+          "age80to89": 1495.962550515659,
+          "age90Plus": 270.6981396026605
+        }
+      }
+    },
+    {
+      "municipality": "0562",
+      "name": "Finspång",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 21502,
+        "age7to15": 2355,
+        "age80to89": 1484,
+        "age90Plus": 260
+      },
+      "model": {
+        "groups": {
+          "population": 21477.74585539953,
+          "age7to15": 2361.306799999999,
+          "age80to89": 1439.633449019301,
+          "age90Plus": 252.161895117826
+        },
+        "cohort": {
+          "population": 21543.54530336589,
+          "age7to15": 2366.350103689961,
+          "age80to89": 1490.075440644256,
+          "age90Plus": 263.1746797697104
+        },
+        "observed": {
+          "population": 21542.05660269922,
+          "age7to15": 2366.140054023294,
+          "age80to89": 1492.213460644256,
+          "age90Plus": 268.6528797697104
+        }
+      }
+    },
+    {
+      "municipality": "0563",
+      "name": "Valdemarsvik",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 7541.0,
+        "age7to15": 640.0,
+        "age80to89": 556.0,
+        "age90Plus": 105.0
+      },
+      "model": {
+        "groups": {
+          "population": 7571.084313920001,
+          "age7to15": 632.0434000000001,
+          "age80to89": 525.8779986920641,
+          "age90Plus": 116.638332405888
+        },
+        "cohort": {
+          "population": 7552.859794455902,
+          "age7to15": 617.6750386870633,
+          "age80to89": 551.7091933877981,
+          "age90Plus": 118.2991789029207
+        },
+        "observed": {
+          "population": 7545.964704455902,
+          "age7to15": 616.9540026870633,
+          "age80to89": 550.7396200544648,
+          "age90Plus": 115.1696922362541
+        }
+      }
+    },
+    {
+      "municipality": "0563",
+      "name": "Valdemarsvik",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 7525.0,
+        "age7to15": 651.0,
+        "age80to89": 604.0,
+        "age90Plus": 104.0
+      },
+      "model": {
+        "groups": {
+          "population": 7511.221256525369,
+          "age7to15": 613.2391692800002,
+          "age80to89": 528.4816392239069,
+          "age90Plus": 117.2158129062585
+        },
+        "cohort": {
+          "population": 7473.019206964562,
+          "age7to15": 606.3498425503851,
+          "age80to89": 611.17300964857,
+          "age90Plus": 116.521398906952
+        },
+        "observed": {
+          "population": 7460.024734455109,
+          "age7to15": 604.5807921275963,
+          "age80to89": 609.6450439086603,
+          "age90Plus": 110.6357662813183
+        }
+      }
+    },
+    {
+      "municipality": "0563",
+      "name": "Valdemarsvik",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 7526,
+        "age7to15": 648,
+        "age80to89": 663,
+        "age90Plus": 102
+      },
+      "model": {
+        "groups": {
+          "population": 7450.475392850964,
+          "age7to15": 594.0192008288228,
+          "age80to89": 530.8269802845347,
+          "age90Plus": 117.7360032753461
+        },
+        "cohort": {
+          "population": 7390.587117346867,
+          "age7to15": 589.358627681306,
+          "age80to89": 678.0410986478798,
+          "age90Plus": 116.266025534533
+        },
+        "observed": {
+          "population": 7372.106330946289,
+          "age7to15": 586.5427730065109,
+          "age80to89": 674.9515651685053,
+          "age90Plus": 108.4397896894953
+        }
+      }
+    },
+    {
+      "municipality": "0563",
+      "name": "Valdemarsvik",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 7525.0,
+        "age7to15": 651.0,
+        "age80to89": 604.0,
+        "age90Plus": 104.0
+      },
+      "model": {
+        "groups": {
+          "population": 7486.282742719228,
+          "age7to15": 627.4628,
+          "age80to89": 556.5050279774299,
+          "age90Plus": 105.0953739885434
+        },
+        "cohort": {
+          "population": 7479.625373526938,
+          "age7to15": 642.3398934039275,
+          "age80to89": 619.8712721429551,
+          "age90Plus": 100.0026711574402
+        },
+        "observed": {
+          "population": 7475.264057526938,
+          "age7to15": 642.2853567372608,
+          "age80to89": 613.2402154762885,
+          "age90Plus": 100.7537578241069
+        }
+      }
+    },
+    {
+      "municipality": "0563",
+      "name": "Valdemarsvik",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 7526,
+        "age7to15": 648,
+        "age80to89": 663,
+        "age90Plus": 102
+      },
+      "model": {
+        "groups": {
+          "population": 7430.909632331122,
+          "age7to15": 615.4535689600001,
+          "age80to89": 556.7997124400844,
+          "age90Plus": 105.1510248313109
+        },
+        "cohort": {
+          "population": 7415.776527378694,
+          "age7to15": 635.3439718162432,
+          "age80to89": 687.0424254991553,
+          "age90Plus": 98.2575844430534
+        },
+        "observed": {
+          "population": 7407.697834787357,
+          "age7to15": 634.9102423124822,
+          "age80to89": 675.4841959912794,
+          "age90Plus": 99.30212028344096
+        }
+      }
+    },
+    {
+      "municipality": "0563",
+      "name": "Valdemarsvik",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 7526,
+        "age7to15": 648,
+        "age80to89": 663,
+        "age90Plus": 102
+      },
+      "model": {
+        "groups": {
+          "population": 7468.019979591018,
+          "age7to15": 646.2632,
+          "age80to89": 603.1269074871592,
+          "age90Plus": 103.849666189842
+        },
+        "cohort": {
+          "population": 7484.931496746753,
+          "age7to15": 661.3391457346343,
+          "age80to89": 671.9502960715206,
+          "age90Plus": 100.0511982327401
+        },
+        "observed": {
+          "population": 7486.606568750831,
+          "age7to15": 661.2796810679674,
+          "age80to89": 667.1554294048539,
+          "age90Plus": 101.799291903485
+        }
+      }
+    },
+    {
+      "municipality": "0580",
+      "name": "Linköping",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 167404.0,
+        "age7to15": 17484.0,
+        "age80to89": 7370.0,
+        "age90Plus": 1613.0
+      },
+      "model": {
+        "groups": {
+          "population": 167562.68190827,
+          "age7to15": 17593.8934,
+          "age80to89": 7187.499241403867,
+          "age90Plus": 1601.501734793133
+        },
+        "cohort": {
+          "population": 167950.0253568554,
+          "age7to15": 17627.08044175016,
+          "age80to89": 7337.251072456676,
+          "age90Plus": 1612.088555672739
+        },
+        "observed": {
+          "population": 167886.7968368555,
+          "age7to15": 17619.55240841684,
+          "age80to89": 7341.626119123343,
+          "age90Plus": 1633.740535672739
+        }
+      }
+    },
+    {
+      "municipality": "0580",
+      "name": "Linköping",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 168035.0,
+        "age7to15": 17302.0,
+        "age80to89": 7828.0,
+        "age90Plus": 1654.0
+      },
+      "model": {
+        "groups": {
+          "population": 168446.4516095262,
+          "age7to15": 17618.24827488,
+          "age80to89": 7283.648902194118,
+          "age90Plus": 1622.925576853294
+        },
+        "cohort": {
+          "population": 169215.9751943492,
+          "age7to15": 17618.84505239073,
+          "age80to89": 7739.970916874461,
+          "age90Plus": 1598.677674180377
+        },
+        "observed": {
+          "population": 169082.3353516738,
+          "age7to15": 17604.23034782376,
+          "age80to89": 7736.202412872347,
+          "age90Plus": 1645.768801643496
+        }
+      }
+    },
+    {
+      "municipality": "0580",
+      "name": "Linköping",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 168714,
+        "age7to15": 17035,
+        "age80to89": 8168,
+        "age90Plus": 1742
+      },
+      "model": {
+        "groups": {
+          "population": 169324.6611320805,
+          "age7to15": 17605.8420678162,
+          "age80to89": 7379.576498695765,
+          "age90Plus": 1644.299939069145
+        },
+        "cohort": {
+          "population": 170468.6881816823,
+          "age7to15": 17489.97732711832,
+          "age80to89": 8053.514449956346,
+          "age90Plus": 1665.59298951696
+        },
+        "observed": {
+          "population": 170258.1478392537,
+          "age7to15": 17466.95456457726,
+          "age80to89": 8033.502099130433,
+          "age90Plus": 1737.413557788008
+        }
+      }
+    },
+    {
+      "municipality": "0580",
+      "name": "Linköping",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 168035.0,
+        "age7to15": 17302.0,
+        "age80to89": 7828.0,
+        "age90Plus": 1654.0
+      },
+      "model": {
+        "groups": {
+          "population": 168286.9724144077,
+          "age7to15": 17429.0402,
+          "age80to89": 7486.344157240016,
+          "age90Plus": 1638.463110668677
+        },
+        "cohort": {
+          "population": 168391.5065505889,
+          "age7to15": 17413.44348820395,
+          "age80to89": 7774.143681323316,
+          "age90Plus": 1600.323827846001
+        },
+        "observed": {
+          "population": 168317.1410472556,
+          "age7to15": 17406.53515487061,
+          "age80to89": 7766.413181323317,
+          "age90Plus": 1627.149461179334
+        }
+      }
+    },
+    {
+      "municipality": "0580",
+      "name": "Linköping",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 168714,
+        "age7to15": 17035,
+        "age80to89": 8168,
+        "age90Plus": 1742
+      },
+      "model": {
+        "groups": {
+          "population": 169162.7176692803,
+          "age7to15": 17335.26904896,
+          "age80to89": 7602.322453230327,
+          "age90Plus": 1663.846148854887
+        },
+        "cohort": {
+          "population": 169362.1124219761,
+          "age7to15": 17243.20099178482,
+          "age80to89": 8094.227933407095,
+          "age90Plus": 1673.764386606403
+        },
+        "observed": {
+          "population": 169206.3585676023,
+          "age7to15": 17230.21762699972,
+          "age80to89": 8068.531518790673,
+          "age90Plus": 1729.538910513087
+        }
+      }
+    },
+    {
+      "municipality": "0580",
+      "name": "Linköping",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 168714,
+        "age7to15": 17035,
+        "age80to89": 8168,
+        "age90Plus": 1742
+      },
+      "model": {
+        "groups": {
+          "population": 168712.4703026313,
+          "age7to15": 17144.554,
+          "age80to89": 7957.784010643326,
+          "age90Plus": 1681.422426367407
+        },
+        "cohort": {
+          "population": 168927.3947725978,
+          "age7to15": 17057.8172683005,
+          "age80to89": 8147.09872300076,
+          "age90Plus": 1745.319246334898
+        },
+        "observed": {
+          "population": 168881.5351359312,
+          "age7to15": 17054.7778883005,
+          "age80to89": 8133.972089667429,
+          "age90Plus": 1756.806913001564
+        }
+      }
+    },
+    {
+      "municipality": "0581",
+      "name": "Norrköping",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 145163.0,
+        "age7to15": 15987.0,
+        "age80to89": 6578.0,
+        "age90Plus": 1315.0
+      },
+      "model": {
+        "groups": {
+          "population": 145842.369419063,
+          "age7to15": 16104.8114,
+          "age80to89": 6350.877243029532,
+          "age90Plus": 1311.989430454097
+        },
+        "cohort": {
+          "population": 145781.2810115577,
+          "age7to15": 16165.74634808576,
+          "age80to89": 6585.06814047581,
+          "age90Plus": 1294.190733560839
+        },
+        "observed": {
+          "population": 145760.0443682244,
+          "age7to15": 16160.45241475243,
+          "age80to89": 6583.834063809141,
+          "age90Plus": 1268.754866894172
+        }
+      }
+    },
+    {
+      "municipality": "0581",
+      "name": "Norrköping",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 144980.0,
+        "age7to15": 15782.0,
+        "age80to89": 7025.0,
+        "age90Plus": 1335.0
+      },
+      "model": {
+        "groups": {
+          "population": 146560.0405286657,
+          "age7to15": 16128.71806176,
+          "age80to89": 6413.255610855521,
+          "age90Plus": 1324.875801288378
+        },
+        "cohort": {
+          "population": 146433.0275457953,
+          "age7to15": 16027.20029451243,
+          "age80to89": 6948.545123819886,
+          "age90Plus": 1313.07673765036
+        },
+        "observed": {
+          "population": 146397.9756538708,
+          "age7to15": 16016.40072475544,
+          "age80to89": 6952.021381288977,
+          "age90Plus": 1269.752499393234
+        }
+      }
+    },
+    {
+      "municipality": "0581",
+      "name": "Norrköping",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 144904,
+        "age7to15": 15587,
+        "age80to89": 7471,
+        "age90Plus": 1373
+      },
+      "model": {
+        "groups": {
+          "population": 147273.4609518346,
+          "age7to15": 16132.13190608699,
+          "age80to89": 6475.263328146249,
+          "age90Plus": 1337.6856016638
+        },
+        "cohort": {
+          "population": 147072.6674101639,
+          "age7to15": 15916.99832585699,
+          "age80to89": 7329.965250807812,
+          "age90Plus": 1344.156623593331
+        },
+        "observed": {
+          "population": 147028.0633062117,
+          "age7to15": 15900.70943653843,
+          "age80to89": 7344.224197545434,
+          "age90Plus": 1288.678584177265
+        }
+      }
+    },
+    {
+      "municipality": "0581",
+      "name": "Norrköping",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 144980.0,
+        "age7to15": 15782.0,
+        "age80to89": 7025.0,
+        "age90Plus": 1335.0
+      },
+      "model": {
+        "groups": {
+          "population": 145442.0278829925,
+          "age7to15": 15900.6404,
+          "age80to89": 6647.377855092625,
+          "age90Plus": 1328.869242846884
+        },
+        "cohort": {
+          "population": 145704.3809771159,
+          "age7to15": 15794.7956609533,
+          "age80to89": 6949.533517120784,
+          "age90Plus": 1327.40953757115
+        },
+        "observed": {
+          "population": 145684.5303504493,
+          "age7to15": 15792.7914709533,
+          "age80to89": 6957.658117120785,
+          "age90Plus": 1298.333530904483
+        }
+      }
+    },
+    {
+      "municipality": "0581",
+      "name": "Norrköping",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 144904,
+        "age7to15": 15587,
+        "age80to89": 7471,
+        "age90Plus": 1373
+      },
+      "model": {
+        "groups": {
+          "population": 145713.786788066,
+          "age7to15": 15777.75787392,
+          "age80to89": 6715.5650620831,
+          "age90Plus": 1342.500464676084
+        },
+        "cohort": {
+          "population": 146235.3606414259,
+          "age7to15": 15610.899314105,
+          "age80to89": 7334.416277800044,
+          "age90Plus": 1355.030206394895
+        },
+        "observed": {
+          "population": 146203.8812876581,
+          "age7to15": 15606.07441668616,
+          "age80to89": 7353.823999580233,
+          "age90Plus": 1308.52332544894
+        }
+      }
+    },
+    {
+      "municipality": "0581",
+      "name": "Norrköping",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 144904,
+        "age7to15": 15587,
+        "age80to89": 7471,
+        "age90Plus": 1373
+      },
+      "model": {
+        "groups": {
+          "population": 144880.7667430569,
+          "age7to15": 15591.4982,
+          "age80to89": 7108.19912157759,
+          "age90Plus": 1350.810793922574
+        },
+        "cohort": {
+          "population": 145162.3176828977,
+          "age7to15": 15547.50039238075,
+          "age80to89": 7432.813040286966,
+          "age90Plus": 1366.459896401759
+        },
+        "observed": {
+          "population": 145148.8318862311,
+          "age7to15": 15549.00122571408,
+          "age80to89": 7430.841530286964,
+          "age90Plus": 1331.315396401759
+        }
+      }
+    },
+    {
+      "municipality": "0582",
+      "name": "Söderköping",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 14867.0,
+        "age7to15": 1727.0,
+        "age80to89": 880.0,
+        "age90Plus": 140.0
+      },
+      "model": {
+        "groups": {
+          "population": 14921.25425517062,
+          "age7to15": 1746.8216,
+          "age80to89": 817.946825099551,
+          "age90Plus": 147.5152856211877
+        },
+        "cohort": {
+          "population": 14916.52011375996,
+          "age7to15": 1747.676186870987,
+          "age80to89": 872.6101411491852,
+          "age90Plus": 139.7298564715838
+        },
+        "observed": {
+          "population": 14919.11586575996,
+          "age7to15": 1747.546825537654,
+          "age80to89": 870.7551878158521,
+          "age90Plus": 142.9593498049171
+        }
+      }
+    },
+    {
+      "municipality": "0582",
+      "name": "Söderköping",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 14789.0,
+        "age7to15": 1758.0,
+        "age80to89": 967.0,
+        "age90Plus": 131.0
+      },
+      "model": {
+        "groups": {
+          "population": 15006.41631029129,
+          "age7to15": 1766.282136,
+          "age80to89": 831.4832908457197,
+          "age90Plus": 149.9565636475489
+        },
+        "cohort": {
+          "population": 14996.18082100792,
+          "age7to15": 1804.344108445969,
+          "age80to89": 949.8624622279473,
+          "age90Plus": 135.0703781238702
+        },
+        "observed": {
+          "population": 15000.5836801673,
+          "age7to15": 1804.430798491276,
+          "age80to89": 942.9460042241819,
+          "age90Plus": 141.4239923590972
+        }
+      }
+    },
+    {
+      "municipality": "0582",
+      "name": "Söderköping",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 14741,
+        "age7to15": 1733,
+        "age80to89": 1063,
+        "age90Plus": 146
+      },
+      "model": {
+        "groups": {
+          "population": 15089.54089644506,
+          "age7to15": 1781.383070754483,
+          "age80to89": 844.6194550279862,
+          "age90Plus": 152.325647983903
+        },
+        "cohort": {
+          "population": 15072.29337257683,
+          "age7to15": 1832.345187082966,
+          "age80to89": 1051.000577241763,
+          "age90Plus": 133.0172362727568
+        },
+        "observed": {
+          "population": 15077.70745618404,
+          "age7to15": 1832.649247054568,
+          "age80to89": 1038.361860761004,
+          "age90Plus": 141.8993274060208
+        }
+      }
+    },
+    {
+      "municipality": "0582",
+      "name": "Söderköping",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 14789.0,
+        "age7to15": 1758.0,
+        "age80to89": 967.0,
+        "age90Plus": 131.0
+      },
+      "model": {
+        "groups": {
+          "population": 14957.20702634228,
+          "age7to15": 1736.6034,
+          "age80to89": 891.9095589006732,
+          "age90Plus": 141.8947025523798
+        },
+        "cohort": {
+          "population": 14955.21620844285,
+          "age7to15": 1775.339848306713,
+          "age80to89": 964.005389148223,
+          "age90Plus": 133.8601933559299
+        },
+        "observed": {
+          "population": 14946.89591222615,
+          "age7to15": 1775.206594640046,
+          "age80to89": 960.1091158148895,
+          "age90Plus": 136.4325325058937
+        }
+      }
+    },
+    {
+      "municipality": "0582",
+      "name": "Söderköping",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 14741,
+        "age7to15": 1733,
+        "age80to89": 1063,
+        "age90Plus": 146
+      },
+      "model": {
+        "groups": {
+          "population": 15046.2517435135,
+          "age7to15": 1742.68234208,
+          "age80to89": 903.646377326961,
+          "age90Plus": 143.7619236656529
+        },
+        "cohort": {
+          "population": 15039.80991719792,
+          "age7to15": 1787.007799649026,
+          "age80to89": 1069.114622649906,
+          "age90Plus": 132.0517164676304
+        },
+        "observed": {
+          "population": 15023.65278541213,
+          "age7to15": 1787.09064457159,
+          "age80to89": 1056.879830754144,
+          "age90Plus": 138.5031605480867
+        }
+      }
+    },
+    {
+      "municipality": "0582",
+      "name": "Söderköping",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 14741,
+        "age7to15": 1733,
+        "age80to89": 1063,
+        "age90Plus": 146
+      },
+      "model": {
+        "groups": {
+          "population": 14768.42722633803,
+          "age7to15": 1759.7084,
+          "age80to89": 974.4313086604029,
+          "age90Plus": 132.0067233035292
+        },
+        "cohort": {
+          "population": 14835.78499512303,
+          "age7to15": 1754.34384431939,
+          "age80to89": 1064.809088148987,
+          "age90Plus": 134.2666592421329
+        },
+        "observed": {
+          "population": 14828.5831087897,
+          "age7to15": 1754.194777652723,
+          "age80to89": 1060.482528148987,
+          "age90Plus": 139.1069592421329
+        }
+      }
+    },
+    {
+      "municipality": "0583",
+      "name": "Motala",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 43728.0,
+        "age7to15": 4654.0,
+        "age80to89": 2536.0,
+        "age90Plus": 539.0
+      },
+      "model": {
+        "groups": {
+          "population": 43732.68014143709,
+          "age7to15": 4688.9464,
+          "age80to89": 2413.738646635588,
+          "age90Plus": 546.4112266008324
+        },
+        "cohort": {
+          "population": 43753.56560246145,
+          "age7to15": 4658.691960365718,
+          "age80to89": 2518.218522131147,
+          "age90Plus": 544.5415297054936
+        },
+        "observed": {
+          "population": 43730.32861912812,
+          "age7to15": 4656.347687032385,
+          "age80to89": 2511.249712131146,
+          "age90Plus": 536.1787063721605
+        }
+      }
+    },
+    {
+      "municipality": "0583",
+      "name": "Motala",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 43505.0,
+        "age7to15": 4671.0,
+        "age80to89": 2722.0,
+        "age90Plus": 543.0
+      },
+      "model": {
+        "groups": {
+          "population": 43731.28110942414,
+          "age7to15": 4697.48821472,
+          "age80to89": 2444.965543218017,
+          "age90Plus": 553.4802300690933
+        },
+        "cohort": {
+          "population": 43768.86621053798,
+          "age7to15": 4693.717617786689,
+          "age80to89": 2680.48262315751,
+          "age90Plus": 546.4636925898603
+        },
+        "observed": {
+          "population": 43725.07068310565,
+          "age7to15": 4688.731410793899,
+          "age80to89": 2669.952901135726,
+          "age90Plus": 526.5820063720867
+        }
+      }
+    },
+    {
+      "municipality": "0583",
+      "name": "Motala",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 43131,
+        "age7to15": 4629,
+        "age80to89": 2821,
+        "age90Plus": 578
+      },
+      "model": {
+        "groups": {
+          "population": 43724.06520558268,
+          "age7to15": 4693.246875049836,
+          "age80to89": 2474.744587022205,
+          "age90Plus": 560.2214751805833
+        },
+        "cohort": {
+          "population": 43771.38594040274,
+          "age7to15": 4709.739191008457,
+          "age80to89": 2790.467984397761,
+          "age90Plus": 577.2422204161983
+        },
+        "observed": {
+          "population": 43709.19578865089,
+          "age7to15": 4701.116352980643,
+          "age80to89": 2774.927127432812,
+          "age90Plus": 547.7195762742717
+        }
+      }
+    },
+    {
+      "municipality": "0583",
+      "name": "Motala",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 43505.0,
+        "age7to15": 4671.0,
+        "age80to89": 2722.0,
+        "age90Plus": 543.0
+      },
+      "model": {
+        "groups": {
+          "population": 43754.27570457586,
+          "age7to15": 4645.3958,
+          "age80to89": 2582.244419363039,
+          "age90Plus": 548.8287626327594
+        },
+        "cohort": {
+          "population": 43760.00492738671,
+          "age7to15": 4711.696615116442,
+          "age80to89": 2702.187817172993,
+          "age90Plus": 535.3074453532482
+        },
+        "observed": {
+          "population": 43743.59501738672,
+          "age7to15": 4708.678525116442,
+          "age80to89": 2692.080917172993,
+          "age90Plus": 531.1698020199149
+        }
+      }
+    },
+    {
+      "municipality": "0583",
+      "name": "Motala",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 43131,
+        "age7to15": 4629,
+        "age80to89": 2821,
+        "age90Plus": 578
+      },
+      "model": {
+        "groups": {
+          "population": 43771.85066346428,
+          "age7to15": 4628.75832736,
+          "age80to89": 2626.262230531856,
+          "age90Plus": 558.1842832242392
+        },
+        "cohort": {
+          "population": 43779.26195524858,
+          "age7to15": 4723.710020152751,
+          "age80to89": 2822.809995124659,
+          "age90Plus": 561.7571810170311
+        },
+        "observed": {
+          "population": 43748.39480683344,
+          "age7to15": 4718.057263857298,
+          "age80to89": 2805.221356351957,
+          "age90Plus": 552.3708176985903
+        }
+      }
+    },
+    {
+      "municipality": "0583",
+      "name": "Motala",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 43131,
+        "age7to15": 4629,
+        "age80to89": 2821,
+        "age90Plus": 578
+      },
+      "model": {
+        "groups": {
+          "population": 43363.11100568525,
+          "age7to15": 4640.1074,
+          "age80to89": 2763.077231683169,
+          "age90Plus": 551.1943191785308
+        },
+        "cohort": {
+          "population": 43450.93906686567,
+          "age7to15": 4671.704048033711,
+          "age80to89": 2852.475049646387,
+          "age90Plus": 570.0941145300266
+        },
+        "observed": {
+          "population": 43430.48784219901,
+          "age7to15": 4669.323524700378,
+          "age80to89": 2839.871981646387,
+          "age90Plus": 565.98733786336
+        }
+      }
+    },
+    {
+      "municipality": "0584",
+      "name": "Vadstena",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 7434.0,
+        "age7to15": 638.0,
+        "age80to89": 636.0,
+        "age90Plus": 118.0
+      },
+      "model": {
+        "groups": {
+          "population": 7508.200557418577,
+          "age7to15": 632.7538,
+          "age80to89": 611.354885634661,
+          "age90Plus": 113.5518195540332
+        },
+        "cohort": {
+          "population": 7503.497962787786,
+          "age7to15": 642.3358048309673,
+          "age80to89": 630.2002656093784,
+          "age90Plus": 114.5474492958514
+        },
+        "observed": {
+          "population": 7498.782770430978,
+          "age7to15": 642.621261497634,
+          "age80to89": 624.0181289427119,
+          "age90Plus": 118.4918199390458
+        }
+      }
+    },
+    {
+      "municipality": "0584",
+      "name": "Vadstena",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 7490.0,
+        "age7to15": 654.0,
+        "age80to89": 673.0,
+        "age90Plus": 125.0
+      },
+      "model": {
+        "groups": {
+          "population": 7533.60344959692,
+          "age7to15": 635.64149984,
+          "age80to89": 619.2640542986762,
+          "age90Plus": 115.0208525397209
+        },
+        "cohort": {
+          "population": 7523.966116622084,
+          "age7to15": 650.6704319157677,
+          "age80to89": 666.9601214215163,
+          "age90Plus": 118.2392425186971
+        },
+        "observed": {
+          "population": 7513.241584604681,
+          "age7to15": 651.2471270115499,
+          "age80to89": 657.3795492204752,
+          "age90Plus": 122.9543071894212
+        }
+      }
+    },
+    {
+      "municipality": "0584",
+      "name": "Vadstena",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 7484,
+        "age7to15": 649,
+        "age80to89": 722,
+        "age90Plus": 137
+      },
+      "model": {
+        "groups": {
+          "population": 7557.287560284463,
+          "age7to15": 637.8171476181853,
+          "age80to89": 626.7432256766075,
+          "age90Plus": 116.4100186994694
+        },
+        "cohort": {
+          "population": 7540.776988149912,
+          "age7to15": 662.0027835193455,
+          "age80to89": 707.5856871782379,
+          "age90Plus": 119.5670831500077
+        },
+        "observed": {
+          "population": 7523.797629627111,
+          "age7to15": 662.5381250674924,
+          "age80to89": 694.8510073068221,
+          "age90Plus": 125.7741091113847
+        }
+      }
+    },
+    {
+      "municipality": "0584",
+      "name": "Vadstena",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 7490.0,
+        "age7to15": 654.0,
+        "age80to89": 673.0,
+        "age90Plus": 125.0
+      },
+      "model": {
+        "groups": {
+          "population": 7390.079106738436,
+          "age7to15": 637.5402,
+          "age80to89": 640.1558230006561,
+          "age90Plus": 118.7710489215054
+        },
+        "cohort": {
+          "population": 7438.900883531189,
+          "age7to15": 638.6710665137765,
+          "age80to89": 675.6835249536178,
+          "age90Plus": 118.2633085335308
+        },
+        "observed": {
+          "population": 7433.186816197856,
+          "age7to15": 638.9546975137764,
+          "age80to89": 669.9880582869514,
+          "age90Plus": 123.4894052001975
+        }
+      }
+    },
+    {
+      "municipality": "0584",
+      "name": "Vadstena",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 7484,
+        "age7to15": 649,
+        "age80to89": 722,
+        "age90Plus": 137
+      },
+      "model": {
+        "groups": {
+          "population": 7344.944619106216,
+          "age7to15": 636.7143824,
+          "age80to89": 643.9018737548366,
+          "age90Plus": 119.4660709167779
+        },
+        "cohort": {
+          "population": 7441.87271911348,
+          "age7to15": 649.3381876811384,
+          "age80to89": 716.5939569461791,
+          "age90Plus": 117.4272345655842
+        },
+        "observed": {
+          "population": 7428.947332681382,
+          "age7to15": 650.2456316299995,
+          "age80to89": 707.4427297169764,
+          "age90Plus": 125.1824109760216
+        }
+      }
+    },
+    {
+      "municipality": "0584",
+      "name": "Vadstena",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 7484,
+        "age7to15": 649,
+        "age80to89": 722,
+        "age90Plus": 137
+      },
+      "model": {
+        "groups": {
+          "population": 7490.91868881188,
+          "age7to15": 662.4354000000001,
+          "age80to89": 677.7967412159984,
+          "age90Plus": 125.890925188707
+        },
+        "cohort": {
+          "population": 7477.21041004851,
+          "age7to15": 659.3385995989469,
+          "age80to89": 711.9932233919808,
+          "age90Plus": 125.9242365058257
+        },
+        "observed": {
+          "population": 7479.387683754832,
+          "age7to15": 659.6158142656136,
+          "age80to89": 708.9953400586473,
+          "age90Plus": 130.0796518788138
+        }
+      }
+    },
+    {
+      "municipality": "0586",
+      "name": "Mjölby",
+      "base": 2022,
+      "year": 2023,
+      "actual": {
+        "population": 28576.0,
+        "age7to15": 3187.0,
+        "age80to89": 1545.0,
+        "age90Plus": 321.0
+      },
+      "model": {
+        "groups": {
+          "population": 28723.18294668342,
+          "age7to15": 3136.902,
+          "age80to89": 1464.479952517699,
+          "age90Plus": 329.5079893164823
+        },
+        "cohort": {
+          "population": 28706.02478349936,
+          "age7to15": 3186.340761694234,
+          "age80to89": 1529.71116297419,
+          "age90Plus": 333.8032185558936
+        },
+        "observed": {
+          "population": 28681.95484649936,
+          "age7to15": 3184.775861694235,
+          "age80to89": 1527.743896307523,
+          "age90Plus": 325.2406415558935
+        }
+      }
+    },
+    {
+      "municipality": "0586",
+      "name": "Mjölby",
+      "base": 2022,
+      "year": 2024,
+      "actual": {
+        "population": 28695.0,
+        "age7to15": 3197.0,
+        "age80to89": 1622.0,
+        "age90Plus": 313.0
+      },
+      "model": {
+        "groups": {
+          "population": 28973.27819277758,
+          "age7to15": 3150.17692992,
+          "age80to89": 1488.550624935591,
+          "age90Plus": 334.923890610508
+        },
+        "cohort": {
+          "population": 28940.23556567651,
+          "age7to15": 3181.6949670407,
+          "age80to89": 1630.441394030529,
+          "age90Plus": 331.4959139334689
+        },
+        "observed": {
+          "population": 28893.10736304608,
+          "age7to15": 3179.252184414908,
+          "age80to89": 1625.581195784835,
+          "age90Plus": 315.8207607018171
+        }
+      }
+    },
+    {
+      "municipality": "0586",
+      "name": "Mjölby",
+      "base": 2022,
+      "year": 2025,
+      "actual": {
+        "population": 28823,
+        "age7to15": 3174,
+        "age80to89": 1704,
+        "age90Plus": 320
+      },
+      "model": {
+        "groups": {
+          "population": 29221.49712713187,
+          "age7to15": 3163.039913121687,
+          "age80to89": 1512.267324717216,
+          "age90Plus": 340.2601480613737
+        },
+        "cohort": {
+          "population": 29171.46464661165,
+          "age7to15": 3163.05125230732,
+          "age80to89": 1713.572172604237,
+          "age90Plus": 340.0112987656224
+        },
+        "observed": {
+          "population": 29104.10152059555,
+          "age7to15": 3160.064713480421,
+          "age80to89": 1707.085863007385,
+          "age90Plus": 318.2822593931195
+        }
+      }
+    },
+    {
+      "municipality": "0586",
+      "name": "Mjölby",
+      "base": 2023,
+      "year": 2024,
+      "actual": {
+        "population": 28695.0,
+        "age7to15": 3197.0,
+        "age80to89": 1622.0,
+        "age90Plus": 313.0
+      },
+      "model": {
+        "groups": {
+          "population": 28702.050693585,
+          "age7to15": 3220.4092,
+          "age80to89": 1564.565600344305,
+          "age90Plus": 325.0650858967778
+        },
+        "cohort": {
+          "population": 28783.17544337718,
+          "age7to15": 3188.352449371348,
+          "age80to89": 1644.083558901079,
+          "age90Plus": 317.5983824036493
+        },
+        "observed": {
+          "population": 28760.28046071051,
+          "age7to15": 3186.440809038014,
+          "age80to89": 1638.394592234413,
+          "age90Plus": 313.692759070316
+        }
+      }
+    },
+    {
+      "municipality": "0586",
+      "name": "Mjölby",
+      "base": 2023,
+      "year": 2025,
+      "actual": {
+        "population": 28823,
+        "age7to15": 3174,
+        "age80to89": 1704,
+        "age90Plus": 320
+      },
+      "model": {
+        "groups": {
+          "population": 28825.5760789758,
+          "age7to15": 3241.91617312,
+          "age80to89": 1583.574159393689,
+          "age90Plus": 329.0144370002423
+        },
+        "cohort": {
+          "population": 28987.46296258471,
+          "age7to15": 3165.699093314068,
+          "age80to89": 1733.948574990392,
+          "age90Plus": 320.9242071498718
+        },
+        "observed": {
+          "population": 28943.92234003271,
+          "age7to15": 3162.907494015367,
+          "age80to89": 1724.171112083485,
+          "age90Plus": 314.2407531568227
+        }
+      }
+    },
+    {
+      "municipality": "0586",
+      "name": "Mjölby",
+      "base": 2024,
+      "year": 2025,
+      "actual": {
+        "population": 28823,
+        "age7to15": 3174,
+        "age80to89": 1704,
+        "age90Plus": 320
+      },
+      "model": {
+        "groups": {
+          "population": 28811.98266207334,
+          "age7to15": 3216.8346,
+          "age80to89": 1638.501168658988,
+          "age90Plus": 316.1842575772276
+        },
+        "cohort": {
+          "population": 28842.04750699278,
+          "age7to15": 3173.025372822629,
+          "age80to89": 1702.863535093756,
+          "age90Plus": 319.9516608107594
+        },
+        "observed": {
+          "population": 28839.41489099278,
+          "age7to15": 3171.422939489295,
+          "age80to89": 1704.431549093757,
+          "age90Plus": 317.2613308107595
+        }
+      }
+    }
+  ]
+}

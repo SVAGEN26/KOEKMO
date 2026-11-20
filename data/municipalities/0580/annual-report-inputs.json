@@ -1,0 +1,11 @@
+{
+  "sources": {
+    "annual2024": "https://www.linkoping.se/kommun-och-politik/budget-mal-och-ekonomi/publikationer"
+  },
+  "forecastInterestRate": {
+    "2024": 1.54
+  },
+  "locators": {
+    "forecastInterestRate": "Linköpings kommuns årsredovisning 2024, not 24, kommunen, genomsnittlig ränta på lång- och kortfristig upplåning. Basårets bokförda räntekostnad används i utfallsraden."
+  }
+}

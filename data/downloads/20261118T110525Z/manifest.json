@@ -1,0 +1,121 @@
+{
+  "retrieved_at": "2026-11-18T11:05:25.611551+00:00",
+  "municipality": "0583",
+  "source": "SCB, Statistikdatabasen",
+  "files": [
+    {
+      "file": "projection-2021.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0401/BE0401B/BefProgOsiktNetN21",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000005QJ",
+                "000005QI",
+                "000005QK",
+                "000005QO",
+                "000005QP",
+                "000005QN",
+                "000005QQ",
+                "000005QS",
+                "000005QR",
+                "000005QM",
+                "000005QL"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "publicationDate": "2021-06-03",
+      "bytes": 1582,
+      "sha256": "709a86fa8930442640e58dd66e96843d5ccb8cb441a829fc679f6f82f709d3ae"
+    },
+    {
+      "file": "projection-2022.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0401/BE0401B/BefProgOsiktNetN22",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0583"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000006MY",
+                "000006MX",
+                "000006MZ",
+                "000006N3",
+                "000006N4",
+                "000006N2",
+                "000006N5",
+                "000006N7",
+                "000006N6",
+                "000006N1",
+                "000006N0"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2022",
+                "2023",
+                "2024",
+                "2025",
+                "2026",
+                "2027",
+                "2028"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "publicationDate": "2022-05-25",
+      "bytes": 1967,
+      "sha256": "43ea1d0934ca9b41c499350ec094f1dcabf83523419c703e14dd17823d18ff20"
+    }
+  ]
+}

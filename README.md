@@ -8,7 +8,7 @@ overfitting. Their results remain visible, but do not replace the Motala evaluat
 or automatically justify adding mechanisms specific to another municipality.
 
 The web app runs the Modelica model itself. OpenModelica's compiler, built for
-WebAssembly, compiles `modelica/Kommunekonomi.mo` and `modelica/Motala.mo` in the visitor's browser (`wasm-jit`)
+WebAssembly, compiles `modelica/Kommunekonomi.mo` with the selected municipality’s package in the visitor's browser (`wasm-jit`)
 and simulates every scenario there. Nothing is sent to a server, so the site is
 plain static files and can be hosted on GitHub Pages. See
 [Browser engine](#browser-engine-openmodelica-wasm-jit).
@@ -27,19 +27,20 @@ Open http://127.0.0.1:8000. No npm installation is required. Python 3, Node 18+ 
 `npm start` also builds the static files, so it works from a fresh checkout.
 If port 8000 is occupied, use `npm start -- --port 8001`.
 
+Select any of **Östergötland’s 13 municipalities** in the scenario controls. For example, open [Linköping from 2025](http://127.0.0.1:8000/?kommun=0580&start=2025). Each municipality can start its forecast in 2025 or 2026. The comparison view includes the 2025 accounts and the local SKR 26:28 reference. See [project memory](docs/project-memory.md#alla-13-kommuner-i-östergötland) for sources and regeneration commands.
+
 - `modelica/`: the model the site runs, and nothing else. `Kommunekonomi.mo` is a library of reusable components for a
   Swedish municipality's annual finances (record types, Sweden-wide SCB data, components, the partial model `Annual`).
   `Motala.mo` holds Motala's data and examples; `Motala.Annual` extends `Kommunekonomi.Annual` with Motala's base year.
   `MotalaBrowser.mo` is the wrapper the browser compiles, `validate.py` the native parity check. Load the library first.
-  `modelica/municipalities/` holds packages for other municipalities, generated from SCB and Kolada (Mjölby, 0586, is the
-  pilot). To add one: `scripts/fetch_municipality.py CODE`, `scripts/fetch_care_data.py CODE` and
+  `modelica/municipalities/` holds packages for other municipalities, generated from SCB and Kolada (including the Finspång web pilot and the Mjölby transferability check). To add one: `scripts/fetch_municipality.py CODE`, `scripts/fetch_care_data.py CODE` and
   `scripts/prepare_care.py ARCHIVE --output data/municipalities/CODE/care-weights.json`, `scripts/fetch_sector_costs.py CODE`,
   then `scripts/prepare_municipality.py CODE Package "Name" ARCHIVE --modelica`, and test it against the SKR circulars with
   `scripts/hindcast_vintages.py CODE Package`. For Motala the SCB route reproduces the annual reports within 2-3 mnkr from 2023.
 - `research/`: experiments that are not part of the site: the M1 and M2 models (`MotalaResearch`,
   `MotalaDynamics`), frozen model versions in `research/reference/`, historical replays, their data,
   reviews and tests. Kept so the results quoted in this README and on the site can be reproduced.
-- `site/src/omc-worker.js`, `omc-session.js`, `jit-engine.js`: the browser engine. A worker loads OpenModelica, compiles the library and `Motala.mo` once and re-runs it with `-override` per scenario.
+- `site/src/omc-worker.js`, `omc-session.js`, `jit-engine.js`: the browser engine. A worker loads OpenModelica, compiles a model per municipality, start year and demographic mode, then re-runs it with `-override` per scenario.
 - `site/src/engine.js`: independent JavaScript reference used only by the tests (`tests/jit-parity.test.mjs`, native parity). The site does not ship it. Other editable dashboard assets are also in `site/src/`.
 - `data/baseline.json`, `data/history.json`, `data/sources.json`: facts, provenance and explicit assumptions.
 - `data/operating-accounts-history.json`: sourced 2024–2025 expenditure/revenue components and reconciliation.

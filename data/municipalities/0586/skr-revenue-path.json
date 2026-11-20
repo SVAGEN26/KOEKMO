@@ -1,0 +1,447 @@
+{
+  "municipality": "0586",
+  "vintage": "2026-10-06",
+  "populationReference": "1 November of the preceding year (Blad 2 Indata C29:J29); not year-end population.",
+  "rows": [
+    {
+      "year": 2026,
+      "tax": 1665.80807,
+      "grants": 540.285118217814,
+      "population": 28789.0,
+      "regulation": 80.5689310752259
+    },
+    {
+      "year": 2027,
+      "tax": 1757.964757,
+      "grants": 555.847314126245,
+      "population": 28821.0,
+      "regulation": 73.2654496461509
+    },
+    {
+      "year": 2028,
+      "tax": 1831.9626680000001,
+      "grants": 566.110392474803,
+      "population": 28748.0,
+      "regulation": 67.9891979947084
+    },
+    {
+      "year": 2029,
+      "tax": 1905.5182490000002,
+      "grants": 571.419462603482,
+      "population": 28763.0,
+      "regulation": 56.9440951233881
+    },
+    {
+      "year": 2030,
+      "tax": 1980.224964,
+      "grants": 576.783649140253,
+      "population": 28795.0,
+      "regulation": 45.7285806601586
+    },
+    {
+      "year": 2031,
+      "tax": 2056.447486,
+      "grants": 582.2955172732351,
+      "population": 28866.0,
+      "regulation": 34.2810127931404
+    },
+    {
+      "year": 2032,
+      "tax": 2135.838894,
+      "grants": 588.02162826737,
+      "population": 28939.0,
+      "regulation": 22.3574297872753
+    },
+    {
+      "year": 2033,
+      "tax": 2218.867853,
+      "grants": 593.928861330392,
+      "population": 29014.0,
+      "regulation": 9.88790285029738
+    }
+  ],
+  "provenance": {
+    "workbook": "Prognosunderlag-0586.xlsx",
+    "sha256": "8cad2e33cf8d5d2c33552a71a2b83f81fb62e62e13e458c37afc459110811816",
+    "cellMap": {
+      "municipality": "0586",
+      "vintage": "2026-10-06",
+      "populationReference": "1 November of the preceding year (Blad 2 Indata C29:J29); not year-end population.",
+      "municipalityCheck": {
+        "sheet": "Prognosunderlag",
+        "cell": "B1",
+        "expected": 586
+      },
+      "calculatedMunicipalityCheck": {
+        "sheet": "Prognosunderlag",
+        "cell": "C1"
+      },
+      "rows": [
+        {
+          "year": 2026,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "B18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "B38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "B40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "C29"
+          }
+        },
+        {
+          "year": 2027,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "C18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "C38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "C40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "D29"
+          }
+        },
+        {
+          "year": 2028,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "D18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "D38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "D40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "E29"
+          }
+        },
+        {
+          "year": 2029,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "E18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "E38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "E40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "F29"
+          }
+        },
+        {
+          "year": 2030,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "F18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "F38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "F40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "G29"
+          }
+        },
+        {
+          "year": 2031,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "G18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "G38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "G40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "H29"
+          }
+        },
+        {
+          "year": 2032,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "H18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "H38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "H40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "I29"
+          }
+        },
+        {
+          "year": 2033,
+          "regulation": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "I18",
+            "scale": 0.001
+          },
+          "tax": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "I38",
+            "scale": 0.001
+          },
+          "grants": {
+            "sheet": "Blad 1 Totala intäkter",
+            "cell": "I40",
+            "scale": 0.001
+          },
+          "population": {
+            "sheet": "Blad 2 Indata",
+            "cell": "J29"
+          }
+        }
+      ],
+      "definition": "Tax is Blad 1 row 38 including tax settlements. Grants are row 40 including general grants/equalisation, LSS and municipal property fee. Regulation is row 18, the regulation grant (negative: fee) within the grants. Original workbook units tkr; converted to mnkr."
+    },
+    "cachedFormulasNotRecalculated": true,
+    "calculatedMunicipalityVerified": true,
+    "recalculation": {
+      "source": "Prognosunderlag-K-2026-2033-26028.xlsm",
+      "sourceSha256": "232479606a21b865e914bc91f9ddf7bee06b1e4abb8de16ba4b8e2ce30afb099",
+      "selectedCopy": "Prognosunderlag-0586-selected.xlsm",
+      "cell": "Prognosunderlag!B1",
+      "value": 586,
+      "recalculated": true,
+      "engine": "LibreOffice 24.2.7.2 420(Build:2)",
+      "calculatedFile": ".local/skr-0586/recalculated/Prognosunderlag-0586.xlsx",
+      "calculatedSha256": "8cad2e33cf8d5d2c33552a71a2b83f81fb62e62e13e458c37afc459110811816",
+      "vbaRemovedBeforeRecalculation": true,
+      "macrosExecuted": false,
+      "components": [
+        {
+          "year": 2026,
+          "tkrByOutputRow": {
+            "12": 1685096.803,
+            "14": 383354.324,
+            "16": -6045.69,
+            "18": 80568.9310752259,
+            "20": 0,
+            "22": 0,
+            "24": 5572.03966249371,
+            "26": 2148546.40773772,
+            "28": 28.686,
+            "30": -19317.419,
+            "32": 0,
+            "34": 76835.5134800942,
+            "36": 2206093.18821781,
+            "38": 1665808.07,
+            "40": 540285.118217814
+          }
+        },
+        {
+          "year": 2027,
+          "tkrByOutputRow": {
+            "12": 1762086.16,
+            "14": 391504.464,
+            "16": 4524.897,
+            "18": 73265.4496461509,
+            "20": 0,
+            "22": 0,
+            "24": 6484.725,
+            "26": 2237865.69564615,
+            "28": 0,
+            "30": 0,
+            "32": -4121.403,
+            "34": 80067.7784800942,
+            "36": 2313812.07112625,
+            "38": 1757964.757,
+            "40": 555847.314126245
+          }
+        },
+        {
+          "year": 2028,
+          "tkrByOutputRow": {
+            "12": 1831962.668,
+            "14": 407071.68,
+            "16": 4513.436,
+            "18": 67989.1979947084,
+            "20": 0,
+            "22": 0,
+            "24": 6468.3,
+            "26": 2318005.28199471,
+            "28": 0,
+            "30": 0,
+            "32": 0,
+            "34": 80067.7784800942,
+            "36": 2398073.0604748,
+            "38": 1831962.668,
+            "40": 566110.392474803
+          }
+        },
+        {
+          "year": 2029,
+          "tkrByOutputRow": {
+            "12": 1905518.249,
+            "14": 423420.123,
+            "16": 4515.791,
+            "18": 56944.0951233881,
+            "20": 0,
+            "22": 0,
+            "24": 6471.675,
+            "26": 2396869.93312339,
+            "28": 0,
+            "30": 0,
+            "32": 0,
+            "34": 80067.7784800942,
+            "36": 2476937.71160348,
+            "38": 1905518.249,
+            "40": 571419.462603482
+          }
+        },
+        {
+          "year": 2030,
+          "tkrByOutputRow": {
+            "12": 1980224.964,
+            "14": 439987.6,
+            "16": 4520.815,
+            "18": 45728.5806601586,
+            "20": 0,
+            "22": 0,
+            "24": 6478.875,
+            "26": 2476940.83466016,
+            "28": 0,
+            "30": 0,
+            "32": 0,
+            "34": 80067.7784800942,
+            "36": 2557008.61314025,
+            "38": 1980224.964,
+            "40": 576783.649140253
+          }
+        },
+        {
+          "year": 2031,
+          "tkrByOutputRow": {
+            "12": 2056447.486,
+            "14": 456919.914,
+            "16": 4531.962,
+            "18": 34281.0127931404,
+            "20": 0,
+            "22": 0,
+            "24": 6494.85,
+            "26": 2558675.22479314,
+            "28": 0,
+            "30": 0,
+            "32": 0,
+            "34": 80067.7784800942,
+            "36": 2638743.00327323,
+            "38": 2056447.486,
+            "40": 582295.517273235
+          }
+        },
+        {
+          "year": 2032,
+          "tkrByOutputRow": {
+            "12": 2135838.894,
+            "14": 474541.722,
+            "16": 4543.423,
+            "18": 22357.4297872753,
+            "20": 0,
+            "22": 0,
+            "24": 6511.275,
+            "26": 2643792.74378728,
+            "28": 0,
+            "30": 0,
+            "32": 0,
+            "34": 80067.7784800942,
+            "36": 2723860.52226737,
+            "38": 2135838.894,
+            "40": 588021.62826737
+          }
+        },
+        {
+          "year": 2033,
+          "tkrByOutputRow": {
+            "12": 2218867.853,
+            "14": 492889.832,
+            "16": 4555.198,
+            "18": 9887.90285029738,
+            "20": 0,
+            "22": 0,
+            "24": 6528.15,
+            "26": 2732728.9358503,
+            "28": 0,
+            "30": 0,
+            "32": 0,
+            "34": 80067.7784800942,
+            "36": 2812796.71433039,
+            "38": 2218867.853,
+            "40": 593928.861330392
+          }
+        }
+      ]
+    },
+    "circular": "26:28"
+  },
+  "source": {
+    "publisher": "Sveriges Kommuner och Regioner (SKR)",
+    "title": "Prognosunderlag K 2026–2033",
+    "circular": "26:28",
+    "published": "2026-10-06",
+    "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d572/1791283712510/Prognosunderlag-K-2026-2033-26028.xlsm",
+    "page": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg.8271.html",
+    "terms": "Selected figures quoted from SKR with reference, for research and comparison. The workbook itself is SKR material and is not redistributed."
+  }
+}

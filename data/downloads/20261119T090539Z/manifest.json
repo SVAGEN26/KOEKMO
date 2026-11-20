@@ -1,0 +1,19 @@
+{
+  "retrieved_at": "2026-11-19T09:05:39.397592+00:00",
+  "municipality": "0580",
+  "source": "Kolada (RKA), open data; statistics from Socialstyrelsen and SCB",
+  "files": [
+    {
+      "file": "kolada-care-kpi-metadata.json",
+      "url": "https://api.kolada.se/v3/kpi/N21702,N21703,N21705,N23805,N23807,N23806,N21009,N21024,N23007,N23001,N23009,N20007,N20048,N01956,N01957",
+      "bytes": 10125,
+      "sha256": "02aeb3924a2973fea2dd7fcab0c83ba43996900e1e28fc7dac1af58e1eb44191"
+    },
+    {
+      "file": "kolada-care-0580.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N21702,N21703,N21705,N23805,N23807,N23806,N21009,N21024,N23007,N23001,N23009,N20007,N20048,N01956,N01957/municipality/0580/year/2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025",
+      "bytes": 32450,
+      "sha256": "ea958af4cc4c0e57c949c63298bed23b795a4cf0f94b6b15c057c19594ce03bc"
+    }
+  ]
+}

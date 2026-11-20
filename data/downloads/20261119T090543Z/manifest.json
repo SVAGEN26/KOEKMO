@@ -1,0 +1,19 @@
+{
+  "retrieved_at": "2026-11-19T09:05:43.792458+00:00",
+  "municipality": "0582",
+  "source": "Kolada (RKA), open data; statistics from SCB (Räkenskapssammandraget)",
+  "files": [
+    {
+      "file": "kolada-sector-kpi-metadata.json",
+      "url": "https://api.kolada.se/v3/kpi/N03067,N11004,N13004,N15015,N15028,N18002,N17014,N18003,N20014",
+      "bytes": 7189,
+      "sha256": "80bc794ef09d64848f711ba28d8af810aa5964421b112aa9cd79f34551182ec9"
+    },
+    {
+      "file": "kolada-sector-costs-0582.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N03067,N11004,N13004,N15015,N15028,N18002,N17014,N18003,N20014/municipality/0582/year/2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025",
+      "bytes": 13813,
+      "sha256": "030b664c886acbde18f9563dae3cf6a3487bcd449259934d1a7d2a6c6b35b9c3"
+    }
+  ]
+}

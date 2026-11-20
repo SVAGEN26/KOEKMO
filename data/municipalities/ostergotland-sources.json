@@ -1,0 +1,8 @@
+{
+  "archive": "data/downloads/20261119T090538Z-county",
+  "populationLocator": "Kolada N01951, Totalt, Folkmängd den 31 december",
+  "novemberLocator": "SCB TAB6725 och föregående tabell FolkmangdNov",
+  "cohortArchive": "data/downloads/20261120T104926Z-cohorts",
+  "migrationArchive": "data/downloads/20261120T105146Z-migration",
+  "ageBacktestArchive": "data/downloads/20261120T121135Z-age-backtest"
+}

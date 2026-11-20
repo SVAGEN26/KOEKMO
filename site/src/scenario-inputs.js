@@ -1,5 +1,7 @@
+import {DEFAULT_MUNICIPALITY} from './municipalities.js';
 // Validation, historical calibration and source-data preparation. No forecast simulation.
 export const sum = a => a.reduce((s,x)=>s+x,0);
+const migrationProfiles={families:[0.16,0.20,0.04,0.60,0],working:[0,0,0,1,0],older:[0,0,0,0,1]};
 export function reconcileHistory(history) {
   return history.map(row=>({...row,population:row.population.map(p=>p*(row.reportedTotal??sum(row.population))/sum(row.population))}));
 }
@@ -41,27 +43,89 @@ export function validate(b,a) {
   for(const k of ['payrollExcludingPensions','pensionExpense','otherOperatingExpense','operatingRevenue']) if(!Number.isFinite(o?.[k])||o[k]<0) throw Error(`Invalid operating account: ${k}`);
   if(!Number.isFinite(o.netCostRoundingAdjustment)||Math.abs(o.payrollExcludingPensions+o.pensionExpense+o.otherOperatingExpense-o.operatingRevenue+o.netCostRoundingAdjustment-b.cashCost)>1e-7) throw Error('Operating accounts do not reconcile to reported net cost');
   if(!Number.isFinite(b.otherFinancialExpense)||b.otherFinancialExpense<0) throw Error('Invalid non-interest financial expense');
+  if(a.revenueMode!=null&&![0,1,2].includes(a.revenueMode)) throw Error('Ogiltig intäktsmodell.');
+  if(a.migrationProfile!=null&&a.migrationProfile!=='default'&&!Object.hasOwn(migrationProfiles,a.migrationProfile)) throw Error('Ogiltig flyttprofil.');
+  if(a.ageTax&&(!Array.isArray(b.ageIncome?.weights)||b.ageIncome.weights.length!==5||!b.ageIncome.weights.every(x=>Number.isFinite(x)&&x>=0)||
+    sum(b.ageIncome.weights)<=0||!Number.isFinite(b.ageIncome?.countyRate)||b.ageIncome.countyRate<=0)) throw Error('Åldersprofil för beskattningsbar inkomst saknas.');
+  if(a.projectChoice!=null&&!['none','planned','delay'].includes(a.projectChoice)) throw Error('Ogiltigt projektval.');
+  if(a.projectChoice&&a.projectChoice!=='none'&&(!b.project||b.project.openingStock>b.workInProgress)) throw Error('Projektunderlaget matchar inte valt basår.');
+  if(a.demographyMode!=null&&!['legacy','observed','cohort','cohort-observed'].includes(a.demographyMode)) throw Error('Ogiltig befolkningsmodell.');
+  if(a.employerContributionRate!=null&&a.employerContributionRate!==-1&&(!Number.isFinite(a.employerContributionRate)||a.employerContributionRate<0||a.employerContributionRate>100)) throw Error('Sociala avgifter måste anges i procent av lönen.');
+  if(a.constructionYears!=null&&(!Number.isInteger(a.constructionYears)||a.constructionYears<0||a.constructionYears>5)) throw Error('Byggtiden ska vara 0–5 hela år.');
+  if(a.constructionShare!=null&&(!Number.isFinite(a.constructionShare)||a.constructionShare<0||a.constructionShare>1)) throw Error('Byggandelen ska vara mellan 0 och 100 procent.');
+  if(a.constructionYears>0&&(!Number.isFinite(b.workInProgress)||b.workInProgress<0)) throw Error('Basårets saldo för pågående arbeten behövs för att räkna med byggtid.');
+  if(a.liquidityPolicy!=null&&typeof a.liquidityPolicy!=='boolean') throw Error('Ogiltig kassapolicy.');
+  if(a.workingCapitalEnabled!=null&&typeof a.workingCapitalEnabled!=='boolean') throw Error('Ogiltigt val för rörelsekapital.');
+  if(a.workingCapitalEnabled&&(![b.workingCapital?.receivables,b.workingCapital?.payables].every(x=>Number.isFinite(x)&&x>=0))) throw Error('Basårets kundfordringar och leverantörsskulder behövs.');
+  for(const key of ['collectionDays','paymentDays']) {
+    if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>365)) throw Error('Betalningstiden ska vara 0–365 dagar.');
+  }
+  if(a.firstYearGrantAdvance!=null&&(!Number.isFinite(a.firstYearGrantAdvance)||a.firstYearGrantAdvance<0)) throw Error('Bidragsförskottet ska vara minst noll.');
+  if(a.cashReserve!=null&&(!Number.isFinite(a.cashReserve)||a.cashReserve<0)) throw Error('Kassareserven ska vara ett belopp på minst noll.');
+  for(const key of ['deferInvestmentShare','prefinanceShare']) {
+    if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>1)) throw Error('Andelarna för senare betalning och förfinansiering ska vara 0–100 procent.');
+  }
 }
 export function planningSeries(b,a,c) {
   const source=b.planningInputs;
-  if(source && (source.municipality!=='0583'||source.baseYear!==b.baseYear||!Array.isArray(source.rows))) throw Error('Planning inputs must match Motala and the baseline year');
+  if(source && (source.municipality!==(b.municipality??DEFAULT_MUNICIPALITY)||source.baseYear!==b.baseYear||!Array.isArray(source.rows))) throw Error('Planning inputs must match the selected municipality and base year');
   let previous=[...b.population],taxFactor=1;
   const rows=[];
   for(let t=1;t<=a.years;t++) {
     const row=source?.rows.find(r=>r.year===b.baseYear+t);
     if(source && (!row||source.rows.filter(r=>r.year===row.year).length!==1)) throw Error(`Planning inputs missing or duplicate year ${b.baseYear+t}`);
-    if(row && (!Array.isArray(row.cohorts)||row.cohorts.length!==5||row.cohorts.some(x=>!Number.isFinite(x)||x<=0)||!['taxBaseGrowth','labourCostGrowth','otherPriceGrowth'].every(k=>Number.isFinite(row[k])&&row[k]>-100&&row[k]<100))) throw Error('Invalid planning input row');
+    const cohorts=row?.cohorts;
+    const validCohorts=Array.isArray(cohorts)&&cohorts.length===5&&cohorts.every(x=>Number.isFinite(x)&&x>0);
+    if(row && (!(validCohorts||(cohorts==null&&(source.demography==='calibrated'||row.projected)))||!['taxBaseGrowth','labourCostGrowth','otherPriceGrowth'].every(k=>Number.isFinite(row[k])&&row[k]>-100&&row[k]<100))) throw Error('Invalid planning input row');
     const natural=naturalStep(previous,b.births*previous[3]/b.population[3],c.deathRates);
-    const migration=row?row.cohorts.map((x,i)=>x-natural[i]):c.migration;
-    const wageGrowth=row?row.labourCostGrowth+a.wageGrowth-b.assumptions.wageGrowth:a.wageGrowth;
+    const migration=a.demographyMode==='observed'?c.migration:cohorts?cohorts.map((x,i)=>x-natural[i]):c.migration;
+    const wageGrowth=row&&!a.splitPayroll?row.labourCostGrowth+a.wageGrowth-b.assumptions.wageGrowth:a.wageGrowth;
     const priceGrowth=row?row.otherPriceGrowth+a.priceGrowth-b.assumptions.priceGrowth:a.priceGrowth;
     const taxGrowth=row?row.taxBaseGrowth+a.taxGrowth-b.assumptions.taxGrowth:a.taxGrowth;
     if([wageGrowth,priceGrowth,taxGrowth].some(x=>x<=-100||x>100)) throw Error('Adjusted annual planning rate outside supported range');
     taxFactor*=1+taxGrowth/100;
     rows.push({year:b.baseYear+t,migration:[...migration],wageGrowth,priceGrowth,taxGrowth,referenceTax:(b.tax-(b.priorYearSettlement??0))*taxFactor});
-    if(row) previous=row.cohorts;
+    if(cohorts) previous=cohorts;
   }
   return rows;
+}
+
+// Extend the bundled series for scenarios beyond their publication horizon.
+// Keep imported custom paths subject to the ordinary coverage check.
+export function extendPlanning(source,endYear) {
+  const last=source.rows.at(-1);
+  if(endYear<=last.year) return source;
+  const years=Array.from({length:endYear-last.year},(_,i)=>last.year+i+1);
+  const rows=[...source.rows,...years.map(year=>({
+    year,labourCostGrowth:last.labourCostGrowth,otherPriceGrowth:last.otherPriceGrowth,
+    taxBaseGrowth:last.taxBaseGrowth,projected:true
+  }))];
+  const revenuePath=source.revenuePath;
+  if(!revenuePath) return {...source,rows};
+  const [previous,final]=revenuePath.rows.slice(-2);
+  const referenceRows=years.map(year=>{
+    const row={year,projected:true};
+    for(const k of ['tax','grants','population']) row[k]=final[k]*(final[k]/previous[k])**(year-final.year);
+    if(Number.isFinite(final.regulation)) row.regulation=final.regulation*row.population/final.population;
+    const components=revenueComponents(revenuePath,final);
+    if(components) row.components={
+      recurringTax:components.recurringTax*row.tax/final.tax,
+      incomeEqualisation:components.incomeEqualisation*row.population/final.population,
+      regulation:components.regulation*row.population/final.population
+    };
+    return row;
+  });
+  return {...source,rows,revenuePath:{...revenuePath,rows:[...revenuePath.rows,...referenceRows]}};
+}
+function revenueComponents(path,row) {
+  if(!row) return null;
+  if(row.components) return row.components;
+  const cells=path.provenance?.recalculation?.components?.find(x=>x.year===row.year)?.tkrByOutputRow;
+  return cells?{recurringTax:cells[12]/1000,incomeEqualisation:cells[14]/1000,regulation:cells[18]/1000}:null;
+}
+function toGroups(values) {
+  const totals=values[0].map((x,i)=>x+values[1][i]);
+  return [[0,7],[7,16],[16,19],[19,65],[65,101]].map(([start,end])=>sum(totals.slice(start,end)));
 }
 // SKR's revenue path assumes the state's grant frame stays fixed in kronor after the years the
 // budget bill has decided, so the regulation grant shrinks each year. Over 2005-2026 the regulation
@@ -78,8 +142,8 @@ export function holdRegulation(path,heldFrom) {
     return {...r,grants:r.grants+adjustment,skrGrants:r.grants,regulationAdjustment:adjustment};
   })};
 }
-export function validateRevenuePath(path,baseYear) {
-  if(path?.municipality!=='0583'||!/^\d{4}-\d{2}-\d{2}$/.test(path?.vintage??'')||!Array.isArray(path.rows)||!path.rows.length) throw Error('Expected municipality 0583, vintage YYYY-MM-DD and nonempty rows');
+export function validateRevenuePath(path,baseYear,municipality=DEFAULT_MUNICIPALITY) {
+  if(path?.municipality!==municipality||!/^\d{4}-\d{2}-\d{2}$/.test(path?.vintage??'')||!Array.isArray(path.rows)||!path.rows.length) throw Error(`SKR-underlaget måste gälla kommun ${municipality}, ha versionsdatum YYYY-MM-DD och innehålla årsbelopp.`);
   const years=new Set();
   for(const r of path.rows) {
     if(!Number.isInteger(r.year)||r.year<=baseYear||years.has(r.year)||![r.tax,r.grants,r.population].every(x=>Number.isFinite(x)&&x>0)) throw Error('Invalid, duplicate or nonpositive revenue row');
@@ -90,11 +154,30 @@ export function validateRevenuePath(path,baseYear) {
 export function prepareScenario(b,history,overrides={},revenuePath=null) {
   const a={...b.assumptions,...overrides}; validate(b,a);
   if(history.length<2||history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
-  if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
-  const c=calibrate(history),inputs=planningSeries(b,a,c),o=b.operatingAccounts;
+  if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear,b.municipality); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
+  const c=calibrate(history),o=b.operatingAccounts;
+  const observed=['observed','cohort-observed'].includes(a.demographyMode),cohort=a.demographyMode?.startsWith('cohort')??false;
+  const evidence=b.experiments;
+  if((observed||a.splitPayroll)&&!evidence) throw Error('SCB-underlag saknas för valt basår.');
+  if(a.demographyMode==='observed') c.migration=toGroups(evidence.netMigration);
+  const inputs=planningSeries(b,a,c);
   const revenuePopulation0=reconcileHistory(history).find(r=>r.year===b.baseYear-1).population;
-  const national=year=>{const v=b.nationalPopulation?.population?.[year];if(!Number.isFinite(v))throw Error(`Rikets folkmängd saknas för ${year}`);return v;};
+  const national=year=>{
+    const population=b.nationalPopulation?.population;
+    const last=b.nationalPopulation?.extrapolateAfter;
+    const v=last&&year>last?population[last]*(population[last]/population[last-1])**(year-last):population?.[year];
+    if(!Number.isFinite(v))throw Error(`Rikets folkmängd saknas för ${year}`);
+    return v;
+  };
   const fields={p0:b.population,deathRates:c.deathRates,residualMigration:c.migration,migrationWeights:a.migrationWeights,educationWeights:a.educationWeights,sectorCosts:a.sectorCosts,tax0:b.tax,grants0:b.grants,debt0:b.debt,cash0:b.cash,assets0:b.assets,depreciation0:b.depreciation,financialIncome:b.financialIncome,otherFinancialExpense:b.otherFinancialExpense,payroll0:o.payrollExcludingPensions,pension0:o.pensionExpense,otherOperatingExpense0:o.otherOperatingExpense,operatingRevenue0:o.operatingRevenue,netCostRoundingAdjustment:o.netCostRoundingAdjustment,births0:b.births,migrationDelta:a.migrationDelta,taxRate:a.taxRate,baseTaxRate:b.taxRate,investment:a.investment,adjustment:a.adjustment,equalisationOffset:a.equalisationOffset,fixedShare:a.fixedShare,populationRevenueElasticity:a.populationRevenueElasticity};
+  if(observed) fields.migrationWeights=toGroups(evidence.arrivalWeights);
+  const profile=Object.hasOwn(migrationProfiles,a.migrationProfile)?migrationProfiles[a.migrationProfile]:null;
+  if(profile) fields.migrationWeights=profile;
+  if(a.splitPayroll) {
+    fields.employerContributions0=o.payrollExcludingPensions*evidence.employerContributions/(evidence.wages+evidence.employerContributions);
+    const rate=a.employerContributionRate??-1;
+    fields.employerContributionRatePath=inputs.map(()=>rate<0?-1:rate/100);
+  }
   for(const k of ['taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','interestRate','birthChange']) fields[k]=a[k]/100;
   fields.productivityGrowth=a.productivity/100;
   fields.revenuePopulation0=revenuePopulation0;
@@ -106,20 +189,76 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   fields.priceGrowthPath=inputs.map(r=>r.priceGrowth/100);
   const refs=inputs.map(r=>revenuePath?.rows.find(p=>p.year===r.year));
   fields.importedRevenue=!!revenuePath;
+  if(revenuePath&&a.revenueMode) fields.importedRevenueMode=a.revenueMode;
   fields.referenceTax=inputs.map((r,i)=>refs[i]?.tax??r.referenceTax);
-  fields.referenceGrants=inputs.map((r,i)=>refs[i]?.grants??b.grants*(1+a.grantGrowth/100)**(i+1));
+  fields.referenceGrants=inputs.map((r,i)=>(a.revenueMode===1?refs[i]?.skrGrants:undefined)??refs[i]?.grants??b.grants*(1+a.grantGrowth/100)**(i+1));
   fields.referencePopulation=inputs.map((r,i)=>refs[i]?.population??sum(b.population));
+  if(revenuePath&&a.revenueMode===2) {
+    if(!Number.isFinite(evidence?.novemberPopulation)) throw Error('SCB:s novemberbefolkning saknas för valt basår.');
+    fields.novemberPopulation0=evidence.novemberPopulation;
+    if(a.ageTax) {
+      fields.ageIncomeWeights=b.ageIncome.weights;
+      fields.equalisationCountyRate=b.ageIncome.countyRate;
+    }
+    fields.importedComponents=refs.map(row=>{
+      const details=revenueComponents(revenuePath,row);
+      if(!details) throw Error('SKR-underlaget behöver delposter för vald intäktsmodell.');
+      return [details.recurringTax,details.incomeEqualisation,details.regulation+(row.regulationAdjustment??0)];
+    });
+  }
   fields.pensionExpensePath=inputs.map((r,i)=>a.pensionExpensePath?.[i]??o.pensionExpense*(1+a.pensionGrowth/100)**(i+1));
   fields.pensionCashPaymentsPath=inputs.map((r,i)=>a.pensionCashPaymentsPath?.[i]??fields.pensionExpensePath[i]);
   fields.investmentPath=inputs.map(()=>a.investment);
+  if(a.workingCapitalEnabled) {
+    const wc=b.workingCapital;
+    const days=workingCapitalDays(b);
+    fields.workingCapitalEnabled=true;
+    fields.receivables0=wc.receivables;
+    fields.payables0=wc.payables;
+    fields.grantAdvances0=wc.grantAdvances??0;
+    fields.collectionDays=a.collectionDays??days.collectionDays;
+    fields.paymentDays=a.paymentDays??days.paymentDays;
+    fields.firstYearGrantAdvance=a.firstYearGrantAdvance??0;
+  }
+  if(a.liquidityPolicy) {
+    fields.liquidityPolicy=true;
+    fields.cashReserve=a.cashReserve??0;
+    fields.deferInvestmentShare=a.deferInvestmentShare??0;
+    fields.prefinanceShare=a.prefinanceShare??0;
+  }
+  if(a.constructionYears>0) {
+    fields.constructionYears=a.constructionYears;
+    fields.constructionShare=a.constructionShare??0.5;
+    fields.workInProgress0=b.workInProgress;
+  }
+  if(a.projectChoice&&a.projectChoice!=='none') {
+    const p=b.project;
+    fields.projectOpeningStock=p.openingStock;
+    fields.workInProgress0=b.workInProgress-p.openingStock;
+    fields.projectPayment=p.authorisedBudget-p.openingStock;
+    fields.projectOpeningStep=p.openingYear-b.baseYear+(a.projectChoice==='delay'?1:0);
+    fields.projectPlaces=p.places;
+  }
   fields.interestRatePath=inputs.map(()=>a.interestRate/100);
   fields.migrationDeltaPath=inputs.map(()=>a.migrationDelta);
   fields.birthChangePath=inputs.map(()=>a.birthChange/100);
   fields.serviceAdjustment=Array(3).fill(a.adjustment);
   fields.serviceFixedShare=Array(3).fill(a.fixedShare);
-  return {assumptions:a,calibration:c,inputs,fields,
+  const ageMigration=a.demographyMode==='cohort-observed'?{
+    'demography.residualMigration':evidence.netMigration,
+    'demography.observedDeltaShape':evidence.arrivalWeights,
+    'demography.useObservedDeltaShape':!profile
+  }:null;
+  return {assumptions:a,calibration:c,inputs,fields,cohort,ageMigration,
     planningStatus:b.planningInputs?'Sourced population and annual SKR assumptions':'Illustrative assumptions',
     revenueStatus:revenuePath?'Imported revenue path':'Illustrative revenue path'};
+}
+export function workingCapitalDays(b) {
+  const wc=b.workingCapital,o=b.operatingAccounts;
+  return {
+    collectionDays:o.operatingRevenue>0?Math.min(365,365*(wc?.receivables??0)/o.operatingRevenue):0,
+    paymentDays:o.otherOperatingExpense>0?Math.min(365,365*(wc?.payables??0)/o.otherOperatingExpense):0
+  };
 }
 export function baselineRow(b) {
   const o=b.operatingAccounts;

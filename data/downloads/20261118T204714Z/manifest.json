@@ -1,0 +1,66 @@
+{
+  "retrieved_at": "2026-11-18T20:47:14.779047+00:00",
+  "municipality": "0562",
+  "source": "SCB, Statistikdatabasen (CC BY 4.0)",
+  "table": "TAB6725",
+  "files": [
+    {
+      "file": "folkmangd-november-2025-finspang.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/FolkmangdNovCKM",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0562"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSA"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSa"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000008DJ"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 606,
+      "sha256": "8c7e8fcb0db2fec843dddd9d1a489b8ffadffc905845666f4789f31428777a8e"
+    }
+  ]
+}
