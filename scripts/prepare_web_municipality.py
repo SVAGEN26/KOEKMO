@@ -79,7 +79,11 @@ def prepare(code, year, source):
     }
     work_in_progress = supplement.get('workInProgress', {}).get(str(year))
     if work_in_progress is not None:
+        # SCB's tangible fixed assets (6779:025) include work in progress. The model keeps it
+        # apart until commissioning, so take it out of the assets in use, as Motala's annual
+        # report does; otherwise it is counted twice and depreciated a year early.
         baseline['workInProgress'] = work_in_progress
+        baseline['assets'] = round(book['assets'] - work_in_progress, 6)
     grant_advances = supplement.get('grantAdvances', {}).get(str(year))
     if grant_advances is not None:
         baseline['workingCapital']['grantAdvances'] = grant_advances

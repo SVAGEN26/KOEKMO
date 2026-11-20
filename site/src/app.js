@@ -27,8 +27,17 @@ const presets={
   migration:{migrationDelta:300},
   investment:{investment:250}
 };
-const presetOverrides=choice=>choice==='investment'&&b.municipality!==DEFAULT_MUNICIPALITY
-  ?{investment:Math.round(b.assumptions.investment*.6)}:presets[choice];
+// The presets are written for Motala. Elsewhere, migration scales with the population
+// (Motala 43 131 at the end of 2025) and the investment preset with the municipality's own level.
+const MOTALA_POPULATION=43131;
+const presetOverrides=choice=>{
+  if(b.municipality===DEFAULT_MUNICIPALITY) return presets[choice];
+  if(choice==='investment') return {investment:Math.round(b.assumptions.investment*.6)};
+  const preset={...presets[choice]};
+  const population=b.reportedPopulation??b.population.reduce((x,y)=>x+y,0);
+  if('migrationDelta' in preset) preset.migrationDelta=Math.round(preset.migrationDelta*population/MOTALA_POPULATION);
+  return preset;
+};
 const skrSources={
   'skr-2021':{circular:'21:35',url:'https://extra.skr.se/download/18.4c5da23117c02359242545dc/1633090430755/21035.pdf'},
   'skr-2026':{circular:'26:28',url:'https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg.8271.html'}

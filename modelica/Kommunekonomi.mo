@@ -30,6 +30,7 @@ package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; be
       Real sectorShares[3] "Utbildning (0-18 år), äldreomsorg och övrig verksamhet, andel av nettokostnaden; Kolada (SCB:s räkenskapssammandrag)";
       Real educationShares[3] "Utbildningens fördelning på 0-6, 7-15 och 16-18 år, andel; Kolada";
       Real careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
+      Real interestRate = -1 "Genomsnittlig ränta på upplåningen enligt årsredovisningen, andel; -1 när den saknas och räntan härleds ur räntekostnaden och den ingående skulden";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
     end BaseYear;
 
@@ -251,7 +252,8 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real baseTaxRate = base.taxRate "Kommunal skattesats i basåret, procent";
     parameter Real equalisationOffset = 0.95 "Andel av en lokal avvikelse i skatteunderlaget som utjämningen tar tillbaka (förenklad)";
     parameter Real populationRevenueElasticity = 1 "Hur starkt skatt och bidrag följer kommunens folkmängd i förhållande till rikets (1 = proportionellt: en invånare färre ger cirka 77 000 kr mindre per år, 2025 års nivå)";
-    parameter Real interestRate = base.interestExpense/base.openingDebt "Genomsnittlig låneränta på ingående skuld, andel; basårets räntekostnad delad med skulden vid basårets början";
+    parameter Real interestRate = if base.interestRate >= 0 then base.interestRate else base.interestExpense/max(base.openingDebt, 1e-9)
+      "Genomsnittlig låneränta på ingående skuld, andel; årsredovisningens ränta när basåret har den (base.interestRate), annars basårets räntekostnad delad med skulden vid basårets början";
     parameter Real investment = base.investment "Årliga investeringar, mnkr";
     // Årsvisa banor; första värdet gäller år 1
     parameter Real residualMigrationPath[horizon, 5] = {residualMigration for i in 1:horizon} "Restflöde per år och åldersgrupp, personer; från en extern befolkningsbana eller kalibreringen";
@@ -343,6 +345,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
 // Årsbanorna ersätter skalärerna ovan och behöver samma gränser.
 // Utan dem nollställer wageGrowthPath[k] = -1 lönerna och en negativ ränta bokförs som intäkt.
     assert(min(wageGrowthPath) > -1 and min(priceGrowthPath) > -1, "wageGrowthPath och priceGrowthPath måste vara större än -1 varje år (andelar, inte procent)");
+    assert(base.interestRate >= 0 or base.openingDebt > 0, "Basåret saknar ingående låneskuld, så räntan kan inte härledas; ange base.interestRate ur årsredovisningen eller interestRate");
     assert(min(interestRatePath) >= 0 and max(interestRatePath) <= 0.3, "interestRatePath måste ligga mellan 0 och 0,3 varje år (andelar, inte procent)");
     assert(min(referenceTax) > 0 and min(referenceGrants) > 0, "referenceTax och referenceGrants måste vara positiva varje år");
     assert(equalisationOffset >= 0 and equalisationOffset <= 1, "equalisationOffset måste ligga mellan 0 och 1");
@@ -860,7 +863,7 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
         standardTax := reference.tax*popFactor;
         composition := (pre(cohorts.p[4])/p0[4])/(sum(pre(cohorts.p))/sum(p0));
         deviation := if importedRevenue or followReference then 0 else standardTax*(composition - 1);
-        ageTaxDelta := if importedRevenue and importedRevenueMode == 2 and equalisationCountyRate > 0 then
+        ageTaxDelta := if importedRevenue and importedRevenueMode == 2 then
           importedComponents[calendar.pathIndex,1]*popFactor*
           (sum(novemberCohorts .* ageIncomeWeights)/sum(novemberCohorts)/openingIncomePerPerson - 1) else 0;
         recurringTaxAdjustment := if importedRevenue and importedRevenueMode == 2 then

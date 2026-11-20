@@ -31,7 +31,7 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 313, financialIncome = 1044.3, interestExpense = 287.3, otherFinancialExpense = 172.8,
       debt = 14382.2, openingDebt = 600, cash = 55.6, assets = 5968, investment = 713.5, taxRate = 20.2,
       sectorShares = {0.4597, 0.16, 0.3803}, educationShares = {0.2643, 0.5575, 0.1782},
-      careCostPerInhabitant = {19988, 140422})
+      careCostPerInhabitant = {19988, 140422}, interestRate = 0.0154)
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.688901, 0.256833, 0.054267};
     constant BaseYear linkoping2023 = BaseYear(

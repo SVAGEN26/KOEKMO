@@ -233,11 +233,18 @@ def main():
                'In the skr and standard sets grants grow 2 % a year. '
                'The components set uses the circular\'s national figures per inhabitant; cost and LSS equalisation '
                'beyond the first year stay at the first forecast year\'s level.',
-               'One-off items in the base year may carry into the forecast. '
-               'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
-               'Personnel is compared as a total. Fixed assets from SCB include work in progress.',
-               'The budget result is the adopted budget for the following year, set in November before the circular.',
-               'The test uses the published national SKR assumptions. Historical local SKR revenue paths are outside this test.'],
+               *(['One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. '
+                  'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
+                  'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',
+                  'Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.',
+                  'The budget result is the adopted budget for the following year, set in November before the circular.',
+                  'The SKR forecast for Motala at the time is not available; only the national assumptions are.']
+                 if CODE == '0583' else
+                 ['One-off items in the base year may carry into the forecast. '
+                  'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
+                  'Personnel is compared as a total. Fixed assets from SCB include work in progress.',
+                  'The budget result is the adopted budget for the following year, set in November before the circular.',
+                  'The test uses the published national SKR assumptions. Historical local SKR revenue paths are outside this test.'])],
            'summaryByHorizon': summary, 'runs': runs}
     (ROOT / ('data/vintage-hindcast.json' if CODE == '0583' else f'data/municipalities/{CODE}/vintage-hindcast.json')).write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     print(f'{"origin":>6s} {"year":>4s} {"set":8s} {"tax":>13s} {"grants":>13s} {"net cost":>13s} {"result":>13s} {"budget":>6s}')
