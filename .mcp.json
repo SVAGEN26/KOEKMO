@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "motala-ekonomilabb": {
+      "command": "python3",
+      "args": ["scripts/mcp_server.py"]
+    }
+  }
+}

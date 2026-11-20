@@ -644,6 +644,14 @@ dödlighet och restflöden från den (se Assumptions). Starta från ett annat å
 som standard. Starta från ett annat år med <code>Annual(base = Data.motala2024)</code>; basåren 2020-2025 finns.
 Uppdelningen av de äldre i femgruppsdemografin är SCB:s för 2025.</p></html>"));
   end Annual;
+  model Continuous "Motalas ekonomi med kontinuerlig tid inom året: lager och flöden"
+    extends Kommunekonomi.Continuous.Economy(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population));
+    annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
+      Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Samma antaganden och utdata som
+<a href=\"modelica://Motala.Annual\">Annual</a>, men pengarna är lager och flöden i kontinuerlig tid inom året
+(<a href=\"modelica://Kommunekonomi.Continuous.Economy\">Kommunekonomi.Continuous.Economy</a>). Årsvärdena gäller vid
+årsskiftena; mellan dem visas året månad för månad.</p></html>"));
+  end Continuous;
   package Examples "Färdiga modeller att simulera"
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet 105 och budgeten 96 mnkr"
       extends Annual(base = Data.motala2024, horizon = 1);
@@ -664,6 +672,15 @@ sjunka i den historiska takten (sätt <code>improvement = Data.SCB.mortalityImpr
 äldreomsorgen viktad efter 65-79, 80-89 och 90+. Byt födelsemodell i demografins parameterdialog eller med
 <code>redeclare Kommunekonomi.Components.Fertility.Projected fertility(firstYear = 2026)</code>.</p></html>"));
     end AnnualCohort;
+
+    model ContinuousCohort "Continuous med ettårsåldrar per kön (SCB-data)"
+      extends Continuous(revenuePopulation0 = Data.SCB.groups(Data.SCB.populationForYear(base.year - 1)),
+        redeclare Kommunekonomi.Components.CohortDemography demography(data = Data.SCB.forYear(base.year), reportedTotal = sum(p0),
+        migrationWeights = migrationWeights));
+      annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
+        Documentation(info = "<html><p>Som <a href=\"modelica://Motala.Examples.AnnualCohort\">AnnualCohort</a>, men med kontinuerlig tid
+inom året. Demografin flyttar ettårsåldrarna en gång per år och räknar fram årets slut när året börjar.</p></html>"));
+    end ContinuousCohort;
 
     model Budget2026 "Kommunens budget 2026-2028: budgetens investeringar, skatt och bidrag; modellens kostnader, räntor och lån"
       extends AnnualCohort(horizon = 3, investmentPath = Data.budget2026.investment, referenceTax = Data.budget2026.tax,
