@@ -208,6 +208,41 @@ writes `data/vintage-hindcast-continuous.json`). The continuous model is no more
 accurate; it shows what happens within the year. `tests/test_continuous.py` checks
 the identities and balances. The site still runs `Annual`.
 
+## Local MCP server: let an AI run the budget
+
+`scripts/mcp_server.py` lets an AI assistant run the model year by year over the
+Model Context Protocol, much like OMEdit's MCP server, but with the project's own
+tools instead of generic editing. It uses only the Python standard library and
+native OpenModelica (set `OMC` if `omc` is not on PATH). Nothing leaves the
+machine.
+
+```sh
+python3 scripts/mcp_server.py               # stdio
+python3 scripts/mcp_server.py --http 3001   # http://127.0.0.1:3001/mcp
+```
+
+Claude Code picks up `.mcp.json` in the project root and offers to start the server.
+Other local clients (LM Studio, Claude Desktop, Open WebUI or an Ollama MCP client)
+can start the stdio command or connect to the HTTP address. The HTTP transport binds
+to 127.0.0.1 and refuses requests from other browser origins.
+
+| Tool | What it does |
+| --- | --- |
+| `list_municipalities`, `list_parameters` | The 13 municipalities, their base years 2020–2025, and the decisions that can be set, with descriptions |
+| `start_session` | Start from a base year's closing accounts, with `Annual` or `Continuous` |
+| `set_decisions` | Set this year's decisions (tax rate, investments, interest, wages, migration ...) with a reason |
+| `advance` | Simulate the next year and return the accounts, balance checks and SKR's tax and grants for that year |
+| `get_results`, `run_scenario` | Any output variable; a whole scenario at once |
+| `reference` | SKR 26:28 (cited) and SCB's accounts 2020–2025 |
+| `save_session` | Decisions, reasons and results as JSON, plus a Modelica model that reproduces the run in OMEdit |
+
+The prompt `budget_round` asks the assistant to act as the finance committee.
+Decisions for a year that has been simulated are fixed. Only parameters of
+`Kommunekonomi.Assumptions` can be set, with numbers or booleans of the declared
+size; no client text reaches the compiler. Sessions are saved under
+`build/mcp/sessions/`. Each run takes about 2–3 seconds and is cached.
+`tests/test_mcp_server.py` covers both transports.
+
 ## Repository contents and generated files
 
 Keep the Modelica/Python/JavaScript sources, tests, documentation, reviewed JSON
