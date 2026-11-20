@@ -1,16 +1,16 @@
 {
  "municipality": "0583",
  "source": "Model Motala.Annual; outcomes from Motala kommun annual reports (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
- "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nno budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nthe municipality's adopted budget when recorded with a source, and older age shares from\nthe corresponding base year. Written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
  "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
  "limitations": [
   "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
-  "In the skr and standard sets grants grow 2 % a year; the circulars have no Motala figure for grants. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation for Motala are not in the circular and stay at the base year's level.",
+  "In the skr and standard sets grants grow 2 % a year. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation beyond the first year stay at the first forecast year's level.",
   "One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. The correction of the previous year's tax settlement is taken out of the base before growth is applied.",
   "The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.",
   "Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.",
   "The budget result is the adopted budget for the following year, set in November before the circular.",
-  "SKR forecast for Motala at the time is not available; only the national assumptions are."
+  "The SKR forecast for Motala at the time is not available; only the national assumptions are."
  ],
  "summaryByHorizon": {
   "skr": {
@@ -263,6 +263,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 40.1,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -290,6 +291,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -317,6 +319,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -352,6 +355,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 40.1,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -387,6 +391,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -422,6 +427,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -457,6 +463,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 40.1,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -492,6 +499,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -527,6 +535,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -554,6 +563,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 40.1,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -581,6 +591,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -608,6 +619,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -635,6 +647,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 40.1,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -662,6 +675,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -689,6 +703,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -716,6 +731,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 40.1,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -743,6 +759,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -770,6 +787,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 64.8
   },
   {
@@ -797,6 +815,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 56.3,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -824,6 +843,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -851,6 +871,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -886,6 +907,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 56.3,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -921,6 +943,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -956,6 +979,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -991,6 +1015,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 56.3,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1026,6 +1051,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1061,6 +1087,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1088,6 +1115,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 56.3,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1115,6 +1143,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1142,6 +1171,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1169,6 +1199,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 56.3,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1196,6 +1227,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1223,6 +1255,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1250,6 +1283,7 @@
     "source": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
    },
    "budgetResult": 56.3,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1277,6 +1311,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1304,6 +1339,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 61.7
   },
   {
@@ -1331,6 +1367,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": 29,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1358,6 +1395,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1385,6 +1423,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1420,6 +1459,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": 29,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1455,6 +1495,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1490,6 +1531,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1525,6 +1567,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": 29,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1560,6 +1603,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1595,6 +1639,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1622,6 +1667,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": 29,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1649,6 +1695,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1676,6 +1723,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1703,6 +1751,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": 29,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1730,6 +1779,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1757,6 +1807,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1784,6 +1835,7 @@
     "source": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
    },
    "budgetResult": 29,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1811,6 +1863,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1838,6 +1891,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 125.1
   },
   {
@@ -1865,6 +1919,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": -15,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -1892,6 +1947,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -1927,6 +1983,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": -15,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -1962,6 +2019,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -1997,6 +2055,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": -15,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2032,6 +2091,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2059,6 +2119,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": -15,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2086,6 +2147,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2113,6 +2175,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": -15,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2140,6 +2203,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2167,6 +2231,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
    },
    "budgetResult": -15,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2194,6 +2259,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 23
   },
   {
@@ -2221,6 +2287,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": 96,
+   "budgetSource": null,
    "persistenceResult": 1
   },
   {
@@ -2256,6 +2323,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": 96,
+   "budgetSource": null,
    "persistenceResult": 1
   },
   {
@@ -2291,6 +2359,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": 96,
+   "budgetSource": null,
    "persistenceResult": 1
   },
   {
@@ -2318,6 +2387,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": 96,
+   "budgetSource": null,
    "persistenceResult": 1
   },
   {
@@ -2345,6 +2415,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": 96,
+   "budgetSource": null,
    "persistenceResult": 1
   },
   {
@@ -2372,6 +2443,7 @@
     "source": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf"
    },
    "budgetResult": 96,
+   "budgetSource": null,
    "persistenceResult": 1
   }
  ]

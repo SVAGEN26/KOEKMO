@@ -230,6 +230,13 @@ pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/p
 Starta från ett annat år med <code>Annual(base = Data.odeshog2024)</code>.</p></html>"));
   end Annual;
 
+  model Continuous "Ödeshögs ekonomi med kontinuerlig tid inom året: lager och flöden"
+    extends Kommunekonomi.Continuous.Economy(base = Data.odeshog2025, olderShares = Data.olderShares);
+    annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
+      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
+är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));
+  end Continuous;
+
   package Examples "Färdiga modeller att simulera"
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet i Data.odeshog2025"
       extends Annual(base = Data.odeshog2024, olderShares = Data.olderShares2024, horizon = 1);

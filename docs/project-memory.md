@@ -841,3 +841,11 @@ där sajten påverkas, i JavaScript-referensen:
 - Förvalsscenariernas flyttnetto (−100 och +300) skalas med folkmängden utanför Motala. Ålderseffekten på skatten beror inte längre på länets utjämningssats.
 - Valdemarsvik 2020–2022 använder Koladas äldreomsorgsvikter från 2018. Generatorn varnar nu när vikterna är mer än två år äldre än basåret.
 - Ej åtgärdat: arbetaren laddar alla 13 kommunpaket vid start; kommunlistan finns både i `municipalities.js` och i `base-years.json`; novemberbefolkningen för Finspång läses ur två arkiv där det andra alltid vinner.
+
+## Lager och flöden i kontinuerlig tid (2026-11-20)
+
+- Användaren vill ha en mer kontinuerlig modell, byggd med lager, flöden och kopplingar, och projektet ska vara interaktivt. `Kommunekonomi.Continuous` (gren `continuous-time`) har `StockPort` (nivå och flöde), `Stock`, `Transfer`, `Inflow`, `Outflow`, `Meter` och `Clock`. `Continuous.Economy` har samma antaganden och utdata (`Report`) som `Annual`. Skulder har negativ nivå; `equityBalance` kontrollerar att lagren ändras med årets resultat.
+- Demografi och intäkter är oförändrade årskomponenter som körs med en kalender som slår vid årets början (`baseYear = base.year - 1`). Befolkningen och skatten blir därför identiska med Annual; testet `tests/test_continuous.py` kräver det.
+- Med standardantaganden är räntan 2–5 mnkr högre och nettokostnaden 5–25 mnkr högre per år 2026–2033 än i Annual (ränta på aktuell skuld; kostnader efter årets genomsnittliga befolkning). Bakåttest från SKR:s decembercirkulär 2020–2024 mot Motalas årsredovisningar: resultatets medelfel inom cirka 2 mnkr av Annual efter ett till tre år, skattefelen identiska (`data/vintage-hindcast-continuous.json`). Ingen träffsäkerhetsvinst.
+- Webbplatsen kör fortfarande Annual. Webbläsarens `buildModel` använder `method="euler"` med ett steg per år, vilket inte räcker för den kontinuerliga modellen.
+- Nästa steg enligt användaren: lokal MCP-server likt OMEdits (OMEdit/OMEditLIB/MCP, HTTP på localhost, generiska verktyg) men med projektets verktyg, så att en lokal AI kan fatta beslut år för år.

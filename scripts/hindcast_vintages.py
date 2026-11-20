@@ -55,6 +55,9 @@ ROOT = Path(__file__).resolve().parents[1]
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
 LAST = 2025
 CODE, PACKAGE = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 else ('0583', 'Motala')
+# HINDCAST_MODEL=Continuous runs the package's Continuous model (Kommunekonomi.Continuous.Economy) instead of Annual.
+MODEL = os.environ.get('HINDCAST_MODEL', 'Annual')
+SUFFIX = '' if MODEL == 'Annual' else '-' + MODEL.lower()
 PREFIX = PACKAGE.lower()
 ORIGINS = range(2020, 2025)
 OUTPUTS = ('tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', 'grantParts[4]', 'grantParts[5]', 'grantParts[6]', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'population', 'debt')
@@ -139,7 +142,7 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
                   f'incomeEqualisationPerCapitaPath = {modelica_array([c / capacity[0] for c in capacity])}*base.equalisationNextYear[1]']
         if assumptions == 'components':
             lines += [f'regulationPerCapitaPath = {modelica_array(regulation)}']
-    return f'model Run\n  extends {PACKAGE}.Annual(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+    return f'model Run\n  extends {PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
 def simulate(origin, horizon, source, directory):
@@ -148,7 +151,7 @@ def simulate(origin, horizon, source, directory):
         f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
         f'loadFile({json.dumps(str(ROOT / ("modelica/Motala.mo" if PACKAGE == "Motala" else f"modelica/municipalities/{PACKAGE}.mo")))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
-        f'simulate(Run, startTime = {origin}, stopTime = {origin + horizon}, numberOfIntervals = {horizon},'
+        f'simulate(Run, startTime = {origin}, stopTime = {origin + horizon}, numberOfIntervals = {horizon * (1 if MODEL == "Annual" else 12)},'
         ' outputFormat = "csv"); getErrorString();\n')
     process = subprocess.run([OMC, 'run.mos'], cwd=directory, capture_output=True, text=True, timeout=600)
     result = directory / 'Run_res.csv'
@@ -222,7 +225,7 @@ def main():
         summary['budget'] = {1: {'cases': len(errors), 'resultMeanAbsError': sum(map(abs, errors)) / len(errors),
                                  'resultMeanError': sum(errors) / len(errors)}}
     summary['persistence'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['persistenceResult'] - r['outcome']['result']) for r in one) / len(one)}}
-    out = {'municipality': CODE, 'source': f'Model {PACKAGE}.Annual; outcomes from ' + ('Motala kommun annual reports (kommunen); ' if CODE == '0583' else 'SCB:s räkenskapssammandrag (kommunen); ') + \
+    out = {'municipality': CODE, 'source': f'Model {PACKAGE}.{MODEL}; outcomes from ' + ('Motala kommun annual reports (kommunen); ' if CODE == '0583' else 'SCB:s räkenskapssammandrag (kommunen); ') + \
                      
                      'SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56',
            'method': __doc__.strip(),
@@ -246,7 +249,7 @@ def main():
                   'The budget result is the adopted budget for the following year, set in November before the circular.',
                   'The test uses the published national SKR assumptions. Historical local SKR revenue paths are outside this test.'])],
            'summaryByHorizon': summary, 'runs': runs}
-    (ROOT / ('data/vintage-hindcast.json' if CODE == '0583' else f'data/municipalities/{CODE}/vintage-hindcast.json')).write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
+    (ROOT / (f'data/vintage-hindcast{SUFFIX}.json' if CODE == '0583' else f'data/municipalities/{CODE}/vintage-hindcast{SUFFIX}.json')).write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     print(f'{"origin":>6s} {"year":>4s} {"set":8s} {"tax":>13s} {"grants":>13s} {"net cost":>13s} {"result":>13s} {"budget":>6s}')
     for r in runs:
         cell = lambda k: f'{r["model"][k]:6.0f}/{r["outcome"][k]:6.0f}'

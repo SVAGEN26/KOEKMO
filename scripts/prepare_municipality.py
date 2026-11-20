@@ -217,6 +217,13 @@ pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/p
 Starta från ett annat år med <code>Annual(base = Data.{package.lower()}{last - 1})</code>.</p></html>"));
   end Annual;
 
+  model Continuous "{name}s ekonomi med kontinuerlig tid inom året: lager och flöden"
+    extends Kommunekonomi.Continuous.Economy(base = Data.{package.lower()}{last}, olderShares = Data.olderShares);
+    annotation(experiment(StartTime = {last}, StopTime = {last + 8}, Interval = 0.0833333333333333),
+      Documentation(info = "<html><p><b>Tid: start {last}, slut {last + 8}.</b> Samma antaganden och utdata som Annual, men pengarna
+är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));
+  end Continuous;
+
   package Examples "Färdiga modeller att simulera"
     model Hindcast{last} "Starta i bokslutet {last - 1} och räkna fram {last}; jämför med utfallet i Data.{package.lower()}{last}"
       extends Annual(base = Data.{package.lower()}{last - 1}, olderShares = Data.olderShares{last - 1}, horizon = 1);
