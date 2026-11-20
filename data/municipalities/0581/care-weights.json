@@ -1,0 +1,464 @@
+{
+ "source": "Källa: Kolada (RKA), Socialstyrelsen och SCB",
+ "archive": "data/downloads/20261119T090426Z",
+ "kpis": {
+  "values": [
+   {
+    "id": "N01956",
+    "title": "Invånare 65-79 år, antal",
+    "description": "Antal invånare 65-79 år den 31/12. Källa: SCB.",
+    "is_divided_by_gender": true,
+    "municipality_type": "A",
+    "auspice": "X",
+    "operating_area": "Befolkning",
+    "perspective": "Volymer",
+    "prel_publication_date": null,
+    "publication_date": "2027-02-24",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N01957",
+    "title": "Invånare 80+, antal",
+    "description": "Antal invånare 80+ den 31/12. Källa: SCB.",
+    "is_divided_by_gender": true,
+    "municipality_type": "A",
+    "auspice": "X",
+    "operating_area": "Befolkning",
+    "perspective": "Volymer",
+    "prel_publication_date": null,
+    "publication_date": "2027-02-24",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N20007",
+    "title": "Kostnad äldreomsorg, kr/inv 65+",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner avseende vård och omsorg enligt SoL/HSL, dividerad med antalet invånare 65+ i kommunen den 31/12. Källa: SCB Räkenskapssammandraget.",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Hälso- och sjukvård",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-03-31",
+    "publication_date": "2027-08-28",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N20048",
+    "title": "Kostnad äldreomsorg, kr/inv 80+",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner avseende vård och omsorg enligt SoL/HSL, dividerad med antalet invånare 80+ i kommunen den 31/12. Källa: SCB Räkenskapssammandraget.",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Hälso- och sjukvård",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-03-31",
+    "publication_date": "2027-08-28",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N21009",
+    "title": "Kostnad hemtjänst äldreomsorg, kr/inv 65+",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för hemtjänst äldreomsorg, dividerat med antal invånare 65+ 31/12. Avser samtlig regi. Källa: SCB-Räkenskapssammandraget",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-03-31",
+    "publication_date": "2027-08-28",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N21024",
+    "title": "Kostnad hemtjänst äldreomsorg, kr/inv 80+",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för hemtjänst äldreomsorg, dividerat med antal invånare 80+ 31/12. Avser samtlig regi. Källa: SCB:s Räkenskapssammandrag och befolkningsstatistik.",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-03-31",
+    "publication_date": "2027-08-28",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N21702",
+    "title": "Hemtjänsttagare 65+ i ordinärt boende, antal",
+    "description": "Antal personer 65+ år med hemtjänst i ordinärt boende. Avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median. Personer med hemtjänstbeslut som endast omfattar trygghetslarm, matdistribution, avlösning eller ledsagning har exkluderats. Ålder beräknas efter hur många år personen har fyllt vid mätdagen (sista dagen) respektive månad. Källa: SCB och Socialstyrelsen.",
+    "is_divided_by_gender": true,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Volymer",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N21703",
+    "title": "Hemtjänsttagare 65-79 i ordinärt boende, antal",
+    "description": "Antal personer 65-79 år i särskilt boende eller med hemtjänst i ordinärt boende. Avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median. Personer med hemtjänstbeslut som endast omfattar trygghetslarm, matdistribution, avlösning eller ledsagning har exkluderats. Ålder beräknas efter hur många år personen har fyllt vid mätdagen (sista dagen) respektive månad. Källa: SCB och Socialstyrelsen.",
+    "is_divided_by_gender": true,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Volymer",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N21705",
+    "title": "Hemtjänsttagare 80+ i ordinärt boende, antal",
+    "description": "Antal personer 80+ år med hemtjänst i ordinärt boende. Avser fram till 2020 ett snitt av årets månader, från 2021 en kommunindividuell median. Personer med hemtjänstbeslut som endast omfattar trygghetslarm, matdistribution, avlösning eller ledsagning har exkluderats. Ålder beräknas efter hur många år personen har fyllt vid mätdagen (sista dagen) respektive månad. Källa: SCB och Socialstyrelsen.",
+    "is_divided_by_gender": true,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Volymer",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N23001",
+    "title": "Kostnad särskilt boende äldreomsorg, kr/inv 80+",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för särskilt boende äldreomsorg, dividerat med antal invånare 80+ 31/12. Avser samtlig regi. Källa: SCB:s Räkenskapssammandrag och befolkningsstatistik.",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-03-31",
+    "publication_date": "2027-08-28",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N23007",
+    "title": "Kostnad särskilt boende äldreomsorg, kr/inv 65+",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för särskilt boende äldreomsorg, dividerat med antal invånare 65+ 31/12. Avser samtlig regi. Källa: SCB:s Räkenskapssammandrag och befolkningsstatistik.",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-03-31",
+    "publication_date": "2027-08-28",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N23009",
+    "title": "Kostnad särskilt boende äldreomsorg, kr/brukare",
+    "description": "Bruttokostnad minus interna intäkter och försäljning till andra kommuner och regioner för särskilt boende eller annat boende äldreomsorg, dividerat med antal personer 65+ som bor permanent i särskilt boende eller annat boende exempelvis biståndsbedömt trygghetsboende. 2016–2023 ingick kostnader för både särskilt boende och annat boende, men de beräknades bara per brukare i särskilt boende. När uppgifterna delades upp togs annat boende bort. Från 2024 gäller både kostnader och antal boende endast särskilt boende. År 2013-2020 avser antal personer i särskilt boende ett månadssnitt av antal brukare, från år 2021 avses en kommunindividuell median (från Socialstyrelsens individstatistik). Även brukare i biståndsbedömt trygghetsboende är medräknade vilket gör att det i de kommuner biståndsbedömt trygghetsboende förekommer blir uppgiften missvisande. 2007-2012 hämtas antalet brukare från Socialstyrelsens individstatistik 1/10. T.o.m. 2006 från Socialstyrelsens mängdstatistik. Avser samtlig regi. Källa: SCB-Räkenskapssammandraget och Socialstyrelsens individstatistik.",
+    "is_divided_by_gender": false,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Resurser",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N23805",
+    "title": "Brukare 65+ i särskilt boende äldre, antal",
+    "description": "Antal personer 65+ år i särskilt boende. År 2013-2020 så avser antal personer i särskilt boende ett månadssnitt av antal brukare, från år 2021 en kommunindividuell median (från Socialstyrelsens individstatistik). Även brukare i biståndsbedömt trygghetsboende är medräknade. 2007-2012 hämtas antalet brukare från Socialstyrelsens individstatistik 1/10. T.o.m. 2006 från Socialstyrelsens mängdstatistik. Avser samtlig regi. Källa: Socialstyrelsen och SCB.",
+    "is_divided_by_gender": true,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Volymer",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N23806",
+    "title": "Brukare 80+ i särskilt boende äldre, antal",
+    "description": "Antal personer 80+ år i särskilt boende. År 2013-2020 avses ett snitt av årets tolv månader, från år 2021 avses en kommunindividuell median. Fr.o.m. 2007 hämtas antalet från Socialstyrelsens individstatistik. T.o.m. 2006 från Socialstyrelsens mängdstatistik. Avser samtlig regi. Källa: Socialstyrelsen.",
+    "is_divided_by_gender": true,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Volymer",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   },
+   {
+    "id": "N23807",
+    "title": "Brukare 65-79 år i särskilt boende äldre, antal",
+    "description": "Antal personer 65-79 år i särskilt boende. 2013-2020 avser antal personer i särskilt boende ett månadssnitt av antal brukare, från år 2021 en kommunindividuell median (från Socialstyrelsens individstatistik). 2007-2012 hämtas antalet brukare från Socialstyrelsens individstatistik 1/10. T.o.m. 2006 från Socialstyrelsens mängdstatistik. Avser samtlig regi. Källa: Socialstyrelsen och SCB.",
+    "is_divided_by_gender": true,
+    "municipality_type": "K",
+    "auspice": "T",
+    "operating_area": "Äldre",
+    "perspective": "Volymer",
+    "prel_publication_date": "2027-04-23",
+    "publication_date": "2027-11-12",
+    "publ_period": "2026",
+    "has_ou_data": false,
+    "search_score": null
+   }
+  ]
+ },
+ "method": "and age group g (65-79, 80+):\n\n    cost per inhabitant(g) = home-care users(g) / inhabitants(g) * cost per home-care user\n                           + residential-care users(g) / inhabitants(g) * cost per residential place\n\n- Cost per home-care user = home-care cost per inhabitant 65+ (N21009) * inhabitants 65+\n  / home-care users 65+ (N21702). The same cost per user is assumed at every age.\n- Cost per residential place = N23009 (kr per user).\n- Users: N21703/N21705 (home care), N23807/N23806 (residential care); inhabitants N01956/N01957.\n\nEach base year uses the mean of the three years ending in it. Kolada has no split of 80+;\nthe model's default gives 80-89 and 90+ the same cost per inhabitant.",
+ "yearly": {
+  "2015": {
+   "homeCarePerUser": 240994.0857629349,
+   "residentialCarePerUser": 719049.966982,
+   "65-79": {
+    "homeCareShare": 0.032251384790598955,
+    "residentialShare": 0.011837586928612105,
+    "costPerInhabitant": 16284.20948236411
+   },
+   "80+": {
+    "homeCareShare": 0.2083580320094843,
+    "residentialShare": 0.13442254494665087,
+    "costPerInhabitant": 146869.57994101572
+   }
+  },
+  "2016": {
+   "homeCarePerUser": 244557.75904532723,
+   "residentialCarePerUser": 788118.239545,
+   "65-79": {
+    "homeCareShare": 0.03186925434116445,
+    "residentialShare": 0.012104187946884577,
+    "costPerInhabitant": 17333.404719941223
+   },
+   "80+": {
+    "homeCareShare": 0.2056088560885609,
+    "residentialShare": 0.13354243542435423,
+    "costPerInhabitant": 155530.47019608555
+   }
+  },
+  "2017": {
+   "homeCarePerUser": 249392.6623641686,
+   "residentialCarePerUser": 852561.540125,
+   "65-79": {
+    "homeCareShare": 0.032331053901850364,
+    "residentialShare": 0.011648565299175382,
+    "costPerInhabitant": 17994.246381333498
+   },
+   "80+": {
+    "homeCareShare": 0.2018213866039953,
+    "residentialShare": 0.1357349197018214,
+    "costPerInhabitant": 166055.14511692658
+   }
+  },
+  "2018": {
+   "homeCarePerUser": 278112.3206395082,
+   "residentialCarePerUser": 860995.161627,
+   "65-79": {
+    "homeCareShare": 0.03476968796433878,
+    "residentialShare": 0.012828132738979692,
+    "costPerInhabitant": 20714.838828644268
+   },
+   "80+": {
+    "homeCareShare": 0.19337340565899427,
+    "residentialShare": 0.136258124420173,
+    "costPerInhabitant": 171097.11245592663
+   }
+  },
+  "2019": {
+   "homeCarePerUser": 270922.88921206445,
+   "residentialCarePerUser": 870512.778236,
+   "65-79": {
+    "homeCareShare": 0.03651423810223987,
+    "residentialShare": 0.013302782270744497,
+    "costPerInhabitant": 21472.78483681047
+   },
+   "80+": {
+    "homeCareShare": 0.18583440216616787,
+    "residentialShare": 0.13418602441641728,
+    "costPerInhabitant": 167157.44206503403
+   }
+  },
+  "2020": {
+   "homeCarePerUser": 284660.9485335015,
+   "residentialCarePerUser": 896137.276063,
+   "65-79": {
+    "homeCareShare": 0.033736813961401976,
+    "residentialShare": 0.014142077034174323,
+    "costPerInhabitant": 22276.795854029046
+   },
+   "80+": {
+    "homeCareShare": 0.18161308516638466,
+    "residentialShare": 0.12229742432741116,
+    "costPerInhabitant": 161293.43379584575
+   }
+  },
+  "2021": {
+   "homeCarePerUser": 293178.9844079341,
+   "residentialCarePerUser": 902440.809298,
+   "65-79": {
+    "homeCareShare": 0.03392044904674344,
+    "residentialShare": 0.014831123584631763,
+    "costPerInhabitant": 23328.97397269906
+   },
+   "80+": {
+    "homeCareShare": 0.17617289016550403,
+    "residentialShare": 0.11667350567637806,
+    "costPerInhabitant": 156941.12190515842
+   }
+  },
+  "2022": {
+   "homeCarePerUser": 302907.9143870244,
+   "residentialCarePerUser": 914991.075223,
+   "65-79": {
+    "homeCareShare": 0.033848239794683065,
+    "residentialShare": 0.014769260568495472,
+    "costPerInhabitant": 23766.641329695656
+   },
+   "80+": {
+    "homeCareShare": 0.17266376696981678,
+    "residentialShare": 0.11598787399499143,
+    "costPerInhabitant": 158429.09108254145
+   }
+  },
+  "2023": {
+   "homeCarePerUser": 327684.28928144136,
+   "residentialCarePerUser": 971772.727273,
+   "65-79": {
+    "homeCareShare": 0.03408651989185014,
+    "residentialShare": 0.015401699497875627,
+    "costPerInhabitant": 26136.56857052842
+   },
+   "80+": {
+    "homeCareShare": 0.1645762067654884,
+    "residentialShare": 0.11370834917015077,
+    "costPerInhabitant": 164427.7099333726
+   }
+  },
+  "2024": {
+   "homeCarePerUser": 339640.23495565634,
+   "residentialCarePerUser": 1035316.30972,
+   "65-79": {
+    "homeCareShare": 0.0341565183639804,
+    "residentialShare": 0.014603852311872301,
+    "costPerInhabitant": 26720.534405633014
+   },
+   "80+": {
+    "homeCareShare": 0.16016746411483254,
+    "residentialShare": 0.10909090909090909,
+    "costPerInhabitant": 167342.9125682134
+   }
+  },
+  "2025": {
+   "homeCarePerUser": 352815.6563410121,
+   "residentialCarePerUser": 1070093.988146,
+   "65-79": {
+    "homeCareShare": 0.03313649895075887,
+    "residentialShare": 0.01303011078034259,
+    "costPerInhabitant": 25634.518837076244
+   },
+   "80+": {
+    "homeCareShare": 0.1573173490160597,
+    "residentialShare": 0.10320063334087311,
+    "costPerInhabitant": 165938.40105785715
+   }
+  }
+ },
+ "baseYears": {
+  "2020": {
+   "years": [
+    2018,
+    2019,
+    2020
+   ],
+   "costPerInhabitant": {
+    "65-79": 21488.139839827927,
+    "80+": 166515.99610560213
+   },
+   "ratio80to6579": 7.749204786771136
+  },
+  "2021": {
+   "years": [
+    2019,
+    2020,
+    2021
+   ],
+   "costPerInhabitant": {
+    "65-79": 22359.51822117953,
+    "80+": 161797.3325886794
+   },
+   "ratio80to6579": 7.236172577073717
+  },
+  "2022": {
+   "years": [
+    2020,
+    2021,
+    2022
+   ],
+   "costPerInhabitant": {
+    "65-79": 23124.137052141257,
+    "80+": 158887.88226118186
+   },
+   "ratio80to6579": 6.871083746948694
+  },
+  "2023": {
+   "years": [
+    2021,
+    2022,
+    2023
+   ],
+   "costPerInhabitant": {
+    "65-79": 24410.727957641047,
+    "80+": 159932.6409736908
+   },
+   "ratio80to6579": 6.5517358290672645
+  },
+  "2024": {
+   "years": [
+    2022,
+    2023,
+    2024
+   ],
+   "costPerInhabitant": {
+    "65-79": 25541.248101952366,
+    "80+": 163399.90452804248
+   },
+   "ratio80to6579": 6.397490986963642
+  },
+  "2025": {
+   "years": [
+    2023,
+    2024,
+    2025
+   ],
+   "costPerInhabitant": {
+    "65-79": 26163.873937745895,
+    "80+": 165903.00785314772
+   },
+   "ratio80to6579": 6.340919095081102
+  }
+ }
+}

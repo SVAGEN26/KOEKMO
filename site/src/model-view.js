@@ -16,60 +16,62 @@ export const COMPONENTS=[
   {id:'demography',model:'Demography',name:'Demografi',sub:'Fem åldersgrupper',x:40,y:40,color:'#285f8c',
     keys:['migrationDelta','birthChange'],
     values:r=>[['Invånare',fmt(r.population)],['Födda / döda',`${fmt(r.births)} / ${fmt(r.deaths)}`],['Flyttnetto',signed(r.migration)]],
-    text:`Befolkningen delas i fem grupper: 0–6, 7–15, 16–18, 19–64 och 65+ år. Varje år överlever en andel, en jämnt fördelad del åldras upp till nästa grupp, födda tillkommer i 0–6 och ett restflöde lägger till flyttningar och statistiska justeringar. Restflödet är kalibrerat så att grundscenariot följer kommunens befolkningsprognos; det är inte observerad flyttning per ålder.`,
-    eq:['födda = 334 · (19–64 år / 19–64 år 2025) · (1 + förändring i födelsetal)',
+    text:`I grundmodellen delas befolkningen i fem grupper: 0–6, 7–15, 16–18, 19–64 och 65+ år. Varje år överlever en andel, en jämnt fördelad del åldras upp till nästa grupp, födda tillkommer i 0–6 och ett restflöde lägger till flyttningar och statistiska justeringar. Restflödet kalibreras mot kommunens historik eller en inläst befolkningsprognos. Det omfattar även statistiska justeringar. Med mer detaljerade lokala underlag kan modellen också räkna med ettårsåldrar och historiskt flyttnetto.`,
+    eq:['födda = födda i basåret · (19–64 år / 19–64 år i basåret) · (1 + förändring i födelsetal)',
       'överlevande = föregående år · (1 − dödsrisk)',
       'uppåldrade = överlevande / gruppens bredd i år (7, 9, 3, 46)',
       'grupp = överlevande − uppåldrade + inflöde + restflöde + flyttnetto · vikt',
       'kontroll: Δbefolkning = födda − döda + flyttnetto'],
-    limits:'Breda åldersgrupper. Födslar följer gruppen 19–64 som en grov exponering. Ändrat flyttnetto fördelas med fasta vikter (15, 12, 3, 65 och 5 %).'},
+    limits:'Breda åldersgrupper. Födslar följer gruppen 19–64 som en grov exponering. Grundmodellens ändrade flyttnetto använder fasta vikter. SCB-varianten fördelar ändringen enligt tidigare inflyttares åldrar.'},
   {id:'services',model:'Services',name:'Verksamhet',sub:'Efterfrågan och kapacitet',x:380,y:40,color:'#237355',
     keys:['adjustment'],
-    values:r=>[['Utbildning',idx(r.educationIndex)],['Äldreomsorg',idx(r.careIndex)],['Index','2025 = 100']],
+    values:r=>[['Utbildning',idx(r.educationIndex)],['Äldreomsorg',idx(r.careIndex)],['Index','basår = 100']],
     text:`Åldersgrupperna blir efterfrågan på tre verksamheter: utbildning, äldreomsorg och övrigt. Kapaciteten följer efterfrågan med fördröjning; en fast andel ändras inte alls. Kapaciteten vägs ihop med verksamheternas kostnader till en tjänstevolym som styr driftens kostnader.`,
-    eq:['utbildning = 0,25 · (0–6)/bas + 0,60 · (7–15)/bas + 0,15 · (16–18)/bas',
-      'äldreomsorg = (65+) / bas',
+    eq:['utbildning = åldersviktat behov för 0–6, 7–15 och 16–18 år',
+      'äldreomsorg = åldersviktat behov för 65–79, 80–89 och 90+ år',
       'övrigt = befolkning / bas',
-      'kapacitet = fg + anpassning · (0,25 + 0,75 · efterfrågan − fg)',
-      'tjänstevolym = (1 250 · utbildning + 600 · omsorg + 1 173 · övrigt) / 3 023'],
-    limits:'Kostnadsvikterna är illustrativa, inte kommunens verksamhetsbudget. Index för behov, inte antal elever eller brukare.'},
+      'kapacitet = fg + anpassning · (fast andel + rörlig andel · efterfrågan − fg)',
+      'tjänstevolym = sektorkapacitet vägd med sektorkostnader i basåret'],
+    limits:'Kostnadsvikterna fördelar basårets kostnader mellan verksamheterna. Indexet beskriver det beräknade behovet.'},
   {id:'operations',model:'OperatingAccounts',name:'Drift',sub:'Löner, pensioner, övrigt',x:720,y:40,color:'#237355',
     keys:['wageGrowth','priceGrowth','pensionGrowth','productivity','operatingRevenueGrowth'],
-    values:r=>[['Löner',fmt(r.payroll)],['Övriga kostnader',fmt(r.otherOperatingExpense)],['Nettokostnad',fmt(r.cost)]],
-    text:`Driftens nettokostnad byggs från bokslutets delar 2025. Löner följer lönebanan och tjänstevolymen, minus produktivitet. Övriga kostnader följer prisbanan och volymen. Pensionskostnaden har en egen bana. Verksamhetens intäkter, till exempel avgifter, följer befolkningen och dras av.`,
-    eq:['löner = 2 288 · löneindex · tjänstevolym / produktivitet',
-      'övriga kostnader = 1 297 · prisindex · tjänstevolym',
-      'verksamhetsintäkter = 751 · intäktsindex · befolkning / befolkning 2025',
-      'nettokostnad = löner + pension + övriga kostnader − verksamhetsintäkter − 1'],
-    limits:'Produktivitet sänker bara lönekostnaden. −1 mnkr stämmer av bokslutets avrundning.'},
+    values:r=>[['Personal exkl. pension',fmt(r.payroll)],['Övriga kostnader',fmt(r.otherOperatingExpense)],['Nettokostnad',fmt(r.cost)]],
+    text:`Driftens nettokostnad byggs från basårets bokslut. Löner följer lönebanan och tjänstevolymen, minus produktivitet. Övriga kostnader följer prisbanan och volymen. Pensionskostnaden har en egen bana. I varianten med separata löner beräknas sociala avgifter som en andel av lönen. Verksamhetens intäkter, till exempel avgifter, följer befolkningen och dras av.`,
+    eq:['löner = basårets löner · löneindex · tjänstevolym / produktivitet',
+      'sociala avgifter = löner · avgiftsandel',
+      'övriga kostnader = basårets övriga kostnader · prisindex · tjänstevolym',
+      'verksamhetsintäkter = basårets intäkter · intäktsindex · befolkning / basårets befolkning',
+      'nettokostnad = löner + sociala avgifter + pension + övriga kostnader − verksamhetsintäkter + avrundning'],
+    limits:'Produktivitet sänker lönekostnaden. En eventuell avrundningspost stämmer av basåret.'},
   {id:'revenues',model:'Revenue',name:'Intäkter',sub:'Skatt och bidrag',x:40,y:330,color:'#285f8c',
     keys:['taxGrowth','grantGrowth','taxRate','equalisationOffset'],
     values:r=>[['Skatt',fmt(r.tax)],['Bidrag',fmt(r.grants)],['Summa',fmt(r.tax+r.grants)]],
-    text:`Skatt och generella bidrag utgår från en referensbana: SKR:s beräkning för Motala när planeringsunderlagen är aktiva, annars en illustrativ tillväxt. En illustrativ bana växer i rikets takt, och rikets skatteunderlag växer också av att rikets befolkning ökar. Motalas del skalas därför med Motalas folkmängd i förhållande till rikets: när Motala krymper och riket växer, minskar Motalas andel. Både skatten och de flesta bidragen räknas per invånare, så varje invånare betyder cirka 77 000 kr per år. Fler eller färre i arbetsför ålder ändrar skatten, och utjämningen tar tillbaka det mesta av den avvikelsen via bidragen. En annan skattesats ändrar bara skatten.`,
-    eq:['befolkningsfaktor = (Motala fg år / Motala året före basåret) / (riket fg år / riket året före basåret)',
-      'med SKR:s bana: befolkningsfaktor = Motala fg år / SKR:s befolkning',
+    text:`Skatt och generella bidrag utgår från en referensbana: SKR:s beräkning för kommunen när planeringsunderlagen är aktiva, annars en illustrativ tillväxt. En illustrativ bana växer i rikets takt, och rikets skatteunderlag växer också av att rikets befolkning ökar. Kommunens del skalas därför med Kommunens folkmängd i förhållande till rikets: när kommunen krymper och riket växer, minskar kommunens andel. Grundmodellen skalar båda intäktssummorna med samma befolkningskvot. Varianten per delpost justerar skatt före avräkning, inkomstutjämning och regleringspost med folkmängden den 1 november. En tredje variant använder SKR:s publicerade intäktsbana direkt. Fler eller färre i arbetsför ålder ändrar skatten, och utjämningen tar tillbaka det mesta av den avvikelsen via bidragen. En annan skattesats ändrar bara skatten.`,
+    eq:['befolkningsfaktor = (kommunen fg år / kommunen året före basåret) / (riket fg år / riket året före basåret)',
+      'med SKR:s bana: befolkningsfaktor = kommunen fg år / SKR:s befolkning',
       'avvikelse = referensskatt · befolkningsfaktor · (andel 19–64 / andel året före basåret − 1); noll med SKR:s bana',
-      'skatt = (referensskatt · befolkningsfaktor + avvikelse) · skattesats / 21,70',
+      'skatt = (referensskatt · befolkningsfaktor + avvikelse) · skattesats / basårets skattesats',
       'bidrag = referensbidrag · befolkningsfaktor − utjämning · avvikelse'],
-    limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning. Rikets folkmängd: SCB, utfall till 2025 och därefter SCB:s framskrivning.'},
+    limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning. Rikets folkmängd hämtas från respektive prognosunderlag.'},
   {id:'capital',model:'Capital',name:'Kapital',sub:'Tillgångar och avskrivning',x:380,y:330,color:'#9b5f23',
     keys:['investment'],
     values:r=>[['Investering',fmt(r.investment)],['Avskrivning',fmt(r.depreciation)],['Tillgångar',fmt(r.assets)]],
-    text:`Investeringar tas i bruk samma år. Avskrivningen räknas med en sammanvägd livslängd, härledd ur bokslutet: 2 997 mnkr i tillgångar och 180 mnkr i avskrivning ger knappt 17 år.`,
-    eq:['livslängd = 2 997 / 180 ≈ 16,7 år',
-      'avskrivning = (tillgångar fg år + ½ · investering) / livslängd',
-      'tillgångar = fg år + investering − avskrivning'],
-    limits:'Ingen uppdelning på anläggningar, pågående projekt eller försäljningar.'},
+    text:`I grundmodellen tas investeringar i bruk samma år. Med vald byggtid ligger byggandelen bland pågående arbeten fram till driftsättning. Kassaflödet belastas när investeringen betalas. Avskrivningen använder en sammanvägd livslängd härledd ur basårets bokslut.`,
+    eq:['livslängd = basårets tillgångar i bruk / basårets avskrivningar',
+      'pågående arbeten = fg år + utbetald investering − taget i bruk',
+      'avskrivning = (tillgångar i bruk fg år + ½ · taget i bruk) / livslängd',
+      'tillgångar i bruk = fg år + taget i bruk − avskrivning'],
+    limits:'Byggtiden är ett gemensamt antagande för de fördröjda investeringarna.'},
   {id:'finance',model:'Finance',name:'Finans',sub:'Resultat, kassa och lån',x:720,y:330,color:'#694b91',
     keys:['interestRate'],
     values:r=>[['Resultat',fmt(r.result)],['Räntor',fmt(r.interest)],['Låneskuld',fmt(r.debt)]],
-    text:`Här möts allt. Årets resultat är intäkter minus kostnader. Kassaflödet från driften lägger tillbaka avskrivningen, som inte är en utbetalning. Räcker kassaflödet inte till investeringarna lånar kommunen mellanskillnaden; ett överskott amorterar lån. Räntan betalas på skulden vid årets början.`,
+    text:`Här möts allt. Årets resultat är intäkter minus kostnader. Kassaflödet från driften lägger tillbaka avskrivningen. När rörelsekapital är aktivt ändras kassaflödet också när kundfordringar, leverantörsskulder och förutbetalda bidrag förändras. I grundmodellen lånar kommunen om driftkassan inte täcker investeringarna. Med kassapolicy används kassan över den valda reserven till betalning och amortering. Ett förfinansieringslån ökar både kassa och skuld när det tas upp. Räntan beräknas på skulden vid årets början.`,
     eq:['ränta = låneskuld fg år · räntesats',
-      'resultat = skatt + bidrag − nettokostnad − avskrivning + 15 − ränta − 4',
+      'resultat = skatt + bidrag − nettokostnad − avskrivning + finansiella intäkter − ränta − övriga finansiella kostnader',
       'kassaflöde = resultat + avskrivning + pensionskostnad − pensionsutbetalning',
       'behov = investering − kassaflöde → lån om positivt, amortering om negativt',
       'låneskuld = fg år + nya lån − amortering'],
-    limits:'Standardräntan 2,23 % är räntekostnaden 2025 (21 mnkr) delad med låneskulden vid årets början (940 mnkr). 15 mnkr finansiella intäkter och 4 mnkr övriga finansiella kostnader hålls fasta. Rörelsekapital, borgen och leasing ingår inte.'}
+    limits:'Standardräntan är basårets räntekostnad delad med dess ingående låneskuld. Övriga finansiella poster hålls fasta. Rörelsekapital kan aktiveras i scenariot. Borgen och ny leasing har inga egna flöden.'}
 ];
 const W=260,H=150,byId=Object.fromEntries(COMPONENTS.map(c=>[c.id,c]));
 
@@ -122,7 +124,7 @@ export function createModelView(root,{source}) {
 
   root.innerHTML=`<div class="model-toolbar"><label for="model-year">År</label><input id="model-year" type="range" min="1" max="1" step="1"><output id="model-year-label"></output></div>
 <div class="model-diagram" id="model-diagram"></div>
-<p class="chart-note">Klicka på en del för att läsa hur den räknar och ändra dess antaganden. Pilarna är modellens kopplingar; pengaflödenas tjocklek motsvarar beloppet för valt år. Diagrammet följer placeringen i <code>Kommunekonomi.Annual</code>, som <code>Motala.Annual</code> ärver.</p>
+<p class="chart-note">Klicka på en del för att läsa hur den räknar och ändra dess antaganden. Pilarna är modellens kopplingar; pengaflödenas tjocklek motsvarar beloppet för valt år. Diagrammet följer placeringen i <code>Kommunekonomi.Annual</code>.</p>
 <div class="model-detail" id="model-detail" aria-live="polite"></div>
 <section class="panel"><p class="eyebrow">FRÅN INTÄKTER TILL LÅN</p><h2 id="waterfall-title">Resultat och finansiering</h2><div id="model-waterfall"></div><p class="chart-note">Samma beräkning som i Finans. Positiva poster ökar, negativa minskar. Kassaflödet räknas från resultatet; investeringar som inte täcks lånas.</p></section>`;
   const $=id=>root.querySelector('#'+id);
@@ -191,12 +193,12 @@ ${flows}${labels}${input}${nodes}</svg>`;
     const c=byId[selected],controls=c.keys.map(control).filter(Boolean);
     paramSignature=controls.map(x=>x.label+x.unit+x.min+x.max).join('|');
     $('model-detail').innerHTML=`<section class="panel model-panel" style="--node:${c.color}">
-<div class="model-panel-text"><p class="eyebrow">${safe(c.model.toUpperCase())} · MOTALA.COMPONENTS</p><h2>${safe(c.name)}</h2><p>${safe(c.text)}</p>
+<div class="model-panel-text"><p class="eyebrow">${safe(c.model.toUpperCase())} · KOMMUNEKONOMI.COMPONENTS</p><h2>${safe(c.name)}</h2><p>${safe(c.text)}</p>
 <h3>Ekvationer, ett steg per år</h3><ul class="equations">${c.eq.map(e=>`<li><code>${safe(e)}</code></li>`).join('')}</ul>
 <p class="chart-note">${safe(c.limits)}</p>
 ${code[c.id]?`<details><summary>Visa Modelica-koden</summary><pre class="modelica"><code>${safe(code[c.id])}</code></pre></details>`:''}</div>
 <div class="model-panel-params"><p class="eyebrow">ANTAGANDEN</p>${controls.length?controls.map(x=>`<div class="slider"><div class="slider-top"><label for="m-${x.key}">${safe(x.label)}</label><div class="number"><input id="m-${x.key}" data-mkey="${x.key}" type="number" min="${x.min}" max="${x.max}" step="any" value="${safe(x.value)}"><span>${safe(x.unit)}</span></div></div><input data-mkey="${x.key}" type="range" min="${x.min}" max="${x.max}" step="${x.step}" value="${safe(x.value)}" aria-label="${safe(x.label)}, reglage"><div class="slider-help"><span>${safe(x.help)}</span></div></div>`).join(''):'<p class="muted">Inga justerbara antaganden.</p>'}
-<p class="small muted">Samma antaganden som i Scenariolabbet. Ändringar gäller från 2026.</p></div></section>`;
+<p class="small muted">Samma antaganden som i Scenariolabbet. Ändringar gäller från första prognosåret.</p></div></section>`;
   }
 
   function renderWaterfall(){

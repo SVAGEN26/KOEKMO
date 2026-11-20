@@ -1,0 +1,387 @@
+{
+  "retrieved_at": "2026-11-20T10:49:26.082278+00:00",
+  "municipalities": [
+    "0509",
+    "0512",
+    "0513",
+    "0560",
+    "0561",
+    "0562",
+    "0563",
+    "0580",
+    "0581",
+    "0582",
+    "0584",
+    "0586"
+  ],
+  "files": [
+    {
+      "file": "deaths-2015-2024.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101I/DodaHandelseK",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "tot"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "BE0101D9"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "968633cfe50d7c4a730ee53c60f6c16cd02f4aa433093a46881e2bdc056aabd5",
+      "bytes": 12888
+    },
+    {
+      "file": "deaths-2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101I/DodaHandelseKCKM",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSA"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000008FO"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "1e7ddd3e24bef755cd8c6bed087c7aece23780045335432c0c4e8cf0127c1612",
+      "bytes": 1721
+    },
+    {
+      "file": "births-2015-2024.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101H/FoddaK",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "AlderModer",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "tot"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "BE0101E2"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "e1bda32db4f611c6ea7309af2de18a8e5181ba82268dfd1f05941c255b6ed630",
+      "bytes": 12969
+    },
+    {
+      "file": "births-2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101H/FoddaKCKM",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "AlderModer",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TotSA"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "00000863"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "bcbe30e997c9314fd6000949ac0278241b6385f01efe30c7470e63d63717fb76",
+      "bytes": 1691
+    },
+    {
+      "file": "total-fertility.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101H/FruktsamhetSum",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000001J4"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "2025"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "sha256": "b104a1bc6bd4ef171f431f73349b48f260835736c3615f60446f934fe4139d87",
+      "bytes": 6433
+    }
+  ]
+}

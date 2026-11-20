@@ -1,0 +1,588 @@
+{
+  "baseline": {
+    "municipality": "0583",
+    "baseYear": 2021,
+    "ageGroups": [
+      "0–6",
+      "7–15",
+      "16–18",
+      "19–64",
+      "65+"
+    ],
+    "tax": 2032.167,
+    "grants": 782.981,
+    "depreciation": 138.355,
+    "financialIncome": 5.962,
+    "interestExpense": 5.167,
+    "otherFinancialExpense": 1.955,
+    "debt": 830.157,
+    "cash": 338.191,
+    "assets": 2328.459,
+    "investment": 272.62,
+    "taxRate": 21.7,
+    "deaths": 455.0,
+    "priorYearSettlement": 7.21,
+    "cashCost": 2613.9519999999998,
+    "publishedResult": 61.681,
+    "births": 420.0,
+    "population": [
+      3386.0,
+      4633.0,
+      1550.0,
+      23766.0,
+      10339.0
+    ],
+    "reportedPopulation": 43674.0,
+    "assumptions": {
+      "years": 5,
+      "taxGrowth": 3.5,
+      "grantGrowth": 2.0,
+      "wageGrowth": 3.0,
+      "priceGrowth": 2.0,
+      "productivity": 0.0,
+      "migrationDelta": 0,
+      "birthChange": 0,
+      "interestRate": 0.6557214776385903,
+      "taxRate": 21.7,
+      "investment": 272.62,
+      "adjustment": 0.5,
+      "equalisationOffset": 0.95,
+      "fixedShare": 0.25,
+      "sectorCosts": [
+        1130.2728448,
+        536.3829503999999,
+        947.2962047999999
+      ],
+      "migrationWeights": [
+        0.15,
+        0.12,
+        0.03,
+        0.65,
+        0.05
+      ],
+      "educationWeights": [
+        0.28842884288428844,
+        0.521052105210521,
+        0.19051905190519053
+      ],
+      "populationRevenueElasticity": 1.0,
+      "pensionGrowth": 2.0,
+      "operatingRevenueGrowth": 2.0,
+      "pensionExpensePath": null,
+      "pensionCashPaymentsPath": null
+    },
+    "workInProgress": 0,
+    "workingCapital": {
+      "receivables": 29.909,
+      "payables": 216.898,
+      "grantAdvances": null,
+      "tradeSource": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6779"
+    },
+    "workInProgressSource": {
+      "url": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "printedPages": [
+        42
+      ],
+      "note": "Not 12, kommunen i jämförelsekolumnen 2021. Streck för pågående ny- och ombyggnation; tolkas som inget separat bokfört saldo i denna not."
+    },
+    "source": "https://www.scb.se/OE0107/",
+    "nationalPopulation": {
+      "population": {
+        "2020": 10379295.0,
+        "2021": 10427485.0,
+        "2022": 10476310.0,
+        "2023": 10523145.0,
+        "2024": 10569114.0,
+        "2025": 10615763.0,
+        "2026": 10662799.0,
+        "2027": 10710034.0
+      },
+      "extrapolateAfter": 2027
+    },
+    "operatingAccounts": {
+      "payrollExcludingPensions": 2005.8229999999999,
+      "pensionExpense": 147.761,
+      "otherOperatingExpense": 1169.346,
+      "operatingRevenue": 708.978,
+      "netCostRoundingAdjustment": 0
+    }
+  },
+  "history": [
+    {
+      "year": 2019,
+      "population": [
+        3418.0,
+        4593.0,
+        1531.0,
+        23988.0,
+        10143.0
+      ],
+      "reportedTotal": 43673.0,
+      "births": null,
+      "deaths": 440.0
+    },
+    {
+      "year": 2020,
+      "population": [
+        3448.0,
+        4559.0,
+        1559.0,
+        23825.0,
+        10249.0
+      ],
+      "reportedTotal": 43640.0,
+      "births": 430.0,
+      "deaths": 451.0
+    },
+    {
+      "year": 2021,
+      "population": [
+        3386.0,
+        4633.0,
+        1550.0,
+        23766.0,
+        10339.0
+      ],
+      "reportedTotal": 43674.0,
+      "births": 420.0,
+      "deaths": 455.0
+    }
+  ],
+  "planning": {
+    "municipality": "0583",
+    "baseYear": 2021,
+    "demography": "calibrated",
+    "rows": [
+      {
+        "year": 2022,
+        "taxBaseGrowth": 4.16226413047447,
+        "labourCostGrowth": 2.073,
+        "otherPriceGrowth": 2.18
+      },
+      {
+        "year": 2023,
+        "taxBaseGrowth": 3.74232883810273,
+        "labourCostGrowth": 2.67,
+        "otherPriceGrowth": 2.035
+      },
+      {
+        "year": 2024,
+        "taxBaseGrowth": 3.31147139672601,
+        "labourCostGrowth": 2.301,
+        "otherPriceGrowth": 2.198
+      },
+      {
+        "year": 2025,
+        "taxBaseGrowth": 3.75063455929034,
+        "labourCostGrowth": 3.542,
+        "otherPriceGrowth": 2.397
+      },
+      {
+        "year": 2026,
+        "taxBaseGrowth": 3.67,
+        "labourCostGrowth": 2.786,
+        "otherPriceGrowth": 2.547
+      },
+      {
+        "year": 2027,
+        "taxBaseGrowth": 3.67,
+        "labourCostGrowth": 3.39,
+        "otherPriceGrowth": 2.547
+      },
+      {
+        "year": 2028,
+        "taxBaseGrowth": 3.67,
+        "labourCostGrowth": 3.39,
+        "otherPriceGrowth": 2.547
+      }
+    ],
+    "revenuePath": {
+      "municipality": "0583",
+      "vintage": "2021-09-30",
+      "populationReference": "Folkmängd 1 november året före intäktsåret enligt SKR.",
+      "rows": [
+        {
+          "year": 2022,
+          "tax": 2081.055054,
+          "grants": 787.8702368284171,
+          "population": 43842.0,
+          "components": {
+            "recurringTax": 2072.768916,
+            "incomeEqualisation": 544.561482,
+            "regulation": 110.313906516531
+          }
+        },
+        {
+          "year": 2023,
+          "tax": 2158.3173659999998,
+          "grants": 778.9059137503191,
+          "population": 44047.0,
+          "components": {
+            "recurringTax": 2158.3173659999998,
+            "incomeEqualisation": 567.017031,
+            "regulation": 78.7402671066449
+          }
+        },
+        {
+          "year": 2024,
+          "tax": 2229.789428,
+          "grants": 797.295544872689,
+          "population": 44244.0,
+          "components": {
+            "recurringTax": 2229.789428,
+            "incomeEqualisation": 585.79056,
+            "regulation": 78.20860257358879
+          }
+        },
+        {
+          "year": 2025,
+          "tax": 2313.420681,
+          "grants": 806.351047911827,
+          "population": 44437.0,
+          "components": {
+            "recurringTax": 2313.420681,
+            "incomeEqualisation": 607.764849,
+            "regulation": 65.1450502954832
+          }
+        },
+        {
+          "year": 2026,
+          "tax": 2398.32322,
+          "grants": 816.0187342910971,
+          "population": 44633.0,
+          "components": {
+            "recurringTax": 2398.32322,
+            "incomeEqualisation": 630.0394279999999,
+            "regulation": 52.3911411038728
+          }
+        },
+        {
+          "year": 2027,
+          "tax": 2486.341682,
+          "grants": 826.4672208469491,
+          "population": 44830.0,
+          "components": {
+            "recurringTax": 2486.341682,
+            "incomeEqualisation": 653.12827,
+            "regulation": 39.603019004299
+          }
+        },
+        {
+          "year": 2028,
+          "tax": 2577.5904219999998,
+          "grants": 836.258505791208,
+          "population": 45028.0,
+          "components": {
+            "recurringTax": 2577.5904219999998,
+            "incomeEqualisation": 677.041008,
+            "regulation": 25.333049208587
+          }
+        }
+      ],
+      "provenance": {
+        "workbook": "Prognosunderlag-Motala-0583-21035.xlsx",
+        "sha256": "377d01759df7e2772c503f9162eb9ff20aa731548e62f8e3b44e02b1fc36841e",
+        "cellMap": {
+          "vintage": "2021-09-30",
+          "populationReference": "Folkmängd 1 november året före intäktsåret enligt SKR.",
+          "municipalityCheck": {
+            "sheet": "Prognosunderlag",
+            "cell": "B1",
+            "expected": 583
+          },
+          "calculatedMunicipalityCheck": {
+            "sheet": "Prognosunderlag",
+            "cell": "C1"
+          },
+          "rows": [
+            {
+              "year": 2022,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "C38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "C40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "D29"
+              }
+            },
+            {
+              "year": 2023,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "D38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "D40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "E29"
+              }
+            },
+            {
+              "year": 2024,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "E38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "E40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "F29"
+              }
+            },
+            {
+              "year": 2025,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "F38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "F40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "G29"
+              }
+            },
+            {
+              "year": 2026,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "G38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "G40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "H29"
+              }
+            },
+            {
+              "year": 2027,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "H38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "H40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "I29"
+              }
+            },
+            {
+              "year": 2028,
+              "tax": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "I38",
+                "scale": 0.001
+              },
+              "grants": {
+                "sheet": "Blad 1 Totala intäkter",
+                "cell": "I40",
+                "scale": 0.001
+              },
+              "population": {
+                "sheet": "Blad 2 Indata",
+                "cell": "J29"
+              }
+            }
+          ]
+        },
+        "cachedFormulasNotRecalculated": true,
+        "calculatedMunicipalityVerified": true,
+        "originalUrl": "https://skr.se/download/18.1505479e17c0251fcab52c9f/1632929688334/Prognosunderlag-K-2021-2028-21035.xls",
+        "archiveUrl": "https://web.archive.org/web/20211011094616id_/https://skr.se/download/18.1505479e17c0251fcab52c9f/1632929688334/Prognosunderlag-K-2021-2028-21035.xls",
+        "originalSha256": "0388496592df9d7500fe42383429d93c245e3c1e4740e0e2c142820e22905007",
+        "circular": "21:35"
+      }
+    },
+    "sources": {
+      "workbook": "Prognosunderlag-K-2021-2028-21035.xls",
+      "skrCircular": "21:35",
+      "archive": "data/downloads/20261109T162149Z"
+    }
+  },
+  "comparisons": [
+    {
+      "year": 2022,
+      "outcome": {
+        "tax": 2137.6,
+        "grants": 794.3,
+        "result": 125.1
+      },
+      "outcomeSource": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "capital": {
+        "workInProgress": 114.7,
+        "depreciation": 162.3,
+        "debt": 664.9,
+        "investment": 253.9
+      },
+      "capitalSource": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf",
+      "cashFlow": {
+        "operatingCash": 79.8,
+        "workingCapitalCash": -227.1
+      },
+      "scb": {
+        "tax": 2137.588,
+        "grants": 795.806,
+        "result": 126.563
+      },
+      "budgetResult": 56.3,
+      "budgetSource": "https://www.motala.se/media/uploads/arsredovisning-2022.pdf"
+    },
+    {
+      "year": 2023,
+      "outcome": {
+        "tax": 2227,
+        "grants": 865,
+        "result": 23
+      },
+      "outcomeSource": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf",
+      "capital": {
+        "workInProgress": 238,
+        "depreciation": 150,
+        "debt": 663,
+        "investment": 299
+      },
+      "capitalSource": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "cashFlow": {
+        "operatingCash": 334,
+        "workingCapitalCash": 123
+      },
+      "scb": {
+        "tax": 2227.01,
+        "grants": 863.394,
+        "result": 22.033
+      },
+      "budgetResult": 29,
+      "budgetSource": "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+    },
+    {
+      "year": 2024,
+      "outcome": {
+        "tax": 2251,
+        "grants": 953,
+        "result": 1
+      },
+      "outcomeSource": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "capital": {
+        "workInProgress": 86,
+        "depreciation": 168,
+        "debt": 940,
+        "investment": 417
+      },
+      "capitalSource": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf",
+      "cashFlow": {
+        "operatingCash": 255,
+        "workingCapitalCash": 72
+      },
+      "scb": {
+        "tax": 2251.166,
+        "grants": 953.164,
+        "result": 1.105
+      },
+      "budgetResult": -15,
+      "budgetSource": "https://www.motala.se/media/uploads/Arsredovisning-2024.pdf"
+    },
+    {
+      "year": 2025,
+      "outcome": {
+        "tax": 2330,
+        "grants": 987,
+        "result": 105
+      },
+      "outcomeSource": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+      "capital": {
+        "workInProgress": 99,
+        "depreciation": 180,
+        "debt": 1040,
+        "investment": 413
+      },
+      "capitalSource": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+      "cashFlow": {
+        "operatingCash": 162,
+        "workingCapitalCash": -124
+      },
+      "scb": {
+        "tax": 2330.182,
+        "grants": 987.269,
+        "result": 104.583
+      },
+      "budgetResult": 96,
+      "budgetSource": "https://www.motala.se/media/uploads/Budget_250523.pdf"
+    },
+    {
+      "year": 2026,
+      "outcome": null,
+      "scb": null,
+      "budgetResult": 86,
+      "budgetSource": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf",
+      "budgetTax": 2410,
+      "budgetGrants": 1014
+    }
+  ],
+  "novemberPopulation": {
+    "source": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6725",
+    "rows": [
+      {
+        "year": 2021,
+        "population": 43647
+      },
+      {
+        "year": 2022,
+        "population": 43733
+      },
+      {
+        "year": 2023,
+        "population": 43776
+      },
+      {
+        "year": 2024,
+        "population": 43572
+      },
+      {
+        "year": 2025,
+        "population": 43158
+      }
+    ]
+  },
+  "scbSource": {
+    "archive": "data/downloads/20261109T162149Z",
+    "tables": [
+      "TAB6777",
+      "TAB6779",
+      "TAB6782",
+      "TAB4202",
+      "TAB5179"
+    ],
+    "tab6777Sha256": "9d235b767ae5c0b71149f6b5cf7f6b03504f04890bfed1cb402740b80a8d6ba7"
+  }
+}

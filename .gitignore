@@ -58,6 +58,16 @@ data/*.xlsm
 data/skr-motala/*.xlsx
 data/skr-motala/*.xlsm
 data/skr-motala/recalculated/
+data/skr-historical/originals/
+data/skr-historical/recalculated/
 data/downloads/**/PKV-*.xlsx
 # Original budget PDF with its images; the archive keeps an image-free copy.
 data/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf
+
+# Downloaded source archives stay local. Archives committed before 2026-11-20
+# remain tracked. Each new archive keeps only its manifest and README in git:
+# source URLs, query, licence, retrieval time and SHA-256 for every file.
+data/downloads/**
+!data/downloads/*/
+!data/downloads/*/manifest.json
+!data/downloads/*/README.md

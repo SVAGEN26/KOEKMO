@@ -1,0 +1,2449 @@
+{
+ "municipality": "0562",
+ "source": "Model Finspang.Annual; outcomes from SCB:s räkenskapssammandrag (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nthe municipality's adopted budget when recorded with a source, and older age shares from\nthe corresponding base year. Written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
+ "limitations": [
+  "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
+  "In the skr and standard sets grants grow 2 % a year. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation beyond the first year stay at the first forecast year's level.",
+  "One-off items in the base year may carry into the forecast. The correction of the previous year's tax settlement is taken out of the base before growth is applied.",
+  "Personnel is compared as a total. Fixed assets from SCB include work in progress.",
+  "The budget result is the adopted budget for the following year, set in November before the circular.",
+  "The test uses the published national SKR assumptions. Historical local SKR revenue paths are outside this test."
+ ],
+ "summaryByHorizon": {
+  "skr": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -20.883435585921415,
+    "grantsMeanError": -11.058242649111275,
+    "netCostMeanError": -5.304762867416093,
+    "resultMeanError": -29.312324886873604,
+    "taxMeanAbsError": 20.883435585921415,
+    "grantsMeanAbsError": 11.058242649111275,
+    "netCostMeanAbsError": 28.977352711759657,
+    "resultMeanAbsError": 38.48815362141431
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -30.96396876787628,
+    "grantsMeanError": -24.215817448049975,
+    "netCostMeanError": -22.3090971971356,
+    "resultMeanError": -35.9274676025284,
+    "taxMeanAbsError": 37.219804388158764,
+    "grantsMeanAbsError": 24.215817448049975,
+    "netCostMeanAbsError": 68.81810909440259,
+    "resultMeanAbsError": 76.4142494846341
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -31.92696451721804,
+    "grantsMeanError": -37.72772654549143,
+    "netCostMeanError": -78.8942470935712,
+    "resultMeanError": 11.599199087759976,
+    "taxMeanAbsError": 35.96174875405874,
+    "grantsMeanAbsError": 37.72772654549143,
+    "netCostMeanAbsError": 96.88890049148124,
+    "resultMeanAbsError": 59.31005155085318
+   }
+  },
+  "components": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -20.883435585921415,
+    "grantsMeanError": 6.286899400000015,
+    "netCostMeanError": -5.304762867416093,
+    "resultMeanError": -11.967182837762262,
+    "taxMeanAbsError": 20.883435585921415,
+    "grantsMeanAbsError": 9.465404199999966,
+    "netCostMeanAbsError": 28.977352711759657,
+    "resultMeanAbsError": 26.359409016534812
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -30.96396876787628,
+    "grantsMeanError": -9.856957244530179,
+    "netCostMeanError": -22.3090971971356,
+    "resultMeanError": -21.161747104890885,
+    "taxMeanAbsError": 37.219804388158764,
+    "grantsMeanAbsError": 21.286407856001574,
+    "netCostMeanAbsError": 68.81810909440259,
+    "resultMeanAbsError": 66.71205013135827
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -31.92696451721804,
+    "grantsMeanError": -26.8675662150654,
+    "netCostMeanError": -78.8942470935712,
+    "resultMeanError": 23.104195183025798,
+    "taxMeanAbsError": 35.96174875405874,
+    "grantsMeanAbsError": 27.310968423688394,
+    "netCostMeanAbsError": 96.88890049148124,
+    "resultMeanAbsError": 60.28981341947122
+   }
+  },
+  "hold": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -20.883435585921415,
+    "grantsMeanError": 7.538218000000006,
+    "netCostMeanError": -5.304762867416093,
+    "resultMeanError": -10.715864237762341,
+    "taxMeanAbsError": 20.883435585921415,
+    "grantsMeanAbsError": 10.638624399999959,
+    "netCostMeanAbsError": 28.977352711759657,
+    "resultMeanAbsError": 27.532629216534737
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -30.96396876787628,
+    "grantsMeanError": 2.2410588802119804,
+    "netCostMeanError": -22.3090971971356,
+    "resultMeanError": -9.03767861553991,
+    "taxMeanAbsError": 37.219804388158764,
+    "grantsMeanAbsError": 15.561732627352015,
+    "netCostMeanAbsError": 68.81810909440259,
+    "resultMeanAbsError": 71.15008859624683
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -31.92696451721804,
+    "grantsMeanError": -5.5358408248127375,
+    "netCostMeanError": -78.8942470935712,
+    "resultMeanError": 44.65964074375167,
+    "taxMeanAbsError": 35.96174875405874,
+    "grantsMeanAbsError": 25.44185672945819,
+    "netCostMeanAbsError": 96.88890049148124,
+    "resultMeanAbsError": 72.93233388274844
+   }
+  },
+  "prices": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -20.883435585921415,
+    "grantsMeanError": -11.058242649111275,
+    "netCostMeanError": 7.104962933361321,
+    "resultMeanError": -41.72205068765093,
+    "taxMeanAbsError": 20.883435585921415,
+    "grantsMeanAbsError": 11.058242649111275,
+    "netCostMeanAbsError": 16.69729879010406,
+    "resultMeanAbsError": 41.72205068765093
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -30.96396876787628,
+    "grantsMeanError": -24.215817448049975,
+    "netCostMeanError": 17.32957648536035,
+    "resultMeanError": -75.72775894345972,
+    "taxMeanAbsError": 37.219804388158764,
+    "grantsMeanAbsError": 24.215817448049975,
+    "netCostMeanAbsError": 28.95632362439244,
+    "resultMeanAbsError": 75.72775894345972
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -31.92696451721804,
+    "grantsMeanError": -37.72772654549143,
+    "netCostMeanError": 13.603435088210063,
+    "resultMeanError": -82.14817452841889,
+    "taxMeanAbsError": 35.96174875405874,
+    "grantsMeanAbsError": 37.72772654549143,
+    "netCostMeanAbsError": 25.025420352307567,
+    "resultMeanAbsError": 82.14817452841889
+   }
+  },
+  "hindsight": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -7.581316734629763,
+    "grantsMeanError": -11.03943547842133,
+    "netCostMeanError": 7.104962933361321,
+    "resultMeanError": -28.40112466566947,
+    "taxMeanAbsError": 7.581316734629763,
+    "grantsMeanAbsError": 11.03943547842133,
+    "netCostMeanAbsError": 16.69729879010406,
+    "resultMeanAbsError": 30.217807036284974
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -9.403830492140514,
+    "grantsMeanError": -24.17729098464072,
+    "netCostMeanError": 17.32957648536035,
+    "resultMeanError": -53.761226179794,
+    "taxMeanAbsError": 17.26385219532051,
+    "grantsMeanAbsError": 24.17729098464072,
+    "netCostMeanAbsError": 28.95632362439244,
+    "resultMeanAbsError": 62.21657955189939
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -1.4685886546756894,
+    "grantsMeanError": -37.5948562989336,
+    "netCostMeanError": 13.603435088210063,
+    "resultMeanError": -50.67468103019478,
+    "taxMeanAbsError": 11.980696879864354,
+    "grantsMeanAbsError": 37.5948562989336,
+    "netCostMeanAbsError": 25.025420352307567,
+    "resultMeanAbsError": 50.67468103019478
+   }
+  },
+  "standard": {
+   "1": {
+    "cases": 5,
+    "taxMeanError": -19.15798103042739,
+    "grantsMeanError": -11.039200234238763,
+    "netCostMeanError": -10.510112887991273,
+    "resultMeanError": -22.362477895931804,
+    "taxMeanAbsError": 19.15798103042739,
+    "grantsMeanAbsError": 11.039200234238763,
+    "netCostMeanAbsError": 34.99224300260139,
+    "resultMeanAbsError": 43.96878599412435
+   },
+   "2": {
+    "cases": 4,
+    "taxMeanError": -33.94594742852979,
+    "grantsMeanError": -24.215410678597607,
+    "netCostMeanError": -36.529572534072145,
+    "resultMeanError": -24.063439127853776,
+    "taxMeanAbsError": 34.41796556612877,
+    "grantsMeanAbsError": 24.215410678597607,
+    "netCostMeanAbsError": 69.32472417884765,
+    "resultMeanAbsError": 66.88604168905272
+   },
+   "3": {
+    "cases": 3,
+    "taxMeanError": -39.83226562566566,
+    "grantsMeanError": -37.717086268029824,
+    "netCostMeanError": -78.26098594976618,
+    "resultMeanError": 3.5470519520991837,
+    "taxMeanAbsError": 39.83226562566566,
+    "grantsMeanAbsError": 37.717086268029824,
+    "netCostMeanAbsError": 78.26098594976618,
+    "resultMeanAbsError": 35.59373496899598
+   }
+  },
+  "budget": {
+   "1": {
+    "cases": 5,
+    "resultMeanAbsError": 28.252999999999965,
+    "resultMeanError": -22.34299999999997
+   }
+  },
+  "persistence": {
+   "1": {
+    "cases": 5,
+    "resultMeanAbsError": 38.00260000000013
+   }
+  }
+ },
+ "runs": [
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "skr",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1038.056772215573,
+    "grants": 367.3673895261923,
+    "netCost": 1374.9674718526376,
+    "personnel": 1100.688995376661,
+    "result": 25.19328187826522,
+    "population": 21768.46233076285
+   },
+   "outcome": {
+    "tax": 1071.744,
+    "grants": 379.56,
+    "netCost": 1388.8709999999999,
+    "personnel": 1108.112,
+    "result": 61.007999999999996,
+    "population": 21889.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 14.8,
+   "budgetSource": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "skr",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1068.663956301836,
+    "grants": 374.5505330422977,
+    "netCost": 1404.0970142940869,
+    "personnel": 1123.8939864280799,
+    "result": 33.69327581559082,
+    "population": 21770.26140494678
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "skr",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1101.853972978153,
+    "grants": 382.0320908725036,
+    "netCost": 1439.361438530058,
+    "personnel": 1152.178887600298,
+    "result": 39.12322853795877,
+    "population": 21770.48052652239
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "components",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1038.056772215573,
+    "grants": 411.043255,
+    "netCost": 1374.9674718526376,
+    "personnel": 1100.688995376661,
+    "result": 68.86914735207301,
+    "population": 21768.46233076285,
+    "grantParts": [
+     216.452925,
+     14.169015,
+     64.72910999999999,
+     15.170205,
+     50.922,
+     49.59999999999997
+    ]
+   },
+   "outcome": {
+    "tax": 1071.744,
+    "grants": 379.56,
+    "netCost": 1388.8709999999999,
+    "personnel": 1108.112,
+    "result": 61.007999999999996,
+    "population": 21889.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 14.8,
+   "budgetSource": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "components",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1068.663956301836,
+    "grants": 409.9879012229428,
+    "netCost": 1404.0970142940869,
+    "personnel": 1123.8939864280799,
+    "result": 69.89044987048328,
+    "population": 21770.26140494678,
+    "grantParts": [
+     225.7253705476207,
+     14.17126897732662,
+     52.61437345345382,
+     15.17261824454171,
+     52.70426999999999,
+     49.59999999999997
+    ]
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "components",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1101.853972978153,
+    "grants": 404.5211033129345,
+    "netCost": 1439.361438530058,
+    "personnel": 1152.178887600298,
+    "result": 63.00174989754987,
+    "population": 21770.48052652239,
+    "grantParts": [
+     235.4968048761932,
+     14.17244017462035,
+     35.52906661287314,
+     15.1738721992479,
+     54.54891944999999,
+     49.59999999999997
+    ]
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hold",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1038.056772215573,
+    "grants": 411.0214899999999,
+    "netCost": 1374.9674718526376,
+    "personnel": 1100.688995376661,
+    "result": 68.84738235207283,
+    "population": 21768.46233076285,
+    "grantParts": [
+     216.452925,
+     14.169015,
+     64.707345,
+     15.170205,
+     50.922,
+     49.59999999999997
+    ]
+   },
+   "outcome": {
+    "tax": 1071.744,
+    "grants": 379.56,
+    "netCost": 1388.8709999999999,
+    "personnel": 1108.112,
+    "result": 61.007999999999996,
+    "population": 21889.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 14.8,
+   "budgetSource": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hold",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1068.663956301836,
+    "grants": 422.0911662788469,
+    "netCost": 1404.0970142940869,
+    "personnel": 1123.8939864280799,
+    "result": 81.99333629222247,
+    "population": 21770.26140494678,
+    "grantParts": [
+     225.7253705476207,
+     14.17126897732662,
+     64.71763850935797,
+     15.17261824454171,
+     52.70426999999999,
+     49.59999999999997
+    ]
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hold",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1101.853972978153,
+    "grants": 433.7150238569682,
+    "netCost": 1439.361438530058,
+    "personnel": 1152.178887600298,
+    "result": 92.40583930542061,
+    "population": 21770.48052652239,
+    "grantParts": [
+     235.4968048761932,
+     14.17244017462035,
+     64.72298715690678,
+     15.1738721992479,
+     54.54891944999999,
+     49.59999999999997
+    ]
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "prices",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1038.056772215573,
+    "grants": 367.3673895261923,
+    "netCost": 1384.7292905769586,
+    "personnel": 1097.805436251548,
+    "result": 15.43146315394415,
+    "population": 21768.46233076285
+   },
+   "outcome": {
+    "tax": 1071.744,
+    "grants": 379.56,
+    "netCost": 1388.8709999999999,
+    "personnel": 1108.112,
+    "result": 61.007999999999996,
+    "population": 21889.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 14.8,
+   "budgetSource": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "prices",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1068.663956301836,
+    "grants": 374.5505330422977,
+    "netCost": 1464.227820458883,
+    "personnel": 1128.203718800022,
+    "result": -26.60735153373389,
+    "population": 21770.26140494678
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "prices",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1101.853972978153,
+    "grants": 382.0320908725036,
+    "netCost": 1562.269022103854,
+    "personnel": 1203.835685639849,
+    "result": -85.00319426233864,
+    "population": 21770.48052652239
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hindsight",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1066.383903440929,
+    "grants": 367.4282418909781,
+    "netCost": 1384.7292905769586,
+    "personnel": 1097.805436251548,
+    "result": 43.81944674408669,
+    "population": 21768.46233076285
+   },
+   "outcome": {
+    "tax": 1071.744,
+    "grants": 379.56,
+    "netCost": 1388.8709999999999,
+    "personnel": 1108.112,
+    "result": 61.007999999999996,
+    "population": 21889.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 14.8,
+   "budgetSource": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hindsight",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1116.861591952679,
+    "grants": 374.7725966779619,
+    "netCost": 1464.227820458883,
+    "personnel": 1128.203718800022,
+    "result": 22.30619845168462,
+    "population": 21770.26140494678
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "hindsight",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1159.10307169819,
+    "grants": 382.4314809863913,
+    "netCost": 1562.269022103854,
+    "personnel": 1203.835685639849,
+    "result": -26.00993163488124,
+    "population": 21770.48052652239
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "standard",
+   "year": 2021,
+   "horizon": 1,
+   "model": {
+    "tax": 1048.184155359139,
+    "grants": 367.3891451783434,
+    "netCost": 1384.2758348024365,
+    "personnel": 1108.491956201528,
+    "result": 26.03405772418409,
+    "population": 21768.46233076285
+   },
+   "outcome": {
+    "tax": 1071.744,
+    "grants": 379.56,
+    "netCost": 1388.8709999999999,
+    "personnel": 1108.112,
+    "result": 61.007999999999996,
+    "population": 21889.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 14.8,
+   "budgetSource": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "standard",
+   "year": 2022,
+   "horizon": 2,
+   "model": {
+    "tax": 1073.902013686148,
+    "grants": 374.5746666341403,
+    "netCost": 1424.8918948166518,
+    "personnel": 1142.1297605383052,
+    "result": 18.17521280078381,
+    "population": 21770.26140494678
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2020,
+   "circular": "20:57",
+   "published": "2020-12-15",
+   "assumptions": "standard",
+   "year": 2023,
+   "horizon": 3,
+   "model": {
+    "tax": 1100.872839725697,
+    "grants": 382.0252461372991,
+    "netCost": 1466.6863542113601,
+    "personnel": 1176.890297650844,
+    "result": 10.55500188617088,
+    "population": 21770.48052652239
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 33.859999999999864
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "skr",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1105.802302233822,
+    "grants": 384.9779062165002,
+    "netCost": 1413.5375191689163,
+    "personnel": 1125.4216202989692,
+    "result": 75.30857183635158,
+    "population": 21866.18686759956
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 36,
+   "budgetSource": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "skr",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1139.528290057515,
+    "grants": 391.0334326149735,
+    "netCost": 1455.0265731228371,
+    "personnel": 1163.130424949028,
+    "result": 75.00156376421114,
+    "population": 21842.32470462135
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "skr",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1170.855957114932,
+    "grants": 397.4773873801556,
+    "netCost": 1483.7198400923635,
+    "personnel": 1186.9100429127332,
+    "result": 85.46564741996099,
+    "population": 21817.42159864199
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "components",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1105.802302233822,
+    "grants": 388.933949,
+    "netCost": 1413.5375191689163,
+    "personnel": 1125.4216202989692,
+    "result": 79.26461461985127,
+    "population": 21866.18686759956,
+    "grantParts": [
+     232.789515,
+     12.673731,
+     54.656833,
+     18.16787,
+     57.546,
+     13.10000000000002
+    ]
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 36,
+   "budgetSource": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "components",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1139.528290057515,
+    "grants": 383.5734759039883,
+    "netCost": 1455.0265731228371,
+    "personnel": 1163.130424949028,
+    "result": 67.60715618245104,
+    "population": 21842.32470462135,
+    "grantParts": [
+     240.6791736852585,
+     12.66052219634014,
+     39.42473492228201,
+     18.14893510010764,
+     59.56010999999999,
+     13.10000000000002
+    ]
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "components",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1170.855957114932,
+    "grants": 392.3829744985045,
+    "netCost": 1483.7198400923635,
+    "personnel": 1186.9100429127332,
+    "result": 80.31426300619569,
+    "population": 21817.42159864199,
+    "grantParts": [
+     248.0267718148763,
+     12.64670600397576,
+     38.83565332481676,
+     18.12912950483572,
+     61.64471384999999,
+     13.10000000000002
+    ]
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hold",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1105.802302233822,
+    "grants": 394.690756,
+    "netCost": 1413.5375191689163,
+    "personnel": 1125.4216202989692,
+    "result": 85.02142161985125,
+    "population": 21866.18686759956,
+    "grantParts": [
+     232.789515,
+     12.673731,
+     60.41363999999999,
+     18.16787,
+     57.546,
+     13.10000000000002
+    ]
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 36,
+   "budgetSource": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hold",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1139.528290057515,
+    "grants": 404.4994167362811,
+    "netCost": 1455.0265731228371,
+    "personnel": 1163.130424949028,
+    "result": 88.62848366919093,
+    "population": 21842.32470462135,
+    "grantParts": [
+     240.6791736852585,
+     12.66052219634014,
+     60.35067575457479,
+     18.14893510010764,
+     59.56010999999999,
+     13.10000000000002
+    ]
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hold",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1170.855957114932,
+    "grants": 413.8321373584427,
+    "netCost": 1483.7198400923635,
+    "personnel": 1186.9100429127332,
+    "result": 102.2071226343296,
+    "population": 21817.42159864199,
+    "grantParts": [
+     248.0267718148763,
+     12.64670600397576,
+     60.28481618475493,
+     18.12912950483572,
+     61.64471384999999,
+     13.10000000000002
+    ]
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "prices",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1105.802302233822,
+    "grants": 384.9779062165002,
+    "netCost": 1463.8982552934963,
+    "personnel": 1137.1641106954369,
+    "result": 24.9478357117714,
+    "population": 21866.18686759956
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 36,
+   "budgetSource": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "prices",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1139.528290057515,
+    "grants": 391.0334326149735,
+    "netCost": 1556.148505721936,
+    "personnel": 1211.437031754034,
+    "result": -26.95481441112793,
+    "population": 21842.32470462135
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "prices",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1170.855957114932,
+    "grants": 397.4773873801556,
+    "netCost": 1628.1359242411183,
+    "personnel": 1273.970665177876,
+    "result": -61.47423506841324,
+    "population": 21817.42159864199
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hindsight",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1130.4105424712,
+    "grants": 384.9400911794701,
+    "netCost": 1463.8982552934963,
+    "personnel": 1137.1641106954369,
+    "result": 49.51826091211888,
+    "population": 21866.18686759956
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 36,
+   "budgetSource": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hindsight",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1177.051904122664,
+    "grants": 390.9962232848619,
+    "netCost": 1556.148505721936,
+    "personnel": 1211.437031754034,
+    "result": 10.93870674421055,
+    "population": 21842.32470462135
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "hindsight",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1210.529227996122,
+    "grants": 397.4667332532696,
+    "netCost": 1628.1359242411183,
+    "personnel": 1273.970665177876,
+    "result": -20.77663019197234,
+    "population": 21817.42159864199
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "standard",
+   "year": 2022,
+   "horizon": 1,
+   "model": {
+    "tax": 1105.802302233822,
+    "grants": 384.9779062165002,
+    "netCost": 1427.2110859724564,
+    "personnel": 1140.085398531435,
+    "result": 61.6350050328117,
+    "population": 21866.18686759956
+   },
+   "outcome": {
+    "tax": 1132.134,
+    "grants": 387.129,
+    "netCost": 1461.976,
+    "personnel": 1129.52,
+    "result": 52.3689999999998,
+    "population": 21903.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 36,
+   "budgetSource": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "standard",
+   "year": 2023,
+   "horizon": 2,
+   "model": {
+    "tax": 1137.33054986454,
+    "grants": 391.0356119477051,
+    "netCost": 1463.75272822203,
+    "personnel": 1172.866073767138,
+    "result": 63.85328544273102,
+    "population": 21842.32470462135
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2021,
+   "circular": "21:49",
+   "published": "2021-12-16",
+   "assumptions": "standard",
+   "year": 2024,
+   "horizon": 3,
+   "model": {
+    "tax": 1169.727969071289,
+    "grants": 397.4776902976483,
+    "netCost": 1501.2653416011144,
+    "personnel": 1206.515716492963,
+    "result": 66.38117849547189,
+    "population": 21817.42159864199
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 61.007999999999996
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "skr",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1158.913440281654,
+    "grants": 392.2681150193573,
+    "netCost": 1566.7105801329258,
+    "personnel": 1212.4624560949799,
+    "result": -21.80820199396362,
+    "population": 21968.09669040682
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 0,
+   "budgetSource": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "skr",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1207.777671240565,
+    "grants": 398.2431138647891,
+    "netCost": 1628.9480792251468,
+    "personnel": 1265.59286863445,
+    "result": -29.96686649885874,
+    "population": 22033.15638083516
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "skr",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1258.085176355261,
+    "grants": 404.1883421108665,
+    "netCost": 1636.0219800968648,
+    "personnel": 1262.833162771208,
+    "result": 18.34672130536023,
+    "population": 22098.19359752115
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "components",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1158.913440281654,
+    "grants": 408.205495,
+    "netCost": 1566.7105801329258,
+    "personnel": 1212.4624560949799,
+    "result": -5.870822013320776,
+    "population": 21968.09669040682,
+    "grantParts": [
+     255.301368,
+     16.273929,
+     51.012087,
+     20.523111,
+     58.995,
+     6.100000000000023
+    ]
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 0,
+   "budgetSource": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "components",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1207.777671240565,
+    "grants": 419.5865951750512,
+    "netCost": 1628.9480792251468,
+    "personnel": 1265.59286863445,
+    "result": -8.367798322408134,
+    "population": 22033.15638083516,
+    "grantParts": [
+     265.1255539273745,
+     16.32229584097226,
+     50.39481380779323,
+     20.58410659891118,
+     61.05982499999999,
+     6.100000000000023
+    ]
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "components",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1258.085176355261,
+    "grants": 419.3742235433648,
+    "netCost": 1636.0219800968648,
+    "personnel": 1262.833162771208,
+    "result": 34.1345726453319,
+    "population": 22098.19359752115,
+    "grantParts": [
+     274.9442414097169,
+     16.37063519096052,
+     38.11736053884482,
+     20.64506752884255,
+     63.19691887499999,
+     6.100000000000023
+    ]
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hold",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1158.913440281654,
+    "grants": 408.358816,
+    "netCost": 1566.7105801329258,
+    "personnel": 1212.4624560949799,
+    "result": -5.717501013320998,
+    "population": 21968.09669040682,
+    "grantParts": [
+     255.301368,
+     16.273929,
+     51.165408,
+     20.523111,
+     58.995,
+     6.100000000000023
+    ]
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 0,
+   "budgetSource": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hold",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1207.777671240565,
+    "grants": 420.5092552360483,
+    "netCost": 1628.9480792251468,
+    "personnel": 1265.59286863445,
+    "result": -7.442679461159287,
+    "population": 22033.15638083516,
+    "grantParts": [
+     265.1255539273745,
+     16.32229584097226,
+     51.31747386879032,
+     20.58410659891118,
+     61.05982499999999,
+     6.100000000000023
+    ]
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hold",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1258.085176355261,
+    "grants": 432.7263163101509,
+    "netCost": 1636.0219800968648,
+    "personnel": 1262.833162771208,
+    "result": 47.50396029150488,
+    "population": 22098.19359752115,
+    "grantParts": [
+     274.9442414097169,
+     16.37063519096052,
+     51.46945330563094,
+     20.64506752884255,
+     63.19691887499999,
+     6.100000000000023
+    ]
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "prices",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1158.913440281654,
+    "grants": 392.2681150193573,
+    "netCost": 1559.5628697811846,
+    "personnel": 1205.476064111939,
+    "result": -14.66049164222204,
+    "population": 21968.09669040682
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 0,
+   "budgetSource": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "prices",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1207.777671240565,
+    "grants": 398.2431138647891,
+    "netCost": 1636.6117863174356,
+    "personnel": 1270.607832600906,
+    "result": -37.51594616233228,
+    "population": 22033.15638083516
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "prices",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1258.085176355261,
+    "grants": 404.1883421108665,
+    "netCost": 1646.1913589196577,
+    "personnel": 1269.47546052377,
+    "result": 8.170905745495247,
+    "population": 22098.19359752115
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hindsight",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1172.146227162639,
+    "grants": 392.2655257071332,
+    "netCost": 1559.5628697811846,
+    "personnel": 1205.476064111939,
+    "result": -1.430294073461482,
+    "population": 21968.09669040682
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 0,
+   "budgetSource": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hindsight",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1210.98604340636,
+    "grants": 398.2401983624967,
+    "netCost": 1636.6117863174356,
+    "personnel": 1270.607832600906,
+    "result": -34.09831756468748,
+    "population": 22033.15638083516
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "hindsight",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1252.537934341661,
+    "grants": 404.1982168635383,
+    "netCost": 1646.1913589196577,
+    "personnel": 1269.47546052377,
+    "result": 2.900518736269305,
+    "population": 22098.19359752115
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "standard",
+   "year": 2023,
+   "horizon": 1,
+   "model": {
+    "tax": 1157.79479796478,
+    "grants": 392.2683339085642,
+    "netCost": 1505.0061894986256,
+    "personnel": 1164.201262852452,
+    "result": 38.77776521266924,
+    "population": 21968.09669040682
+   },
+   "outcome": {
+    "tax": 1179.277,
+    "grants": 403.856,
+    "netCost": 1579.4020000000003,
+    "personnel": 1238.3060000000003,
+    "result": -5.972000000000236,
+    "population": 21694.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 0,
+   "budgetSource": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "standard",
+   "year": 2024,
+   "horizon": 2,
+   "model": {
+    "tax": 1196.210036275198,
+    "grants": 398.2536255711984,
+    "netCost": 1548.3787835354788,
+    "personnel": 1200.450241660598,
+    "result": 40.0169196796669,
+    "population": 22033.15638083516
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2022,
+   "circular": "22:54",
+   "published": "2022-12-15",
+   "assumptions": "standard",
+   "year": 2025,
+   "horizon": 3,
+   "model": {
+    "tax": 1236.478394326017,
+    "grants": 404.2268047609631,
+    "netCost": 1593.0513463382267,
+    "personnel": 1237.936751284814,
+    "result": 41.84297547465485,
+    "population": 22098.19359752115
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": 52.3689999999998
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "skr",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1179.163467625077,
+    "grants": 416.4308034241202,
+    "netCost": 1666.5354746108587,
+    "personnel": 1307.802306360987,
+    "result": -87.44441421162242,
+    "population": 21584.75119547775
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 33,
+   "budgetSource": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "skr",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1218.884207328579,
+    "grants": 423.3196506857398,
+    "netCost": 1680.4539445693867,
+    "personnel": 1305.75824682691,
+    "result": -61.93084349105698,
+    "population": 21474.00778060438
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "components",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1179.163467625077,
+    "grants": 432.2557380000001,
+    "netCost": 1666.5354746108587,
+    "personnel": 1307.802306360987,
+    "result": -71.61947963574244,
+    "population": 21584.75119547775,
+    "grantParts": [
+     260.0676720000001,
+     21.216732,
+     66.07992399999999,
+     22.01941,
+     61.272,
+     1.599999999999966
+    ]
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 33,
+   "budgetSource": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "components",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1218.884207328579,
+    "grants": 431.434198719897,
+    "netCost": 1680.4539445693867,
+    "personnel": 1305.75824682691,
+    "result": -53.26979615008986,
+    "population": 21474.00778060438,
+    "grantParts": [
+     271.8980532349,
+     21.10988666917724,
+     51.50121635240991,
+     21.90852246340992,
+     63.41652,
+     1.599999999999966
+    ]
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hold",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1179.163467625077,
+    "grants": 432.4509840000001,
+    "netCost": 1666.5354746108587,
+    "personnel": 1307.802306360987,
+    "result": -71.42423363574244,
+    "population": 21584.75119547775,
+    "grantParts": [
+     260.0676720000001,
+     21.216732,
+     66.27517,
+     22.01941,
+     61.272,
+     1.599999999999966
+    ]
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 33,
+   "budgetSource": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hold",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1218.884207328579,
+    "grants": 445.8743972696716,
+    "netCost": 1680.4539445693867,
+    "personnel": 1305.75824682691,
+    "result": -38.82285496241389,
+    "population": 21474.00778060438,
+    "grantParts": [
+     271.8980532349,
+     21.10988666917724,
+     65.94141490218453,
+     21.90852246340992,
+     63.41652,
+     1.599999999999966
+    ]
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "prices",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1179.163467625077,
+    "grants": 416.4308034241202,
+    "netCost": 1659.4940590186488,
+    "personnel": 1301.853298743025,
+    "result": -80.40299861941253,
+    "population": 21584.75119547775
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 33,
+   "budgetSource": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "prices",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1218.884207328579,
+    "grants": 423.3196506857398,
+    "netCost": 1670.0921934431867,
+    "personnel": 1296.292139534587,
+    "result": -51.32592366664494,
+    "population": 21474.00778060438
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hindsight",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1189.456326920588,
+    "grants": 416.5141640405961,
+    "netCost": 1659.4940590186488,
+    "personnel": 1301.853298743025,
+    "result": -70.02677870742605,
+    "population": 21584.75119547775
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 33,
+   "budgetSource": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "hindsight",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1216.195138549735,
+    "grants": 423.2918177361166,
+    "netCost": 1670.0921934431867,
+    "personnel": 1296.292139534587,
+    "result": -53.68449235038383,
+    "population": 21474.00778060438
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "standard",
+   "year": 2024,
+   "horizon": 1,
+   "model": {
+    "tax": 1189.507006814771,
+    "grants": 416.5145744908996,
+    "netCost": 1626.5539425241539,
+    "personnel": 1273.282814145522,
+    "result": -37.035571868445,
+    "population": 21584.75119547775
+   },
+   "outcome": {
+    "tax": 1195.266,
+    "grants": 440.202,
+    "netCost": 1607.3539999999998,
+    "personnel": 1251.487,
+    "result": 24.19700000000026,
+    "population": 21623.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 33,
+   "budgetSource": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2023,
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "assumptions": "standard",
+   "year": 2025,
+   "horizon": 2,
+   "model": {
+    "tax": 1215.483610459995,
+    "grants": 423.2844531325657,
+    "netCost": 1674.6203032895507,
+    "personnel": 1308.294437094295,
+    "result": -57.79217443459697,
+    "population": 21474.00778060438
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": null,
+   "budgetSource": null,
+   "persistenceResult": -5.972000000000236
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "skr",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1244.100839714267,
+    "grants": 447.2345725682736,
+    "netCost": 1598.358139897581,
+    "personnel": 1230.7119922942659,
+    "result": 83.7041380566011,
+    "population": 21477.74585539953
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 26,
+   "budgetSource": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+   "persistenceResult": 24.19700000000026
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "components",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1244.100839714267,
+    "grants": 454.56606,
+    "netCost": 1598.358139897581,
+    "personnel": 1230.7119922942659,
+    "result": 91.03562548832747,
+    "population": 21477.74585539953,
+    "grantParts": [
+     253.010723,
+     38.121349,
+     56.998228,
+     35.02926,
+     68.2065,
+     3.199999999999989
+    ]
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 26,
+   "budgetSource": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+   "persistenceResult": 24.19700000000026
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "hold",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1244.100839714267,
+    "grants": 454.739044,
+    "netCost": 1598.358139897581,
+    "personnel": 1230.7119922942659,
+    "result": 91.20860948832751,
+    "population": 21477.74585539953,
+    "grantParts": [
+     253.010723,
+     38.121349,
+     57.171212,
+     35.02926,
+     68.2065,
+     3.199999999999989
+    ]
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 26,
+   "budgetSource": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+   "persistenceResult": 24.19700000000026
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "prices",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1244.100839714267,
+    "grants": 447.2345725682736,
+    "netCost": 1614.473339996518,
+    "personnel": 1246.064040674234,
+    "result": 67.58893795766426,
+    "population": 21477.74585539953
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 26,
+   "budgetSource": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+   "persistenceResult": 24.19700000000026
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "hindsight",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1234.150416331495,
+    "grants": 447.2247997897159,
+    "netCost": 1614.473339996518,
+    "personnel": 1246.064040674234,
+    "result": 57.62874179633445,
+    "population": 21477.74585539953
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 26,
+   "budgetSource": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+   "persistenceResult": 24.19700000000026
+  },
+  {
+   "origin": 2024,
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "assumptions": "standard",
+   "year": 2025,
+   "horizon": 1,
+   "model": {
+    "tax": 1233.375832475351,
+    "grants": 447.2240390344988,
+    "netCost": 1651.035382762371,
+    "personnel": 1285.575413262024,
+    "result": 20.29135441912081,
+    "population": 21477.74585539953
+   },
+   "outcome": {
+    "tax": 1252.033,
+    "grants": 452.823,
+    "netCost": 1609.0299999999997,
+    "personnel": 1225.8319999999999,
+    "result": 89.91300000000004,
+    "population": 21502.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261118T203655Z)"
+   },
+   "budgetResult": 26,
+   "budgetSource": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+   "persistenceResult": 24.19700000000026
+  }
+ ]
+}

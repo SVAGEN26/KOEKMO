@@ -1,0 +1,25 @@
+{
+  "sources": {
+    "annual2025": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+    "annual2024": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+    "annual2023": "https://finspang.se/download/18.11115567190a2c42d1f7a7d6/1723030480293/%C3%85rsredovisning%202023.pdf",
+    "annual2022": "https://finspang.se/download/18.49468e17188b9f519ed4f44d/1687956932635/%C3%85rsredovisning%202022.pdf",
+    "annual2021": "https://finspang.se/download/18.3b98bfc718120f1c8d7369e0/1655124820495/%C3%85rsredovisning%202021.pdf",
+    "population": "https://api.kolada.se/v3/data/kpi/N01951/municipality/0562/year/2025"
+  },
+  "novemberPopulationArchive": "data/downloads/20261118T204714Z",
+  "population": {"2025": 21502},
+  "externalBankDebt": {"2021": 1191, "2022": 1277, "2023": 1474, "2024": 1650, "2025": 1777},
+  "bankInterest": {"2024": 45, "2025": 43},
+  "workInProgress": {"2025": 50},
+  "grantAdvances": {"2025": 0},
+  "budgetResult": {"2021": 14.8, "2022": 36, "2023": 0, "2024": 33, "2025": 26},
+  "locators": {
+    "population": "Årsredovisning 2025 s. 6 och 9 samt Kolada N01951, totalt. Modellen skalar SCB:s åldersceller proportionellt till totalen.",
+    "externalBankDebt": "Årsredovisning 2025 s. 9 och 27. Hela externupplåningen via internbanken inklusive vidareutlåning till kommunens bolag.",
+    "bankInterest": "Årsredovisning 2025 s. 46, not 9, Ränta på lån. Övriga finansiella kostnader lämnas i resultaträkningen.",
+    "workInProgress": "Årsredovisning 2025 s. 47, not 11 och 12 (44 plus 6 mnkr).",
+    "grantAdvances": "Årsredovisning 2025 s. 50, not 21, Förutbetalda generella statsbidrag.",
+    "budgetResult": "Kommunbudget i årsredovisningarnas resultaträkningar, s. 36, 38, 39, 41 och 41 i årsordning 2021–2025."
+  }
+}

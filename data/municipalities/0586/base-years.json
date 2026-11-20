@@ -1,13 +1,14 @@
 {
  "source": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
- "archive": "data/downloads/20261109T162208Z",
+ "archive": "data/downloads/20261119T090430Z",
  "municipality": "0586",
  "name": "Mjölby",
+ "packageName": "Mjolby",
  "unit": "mnkr; persons",
  "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); debt is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
  "olderShares": [
   0.6823047858942065,
-  0.26841939546599497,
+  0.2684193954659949,
   0.04927581863979849
  ],
  "years": {
@@ -94,6 +95,16 @@
    "careCostPerInhabitant": [
     21976,
     164396
+   ],
+   "careReferenceYears": [
+    2018,
+    2019,
+    2020
+   ],
+   "olderShares": [
+    0.7325151311365165,
+    0.2163752521856086,
+    0.05110961667787491
    ]
   },
   "2021": {
@@ -179,6 +190,16 @@
    "careCostPerInhabitant": [
     21877,
     165718
+   ],
+   "careReferenceYears": [
+    2019,
+    2020,
+    2021
+   ],
+   "olderShares": [
+    0.7255744751198545,
+    0.22449991734170938,
+    0.049925607538436105
    ]
   },
   "2022": {
@@ -264,6 +285,16 @@
    "careCostPerInhabitant": [
     22685,
     164425
+   ],
+   "careReferenceYears": [
+    2020,
+    2021,
+    2022
+   ],
+   "olderShares": [
+    0.7139150178397664,
+    0.23353876094712941,
+    0.05254622121310412
    ]
   },
   "2023": {
@@ -349,6 +380,16 @@
    "careCostPerInhabitant": [
     23706,
     165806
+   ],
+   "careReferenceYears": [
+    2021,
+    2022,
+    2023
+   ],
+   "olderShares": [
+    0.6996136509980683,
+    0.24871216999356086,
+    0.051674179008370895
    ]
   },
   "2024": {
@@ -434,6 +475,16 @@
    "careCostPerInhabitant": [
     24500,
     170007
+   ],
+   "careReferenceYears": [
+    2022,
+    2023,
+    2024
+   ],
+   "olderShares": [
+    0.6928083822829021,
+    0.25750119066518495,
+    0.049690427051913004
    ]
   },
   "2025": {
@@ -454,17 +505,17 @@
      6299.0
     ],
     [
-     2261.0,
-     3170.0,
-     1046.0,
-     16009.0,
-     6352.0
+     2259.8239475691794,
+     3168.3511339205215,
+     1045.455926208475,
+     16000.67296622512,
+     6348.696026076705
     ]
    ],
    "reportedPopulation": [
     28576.0,
     28695.0,
-    28838.0
+    28823.0
    ],
    "births": [
     291.0,
@@ -519,6 +570,16 @@
    "careCostPerInhabitant": [
     25528,
     171066
+   ],
+   "careReferenceYears": [
+    2023,
+    2024,
+    2025
+   ],
+   "olderShares": [
+    0.6823047858942065,
+    0.2684193954659949,
+    0.04927581863979849
    ]
   }
  }

@@ -1,7 +1,8 @@
+import {municipalities} from './municipalities.js';
 // Module worker hosting OpenModelica's in-browser compiler, so compiling and
 // simulating never block the page. Protocol:
 //   → {type:'init'}                     ← {type:'progress', loaded, total} … {type:'ready'} | {type:'failed', error}
-//   → {type:'run', id, jobs:[{fields, years}]}
+//   → {type:'run', id, jobs:[{fields, years, baseYear}]}
 //   ← {type:'result', id, results:[{rows} | {error}]}
 import init,* as omc from './omc-web/omc/OpenModelicaCompiler.js';
 import {createSession} from './omc-session.js';
@@ -41,7 +42,7 @@ async function start() {
   omc.omc_set_env('OPENMODELICAHOME','/usr');
   if(!omc.omc_init()) throw Error('OpenModelica kunde inte starta.');
   omc.omc_enable_wasm_blobs?.();
-  const sources=await Promise.all(['Kommunekonomi.mo','Motala.mo','MotalaBrowser.mo'].map(async name=>{
+  const sources=await Promise.all(['Kommunekonomi.mo',...Object.values(municipalities).map(item=>item.packageName+'.mo'),'MotalaBrowser.mo'].map(async name=>{
     const r=await fetch(new URL(name,base));
     if(!r.ok) throw Error(`Kunde inte läsa ${name}`);
     return {name,text:await r.text()};
@@ -57,7 +58,7 @@ self.onmessage=async({data})=>{
   }
   if(data.type==='run') {
     const results=data.jobs.map(job=>{
-      try {return {rows:session.run(job.fields,job.years)};}
+      try {return {rows:session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality)};}
       catch(e) {return {error:e.message};}
     });
     self.postMessage({type:'result',id:data.id,results});

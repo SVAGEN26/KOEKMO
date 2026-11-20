@@ -13,6 +13,8 @@ import json
 import re
 from pathlib import Path
 
+from prepare_demography import fertility_profiles
+
 ROOT = Path(__file__).resolve().parents[1]
 LIBRARY = ROOT / 'modelica/Kommunekonomi.mo'
 MUNICIPALITY = ROOT / 'modelica/Motala.mo'
@@ -39,8 +41,30 @@ def by_sex(table, digits, indent):
             + vector(table['2'], digits, 17, inner) + '}')
 
 
+def cohort_records(name, prefix, calibration):
+    pad = '      '
+    years = []
+    for base, c in sorted(calibration.items()):
+        years.append(f'''    constant DemographyYear {prefix}{base} = DemographyYear(
+      year = {base},
+      population = {by_sex(c['population'], 6, pad + '  ')},
+      deathRisk = {by_sex(c['deathRisk'], 6, pad + '  ')},
+      mortalityImprovement = {by_sex(c['mortalityImprovement'], 4, pad + '  ')},
+      mortalityRatio = {vector(c['mortalityRatio'], 6)},
+      residualMigration = {by_sex(c['residualMigration'], 4, pad + '  ')},
+      shareBoys = {num(c['shareBoys'], 6)},
+      totalFertility = {num(c['totalFertility'], 4)},
+      totalFertilityMean5 = {num(c['totalFertilityMean5'], 4)},
+      births = {num(c['births'], 6)},
+      deaths = {num(c['deaths'], 6)})
+      "{name} vid slutet av {base}; dödlighetskvot {c['mortalityWindow'][0]}-{c['mortalityWindow'][1]}, restflöden {c['migrationTransitions'][0]}-{c['migrationTransitions'][1]}";''')
+    return years
+
+
 def packages(d, national, years, chain, first_base, last_base, first, tfr, improve, nat_years, nat_values, pad):
     """The national package for the library and the municipality's package that extends it."""
+    profiles = fertility_profiles(d)
+    historical_profiles = ',\n        '.join(vector(profiles[year], 8) for year in range(2021, 2025))
     tables = ', '.join(sorted(set(u.rsplit('/', 1)[1] for u in d['tables'].values())))
     library = f'''  package SCB "Rikets demografiska data från SCB och posttypen för en kommuns ettårsdata. Genereras av scripts/write_demography_modelica.py; redigera inte för hand"
     record DemographyYear "En kommun vid ett basårs slut, ettårsåldrar 0-100+ (index 1-101) per kön (1 män, 2 kvinnor)"
@@ -60,6 +84,8 @@ def packages(d, national, years, chain, first_base, last_base, first, tfr, impro
 
     constant Real fertilityProfile[101] = {vector(d['fertilityProfile']['shares'], 6, 12, pad + '  ')}
       "Andel av en kvinnas barn som föds vid varje ålder, SCB:s framskrivning {first}; summerar till 1";
+    constant Real historicalFertilityProfile[4, 101] = {{{historical_profiles}}}
+      "SCB:s historiska fruktsamhetstal för riket 2021–2024, jämnt fördelade inom moderns åldersgrupp och normaliserade";
     constant Integer projectionFirstYear = {first} "Första året i SCB:s framskrivning";
     constant Real projectedTotalFertility[{HORIZON}] = {vector(tfr, 5, 10, pad + '  ')}
       "Rikets summerade fruktsamhet enligt SCB:s antagande, {first}-{first + HORIZON - 1}";
@@ -138,21 +164,7 @@ def main():
     nat_years = sorted(int(y) for y in national['population'])
     nat_values = [national['population'][str(y)] for y in nat_years]
     pad = '      '
-    years = []
-    for base, c in sorted(d['baseYears'].items()):
-        years.append(f'''    constant DemographyYear {PREFIX}{base} = DemographyYear(
-      year = {base},
-      population = {by_sex(c['population'], 6, pad + '  ')},
-      deathRisk = {by_sex(c['deathRisk'], 6, pad + '  ')},
-      mortalityImprovement = {by_sex(c['mortalityImprovement'], 4, pad + '  ')},
-      mortalityRatio = {vector(c['mortalityRatio'], 6)},
-      residualMigration = {by_sex(c['residualMigration'], 4, pad + '  ')},
-      shareBoys = {num(c['shareBoys'], 6)},
-      totalFertility = {num(c['totalFertility'], 4)},
-      totalFertilityMean5 = {num(c['totalFertilityMean5'], 4)},
-      births = {num(c['births'], 6)},
-      deaths = {num(c['deaths'], 6)})
-      "{NAME} vid slutet av {base}; dödlighetskvot {c['mortalityWindow'][0]}-{c['mortalityWindow'][1]}, restflöden {c['migrationTransitions'][0]}-{c['migrationTransitions'][1]}";''')
+    years = cohort_records(NAME, PREFIX, d['baseYears'])
     bases = sorted(d['baseYears'])
     chain = ' elseif '.join(f'if year == {b} then {PREFIX}{b}' if i == 0 else f'year == {b} then {PREFIX}{b}' for i, b in enumerate(bases[:-1]))
     chain = f'{chain} else {PREFIX}{bases[-1]}'

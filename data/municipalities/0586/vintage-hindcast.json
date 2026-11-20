@@ -1,16 +1,15 @@
 {
  "municipality": "0586",
  "source": "Model Mjolby.Annual; outcomes from SCB:s räkenskapssammandrag (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
- "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nno budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nthe municipality's adopted budget when recorded with a source, and older age shares from\nthe corresponding base year. Written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
  "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
  "limitations": [
   "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
-  "In the skr and standard sets grants grow 2 % a year; the circulars have no Motala figure for grants. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation for Motala are not in the circular and stay at the base year's level.",
-  "One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. The correction of the previous year's tax settlement is taken out of the base before growth is applied.",
-  "The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.",
-  "Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.",
+  "In the skr and standard sets grants grow 2 % a year. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation beyond the first year stay at the first forecast year's level.",
+  "One-off items in the base year may carry into the forecast. The correction of the previous year's tax settlement is taken out of the base before growth is applied.",
+  "Personnel is compared as a total. Fixed assets from SCB include work in progress.",
   "The budget result is the adopted budget for the following year, set in November before the circular.",
-  "SKR forecast for Motala at the time is not available; only the national assumptions are."
+  "The test uses the published national SKR assumptions. Historical local SKR revenue paths are outside this test."
  ],
  "summaryByHorizon": {
   "skr": {
@@ -29,11 +28,11 @@
     "cases": 4,
     "taxMeanError": -38.87988252714672,
     "grantsMeanError": -15.00527246223443,
-    "netCostMeanError": -62.953082123684794,
+    "netCostMeanError": -62.95308212368474,
     "resultMeanError": 27.054555125030234,
     "taxMeanAbsError": 42.39247786976375,
     "grantsMeanAbsError": 19.261856428261225,
-    "netCostMeanAbsError": 74.31177560012736,
+    "netCostMeanAbsError": 74.3117756001273,
     "resultMeanAbsError": 64.96688181695193
    },
    "3": {
@@ -64,12 +63,12 @@
     "cases": 4,
     "taxMeanError": -38.87988252714672,
     "grantsMeanError": -6.674046015216476,
-    "netCostMeanError": -62.953082123684794,
-    "resultMeanError": 35.53851713261895,
+    "netCostMeanError": -62.95308212368474,
+    "resultMeanError": 35.538517132619,
     "taxMeanAbsError": 42.39247786976375,
     "grantsMeanAbsError": 19.691316212133557,
-    "netCostMeanAbsError": 74.31177560012736,
-    "resultMeanAbsError": 51.05188440445666
+    "netCostMeanAbsError": 74.3117756001273,
+    "resultMeanAbsError": 51.05188440445671
    },
    "3": {
     "cases": 3,
@@ -99,11 +98,11 @@
     "cases": 4,
     "taxMeanError": -38.87988252714672,
     "grantsMeanError": 9.17989531484082,
-    "netCostMeanError": -62.953082123684794,
+    "netCostMeanError": -62.95308212368474,
     "resultMeanError": 51.40297641860206,
     "taxMeanAbsError": 42.39247786976375,
     "grantsMeanAbsError": 22.128651003792157,
-    "netCostMeanAbsError": 74.31177560012736,
+    "netCostMeanAbsError": 74.3117756001273,
     "resultMeanAbsError": 57.313592533435504
    },
    "3": {
@@ -134,11 +133,11 @@
     "cases": 4,
     "taxMeanError": -38.87988252714672,
     "grantsMeanError": -15.00527246223443,
-    "netCostMeanError": -11.277023985426354,
+    "netCostMeanError": -11.277023985426297,
     "resultMeanError": -24.67803131662157,
     "taxMeanAbsError": 42.39247786976375,
     "grantsMeanAbsError": 19.261856428261225,
-    "netCostMeanAbsError": 32.830456595126975,
+    "netCostMeanAbsError": 32.83045659512692,
     "resultMeanAbsError": 46.44330331152777
    },
    "3": {
@@ -169,23 +168,23 @@
     "cases": 4,
     "taxMeanError": -11.420375534933669,
     "grantsMeanError": -14.937524665161789,
-    "netCostMeanError": -11.277023985426354,
-    "resultMeanError": 3.014040507598912,
+    "netCostMeanError": -11.277023985426297,
+    "resultMeanError": 3.014040507598967,
     "taxMeanAbsError": 13.14737188833874,
     "grantsMeanAbsError": 19.310119127178893,
-    "netCostMeanAbsError": 32.830456595126975,
-    "resultMeanAbsError": 44.855698777694975
+    "netCostMeanAbsError": 32.83045659512692,
+    "resultMeanAbsError": 44.8556987776948
    },
    "3": {
     "cases": 3,
     "taxMeanError": -12.501296069989243,
     "grantsMeanError": -17.047530082790235,
     "netCostMeanError": -34.616638305679466,
-    "resultMeanError": 37.02088069907231,
+    "resultMeanError": 37.02088069907223,
     "taxMeanAbsError": 12.501296069989243,
     "grantsMeanAbsError": 17.047530082790235,
     "netCostMeanAbsError": 34.616638305679466,
-    "resultMeanAbsError": 37.02088069907231
+    "resultMeanAbsError": 37.02088069907223
    }
   },
   "standard": {
@@ -204,11 +203,11 @@
     "cases": 4,
     "taxMeanError": -42.70559478016821,
     "grantsMeanError": -15.037383659512429,
-    "netCostMeanError": -81.52036252772712,
+    "netCostMeanError": -81.52036252772706,
     "resultMeanError": 42.097482400944955,
     "taxMeanAbsError": 43.96012131508826,
     "grantsMeanAbsError": 19.287172946076836,
-    "netCostMeanAbsError": 88.12397100546616,
+    "netCostMeanAbsError": 88.1239710054661,
     "resultMeanAbsError": 86.19085551321798
    },
    "3": {
@@ -253,9 +252,10 @@
     "personnel": 1296.208,
     "result": 116.47499999999992,
     "population": 28269.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -280,9 +280,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -307,9 +308,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -342,9 +344,10 @@
     "personnel": 1296.208,
     "result": 116.47499999999992,
     "population": 28269.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -377,9 +380,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -412,9 +416,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -447,9 +452,10 @@
     "personnel": 1296.208,
     "result": 116.47499999999992,
     "population": 28269.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -482,9 +488,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -517,9 +524,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -544,9 +552,10 @@
     "personnel": 1296.208,
     "result": 116.47499999999992,
     "population": 28269.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -571,9 +580,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -598,9 +608,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -625,9 +636,10 @@
     "personnel": 1296.208,
     "result": 116.47499999999992,
     "population": 28269.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -652,9 +664,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -679,9 +692,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -706,9 +720,10 @@
     "personnel": 1296.208,
     "result": 116.47499999999992,
     "population": 28269.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -733,9 +748,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -760,9 +776,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 72.47599999999996
   },
   {
@@ -787,9 +804,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -814,9 +832,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -831,7 +850,7 @@
     "grants": 476.63545669161,
     "netCost": 1818.4332789435307,
     "personnel": 1412.0732410751739,
-    "result": 161.9846352467803,
+    "result": 161.9846352467805,
     "population": 29047.14187932252
    },
    "outcome": {
@@ -841,9 +860,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -876,9 +896,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -893,7 +914,7 @@
     "grants": 448.5198325209718,
     "netCost": 1768.5047623389912,
     "personnel": 1374.426029702678,
-    "result": 129.1861610004487,
+    "result": 129.1861610004489,
     "population": 28787.83351840993,
     "grantParts": [
      324.0551078535383,
@@ -911,9 +932,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -946,9 +968,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -981,9 +1004,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1016,9 +1040,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1051,9 +1076,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1078,9 +1104,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1105,9 +1132,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1132,9 +1160,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1159,9 +1188,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1186,9 +1216,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1213,9 +1244,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1240,9 +1272,10 @@
     "personnel": 1351.4769999999999,
     "result": 128.2349999999999,
     "population": 28471.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1267,9 +1300,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1294,9 +1328,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 116.47499999999992
   },
   {
@@ -1321,9 +1356,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1336,7 +1372,7 @@
    "model": {
     "tax": 1535.459637120309,
     "grants": 479.170627936183,
-    "netCost": 1972.054843648166,
+    "netCost": 1972.0548436481663,
     "personnel": 1523.07098894111,
     "result": 46.48809806747727,
     "population": 28973.27819277758
@@ -1348,9 +1384,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1365,7 +1402,7 @@
     "grants": 493.9767665180566,
     "netCost": 1989.833847387894,
     "personnel": 1525.702110551605,
-    "result": 111.4937865343154,
+    "result": 111.4937865343152,
     "population": 29221.49712713187
    },
    "outcome": {
@@ -1374,10 +1411,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1410,9 +1448,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1425,7 +1464,7 @@
    "model": {
     "tax": 1535.459637120309,
     "grants": 478.3712631693566,
-    "netCost": 1972.054843648166,
+    "netCost": 1972.0548436481663,
     "personnel": 1523.07098894111,
     "result": 45.64619933339827,
     "population": 28973.27819277758,
@@ -1445,9 +1484,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1479,10 +1519,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1515,9 +1556,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1530,7 +1572,7 @@
    "model": {
     "tax": 1535.459637120309,
     "grants": 479.5776368531173,
-    "netCost": 1972.054843648166,
+    "netCost": 1972.0548436481663,
     "personnel": 1523.07098894111,
     "result": 46.85379603919546,
     "population": 28973.27819277758,
@@ -1550,9 +1592,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1584,10 +1627,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1612,9 +1656,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1627,7 +1672,7 @@
    "model": {
     "tax": 1535.459637120309,
     "grants": 479.170627936183,
-    "netCost": 1981.771423320851,
+    "netCost": 1981.7714233208512,
     "personnel": 1529.10622058361,
     "result": 36.82430767168375,
     "population": 28973.27819277758
@@ -1639,9 +1684,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1665,10 +1711,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1693,9 +1740,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1708,9 +1756,9 @@
    "model": {
     "tax": 1539.538472222782,
     "grants": 479.200842343442,
-    "netCost": 1981.771423320851,
+    "netCost": 1981.7714233208512,
     "personnel": 1529.10622058361,
-    "result": 41.0368441599469,
+    "result": 41.03684415994667,
     "population": 28973.27819277758
    },
    "outcome": {
@@ -1720,9 +1768,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1737,7 +1786,7 @@
     "grants": 493.9099629206785,
     "netCost": 2002.781436607824,
     "personnel": 1533.727056362424,
-    "result": 91.53113218153476,
+    "result": 91.53113218153453,
     "population": 29221.49712713187
    },
    "outcome": {
@@ -1746,10 +1795,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1774,9 +1824,10 @@
     "personnel": 1488.2959999999998,
     "result": 4.253999999999998,
     "population": 28576.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1789,7 +1840,7 @@
    "model": {
     "tax": 1520.753588971548,
     "grants": 479.0616913116874,
-    "netCost": 1872.247718028307,
+    "netCost": 1872.2477180283072,
     "personnel": 1444.704574553478,
     "result": 131.9408516936935,
     "population": 28973.27819277758
@@ -1801,9 +1852,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1827,10 +1879,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 128.2349999999999
   },
   {
@@ -1855,9 +1908,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -1881,10 +1935,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -1917,9 +1972,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -1951,10 +2007,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -1987,9 +2044,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2021,10 +2079,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2049,9 +2108,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2075,10 +2135,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2103,9 +2164,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2120,7 +2182,7 @@
     "grants": 475.8802297598892,
     "netCost": 2072.6807652995412,
     "personnel": 1568.38489596814,
-    "result": -1.864681783309152,
+    "result": -1.864681783308697,
     "population": 28825.5760789758
    },
    "outcome": {
@@ -2129,10 +2191,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2157,9 +2220,10 @@
     "personnel": 1553.986,
     "result": 2.314000000000057,
     "population": 28695.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2183,10 +2247,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 4.253999999999998
   },
   {
@@ -2210,10 +2275,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 2.314000000000057
   },
   {
@@ -2245,10 +2311,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 2.314000000000057
   },
   {
@@ -2280,10 +2347,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 2.314000000000057
   },
   {
@@ -2307,10 +2375,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 2.314000000000057
   },
   {
@@ -2334,10 +2403,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 2.314000000000057
   },
   {
@@ -2361,10 +2431,11 @@
     "netCost": 2062.7400000000002,
     "personnel": 1606.401,
     "result": 38.94299999999967,
-    "population": 28838.0,
-    "source": "SCB räkenskapssammandrag (data/downloads/20261109T162208Z)"
+    "population": 28823.0,
+    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090430Z)"
    },
    "budgetResult": null,
+   "budgetSource": null,
    "persistenceResult": 2.314000000000057
   }
  ]

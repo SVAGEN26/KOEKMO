@@ -1,0 +1,39 @@
+{
+  "source": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB744",
+  "countyRate": 18.93,
+  "countyRateSource": "https://data.riksdagen.se/dokument/sfs-2004-881.html",
+  "municipalities": {
+    "0583": {
+      "2019": [
+        3.5,
+        3.5,
+        3.5,
+        294.0,
+        157.9
+      ],
+      "2024": [
+        4.1,
+        4.1,
+        4.1,
+        351.5,
+        182.6
+      ]
+    },
+    "0586": {
+      "2019": [
+        3.6,
+        3.6,
+        3.6,
+        311.9,
+        157.2
+      ],
+      "2024": [
+        4.4,
+        4.4,
+        4.4,
+        371.2,
+        183.0
+      ]
+    }
+  }
+}

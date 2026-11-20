@@ -97,6 +97,79 @@ def natural_step(pop, q_year, births_total, boys):
     return nxt
 
 
+def fertility_profiles(national):
+    """Use the observed Swedish age-specific rates available at each earlier base year."""
+    archive = ROOT / national['archive']
+    manifest = json.loads((archive / 'manifest.json').read_text())
+    rows, _ = load(archive, 'fertility-rates-sweden', manifest)
+    values = {}
+    for row in rows:
+        ages = row['AlderModer'].split('-')
+        if len(ages) != 2 or not all(a.isdigit() for a in ages):
+            continue
+        profile = values.setdefault(int(row['Tid']), [0.] * 101)
+        for age in range(int(ages[0]), int(ages[1]) + 1):
+            profile[age] = float(row['value'])
+    return {year: [v / sum(values[year]) for v in values[year]] for year in values}
+
+
+def calibrate(population, deaths, births, tfr, q, base_years):
+    """Prepare one cohort record per base year, using only observations through that year."""
+    # Mortality trend from the life tables: annual decline in log death risk over the ten years
+    # ending in the base year, per sex and age band (single ages are too noisy at young ages).
+    bands = [(0, 15), (15, 50), (50, 65), (65, 80), (80, 90), (90, 101)]
+
+    def trend(base, sex):
+        years = list(range(base - 9, base + 1))
+        rate = [0.0] * AGES
+        for lo, hi in bands:
+            logs = [math.log(sum(q[y][sex][lo:hi]) / (hi - lo)) for y in years]
+            mean_t, mean_l = sum(years) / len(years), sum(logs) / len(logs)
+            slope = (sum((t - mean_t) * (l - mean_l) for t, l in zip(years, logs))
+                     / sum((t - mean_t) ** 2 for t in years))
+            for a in range(lo, hi):
+                rate[a] = -slope
+        return rate
+
+    # One calibration per base year, from data up to and including that year only.
+    calibration = {}
+    for base in base_years:
+        window = range(base - 4, base + 1)
+        improvement_base = {s: trend(base, s) for s in SEXES}
+        # Death risk at the base year: the last five years moved along the trend and averaged,
+        # so a single unusual year (2020, 2022) does not set the level.
+        level = {s: [min(1.0, sum(q[y][s][a] * math.exp(-improvement_base[s][a] * (base - y)) for y in window) / 5)
+                     for a in range(AGES)] for s in SEXES}
+        ratio = {}
+        for sex in SEXES:
+            observed = sum(deaths[y][sex] for y in window)
+            expected = sum(population[y - 1][sex][a] * q[y][sex][a] for y in window for a in range(AGES))
+            ratio[sex] = observed / expected
+        past = [y for y in births if base - 9 <= y <= base]
+        boys = sum(births[y]['1'] for y in past) / sum(births[y]['1'] + births[y]['2'] for y in past)
+        residuals = []
+        for y in range(base - 2, base + 1):
+            scaled = {s: [min(1.0, q[y][s][a] * ratio[s]) for a in range(AGES)] for s in SEXES}
+            expected = natural_step(population[y - 1], scaled, births[y]['1'] + births[y]['2'], boys)
+            residuals.append({s: [population[y][s][a] - expected[s][a] for a in range(AGES)] for s in SEXES})
+        calibration[str(base)] = {
+            'population': population[base],
+            'deathRisk': level,
+            'mortalityImprovement': improvement_base,
+            'mortalityRatio': [ratio['1'], ratio['2']],
+            'mortalityWindow': [window[0], window[-1]],
+            'residualMigration': {s: [sum(r[s][a] for r in residuals) / 3 for a in range(AGES)] for s in SEXES},
+            'migrationTransitions': [base - 2, base],
+            'shareBoys': boys,
+            'totalFertility': tfr[base],
+            'totalFertilityMean5': sum(tfr[y] for y in window) / 5,
+            'births': births[base]['1'] + births[base]['2'],
+            'deaths': sum(deaths[base].values()),
+        }
+
+    return calibration
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('archive', type=Path)
@@ -159,57 +232,8 @@ def main():
             profile[15 if code.startswith('-') else 49 if code.endswith('+') else int(code)] += v
     profile = [x / sum(profile) for x in profile]
 
-    # Mortality trend from the life tables: annual decline in log death risk over the ten years
-    # ending in the base year, per sex and age band (single ages are too noisy at young ages).
-    bands = [(0, 15), (15, 50), (50, 65), (65, 80), (80, 90), (90, 101)]
-
-    def trend(base, sex):
-        years = list(range(base - 9, base + 1))
-        rate = [0.0] * AGES
-        for lo, hi in bands:
-            logs = [math.log(sum(q[y][sex][lo:hi]) / (hi - lo)) for y in years]
-            mean_t, mean_l = sum(years) / len(years), sum(logs) / len(logs)
-            slope = (sum((t - mean_t) * (l - mean_l) for t, l in zip(years, logs))
-                     / sum((t - mean_t) ** 2 for t in years))
-            for a in range(lo, hi):
-                rate[a] = -slope
-        return rate
-
-    # One calibration per base year, from data up to and including that year only.
-    calibration = {}
-    for base in range(2020, 2026):
-        window = range(base - 4, base + 1)
-        improvement_base = {s: trend(base, s) for s in SEXES}
-        # Death risk at the base year: the last five years moved along the trend and averaged,
-        # so a single unusual year (2020, 2022) does not set the level.
-        level = {s: [min(1.0, sum(q[y][s][a] * math.exp(-improvement_base[s][a] * (base - y)) for y in window) / 5)
-                     for a in range(AGES)] for s in SEXES}
-        ratio = {}
-        for sex in SEXES:
-            observed = sum(sum(deaths[y][sex]) for y in window)
-            expected = sum(population[y - 1][sex][a] * q[y][sex][a] for y in window for a in range(AGES))
-            ratio[sex] = observed / expected
-        past = [y for y in births if base - 9 <= y <= base]
-        boys = sum(births[y]['1'] for y in past) / sum(births[y]['1'] + births[y]['2'] for y in past)
-        residuals = []
-        for y in range(base - 2, base + 1):
-            scaled = {s: [min(1.0, q[y][s][a] * ratio[s]) for a in range(AGES)] for s in SEXES}
-            expected = natural_step(population[y - 1], scaled, births[y]['1'] + births[y]['2'], boys)
-            residuals.append({s: [population[y][s][a] - expected[s][a] for a in range(AGES)] for s in SEXES})
-        calibration[str(base)] = {
-            'population': population[base],
-            'deathRisk': level,
-            'mortalityImprovement': improvement_base,
-            'mortalityRatio': [ratio['1'], ratio['2']],
-            'mortalityWindow': [window[0], window[-1]],
-            'residualMigration': {s: [sum(r[s][a] for r in residuals) / 3 for a in range(AGES)] for s in SEXES},
-            'migrationTransitions': [base - 2, base],
-            'shareBoys': boys,
-            'totalFertility': tfr['0583'][base],
-            'totalFertilityMean5': sum(tfr['0583'][y] for y in window) / 5,
-            'births': births[base]['1'] + births[base]['2'],
-            'deaths': sum(deaths[base]['1']) + sum(deaths[base]['2']),
-        }
+    death_totals = {year: {sex: sum(counts) for sex, counts in row.items()} for year, row in deaths.items()}
+    calibration = calibrate(population, death_totals, births, tfr['0583'], q, range(2020, 2026))
 
     # SCB's regional projection for Motala, as a benchmark.
     projection = {}

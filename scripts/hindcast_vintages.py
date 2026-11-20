@@ -6,7 +6,8 @@
 Without arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.
 With a municipality code and its Modelica package (scripts/prepare_municipality.py), for example
 `0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),
-no budget comparison, written to data/municipalities/<code>/vintage-hindcast.json.
+the municipality's adopted budget when recorded with a source, and older age shares from
+the corresponding base year. Written to data/municipalities/<code>/vintage-hindcast.json.
 
 Each run starts in the closing accounts of a base year (Motala.Data.motala<year>) and
 simulates Motala.Annual up to three years ahead, but not past 2025. Two sets of
@@ -106,11 +107,13 @@ def modelica_array(values):
     return '{' + ', '.join(f'{x:.10g}' for x in values) + '}'
 
 
-def model_source(origin, horizon, v, assumptions):
+def model_source(origin, horizon, v, assumptions, older_shares=None):
     n0, path = national_path(origin, horizon, v)
     years = [origin + i for i in range(1, horizon + 1)]
     lines = [f'base = {PACKAGE}.Data.{PREFIX}{origin}', f'horizon = {horizon}',
              f'nationalPopulation0 = {n0:.10g}', f'nationalPopulationPath = {modelica_array(path)}']
+    if older_shares:
+        lines.append(f'olderShares = {modelica_array(older_shares)}')
     if assumptions in ('prices', 'hindsight'):
         outcome = pkv_outcomes()
         v = {**v, 'labour': {y: outcome[y]['labour'] for y in years}, 'other': {y: outcome[y]['other'] for y in years}}
@@ -158,6 +161,7 @@ def simulate(origin, horizon, source, directory):
 
 
 def main():
+    regional_years = {}
     if CODE == '0583':
         ledgers = {r['year']: r for r in load('research/data/annual-ledgers.json')['rows']}
         ledger_sources = {k: v['url'] for k, v in load('research/data/annual-ledgers.json')['sources'].items()}
@@ -166,7 +170,13 @@ def main():
     else:  # SCB's account summary, with the same definitions as the base years
         scb = load(f'data/municipalities/{CODE}/base-years.json')
         ledgers, ledger_sources, budgets = {}, {'scb': f"SCB räkenskapssammandrag ({scb['archive']})"}, {}
-        for y, r in scb['years'].items():
+        supplemental = ROOT / f'data/municipalities/{CODE}/annual-report-inputs.json'
+        if supplemental.exists():
+            evidence = json.loads(supplemental.read_text())
+            budgets = {int(year): {'value': amount, 'source': evidence['sources'].get(f'annual{year}')}
+                       for year, amount in evidence.get('budgetResult', {}).items()}
+        regional_years = {int(y): r for y, r in scb['years'].items()}
+        for y, r in regional_years.items():
             net = r['payroll'] + r['pension'] + r['otherOperatingExpense'] - r['operatingRevenue'] + r['depreciation']
             ledgers[int(y)] = {'tax': r['tax'], 'grants': r['grants'], 'netCost': net, 'payroll': r['payroll'],
                                'pension': r['pension'], 'population': r['reportedPopulation'][-1], 'sourceId': 'scb',
@@ -179,7 +189,7 @@ def main():
             for assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight', 'standard'):
                 directory = Path(tmp) / f'{origin}-{assumptions}'
                 directory.mkdir()
-                for year, m in simulate(origin, horizon, model_source(origin, horizon, v, assumptions), directory).items():
+                for year, m in simulate(origin, horizon, model_source(origin, horizon, v, assumptions, regional_years.get(origin, {}).get('olderShares')), directory).items():
                     o = ledgers[year]
                     runs.append({
                         'origin': origin, 'circular': v['circular'], 'published': v['published'],
@@ -192,6 +202,7 @@ def main():
                                     'personnel': o['payroll'] + o['pension'], 'result': o['result'],
                                     'population': o['population'], 'source': ledger_sources[o['sourceId']]},
                         'budgetResult': budgets[year]['value'] if year in budgets and year - origin == 1 else None,
+                        'budgetSource': budgets[year].get('source') if year in budgets and year - origin == 1 else None,
                         'persistenceResult': ledgers[origin]['result'],
                     })
     keys = ('tax', 'grants', 'netCost', 'result')
@@ -205,9 +216,11 @@ def main():
                     **{f'{k}MeanError': sum(r['model'][k] - r['outcome'][k] for r in cases) / len(cases) for k in keys},
                     **{f'{k}MeanAbsError': sum(abs(r['model'][k] - r['outcome'][k]) for r in cases) / len(cases) for k in keys}}
     one = [r for r in runs if r['horizon'] == 1 and r['assumptions'] == 'skr']  # budget and persistence: once per origin
-    if budgets:
-        summary['budget'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['budgetResult'] - r['outcome']['result']) for r in one) / len(one),
-                                 'resultMeanError': sum(r['budgetResult'] - r['outcome']['result'] for r in one) / len(one)}}
+    with_budget = [r for r in one if r['budgetResult'] is not None]
+    if with_budget:
+        errors = [r['budgetResult'] - r['outcome']['result'] for r in with_budget]
+        summary['budget'] = {1: {'cases': len(errors), 'resultMeanAbsError': sum(map(abs, errors)) / len(errors),
+                                 'resultMeanError': sum(errors) / len(errors)}}
     summary['persistence'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['persistenceResult'] - r['outcome']['result']) for r in one) / len(one)}}
     out = {'municipality': CODE, 'source': f'Model {PACKAGE}.Annual; outcomes from ' + ('Motala kommun annual reports (kommunen); ' if CODE == '0583' else 'SCB:s räkenskapssammandrag (kommunen); ') + \
                      
@@ -217,15 +230,21 @@ def main():
            'limitations': [
                'The base-year accounts were published in spring after the circular. The test uses the closing accounts '
                'and the December circular as the information set, as a budget revision in spring would.',
-               'In the skr and standard sets grants grow 2 % a year; the circulars have no Motala figure for grants. '
+               'In the skr and standard sets grants grow 2 % a year. '
                'The components set uses the circular\'s national figures per inhabitant; cost and LSS equalisation '
-               'for Motala are not in the circular and stay at the base year\'s level.',
-               'One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. '
-               'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
-               'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',
-               'Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.',
-               'The budget result is the adopted budget for the following year, set in November before the circular.',
-               'SKR forecast for Motala at the time is not available; only the national assumptions are.'],
+               'beyond the first year stay at the first forecast year\'s level.',
+               *(['One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. '
+                  'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
+                  'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',
+                  'Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.',
+                  'The budget result is the adopted budget for the following year, set in November before the circular.',
+                  'The SKR forecast for Motala at the time is not available; only the national assumptions are.']
+                 if CODE == '0583' else
+                 ['One-off items in the base year may carry into the forecast. '
+                  'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',
+                  'Personnel is compared as a total. Fixed assets from SCB include work in progress.',
+                  'The budget result is the adopted budget for the following year, set in November before the circular.',
+                  'The test uses the published national SKR assumptions. Historical local SKR revenue paths are outside this test.'])],
            'summaryByHorizon': summary, 'runs': runs}
     (ROOT / ('data/vintage-hindcast.json' if CODE == '0583' else f'data/municipalities/{CODE}/vintage-hindcast.json')).write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     print(f'{"origin":>6s} {"year":>4s} {"set":8s} {"tax":>13s} {"grants":>13s} {"net cost":>13s} {"result":>13s} {"budget":>6s}')

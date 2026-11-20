@@ -14,7 +14,8 @@ OMC = ROOT / 'site/omc-web'
 # engine.js is the independent JavaScript reference for the tests; the site never runs it.
 NOT_SHIPPED = {'engine.js'}
 DATA = ['baseline.json', 'history.json', 'sources.json', 'backtest.json', 'municipal-benchmarks.json',
-        'operating-accounts-history.json', 'planning-inputs.json', 'skr-revenue-path.json']
+        'operating-accounts-history.json', 'planning-inputs.json', 'skr-revenue-path.json', 'replay-2022.json',
+        'model-experiments.json', 'age-income.json']
 
 
 def sha(path):
@@ -44,6 +45,29 @@ def main():
         shutil.copy2(ROOT / 'data' / name, DIST / name)
     shutil.copy2(ROOT / 'modelica/Kommunekonomi.mo', DIST / 'Kommunekonomi.mo')
     shutil.copy2(ROOT / 'modelica/Motala.mo', DIST / 'Motala.mo')
+    municipal_data = {}
+    for folder in sorted((ROOT / 'data/municipalities').glob('[0-9]*')):
+        if not (folder / 'web.json').is_file():
+            continue
+        code = folder.name
+        records = json.loads((folder / 'base-years.json').read_text())
+        package = records['packageName']
+        municipal_data[code] = {
+            'current': json.loads((folder / 'web.json').read_text()),
+            'historical': json.loads((folder / 'web-2024.json').read_text()),
+        }
+        if code != '0583':
+            shutil.copy2(ROOT / 'modelica/municipalities' / f'{package}.mo', DIST / f'{package}.mo')
+        reference = folder / 'skr-revenue-path.json'
+        if reference.is_file():
+            target = DIST / 'municipalities' / code
+            target.mkdir(parents=True)
+            shutil.copy2(reference, target / reference.name)
+    (DIST / 'municipalities-data.json').write_text(json.dumps(municipal_data, ensure_ascii=False))
+    # Preserve the Finspång URLs used before the shared municipality picker.
+    shutil.copy2(ROOT / 'data/municipalities/0562/web.json', DIST / 'finspang.json')
+    shutil.copy2(ROOT / 'data/municipalities/0562/skr-revenue-path.json', DIST / 'finspang-skr-revenue-path.json')
+    shutil.copy2(ROOT / 'data/municipalities/0562/vintage-hindcast.json', DIST / 'finspang-vintage-hindcast.json')
     shutil.copy2(ROOT / 'modelica/MotalaBrowser.mo', DIST / 'MotalaBrowser.mo')
     shutil.copytree(OMC, DIST / 'omc-web')
     shutil.copy2(ROOT / 'docs/methodology.md', DIST / 'methodology.md')

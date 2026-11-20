@@ -8,13 +8,23 @@ export const ENGINE='OpenModelica · wasm-jit';
 // Validate and prepare one scenario. Throws for inputs the model must not see.
 export function prepareJob(b,history,overrides={},revenuePath=null) {
   const prepared=prepareScenario(b,history,overrides,revenuePath);
-  return {prepared,job:{fields:prepared.fields,years:prepared.assumptions.years}};
+  return {prepared,job:{fields:prepared.fields,years:prepared.assumptions.years,baseYear:b.baseYear,cohort:prepared.cohort,ageMigration:prepared.ageMigration,municipality:b.municipality}};
 }
 
 // Turn the simulation's annual rows into the dashboard's ledger rows.
 export function assemble(b,prepared,simRows,revenuePath=null) {
   const {fields}=prepared;
   const rows=[baselineRow(b)];
+  for(const row of rows) {
+    row.employerContributions=fields.employerContributions0??null;
+    row.wages=row.employerContributions==null?null:row.payroll-row.employerContributions;
+    row.workInProgress=b.workInProgress??null;
+    row.commissioned=null;
+    row.tradeReceivables=b.workingCapital?.receivables??null;
+    row.tradePayables=b.workingCapital?.payables??null;
+    row.deferredGrants=b.workingCapital?.grantAdvances??null;
+    row.workingCapitalCash=null;
+  }
   simRows.forEach((r,i)=>{
     const row=Object.fromEntries(OUTPUTS.map(name=>[name,r[name]]));
     row.year=b.baseYear+i+1;
@@ -22,10 +32,10 @@ export function assemble(b,prepared,simRows,revenuePath=null) {
     row.investment=r.annualInvestment;
     row.otherFinancialExpense=b.otherFinancialExpense;
     row.benchmarkRevenue=fields.referenceTax[i]+fields.referenceGrants[i];
-    row.officialRevenue=revenuePath?row.benchmarkRevenue:null;
+    row.officialRevenue=revenuePath&&!revenuePath.rows.find(p=>p.year===row.year)?.projected?row.benchmarkRevenue:null;
     rows.push(row);
   });
-  const {fields:_,...details}=prepared;
+  const {fields:_,ageMigration:__,...details}=prepared;
   return {...details,rows,engine:ENGINE};
 }
 
@@ -33,7 +43,7 @@ export function assemble(b,prepared,simRows,revenuePath=null) {
 export function createDirectSimulator(session) {
   return function simulate(b,history,overrides={},revenuePath=null) {
     const {prepared,job}=prepareJob(b,history,overrides,revenuePath);
-    return assemble(b,prepared,session.run(job.fields,job.years),revenuePath);
+    return assemble(b,prepared,session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality),revenuePath);
   };
 }
 

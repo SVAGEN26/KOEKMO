@@ -1,0 +1,81 @@
+{
+  "retrieved_at": "2026-11-18T16:44:36.932265+00:00",
+  "source": "SCB Statistikdatabasen",
+  "table": "TAB744",
+  "files": [
+    {
+      "file": "tax-income-by-age.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/HE/HE0110/HE0110B/BeskForvInk",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "00",
+                "0583",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1+2"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "-19",
+                "20-64",
+                "65+",
+                "tot"
+              ]
+            }
+          },
+          {
+            "code": "Inkomstklass",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "TOT"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "HE0110F1",
+                "HE0110F4"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2019",
+                "2024"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 2250,
+      "sha256": "5b5cf1630ee166521efc4bfd90103382d4d94310e4772e3f7d51620264dba207"
+    }
+  ]
+}

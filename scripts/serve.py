@@ -7,11 +7,14 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 import argparse
 import errno
-import os
 
-os.chdir(Path(__file__).resolve().parents[1] / 'site/dist')
+SITE_DIR = Path(__file__).resolve().parents[1] / 'site/dist'
+
 class Handler(SimpleHTTPRequestHandler):
     extensions_map = {**SimpleHTTPRequestHandler.extensions_map, '.wasm': 'application/wasm', '.mjs': 'text/javascript'}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=SITE_DIR, **kwargs)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)

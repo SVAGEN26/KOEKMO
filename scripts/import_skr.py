@@ -12,11 +12,15 @@ import xml.etree.ElementTree as ET
 NS={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
 PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
 
-def is_motala(value):
-    """Recognise the municipality independently of the caller's cell mapping."""
-    if isinstance(value,str):
-        return value.strip().casefold() in ('motala','0583','583','583.0')
-    return type(value) in (int,float) and value==583
+MUNICIPALITIES = {
+    item.parent.name: json.loads(item.read_text())['name']
+    for item in (Path(__file__).resolve().parents[1]/'data/municipalities').glob('[0-9]*/base-years.json')
+}
+
+def is_municipality(value, code):
+    if isinstance(value, str):
+        return value.strip().casefold() in (MUNICIPALITIES[code].casefold(), code, str(int(code)), f'{int(code)}.0')
+    return type(value) in (int, float) and value == int(code)
 
 def read_workbook(filename):
     with zipfile.ZipFile(filename) as z:
@@ -52,9 +56,12 @@ def extract(filename,mapping):
         except KeyError as e: raise ValueError(f'Missing mapped cell {ref}') from e
         if cell['value'] is None: raise ValueError(f'No cached value in {ref}; calculate and save the workbook in Excel first')
         return cell['value']
+    code=mapping.get('municipality','0583')
+    if code not in MUNICIPALITIES: raise ValueError('Municipality mapping uses an unknown code')
+    name=f'{MUNICIPALITIES[code]} ({code})'
     check=mapping['municipalityCheck']
-    if not is_motala(check['expected']): raise ValueError('Municipality mapping must identify Motala (0583)')
-    if not is_motala(get(check)): raise ValueError('Municipality selection must be Motala (0583); select Motala and recalculate/save first')
+    if not is_municipality(check['expected'],code): raise ValueError(f'Municipality mapping must identify {name}')
+    if not is_municipality(get(check),code): raise ValueError(f'Municipality selection must be {name}; select it and recalculate/save first')
     # The selection cell is user input. Without a recalculation its formula caches still hold the previous
     # municipality's figures, so a formula cell that derives the name from the selection must agree too.
     calculated=mapping.get('calculatedMunicipalityCheck')
@@ -62,7 +69,7 @@ def extract(filename,mapping):
         try: cell=sheets[calculated['sheet']][calculated['cell']]
         except KeyError as e: raise ValueError(f'Missing mapped cell {calculated}') from e
         if not cell['formula']: raise ValueError('calculatedMunicipalityCheck must point at a formula cell')
-        if not is_motala(cell['value']): raise ValueError('Calculated municipality is not Motala; the workbook was not recalculated after selection')
+        if not is_municipality(cell['value'],code): raise ValueError(f'Calculated municipality is not {name}; the workbook was not recalculated after selection')
     else:
         print('Warning: no calculatedMunicipalityCheck in mapping; cached values may belong to the previously selected municipality',file=sys.stderr)
     rows=[]
@@ -82,7 +89,7 @@ def extract(filename,mapping):
                 row[field]=value*entry[field].get('scale',1)
         rows.append(row)
     if len({r['year'] for r in rows})!=len(rows): raise ValueError('Duplicate mapped year')
-    return {'municipality':'0583','vintage':mapping['vintage'],'populationReference':mapping['populationReference'],'rows':rows,'provenance':{'workbook':filename.name,'sha256':hashlib.sha256(filename.read_bytes()).hexdigest(),'cellMap':mapping,'cachedFormulasNotRecalculated':True,'calculatedMunicipalityVerified':bool(calculated)}}
+    return {'municipality':code,'vintage':mapping['vintage'],'populationReference':mapping['populationReference'],'rows':rows,'provenance':{'workbook':filename.name,'sha256':hashlib.sha256(filename.read_bytes()).hexdigest(),'cellMap':mapping,'cachedFormulasNotRecalculated':True,'calculatedMunicipalityVerified':bool(calculated)}}
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
