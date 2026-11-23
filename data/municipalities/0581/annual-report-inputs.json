@@ -1,0 +1,13 @@
+{
+  "sources": {
+    "annual2024": "https://norrkoping.se/download/18.8f5aac4196f138bba110e5d/1748936883175/Norrk%C3%B6pings-kommun-%C3%85rsredovisning2024-del1.pdf",
+    "annual2025": "https://norrkoping.se/download/18.3a8c6b3019eafce305b3e1/1781159178882/%C3%85rsredovisning%202025%20-%20del%201.pdf"
+  },
+  "nonRecurring": {
+    "2024": {"operating": 230, "financial": -101},
+    "2025": {"operating": 3232, "financial": 0}
+  },
+  "locators": {
+    "nonRecurring": "Jämförelsestörande poster för medfinansiering av Ostlänken, kommunen, mnkr. operating: kostnadsreducering i verksamhetens nettokostnader (positiv = sänker kostnaden; läggs tillbaka i basåret). financial: finansiell kostnad (negativ = kostnad; tas bort ur basåret). 2025: Årsredovisning 2025 del 1, s. 60, tabellen Resultat mot budget; återföring av avsättningen eftersom kommunen bedömer att medfinansieringen inte genomförs. 2024: Årsredovisning 2024 del 1, s. 55, samma tabell. Femårsöversikten i 2025 års rapport, s. 6, not 2-5, anger nettot +3 232, +129, -80 och -3 281 mnkr för 2025-2022."
+  }
+}

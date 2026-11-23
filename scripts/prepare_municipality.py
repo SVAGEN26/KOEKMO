@@ -157,6 +157,13 @@ def build(code, archive):
         if abs(net + g(rr, '030', y)) > 0.01 or abs(result - g(rr, '120', y)) > 0.01:
             raise SystemExit(f'{code} {y}: accounts do not reconcile (net {net:.1f} vs {-g(rr, "030", y):.1f}, '
                              f'result {result:.1f} vs {g(rr, "120", y):.1f})')
+        # Items the annual report marks as jämförelsestörande (one-off) are taken out of the base year, so the
+        # forecast starts from the recurring level. The published result stays in SCB's accounts.
+        one_off = supplement.get('nonRecurring', {}).get(str(y))
+        if one_off:
+            record['nonRecurring'] = one_off
+            record['otherOperatingExpense'] += one_off.get('operating', 0.0)
+            record['otherFinancialExpense'] += one_off.get('financial', 0.0)
         if abs(sum(record['reportedPopulation'][-1:]) - sum(record['cohorts'][-1])) > 0.5:
             raise SystemExit(f'{code} {y}: population groups do not add up')
         years[y] = record

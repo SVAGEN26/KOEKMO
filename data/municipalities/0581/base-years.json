@@ -449,13 +449,13 @@
    ],
    "payroll": 6169.247,
    "pension": 709.098,
-   "otherOperatingExpense": 4537.898,
+   "otherOperatingExpense": 4767.898,
    "operatingRevenue": 2036.131,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 689.719,
    "financialIncome": 1425.843,
    "interestExpense": 975.581,
-   "otherFinancialExpense": 388.659,
+   "otherFinancialExpense": 287.659,
    "debt": 16292.68,
    "openingDebt": 11681.0,
    "cash": 0.001,
@@ -481,6 +481,10 @@
     2023,
     2024
    ],
+   "nonRecurring": {
+    "operating": 230,
+    "financial": -101
+   },
    "olderShares": [
     0.711435573504539,
     0.24248386317351833,
@@ -544,7 +548,7 @@
    ],
    "payroll": 6292.780000000001,
    "pension": 500.068,
-   "otherOperatingExpense": 1730.1209999999985,
+   "otherOperatingExpense": 4962.120999999998,
    "operatingRevenue": 2081.052,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 736.972,
@@ -576,6 +580,10 @@
     2024,
     2025
    ],
+   "nonRecurring": {
+    "operating": 3232,
+    "financial": 0
+   },
    "olderShares": [
     0.6989936892375918,
     0.2544090056285178,

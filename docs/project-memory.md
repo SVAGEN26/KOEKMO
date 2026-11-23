@@ -900,3 +900,30 @@ där sajten påverkas, i JavaScript-referensen:
 - Scenariot Högre ränta (+3 procentenheter från 1 januari första prognosåret) finns på webben och i MCP-servern. Motala från 2025: snitträntan 3,0 % 2026 och 4,7 % 2029; räntan 32 i stället för 23 mnkr 2026 och 71 i stället för 33 mnkr 2029.
 - `-override` når inte parametrar vars standard beror på basåret (OpenModelica fäller dem vid kompileringen); `MotalaBrowser.mo` har därför bokstavliga standardvärden.
 - Scenariot Högre inflation (användarens förslag, med högre ränta som en del): `inflationShockPath` i `Components.Scenario` når priserna samma år, lönerna och skatteunderlaget året därpå, pensionskostnaden samma år och marknadsräntan med 0,5 procentenheter per procentenhet; bidragen är fasta i kronor om inte `inflationGrantCompensation` sätts. Andelarna är illustrativa antaganden. Motala från 2025 med 3 procentenheter första året och hälften kvar per år: resultatet 49 mnkr lägre 2026 och 107 mnkr lägre 2033 än grundbanan. Webbläsarens wasm-körning är inte provad för de nya reglagen; native `-override` av `MotalaBrowser` är det.
+
+## Norrköping och Linköping i kommunkorten (2026-11-23)
+
+- Norrköping 2025: årets resultat 3 596 mnkr (SCB TAB6777 rad 120, kommunen). Varav 3 232 mnkr är en
+  jämförelsestörande kostnadsreducering: återföring av avsättningen för medfinansiering av Ostlänken, eftersom
+  kommunen bedömer att medfinansieringen inte blir av. Exklusive den 364 mnkr. Källa: Norrköpings kommun,
+  Årsredovisning 2025 del 1, s. 60 (resultat mot budget) och s. 6 (femårsöversikt, not 2–5), hämtad
+  2026-11-23 från https://norrkoping.se/kommun-och-politik/om-norrkoping/ekonomi-fakturor-och-budget/arsredovisning
+  (sha256 se arkivet när det sparas). SCB TAB6779 rad 131 (avsättning för bidrag till infrastruktur) stämmer:
+  28,8 → 3 299,6 mnkr 2021–2022, 3 293,3 (2024) → 45,8 (2025). Femårsöversikten anger också −3 281 (2022),
+  −80 (2023) och +129 mnkr (2024) i samma post. Modellens basår 2025 räknar därför nettokostnaden 3,2 mdkr för
+  låg, och alla Norrköpings banor från 2026 blev för höga. Åtgärdat 2026-11-23: `annual-report-inputs.json`
+  har `nonRecurring` per år (2025: +3 232 i nettokostnaden; 2024: +230 i nettokostnaden och −101 finansiell
+  kostnad, Årsredovisning 2024 del 1 s. 55) och `prepare_municipality.py` lägger tillbaka dem i basåret.
+  Nettokostnaden blir 9 674 (2025) och 9 610 mnkr (2024), samma som raden Verksamhetens intäkter och kostnader i
+  respektive årsredovisning. Resultatet 2026 blir 375 mnkr i grundbanan. 2022 (−3 281) och 2023 (−80) är inte
+  inlagda: femårsöversikten ger bara nettot, inte uppdelningen på drift och finans.
+- Linköping: grundbanan från 2026 ger resultatet 634 mnkr 2026 och 1 839 mnkr 2033. Skatten följer SKR 26:28
+  nära (12 831 mot 12 977 mnkr 2033), men nettokostnaden växer 2,2 %/år i modellen (löner 3 %, priser 2 %,
+  utbildningsbehovet ned till 0,88) mot 4,3 %/år 2017–2025 enligt SCB TAB6777 (skatt och bidrag 4,2 %/år).
+  Räntan faller från 361 till 261 mnkr 2026 när skulden föll 2025 medan finansiella intäkter hålls på
+  1 134 mnkr. De tolv kommunerna utom Motala kör från 2026 med de illustrativa standardantagandena, inte
+  SKR:s årsvisa pris- och skatteunderlagsbanor; Motala har dem. Åtgärdat 2026-11-23: `prepare_web_municipality.py`
+  ger basår 2025 SKR 26:28:s nationella banor (samma rader som Motala) och kommunens SKR-intäktsbana, med samma
+  regel för regleringsbidraget. Linköping stiger ändå, 466 mnkr 2026 till 1 748 mnkr 2033: skatten +4,4 %/år
+  enligt SKR, nettokostnaden +2,8 %/år (SKR:s index gånger demografin, invånarna +0,3 %/år). Modellen saknar
+  kostnadsökning utöver demografi och pris. Inte jämfört med Linköpings egen budget och plan.
