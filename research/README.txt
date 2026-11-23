@@ -190,7 +190,7 @@ useExternalTax=true ersätter enbart skatten med externalTax och lämnar den
 interna bidrags-/utjämningsbanan kvar. Det är användbart för en isolerad
 känslighet, men utjämningen reagerar då inte på den externa skattebanan.
 
-Härledning, källor och antaganden: ../docs/dynamics-equations.md.
+Härledning, källor och antaganden: dynamics-equations.md.
 Sektorandelar, personal, kapacitet och anpassningstider är ännu inte skattade
 för Motala. Balanser och mekanismer är testade; den historiska prövningen nedan
 visar precisionen och dess begränsningar.
@@ -327,7 +327,7 @@ Underlag för en uppdelad intäktsmodell
 data/motala-revenue-components.json stämmer av not 6 och 7 för 2020–2024
 mot bokslutens skatt och bidrag. data/skr-revenue-vintages.json innehåller
 de fem decembercirkulärens befolkning, medelskattekraft, reglering och
-avräkningar. Källorna och härledningen i ../docs/dynamics-equations.md §7.1
+avräkningar. Källorna och härledningen i dynamics-equations.md §7.1
 har granskats separat, se reviews/revenue-sources-20261015.txt.
 motala_lab/revenue_bridge.py prövar enheter, referensdatum och algebra.
 Den används också för källurval i den normaliserade delprövningen nedan.

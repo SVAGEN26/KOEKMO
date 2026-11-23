@@ -1,5 +1,5 @@
 import {DEFAULT_MUNICIPALITY,municipalities} from './municipalities.js';
-import {sum,validateRevenuePath,holdRegulation,extendPlanning,workingCapitalDays} from './scenario-inputs.js';
+import {sum,validateRevenuePath,holdRegulation,extendPlanning,workingCapitalDays,rateFixing} from './scenario-inputs.js';
 import {MAX_YEARS} from './omc-session.js';
 import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
@@ -17,15 +17,19 @@ const definitions=[
   ['investment','Årliga investeringar',0,800,1,'mnkr', 'Bokslut 2025: 413 mnkr'],
   ['productivity','Årlig produktivitetsökning',0,2,.1,'%', 'Scenario, ej belagd effektivisering']
 ];
-const advanced=[['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
+const advanced=[['inflationShock','Extra inflation första prognosåret',0,8,.25,'p.e.', 'Priser samma år, löner och skatteunderlag året därpå'],['inflationPersistence','Andel av den extra inflationen kvar året därpå',0,1,.05,'', '0,5 = halveras varje år'],['inflationRateResponse','Räntans svar på extra inflation',0,1.5,.05,'', 'Procentenheter högre marknadsränta per procentenhet inflation; illustrativt'],['inflationGrantCompensation','Statlig kompensation i bidragen',0,100,5,'%', 'Andel av förra årets extra inflation; 0 = bidragen fasta i kronor'],['rateShock','Räntehöjning på marknadsräntan',0,8,.25,'p.e.', 'Nya och omsatta lån, från vald månad första prognosåret'],['rateShockMonth','Räntehöjningens första månad',1,12,1,'mån', '1 = januari första prognosåret'],['rateFixingYears','Genomsnittlig räntebindning',0,8,.1,'år', 'Hur snabbt en räntehöjning slår igenom'],['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
   adverse:{taxGrowth:2.5,wageGrowth:4,priceGrowth:3,interestRate:4,migrationDelta:-100},
   migration:{migrationDelta:300},
-  investment:{investment:250}
+  investment:{investment:250},
+  // Marknadsräntan tre procentenheter högre från första prognosårets början; slår igenom med räntebindningen.
+  higherInterest:{rateShock:3,rateShockMonth:1},
+  // Tre procentenheter extra inflation första året, hälften kvar varje år därefter; räntan, lönerna, pensionerna och skatteunderlaget följer.
+  higherInflation:{inflationShock:3,inflationPersistence:0.5}
 };
 // The presets are written for Motala. Elsewhere, migration scales with the population
 // (Motala 43 131 at the end of 2025) and the investment preset with the municipality's own level.
@@ -145,7 +149,8 @@ function planningControls(){
     return d;
   });
   makeControls(controlDefinitions(controls),'sliders');
-  const localAdvanced=advanced.map(d=>d[0]==='operatingRevenueGrowth'?[...d.slice(0,6),`Bas: ${fmt(b.operatingAccounts.operatingRevenue)} mnkr. Volymjusteras.`]:d[0]==='taxRate'?[...d.slice(0,6),`Bokslut: ${decimal(b.taxRate??b.assumptions.taxRate)} %`]:d);
+  const fixing=rateFixing(rateFixingTable,b.municipality,b.baseYear);
+  const localAdvanced=advanced.map(d=>d[0]==='rateFixingYears'?[...d.slice(0,6),fixing.note]:d[0]==='operatingRevenueGrowth'?[...d.slice(0,6),`Bas: ${fmt(b.operatingAccounts.operatingRevenue)} mnkr. Volymjusteras.`]:d[0]==='taxRate'?[...d.slice(0,6),`Bokslut: ${decimal(b.taxRate??b.assumptions.taxRate)} %`]:d);
   makeControls(controlDefinitions(localAdvanced),'advanced');
   syncControls();
 }
@@ -231,7 +236,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality};
+  b={...b,municipality:activeMunicipality,assumptions:{inflationShock:0,inflationPersistence:0.5,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;
@@ -784,13 +789,14 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
   experiments=files[7].municipalities['0583'];
   ageIncome=files[8];
   regional=files[9];
+  rateFixingTable=files[10];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));

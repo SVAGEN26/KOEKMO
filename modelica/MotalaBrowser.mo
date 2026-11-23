@@ -30,6 +30,8 @@ model MotalaBrowser "Omslag för webbläsaren: fast kapacitet på 30 år, alla s
     constructionYears=0, constructionShare=0.5, workInProgress0=0,
     investmentPath=fill(413,30),
     interestRatePath=fill(21/1040,30),
+    rateFixingYears=0, rateShock=0, rateShockTime=2026,
+    inflationShockPath=zeros(30), inflationWagePassThrough=1, inflationPensionPassThrough=1, inflationRateResponse=0.5, inflationGrantCompensation=0,
     migrationDeltaPath=zeros(30),
     birthChangePath=zeros(30),
     serviceAdjustment=fill(0.5,3),

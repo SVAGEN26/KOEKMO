@@ -1,100 +1,225 @@
-# Motala economic scenario model
+# Methodology
 
-This is a reproducible first prototype for municipality 0583, covering the municipality's own accounts (kommunen), excluding the consolidated group. It does not yet demonstrate forecasting superiority. Modelica describes the annual stocks and flows, and the browser runs that Modelica model: OpenModelica's web compiler compiles it in the browser (wasm-jit). A JavaScript reference implementation (`site/src/engine.js`) is kept only for parity tests. All money is nominal SEK million, and all population values are persons. Baseline: 31 December 2025; forecast years: 2026–2033. Source access date: 13 October 2026.
+How `Kommunekonomi.Annual` computes a municipality's finances, the model the
+site runs. Updated 2026-11-23. The equations below are read from
+`modelica/Kommunekonomi.mo`; the Modelica documentation of each component says
+the same in Swedish.
 
-## Activated planning mode (6 November 2026)
+Scope: the municipality's own accounts (kommunen), not the group. Money is
+nominal mnkr, population is persons, time is the calendar year. The start is the
+base year's closing accounts (31 December); each step computes one year, and the
+default horizon is eight years. Every amount has its base-year value from the
+accounts: Motala's annual reports for Motala, SCB's municipal accounts (TAB6777,
+TAB6779, TAB6782) for the others.
 
-The dashboard loads `planning-inputs.json` by default; the source toggle removes
-it for the earlier illustrative calculation. Annual residual migration is chosen
-so a neutral scenario follows the anchored external cohort path. This residual
-includes all differences from the simple birth/death/ageing assumptions and must
-not be interpreted as observed migration. User changes to births or migration
-still act on the evolving scenario and preserve population conservation.
+The model is a scenario tool. It shows how decisions and assumptions move the
+result, cash and debt. It is not shown to forecast better than SKR or the
+municipality; see [Validation](#validation).
 
-The source provides five-year ages. Assume a uniform distribution when splitting
-5–9, 15–19 at boundaries 7, 16 and 19. For each model cohort, multiply the existing
-2025 account value by its source-cohort ratio to 2025; then proportionally scale
-all cohorts so total population follows the source's total growth from the
-account baseline. This retains the existing account opening state and makes the
-43132 source / 43131 accounts difference explicit. No causal or statistical
-precision is claimed for this approximation. Source older groups are shown
-separately but care costs still use the aggregate 65+ index.
+## Structure
 
-SKR input cells `Blad 2 Indata!C9:J9`, `C100:J100`, `C101:J101` supply annual
-national tax-base, labour-cost and other-consumption growth, respectively, with
-years verified against `C99:J99`. Percentage-point scenario offsets are added
-to every year's rate before compounding. Labour costs are a proxy applied only
-to payroll excluding pensions; pensions retain their separately labelled path.
-When no municipal revenue path is selected, tax-base growth is compounded from
-observed tax revenue and passed through the existing approximate local
-population/composition equations. It is not the
-municipal SKR revenue model and does not reproduce settlements or equalisation.
+Six components, connected in this order each year:
 
-The original `Prognosunderlag!B1` is empty. A separate copy now selects Motala
-(583) and was recalculated with LibreOffice 24.2.7.2 after VBA removal; macros
-were disabled. The dashboard activates `skr-revenue-path.json` by default.
-Output row 38 includes tax settlements and row 40 includes general grants,
-equalisation, LSS and property fees. Convert tkr to mnkr by 0.001. Input row 29
-provides 1 November population of the preceding year. Tax plus grants reconciles
-to output row 36 in every forecast year. The original workbook remains unchanged.
+1. **Scenario** picks the year's values out of the annual paths: migration,
+   births, wage and price growth, pensions, SKR's reference for tax and grants,
+   investment and the interest rate. Decisions and outside assumptions enter here.
+2. **Demography** gives the population at year end.
+3. **Services** turns population into demand and capacity per sector.
+4. **OperatingAccounts** gives payroll, pensions, other costs, fees and net cost.
+5. **Revenue** gives tax and general grants.
+6. **Capital** and **Finance** give depreciation, result, cash flow, debt,
+   cash and interest. **WorkingCapital** is optional.
 
-Imported values are reference amounts. The existing local population/composition,
-tax-rate and approximate equalisation equations can change scenario amounts,
-even in the neutral population scenario because its population base differs from
-SKR's November reference. The raw reference is therefore displayed separately.
-No new official SKR forecast or improvement in accuracy is claimed. Kolada data are displayed with definitions and units, and
-budget PDFs are downloadable references. These inputs do not automatically
-calibrate sector budgets or activate investment amounts. The historical backtest
-remains a test of the earlier population model, not this new future-source path.
+`Continuous.Economy` uses the same assumptions and outputs with time continuous
+within the year; see the last section.
 
-## Evidence and benchmarks
+## Demography
 
-The [2025 accounts](https://www.motala.se/media/uploads/Arsredovisning-2025.pdf) provide population, financial history and initial states. The [2026 budget](https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf) is identified but its numeric forecasts have not been extracted. [SKR's revenue methodology](https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg.8271.html) and [service-price budget model](https://skr.se/ekonomiochbudgetplanering/resursfordelningochanalysstod.8273.html) are distinct benchmarks. The 6 October 2026 revenue workbook was identified but could not be downloaded in this environment. The application never calls its illustrative revenue path an official SKR forecast.
+Two choices, both with a population balance checked every year
+(Δ population = births − deaths + migration).
 
-The 2025 report reproduces the municipality's budget result of 96 mnkr, April full-year forecast of 89 and August forecast of 83, against the 105 outcome (printed page 43). The corresponding absolute differences are 9, 16 and 22 mnkr. They are stored in `data/municipal-benchmarks.json`. The budget is a planning comparator, distinct from in-year forecasts. Original release dates and contemporaneous inputs are still missing, and no matched Modelica hindcast is claimed.
+**Five age groups** (0–6, 7–15, 16–18, 19–64, 65+), the site's default.
+Survivors are last year's population times one minus the death rate. A uniform
+share of each group ages into the next: 1/7, 1/9, 1/3 and 1/46. Births enter 0–6
+and scale with the 19–64 population relative to the base year. Death rates under
+65 are illustrative; the 65+ rate is set so base-year deaths match the accounts.
+Residual migration per group is the average observed change minus the natural
+change over the two latest years. It holds statistical adjustments as well as
+migration. A scenario change in net migration is spread over the groups with
+fixed weights. The 65+ group is split into 65–79, 80–89 and 90+ in fixed shares
+from SCB.
 
-Motala's public reporting process includes April and August full-year forecasts and December accounts. We have not established what proprietary forecasting software or internal equations Motala uses. Demographics alone are therefore not a demonstrated improvement over its current method.
+**Single years of age** (`CohortDemography`): ages 0–100+ by sex, as in SCB's
+projections. Deaths follow Sweden's life table scaled to the municipality's
+level (five years of data), with the national trend (ten years). Births follow a
+total fertility rate (default 1.41; or SCB's national projection, or the
+five-group rule) with SCB's age profile. Residual flows are calibrated by age on
+three years up to the base year, or taken from observed migration (SCB TAB1212).
 
-## Annual equations
+The amounts in the accounts and in SCB's age tables can differ by a few persons;
+the groups are scaled to the published total (`Data.reconcile`).
 
-The 2025 published age counts sum to 43,139 while the published total is 43,131. The model proportionally reconciles each cohort to the published total. Original values remain in `observedPopulation` and the history file. No specific cause of this discrepancy is assumed. This reconciliation is applied separately at each historical origin using that year's total.
+## Services
 
-Population uses five cohorts (0–6, 7–15, 16–18, 19–64, 65+). Survivors equal previous population times one minus mortality. Survivors in the first four cohorts advance at rates 1/7, 1/9, 1/3 and 1/46, assuming a uniform distribution inside each group. Births enter 0–6. Cohort migration residuals are the average observed cohort changes minus natural changes in the two latest transitions. Residuals include statistical adjustments and errors from broad cohort aggregation; they are not observed age-specific migration estimates.
+Demand indices, base year = 1:
 
-Mortality rates for the first four cohorts are illustrative. The senior mortality rate is selected so base-year deaths reconcile with the published total. Births scale with 19–64 population as a rough exposure proxy. A user-specified migration change is distributed across cohorts with explicit weights. Population conservation is checked each year: Δ population = births − deaths + sum of residual migration. Negative cohorts stop a scenario.
+- education: the 0–6, 7–15 and 16–18 groups, weighted by the base year's net
+  cost per group (Kolada);
+- elderly care: 65–79, 80–89 and 90+ weighted by care cost per inhabitant
+  (Kolada). For Motala 2023–2025 a person 80+ costs 7.1 times a person 65–79.
+  Kolada has no split of 80+, so 90+ gets the 80–89 weight;
+- other services: total population.
 
-Education demand is a weighted average of the first three cohort ratios. Elderly-care demand is the 65+ ratio. Other-service demand is total population ratio. These are demand indices, not pupil numbers or care recipients. Production needs single-year ages, 65–79 / 80–89 / 90+ groups, participation rates, care intensity, and actual capacity constraints.
+Capacity follows demand with a lag, and a fixed share does not follow:
 
-Operating costs now start from the published gross accounts: payroll excluding pensions 2,288 mnkr, pension expense 190, other operating expenditure 1,297 (derived from total expenditure 3,775), and operating revenue 751. The rounded gross values give net operating cost of 3,024. The reported net cost excluding depreciation is 3,203 − 180 = 3,023; an explicit −1 mnkr rounding adjustment reconciles these series. The legacy JSON name `cashCost` denotes this accrual net operating cost, not an observed cash flow.
+    capacity = capacity_prev + adjustment · (fixedShare + (1 − fixedShare) · demand − capacity_prev)
 
-Service weights remain illustrative: education 1,250, elderly care 600, and other services 1,173, summing to 3,023. They determine an aggregate service-volume index from gradually adapting capacity. They are not audited functional budgets or separate pension allocations. Actual service weights require Kolada/SCB functional accounts. Wage growth compounds on gross payroll only. Productivity reduces the payroll needed for the same service volume; it does not automatically reduce pensions, purchased goods/services, or revenue. Other expenditure compounds with its own price index and service volume. Operating revenue has a separate growth rate and scales with population. That revenue-volume assumption still needs fee, sales and earmarked-grant components.
+Defaults 0.5 and 0.25, the same in all sectors; both are illustrative. Service
+volume is capacity weighted by the base year's sector costs (Kolada).
 
-Pension expense follows an explicit annual `pensionExpensePath`, or a separately labelled illustrative growth rate from the 190 mnkr base. Pension cash payments follow `pensionCashPaymentsPath` when supplied, otherwise they are assumed equal to expense. Each supplied array must cover exactly the forecast horizon, in mnkr. No future KPA forecast has been imported. These inputs represent operating pension expense and associated payments; financial pension expense remains in the non-interest financial-cost allowance.
+## Operating accounts
 
-The observed 2024–2025 cost bridge is now preserved in `data/operating-accounts-history.json`: payroll +30, pension expense −85, other expenditure +28, lower operating revenue +23, and component rounding −1, giving a net operating-cost change of −5 mnkr before depreciation. This is an accounting explanation of observed outcomes, not a forecast validation. Pension values in the 2023 report explicitly exclude payroll tax, so they are not silently appended to this series.
+    wages            = wages_0 · wageIndex · volume / productivity
+    employer contr.  = same scaling, or wages · rate when a rate path is given
+    other costs      = other_0 · priceIndex · volume
+    operating revenue = revenue_0 · revenueIndex · population / population_0
+    net cost         = payroll + pension expense + other costs − operating revenue + rounding
 
-Tax revenue is a reference tax path multiplied by Motala's lagged population relative to Sweden's and a working-age composition correction, with municipal tax-rate changes applied separately. The illustrative reference growth (`taxGrowth`, `grantGrowth`, SKR's national tax-base growth) is national and includes Sweden's population growth, so Motala's share is scaled by (Motala at the end of the previous year / Motala at the end of the year before the base year) / (the same ratio for Sweden). The base is the year before the base year because the base year's tax rests on the population registered on 1 November of that year. Sweden's population is SCB's outcome to 2025 and SCB's projection after (`data/national-population.json`). Tax and most grants are per inhabitant, so each inhabitant is worth about 77,000 SEK a year at 2025 levels; the 374 fewer inhabitants in 2025 mean about 29 mnkr less from 2026. An imported SKR path is already Motala's own: it is scaled only by the model's population against SKR's, without a composition correction. Grants use the reference grant path and population correction, with an adjustable offset of the local tax-base deviation. The default 95% offset is an illustrative sensitivity, not a statutory implementation. It does not offset a discretionary tax-rate change. Income/cost/LSS equalisation, guarantee levels, national tax capacity, settlement years, property fees and rule changes must be separated for a production revenue model. The population reference is simplified to previous 31 December, not the legally applicable November date.
+Indices compound the year's growth. Productivity lowers payroll only. Pension
+expense and pension payments are separate annual paths: the expense hits the
+result, the payment hits cash. Without a source the payments equal the expense.
+The rounding term reconciles the base year's rounded components to the reported
+net cost.
 
-Default revenue growth is illustrative. An imported annual SKR tax/grant/population path replaces it; the path must cover every forecast year. Population in the import must be the reference population actually used in that forecast year, not the year-end population labelled with the same year. Exact SKR revenue reconciliation requires separating the components and settlement adjustments.
+## Tax and general grants
 
-Depreciation uses an inferred blended asset life: 2,997 / 180 years. Annual depreciation is (opening depreciable assets + half annual investment) / life. Assets close at opening assets + investment − depreciation. This is a declining stock proxy, not Motala's straight-line component accounting. Commissioning, work in progress, replacement schedules, disposal and land require separate asset vintages.
+Tax and grants start from a reference path: SKR's forecast for the
+municipality when imported, otherwise the base year's amounts grown at
+`taxGrowth` and `grantGrowth`. National growth includes Sweden's population
+growth, so the municipality's share is scaled by its population relative to
+Sweden's:
 
-Interest equals opening bank debt times the scenario rate. The 2025 note reports interest expense of 21 mnkr within total financial expenses of 25; the model now retains 4 mnkr separately for remaining financial expenses and rounding. The default interest rate is 21/940 = 2.23 %, the 2025 interest expense divided by the opening bank debt, consistent with interest charged on opening debt; it is a proxy, not an observed average portfolio rate. Financial income stays at 15 mnkr. Annual result = tax + grants − net operating cost − depreciation + financial income − interest − other financial expense.
+    popFactor = (pop_{t−1} / pop_ref) / (Sweden_{t−1} / Sweden_ref)
 
-Operating cash = result + depreciation + operating pension expense − pension cash payments. Investment deficits increase debt; surpluses repay debt up to the opening balance, with any remainder held as cash. A noncash pension expense therefore lowers result without automatically increasing borrowing. This is still a simplified cash-flow model: guarantees, leases, working capital, asset sales, other noncash provisions, pension-liability valuation and liquidity policy remain omitted. The base-year published result is 105 while rounded ledger terms produce 104; the 1 mnkr reconciliation difference is retained only in the observed base row. Base-year pension payments are left unknown rather than invented.
+where pop_ref is the population at the end of the year before the base year,
+since the base year's tax rests on the population of 1 November that year. Tax
+and most grants are per inhabitant: at Motala's 2025 amounts each inhabitant is
+worth about 77,000 kr a year in tax and grants.
 
-Stress curves perturb revenue growth, wage/price growth, net migration, births and interest coherently. They are user-defined scenarios, not calibrated confidence intervals or probabilities. No prediction interval is claimed.
+    tax = (reference tax · popFactor + age deviation) · taxRate_t / baseTaxRate
 
-## Validation and the meaning of “better”
+The age deviation is the tax effect of a changed share aged 19–64. Without
+component grants, grants = reference grants · popFactor − 0.95 · age deviation,
+a simplified equalisation. A changed tax rate changes only tax.
 
-Numerical checks cover conservation, fiscal and cash identities, nonnegative debt, tax-rate sensitivity, imported-path completeness, scenario validation and native Modelica/reference parity. Native parity is tested over four scenarios: base, adverse, alternative migration/investment, and a pension path where expense and payments differ. All 23 checked outputs match for eight annual rows. The reference engine rejects future or discontinuous calibration history. The browser's wasm-jit build is checked the same way in `tests/jit-parity.test.mjs`: 25 annual outputs and five cohorts for 14 scenarios agree with the reference within a relative 1e-8 (observed about 1e-12).
+**Grants by component** (`grantsByComponent`): income equalisation, cost
+equalisation, the regulation grant and LSS equalisation as kronor per inhabitant
+times last year's population; property fee and other grants in mnkr. Next
+year's amounts are SCB's published values (TAB1981, TAB4011); later years hold
+the per-inhabitant amounts, with income equalisation following Sweden's tax
+capacity. Income equalisation follows the law (2004:773): the municipality
+receives 95 % of a tax rate times the gap between 115 % of Sweden's mean tax
+capacity and its own, and pays 85 % when above (`Data.equalisationShare`). A
+changed share in working age changes its own tax capacity.
 
-The supplied population retrospective evaluation compares a one-year cohort model with persistence and a recent total-population trend, using only preceding rows for each fit. The later annual report supplies all observations, so this is not a genuine real-time vintage backtest. Only three holdouts (2023–2025) are available. Structural population results can fail to outperform the simpler baselines; failures are reported. No fiscal or municipality/SKR superiority result is claimed.
+**Imported SKR path** (`importedRevenue`), three modes:
 
-For forecast acceptance, archive every source vintage with release date and information cutoff. Collect at least 10 years of annual accounts and the April/August municipal forecasts, every available SKR vintage and corresponding SCB/Kolada observations. Evaluate 1/2/3-year horizons at rolling origins without future input leakage. Score population by age (MAE), revenue/cost/debt (MAE and bias in mnkr), result (MAE, not percentage errors near zero), and interval coverage/width. Compare with the exact municipality and SKR paths and simple statistical baselines on identical cutoffs. Report shock years separately. Choose additional mechanisms only when they improve held-out performance and retain accounting consistency. Modelica makes the mechanisms explicit; it does not by itself improve forecast accuracy.
+- 0, proportional: the path scaled by the model's population against SKR's;
+- 1, published: SKR's amounts as they are;
+- 2, per component: tax before settlement, income equalisation and the
+  regulation item each adjusted for population and tax rate; optional age
+  weighting of taxable income (SCB TAB744), with income equalisation taking back
+  the age effect at the county rate.
 
-## OpenModelica wasm-jit
+`revenueFromReference` takes a path as given, for example a budget's amounts.
 
-The browser compiles `Motala.Annual`, through the `MotalaBrowser` wrapper, with OpenModelica's web compiler and the `wasm-jit` target. The compiled model is reused: every scenario re-runs it with `-override` values for all annual inputs, and the horizon is set through `stopTime`. Inputs are validated in JavaScript before they reach the model, and the model asserts the same limits itself. The compiler revision and file hashes are recorded in `omc-web/manifest.json` on the site. Compiler version or API drift can require changes to `site/src/omc-session.js`.
+## Capital
 
-The engine needs no personal resident records. The prototype is aggregate and stores no resident-level data.
+A share of each year's investment (`constructionShare`) waits in work in
+progress for `constructionYears` before it is put in use; the rest is put in
+use the same year. A named project can be paid and opened in a given year, with
+its places in use from then.
+
+    depreciation = (assets_prev + 0.5 · commissioned) / life
+    assets       = assets_prev + commissioned − depreciation
+
+`life` is the base year's assets over its depreciation, a blended life (Motala
+2025: 2,997 / 180 mnkr). This is a declining stock, not component depreciation.
+
+## Finance
+
+    result = tax + grants − net cost − depreciation + financial income − interest − other financial costs
+    operating cash = result + depreciation + pension expense − pension payments + working-capital effect
+
+If operating cash does not cover investment, the municipality borrows the gap;
+a surplus repays debt, and what remains goes to cash. With `liquidityPolicy`,
+cash above a chosen reserve is used before borrowing, and a share of the first
+year's investment can be deferred and prefinanced.
+
+Interest is opening debt times the year's rate on it. Without a fixed-rate
+period (`rateFixingYears = 0`) that is the year's rate. With one, the rate path
+is the market rate for new and refixed loans, and the average rate moves toward
+it by the share 1 − exp(−1/τ) of the debt each year; new loans pay the market
+rate. `rateShock` raises the market rate from a date, counted for the rest of
+that year. The default rate is the base year's reported average rate when the
+annual report gives one, otherwise interest expense over opening debt.
+
+Extra inflation (`inflationShockPath`) reaches prices the same year, wages and
+the tax base the year after, pensions the same year and the market rate by
+`inflationRateResponse` per point; grants stay fixed in kronor unless
+`inflationGrantCompensation` is set. The shares are illustrative.
+
+Key ratios: result as a share of tax and grants (`resultShare`, the usual
+financial target), interest as a share of tax and grants, and cumulative
+interest. Guarantees, leases, asset sales and pension-liability valuation are
+not modelled.
+
+**WorkingCapital** (optional): receivables as days of operating revenue,
+payables as days of other costs, and prepaid grants. Only the change in balances
+reaches cash. Inventories and land for development are not included.
+
+## Continuous time
+
+`Kommunekonomi.Continuous.Economy` keeps the annual rules (tax and grants,
+wage and price levels, the demography) but moves money between stocks within
+the year: cash, debt, assets, work in progress, receivables, payables, pension
+provision and grant advances. Liabilities have negative levels, so the sum of
+stocks changes only by the result, which the model checks (`equityBalance`).
+Interest accrues on the current debt and costs follow the year's average
+population. Population, tax and grants are identical to `Annual`;
+`tests/test_continuous.py` checks that.
+
+## Validation
+
+**Identities and parity.** Every year the model asserts population balance,
+asset, debt and cash balances and non-negative debt. `npm test` and
+`npm run validate:modelica` check native OpenModelica and the browser build
+against the independent JavaScript reference (`site/src/engine.js`).
+
+**Hindcast.** `scripts/hindcast_vintages.py` starts from each set of accounts
+2020–2024 with only what SKR's December circular of that year assumed, and runs
+up to three years, not past 2025. Outcomes are Motala's annual reports
+(`research/data/annual-ledgers.json`) and SCB for the others. Results are in
+`data/vintage-hindcast.json`; the README has a summary. One year ahead the
+model's result is off by 40 mnkr on average for Motala, the municipality's
+budget by 24. With hindsight values for prices and the tax base the tax error
+falls to about 10 mnkr, so most of the error comes from the forecasts the model
+is given and from the state's grant decisions.
+
+**Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
+municipalities from 2022–2024 to 2025; results in
+`research/data/age-group-hindcast.json`.
+
+Limits: few cases (five base years, fewer at longer horizons), one
+municipality's annual reports, and SKR's own historical Motala forecasts are no
+longer available to compare with. The hindcast uses only data known at the
+base year; later outcomes are the answer, not inputs.
+
+## Browser engine
+
+The site compiles `Kommunekonomi.mo`, the municipality's package and
+`MotalaBrowser.mo` with OpenModelica's web compiler (`wasm-jit`), and re-runs the
+compiled model with `-override` for every scenario. Inputs are validated in
+JavaScript, and the model asserts the same limits. The compiler revision and file
+hashes are in `omc-web/manifest.json` on the site. No resident-level data are
+used or stored.

@@ -109,6 +109,38 @@ class Session(unittest.TestCase):
         finally:
             server.close()
 
+    def test_higher_interest_passes_through_gradually(self):
+        server = Stdio()
+        try:
+            base, _, _ = server.tool('run_scenario', municipality='0583', horizon=3)
+            high, error, text = server.tool('run_scenario', municipality='0583', horizon=3, scenario='higherInterest')
+            self.assertFalse(error, text)
+            rates = [y['annualInterestRate'] for y in high['years'][1:]]
+            self.assertEqual(rates, sorted(rates))  # the average rate climbs year by year
+            first, plain = high['years'][1], base['years'][1]
+            full = plain['annualInterestRate'] + 0.03
+            self.assertGreater(first['annualInterestRate'], plain['annualInterestRate'] + 0.005)
+            self.assertLess(first['annualInterestRate'], full - 0.01)  # 3.19 years of fixed rates: not all at once
+            self.assertLess(first['result'], plain['result'])
+        finally:
+            server.close()
+
+    def test_higher_inflation_hits_costs_before_tax(self):
+        server = Stdio()
+        try:
+            base, _, _ = server.tool('run_scenario', municipality='0583', horizon=3)
+            high, error, text = server.tool('run_scenario', municipality='0583', horizon=3, scenario='higherInflation')
+            self.assertFalse(error, text)
+            b1, h1, b2, h2 = base['years'][1], high['years'][1], base['years'][2], high['years'][2]
+            self.assertAlmostEqual(h1['tax'], b1['tax'], places=6)  # the tax base follows wages a year later
+            self.assertGreater(h2['tax'], b2['tax'])
+            self.assertGreater(h1['otherOperatingExpense'], b1['otherOperatingExpense'])
+            self.assertAlmostEqual(h1['grants'], b1['grants'], places=6)  # fixed in kronor without compensation
+            self.assertLess(h1['result'], b1['result'])
+            self.assertGreater(h1['annualInterestRate'], b1['annualInterestRate'])
+        finally:
+            server.close()
+
 
 class Http(unittest.TestCase):
     def test_post_and_origin(self):

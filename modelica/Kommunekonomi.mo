@@ -319,6 +319,16 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real projectPlaces(min=0) = 0 "Projektets lokalkapacitet vid öppning, platser";
     parameter Real workInProgress0(min = 0) = 0 "Pågående arbeten vid basårets slut utöver assets0, mnkr";
     parameter Real interestRatePath[horizon] = fill(interestRate, horizon) "Låneränta på ingående skuld per år, andel";
+    parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid för lånen, år (årsredovisningens avsnitt om finansiella risker); 0 = hela skulden till årets ränta. Med räntebindning är interestRatePath marknadsräntan för nya och omsatta lån";
+    parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
+    parameter Real rateShockTime = base.year + 1 "Datum för räntehöjningen som decimalår: 2026,0 = 1 januari 2026, 2026,5 = 1 juli 2026; i årsmodellen räknas den återstående delen av året";
+    parameter Real inflationShock = 0 "Extra inflation första prognosåret utöver prisbanan, andel (0,03 = tre procentenheter)";
+    parameter Real inflationPersistence(min = 0, max = 1) = 0.5 "Andel av den extra inflationen som finns kvar året därpå";
+    parameter Real inflationShockPath[horizon] = {inflationShock*inflationPersistence^(i - 1) for i in 1:horizon} "Extra inflation per år, andel";
+    parameter Real inflationWagePassThrough = 1 "Andel av förra årets extra inflation som når lönerna (avtalen följer efter)";
+    parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden (uppräkning av pensionsskulden)";
+    parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år (illustrativt)";
+    parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i de generella bidragen; 0 = bidragen fasta i kronor";
     parameter Real migrationDeltaPath[horizon] = fill(migrationDelta, horizon) "Förändrat flyttnetto per år, personer";
     parameter Real birthChangePath[horizon] = fill(birthChange, horizon) "Relativ förändring av födda per år, andel";
     final parameter Real life = assets0/depreciation0 "Sammanvägd avskrivningstid, år";
@@ -485,6 +495,15 @@ antalet år.</p></html>"));
       parameter Real projectPayment = 0;
       final parameter Real deferredAmount = investmentPath[1]*deferInvestmentShare;
       parameter Real interestRatePath[horizon] "Låneränta per år, andel";
+      parameter Real inflationShockPath[horizon] = zeros(horizon) "Extra inflation per år utöver prisbanan, andel";
+      parameter Real inflationWagePassThrough = 1 "Andel av förra årets extra inflation som når lönerna";
+      parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden";
+      parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år";
+      parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i bidragen";
+      final parameter Real inflationGrantFactor[horizon] = {product({1 + (if j == 1 then 0 else inflationGrantCompensation*inflationShockPath[j - 1]) for j in 1:i}) for i in 1:horizon} "Bidragens faktor mot referensbanan";
+      final parameter Real inflationWage[horizon] = {if i == 1 then 0 else inflationWagePassThrough*inflationShockPath[i - 1] for i in 1:horizon} "Extra löneökning per år, andel";
+      final parameter Real inflationTaxFactor[horizon] = {product({1 + inflationWage[j] for j in 1:i}) for i in 1:horizon} "Skatteunderlaget följer lönerna: faktor mot referensbanan";
+      final parameter Real inflationPensionFactor[horizon] = {product({1 + inflationPensionPassThrough*inflationShockPath[j] for j in 1:i}) for i in 1:horizon} "Pensionskostnadens faktor mot banan";
       Interfaces.DemographyDriversOutput demography "Årets demografiska antaganden" annotation(
         Placement(transformation(origin = {-624, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-260, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
       Interfaces.CostDriversOutput operations "Årets löne-, pris- och pensionsantaganden" annotation(
@@ -499,22 +518,26 @@ antalet år.</p></html>"));
       demography.residualMigration = residualMigrationPath[calendar.pathIndex, :];
       demography.migrationDelta = migrationDeltaPath[calendar.pathIndex];
       demography.birthChange = birthChangePath[calendar.pathIndex];
-      operations.wageGrowth = wageGrowthPath[calendar.pathIndex];
-      operations.priceGrowth = priceGrowthPath[calendar.pathIndex];
-      operations.pensionExpense = pensionExpensePath[calendar.pathIndex];
-      operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex];
-      revenue.tax = referenceTax[calendar.pathIndex];
-      revenue.grants = referenceGrants[calendar.pathIndex];
+      operations.wageGrowth = wageGrowthPath[calendar.pathIndex] + inflationWage[calendar.pathIndex];
+      operations.priceGrowth = priceGrowthPath[calendar.pathIndex] + inflationShockPath[calendar.pathIndex];
+      operations.pensionExpense = pensionExpensePath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
+      operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
+      revenue.tax = referenceTax[calendar.pathIndex]*inflationTaxFactor[calendar.pathIndex];
+      revenue.grants = referenceGrants[calendar.pathIndex]*inflationGrantFactor[calendar.pathIndex];
       revenue.population = referencePopulation[calendar.pathIndex];
       revenue.nationalPopulation = nationalPopulationPath[calendar.pathIndex];
       investment = investmentPath[calendar.pathIndex] +
         (if calendar.pathIndex == 1 then projectPayment - deferredAmount elseif calendar.pathIndex == 2 then deferredAmount else 0);
-      interestRate = interestRatePath[calendar.pathIndex];
+      interestRate = interestRatePath[calendar.pathIndex] + inflationRateResponse*inflationShockPath[calendar.pathIndex];
       annotation(
         Icon(coordinateSystem(extent = {{-300, -25}, {300, 25}}), graphics = {Rectangle(extent = {{-300, -25}, {300, 25}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-290, -20}, {290, 20}}, textString = "Scenario: årets antaganden", fontSize = 16, textColor = {35, 50, 65})}),
         Documentation(info = "<html><p>Plockar ut årets värden ur de årsvisa banorna. Beslutsparametrar (investeringar,
 skattesats) och yttre antaganden (löner, priser, ränta, SKR:s referens för skatt och bidrag, befolkningsbanan) kommer in i
-modellen här, så att varje komponent får dem genom en koppling.</p></html>"));
+modellen här, så att varje komponent får dem genom en koppling.</p>
+<p>En extra inflation (<code>inflationShockPath</code>) når kommunen i olika takt: priserna samma år, lönerna året därpå
+(avtalen), pensionskostnaden samma år (uppräkningen av pensionsskulden), skatteunderlaget med lönerna och marknadsräntan
+med <code>inflationRateResponse</code> per procentenhet. De generella bidragen är fasta i kronor tills staten beslutar annat;
+<code>inflationGrantCompensation</code> anger hur stor del av förra årets extra inflation staten kompenserar. Med noll extra inflation är banorna oförändrade.</p></html>"));
     end Scenario;
 
     partial model DemographyBase "Det varje demografimodell ska ge: antaganden in, befolkning ut"
@@ -1016,6 +1039,10 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       parameter Boolean liquidityPolicy = false;
       parameter Real cashReserve = 0;
       parameter Real plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
+      parameter Real averageRate0 = 0 "Snittränta på skulden vid basårets slut, andel";
+      parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
+      parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
+      parameter Real rateShockTime = 1e9 "Datum för höjningen som decimalår (2026,5 = 1 juli 2026)";
       outer Calendar calendar;
       input Real workingCapitalCash "Kassaeffekt av ändrade rörelsekapitalposter";
       Interfaces.TaxAndGrantsInput taxAndGrants "Skatt och bidrag" annotation(
@@ -1041,6 +1068,9 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       discrete output Real resultShare(start = 100*result0/revenue0, fixed = true) "Årets resultat i procent av skatter och bidrag (kommunens finansiella mål)";
       discrete output Real interestShare(start = 100*interest0/revenue0, fixed = true) "Räntekostnader i procent av skatter och bidrag";
       discrete output Real cumulativeInterest(start = 0, fixed = true) "Räntekostnader sammanlagt sedan basåret, mnkr";
+      discrete output Real marketRate(start = averageRate0, fixed = true) "Marknadsränta för nya och omsatta lån under året, andel";
+      discrete output Real rateOnOpeningDebt(start = averageRate0, fixed = true) "Årets ränta på den ingående skulden, andel";
+      discrete output Real averageRate(start = averageRate0, fixed = true) "Snittränta på skulden vid årets slut, andel";
     protected
       discrete Real financingGap(start = 0, fixed = true) "Finansieringsgap efter kassapolicy, mnkr";
     equation
@@ -1049,7 +1079,12 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       assert(abs(cashBalance) < 1e-7*max(1, abs(operatingCash)), "Kassabalansen stämmer inte");
     algorithm
       when calendar.tick then
-        interest := pre(debt)*interestRate;
+        // En höjning under året räknas för den del av året som återstår.
+        // Tiden t är den 31 december år t; datumet rateShockTime (2026,5 = 1 juli 2026) är tiden rateShockTime - 1.
+        marketRate := interestRate + rateShock*min(1, max(0, time - (rateShockTime - 1)));
+        // Andelen av skulden som omsätts under året; utan räntebindning hela skulden.
+        rateOnOpeningDebt := pre(averageRate) + (marketRate - pre(averageRate))*(1 - exp(-1/max(rateFixingYears, 1e-9)));
+        interest := pre(debt)*rateOnOpeningDebt;
         result := taxAndGrants.tax + taxAndGrants.grants - operations.cost - depreciation + financialIncome - interest - otherFinancialExpense;
         operatingCash := result + depreciation + operations.pensionExpense - operations.pensionCashPayments + workingCapitalCash;
         resultShare := 100*result/(taxAndGrants.tax + taxAndGrants.grants);
@@ -1061,6 +1096,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
         borrowing := max(0, financingGap) + prefinancing;
         repayment := min(pre(debt), max(0, -financingGap));
         debt := pre(debt) + borrowing - repayment;
+        averageRate := if debt > 1e-9 then (rateOnOpeningDebt*(pre(debt) - repayment) + marketRate*borrowing)/debt else marketRate;
         cash := pre(cash) + operatingCash - investment + borrowing - repayment;
         debtBalance := debt - pre(debt) - borrowing + repayment;
         cashBalance := cash - pre(cash) - operatingCash + investment - borrowing + repayment;
@@ -1069,7 +1105,10 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
         Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {105, 75, 145}, fillColor = {245, 238, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Finans", fontSize = 21, textColor = {105, 75, 145}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Resultat / kassa / lån", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {105, 75, 145})}),
         Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Finans", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Skatt / bidrag\nKostnader / investering\nPension / ränta", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "Lån / kassa\nÅrets kassaflöde", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Resultat / ränta\nNya lån / amortering\nKontroller", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Ränta på ingående skuld. Pensionskostnad och pensionsutbetalning hålls isär.", fontSize = 12, textColor = {35, 50, 65})}),
         Documentation(info = "<html><p>Här möts allt:</p>
-<ul><li>ränta = låneskuld vid årets början · ränta</li>
+<ul><li>ränta = låneskuld vid årets början · årets ränta på den skulden. Utan räntebindning (<code>rateFixingYears = 0</code>)
+är det årets ränta. Med räntebindning är årets ränta marknadsräntan för nya och omsatta lån, och snitträntan närmar sig den
+med andelen 1 - exp(-1/rateFixingYears) av skulden per år; nya lån tas till marknadsräntan. <code>rateShock</code> höjer
+marknadsräntan från <code>rateShockTime</code>.</li>
 <li>årets resultat = skatt + bidrag - nettokostnad - avskrivningar + finansiella intäkter - ränta - övriga finansiella kostnader</li>
 <li>kassaflöde = resultat + avskrivningar + pensionskostnad - pensionsutbetalningar</li>
 <li>räcker kassaflödet inte till investeringarna lånar kommunen mellanskillnaden; ett överskott amorterar, och det som blir
@@ -1158,7 +1197,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     extends Report;
     inner Components.Calendar calendar(horizon = horizon, baseYear = base.year) "Gemensam årskalender" annotation(
       Placement(transformation(origin = {370, 305}, extent = {{-40, -20}, {40, 20}})));
-    Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath) "Årets antaganden" annotation(
+    Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
       Placement(transformation(origin = {-20, 240}, extent = {{-300, -25}, {300, 25}})));
     replaceable Components.Demography demography(p0 = p0, olderShares = olderShares, deathRates = deathRates, migrationWeights = migrationWeights, births0 = births0) constrainedby Components.DemographyBase "Demografi: fem åldersgrupper som standard; Examples.AnnualCohort använder ettårsåldrar" annotation(choicesAllMatching = true, 
       Placement(transformation(origin = {-280, 110}, extent = {{-75, -56}, {75, 56}})));
@@ -1176,7 +1215,8 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       payables0=payables0, grantAdvances0=grantAdvances0, collectionDays=collectionDays,
       paymentDays=paymentDays, firstYearGrantAdvance=firstYearGrantAdvance) "Rörelsekapital";
     Components.Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, result0 = tax0 + grants0 - (payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment) - depreciation0 + financialIncome - base.interestExpense - otherFinancialExpense, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, revenue0 = tax0 + grants0, liquidityPolicy = liquidityPolicy, cashReserve = cashReserve,
-      plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare) "Finans" annotation(
+      plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
+        averageRate0 = interestRate, rateFixingYears = rateFixingYears, rateShock = rateShock, rateShockTime = rateShockTime) "Finans" annotation(
       Placement(transformation(origin = {250, -110}, extent = {{-75, -56}, {75, 56}})));
   equation
     connect(scenario.demography, demography.drivers) annotation(
@@ -1209,7 +1249,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     year = calendar.year;
     // Vid starttiden visas basårets utfall, därefter scenariots värden.
     annualInvestment = if yearIndex == 0 then base.investment else scenario.investment;
-    annualInterestRate = if yearIndex == 0 then (if base.openingDebt > 0 then base.interestExpense/base.openingDebt else interestRate) else scenario.interestRate;
+    annualInterestRate = if yearIndex == 0 then (if base.openingDebt > 0 then base.interestExpense/base.openingDebt else interestRate) else finance.rateOnOpeningDebt;
     p = demography.cohorts.p;
     population = demography.population;
     births = demography.births;
@@ -1711,6 +1751,10 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       parameter Real cashReserve = 0;
       parameter Real plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
       parameter Real reserveRestoreTime = 1/12 "Tid för att låna upp till kassareserven när kassan understiger den, år";
+      parameter Real averageRate0 = 0 "Snittränta på skulden vid basårets slut, andel";
+      parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
+      parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
+      parameter Real rateShockTime = 1e9 "Datum för höjningen som decimalår (2026,5 = 1 juli 2026)";
       outer Components.Calendar calendar;
       outer Clock clock;
       Interfaces.TaxAndGrantsInput taxAndGrants "Skatt och bidrag, mnkr per år" annotation(
@@ -1732,6 +1776,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       Transfer prefinancing "Lån i förväg" annotation(Placement(transformation(origin = {50, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
       Transfer repayment "Amortering" annotation(Placement(transformation(origin = {50, -30}, extent = {{-10, -10}, {10, 10}})));
       Real net "Kassaflöde före finansiering, mnkr per år";
+      Real marketRate "Marknadsränta för nya och omsatta lån just nu, andel";
+      Real fixedInterest(start = averageRate0*debt0, fixed = true) "Årlig räntekostnad på lånen med deras bundna räntor, mnkr per år";
+      Real averageRate "Snittränta på skulden just nu, andel";
       Real reserve "Kassareserven just nu: policyns reserv plus det som lånats i förväg under första året, mnkr";
       Boolean surplusCash "Kassan över reserven finansierar underskott";
       Boolean belowReserve "Kassan under reserven fylls på först";
@@ -1743,7 +1790,12 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       tax.rate = taxAndGrants.tax;
       grants.rate = taxAndGrants.grants;
       financial.rate = financialIncome;
-      interest.rate = interestRate*(-debt.level);
+      marketRate = interestRate + (if time >= rateShockTime - 1 then rateShock else 0) "Tiden t är den 31 december år t; datumet rateShockTime är tiden rateShockTime - 1";
+      // Lånen omsätts med takten 1/rateFixingYears; nya lån och omsatta lån får marknadsräntan, amortering tar bort snitträntan.
+      der(fixedInterest) = if rateFixingYears > 0 then marketRate*(borrowing.rate + prefinancing.rate) - averageRate*repayment.rate
+        + (marketRate*(-debt.level) - fixedInterest)/rateFixingYears else 0;
+      averageRate = if rateFixingYears > 0 and -debt.level > 1e-9 then fixedInterest/(-debt.level) else marketRate;
+      interest.rate = if rateFixingYears > 0 then fixedInterest else marketRate*(-debt.level);
       otherFinancial.rate = otherFinancialExpense;
       net = operations.rate + investments.rate;
       prefinancing.rate = if liquidityPolicy and calendar.pathIndex == 1 then plannedPrefinancing else 0;
@@ -1782,6 +1834,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
         Documentation(info = "<html><p>Kassan och låneskulden är lager. Skatt, bidrag och finansiella poster flödar in och ut över gränsen;
 driftens och investeringarnas betalningar kommer genom kopplingarna och mäts (<code>operations</code>,
 <code>investments</code>). Räntan är ett flöde på den aktuella skulden, inte på årets ingående skuld.</p>
+<p>Med räntebindning (<code>rateFixingYears</code> &gt; 0) är <code>fixedInterest</code> den årliga räntekostnaden med lånens
+bundna räntor. Den närmar sig marknadsräntan gånger skulden med tidskonstanten <code>rateFixingYears</code>; nya lån tas till
+marknadsräntan. En räntechock (<code>rateShock</code> från <code>rateShockTime</code>) slår därför igenom gradvis.</p>
 <ul><li>Underskott före finansiering lånas när det uppstår; ett överskott amorterar, och när skulden är noll växer kassan.</li>
 <li>Med kassapolicy finansierar kassan över reserven underskott först, och en kassa under reserven fylls på genom lån
 inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första året hålls i kassan till året därpå.</li></ul></html>"));
@@ -1795,7 +1850,7 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
         Placement(transformation(origin = {-200, 140}, extent = {{-10, -10}, {10, 10}})));
       inner Clock clock(horizon = horizon, baseYear = base.year) "Bokslut vid årets slut" annotation(
         Placement(transformation(origin = {-170, 140}, extent = {{-10, -10}, {10, 10}})));
-      Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath) "Årets antaganden" annotation(
+      Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
         Placement(transformation(origin = {-200, 60}, extent = {{-20, -40}, {20, 40}})));
       replaceable Components.Demography demography(p0 = p0, olderShares = olderShares, deathRates = deathRates, migrationWeights = migrationWeights, births0 = births0) constrainedby Components.DemographyBase "Demografi: räknar fram årets slut när året börjar" annotation(
         Placement(transformation(origin = {-120, 100}, extent = {{-20, -15}, {20, 15}})));
@@ -1809,14 +1864,15 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
         Placement(transformation(origin = {-120, 20}, extent = {{-20, -15}, {20, 15}})));
       Payments payments(active = workingCapitalEnabled, receivables0 = receivables0, payables0 = payables0, grantAdvances0 = grantAdvances0, collectionDays = collectionDays, paymentDays = paymentDays, firstYearGrantAdvance = firstYearGrantAdvance, netCostRoundingAdjustment = netCostRoundingAdjustment) "Driftens betalningar" annotation(
         Placement(transformation(origin = {60, 40}, extent = {{-20, -15}, {20, 15}})));
-      Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, liquidityPolicy = liquidityPolicy, cashReserve = cashReserve, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare) "Kassa och lån" annotation(
+      Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, liquidityPolicy = liquidityPolicy, cashReserve = cashReserve, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
+        averageRate0 = interestRate, rateFixingYears = rateFixingYears, rateShock = rateShock, rateShockTime = rateShockTime) "Kassa och lån" annotation(
         Placement(transformation(origin = {0, -20}, extent = {{-20, -15}, {20, 15}})));
       Capital capital(baseYear = base.year, assets0 = assets0, depreciation0 = depreciation0, life = life, constructionYears = constructionYears, constructionShare = constructionShare, workInProgress0 = workInProgress0, projectOpeningStock = projectOpeningStock, projectPayment = projectPayment, projectOpeningStep = projectOpeningStep, projectPlaces = projectPlaces) "Kapital" annotation(
         Placement(transformation(origin = {0, -80}, extent = {{-20, -15}, {20, 15}})));
     protected
       discrete Real demographyYear[4](each fixed = false) "Födda, döda, flyttnetto och befolkningsbalans under det avslutade året";
       discrete Real revenueYear[11](each fixed = false) "Skatt, bidrag, tre befolkningsjusteringar och sex bidragsdelar för det avslutade året";
-      discrete Real interestRateYear(fixed = false) "Låneränta under det avslutade året";
+      discrete Real interestRateYear(fixed = false) "Årets räntekostnad delad med årets genomsnittliga skuld, andel";
       discrete Real netWorth(fixed = false) "Summan av alla lager vid årets slut, mnkr";
       Real netWorthNow "Summan av alla lager just nu, mnkr";
     initial equation
@@ -1850,7 +1906,8 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
       when clock.yearEnd then
         demographyYear = {pre(demography.births), pre(demography.deaths), pre(demography.migration), pre(demography.populationBalance)};
         revenueYear = cat(1, {pre(revenues.tax), pre(revenues.grants), pre(revenues.recurringTaxAdjustment), pre(revenues.incomeEqualisationAdjustment), pre(revenues.regulationPopulationAdjustment)}, pre(revenues.grantParts));
-        interestRateYear = pre(scenario.interestRate);
+        interestRateYear = if pre(finance.debtLevel) + finance.debtLevel > 1e-6 then
+          finance.interest.annual/((pre(finance.debtLevel) + finance.debtLevel)/2) else pre(finance.marketRate);
         netWorth = netWorthNow;
         equityBalance = netWorthNow - pre(netWorth) - (finance.tax.annual + finance.grants.annual - operations.cost - capital.depreciation.annual
           + finance.financial.annual - finance.interest.annual - finance.otherFinancial.annual);
