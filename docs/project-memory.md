@@ -927,3 +927,14 @@ där sajten påverkas, i JavaScript-referensen:
   regel för regleringsbidraget. Linköping stiger ändå, 466 mnkr 2026 till 1 748 mnkr 2033: skatten +4,4 %/år
   enligt SKR, nettokostnaden +2,8 %/år (SKR:s index gånger demografin, invånarna +0,3 %/år). Modellen saknar
   kostnadsökning utöver demografi och pris. Inte jämfört med Linköpings egen budget och plan.
+
+## Årsredovisningar för länets kommuner (2026-11-23)
+
+- 61 årsredovisningar 2021–2025 för de 13 kommunerna ligger i det privata repot
+  https://github.com/SVAGEN26/ekonomilabb-kallor (manifest med URL, tid och SHA-256). Sex kommer från
+  Wayback Machine. Saknas: Kinda 2021–2022, Mjölby 2021 och 2024.
+- `scripts/extract_annual_reports.py` läser resultaträkningen och stämmer av mot SCB TAB6777:
+  `data/annual-reports/`. 881 av 1 232 rader stämmer inom 1,5 mnkr.
+- Linköping redovisar pensioner avvikande ("med undantag av pensionsredovisningen", AR 2025 s. 61):
+  resultat 594/233 mnkr 2025/2024 i rapporten mot 418/161 hos SCB. Modellen använder SCB. Ej utrett.
+- Boxholm och Åtvidaberg 2023 har resultaträkningen som bild; inget OCR-verktyg finns installerat.
