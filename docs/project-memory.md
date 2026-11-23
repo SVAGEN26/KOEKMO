@@ -18,11 +18,14 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 
 ## Öppet
 
-1. Grenen `higher-interest` (räntebindning, Högre ränta, Högre inflation) och `docs-refresh` är inte
-   pushade eller sammanslagna. `hindcast-lines` ingår i `higher-interest`.
-2. De nya ränte- och inflationsreglagen är inte provade i webbläsaren, bara med native `-override`.
-3. Beslut för beslutsfattare: daterade beslut på webben, flagga för balanskravet och de finansiella målen,
-   förklaring av vad som ändrade resultatet. MCP-servern har beslut med motivering; webben har det inte.
+1. PR #1 (räntebindning, Högre ränta och inflation, dokumentation) är sammanslagen i main 2026-11-23.
+2. Ränte- och inflationsscenarierna provades i headless Chromium 2026-11-23 för Linköping och Motala:
+   de räknar och flaggar underskott. Siffrorna är inte granskade mot något utfall.
+3. Beslut för beslutsfattare: daterade beslut på webben och förklaring av vad som ändrade resultatet.
+   MCP-servern har beslut med motivering; webben har det inte. (Startvy med kommunkort, grupperade
+   antaganden med förklaringar, scenarioknappar, balanskravsflagga med valfritt resultatmål och delbar
+   adress byggdes 2026-11-23 på grenen `site-navigation`. Balanskravet: kommunallagen 11 kap. 5 § och
+   12 §, kontrollerat i två sammanfattningar av lagtexten på riksdagen.se och lagen.nu, inte ordagrant.)
 4. Var den kontinuerliga modellen och MCP-servern ska höra hemma. Webbläsaren tar ett Euler-steg per år.
 5. Lönefelet efter tre år (−103 mnkr för Motala): kontrollera löneglidning och bemanning mot
    årsredovisningarna innan en ny mekanism läggs till.
@@ -30,6 +33,8 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
    både `municipalities.js` och `base-years.json`; Finspångs novemberbefolkning läses ur två arkiv.
 7. Underlag: delårsrapport 2026 ej funnen i diariet; historiska SKR- och budgetversioner med datum bara
    delvis insamlade; Linköpings ränta saknar källa för 2020, 2021 och 2023.
+8. Norrköpings resultat 2025 i kommunkorten är +3 596 mnkr, 33,6 % av skatt och bidrag, ur SCB TAB6777.
+   Ovanligt högt; inte kontrollerat mot årsredovisningen.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 

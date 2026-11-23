@@ -18,6 +18,38 @@ const definitions=[
   ['productivity','Årlig produktivitetsökning',0,2,.1,'%', 'Scenario, ej belagd effektivisering']
 ];
 const advanced=[['inflationShock','Extra inflation första prognosåret',0,8,.25,'p.e.', 'Priser samma år, löner och skatteunderlag året därpå'],['inflationPersistence','Andel av den extra inflationen kvar året därpå',0,1,.05,'', '0,5 = halveras varje år'],['inflationRateResponse','Räntans svar på extra inflation',0,1.5,.05,'', 'Procentenheter högre marknadsränta per procentenhet inflation; illustrativt'],['inflationGrantCompensation','Statlig kompensation i bidragen',0,100,5,'%', 'Andel av förra årets extra inflation; 0 = bidragen fasta i kronor'],['rateShock','Räntehöjning på marknadsräntan',0,8,.25,'p.e.', 'Nya och omsatta lån, från vald månad första prognosåret'],['rateShockMonth','Räntehöjningens första månad',1,12,1,'mån', '1 = januari första prognosåret'],['rateFixingYears','Genomsnittlig räntebindning',0,8,.1,'år', 'Hur snabbt en räntehöjning slår igenom'],['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
+// The assumptions in the panel, grouped. Every key of `definitions` and `advanced` is in exactly one group.
+const assumptionGroups=[
+  ['population','Befolkning','Flyttnetto och födda',['migrationDelta','birthChange']],
+  ['revenue','Intäkter','Skattesats, skatteunderlag och bidrag',['taxRate','taxGrowth','grantGrowth','equalisationOffset']],
+  ['costs','Kostnader och verksamhet','Löner, priser, pensioner och anpassning',['wageGrowth','priceGrowth','pensionGrowth','productivity','operatingRevenueGrowth','adjustment']],
+  ['capital','Investeringar och lån','Investeringar, ränta och räntebindning',['investment','interestRate','rateFixingYears']],
+  ['shocks','Ränte- och inflationschock','Plötslig höjning av räntan eller inflationen',['rateShock','rateShockMonth','inflationShock','inflationPersistence','inflationRateResponse','inflationGrantCompensation']]
+];
+// What each assumption means and where its default comes from.
+const explanations={
+  taxGrowth:'Hur mycket rikets skatteunderlag växer per år. Kommunens skatt följer det, justerat för hur kommunens folkmängd ändras mot rikets. Med planeringsunderlagen anger reglaget avvikelsen från SKR:s årsvisa bana. Låst när SKR:s kommunvisa intäkter används.',
+  wageGrowth:'Årlig löneökning. Lönekostnaden följer också verksamhetens volym och produktiviteten. Med planeringsunderlagen anger reglaget avvikelsen från SKR:s index för arbetskraftskostnad.',
+  pensionGrowth:'Pensionskostnadens årliga ökning från basårets bokförda kostnad. Kostnaden påverkar resultatet; utbetalningarna antas lika stora när ingen egen bana finns. Standardvärdet är illustrativt.',
+  priceGrowth:'Prisökning för övriga kostnader: köpta tjänster, material och lokaler. Med planeringsunderlagen anger reglaget avvikelsen från SKR:s index för övrig förbrukning.',
+  migrationDelta:'Fler eller färre inflyttade netto per år än i den kalibrerade banan. Fördelas på åldersgrupperna. Skatt och bidrag följer folkmängden den 1 november året före, så effekten på intäkterna kommer ett år senare; behoven i skola och omsorg ändras direkt.',
+  interestRate:'Räntan på lånen. Med räntebindning är det marknadsräntan för nya och omsatta lån. Standard: basårets genomsnittsränta enligt årsredovisningen när den finns, annars räntekostnaden delad med låneskulden.',
+  investment:'Investeringsutgifter per år. Kassaflödet betalar först; resten lånas. Investeringarna ger avskrivningar och ränta de följande åren. Standard: basårets investeringar enligt bokslutet.',
+  productivity:'Minskar lönekostnaden för samma verksamhetsvolym. Ett antagande, ingen belagd effektivisering. Standard 0.',
+  inflationShock:'Extra inflation utöver prisbanan första prognosåret. Priserna stiger samma år, lönerna och skatteunderlaget året därpå, pensionskostnaden samma år. Scenariot Högre inflation använder 3 procentenheter.',
+  inflationPersistence:'Hur stor del av den extra inflationen som finns kvar året därpå. 0,5 betyder att den halveras varje år.',
+  inflationRateResponse:'Hur många procentenheter marknadsräntan stiger per procentenhet extra inflation samma år. Illustrativt antagande.',
+  inflationGrantCompensation:'Andel av förra årets extra inflation som staten kompenserar i de generella bidragen. Bidragen är belopp i kronor som riksdagen beslutar; 0 betyder att de inte räknas upp.',
+  rateShock:'Plötslig höjning av marknadsräntan för nya och omsatta lån. Slår igenom gradvis med räntebindningen. Scenariot Högre ränta använder 3 procentenheter från januari.',
+  rateShockMonth:'Månad under första prognosåret då räntehöjningen börjar gälla. Resten av året räknas med den högre räntan.',
+  rateFixingYears:'Genomsnittlig räntebindningstid för lån och derivat. Kortare bindning gör att en höjning slår igenom snabbare. Motala: årsredovisningen; övriga kommuner 3 år som antagande.',
+  grantGrowth:'Årlig tillväxt för de generella bidragen i riket när ingen SKR-bana används. Kommunens del följer folkmängden mot rikets. Låst när SKR:s kommunvisa intäkter används.',
+  operatingRevenueGrowth:'Taxor, avgifter, försäljning och riktade bidrag. Växer med vald takt och med folkmängden.',
+  birthChange:'Fler eller färre födda än i modellens bana, i procent. Påverkar förskola och skola de följande åren.',
+  taxRate:'Kommunal skattesats. Skatteintäkterna ändras i proportion till skattesatsen; bidragen och utjämningen ändras inte. Låst när SKR:s publicerade bana används rakt av.',
+  adjustment:'Hur stor del av glappet mellan behov och kapacitet i verksamheten som stängs varje år. 0 = kapaciteten ligger still, 1 = följer behovet direkt. Illustrativt.',
+  equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
+};
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
 let rateFixingTable,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
@@ -148,10 +180,9 @@ function planningControls(){
     if(d[0]==='investment') return [d[0],d[1],d[2],Math.max(d[3],Math.ceil(2*b.investment/100)*100),...d.slice(4,6),`Bokslut ${b.baseYear}: ${fmt(b.investment)} mnkr`];
     return d;
   });
-  makeControls(controlDefinitions(controls),'sliders');
   const fixing=rateFixing(rateFixingTable,b.municipality,b.baseYear);
   const localAdvanced=advanced.map(d=>d[0]==='rateFixingYears'?[...d.slice(0,6),fixing.note]:d[0]==='operatingRevenueGrowth'?[...d.slice(0,6),`Bas: ${fmt(b.operatingAccounts.operatingRevenue)} mnkr. Volymjusteras.`]:d[0]==='taxRate'?[...d.slice(0,6),`Bokslut: ${decimal(b.taxRate??b.assumptions.taxRate)} %`]:d);
-  makeControls(controlDefinitions(localAdvanced),'advanced');
+  makeGroups(controlDefinitions([...controls,...localAdvanced]));
   syncControls();
 }
 function updatePeriod() {
@@ -301,9 +332,28 @@ function selectMunicipality(code,firstYear=null) {
   selectPeriod(firstYears.includes(firstYear)?firstYear:firstYears[0]);
 }
 function report(e){$('error').textContent=e.message;$('error').hidden=false;}
-function makeControls(defs,id){$(id).innerHTML=defs.map(([key,label,min,max,step,unit,help])=>`<div class="slider"><div class="slider-top"><label for="${key}">${label}</label><div class="number"><input id="${key}" data-key="${key}" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}"><span>${unit}</span></div></div><input id="${key}-range" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" aria-label="${label}, reglage"><div class="slider-help"><span>${help}</span></div></div>`).join('');}
+const sliderMarkup=([key,label,min,max,step,unit,help])=>`<div class="slider"><div class="slider-top"><label for="${key}">${label}</label><button type="button" class="info-button" data-info="${key}" aria-expanded="false" aria-controls="${key}-info" aria-label="Vad betyder ${safe(label)}?">?</button><div class="number"><input id="${key}" data-key="${key}" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}"><span>${unit}</span></div></div><p id="${key}-info" class="slider-info" hidden>${safe(explanations[key]??'')}</p><input id="${key}-range" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" aria-label="${label}, reglage"><div class="slider-help"><span>${help}</span></div></div>`;
+// Rebuilding the panel keeps the groups the user has opened.
+function makeGroups(defs){
+  const container=$('assumption-groups');
+  const open=new Set([...container.querySelectorAll('details[open]')].map(el=>el.dataset.group));
+  const byKey=new Map(defs.map(d=>[d[0],d]));
+  container.innerHTML=assumptionGroups.map(([id,title,sub,keys])=>`<details class="assumption-group" data-group="${id}"${open.has(id)?' open':''}><summary><span class="group-title">${title}<small>${sub}</small></span><span class="group-changes" data-changes="${id}"></span><button type="button" class="text-button group-reset" data-reset="${id}" hidden aria-label="Återställ ${title.toLowerCase()}">↺</button></summary>${keys.filter(k=>byKey.has(k)).map(k=>sliderMarkup(byKey.get(k))).join('')}</details>`).join('');
+}
+const changedKey=k=>overrides[k]!==undefined&&Math.abs(overrides[k]-b.assumptions[k])>1e-9;
+function syncGroups(){
+  for(const [id,,,keys] of assumptionGroups){
+    const n=keys.filter(changedKey).length,label=document.querySelector(`[data-changes="${id}"]`);
+    if(!label) continue;
+    label.textContent=n?`${n} ändrad${n>1?'e':''}`:'';
+    document.querySelector(`[data-reset="${id}"]`).hidden=!n;
+  }
+  const value=$('preset').value;
+  for(const button of $('preset-buttons').children) button.setAttribute('aria-pressed',String(button.dataset.preset===value));
+  $('preset-status').textContent=value==='custom'?'Eget scenario: du har ändrat antagandena.':'';
+}
 // `editing` is the field the user is typing in. Rewriting its value mid-edit drops a trailing decimal point ("2." → "2").
-function syncControls(editing=null){for(const [k] of [...definitions,...advanced]){const value=(overrides[k]??b.assumptions[k])-(sourcedRate(k)?b.assumptions[k]:0);if($(k)!==editing)$(k).value=Number(value.toFixed(2));$(k).step='any';if($(k+'-range')!==editing)$(k+'-range').value=value;}}
+function syncControls(editing=null){for(const [k] of [...definitions,...advanced]){const value=(overrides[k]??b.assumptions[k])-(sourcedRate(k)?b.assumptions[k]:0);if($(k)!==editing)$(k).value=Number(value.toFixed(2));$(k).step='any';if($(k+'-range')!==editing)$(k+'-range').value=value;}syncGroups();}
 // Y-axis with round steps (1, 2 or 5 times a power of ten). It starts at zero when the values are
 // all on one side of it and not far from it; otherwise it hugs the data.
 export function niceAxis(low,high) {
@@ -332,7 +382,7 @@ function scaleControl(id) {
 function chart(id,series,options={}) {
   if(!run) return;
   chartArgs[id]=[series,options];scaleControl(id);
-  const {unit='',height=255}=options;
+  const {unit='',height=255,bands=[]}=options;
   const width=760,left=62,right=22,top=20,bottom=38,values=series.flatMap(s=>s.values).filter(Number.isFinite);
   const auto=niceAxis(Math.min(...values),Math.max(...values)),manual=scales[id];
   // A chosen end replaces the automatic one; round steps are kept between them.
@@ -344,10 +394,13 @@ function chart(id,series,options={}) {
   const lines=ticks.map(v=>`<line x1="${left}" y1="${y(v)}" x2="${width-right}" y2="${y(v)}" stroke="#e8ede5"/><text x="${left-11}" y="${y(v)+4}" text-anchor="end" fill="#78837d" font-size="11">${fmt(v)}</text>`).join('');
   const zero=low<0&&high>0?`<line x1="${left}" x2="${width-right}" y1="${y(0)}" y2="${y(0)}" stroke="#aab7a2" stroke-dasharray="3 4"/>`:'';
   const clip=`clip-${id}`;
+  // Shaded columns for flagged years, for example years with a deficit.
+  const half=(width-left-right)/(run.rows.length-1)/2;
+  const shaded=bands.map(i=>`<rect class="band" x="${(x(i)-half).toFixed(2)}" y="${top}" width="${(2*half).toFixed(2)}" height="${height-top-bottom}" fill="#f6dcd6"><title>Underskott ${run.rows[i].year}</title></rect>`).join('');
   const paths=series.map(s=>`<path d="${s.values.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.thin?'':s.values.map((v,i)=>v<low||v>high?'':`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${s.color}"><title>${safe(s.name)} ${run.rows[i].year}: ${fmt(v)} ${unit}</title></circle>`).join('')}`).join('');
   const labelStep=Math.ceil((run.rows.length-1)/8);
   const labels=run.rows.map((r,i)=>i%labelStep===0||i===run.rows.length-1?`<text x="${x(i)}" y="${height-10}" text-anchor="middle" fill="#78837d" font-size="11">${r.year}</text>`:'').join('');
-  $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${lines}${zero}<g clip-path="url(#${clip})">${paths}</g>${labels}</svg>`;
+  $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${shaded}${lines}${zero}<g clip-path="url(#${clip})">${paths}</g>${labels}</svg>`;
 }
 function ledger() {
   const cols=[['year','År'],['tax','Skatt'],['grants','Bidrag & utj.'],['cost','Nettodrift'],['depreciation','Avskr.'],['interest','Ränta'],['result','Resultat'],['investment','Invest.'],['debt','Låneskuld'],['cash','Kassa']];
@@ -694,6 +747,29 @@ async function draw() {
 }
 const stressOverrides=(a,direction)=>({...overrides,taxGrowth:a.taxGrowth+direction*.7,wageGrowth:Math.max(0,a.wageGrowth-direction*.7),priceGrowth:Math.max(0,a.priceGrowth-direction*.4),migrationDelta:a.migrationDelta+direction*100,birthChange:a.birthChange+direction*5,interestRate:Math.max(0,a.interestRate-direction*.75)});
 const sensitivityCases=[['wageGrowth',1,'Löneökning +1 procentenhet'],['interestRate',1,'Låneränta +1 procentenhet'],['migrationDelta',100,'Flyttnetto +100 personer/år'],['investment',100,'Investeringar +100 mnkr/år']];
+// Consecutive years as ranges: [2028,2029,2030,2032] -> "2028–2030 och 2032".
+function yearRanges(years){
+  const parts=[];
+  for(const year of years){const last=parts.at(-1);if(last&&year===last[1]+1)last[1]=year;else parts.push([year,year]);}
+  const text=parts.map(([a,z])=>a===z?String(a):`${a}–${z}`);
+  return text.length>1?`${text.slice(0,-1).join(', ')} och ${text.at(-1)}`:text[0];
+}
+function resultTarget(){
+  const el=$('result-target');
+  return el.value===''||!el.validity.valid?null:Number(el.value);
+}
+function renderBalanceFlag(deficits,belowTarget,target,rows){
+  const period=forecastPeriod(rows),parts=[];
+  parts.push(deficits.length
+    ?`<strong>Underskott ${yearRanges(deficits)}.</strong> Kommunallagen kräver att budgeten har ett överskott (11 kap. 5 §) och att ett negativt balanskravsresultat regleras inom tre år (11 kap. 12 §).`
+    :`<strong>Inget underskott ${period}.</strong>`);
+  if(target!=null) parts.push(belowTarget.length
+    ?`Under resultatmålet ${decimal(target)} % av skatt och bidrag: ${yearRanges(belowTarget)}.`
+    :`Resultatmålet ${decimal(target)} % nås ${deficits.length?'de år som inte har underskott':'alla år'}.`);
+  parts.push('Modellens resultat är årets resultat. Balanskravsresultatet räknar dessutom bort bland annat realisationsvinster.');
+  $('balance-flag').className='balance-flag'+(deficits.length?' warning':'');
+  $('balance-flag').innerHTML=parts.join(' ');
+}
 async function drawOnce() {
   try {
     const a={...b.assumptions,...overrides},stressed=path?[]:[-1,1];
@@ -719,12 +795,21 @@ async function drawOnce() {
     const circular=path?.provenance?.circular??(path?.vintage==='2026-10-06'?'26:28':null);
     for(const result of results) if(result.run) result.run.context={
       municipality:b.municipality,basis:path?`SKR ${circular?`${circular} · `:''}${path.vintage}`:b.planningInputs?'Nationella SKR-antaganden':'Egna grundantaganden'};
+    // The address always describes the scenario on screen, so a reload or a copied address gives the same view.
+    if(!document.body.classList.contains('picking')) window.history.replaceState(null,'',shareUrl());
     run=results[0].run;base=results[1].run;latestSettings=snapshotSettings();version++;modelView?.update(run);$('error').hidden=true;$('engine').textContent=ENGINE;
     const stressRuns=results.slice(2,2+stressed.length),sensitivityRuns=results.slice(2+stressed.length,comparisonIndex);
     const end=run.rows.at(-1),initial=run.rows[0],margin=end.result/(end.tax+end.grants)*100;
     $('metrics').innerHTML=[['Resultat '+end.year,fmt(end.result),'mnkr',`${decimal(margin)} % av skatt och bidrag`],['Banklåneskuld '+end.year,fmt(end.debt),'mnkr',`${fmt(end.debt-initial.debt)} mnkr förändring från ${b.baseYear}`],['Invånare '+end.year,fmt(end.population),'pers.',`${fmt(end.population-initial.population)} personer från ${b.baseYear}`]].map(([label,value,unit,detail])=>`<div class="metric"><div class="metric-label">${label}</div><div class="metric-number">${value}<small>${unit}</small></div><div class="metric-detail">${detail}</div></div>`).join('');
     const stresses=stressRuns.map((r,i)=>r.run?{name:'Stress '+(stressed[i]<0?'svag':'stark'),values:r.run.rows.map(x=>x.result),color:'#b4c0ae',thin:true}:null).filter(Boolean);
-    chart('result-chart',[...stresses,{name:'Grundbana',values:base.rows.map(r=>r.result),color:'#ad8053',dash:true},{name:'Ditt scenario',values:run.rows.map(r=>r.result),color:'#17634e'}],{unit:'mnkr'});
+    const target=resultTarget(),forecastRows=run.rows.slice(1);
+    const deficits=forecastRows.filter(r=>r.result<0).map(r=>r.year);
+    const belowTarget=target==null?[]:forecastRows.filter(r=>r.result>=0&&100*r.result/(r.tax+r.grants)<target).map(r=>r.year);
+    const targetSeries=target==null?[]:[{name:`Resultatmål ${decimal(target)} %`,values:run.rows.map(r=>target/100*(r.tax+r.grants)),color:'#516e9c',dash:true,thin:true}];
+    chart('result-chart',[...stresses,...targetSeries,{name:'Grundbana',values:base.rows.map(r=>r.result),color:'#ad8053',dash:true},{name:'Ditt scenario',values:run.rows.map(r=>r.result),color:'#17634e'}],
+      {unit:'mnkr',bands:run.rows.map((r,i)=>i>0&&r.result<0?i:-1).filter(i=>i>0)});
+    $('target-legend').hidden=target==null;
+    renderBalanceFlag(deficits,belowTarget,target,forecastRows);
     document.querySelector('.legend-line.stress').hidden=!!path;
     chart('debt-chart',[{name:'Grundbana',values:base.rows.map(r=>r.debt),color:'#ad8053',dash:true},{name:'Låneskuld',values:run.rows.map(r=>r.debt),color:'#17634e'}],{unit:'mnkr',height:205});
     const sensitivities=sensitivityCases.map(([,,label],i)=>({label,delta:sensitivityRuns[i].run?sensitivityRuns[i].run.rows.at(-1).result-end.result:NaN}));
@@ -781,6 +866,72 @@ function renderMunicipalityEvidence(period) {
   $('municipality-package').href=`${packageName}.mo`;
   $('municipality-package').textContent=`Hämta ${packageName}.mo ↓`;
 }
+// A scenario as a link: the municipality, period and every changed assumption and model option.
+const SHARE_VERSION=1;
+function shareUrl(){
+  const url=new URL(location.href);
+  url.search='';url.hash='';
+  url.searchParams.set('kommun',activeMunicipality);
+  url.searchParams.set('start',b.baseYear+1);
+  url.searchParams.set('slut',b.baseYear+b.assumptions.years);
+  const controls=Object.fromEntries(savedControlIds.filter($).map(id=>[id,$(id).type==='checkbox'?$(id).checked:$(id).value])
+    .filter(([id,value])=>{const el=$(id);return el.type==='checkbox'?value!==el.defaultChecked:el.tagName==='SELECT'?el.selectedIndex!==Math.max(0,[...el.options].findIndex(o=>o.defaultSelected)):value!==el.defaultValue;}));
+  const state={v:SHARE_VERSION,p:$('preset').value,o:overrides,c:controls,...(resultTarget()!=null?{t:resultTarget()}:{})};
+  if(state.p==='base'&&!Object.keys(overrides).length&&!Object.keys(controls).length&&state.t===undefined) return url;
+  url.searchParams.set('s',btoa(JSON.stringify(state)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''));
+  return url;
+}
+// Only known keys and plain values are accepted; anything else in the link is ignored.
+function readShared(text){
+  try{
+    const state=JSON.parse(atob(text.replace(/-/g,'+').replace(/_/g,'/')));
+    if(state?.v!==SHARE_VERSION) return null;
+    const keys=new Set([...definitions,...advanced].map(d=>d[0]));
+    const o=Object.fromEntries(Object.entries(state.o??{}).filter(([k,v])=>keys.has(k)&&Number.isFinite(v)));
+    const c=Object.fromEntries(Object.entries(state.c??{}).filter(([k,v])=>savedControlIds.includes(k)&&['string','boolean'].includes(typeof v)));
+    const p=state.p in presets||state.p==='custom'?state.p:'base';
+    return {o,c,p,t:Number.isFinite(state.t)?state.t:null};
+  }catch(e){return null;}
+}
+function applyShared(state,firstYear,endYear){
+  for(const [id,value] of Object.entries(state.c)){const el=$(id);if(el.type==='checkbox')el.checked=value;else el.value=value;}
+  if(state.t!=null) $('result-target').value=state.t;
+  const ends=Array.from({length:MAX_YEARS},(_,i)=>firstYear+i);
+  selectPeriod(firstYear,{overrides:state.o,preset:state.p,...(ends.includes(endYear)?{endYear}:{})});
+}
+function renderMunicipalityCards(){
+  const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
+  $('municipality-cards').innerHTML=ordered.map(([code,{name}])=>{
+    const base=regional[code].current.baseline,revenue=base.tax+base.grants,share=100*base.publishedResult/revenue;
+    return `<a class="municipality-card" href="?kommun=${code}" data-code="${code}"><span class="card-name">${safe(name)}</span><span class="card-code">${code}</span>
+      <dl><div><dt>Invånare</dt><dd>${fmt(base.reportedPopulation)}</dd></div><div><dt>Resultat ${base.baseYear}</dt><dd class="${base.publishedResult<0?'negative':''}">${signedMoney.format(Math.round(base.publishedResult))} mnkr</dd></div>
+      <div><dt>Av skatt och bidrag</dt><dd>${decimal(share)} %</dd></div><div><dt>Skattesats</dt><dd>${decimal(base.taxRate)} %</dd></div></dl></a>`;
+  }).join('');
+  const year=regional[DEFAULT_MUNICIPALITY].current.baseline.baseYear;
+  $('cards-note').innerHTML=`Bokslut ${year} för kommunen, inte koncernen: <a href="https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777">SCB:s räkenskapssammandrag</a>, för Motala årsredovisningen. Invånare 31 december ${year}.`;
+}
+function showStart(){
+  document.body.classList.add('picking');
+  $('start-view').hidden=false;
+  $('municipality-brand').textContent='Östergötlands';
+  $('municipality-code').textContent='13 kommuner';
+  document.title='Ekonomilabb · Östergötlands kommuner';
+  window.scrollTo(0,0);
+}
+function openMunicipality(code,firstYear=null){
+  document.body.classList.remove('picking');
+  $('start-view').hidden=true;
+  selectMunicipality(code,firstYear);
+}
+// Show what the address says: the cards without a municipality, otherwise the lab.
+function route(){
+  const query=new URLSearchParams(location.search),code=query.get('kommun');
+  if(!Object.hasOwn(municipalities,code)){showStart();return;}
+  const firstYear=Number(query.get('start'));
+  openMunicipality(code,firstYear);
+  const shared=query.get('s')&&readShared(query.get('s'));
+  if(shared) applyShared(shared,b.baseYear+1,Number(query.get('slut')));
+}
 async function boot(){try{
   $('engine').textContent='Hämtar OpenModelica…';
   const mib=x=>(x/1048576).toFixed(0);
@@ -812,8 +963,21 @@ async function boot(){try{
   };
   setupSavedScenarios();
   $('explanation-year').onchange=renderExplanation;
-  const query=new URLSearchParams(location.search),requested=query.get('kommun');
-  selectMunicipality(Object.hasOwn(municipalities,requested)?requested:DEFAULT_MUNICIPALITY,Number(query.get('start')));
+  renderMunicipalityCards();
+  $('municipality-cards').addEventListener('click',event=>{
+    const card=event.target.closest('[data-code]');
+    if(!card||event.metaKey||event.ctrlKey||event.shiftKey) return;
+    event.preventDefault();
+    window.history.pushState(null,'',`?kommun=${card.dataset.code}`);
+    openMunicipality(card.dataset.code);
+  });
+  for(const id of ['all-municipalities','brand-link']) $(id).onclick=event=>{
+    event.preventDefault();
+    window.history.pushState(null,'',location.pathname);
+    showStart();
+  };
+  window.addEventListener('popstate',route);
+  route();
   renderEvidence(files[2],files[3]);renderPlanning();
   $('municipal-benchmarks').innerHTML=`<thead><tr><th scope="col">2025</th><th scope="col">Budget/prognos</th><th scope="col">Utfall</th><th scope="col">Absolut fel</th></tr></thead><tbody>${files[4].rows.map(r=>`<tr><th scope="row">${({budget:'Budget',april:'Aprilprognos',august:'Augustiprognos'})[r.stage]}</th><td>${fmt(r.forecast)}</td><td>${fmt(r.actual)}</td><td>${fmt(Math.abs(r.forecast-r.actual))}</td></tr>`).join('')}</tbody>`;
   document.querySelector('.controls').addEventListener('input',event=>{const el=event.target;if(!el.dataset.key)return;
@@ -871,6 +1035,37 @@ async function boot(){try{
   $('docs-link').onclick=e=>{e.preventDefault();document.querySelector('.tab[data-tab="model"]').click();$('model').scrollIntoView({behavior:'smooth'});};
   $('reset').onclick=()=>{overrides={};$('preset').value='base';syncControls();draw();};
   $('preset').onchange=()=>{overrides={...presetOverrides($('preset').value)};syncControls();draw();};
+  $('preset-buttons').innerHTML=[...$('preset').options].filter(o=>o.value!=='custom').map(o=>`<button type="button" class="preset-button" data-preset="${o.value}" aria-pressed="false">${safe(o.text)}</button>`).join('');
+  $('preset-buttons').onclick=event=>{
+    const button=event.target.closest('[data-preset]');
+    if(!button||!b) return;
+    $('preset').value=button.dataset.preset;
+    $('preset').onchange();
+  };
+  $('assumption-groups').addEventListener('click',event=>{
+    const info=event.target.closest('[data-info]'),reset=event.target.closest('[data-reset]');
+    if(info){
+      const text=$(info.dataset.info+'-info'),open=text.hidden;
+      text.hidden=!open;info.setAttribute('aria-expanded',String(open));
+    }
+    if(reset){
+      // A button inside <summary> would also open or close the group.
+      event.preventDefault();
+      const keys=assumptionGroups.find(([id])=>id===reset.dataset.reset)[3];
+      for(const k of keys) delete overrides[k];
+      $('preset').value=Object.keys(overrides).some(changedKey)?'custom':'base';
+      syncControls();draw();
+    }
+  });
+  $('result-target').oninput=()=>{if(run&&$('result-target').validity.valid)draw();};
+  $('share').onclick=async()=>{
+    if(!b) return;
+    const url=shareUrl();
+    window.history.replaceState(null,'',url);
+    const note=customPath?' Ett importerat SKR-underlag följer inte med länken.':'';
+    try{await navigator.clipboard.writeText(url.href);$('share-status').textContent='Länken är kopierad.'+note;}
+    catch(e){$('share-status').textContent='Länken står i adressfältet.'+note;}
+  };
   for(const select of comparisonSelectors) {
     const previous=select.querySelector('option[value="previous"]');
     for(const option of $('preset').options) {

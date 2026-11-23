@@ -38,13 +38,24 @@ Motala also has a run from 2022.
 
 ## What the site does
 
-- **Scenario controls.** Tax rate per year, investments and a dated building
-  project, wages, prices, productivity, pensions, migration and births, interest
-  and fixed-rate period, working capital and a cash policy. Revenue can follow
-  SKR's published path, a proportional adjustment of it, or an adjustment per
-  component. Population can use five age groups (default) or single years of age.
-- **Prepared scenarios.** Higher interest and Higher inflation, plus migration
-  and stress paths. See [Scenarios](#scenarios).
+- **Start view.** The root address shows the 13 municipalities as cards with
+  population, the latest result and tax rate; a card opens the lab. The address
+  `?kommun=CODE` opens a municipality directly.
+- **Scenario controls.** Assumptions in five groups that open on demand
+  (population, revenue, costs, investment and loans, rate and inflation shocks),
+  each showing how many values are changed and with its own reset. A `?` next to
+  each control explains it and where the default comes from. Further options:
+  a dated building project, working capital, a cash policy, SKR's revenue path
+  as published, proportionally adjusted or adjusted per component, and five age
+  groups (default) or single years of age.
+- **Prepared scenarios** as buttons: Higher interest, Higher inflation, a weaker
+  economy, more migration and lower investment. See [Scenarios](#scenarios).
+- **Balance requirement.** Years with a deficit are shaded in the result chart.
+  An optional result target (% of tax and grants) draws a line and lists the
+  years below it.
+- **Shareable address.** The address always describes the scenario on screen:
+  municipality, period, changed assumptions and options (`s=`). "Kopiera länk"
+  copies it. An imported SKR file is not part of the link.
 - **Comparison.** Save named runs in the browser and compare them; "Varför
   skiljer sig banorna?" splits the difference into revenue and costs per year.
   The comparison tab shows the latest accounts and SKR 26:28 for the
