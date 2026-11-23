@@ -98,6 +98,54 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       careCostPerInhabitant = {20679, 172192})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.771954, 0.188868, 0.039179};
+    constant BaseYear soderkoping2019 = BaseYear(
+      year = 2019,
+      cohorts = {{1224, 1575, 467, 7761, 3494}, {1228, 1578, 508, 7712, 3592}, {1198, 1600, 512, 7654, 3662}},
+      reportedPopulation = {14521, 14618, 14626},
+      births = {151, 143}, deaths = 150,
+      equalisationNextYear = {8465, -991, 1024, 1728},
+      relativeTaxCapacity = {0.9645, 0.9506},
+      tax = 684.8, priorYearSettlement = 0.3, grants = 177.4,
+      grantComponents = {115.6, -11.4, 10.2, 23, 36.9},
+      payroll = 551.5, pension = 53.4, otherOperatingExpense = 481.7, operatingRevenue = 254.7, netCostRoundingAdjustment = 0,
+      depreciation = 35.3, financialIncome = 4.1, interestExpense = 6.1, otherFinancialExpense = 0.2,
+      debt = 550, openingDebt = 514, cash = 85.9, assets = 824.8, investment = 81.1, taxRate = 21.18,
+      sectorShares = {0.4748, 0.2097, 0.3156}, educationShares = {0.2703, 0.5331, 0.1966},
+      careCostPerInhabitant = {20507, 173974})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.773348, 0.185418, 0.041234};
+    constant BaseYear soderkoping2018 = BaseYear(
+      year = 2018,
+      cohorts = {{1204, 1509, 473, 7741, 3475}, {1224, 1575, 467, 7761, 3494}, {1228, 1578, 508, 7712, 3592}},
+      reportedPopulation = {14402, 14521, 14618},
+      births = {145, 151}, deaths = 129,
+      equalisationNextYear = {7921, -783, 702, 1575},
+      relativeTaxCapacity = {0.9645, 0.9645},
+      tax = 662.7, priorYearSettlement = -2.1, grants = 159.5,
+      grantComponents = {113.7, -11.2, 2.3, 13.7, 35.9},
+      payroll = 544.5, pension = 43.6, otherOperatingExpense = 464.8, operatingRevenue = 263, netCostRoundingAdjustment = 0,
+      depreciation = 30.2, financialIncome = 4, interestExpense = 6.3, otherFinancialExpense = 0.2,
+      debt = 514, openingDebt = 474, cash = 103.1, assets = 780.2, investment = 85, taxRate = 21.18,
+      sectorShares = {0.4601, 0.2331, 0.3068}, educationShares = {0.284, 0.5488, 0.1672},
+      careCostPerInhabitant = {17579, 187041})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.779788, 0.177895, 0.042316};
+    constant BaseYear soderkoping2017 = BaseYear(
+      year = 2017,
+      cohorts = {{1178, 1476, 459, 7732, 3395}, {1204, 1509, 473, 7741, 3475}, {1224, 1575, 467, 7761, 3494}},
+      reportedPopulation = {14240, 14402, 14521},
+      births = {144, 145}, deaths = 158,
+      equalisationNextYear = {7818, -769, 157, 943},
+      relativeTaxCapacity = {0.9672, 0.9645},
+      tax = 648.4, priorYearSettlement = 0.8, grants = 155.2,
+      grantComponents = {109.3, -7.8, -0.1, 15.7, 32.7},
+      payroll = 528.3, pension = 40, otherOperatingExpense = 454.4, operatingRevenue = 263.2, netCostRoundingAdjustment = 0,
+      depreciation = 29.1, financialIncome = 1.9, interestExpense = 7.8, otherFinancialExpense = 0.2,
+      debt = 474, openingDebt = 449, cash = 71.3, assets = 750.8, investment = 72.8, taxRate = 21.18,
+      sectorShares = {0.466, 0.2197, 0.3143}, educationShares = {0.2817, 0.5457, 0.1726},
+      careCostPerInhabitant = {17860, 179084})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.775043, 0.183744, 0.041214};
 
     package SCB "Söderköpings demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

@@ -69,7 +69,7 @@ def packages(d, national, years, chain, first_base, last_base, first, tfr, impro
     library = f'''  package SCB "Rikets demografiska data från SCB och posttypen för en kommuns ettårsdata. Genereras av scripts/write_demography_modelica.py; redigera inte för hand"
     record DemographyYear "En kommun vid ett basårs slut, ettårsåldrar 0-100+ (index 1-101) per kön (1 män, 2 kvinnor)"
       Integer year "Basår";
-      Real population[2, 101] "Befolkning vid årets slut";
+      Units.Persons population[2, 101] "Befolkning vid årets slut";
       Real deathRisk[2, 101] "Rikets dödsrisk vid basåret: fem livslängdstabeller flyttade längs trenden och medelvärdesbildade, andel";
       Real mortalityImprovement[2, 101] "Årlig minskning av dödsrisken, rikets trend de tio åren fram till basåret";
       Real mortalityRatio[2] "Kommunens dödlighet i förhållande till rikets livslängdstabell, de fem åren fram till basåret";
@@ -77,8 +77,8 @@ def packages(d, national, years, chain, first_base, last_base, first, tfr, impro
       Real shareBoys "Andel pojkar bland de födda, de tio åren fram till basåret";
       Real totalFertility "Kommunens summerade fruktsamhet basåret";
       Real totalFertilityMean5 "Kommunens genomsnittliga summerade fruktsamhet de fem åren fram till basåret";
-      Real births "Födda under basåret";
-      Real deaths "Döda under basåret";
+      Units.Persons births "Födda under basåret";
+      Units.Persons deaths "Döda under basåret";
       annotation(Icon(coordinateSystem(extent = {{{{-100, -100}}, {{100, 100}}}}), graphics = {{Rectangle(lineColor = {{40, 95, 140}}, fillColor = {{255, 255, 255}}, fillPattern = FillPattern.Solid, extent = {{{{-100, -100}}, {{100, 100}}}}), Rectangle(lineColor = {{40, 95, 140}}, fillColor = {{40, 95, 140}}, fillPattern = FillPattern.Solid, extent = {{{{-100, 50}}, {{100, 100}}}}), Text(textColor = {{255, 255, 255}}, extent = {{{{-92, 55}}, {{92, 95}}}}, textString = "SCB-år"), Line(points = {{{{-100, 0}}, {{100, 0}}}}, color = {{40, 95, 140}}), Line(points = {{{{-100, -50}}, {{100, -50}}}}, color = {{40, 95, 140}}), Line(points = {{{{0, 50}}, {{0, -100}}}}, color = {{40, 95, 140}})}}));
     end DemographyYear;
 

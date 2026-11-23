@@ -15,14 +15,16 @@ const definitions=[
   ['migrationDelta','Förändrat årligt flyttnetto',-400,600,10,'pers.', 'Förändring mot kalibrerat restflöde'],
   ['interestRate','Genomsnittlig låneränta',0,7,.1,'%', 'På ingående banklåneskuld'],
   ['investment','Årliga investeringar',0,800,1,'mnkr', 'Bokslut 2025: 413 mnkr'],
-  ['productivity','Årlig produktivitetsökning',0,2,.1,'%', 'Scenario, ej belagd effektivisering']
+  ['productivity','Årlig produktivitetsökning',0,2,.1,'%', 'Scenario, ej belagd effektivisering'],
+  ['costDrift','Kostnadsökning utöver demografi och pris',-2,3,.05,'%', 'Standard 0; historiskt -0,1 till 0,6 %/år'],
+  ['grantIncrease','Statens bidragshöjning per år, utöver SKR',-10,20,.5,'mdkr', 'I riket, från andra prognosåret']
 ];
 const advanced=[['inflationShock','Extra inflation första prognosåret',0,8,.25,'p.e.', 'Priser samma år, löner och skatteunderlag året därpå'],['inflationPersistence','Andel av den extra inflationen kvar året därpå',0,1,.05,'', '0,5 = halveras varje år'],['inflationRateResponse','Räntans svar på extra inflation',0,1.5,.05,'', 'Procentenheter högre marknadsränta per procentenhet inflation; illustrativt'],['inflationGrantCompensation','Statlig kompensation i bidragen',0,100,5,'%', 'Andel av förra årets extra inflation; 0 = bidragen fasta i kronor'],['rateShock','Räntehöjning på marknadsräntan',0,8,.25,'p.e.', 'Nya och omsatta lån, från vald månad första prognosåret'],['rateShockMonth','Räntehöjningens första månad',1,12,1,'mån', '1 = januari första prognosåret'],['rateFixingYears','Genomsnittlig räntebindning',0,8,.1,'år', 'Hur snabbt en räntehöjning slår igenom'],['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
 // The assumptions in the panel, grouped. Every key of `definitions` and `advanced` is in exactly one group.
 const assumptionGroups=[
   ['population','Befolkning','Flyttnetto och födda',['migrationDelta','birthChange']],
-  ['revenue','Intäkter','Skattesats, skatteunderlag och bidrag',['taxRate','taxGrowth','grantGrowth','equalisationOffset']],
-  ['costs','Kostnader och verksamhet','Löner, priser, pensioner och anpassning',['wageGrowth','priceGrowth','pensionGrowth','productivity','operatingRevenueGrowth','adjustment']],
+  ['revenue','Intäkter','Skattesats, skatteunderlag och bidrag',['taxRate','taxGrowth','grantIncrease','grantGrowth','equalisationOffset']],
+  ['costs','Kostnader och verksamhet','Löner, priser, pensioner och anpassning',['wageGrowth','priceGrowth','pensionGrowth','costDrift','productivity','operatingRevenueGrowth','adjustment']],
   ['capital','Investeringar och lån','Investeringar, ränta och räntebindning',['investment','interestRate','rateFixingYears']],
   ['shocks','Ränte- och inflationschock','Plötslig höjning av räntan eller inflationen',['rateShock','rateShockMonth','inflationShock','inflationPersistence','inflationRateResponse','inflationGrantCompensation']]
 ];
@@ -35,6 +37,8 @@ const explanations={
   migrationDelta:'Fler eller färre inflyttade netto per år än i den kalibrerade banan. Fördelas på åldersgrupperna. Skatt och bidrag följer folkmängden den 1 november året före, så effekten på intäkterna kommer ett år senare; behoven i skola och omsorg ändras direkt.',
   interestRate:'Räntan på lånen. Med räntebindning är det marknadsräntan för nya och omsatta lån. Standard: basårets genomsnittsränta enligt årsredovisningen när den finns, annars räntekostnaden delad med låneskulden.',
   investment:'Investeringsutgifter per år. Kassaflödet betalar först; resten lånas. Investeringarna ger avskrivningar och ränta de följande åren. Standard: basårets investeringar enligt bokslutet.',
+  costDrift:'Hur mycket kostnaderna växer per år utöver det demografin och priserna förklarar: höjd standard, nya uppgifter, sådant som varken är volym eller pris. Standard 0. Historiskt (2010–2025) låg den i länets kommuner mellan -0,1 och 0,6 procent per år i medel: SCB:s nettokostnad, deflaterad med SKR:s prisindex för kommunal verksamhet, minus det demografiska behovet. Enskilda år varierar med flera procent. I ett bakåttest åtta år framåt från 2017–2019 gav historikens medel för höga kostnader; utan den träffade resultatet bättre.',
+  grantIncrease:'Statens höjning av de generella statsbidragen, utöver SKR:s bana: så många miljarder kronor mer i riket för varje år från det andra prognosåret. Det första året är redan beslutat i budgetpropositionen. Höjningen fördelas lika per invånare, som regleringsbidraget. I riket ökade generella statsbidrag och utjämning från 130,8 till 146,1 miljarder kronor 2021–2025 (SCB), i snitt cirka 3,8 miljarder per år.',
   productivity:'Minskar lönekostnaden för samma verksamhetsvolym. Ett antagande, ingen belagd effektivisering. Standard 0.',
   inflationShock:'Extra inflation utöver prisbanan första prognosåret. Priserna stiger samma år, lönerna och skatteunderlaget året därpå, pensionskostnaden samma år. Scenariot Högre inflation använder 3 procentenheter.',
   inflationPersistence:'Hur stor del av den extra inflationen som finns kvar året därpå. 0,5 betyder att den halveras varje år.',
@@ -267,7 +271,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality,assumptions:{inflationShock:0,inflationPersistence:0.5,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
+  b={...b,municipality:activeMunicipality,assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;

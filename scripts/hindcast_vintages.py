@@ -30,8 +30,16 @@ assumptions are run from every base year:
             price forecast and how much is the model.
   hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its
             outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).
+            The grants follow the state's decisions as they turned out: per component as booked
+            (income, cost, regulation and LSS equalisation per inhabitant of the year before, the
+            property fee and other general grants in mnkr). Only the municipality's population is
+            the model's.
   standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,
             pensions 2 %, grants 2 %), with the same population as above.
+
+No set has cost growth beyond demography and prices (costDrift 0, the model's default);
+scripts/hindcast_long.py shows that the historical mean of that residual made eight-year
+forecasts worse.
 
 Sweden's population after the base year comes from the circular, not from SCB's later
 outcome. Motala's own population is the model's projection from the base year. Nothing
@@ -144,6 +152,19 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
                   f'incomeEqualisationPerCapitaPath = {modelica_array([c / capacity[0] for c in capacity])}*base.equalisationNextYear[1]']
         if assumptions == 'components':
             lines += [f'regulationPerCapitaPath = {modelica_array(regulation)}']
+    if assumptions == 'hindsight':
+        # The state's grants as they turned out: each component as booked in year y, per inhabitant at the end of
+        # y - 1 (the population the model multiplies by), so a mid-year decision is included.
+        record = lambda y: f'{PACKAGE}.Data.{PREFIX}{y}'
+        per_capita = lambda k: '{' + ', '.join(f'{record(y)}.grantComponents[{k}]*1e6/{record(y)}.reportedPopulation[2]' for y in years) + '}'
+        lines += ['grantsByComponent = true',
+                  f'incomeEqualisationPerCapitaPath = {per_capita(1)}',
+                  f'relativeTaxCapacityPath = fill(base.relativeTaxCapacity[2], {horizon})',
+                  f'costEqualisationPerCapitaPath = {per_capita(2)}',
+                  f'regulationPerCapitaPath = {per_capita(3)}',
+                  f'lssEqualisationPerCapitaPath = {per_capita(4)}',
+                  'propertyFeePath = {' + ', '.join(f'{record(y)}.grantComponents[5]' for y in years) + '}',
+                  'otherGeneralGrantsPath = {' + ', '.join(f'{record(y)}.grants - sum({record(y)}.grantComponents)' for y in years) + '}']
     return f'model Run\n  extends {PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
@@ -206,7 +227,7 @@ def main():
                                   'population': m['population'], 'payroll': m['payroll'], 'pension': m['pensionExpense'],
                                   'otherCosts': m['otherOperatingExpense'], 'operatingRevenue': m['operatingRevenue'],
                                   'depreciation': m['depreciation'], 'interest': m['interest'], 'debt': m['debt'], 'cash': m['cash'],
-                                  **({'grantParts': [m[f'grantParts[{j}]'] for j in range(1, 7)]} if assumptions in ('components', 'hold') else {})},
+                                  **({'grantParts': [m[f'grantParts[{j}]'] for j in range(1, 7)]} if assumptions in ('components', 'hold', 'hindsight') else {})},
                         'outcome': {'tax': o['tax'], 'grants': o['grants'], 'netCost': o['netCost'],
                                     'personnel': o['payroll'] + o['pension'], 'result': o['result'],
                                     'population': o['population'], 'payroll': o.get('payroll'), 'pension': o.get('pension'),
@@ -247,7 +268,7 @@ def main():
            'limitations': [
                'The base-year accounts were published in spring after the circular. The test uses the closing accounts '
                'and the December circular as the information set, as a budget revision in spring would.',
-               'In the skr and standard sets grants grow 2 % a year. '
+               'In the skr, prices and standard sets grants grow 2 % a year; hindsight has the grants as they turned out. '
                'The components set uses the circular\'s national figures per inhabitant; cost and LSS equalisation '
                'beyond the first year stay at the first forecast year\'s level.',
                *(['One-off items in the base year (for example an impairment of 12.1 mnkr in 2022) carry into the forecast. '

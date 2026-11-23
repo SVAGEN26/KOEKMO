@@ -12,7 +12,7 @@ export function simulate(b,history,overrides={},revenuePath=null) {
   const national=year=>b.nationalPopulation.population[year], national0=national(b.baseYear-1);
   const inputs=planningSeries(b,a,c);
   const o=b.operatingAccounts;
-  let p=[...p0],capacity=[1,1,1],tax=b.tax,grants=b.grants,wageIndex=1,priceIndex=1,revenueIndex=1,productivity=1,debt=b.debt,cash=b.cash,assets=b.assets;
+  let p=[...p0],capacity=[1,1,1],tax=b.tax,grants=b.grants,wageIndex=1,priceIndex=1,revenueIndex=1,productivity=1,standard=1,debt=b.debt,cash=b.cash,assets=b.assets;
   const rows=[{year:b.baseYear,population:total0,cohorts:p,cost:b.cashCost,depreciation:b.depreciation,tax,grants,result:b.publishedResult,debt,cash,investment:b.investment,interest:b.interestExpense,otherFinancialExpense:b.otherFinancialExpense,payroll:o.payrollExcludingPensions,pensionExpense:o.pensionExpense,otherOperatingExpense:o.otherOperatingExpense,operatingRevenue:o.operatingRevenue,pensionCashPayments:null,operatingCash:null,educationIndex:1,careIndex:1,benchmarkRevenue:null,officialRevenue:null}];
   for(let t=1;t<=a.years;t++) {
     const previousP=p,previousDebt=debt,previousCash=cash,previousAssets=assets;
@@ -28,9 +28,10 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     priceIndex*=1+annual.priceGrowth/100;
     revenueIndex*=1+a.operatingRevenueGrowth/100;
     productivity*=1+a.productivity/100;
+    standard*=1+(a.costDrift??0)/100;
     const serviceVolume=sum(a.sectorCosts.map((x,i)=>x*capacity[i]))/b.cashCost;
-    const payroll=o.payrollExcludingPensions*wageIndex*serviceVolume/productivity;
-    const otherOperatingExpense=o.otherOperatingExpense*priceIndex*serviceVolume;
+    const payroll=o.payrollExcludingPensions*wageIndex*serviceVolume*standard/productivity;
+    const otherOperatingExpense=o.otherOperatingExpense*priceIndex*serviceVolume*standard;
     const operatingRevenue=o.operatingRevenue*revenueIndex*ratio;
     const pensionExpense=a.pensionExpensePath?.[t-1]??o.pensionExpense*Math.pow(1+a.pensionGrowth/100,t);
     const pensionCashPayments=a.pensionCashPaymentsPath?.[t-1]??pensionExpense;
@@ -42,7 +43,8 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     const imported=revenuePath?.rows.find(r=>r.year===b.baseYear+t);
     const referencePop=imported?.population??total0;
     const referenceTax=imported?.tax??annual.referenceTax;
-    const referenceGrants=imported?.grants??b.grants*Math.pow(1+a.grantGrowth/100,t);
+    const increase=(a.grantIncrease??0)*1e3*(t-1)*(imported?referencePop/national(b.baseYear+t-1):totalTax0/national0);
+    const referenceGrants=(imported?.grants??b.grants*Math.pow(1+a.grantGrowth/100,t))+increase;
     const localPopFactor=imported?sum(previousP)/referencePop:popFactor;
     const standardTax=referenceTax*localPopFactor;
     // Working-age composition is a local deviation around the population-based reference.

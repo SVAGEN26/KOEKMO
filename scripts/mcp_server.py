@@ -119,7 +119,7 @@ def parameter_catalogue():
     start = text.index('partial model Assumptions "')
     block = text[start:text.index('initial equation', start)]
     catalogue = {}
-    for m in re.finditer(r'(?m)^\s*(final\s+)?parameter\s+(Real|Integer|Boolean)\s+(\w+)', block):
+    for m in re.finditer(r'(?m)^\s*(final\s+)?parameter\s+(Real|Integer|Boolean|Units\.\w+)\s+(\w+)', block):
         final, kind, name = m.group(1), m.group(2), m.group(3)
         i = m.end()
         dims = None
@@ -166,7 +166,9 @@ def parameter_catalogue():
             continue
         if name in ('horizon',):
             continue
-        catalogue[name] = {'name': name, 'type': kind, 'shape': shape, 'size': size, 'description': ' '.join(description.split())}
+        # Units.Money and the other unit types are Real with a unit (Kommunekonomi.Units).
+        unit = {'type': 'Real', 'unitType': kind.split('.', 1)[1]} if kind.startswith('Units.') else {'type': kind}
+        catalogue[name] = {'name': name, **unit, 'shape': shape, 'size': size, 'description': ' '.join(description.split())}
     return catalogue
 
 

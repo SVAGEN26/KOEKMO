@@ -98,6 +98,54 @@ package Kinda "Kinda: kommunens ekonomi år för år med biblioteket Kommunekono
       careCostPerInhabitant = {15006, 140429})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.733898, 0.217151, 0.048951};
+    constant BaseYear kinda2019 = BaseYear(
+      year = 2019,
+      cohorts = {{735, 1059, 312, 5181, 2595}, {738, 1041, 330, 5179, 2627}, {753, 1013, 334, 5159, 2681}},
+      reportedPopulation = {9882, 9915, 9940},
+      births = {97, 101}, deaths = 102,
+      equalisationNextYear = {11060, 1863, 1024, -120},
+      relativeTaxCapacity = {0.8954, 0.8943},
+      tax = 427.6, priorYearSettlement = 0.2, grants = 155.3,
+      grantComponents = {107, 14.4, 7, -2.6, 26.4},
+      payroll = 425.5, pension = 27.3, otherOperatingExpense = 249.2, operatingRevenue = 131.1, netCostRoundingAdjustment = 0,
+      depreciation = 22.8, financialIncome = 1.4, interestExpense = 1.2, otherFinancialExpense = 0.6,
+      debt = 130, openingDebt = 90, cash = 27.8, assets = 496.4, investment = 38.9, taxRate = 20.95,
+      sectorShares = {0.4462, 0.2023, 0.3515}, educationShares = {0.2626, 0.5538, 0.1836},
+      careCostPerInhabitant = {12199, 161240})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.737411, 0.215964, 0.046624};
+    constant BaseYear kinda2018 = BaseYear(
+      year = 2018,
+      cohorts = {{756, 1039, 312, 5212, 2555}, {735, 1059, 312, 5181, 2595}, {738, 1041, 330, 5179, 2627}},
+      reportedPopulation = {9874, 9882, 9915},
+      births = {83, 97}, deaths = 125,
+      equalisationNextYear = {10809, 1451, 702, -264},
+      relativeTaxCapacity = {0.892, 0.8954},
+      tax = 415.5, priorYearSettlement = -1.5, grants = 153.1,
+      grantComponents = {103.9, 11.9, 1.6, 1.8, 26.5},
+      payroll = 411.6, pension = 31.6, otherOperatingExpense = 242.1, operatingRevenue = 142.7, netCostRoundingAdjustment = 0,
+      depreciation = 21.1, financialIncome = 1.7, interestExpense = 1.2, otherFinancialExpense = 0.6,
+      debt = 90, openingDebt = 64.7, cash = 7, assets = 480.7, investment = 69.6, taxRate = 20.95,
+      sectorShares = {0.4489, 0.2216, 0.3295}, educationShares = {0.2583, 0.5657, 0.176},
+      careCostPerInhabitant = {11981, 160877})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.746098, 0.215455, 0.038447};
+    constant BaseYear kinda2017 = BaseYear(
+      year = 2017,
+      cohorts = {{723, 1023, 313, 5234, 2502}, {756, 1039, 312, 5212, 2555}, {735, 1059, 312, 5181, 2595}},
+      reportedPopulation = {9795, 9874, 9882},
+      births = {134, 83}, deaths = 114,
+      equalisationNextYear = {10522, 1210, 157, 180},
+      relativeTaxCapacity = {0.8931, 0.892},
+      tax = 407.2, priorYearSettlement = 0.5, grants = 150.5,
+      grantComponents = {104.8, 17.3, -0.1, 0.7, 21.9},
+      payroll = 403.7, pension = 25, otherOperatingExpense = 249.7, operatingRevenue = 154.7, netCostRoundingAdjustment = 0,
+      depreciation = 19.9, financialIncome = 0.8, interestExpense = 1.3, otherFinancialExpense = 0.2,
+      debt = 64.7, openingDebt = 64.7, cash = 37, assets = 434.7, investment = 54.6, taxRate = 20.95,
+      sectorShares = {0.4507, 0.2287, 0.3206}, educationShares = {0.2502, 0.5621, 0.1877},
+      careCostPerInhabitant = {11796, 156427})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.744509, 0.214258, 0.041233};
 
     package SCB "Kindas demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

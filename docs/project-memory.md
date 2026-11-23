@@ -11,7 +11,9 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 - `Kommunekonomi.Continuous.Economy` (lager och flöden) och den lokala MCP-servern (`scripts/mcp_server.py`)
   finns men är inte kopplade till webbplatsen.
 - Bakåttest från SKR:s decembercirkulär 2020–2024: Motalas resultat ett år fram fel med i snitt 40 mnkr,
-  budgeten 24. Största felen: löner och bidrag efter tre år.
+  budgeten 24. Med facit för priser, skatteunderlag och statens bidrag per del: resultat −18/−20/+2 mnkr.
+- Åttaårstest 2017–2019 till 2025, alla 13 kommuner (`scripts/hindcast_long.py`): resultatet utan
+  systematiskt fel, medelabsolutfel 1,7–4,0 % av skatt och bidrag; folkmängden 6 % för hög efter åtta år.
 - Dokumentation omskriven 2026-11-23: ny README, `modelica/README.md` och `docs/methodology.md`.
   M2-delen av README flyttad till `research/M2.md`; `docs/dynamics-equations.md` flyttad till
   `research/dynamics-equations.md`. Lokal gren `master` (gammal historik från 2026-11-06) raderad.
@@ -33,8 +35,12 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
    både `municipalities.js` och `base-years.json`; Finspångs novemberbefolkning läses ur två arkiv.
 7. Underlag: delårsrapport 2026 ej funnen i diariet; historiska SKR- och budgetversioner med datum bara
    delvis insamlade; Linköpings ränta saknar källa för 2020, 2021 och 2023.
-8. Norrköpings resultat 2025 i kommunkorten är +3 596 mnkr, 33,6 % av skatt och bidrag, ur SCB TAB6777.
-   Ovanligt högt; inte kontrollerat mot årsredovisningen.
+8. Folkmängden växer för fort i åttaårstestet (+6 % efter åtta år från 2017): flyttningarna kalibreras
+   på 2015–2017, åren med stor flyktinginvandring. Pröva kortare eller längre kalibreringsfönster.
+9. Investeringarna hålls på basårets nivå; skulden blir en tredjedel för låg efter åtta år.
+10. Linköpings resultat stiger med SKR 26:28 (422 → 1 278 mnkr 2026–2033 utan kostnadsökning utöver
+    demografi och pris): skatteunderlaget växer cirka 4,2 %/år mot löner 3,3 och priser 2,6 %.
+    Inte jämfört med Linköpings egen plan.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 
@@ -951,3 +957,30 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
   snabbare per år. För Motala med facit för priser är nettokostnadsfelet +8/+21/+5 mnkr. Ej åtgärdat.
 - Biblioteket har inga `unit=`. `life` = bokfört värde/avskrivning används på nya investeringar (i praktiken
   degressivt). Ränta bara på ingående skuld ger fel med samma tecken (−2/−5/−9). Ej åtgärdat.
+
+## Kostnadsökning, statens bidrag, enheter och åttaårstest (2026-11-23)
+
+- `costDrift` i `Kommunekonomi` (båda driftmodellerna): löner, sociala avgifter och övriga kostnader växer
+  med `standard = fg · (1 + costDrift)`. Standard 0. Reglage på webben, -2 till 3 %/år.
+- `scripts/cost_residual.py` räknar nu alla 13 kommuner 2010–2025: SCB TAB6777 (030 minus 025) deflaterad
+  med PKV-utfall minus demografiskt behov. Medel 2010–2025 -0,1 till 0,6 %/år (Linköping 0,34, Motala 0,30),
+  standardavvikelse 2–3,6 procentenheter per år. Norrköping: kända engångsposter (`nonRecurring`) läggs
+  tillbaka och 2022–2023 hoppas över (`trendExclude` i `annual-report-inputs.json`). `knownBy` ger medlet
+  fram till varje basår. Som prognos (åttaårstestets variant drift) ger det för höga kostnader: nettokostnad
+  +11,5 % och resultat -6,9 % av skatt och bidrag efter åtta år. Därför standard 0.
+- Statens bidragshöjning (`grantIncrease`, webben): mdkr mer i riket för varje år från andra prognosåret,
+  lika per invånare, läggs på referensbanan i `scenario-inputs.js`. Riket 130,8 → 146,1 mdkr 2021–2025
+  (SCB TAB6777, se avsnittet om bidragens ökning), cirka 3,8 mdkr/år.
+- Bakåttestets variant hindsight har nu statens bidrag per del som de bokfördes (per invånare året före).
+  Motala: bidragsfel 0/+9/+16 mnkr (tidigare -23/-61/-103), resultat -18/-20/+2 (tidigare -41/-90/-117).
+- Enheter: `Kommunekonomi.Units` (Money MSEK, MoneyRate MSEK/a, MoneyPerPerson SEK, Persons, Duration a) på
+  303 deklarationer. `omc --unitChecking` varnar inte, men känner inte valutan.
+- Äldre SCB-serier 2009–2016 för de 13 kommunerna: `scripts/fetch_history.py` →
+  `data/downloads/20261123T134822Z-history` (TAB6777, TAB6779, befolkning, födda och döda). Basår 2017–2019
+  i alla kommunpaket; Kolada-omsorgsvikter från 2017 (Boxholm 2017–2018 får 2019 års). Extraordinära poster
+  (6777:085 eller 100+110; Motala 2017 +32, Norrköping 2019 -62, Vadstena 2019 +207) ligger utanför basen.
+- `scripts/hindcast_long.py` → `data/long-hindcast.json`: 13 kommuner från 2017, 2018 och 2019 till 2025,
+  39 körningar, varianterna hindsight, drift och standard. Motala byggs där ur SCB (paketet MotalaScb i en
+  tillfällig mapp), inte ur årsredovisningarna. Linköping och Vadstena 2017–2019 saknar ränta i SCB:s skuld
+  och får 2 %.
+

@@ -98,6 +98,54 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {16707, 161161})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.751107, 0.201063, 0.04783};
+    constant BaseYear ydre2019 = BaseYear(
+      year = 2019,
+      cohorts = {{278, 366, 129, 1899, 1061}, {267, 355, 123, 1912, 1086}, {279, 355, 112, 1883, 1118}},
+      reportedPopulation = {3733, 3743, 3747},
+      births = {27, 42}, deaths = 49,
+      equalisationNextYear = {12705, 4785, 1024, -2294},
+      relativeTaxCapacity = {0.8515, 0.8614},
+      tax = 160.9, priorYearSettlement = 0.1, grants = 66,
+      grantComponents = {48.2, 12.2, 2.6, -7.7, 8.8},
+      payroll = 149.3, pension = 14.9, otherOperatingExpense = 110.1, operatingRevenue = 57.6, netCostRoundingAdjustment = 0,
+      depreciation = 9.2, financialIncome = 1.3, interestExpense = 0.4, otherFinancialExpense = 0,
+      debt = 79, openingDebt = 79, cash = 32.9, assets = 164.8, investment = 10.6, taxRate = 21.95,
+      sectorShares = {0.4716, 0.2767, 0.2516}, educationShares = {0.2727, 0.5284, 0.1989},
+      careCostPerInhabitant = {17756, 163565})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.761181, 0.193202, 0.045617};
+    constant BaseYear ydre2018 = BaseYear(
+      year = 2018,
+      cohorts = {{259, 366, 131, 1856, 1063}, {278, 366, 129, 1899, 1061}, {267, 355, 123, 1912, 1086}},
+      reportedPopulation = {3675, 3733, 3743},
+      births = {40, 27}, deaths = 49,
+      equalisationNextYear = {12846, 3262, 702, -2055},
+      relativeTaxCapacity = {0.8597, 0.8515},
+      tax = 156.2, priorYearSettlement = -0.5, grants = 64.2,
+      grantComponents = {46.9, 13.4, 0.6, -8.3, 8.8},
+      payroll = 151.4, pension = 12.1, otherOperatingExpense = 105.7, operatingRevenue = 58, netCostRoundingAdjustment = 0,
+      depreciation = 7, financialIncome = 0.7, interestExpense = 0.4, otherFinancialExpense = 0,
+      debt = 79, openingDebt = 61, cash = 38.2, assets = 163.3, investment = 51.5, taxRate = 21.95,
+      sectorShares = {0.465, 0.2707, 0.2643}, educationShares = {0.2747, 0.5075, 0.2178},
+      careCostPerInhabitant = {17756, 163565})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.755985, 0.195212, 0.048803};
+    constant BaseYear ydre2017 = BaseYear(
+      year = 2017,
+      cohorts = {{268, 348, 120, 1883, 1039}, {259, 366, 131, 1856, 1063}, {278, 366, 129, 1899, 1061}},
+      reportedPopulation = {3658, 3675, 3733},
+      births = {40, 40}, deaths = 56,
+      equalisationNextYear = {12536, 3594, 157, -2219},
+      relativeTaxCapacity = {0.8689, 0.8597},
+      tax = 155, priorYearSettlement = 0.2, grants = 55.6,
+      grantComponents = {41.7, 12.9, -0, -10.1, 7.8},
+      payroll = 153.7, pension = 12.9, otherOperatingExpense = 111.2, operatingRevenue = 78.2, netCostRoundingAdjustment = 0,
+      depreciation = 7.2, financialIncome = 0.6, interestExpense = 0.6, otherFinancialExpense = 0,
+      debt = 61, openingDebt = 36, cash = 62.7, assets = 119.1, investment = 20.1, taxRate = 21.95,
+      sectorShares = {0.4757, 0.2996, 0.2247}, educationShares = {0.2725, 0.53, 0.1975},
+      careCostPerInhabitant = {16315, 143637})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.753063, 0.202639, 0.044298};
 
     package SCB "Ydres demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

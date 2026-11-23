@@ -98,6 +98,54 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       careCostPerInhabitant = {19546, 155506})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.722386, 0.233038, 0.044576};
+    constant BaseYear atvidaberg2019 = BaseYear(
+      year = 2019,
+      cohorts = {{879, 1131, 390, 6255, 2976}, {890, 1130, 380, 6115, 3022}, {865, 1159, 371, 6059, 3049}},
+      reportedPopulation = {11631, 11537, 11503},
+      births = {120, 89}, deaths = 140,
+      equalisationNextYear = {10480, -308, 1024, -410},
+      relativeTaxCapacity = {0.9028, 0.9008},
+      tax = 532, priorYearSettlement = 0.3, grants = 144.4,
+      grantComponents = {116.3, -7.3, 8.1, -1.7, 24.9},
+      payroll = 436.8, pension = 36.9, otherOperatingExpense = 320.9, operatingRevenue = 153.3, netCostRoundingAdjustment = 0,
+      depreciation = 21.3, financialIncome = 0.8, interestExpense = 1.7, otherFinancialExpense = 0.7,
+      debt = 153, openingDebt = 113.5, cash = 34.9, assets = 446.9, investment = 56.8, taxRate = 21.95,
+      sectorShares = {0.4476, 0.2335, 0.3189}, educationShares = {0.2429, 0.5397, 0.2174},
+      careCostPerInhabitant = {19447, 155160})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.737291, 0.219744, 0.042965};
+    constant BaseYear atvidaberg2018 = BaseYear(
+      year = 2018,
+      cohorts = {{837, 1165, 408, 6271, 2936}, {879, 1131, 390, 6255, 2976}, {890, 1130, 380, 6115, 3022}},
+      reportedPopulation = {11617, 11631, 11537},
+      births = {109, 120}, deaths = 115,
+      equalisationNextYear = {10082, -633, 702, -150},
+      relativeTaxCapacity = {0.8952, 0.9028},
+      tax = 514.1, priorYearSettlement = -1.7, grants = 150,
+      grantComponents = {120.3, -2.6, 1.8, -2.8, 24.9},
+      payroll = 435.9, pension = 34.4, otherOperatingExpense = 312.8, operatingRevenue = 155.7, netCostRoundingAdjustment = 0,
+      depreciation = 18.2, financialIncome = 2, interestExpense = 1.8, otherFinancialExpense = 0.4,
+      debt = 113.5, openingDebt = 103.3, cash = 46, assets = 390.4, investment = 31.8, taxRate = 21.95,
+      sectorShares = {0.4508, 0.24, 0.3093}, educationShares = {0.2472, 0.5316, 0.2211},
+      careCostPerInhabitant = {19339, 154691})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.73726, 0.220053, 0.042687};
+    constant BaseYear atvidaberg2017 = BaseYear(
+      year = 2017,
+      cohorts = {{810, 1157, 433, 6251, 2894}, {837, 1165, 408, 6271, 2936}, {879, 1131, 390, 6255, 2976}},
+      reportedPopulation = {11545, 11617, 11631},
+      births = {130, 109}, deaths = 129,
+      equalisationNextYear = {10365, -224, 157, -244},
+      relativeTaxCapacity = {0.8898, 0.8952},
+      tax = 501.1, priorYearSettlement = 0.6, grants = 150.8,
+      grantComponents = {124, 1.3, -0.1, -2.6, 20.6},
+      payroll = 427, pension = 31.5, otherOperatingExpense = 324, operatingRevenue = 187.2, netCostRoundingAdjustment = 0,
+      depreciation = 23.6, financialIncome = 0.3, interestExpense = 2.8, otherFinancialExpense = 5.6,
+      debt = 103.3, openingDebt = 155.3, cash = 45.5, assets = 377.3, investment = 58.7, taxRate = 21.95,
+      sectorShares = {0.4511, 0.2418, 0.3071}, educationShares = {0.2558, 0.5239, 0.2204},
+      careCostPerInhabitant = {18735, 154198})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.740591, 0.21707, 0.042339};
 
     package SCB "Åtvidabergs demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

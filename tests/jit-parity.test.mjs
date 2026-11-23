@@ -40,6 +40,8 @@ const scenarios=[{},
   {investment:0,interestRate:0},
   {birthChange:-30,migrationDelta:-400,adjustment:1,equalisationOffset:1},
   {years:3},
+  {costDrift:0.8,grantIncrease:4},
+  {costDrift:-0.5,grantIncrease:-2,years:5},
   {pensionExpensePath:[275,250,220,190,190,190,190,190],pensionCashPaymentsPath:[190,195,200,200,200,200,200,200]}];
 
 for(const sourced of [true,false]) for(const overrides of scenarios) {

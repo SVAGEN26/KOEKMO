@@ -1,11 +1,11 @@
 {
  "municipality": "0586",
  "source": "Model Mjolby.Annual; outcomes from SCB:s räkenskapssammandrag (kommunen); SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56",
- "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nthe municipality's adopted budget when recorded with a source, and older age shares from\nthe corresponding base year. Written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
+ "method": "Test the economy against what happened: one run per SKR December circular, 2020-2024.\n\n    OMC=/path/to/omc python3 scripts/hindcast_vintages.py [code Package]\n\nWithout arguments: Motala, outcomes from its annual reports, written to data/vintage-hindcast.json.\nWith a municipality code and its Modelica package (scripts/prepare_municipality.py), for example\n`0586 Mjolby`: outcomes from SCB's account summary (data/municipalities/<code>/base-years.json),\nthe municipality's adopted budget when recorded with a source, and older age shares from\nthe corresponding base year. Written to data/municipalities/<code>/vintage-hindcast.json.\n\nEach run starts in the closing accounts of a base year (Motala.Data.motala<year>) and\nsimulates Motala.Annual up to three years ahead, but not past 2025. Two sets of\nassumptions are run from every base year:\n\n  skr       what SKR's December circular of the base year said: national tax-base\n            growth, the labour-cost index (payroll and pensions) and the price index\n            for other costs, and Sweden's population. Grants still grow 2 % a year,\n            because the circulars give no figure for Motala's grants.\n  components  as skr, but the grants are computed per component (grantsByComponent). Year one's\n            income, cost, regulation and LSS equalisation per inhabitant are SCB's, published in\n            December of the base year; later income equalisation grows with the circular's mean\n            tax capacity and follows the law's formula for the relative tax capacity; the\n            regulation grant follows the circular; cost and LSS equalisation stay at year one's\n            level; the property fee grows 3.5 % a year; other general grants stay as in the base year.\n  hold      as components, but the regulation grant stays at year one's amount per inhabitant:\n            the rule for years the state has not decided.\n  prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow\n            the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the\n            price forecast and how much is the model.\n  hindsight a diagnostic, not a forecast: as prices, and the national tax base follows its\n            outcome (SCB SkatteKraft; 2025 is SKR's estimate of October 2026, no outcome yet).\n            The grants follow the state's decisions as they turned out: per component as booked\n            (income, cost, regulation and LSS equalisation per inhabitant of the year before, the\n            property fee and other general grants in mnkr). Only the municipality's population is\n            the model's.\n  standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,\n            pensions 2 %, grants 2 %), with the same population as above.\n\nNo set has cost growth beyond demography and prices (costDrift 0, the model's default);\nscripts/hindcast_long.py shows that the historical mean of that residual made eight-year\nforecasts worse.\n\nSweden's population after the base year comes from the circular, not from SCB's later\noutcome. Motala's own population is the model's projection from the base year. Nothing\nafter the base year is used as input.\n\nThe outcome is the municipality's annual report (research/data/annual-ledgers.json).\nThe budget result is from research/benchmark/municipal-budget-history.json. SKR's own\nforecast for Motala at the time is not available: the old municipal workbooks\n(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.",
  "units": "mnkr; population in persons; netCost includes depreciation as in the annual report",
  "limitations": [
   "The base-year accounts were published in spring after the circular. The test uses the closing accounts and the December circular as the information set, as a budget revision in spring would.",
-  "In the skr and standard sets grants grow 2 % a year. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation beyond the first year stay at the first forecast year's level.",
+  "In the skr, prices and standard sets grants grow 2 % a year; hindsight has the grants as they turned out. The components set uses the circular's national figures per inhabitant; cost and LSS equalisation beyond the first year stay at the first forecast year's level.",
   "One-off items in the base year may carry into the forecast. The correction of the previous year's tax settlement is taken out of the base before growth is applied.",
   "Personnel is compared as a total. Fixed assets from SCB include work in progress.",
   "The budget result is the adopted budget for the following year, set in November before the circular.",
@@ -348,13 +348,13 @@
    "1": {
     "cases": 5,
     "taxMeanError": -5.649671054188593,
-    "grantsMeanError": -6.531775851317979,
+    "grantsMeanError": -0.023800000000073852,
     "netCostMeanError": -7.757136841750253,
-    "resultMeanError": 0.6684600500946971,
+    "resultMeanError": 7.1764359014126455,
     "taxMeanAbsError": 11.937928613242956,
-    "grantsMeanAbsError": 11.435223935713111,
+    "grantsMeanAbsError": 0.023800000000073852,
     "netCostMeanAbsError": 32.695334846476,
-    "resultMeanAbsError": 33.6091888832681,
+    "resultMeanAbsError": 27.631059894182137,
     "payrollMeanError": -18.611448228917606,
     "payrollMeanAbsError": 33.271430426073174,
     "pensionMeanError": -0.7396874820279976,
@@ -367,21 +367,21 @@
     "depreciationMeanAbsError": 3.096213417511234,
     "interestMeanError": -3.6713701138510553,
     "interestMeanAbsError": 3.816792336073278,
-    "debtMeanError": 0.9668975082497127,
-    "debtMeanAbsError": 51.68008202644669,
+    "debtMeanError": -5.541078343068125,
+    "debtMeanAbsError": 54.592873008411495,
     "cashMeanError": -41.4496,
     "cashMeanAbsError": 41.4496
    },
    "2": {
     "cases": 4,
     "taxMeanError": -11.420375534933669,
-    "grantsMeanError": -14.937524665161789,
+    "grantsMeanError": 2.1926077401418524,
     "netCostMeanError": -11.277023985426297,
-    "resultMeanError": 3.014040507598967,
+    "resultMeanError": 20.253492259613957,
     "taxMeanAbsError": 13.14737188833874,
-    "grantsMeanAbsError": 19.310119127178893,
+    "grantsMeanAbsError": 3.05549581719697,
     "netCostMeanAbsError": 32.83045659512692,
-    "resultMeanAbsError": 44.8556987776948,
+    "resultMeanAbsError": 40.4918500781879,
     "payrollMeanError": -20.4717932358825,
     "payrollMeanAbsError": 39.49528712308745,
     "pensionMeanError": -12.4575493408,
@@ -392,23 +392,23 @@
     "operatingRevenueMeanAbsError": 16.41709999571046,
     "depreciationMeanError": -2.632493988681272,
     "depreciationMeanAbsError": 2.7454935692068254,
-    "interestMeanError": -9.47966672226811,
-    "interestMeanAbsError": 9.47966672226811,
-    "debtMeanError": -53.43653684279059,
-    "debtMeanAbsError": 134.13439847538098,
+    "interestMeanError": -9.588986068979496,
+    "interestMeanAbsError": 9.588986068979496,
+    "debtMeanError": -76.150792818176,
+    "debtMeanAbsError": 118.68087352228133,
     "cashMeanError": -94.4015,
     "cashMeanAbsError": 94.4015
    },
    "3": {
     "cases": 3,
     "taxMeanError": -12.501296069989243,
-    "grantsMeanError": -17.047530082790235,
+    "grantsMeanError": 5.178428206129392,
     "netCostMeanError": -34.616638305679466,
-    "resultMeanError": 37.02088069907223,
+    "resultMeanError": 59.26921926300687,
     "taxMeanAbsError": 12.501296069989243,
-    "grantsMeanAbsError": 17.047530082790235,
+    "grantsMeanAbsError": 6.627815349121515,
     "netCostMeanAbsError": 34.616638305679466,
-    "resultMeanAbsError": 37.02088069907223,
+    "resultMeanAbsError": 59.26921926300687,
     "payrollMeanError": -21.000577410458998,
     "payrollMeanAbsError": 25.630556394954965,
     "pensionMeanError": -33.25000913493333,
@@ -419,10 +419,10 @@
     "operatingRevenueMeanAbsError": 16.086460196961525,
     "depreciationMeanError": -4.2953442707920955,
     "depreciationMeanAbsError": 4.2953442707920955,
-    "interestMeanError": -15.987068546171903,
-    "interestMeanAbsError": 15.987068546171903,
-    "debtMeanError": -176.04233131441484,
-    "debtMeanAbsError": 235.97155744875667,
+    "interestMeanError": -16.009448821186986,
+    "interestMeanAbsError": 16.009448821186986,
+    "debtMeanError": -201.4629622784114,
+    "debtMeanAbsError": 259.85998829430537,
     "cashMeanError": -139.037,
     "cashMeanAbsError": 139.037
    }
@@ -1103,10 +1103,10 @@
    "horizon": 1,
    "model": {
     "tax": 1346.823300634651,
-    "grants": 435.4795945500073,
+    "grants": 434.9999999999999,
     "netCost": 1679.9262493532028,
     "personnel": 1297.709842848831,
-    "result": 105.1210902758994,
+    "result": 104.6414957258921,
     "population": 28248.14609799932,
     "payroll": 1197.408500189631,
     "pension": 100.3013426592,
@@ -1114,8 +1114,16 @@
     "operatingRevenue": 407.258250525319,
     "depreciation": 98.18018398048383,
     "interest": 3.555555555555556,
-    "debt": 710.1987257436167,
-    "cash": 66.7
+    "debt": 710.678320293624,
+    "cash": 66.7,
+    "grantParts": [
+     285.3,
+     -19.0,
+     82.89999999999999,
+     9.299999999999999,
+     61.4,
+     15.09999999999997
+    ]
    },
    "outcome": {
     "tax": 1347.195,
@@ -1147,19 +1155,27 @@
    "horizon": 2,
    "model": {
     "tax": 1430.237373327343,
-    "grants": 443.7876403119875,
+    "grants": 446.1892238458898,
     "netCost": 1791.0200999198603,
     "personnel": 1339.443443132753,
-    "result": 85.3593652431166,
+    "result": 87.75828436285201,
     "population": 28538.24147491167,
     "payroll": 1236.474004448753,
     "pension": 102.969438684,
     "otherCosts": 764.8861984781677,
     "operatingRevenue": 419.6694162136213,
     "depreciation": 106.3598745225613,
-    "interest": 3.945548476353426,
-    "debt": 791.9794859779388,
-    "cash": 66.7
+    "interest": 3.948212890520133,
+    "debt": 790.0601614082107,
+    "cash": 66.7,
+    "grantParts": [
+     306.9409362704625,
+     -15.58849195687111,
+     77.8425335538628,
+     7.794245978435555,
+     63.5,
+     5.699999999999989
+    ]
    },
    "outcome": {
     "tax": 1434.068,
@@ -1191,19 +1207,27 @@
    "horizon": 3,
    "model": {
     "tax": 1504.895710193803,
-    "grants": 452.4026065918444,
+    "grants": 452.7709192855118,
     "netCost": 1922.770718835444,
     "personnel": 1436.554453886255,
-    "result": 36.42771191699308,
+    "result": 36.80668752493671,
     "population": 28830.1908462398,
     "payroll": 1326.807260495855,
     "pension": 109.7471933904,
     "otherCosts": 804.5002645324706,
     "operatingRevenue": 432.4419344427147,
     "depreciation": 114.157934859433,
-    "interest": 4.399886033210771,
-    "debt": 914.8938392015127,
-    "cash": 66.7
+    "interest": 4.389223118934503,
+    "debt": 912.595539023841,
+    "cash": 66.7,
+    "grantParts": [
+     327.4391334578249,
+     -17.84203920668146,
+     66.55682041144094,
+     7.217004622927331,
+     66.7,
+     2.700000000000045
+    ]
    },
    "outcome": {
     "tax": 1517.128,
@@ -1943,10 +1967,10 @@
    "horizon": 1,
    "model": {
     "tax": 1420.953412987926,
-    "grants": 450.4329804534523,
+    "grants": 447.8999999999998,
     "netCost": 1772.8137814995448,
     "personnel": 1335.722074543135,
-    "result": 101.6876119418341,
+    "result": 99.15463148838171,
     "population": 28528.47491324186,
     "payroll": 1230.187512200335,
     "pension": 105.5345623428,
@@ -1954,8 +1978,16 @@
     "operatingRevenue": 423.994353995529,
     "depreciation": 108.7926683218928,
     "interest": 3.585,
-    "debt": 704.119719736273,
-    "cash": 79.0
+    "debt": 706.6527001897255,
+    "cash": 79.0,
+    "grantParts": [
+     308.5999999999999,
+     -15.6,
+     77.89999999999999,
+     7.799999999999999,
+     63.5,
+     5.699999999999989
+    ]
    },
    "outcome": {
     "tax": 1434.068,
@@ -1987,19 +2019,27 @@
    "horizon": 2,
    "model": {
     "tax": 1493.41865960333,
-    "grants": 463.6901889240342,
+    "grants": 457.5665944670623,
     "netCost": 1899.0176155180422,
     "personnel": 1431.508070008767,
-    "result": 61.27063441064092,
+    "result": 55.13437505140178,
     "population": 28787.83351840993,
     "payroll": 1319.026908998367,
     "pension": 112.4811610104,
     "otherCosts": 790.6351281665985,
     "operatingRevenue": 436.4059589915761,
     "depreciation": 113.2803763342522,
-    "interest": 3.520598598681365,
-    "debt": 727.1687089913798,
-    "cash": 79.0
+    "interest": 3.533263500948627,
+    "debt": 735.8379488040714,
+    "cash": 79.0,
+    "grantParts": [
+     332.2539500162563,
+     -17.83593317606354,
+     66.53404285902356,
+     7.214534767845927,
+     66.7,
+     2.700000000000045
+    ]
    },
    "outcome": {
     "tax": 1517.128,
@@ -2031,19 +2071,27 @@
    "horizon": 3,
    "model": {
     "tax": 1550.953730944233,
-    "grants": 476.9388402391064,
+    "grants": 505.6616720828603,
     "netCost": 2002.3419296396937,
     "personnel": 1515.649730115144,
-    "result": 28.6147979986888,
+    "result": 57.294283643379,
     "population": 29047.14187932252,
     "payroll": 1397.297968476744,
     "pension": 118.3517616384,
     "otherCosts": 818.2945464269786,
     "operatingRevenue": 449.1436535402225,
     "depreciation": 117.5413066377937,
-    "interest": 3.635843544956899,
-    "debt": 778.6126043548973,
-    "cash": 79.0
+    "interest": 3.679189744020357,
+    "debt": 758.6023585228986,
+    "cash": 79.0,
+    "grantParts": [
+     338.8019162339491,
+     -8.764492987477826,
+     87.94715377089818,
+     10.47709506549073,
+     71.3,
+     5.900000000000034
+    ]
    },
    "outcome": {
     "tax": 1561.134,
@@ -2783,10 +2831,10 @@
    "horizon": 1,
    "model": {
     "tax": 1486.645287208844,
-    "grants": 464.2160452075283,
+    "grants": 454.9,
     "netCost": 1880.7266811556042,
     "personnel": 1445.74272497743,
-    "result": 74.30829142813195,
+    "result": 64.99224622060365,
     "population": 28723.18294668342,
     "payroll": 1350.03182191223,
     "pension": 95.7109030652,
@@ -2794,8 +2842,16 @@
     "operatingRevenue": 458.8465674350974,
     "depreciation": 115.9324448785934,
     "interest": 4.326359832635983,
-    "debt": 722.0592636932747,
-    "cash": 85.9
+    "debt": 731.375308900803,
+    "cash": 85.9,
+    "grantParts": [
+     329.7,
+     -17.8,
+     66.4,
+     7.199999999999999,
+     66.7,
+     2.700000000000045
+    ]
    },
    "outcome": {
     "tax": 1517.128,
@@ -2827,19 +2883,27 @@
    "horizon": 2,
    "model": {
     "tax": 1539.538472222782,
-    "grants": 479.200842343442,
+    "grants": 504.8408495881403,
     "netCost": 1981.7714233208512,
     "personnel": 1529.10622058361,
-    "result": 41.03684415994667,
+    "result": 66.61968181062412,
     "population": 28973.27819277758,
     "payroll": 1428.39998777441,
     "pension": 100.7062328092,
     "otherCosts": 804.1308235721289,
     "operatingRevenue": 472.0986199959386,
     "depreciation": 120.6329991610511,
-    "interest": 4.431047085425954,
-    "debt": 767.689420372277,
-    "cash": 85.9
+    "interest": 4.488216679447048,
+    "debt": 751.4226279291279,
+    "cash": 85.9,
+    "grantParts": [
+     338.1824480534669,
+     -8.744810037659077,
+     87.74964555030314,
+     10.45356602202924,
+     71.3,
+     5.900000000000034
+    ]
    },
    "outcome": {
     "tax": 1561.134,
@@ -2871,19 +2935,27 @@
    "horizon": 3,
    "model": {
     "tax": 1596.613670651996,
-    "grants": 493.9099629206785,
+    "grants": 531.496693250016,
     "netCost": 2002.781436607824,
     "personnel": 1533.727056362424,
-    "result": 91.53113218153453,
+    "result": 129.2176866207046,
     "population": 29221.49712713187,
     "payroll": 1433.294038796024,
     "pension": 100.4330175664,
     "otherCosts": 829.6286859811815,
     "operatingRevenue": 485.6660314261783,
     "depreciation": 125.091725690397,
-    "interest": 4.711064783316623,
-    "debt": 758.3665625003455,
-    "cash": 85.9
+    "interest": 4.611240673484188,
+    "debt": 704.4132156180262,
+    "cash": 85.9,
+    "grantParts": [
+     370.7840181304915,
+     0.1009697793789077,
+     76.63606254859097,
+     7.875642791554803,
+     74.5,
+     1.599999999999909
+    ]
    },
    "outcome": {
     "tax": 1611.705,
@@ -3431,10 +3503,10 @@
    "horizon": 1,
    "model": {
     "tax": 1563.338011005423,
-    "grants": 464.8721628955306,
+    "grants": 499.1,
     "netCost": 2053.159464159067,
     "personnel": 1568.824233470328,
-    "result": -42.13652430066713,
+    "result": -7.908687196197661,
     "population": 28702.050693585,
     "payroll": 1416.361633391028,
     "pension": 152.4626000793,
@@ -3442,8 +3514,16 @@
     "operatingRevenue": 463.2785788812962,
     "depreciation": 121.4971947693237,
     "interest": 12.28723404255319,
-    "debt": 1028.839329531343,
-    "cash": 125.4
+    "debt": 994.611492426874,
+    "cash": 125.4,
+    "grantParts": [
+     332.9,
+     -8.7,
+     87.3,
+     10.4,
+     71.3,
+     5.900000000000034
+    ]
    },
    "outcome": {
     "tax": 1561.134,
@@ -3475,19 +3555,27 @@
    "horizon": 2,
    "model": {
     "tax": 1615.15899270681,
-    "grants": 475.8802297598892,
+    "grants": 522.482763059475,
     "netCost": 2072.6807652995412,
     "personnel": 1568.38489596814,
-    "result": -1.864681783308697,
+    "result": 45.24762781357754,
     "population": 28825.5760789758,
     "payroll": 1416.33592583494,
     "pension": 152.0489701332,
     "otherCosts": 849.3859401118907,
     "operatingRevenue": 474.5778448078994,
     "depreciation": 129.4877740274103,
-    "interest": 15.32313895046682,
-    "debt": 1184.416237287242,
-    "cash": 125.4
+    "interest": 14.81336265316621,
+    "debt": 1103.076090585886,
+    "cash": 125.4,
+    "grantParts": [
+     362.5621724296643,
+     0.1000245711572922,
+     75.91864950838477,
+     7.801916550268791,
+     74.5,
+     1.599999999999909
+    ]
    },
    "outcome": {
     "tax": 1611.705,
@@ -3799,10 +3887,10 @@
    "horizon": 1,
    "model": {
     "tax": 1625.221632892213,
-    "grants": 509.6593376368917,
+    "grants": 520.3,
     "netCost": 2033.3781396238303,
     "personnel": 1551.6134456055481,
-    "result": 54.5828309052747,
+    "result": 65.22349326838298,
     "population": 28811.98266207334,
     "payroll": 1388.457291162188,
     "pension": 163.15615444336,
@@ -3810,8 +3898,16 @@
     "operatingRevenue": 479.9205776949476,
     "depreciation": 129.2997202579843,
     "interest": 26.22,
-    "debt": 1241.617448836741,
-    "cash": 249.4
+    "debt": 1230.976786473633,
+    "cash": 249.4,
+    "grantParts": [
+     360.4,
+     0.09999999999999999,
+     75.89999999999999,
+     7.8,
+     74.5,
+     1.599999999999909
+    ]
    },
    "outcome": {
     "tax": 1611.705,

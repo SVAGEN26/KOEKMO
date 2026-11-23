@@ -35,6 +35,7 @@ export function validate(b,a) {
   for(const k of keys) if(!Number.isFinite(a[k])) throw Error(`Invalid assumption: ${k}`);
   if(a.years<1||a.years>100||!Number.isInteger(a.years)) throw Error('Forecast horizon must be 1–100 years');
   for(const k of ['taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','productivity']) if(a[k]<=-100||a[k]>100) throw Error(`Rate outside supported range: ${k}`);
+  for(const [k,low,high] of [['costDrift',-5,5],['grantIncrease',-30,30]]) if(a[k]!=null&&(!Number.isFinite(a[k])||a[k]<low||a[k]>high)) throw Error(`Antagandet ${k} ska ligga mellan ${low} och ${high}.`);
   if(a.birthChange < -100||a.birthChange>100||a.interestRate<0||a.interestRate>30||a.taxRate<=0||a.taxRate>40||a.investment<0||Math.abs(a.migrationDelta)>3000) throw Error('Scenario outside supported ranges');
   for(const k of ['adjustment','equalisationOffset','fixedShare']) if(a[k]<0||a[k]>1) throw Error(`Fraction outside [0,1]: ${k}`);
   for(const [k,n] of [['sectorCosts',3],['migrationWeights',5],['educationWeights',3]]) if(!Array.isArray(a[k])||a[k].length!==n||a[k].some(x=>!Number.isFinite(x)||x<0)) throw Error(`Invalid vector: ${k}`);
@@ -192,6 +193,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   }
   for(const k of ['taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','interestRate','birthChange']) fields[k]=a[k]/100;
   fields.productivityGrowth=a.productivity/100;
+  fields.costDrift=(a.costDrift??0)/100;
   fields.revenuePopulation0=revenuePopulation0;
   // Reference growth is national; Motala's share follows its population relative to Sweden's (end of the previous year).
   fields.nationalPopulation0=national(b.baseYear-1);
@@ -205,6 +207,14 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   fields.referenceTax=inputs.map((r,i)=>refs[i]?.tax??r.referenceTax);
   fields.referenceGrants=inputs.map((r,i)=>(a.revenueMode===1?refs[i]?.skrGrants:undefined)??refs[i]?.grants??b.grants*(1+a.grantGrowth/100)**(i+1));
   fields.referencePopulation=inputs.map((r,i)=>refs[i]?.population??sum(b.population));
+  // Statens bidragshöjning: grantIncrease mdkr mer i riket för varje år från det andra prognosåret (det första är
+  // beslutat i budgetpropositionen och finns i SKR:s bana), fördelat lika per invånare som regleringsbidraget.
+  // Modellen skalar referensen med kommunens folkmängd: mot SKR:s befolkning med en importerad bana, annars mot
+  // kommunens och rikets folkmängd året före basåret.
+  if(a.grantIncrease) fields.referenceGrants=fields.referenceGrants.map((g,i)=>{
+    const perInhabitant=a.grantIncrease*1e3*i;
+    return g+perInhabitant*(revenuePath?fields.referencePopulation[i]/fields.nationalPopulationPath[i]:sum(revenuePopulation0)/fields.nationalPopulation0);
+  });
   if(revenuePath&&a.revenueMode===2) {
     if(!Number.isFinite(evidence?.novemberPopulation)) throw Error('SCB:s novemberbefolkning saknas för valt basår.');
     fields.novemberPopulation0=evidence.novemberPopulation;

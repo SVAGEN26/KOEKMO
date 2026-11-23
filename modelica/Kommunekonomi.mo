@@ -1,35 +1,48 @@
 package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; belopp i mnkr, tid i kalenderår"
+  package Units "Enheter: belopp i miljoner kronor (mnkr), tid i år, personer"
+    type Money = Real(final quantity = "Money", final unit = "MSEK") "Belopp, mnkr; i årsmodellen årets belopp";
+    type MoneyRate = Real(final quantity = "MoneyRate", final unit = "MSEK/a") "Flöde, mnkr per år (kontinuerlig tid)";
+    type MoneyPerPerson = Real(final quantity = "MoneyPerPerson", final unit = "SEK") "Kronor per invånare";
+    type Persons = Real(final quantity = "Population", final unit = "1") "Antal personer";
+    type Duration = Real(final quantity = "Time", final unit = "a") "Tid i år";
+    annotation(Documentation(info = "<html><p>Enhetstyper för bibliotekets variabler. <code>MSEK</code> är miljoner kronor (mnkr),
+<code>a</code> år. Modelica har ingen valutaenhet; strängarna följer enhetssyntaxen, och <code>M</code> är prefixet mega.
+I årsmodellen (<code>Annual</code>) är ett flöde årets belopp, <code>MSEK</code>, eftersom varje steg är ett år; i
+<code>Continuous</code> är flödena <code>MSEK/a</code> och lagren <code>MSEK</code>. Andelar, index och tillväxttakter är
+dimensionslösa. Skattesatsen är i procent och har ingen enhet angiven.</p></html>"));
+  end Units;
+
   package Data "Posttyper för bokslut, budget och befolkning, rikets data från SCB och funktioner för kalibrering"
     record BaseYear "Utfall vid basårets slut; mnkr och personer"
       Integer year "Basår";
       Real cohorts[3, 5] "Redovisade invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid slutet av de två föregående åren och basåret";
       Real reportedPopulation[3] "Redovisad folkmängd samma tre år";
-      Real births[2] "Födda föregående år och basåret";
-      Real deaths "Döda under basåret";
-      Real tax "Skatteintäkter, mnkr";
-      Real priorYearSettlement "Därav korrigering av föregående års slutavräkning (slutavräkningsdifferens), mnkr; återkommer inte";
-      Real grants "Generella statsbidrag och utjämning, mnkr";
-      Real equalisationNextYear[4] "Inkomstutjämning, kostnadsutjämning, regleringsbidrag och LSS-utjämning året efter basåret, kr per invånare; SCB publicerar dem i december under basåret";
+      Units.Persons births[2] "Födda föregående år och basåret";
+      Units.Persons deaths "Döda under basåret";
+      Units.Money tax "Skatteintäkter, mnkr";
+      Units.Money priorYearSettlement "Därav korrigering av föregående års slutavräkning (slutavräkningsdifferens), mnkr; återkommer inte";
+      Units.Money grants "Generella statsbidrag och utjämning, mnkr";
+      Units.MoneyPerPerson equalisationNextYear[4] "Inkomstutjämning, kostnadsutjämning, regleringsbidrag och LSS-utjämning året efter basåret, kr per invånare; SCB publicerar dem i december under basåret";
       Real relativeTaxCapacity[2] "Skattekraft i förhållande till rikets medelskattekraft för utjämningsåret, basåret och året efter (SCB; året efters värde är känt vid basårets slut), andel";
-      Real grantComponents[5] "Därav inkomstutjämning, kostnadsutjämning, regleringsbidrag (avgift negativ), LSS-utjämning och fastighetsavgift, mnkr; resten är övriga generella bidrag";
-      Real payroll "Lönekostnader exklusive pensioner, mnkr";
-      Real pension "Pensionskostnad, mnkr";
-      Real otherOperatingExpense "Verksamhetens bruttokostnader minus löner och pensioner, mnkr";
-      Real operatingRevenue "Verksamhetens intäkter (avgifter, försäljning, riktade bidrag), mnkr";
-      Real netCostRoundingAdjustment "Avrundning som stämmer av delposterna mot redovisad nettokostnad, mnkr";
-      Real depreciation "Avskrivningar, mnkr";
-      Real financialIncome "Finansiella intäkter, mnkr";
-      Real interestExpense "Räntekostnader, mnkr";
-      Real otherFinancialExpense "Finansiella kostnader utöver räntor, mnkr";
-      Real debt "Låneskuld till banker och kreditinstitut vid årets slut, mnkr";
-      Real openingDebt "Låneskuld vid årets början (föregående års slut), mnkr";
-      Real cash "Kassa och bank, mnkr";
-      Real assets "Byggnader, anläggningar, maskiner och inventarier exklusive pågående investeringar, mnkr";
-      Real investment "Investeringar, mnkr";
+      Units.Money grantComponents[5] "Därav inkomstutjämning, kostnadsutjämning, regleringsbidrag (avgift negativ), LSS-utjämning och fastighetsavgift, mnkr; resten är övriga generella bidrag";
+      Units.Money payroll "Lönekostnader exklusive pensioner, mnkr";
+      Units.Money pension "Pensionskostnad, mnkr";
+      Units.Money otherOperatingExpense "Verksamhetens bruttokostnader minus löner och pensioner, mnkr";
+      Units.Money operatingRevenue "Verksamhetens intäkter (avgifter, försäljning, riktade bidrag), mnkr";
+      Units.Money netCostRoundingAdjustment "Avrundning som stämmer av delposterna mot redovisad nettokostnad, mnkr";
+      Units.Money depreciation "Avskrivningar, mnkr";
+      Units.Money financialIncome "Finansiella intäkter, mnkr";
+      Units.Money interestExpense "Räntekostnader, mnkr";
+      Units.Money otherFinancialExpense "Finansiella kostnader utöver räntor, mnkr";
+      Units.Money debt "Låneskuld till banker och kreditinstitut vid årets slut, mnkr";
+      Units.Money openingDebt "Låneskuld vid årets början (föregående års slut), mnkr";
+      Units.Money cash "Kassa och bank, mnkr";
+      Units.Money assets "Byggnader, anläggningar, maskiner och inventarier exklusive pågående investeringar, mnkr";
+      Units.Money investment "Investeringar, mnkr";
       Real taxRate "Kommunal skattesats, procent";
       Real sectorShares[3] "Utbildning (0-18 år), äldreomsorg och övrig verksamhet, andel av nettokostnaden; Kolada (SCB:s räkenskapssammandrag)";
       Real educationShares[3] "Utbildningens fördelning på 0-6, 7-15 och 16-18 år, andel; Kolada";
-      Real careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
+      Units.MoneyPerPerson careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
       Real interestRate = -1 "Genomsnittlig ränta på upplåningen enligt årsredovisningen, andel; -1 när den saknas och räntan härleds ur räntekostnaden och den ingående skulden";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
     end BaseYear;
@@ -108,7 +121,7 @@ package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; be
     package SCB "Rikets demografiska data från SCB och posttypen för en kommuns ettårsdata. Genereras av scripts/write_demography_modelica.py; redigera inte för hand"
       record DemographyYear "En kommun vid ett basårs slut, ettårsåldrar 0-100+ (index 1-101) per kön (1 män, 2 kvinnor)"
         Integer year "Basår";
-        Real population[2, 101] "Befolkning vid årets slut";
+        Units.Persons population[2, 101] "Befolkning vid årets slut";
         Real deathRisk[2, 101] "Rikets dödsrisk vid basåret: fem livslängdstabeller flyttade längs trenden och medelvärdesbildade, andel";
         Real mortalityImprovement[2, 101] "Årlig minskning av dödsrisken, rikets trend de tio åren fram till basåret";
         Real mortalityRatio[2] "Kommunens dödlighet i förhållande till rikets livslängdstabell, de fem åren fram till basåret";
@@ -116,8 +129,8 @@ package Kommunekonomi "Kommunekonomi: en svensk kommuns ekonomi år för år; be
         Real shareBoys "Andel pojkar bland de födda, de tio åren fram till basåret";
         Real totalFertility "Kommunens summerade fruktsamhet basåret";
         Real totalFertilityMean5 "Kommunens genomsnittliga summerade fruktsamhet de fem åren fram till basåret";
-        Real births "Födda under basåret";
-        Real deaths "Döda under basåret";
+        Units.Persons births "Födda under basåret";
+        Units.Persons deaths "Döda under basåret";
         annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "SCB-år"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
       end DemographyYear;
 
@@ -204,14 +217,14 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Integer horizon(min = 1) = 8 "Antal årssteg som räknas fram; tiden mäts i år från basåret";
     parameter Data.BaseYear base "Basår med utfall från bokslutet; kommunens paket ger ett värde, till exempel Motala.Data.motala2025";
     // Befolkning och demografi
-    parameter Real p0[5] = Data.reconcile(base.cohorts[3, :], base.reportedPopulation[3]) "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid basårets slut, avstämda mot redovisad folkmängd";
-    parameter Real revenuePopulation0[5] = Data.reconcile(base.cohorts[2, :], base.reportedPopulation[2]) "Invånare per åldersgrupp vid slutet av året före basåret: den folkmängd basårets skatt och bidrag bygger på";
+    parameter Units.Persons p0[5] = Data.reconcile(base.cohorts[3, :], base.reportedPopulation[3]) "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid basårets slut, avstämda mot redovisad folkmängd";
+    parameter Units.Persons revenuePopulation0[5] = Data.reconcile(base.cohorts[2, :], base.reportedPopulation[2]) "Invånare per åldersgrupp vid slutet av året före basåret: den folkmängd basårets skatt och bidrag bygger på";
     parameter Real deathRates[5] = Data.mortality(p0, base.deaths) "Dödsrisk per åldersgrupp och år; 65+ ger basårets observerade antal döda";
-    parameter Real residualMigration[5] = Data.calibratedMigration(base.cohorts, base.reportedPopulation, base.births, deathRates) "Kalibrerat restflöde per åldersgrupp, personer per år (flyttningar och statistiska justeringar)";
+    parameter Units.Persons residualMigration[5] = Data.calibratedMigration(base.cohorts, base.reportedPopulation, base.births, deathRates) "Kalibrerat restflöde per åldersgrupp, personer per år (flyttningar och statistiska justeringar)";
     parameter Real olderShares[3] "Fast uppdelning av 65+ i 65-79, 80-89 och 90+ för femgruppsdemografin; kommunens paket ger den ur SCB-data";
     parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på åldersgrupperna; summerar till 1";
-    parameter Real births0 = base.births[2] "Födda under basåret";
-    parameter Real migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer";
+    parameter Units.Persons births0 = base.births[2] "Födda under basåret";
+    parameter Units.Persons migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer";
     parameter Real birthChange = 0 "Relativ förändring av antalet födda, andel (0,1 = tio procent fler)";
     // Verksamhet
     parameter Real educationWeights[3] = base.educationShares/sum(base.educationShares) "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet; basårets nettokostnader (Kolada), summerar till 1";
@@ -225,27 +238,28 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real careWeights[3] = {base.careCostPerInhabitant[1], base.careCostPerInhabitant[2], base.careCostPerInhabitant[2]*oldestRelativeCare}
       "Äldreomsorgens kostnad per invånare 65-79, 80-89 och 90+, kr (Kolada)";
     // Drift: utfall i basåret
-    parameter Real payroll0 = base.payroll "Lönekostnader exklusive pensioner i basåret, mnkr";
-    parameter Real pension0 = base.pension "Pensionskostnad i basåret, mnkr";
-    parameter Real otherOperatingExpense0 = base.otherOperatingExpense "Övriga verksamhetskostnader i basåret, mnkr";
-    parameter Real operatingRevenue0 = base.operatingRevenue "Verksamhetens intäkter i basåret (avgifter, försäljning, riktade bidrag), mnkr";
-    parameter Real netCostRoundingAdjustment = base.netCostRoundingAdjustment "Avrundningsjustering som stämmer av delposterna mot redovisad nettokostnad, mnkr";
+    parameter Units.Money payroll0 = base.payroll "Lönekostnader exklusive pensioner i basåret, mnkr";
+    parameter Units.Money pension0 = base.pension "Pensionskostnad i basåret, mnkr";
+    parameter Units.Money otherOperatingExpense0 = base.otherOperatingExpense "Övriga verksamhetskostnader i basåret, mnkr";
+    parameter Units.Money operatingRevenue0 = base.operatingRevenue "Verksamhetens intäkter i basåret (avgifter, försäljning, riktade bidrag), mnkr";
+    parameter Units.Money netCostRoundingAdjustment = base.netCostRoundingAdjustment "Avrundningsjustering som stämmer av delposterna mot redovisad nettokostnad, mnkr";
     // Intäkter, kapital och finansiering: utfall i basåret
-    parameter Real tax0 = base.tax "Skatteintäkter i basåret, mnkr";
-    parameter Real recurringTax0 = tax0 - base.priorYearSettlement "Basårets skatt utan korrigeringen av föregående års slutavräkning, mnkr; utgångspunkten för referensbanan";
-    parameter Real grants0 = base.grants "Generella statsbidrag och utjämning i basåret, mnkr";
-    parameter Real debt0 = base.debt "Låneskuld till banker och kreditinstitut vid basårets slut, mnkr";
-    parameter Real cash0 = base.cash "Kassa och bank vid basårets slut, mnkr";
-    parameter Real assets0 = base.assets "Byggnader, anläggningar, maskiner och inventarier vid basårets slut, exklusive pågående investeringar, mnkr";
-    parameter Real depreciation0 = base.depreciation "Avskrivningar i basåret, mnkr";
-    parameter Real financialIncome = base.financialIncome "Finansiella intäkter per år, mnkr";
-    parameter Real otherFinancialExpense = base.otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
+    parameter Units.Money tax0 = base.tax "Skatteintäkter i basåret, mnkr";
+    parameter Units.Money recurringTax0 = tax0 - base.priorYearSettlement "Basårets skatt utan korrigeringen av föregående års slutavräkning, mnkr; utgångspunkten för referensbanan";
+    parameter Units.Money grants0 = base.grants "Generella statsbidrag och utjämning i basåret, mnkr";
+    parameter Units.Money debt0 = base.debt "Låneskuld till banker och kreditinstitut vid basårets slut, mnkr";
+    parameter Units.Money cash0 = base.cash "Kassa och bank vid basårets slut, mnkr";
+    parameter Units.Money assets0 = base.assets "Byggnader, anläggningar, maskiner och inventarier vid basårets slut, exklusive pågående investeringar, mnkr";
+    parameter Units.Money depreciation0 = base.depreciation "Avskrivningar i basåret, mnkr";
+    parameter Units.Money financialIncome = base.financialIncome "Finansiella intäkter per år, mnkr";
+    parameter Units.Money otherFinancialExpense = base.otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
     // Tillväxt och priser
     parameter Real taxGrowth = 0.035 "Rikets skatteunderlag, årlig tillväxt, andel; inklusive rikets befolkningsökning, så kommunens skatt växer långsammare när kommunen krymper och riket växer";
     parameter Real grantGrowth = 0.02 "Generella bidrag i riket, årlig tillväxt, andel; kommunens del följer folkmängden i förhållande till rikets";
     parameter Real wageGrowth = 0.03 "Årlig löneökning, andel";
     parameter Real priceGrowth = 0.02 "Årlig prisökning för övriga kostnader, andel";
     parameter Real productivityGrowth = 0 "Årlig produktivitetsökning, andel; minskar lönekostnaden för samma volym";
+    parameter Real costDrift = 0 "Kostnadsökning utöver demografi och pris, andel per år: höjd standard, nya uppgifter; 2010-2025 i medel -0,1 till 0,6 procent i länets kommuner (data/cost-residual.json), men standard 0: historikens medel gav för höga kostnader åtta år fram (data/long-hindcast.json)";
     parameter Real pensionGrowth = 0.02 "Pensionskostnadens årliga ökning, andel";
     parameter Real operatingRevenueGrowth = 0.02 "Verksamhetsintäkternas årliga ökning, andel";
     parameter Real taxRate = base.taxRate "Kommunal skattesats i scenariot, procent";
@@ -255,31 +269,31 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real populationRevenueElasticity = 1 "Hur starkt skatt och bidrag följer kommunens folkmängd i förhållande till rikets (1 = proportionellt: en invånare färre ger cirka 77 000 kr mindre per år, 2025 års nivå)";
     parameter Real interestRate = if base.interestRate >= 0 then base.interestRate else base.interestExpense/max(base.openingDebt, 1e-9)
       "Genomsnittlig låneränta på ingående skuld, andel; årsredovisningens ränta när basåret har den (base.interestRate), annars basårets räntekostnad delad med skulden vid basårets början";
-    parameter Real investment = base.investment "Årliga investeringar, mnkr";
+    parameter Units.Money investment = base.investment "Årliga investeringar, mnkr";
     // Årsvisa banor; första värdet gäller år 1
-    parameter Real residualMigrationPath[horizon, 5] = {residualMigration for i in 1:horizon} "Restflöde per år och åldersgrupp, personer; från en extern befolkningsbana eller kalibreringen";
-    parameter Real employerContributions0 = 0 "Sociala avgifter exklusive pensionskostnader, mnkr (del av payroll0)";
+    parameter Units.Persons residualMigrationPath[horizon, 5] = {residualMigration for i in 1:horizon} "Restflöde per år och åldersgrupp, personer; från en extern befolkningsbana eller kalibreringen";
+    parameter Units.Money employerContributions0 = 0 "Sociala avgifter exklusive pensionskostnader, mnkr (del av payroll0)";
     parameter Real employerContributionRatePath[horizon] = fill(-1, horizon) "Sociala avgifter som andel av löner, eller -1 för oförändrad andel från basåret";
     parameter Real wageGrowthPath[horizon] = fill(wageGrowth, horizon) "Löneökning per år, andel";
     parameter Real priceGrowthPath[horizon] = fill(priceGrowth, horizon) "Prisökning per år, andel";
-    parameter Real pensionExpensePath[horizon] = {pension0*(1 + pensionGrowth)^i for i in 1:horizon} "Pensionskostnad per år, mnkr";
-    parameter Real pensionCashPaymentsPath[horizon] = pensionExpensePath "Pensionsutbetalningar per år, mnkr; illustrativa tills en egen källa finns";
-    parameter Real referenceTax[horizon] = {recurringTax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
-    parameter Real referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
-    parameter Real referencePopulation[horizon] = fill(sum(p0), horizon) "Folkmängd som referensbanan bygger på, personer";
-    parameter Real nationalPopulation0 = Data.SCB.nationalPopulationAt(base.year - 1) "Rikets folkmängd vid slutet av året före basåret, personer (SCB)";
+    parameter Units.Money pensionExpensePath[horizon] = {pension0*(1 + pensionGrowth)^i for i in 1:horizon} "Pensionskostnad per år, mnkr";
+    parameter Units.Money pensionCashPaymentsPath[horizon] = pensionExpensePath "Pensionsutbetalningar per år, mnkr; illustrativa tills en egen källa finns";
+    parameter Units.Money referenceTax[horizon] = {recurringTax0*(1 + taxGrowth)^i for i in 1:horizon} "Referensbana för skatteintäkter, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
+    parameter Units.Money referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
+    parameter Units.Persons referencePopulation[horizon] = fill(sum(p0), horizon) "Folkmängd som referensbanan bygger på, personer";
+    parameter Units.Persons nationalPopulation0 = Data.SCB.nationalPopulationAt(base.year - 1) "Rikets folkmängd vid slutet av året före basåret, personer (SCB)";
     parameter Real nationalPopulationPath[horizon] = {Data.SCB.nationalPopulationAt(base.year + i - 1) for i in 1:horizon}
       "Rikets folkmängd vid slutet av året före varje prognosår, personer (SCB: utfall, sedan framskrivning)";
     parameter Boolean importedRevenue = false "Sant när referensbanan är importerad från SKR";
     parameter Real ageIncomeWeights[5] = ones(5) "Relativ beskattningsbar inkomst per invånare i modellens åldersgrupper";
     parameter Real equalisationCountyRate(min=0) = 0 "Länsvis skattesats för inkomstutjämningsbidrag, procent";
     parameter Integer importedRevenueMode(min=0,max=2) = 0 "Importerad SKR: 0 proportionell, 1 publicerad bana, 2 justering per delpost";
-    parameter Real novemberPopulation0 = sum(p0) "Folkmängd 1 november under basåret; sätt observation om känd";
-    parameter Real importedComponents[horizon, 3] = zeros(horizon,3) "Importerad skatt före avräkning, inkomstutjämning och regleringspost, mnkr";
+    parameter Units.Persons novemberPopulation0 = sum(p0) "Folkmängd 1 november under basåret; sätt observation om känd";
+    parameter Units.Money importedComponents[horizon, 3] = zeros(horizon,3) "Importerad skatt före avräkning, inkomstutjämning och regleringspost, mnkr";
     // Generella bidrag per del (används med grantsByComponent)
     parameter Boolean grantsByComponent = false "Bidragen räknas per del: inkomstutjämning, kostnads- och LSS-utjämning, regleringsbidrag, fastighetsavgift och övriga";
-    parameter Real grantComponents0[5] = base.grantComponents "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
-    final parameter Real grantPerCapita0[4] = grantComponents0[1:4]*1e6/sum(revenuePopulation0) "Basårets inkomst-, kostnads-, reglerings- och LSS-del, kr per invånare";
+    parameter Units.Money grantComponents0[5] = base.grantComponents "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
+    final parameter Units.MoneyPerPerson grantPerCapita0[4] = grantComponents0[1:4]*1e6/sum(revenuePopulation0) "Basårets inkomst-, kostnads-, reglerings- och LSS-del, kr per invånare";
     final parameter Real taxCapacityIndex[horizon] = {(referenceTax[i]/recurringTax0)/(nationalPopulationPath[i]/nationalPopulation0) for i in 1:horizon}
       "Rikets skatteunderlag per invånare i förhållande till basåret (referensbanans tillväxt delad med rikets folkmängd)";
     parameter Real incomeEqualisationPerCapitaPath[horizon] = {base.equalisationNextYear[1]*taxCapacityIndex[i]/taxCapacityIndex[1] for i in 1:horizon}
@@ -290,36 +304,36 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real equalisationGuarantee = 1.15 "Garantinivå i inkomstutjämningen, andel av rikets medelskattekraft (lag 2004:773, 4 §)";
     parameter Real relativeTaxCapacityPath[horizon] = fill(base.relativeTaxCapacity[2], horizon)
       "Skattekraft i förhållande till rikets medel per utjämningsår; året efter basåret är känt (SCB), sedan oförändrad om inget annat anges";
-    parameter Real costEqualisationPerCapitaPath[horizon] = fill(base.equalisationNextYear[2], horizon) "Kostnadsutjämning per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrad";
+    parameter Units.MoneyPerPerson costEqualisationPerCapitaPath[horizon] = fill(base.equalisationNextYear[2], horizon) "Kostnadsutjämning per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrad";
     parameter Real regulationPerCapitaPath[horizon] = fill(base.equalisationNextYear[3], horizon)
       "Regleringsbidrag per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrat. Samma för alla kommuner; staten beslutar det i budgeten";
-    parameter Real lssEqualisationPerCapitaPath[horizon] = fill(base.equalisationNextYear[4], horizon) "LSS-utjämning per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrad";
+    parameter Units.MoneyPerPerson lssEqualisationPerCapitaPath[horizon] = fill(base.equalisationNextYear[4], horizon) "LSS-utjämning per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrad";
     parameter Real propertyFeeGrowth = 0.035 "Fastighetsavgiftens årliga ökning, andel; taket följer inkomstbasbeloppet (3,8 procent om året 2020-2026)";
-    parameter Real propertyFeePath[horizon] = {grantComponents0[5]*(1 + propertyFeeGrowth)^i for i in 1:horizon} "Kommunal fastighetsavgift per år, mnkr";
+    parameter Units.Money propertyFeePath[horizon] = {grantComponents0[5]*(1 + propertyFeeGrowth)^i for i in 1:horizon} "Kommunal fastighetsavgift per år, mnkr";
     parameter Real otherGeneralGrantsPath[horizon] = fill(grants0 - sum(grantComponents0), horizon)
       "Övriga generella bidrag per år, mnkr; basårets belopp om inget annat anges (Motalas 51 mnkr 2025 är ett omklassat riktat statsbidrag; sätt noll för tillfälliga bidrag)";
     parameter Boolean revenueFromReference = false "Skatt och bidrag följer referensbanan exakt (till exempel budgetens belopp)";
-    parameter Real investmentPath[horizon] = fill(investment, horizon) "Årets investeringsutbetalningar, mnkr";
+    parameter Units.Money investmentPath[horizon] = fill(investment, horizon) "Årets investeringsutbetalningar, mnkr";
     parameter Boolean workingCapitalEnabled = false "Modellera kundfordringar, leverantörsskulder och bidragsförskott";
-    parameter Real receivables0(min=0) = 0 "Ingående kundfordringar, mnkr";
-    parameter Real payables0(min=0) = 0 "Ingående leverantörsskulder, mnkr";
-    parameter Real grantAdvances0(min=0) = 0 "Ingående förutbetalda bidrag, mnkr";
+    parameter Units.Money receivables0(min=0) = 0 "Ingående kundfordringar, mnkr";
+    parameter Units.Money payables0(min=0) = 0 "Ingående leverantörsskulder, mnkr";
+    parameter Units.Money grantAdvances0(min=0) = 0 "Ingående förutbetalda bidrag, mnkr";
     parameter Real collectionDays(min=0,max=365) = 0 "Kundfordringar i dagar av verksamhetsintäkterna";
     parameter Real paymentDays(min=0,max=365) = 0 "Leverantörsskulder i dagar av övriga driftkostnader";
-    parameter Real firstYearGrantAdvance(min=0) = 0 "Bidrag inbetalt första året som hör till året efter, mnkr";
+    parameter Units.Money firstYearGrantAdvance(min=0) = 0 "Bidrag inbetalt första året som hör till året efter, mnkr";
     parameter Boolean liquidityPolicy = false "Använd tillgänglig kassa och håll en vald kassareserv";
-    parameter Real cashReserve(min=0) = 0 "Önskad lägsta kassa vid årets slut, mnkr";
+    parameter Units.Money cashReserve(min=0) = 0 "Önskad lägsta kassa vid årets slut, mnkr";
     parameter Real deferInvestmentShare(min=0,max=1) = 0 "Andel av första årets planerade investering som betalas året efter";
     parameter Real prefinanceShare(min=0,max=1) = 0 "Andel av uppskjuten betalning som lånas första året";
     parameter Integer constructionYears(min = 0, max = 5) = 0 "Årssteg mellan utbetalning och driftsättning för byggprojekt";
     parameter Real constructionShare(min = 0, max = 1) = 0.5 "Andel av årets investeringar som tar byggtid";
-    parameter Real projectOpeningStock(min=0) = 0 "Projektets ansamlade investering före första prognosåret, mnkr";
-    parameter Real projectPayment(min=0) = 0 "Projektets extra utbetalning första prognosåret, mnkr";
+    parameter Units.Money projectOpeningStock(min=0) = 0 "Projektets ansamlade investering före första prognosåret, mnkr";
+    parameter Units.Money projectPayment(min=0) = 0 "Projektets extra utbetalning första prognosåret, mnkr";
     parameter Integer projectOpeningStep(min=1) = 1 "Årssteg då projektet tas i bruk";
     parameter Real projectPlaces(min=0) = 0 "Projektets lokalkapacitet vid öppning, platser";
-    parameter Real workInProgress0(min = 0) = 0 "Pågående arbeten vid basårets slut utöver assets0, mnkr";
+    parameter Units.Money workInProgress0(min = 0) = 0 "Pågående arbeten vid basårets slut utöver assets0, mnkr";
     parameter Real interestRatePath[horizon] = fill(interestRate, horizon) "Låneränta på ingående skuld per år, andel";
-    parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid för lånen, år (årsredovisningens avsnitt om finansiella risker); 0 = hela skulden till årets ränta. Med räntebindning är interestRatePath marknadsräntan för nya och omsatta lån";
+    parameter Units.Duration rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid för lånen, år (årsredovisningens avsnitt om finansiella risker); 0 = hela skulden till årets ränta. Med räntebindning är interestRatePath marknadsräntan för nya och omsatta lån";
     parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
     parameter Real rateShockTime = base.year + 1 "Datum för räntehöjningen som decimalår: 2026,0 = 1 januari 2026, 2026,5 = 1 juli 2026; i årsmodellen räknas den återstående delen av året";
     parameter Real inflationShock = 0 "Extra inflation första prognosåret utöver prisbanan, andel (0,03 = tre procentenheter)";
@@ -329,9 +343,9 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden (uppräkning av pensionsskulden)";
     parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år (illustrativt)";
     parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i de generella bidragen; 0 = bidragen fasta i kronor";
-    parameter Real migrationDeltaPath[horizon] = fill(migrationDelta, horizon) "Förändrat flyttnetto per år, personer";
+    parameter Units.Persons migrationDeltaPath[horizon] = fill(migrationDelta, horizon) "Förändrat flyttnetto per år, personer";
     parameter Real birthChangePath[horizon] = fill(birthChange, horizon) "Relativ förändring av födda per år, andel";
-    final parameter Real life = assets0/depreciation0 "Sammanvägd avskrivningstid, år";
+    final parameter Units.Duration life = assets0/depreciation0 "Sammanvägd avskrivningstid, år";
   initial equation
     assert(horizon >= 1, "horizon måste vara minst ett år");
     assert(min(p0) > 0, "p0: varje åldersgrupp måste ha invånare");
@@ -352,7 +366,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     assert(min(investmentPath) >= 0, "investmentPath får inte vara negativ; försäljningar av tillgångar modelleras inte");
     assert(births0 >= 0 and min(birthChangePath) >= -1, "births0 och birthChangePath får inte ge negativt antal födda");
     assert(min(pensionExpensePath) >= 0 and min(pensionCashPaymentsPath) >= 0, "pensionExpensePath och pensionCashPaymentsPath får inte vara negativa");
-    assert(taxGrowth > -1 and grantGrowth > -1 and wageGrowth > -1 and priceGrowth > -1 and productivityGrowth > -1 and pensionGrowth > -1 and operatingRevenueGrowth > -1, "Årliga tillväxttakter måste vara större än -1 (andelar, inte procent)");
+    assert(taxGrowth > -1 and grantGrowth > -1 and wageGrowth > -1 and priceGrowth > -1 and productivityGrowth > -1 and costDrift > -1 and pensionGrowth > -1 and operatingRevenueGrowth > -1, "Årliga tillväxttakter måste vara större än -1 (andelar, inte procent)");
 // Årsbanorna ersätter skalärerna ovan och behöver samma gränser.
 // Utan dem nollställer wageGrowthPath[k] = -1 lönerna och en negativ ränta bokförs som intäkt.
     assert(min(wageGrowthPath) > -1 and min(priceGrowthPath) > -1, "wageGrowthPath och priceGrowthPath måste vara större än -1 varje år (andelar, inte procent)");
@@ -371,16 +385,16 @@ ett värde per prognosår. Tillväxt anges som andel (0,03 = tre procent), belop
       Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
 
     connector Cohorts "Befolkning per åldersgrupp, de äldre uppdelade och totalt, personer"
-      Real p[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+";
-      Real older[3] "Invånare 65-79, 80-89 och 90+";
-      Real population "Folkmängd";
+      Units.Persons p[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+";
+      Units.Persons older[3] "Invånare 65-79, 80-89 och 90+";
+      Units.Persons population "Folkmängd";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid)}));
     end Cohorts;
 
     connector DemographyDrivers "Årets demografiska antaganden"
-      Real residualMigration[5] "Restflöde per åldersgrupp, personer";
-      Real migrationDelta "Förändrat flyttnetto, personer";
+      Units.Persons residualMigration[5] "Restflöde per åldersgrupp, personer";
+      Units.Persons migrationDelta "Förändrat flyttnetto, personer";
       Real birthChange "Relativ förändring av antalet födda, andel";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
@@ -389,32 +403,32 @@ ett värde per prognosår. Tillväxt anges som andel (0,03 = tre procent), belop
     connector CostDrivers "Årets kostnadsantaganden"
       Real wageGrowth "Löneökning, andel";
       Real priceGrowth "Prisökning, andel";
-      Real pensionExpense "Pensionskostnad, mnkr";
-      Real pensionCashPayments "Pensionsutbetalningar, mnkr";
+      Units.Money pensionExpense "Pensionskostnad, mnkr";
+      Units.Money pensionCashPayments "Pensionsutbetalningar, mnkr";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
     end CostDrivers;
 
     connector RevenueReference "Årets referensvärden för skatt och bidrag (SKR eller illustrativa) och folkmängden de bygger på"
-      Real tax "Skatteintäkter, mnkr";
-      Real grants "Generella bidrag och utjämning, mnkr";
-      Real population "Folkmängd, personer";
-      Real nationalPopulation "Rikets folkmängd vid slutet av föregående år, personer";
+      Units.Money tax "Skatteintäkter, mnkr";
+      Units.Money grants "Generella bidrag och utjämning, mnkr";
+      Units.Persons population "Folkmängd, personer";
+      Units.Persons nationalPopulation "Rikets folkmängd vid slutet av föregående år, personer";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
     end RevenueReference;
 
     connector OperatingCost "Driftens nettokostnad och dess pensionsdelar, mnkr"
-      Real cost "Verksamhetens nettokostnad, mnkr";
-      Real pensionExpense "Pensionskostnad, mnkr";
-      Real pensionCashPayments "Pensionsutbetalningar, mnkr";
+      Units.Money cost "Verksamhetens nettokostnad, mnkr";
+      Units.Money pensionExpense "Pensionskostnad, mnkr";
+      Units.Money pensionCashPayments "Pensionsutbetalningar, mnkr";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid)}));
     end OperatingCost;
 
     connector TaxAndGrants "Skatteintäkter och generella bidrag, mnkr"
-      Real tax "Skatteintäkter, mnkr";
-      Real grants "Generella statsbidrag och utjämning, mnkr";
+      Units.Money tax "Skatteintäkter, mnkr";
+      Units.Money grants "Generella statsbidrag och utjämning, mnkr";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid)}));
     end TaxAndGrants;
@@ -479,18 +493,18 @@ antalet år.</p></html>"));
     model Scenario "Årets antaganden, hämtade ur de årsvisa banorna"
       outer Calendar calendar;
       parameter Integer horizon(min = 1) "Antal årssteg";
-      parameter Real residualMigrationPath[horizon, 5] "Restflöde per år och åldersgrupp, personer";
-      parameter Real migrationDeltaPath[horizon] "Förändrat flyttnetto per år, personer";
+      parameter Units.Persons residualMigrationPath[horizon, 5] "Restflöde per år och åldersgrupp, personer";
+      parameter Units.Persons migrationDeltaPath[horizon] "Förändrat flyttnetto per år, personer";
       parameter Real birthChangePath[horizon] "Relativ förändring av födda per år, andel";
       parameter Real wageGrowthPath[horizon] "Löneökning per år, andel";
       parameter Real priceGrowthPath[horizon] "Prisökning per år, andel";
-      parameter Real pensionExpensePath[horizon] "Pensionskostnad per år, mnkr";
-      parameter Real pensionCashPaymentsPath[horizon] "Pensionsutbetalningar per år, mnkr";
-      parameter Real referenceTax[horizon] "Referensbana för skatteintäkter, mnkr";
-      parameter Real referenceGrants[horizon] "Referensbana för generella bidrag, mnkr";
-      parameter Real referencePopulation[horizon] "Folkmängd som referensbanan bygger på, personer";
-      parameter Real nationalPopulationPath[horizon] "Rikets folkmängd vid slutet av året före varje prognosår, personer";
-      parameter Real investmentPath[horizon] "Investeringar per år, mnkr";
+      parameter Units.Money pensionExpensePath[horizon] "Pensionskostnad per år, mnkr";
+      parameter Units.Money pensionCashPaymentsPath[horizon] "Pensionsutbetalningar per år, mnkr";
+      parameter Units.Money referenceTax[horizon] "Referensbana för skatteintäkter, mnkr";
+      parameter Units.Money referenceGrants[horizon] "Referensbana för generella bidrag, mnkr";
+      parameter Units.Persons referencePopulation[horizon] "Folkmängd som referensbanan bygger på, personer";
+      parameter Units.Persons nationalPopulationPath[horizon] "Rikets folkmängd vid slutet av året före varje prognosår, personer";
+      parameter Units.Money investmentPath[horizon] "Investeringar per år, mnkr";
       parameter Real deferInvestmentShare = 0;
       parameter Real projectPayment = 0;
       final parameter Real deferredAmount = investmentPath[1]*deferInvestmentShare;
@@ -546,11 +560,11 @@ med <code>inflationRateResponse</code> per procentenhet. De generella bidragen �
         Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
       Interfaces.CohortsOutput cohorts "Befolkning per åldersgrupp vid årets slut" annotation(
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
-      discrete output Real population "Folkmängd vid årets slut";
-      discrete output Real births "Födda under året";
-      discrete output Real deaths "Döda under året";
+      discrete output Units.Persons population "Folkmängd vid årets slut";
+      discrete output Units.Persons births "Födda under året";
+      discrete output Units.Persons deaths "Döda under året";
       discrete output Real migration "Flyttnetto och restflöden under året";
-      discrete output Real populationBalance "Kontroll av befolkningsbalansen, personer; ska vara noll";
+      discrete output Units.Persons populationBalance "Kontroll av befolkningsbalansen, personer; ska vara noll";
     equation
       assert(population > 0, "Scenariot tömmer befolkningen");
       assert(abs(populationBalance) < 1e-7*max(1, population), "Befolkningsbalansen stämmer inte");
@@ -561,10 +575,10 @@ med <code>inflationRateResponse</code> per procentenhet. De generella bidragen �
     package Fertility "Valbara födelsemodeller för CohortDemography"
       partial model Partial "Födda under året utifrån befolkningen vid årets början"
         outer Calendar calendar;
-        input Real population[2, 101] "Befolkning vid årets början, ettårsåldrar 0-100+ per kön (1 män, 2 kvinnor)";
-        parameter Real births0 "Födda under basåret";
-        parameter Real population0[2, 101] "Befolkning vid basårets slut";
-        output Real births "Födda under året";
+        input Units.Persons population[2, 101] "Befolkning vid årets början, ettårsåldrar 0-100+ per kön (1 män, 2 kvinnor)";
+        parameter Units.Persons births0 "Födda under basåret";
+        parameter Units.Persons population0[2, 101] "Befolkning vid basårets slut";
+        output Units.Persons births "Födda under året";
       protected
         Real exposure[101] = cat(1, {0.5*population[2, 1]}, {0.5*(population[2, a] + population[2, a - 1]) for a in 2:101})
           "Kvinnor i varje ålder under året: hälften av dem i åldern och hälften av dem ett år yngre vid årets början";
@@ -607,20 +621,20 @@ Alla utom Legacy använder SCB:s åldersprofil för fruktsamheten. Prövning mot
       extends DemographyBase(population(start = sum(population0), fixed = true), births(start = data.births, fixed = true),
         deaths(start = data.deaths, fixed = true), migration(start = 0, fixed = true), populationBalance(start = 0, fixed = true));
       parameter Data.SCB.DemographyYear data "Basår: befolkning, dödsrisk och kalibrering (SCB); kommunens paket ger ett värde";
-      parameter Real reportedTotal = sum(data.population) "Folkmängd att starta från; ettårsåldrarna skalas till den";
-      parameter Real population0[2, 101] = data.population*reportedTotal/sum(data.population) "Befolkning vid basårets slut, ettårsåldrar per kön";
+      parameter Units.Persons reportedTotal = sum(data.population) "Folkmängd att starta från; ettårsåldrarna skalas till den";
+      parameter Units.Persons population0[2, 101] = data.population*reportedTotal/sum(data.population) "Befolkning vid basårets slut, ettårsåldrar per kön";
       parameter Real mortalityRatio[2] = data.mortalityRatio "Kommunens dödlighet i förhållande till rikets livslängdstabell, män och kvinnor";
       parameter Boolean mortalityImprovement = true "Låt dödsriskerna fortsätta sjunka";
       parameter Real improvement[2, 101] = if mortalityImprovement then data.mortalityImprovement else zeros(2, 101)
         "Årlig minskning av dödsrisken; basårets historiska trend, eller Data.SCB.mortalityImprovement för SCB:s framskrivning";
-      parameter Real residualMigration[2, 101] = data.residualMigration "Kalibrerat restflöde per ålder och kön, personer per år";
+      parameter Units.Persons residualMigration[2, 101] = data.residualMigration "Kalibrerat restflöde per ålder och kön, personer per år";
       parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på 0-6, 7-15, 16-18, 19-64 och 65+";
       parameter Real observedDeltaShape[2,101] = zeros(2,101) "Andelar efter ålder och kön för ändrad inflyttning";
       parameter Boolean useObservedDeltaShape = false;
       parameter Real shareBoys = data.shareBoys "Andel pojkar bland de födda";
       replaceable Fertility.Constant fertility constrainedby Fertility.Partial(births0 = data.births, population0 = population0)
         "Födelsemodell" annotation(choicesAllMatching = true);
-      discrete output Real p[2, 101](start = population0, each fixed = true) "Befolkning vid årets slut, ettårsåldrar per kön";
+      discrete output Units.Persons p[2, 101](start = population0, each fixed = true) "Befolkning vid årets slut, ettårsåldrar per kön";
       discrete output Real older[3](start = {sum(population0[:, 66:80]), sum(population0[:, 81:90]), sum(population0[:, 91:101])}, each fixed = true)
         "Invånare 65-79, 80-89 och 90+";
     protected
@@ -631,7 +645,7 @@ Alla utom Legacy använder SCB:s åldersprofil för fruktsamheten. Prövning mot
       discrete Real q[2, 101](start = zeros(2, 101), each fixed = true) "Årets dödsrisk";
       discrete Real survivors[2, 101](start = zeros(2, 101), each fixed = true) "Överlevande från årets början";
       discrete Real delta[2, 101](start = zeros(2, 101), each fixed = true) "Årets förändrade flyttnetto per ålder och kön";
-      discrete Real natural[2, 101](start = zeros(2, 101), each fixed = true) "Befolkning vid årets slut utan flyttningar";
+      discrete Units.Persons natural[2, 101](start = zeros(2, 101), each fixed = true) "Befolkning vid årets slut utan flyttningar";
     equation
       fertility.population = pre(p);
       cohorts.p = {sum(p[:, 1:7]), sum(p[:, 8:16]), sum(p[:, 17:19]), sum(p[:, 20:65]), sum(p[:, 66:101])};
@@ -670,13 +684,13 @@ restflöden per ettårsålder. <code>older</code> delar 65+ i 65-79, 80-89 och 9
     end CohortDemography;
 
     model Demography "Fem åldersgrupper med kontrollerad befolkningsbalans"
-      parameter Real p0[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid basårets slut";
+      parameter Units.Persons p0[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid basårets slut";
       parameter Real deathRates[5] "Dödsrisk per åldersgrupp och år";
       parameter Real migrationWeights[5] "Fördelning av ett förändrat flyttnetto på åldersgrupperna";
-      parameter Real births0 "Födda under basåret";
+      parameter Units.Persons births0 "Födda under basåret";
       extends DemographyBase(population(start = sum(p0), fixed = true), births(start = births0, fixed = true),
         deaths(start = 0, fixed = true), migration(start = 0, fixed = true), populationBalance(start = 0, fixed = true));
-      discrete output Real p[5](start = p0, each fixed = true) "Invånare per åldersgrupp vid årets slut";
+      discrete output Units.Persons p[5](start = p0, each fixed = true) "Invånare per åldersgrupp vid årets slut";
       parameter Real olderShares[3] "Fast uppdelning av 65+ i 65-79, 80-89 och 90+ (SCB)";
     protected
       discrete Real survivors[5](each start = 0, each fixed = true) "Överlevande från årets början";
@@ -709,7 +723,7 @@ Används av sajten; CohortDemography är den finare modellen.</p></html>"));
 
     model Services "Verksamhetens behov och kapacitet per sektor"
       parameter Real educationWeights[3] "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet";
-      parameter Real sectorCosts[3] "Kostnadsvikter för utbildning, äldreomsorg och övrigt, mnkr";
+      parameter Units.Money sectorCosts[3] "Kostnadsvikter för utbildning, äldreomsorg och övrigt, mnkr";
       parameter Real adjustment[3] "Årlig kapacitetsanpassning per sektor (0 = låst, 1 = direkt)";
       parameter Real fixedShare[3] "Fast andel av kapaciteten per sektor";
       parameter Real careWeights[3] = {1, 1, 1} "Äldreomsorgens kostnad per invånare 65-79, 80-89 och 90+; bara förhållandet mellan dem spelar roll";
@@ -728,7 +742,7 @@ Används av sajten; CohortDemography är den finare modellen.</p></html>"));
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
     protected
       parameter Real careBase(fixed = false) "Viktat antal äldre vid start";
-      parameter Real cohorts0[5](each fixed = false) "Invånare per åldersgrupp vid start";
+      parameter Units.Persons cohorts0[5](each fixed = false) "Invånare per åldersgrupp vid start";
     initial equation
       careBase = careWeights*cohorts.older;
       cohorts0 = cohorts.p;
@@ -751,17 +765,18 @@ kostar ungefär sju gånger så mycket som en person 65-79. Med lika vikter blir
     end Services;
 
     model OperatingAccounts "Driftens kostnader och intäkter; pensionskostnad skild från pensionsutbetalning"
-      parameter Real population0 "Folkmängd vid basårets slut";
-      parameter Real payroll0 "Lönekostnader exklusive pensioner i basåret, mnkr";
-      parameter Real employerContributions0 = 0 "Sociala avgifter exklusive pensioner, mnkr";
+      parameter Units.Persons population0 "Folkmängd vid basårets slut";
+      parameter Units.Money payroll0 "Lönekostnader exklusive pensioner i basåret, mnkr";
+      parameter Units.Money employerContributions0 = 0 "Sociala avgifter exklusive pensioner, mnkr";
       parameter Integer horizon = 1;
       parameter Real employerContributionRatePath[horizon] = fill(-1,horizon) "Sociala avgifter som andel av löner";
-      parameter Real pension0 "Pensionskostnad i basåret, mnkr";
-      parameter Real otherOperatingExpense0 "Övriga verksamhetskostnader i basåret, mnkr";
-      parameter Real operatingRevenue0 "Verksamhetens intäkter i basåret, mnkr";
-      parameter Real netCostRoundingAdjustment "Avrundningsjustering, mnkr";
+      parameter Units.Money pension0 "Pensionskostnad i basåret, mnkr";
+      parameter Units.Money otherOperatingExpense0 "Övriga verksamhetskostnader i basåret, mnkr";
+      parameter Units.Money operatingRevenue0 "Verksamhetens intäkter i basåret, mnkr";
+      parameter Units.Money netCostRoundingAdjustment "Avrundningsjustering, mnkr";
       parameter Real operatingRevenueGrowth "Verksamhetsintäkternas årliga ökning, andel";
       parameter Real productivityGrowth "Årlig produktivitetsökning, andel";
+      parameter Real costDrift = 0 "Kostnadsökning utöver demografi och pris, andel per år";
       outer Calendar calendar;
       Interfaces.CohortsInput cohorts "Befolkning" annotation(
         Placement(transformation(origin = {-240, -87}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, -50}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
@@ -775,14 +790,15 @@ kostar ungefär sju gånger så mycket som en person 65-79. Med lika vikter blir
       discrete output Real priceIndex(start = 1, fixed = true) "Prisnivå för övriga kostnader, index (basår = 1)";
       discrete output Real revenueIndex(start = 1, fixed = true) "Taxor och avgifter, index (basår = 1)";
       discrete output Real productivity(start = 1, fixed = true) "Produktivitet, index (basår = 1)";
-      discrete output Real wages(start = payroll0 - employerContributions0, fixed = true) "Löner, mnkr";
-      discrete output Real employerContributions(start = employerContributions0, fixed = true) "Sociala avgifter exklusive pensioner, mnkr";
-      discrete output Real payroll(start = payroll0, fixed = true) "Lönekostnader exklusive pensioner, mnkr";
-      discrete output Real pensionExpense(start = pension0, fixed = true) "Pensionskostnad, mnkr";
-      discrete output Real pensionCashPayments(start = pension0, fixed = true) "Pensionsutbetalningar, mnkr; utgångsvärdet är illustrativt, inte ett utfall";
-      discrete output Real otherOperatingExpense(start = otherOperatingExpense0, fixed = true) "Övriga verksamhetskostnader, mnkr";
-      discrete output Real operatingRevenue(start = operatingRevenue0, fixed = true) "Verksamhetens intäkter, mnkr";
-      discrete output Real cost(start = payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment, fixed = true) "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
+      discrete output Real standard(start = 1, fixed = true) "Kostnadsnivå utöver demografi och pris, index (basår = 1)";
+      discrete output Units.Money wages(start = payroll0 - employerContributions0, fixed = true) "Löner, mnkr";
+      discrete output Units.Money employerContributions(start = employerContributions0, fixed = true) "Sociala avgifter exklusive pensioner, mnkr";
+      discrete output Units.Money payroll(start = payroll0, fixed = true) "Lönekostnader exklusive pensioner, mnkr";
+      discrete output Units.Money pensionExpense(start = pension0, fixed = true) "Pensionskostnad, mnkr";
+      discrete output Units.Money pensionCashPayments(start = pension0, fixed = true) "Pensionsutbetalningar, mnkr; utgångsvärdet är illustrativt, inte ett utfall";
+      discrete output Units.Money otherOperatingExpense(start = otherOperatingExpense0, fixed = true) "Övriga verksamhetskostnader, mnkr";
+      discrete output Units.Money operatingRevenue(start = operatingRevenue0, fixed = true) "Verksamhetens intäkter, mnkr";
+      discrete output Units.Money cost(start = payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment, fixed = true) "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
     equation
       accounts.cost = cost;
       accounts.pensionExpense = pensionExpense;
@@ -793,11 +809,12 @@ kostar ungefär sju gånger så mycket som en person 65-79. Med lika vikter blir
         priceIndex := pre(priceIndex)*(1 + drivers.priceGrowth);
         revenueIndex := pre(revenueIndex)*(1 + operatingRevenueGrowth);
         productivity := pre(productivity)*(1 + productivityGrowth);
-        wages := (payroll0 - employerContributions0)*wageIndex*serviceVolume/productivity;
+        standard := pre(standard)*(1 + costDrift);
+        wages := (payroll0 - employerContributions0)*wageIndex*serviceVolume*standard/productivity;
         employerContributions := if employerContributionRatePath[calendar.pathIndex] < 0 then
-          employerContributions0*wageIndex*serviceVolume/productivity else wages*employerContributionRatePath[calendar.pathIndex];
+          employerContributions0*wageIndex*serviceVolume*standard/productivity else wages*employerContributionRatePath[calendar.pathIndex];
         payroll := wages + employerContributions;
-        otherOperatingExpense := otherOperatingExpense0*priceIndex*serviceVolume;
+        otherOperatingExpense := otherOperatingExpense0*priceIndex*serviceVolume*standard;
         operatingRevenue := operatingRevenue0*revenueIndex*cohorts.population/population0;
         pensionExpense := drivers.pensionExpense;
         pensionCashPayments := drivers.pensionCashPayments;
@@ -807,18 +824,22 @@ kostar ungefär sju gånger så mycket som en person 65-79. Med lika vikter blir
         Icon(coordinateSystem(extent = {{-100, -75}, {100, 75}}), graphics = {Rectangle(extent = {{-100, -75}, {100, 75}}, lineColor = {35, 115, 85}, fillColor = {234, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 30}, {95, 65}}, textString = "Drift", fontSize = 21, textColor = {35, 115, 85}), Text(extent = {{-95, -27}, {95, 25}}, textString = "Löner / pensioner\nÖvrigt / avgifter", fontSize = 16, textColor = {35, 50, 65}), Text(extent = {{-95, -68}, {95, -35}}, textString = "%name", fontSize = 14, textColor = {35, 115, 85})}),
         Diagram(coordinateSystem(extent = {{-240, -130}, {240, 130}}), graphics = {Text(extent = {{-235, 85}, {235, 125}}, textString = "Drift", fontSize = 22, textColor = {35, 50, 65}), Rectangle(extent = {{-230, -55}, {-100, 65}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{-65, -55}, {65, 65}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Rectangle(extent = {{100, -55}, {230, 65}}, lineColor = {50, 120, 90}, fillColor = {236, 248, 240}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-225, 35}, {-105, 60}}, textString = "Indata / antaganden", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, 35}, {60, 60}}, textString = "Tillstånd / årssteg", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, 35}, {225, 60}}, textString = "Utdata", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-225, -48}, {-105, 32}}, textString = "Befolkning\nVolym\nPensionsbanor", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{-60, -48}, {60, 32}}, textString = "Löne- och prisindex\nProduktivitet\nÅrets bokslut", fontSize = 13, textColor = {35, 50, 65}), Text(extent = {{105, -48}, {225, 32}}, textString = "Löner / pension\nÖvrigt / avgifter\nNettokostnad", fontSize = 13, textColor = {35, 50, 65}), Line(points = {{-100, 5}, {-65, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{65, 5}, {100, 5}}, color = {70, 95, 120}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-235, -125}, {235, -75}}, textString = "Pensionskostnad och utbetalning hålls isär; belopp i mnkr, löpande priser.", fontSize = 12, textColor = {35, 50, 65})}),
         Documentation(info = "<html><p>Driftens nettokostnad byggs upp från bokslutets delar i basåret:</p>
-<ul><li>löner = löner<sub>0</sub> · löneindex · volym / produktivitet</li>
-<li>övriga kostnader = övrigt<sub>0</sub> · prisindex · volym</li>
+<ul><li>löner = löner<sub>0</sub> · löneindex · volym · standard / produktivitet</li>
+<li>övriga kostnader = övrigt<sub>0</sub> · prisindex · volym · standard</li>
 <li>verksamhetsintäkter = intäkter<sub>0</sub> · intäktsindex · folkmängd / folkmängd<sub>0</sub></li>
 <li>nettokostnad = löner + pensionskostnad + övriga kostnader - verksamhetsintäkter + avrundning</li></ul>
+<p>Standard är kostnadsökningen utöver demografi och pris (<code>costDrift</code>): höjd standard, nya uppgifter och annat som
+varken är volym eller pris. Länets kommuner låg 2010-2025 i medel mellan -0,1 och 0,6 procent per år (SCB:s nettokostnad
+deflaterad med SKR:s PKV minus det demografiska behovet; <code>scripts/cost_residual.py</code>). Standardvärdet är 0: i
+bakåttestet åtta år framåt från 2017-2019 (<code>scripts/hindcast_long.py</code>) gav historikens medel för höga kostnader.</p>
 <p>Pensionskostnaden och pensionsutbetalningarna hålls isär, eftersom kostnaden påverkar resultatet och utbetalningen
 kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
     end OperatingAccounts;
 
     model Revenue "Skatt och generella bidrag: referensbana, föregående års befolkning och förenklad utjämning"
-      parameter Real p0[5] "Invånare per åldersgrupp som basårets skatt och bidrag bygger på (slutet av året före basåret)";
-      parameter Real tax0 "Skatteintäkter i basåret, mnkr";
-      parameter Real grants0 "Generella bidrag och utjämning i basåret, mnkr";
+      parameter Units.Persons p0[5] "Invånare per åldersgrupp som basårets skatt och bidrag bygger på (slutet av året före basåret)";
+      parameter Units.Money tax0 "Skatteintäkter i basåret, mnkr";
+      parameter Units.Money grants0 "Generella bidrag och utjämning i basåret, mnkr";
       parameter Real taxRate "Kommunal skattesats i scenariot, procent";
       parameter Real taxRatePath[horizon] = fill(taxRate, horizon) "Kommunal skattesats per år, procent";
       parameter Real baseTaxRate "Kommunal skattesats i basåret, procent";
@@ -826,7 +847,7 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
       parameter Real populationRevenueElasticity "Hur starkt skatt och bidrag följer folkmängden";
       parameter Boolean importedRevenue "Sant när referensbanan är importerad från SKR";
       parameter Boolean followReference = false "Skatt och bidrag följer referensbanan exakt, utan befolkningseffekt (till exempel budgetens belopp)";
-      parameter Real nationalPopulation0 "Rikets folkmängd vid slutet av året före basåret, personer";
+      parameter Units.Persons nationalPopulation0 "Rikets folkmängd vid slutet av året före basåret, personer";
       parameter Boolean grantsByComponent = false "Bidragen räknas per del i stället för som en referensbana (gäller inte en importerad SKR-bana eller budgetens belopp)";
       parameter Integer horizon(min = 1) = 1 "Antal årssteg i bidragsbanorna";
       parameter Integer importedRevenueMode(min=0,max=2) = 0;
@@ -836,17 +857,17 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
       parameter Real equalisationCountyRate = 0;
       final parameter Real openingIncomePerPerson = sum(openingCohorts .* ageIncomeWeights)/sum(openingCohorts);
       parameter Real importedComponents[horizon, 3] = zeros(horizon,3);
-      parameter Real grantComponents0[5] = zeros(5) "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
-      parameter Real incomeEqualisationPerCapita[horizon] = zeros(horizon) "Inkomstutjämning per år vid basårets relativa skattekraft, kr per invånare";
+      parameter Units.Money grantComponents0[5] = zeros(5) "Basårets inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning och fastighetsavgift, mnkr";
+      parameter Units.MoneyPerPerson incomeEqualisationPerCapita[horizon] = zeros(horizon) "Inkomstutjämning per år vid basårets relativa skattekraft, kr per invånare";
       parameter Real equalisationGuarantee = 1.15 "Garantinivå i inkomstutjämningen, andel av rikets medelskattekraft (lag 2004:773, 4 §)";
       parameter Real relativeTaxCapacity0 = 1 "Den relativa skattekraft som incomeEqualisationPerCapita gäller, andel";
       parameter Real incomeEqualisationComposition = 1 "Andelen i arbetsför ålder (composition) som incomeEqualisationPerCapita redan bygger på";
       parameter Real relativeTaxCapacity[horizon] = fill(relativeTaxCapacity0, horizon) "Kommunens skattekraft i förhållande till rikets medel per utjämningsår, före ålderseffekten, andel";
-      parameter Real costEqualisationPerCapita[horizon] = zeros(horizon) "Kostnadsutjämning per år, kr per invånare (avgift negativ)";
-      parameter Real regulationPerCapita[horizon] = zeros(horizon) "Regleringsbidrag per år, kr per invånare (avgift negativ)";
-      parameter Real lssEqualisationPerCapita[horizon] = zeros(horizon) "LSS-utjämning per år, kr per invånare (avgift negativ)";
-      parameter Real propertyFee[horizon] = zeros(horizon) "Kommunal fastighetsavgift per år, mnkr";
-      parameter Real otherGeneralGrants[horizon] = zeros(horizon) "Övriga generella bidrag per år, mnkr";
+      parameter Units.MoneyPerPerson costEqualisationPerCapita[horizon] = zeros(horizon) "Kostnadsutjämning per år, kr per invånare (avgift negativ)";
+      parameter Units.MoneyPerPerson regulationPerCapita[horizon] = zeros(horizon) "Regleringsbidrag per år, kr per invånare (avgift negativ)";
+      parameter Units.MoneyPerPerson lssEqualisationPerCapita[horizon] = zeros(horizon) "LSS-utjämning per år, kr per invånare (avgift negativ)";
+      parameter Units.Money propertyFee[horizon] = zeros(horizon) "Kommunal fastighetsavgift per år, mnkr";
+      parameter Units.Money otherGeneralGrants[horizon] = zeros(horizon) "Övriga generella bidrag per år, mnkr";
       outer Calendar calendar;
       Interfaces.CohortsInput cohorts "Befolkning" annotation(
         Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
@@ -854,11 +875,11 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
         Placement(transformation(origin = {-240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {-100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
       Interfaces.TaxAndGrantsOutput taxAndGrants "Skatt och bidrag till finansieringen" annotation(
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
-      discrete output Real recurringTaxAdjustment(start = 0, fixed = true) "Justering av skatt före slutavräkning, mnkr";
-      discrete output Real incomeEqualisationAdjustment(start = 0, fixed = true) "Befolkningseffekt på inkomstutjämning, mnkr";
-      discrete output Real regulationPopulationAdjustment(start = 0, fixed = true) "Befolkningseffekt på regleringsposten, mnkr";
-      discrete output Real tax(start = tax0, fixed = true) "Skatteintäkter, mnkr: referensbana · kommunens folkmängd i förhållande till rikets · ålderseffekt · skattesats / basårets skattesats";
-      discrete output Real grants(start = grants0, fixed = true) "Generella statsbidrag och utjämning, mnkr: referensbana · kommunens folkmängd i förhållande till rikets, minus utjämning av ålderseffekten";
+      discrete output Units.Money recurringTaxAdjustment(start = 0, fixed = true) "Justering av skatt före slutavräkning, mnkr";
+      discrete output Units.Money incomeEqualisationAdjustment(start = 0, fixed = true) "Befolkningseffekt på inkomstutjämning, mnkr";
+      discrete output Units.Money regulationPopulationAdjustment(start = 0, fixed = true) "Befolkningseffekt på regleringsposten, mnkr";
+      discrete output Units.Money tax(start = tax0, fixed = true) "Skatteintäkter, mnkr: referensbana · kommunens folkmängd i förhållande till rikets · ålderseffekt · skattesats / basårets skattesats";
+      discrete output Units.Money grants(start = grants0, fixed = true) "Generella statsbidrag och utjämning, mnkr: referensbana · kommunens folkmängd i förhållande till rikets, minus utjämning av ålderseffekten";
       discrete output Real grantParts[6](start = cat(1, grantComponents0, {grants0 - sum(grantComponents0)}), each fixed = true)
         "Bidragen per del med grantsByComponent: inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning, fastighetsavgift och övriga, mnkr";
     protected
@@ -868,7 +889,7 @@ kassaflödet. Belopp i mnkr, löpande priser.</p></html>"));
       discrete Real ageTaxDelta(start=0,fixed=true) "Skatt vid basskattesats från ändrad ålderssammansättning";
       discrete Real novemberPopulation(start = novemberPopulation0, fixed = true);
       discrete Real popFactor(start = 1, fixed = true) "kommunens folkmängd i förhållande till rikets, jämfört med året före basåret";
-      discrete Real standardTax(start = 0, fixed = true) "Skatt vid basårets skattesats och sammansättning, mnkr";
+      discrete Units.Money standardTax(start = 0, fixed = true) "Skatt vid basårets skattesats och sammansättning, mnkr";
       discrete Real composition(start = 1, fixed = true) "Andel 19-64 år i förhållande till basåret";
       discrete Real deviation(start = 0, fixed = true) "Skatteeffekt av en ändrad andel i arbetsför ålder, mnkr";
     equation
@@ -943,9 +964,9 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     end Revenue;
 
     model Capital "Tillgångar och avskrivningar med en sammanvägd avskrivningstid"
-      parameter Real assets0 "Tillgångar vid basårets slut, mnkr";
-      parameter Real depreciation0 "Avskrivningar i basåret, mnkr";
-      parameter Real life "Sammanvägd avskrivningstid, år";
+      parameter Units.Money assets0 "Tillgångar vid basårets slut, mnkr";
+      parameter Units.Money depreciation0 "Avskrivningar i basåret, mnkr";
+      parameter Units.Duration life "Sammanvägd avskrivningstid, år";
       parameter Integer constructionYears(min = 0, max = 5) = 0;
       parameter Real constructionShare(min = 0, max = 1) = 0.5;
       parameter Real workInProgress0(min = 0) = 0;
@@ -956,16 +977,16 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       outer Calendar calendar;
       Interfaces.SignalInput investment "Årets investeringar, mnkr" annotation(
         Placement(transformation(origin = {0, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {0, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
-      discrete output Real assets(start = assets0, fixed = true) "Tillgångar vid årets slut, mnkr";
+      discrete output Units.Money assets(start = assets0, fixed = true) "Tillgångar vid årets slut, mnkr";
       discrete Interfaces.SignalOutput depreciation(start = depreciation0, fixed = true) "Årets avskrivningar, mnkr" annotation(
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 0), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 0)));
-      discrete output Real commissioned(start = 0, fixed = true) "Anläggningar tagna i bruk under året, mnkr";
-      discrete output Real projectPaid(start=0,fixed=true) "Projektutbetalning, mnkr";
-      discrete output Real projectCommissioned(start=0,fixed=true) "Driftsatt projektkapital, mnkr";
-      discrete output Real projectWorkInProgress(start=projectOpeningStock,fixed=true) "Projektets pågående arbeten, mnkr";
+      discrete output Units.Money commissioned(start = 0, fixed = true) "Anläggningar tagna i bruk under året, mnkr";
+      discrete output Units.Money projectPaid(start=0,fixed=true) "Projektutbetalning, mnkr";
+      discrete output Units.Money projectCommissioned(start=0,fixed=true) "Driftsatt projektkapital, mnkr";
+      discrete output Units.Money projectWorkInProgress(start=projectOpeningStock,fixed=true) "Projektets pågående arbeten, mnkr";
       discrete output Real projectPlacesInUse(start=0,fixed=true) "Projektplatser som tagits i bruk";
-      output Real workInProgress "Pågående arbeten vid årets slut, mnkr";
-      discrete output Real assetBalance(start = 0, fixed = true) "Kontroll av tillgångsbalansen, mnkr; ska vara noll";
+      output Units.Money workInProgress "Pågående arbeten vid årets slut, mnkr";
+      discrete output Units.Money assetBalance(start = 0, fixed = true) "Kontroll av tillgångsbalansen, mnkr; ska vara noll";
     protected
       discrete Real pending[5](start = {if i <= max(1, constructionYears) then workInProgress0/max(1, constructionYears) else 0 for i in 1:5}, each fixed = true)
         "Betalda byggprojekt sorterade efter återstående år till driftsättning";
@@ -1013,12 +1034,12 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       parameter Real collectionDays = 0;
       parameter Real paymentDays = 0;
       parameter Real firstYearGrantAdvance = 0;
-      input Real operatingRevenue "Bokförda verksamhetsintäkter, mnkr";
-      input Real otherOperatingExpense "Bokförda övriga driftkostnader, mnkr";
-      discrete output Real receivables(start=receivables0,fixed=true) "Kundfordringar vid årets slut, mnkr";
-      discrete output Real payables(start=payables0,fixed=true) "Leverantörsskulder vid årets slut, mnkr";
-      discrete output Real grantAdvances(start=grantAdvances0,fixed=true) "Förutbetalda bidrag vid årets slut, mnkr";
-      discrete output Real cashEffect(start=0,fixed=true) "Kassaeffekt av ändrat rörelsekapital, mnkr";
+      input Units.Money operatingRevenue "Bokförda verksamhetsintäkter, mnkr";
+      input Units.Money otherOperatingExpense "Bokförda övriga driftkostnader, mnkr";
+      discrete output Units.Money receivables(start=receivables0,fixed=true) "Kundfordringar vid årets slut, mnkr";
+      discrete output Units.Money payables(start=payables0,fixed=true) "Leverantörsskulder vid årets slut, mnkr";
+      discrete output Units.Money grantAdvances(start=grantAdvances0,fixed=true) "Förutbetalda bidrag vid årets slut, mnkr";
+      discrete output Units.Money cashEffect(start=0,fixed=true) "Kassaeffekt av ändrat rörelsekapital, mnkr";
     algorithm
       when calendar.tick then
         receivables := if active then operatingRevenue*collectionDays/365 else pre(receivables);
@@ -1029,18 +1050,18 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     end WorkingCapital;
 
     model Finance "Årets resultat, kassaflöde, upplåning och amortering"
-      parameter Real debt0 "Låneskuld vid basårets slut, mnkr";
-      parameter Real cash0 "Kassa vid basårets slut, mnkr";
-      parameter Real interest0 "Räntekostnader i basåret, mnkr (bokslut)";
-      parameter Real result0 "Årets resultat i basåret enligt modellens poster, mnkr";
-      parameter Real financialIncome "Finansiella intäkter per år, mnkr";
-      parameter Real otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
-      parameter Real revenue0 "Skatt och generella bidrag i basåret, mnkr";
+      parameter Units.Money debt0 "Låneskuld vid basårets slut, mnkr";
+      parameter Units.Money cash0 "Kassa vid basårets slut, mnkr";
+      parameter Units.Money interest0 "Räntekostnader i basåret, mnkr (bokslut)";
+      parameter Units.Money result0 "Årets resultat i basåret enligt modellens poster, mnkr";
+      parameter Units.Money financialIncome "Finansiella intäkter per år, mnkr";
+      parameter Units.Money otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
+      parameter Units.Money revenue0 "Skatt och generella bidrag i basåret, mnkr";
       parameter Boolean liquidityPolicy = false;
       parameter Real cashReserve = 0;
-      parameter Real plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
+      parameter Units.Money plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
       parameter Real averageRate0 = 0 "Snittränta på skulden vid basårets slut, andel";
-      parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
+      parameter Units.Duration rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
       parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
       parameter Real rateShockTime = 1e9 "Datum för höjningen som decimalår (2026,5 = 1 juli 2026)";
       outer Calendar calendar;
@@ -1055,24 +1076,24 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
         Placement(transformation(origin = {-144, 130}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-60, 75}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
       Interfaces.SignalInput interestRate "Låneränta, andel" annotation(
         Placement(transformation(origin = {240, 0}, extent = {{-18, -18}, {18, 18}}, rotation = 180), iconTransformation(origin = {100, 0}, extent = {{-9, -9}, {9, 9}}, rotation = 180)));
-      discrete output Real result(start = result0, fixed = true) "Årets resultat, mnkr";
-      discrete output Real interest(start = interest0, fixed = true) "Räntekostnader, mnkr";
-      discrete output Real operatingCash(start = 0, fixed = true) "Kassaflöde från den löpande verksamheten, mnkr";
-      discrete output Real debt(start = debt0, fixed = true) "Låneskuld vid årets slut, mnkr";
-      discrete output Real cash(start = cash0, fixed = true) "Kassa vid årets slut, mnkr";
-      discrete output Real borrowing(start = 0, fixed = true) "Nya lån under året, mnkr";
-      discrete output Real prefinancing(start = 0, fixed = true) "Lån i förväg under året, mnkr";
-      discrete output Real repayment(start = 0, fixed = true) "Amortering under året, mnkr";
-      discrete output Real cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
-      discrete output Real debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
+      discrete output Units.Money result(start = result0, fixed = true) "Årets resultat, mnkr";
+      discrete output Units.Money interest(start = interest0, fixed = true) "Räntekostnader, mnkr";
+      discrete output Units.Money operatingCash(start = 0, fixed = true) "Kassaflöde från den löpande verksamheten, mnkr";
+      discrete output Units.Money debt(start = debt0, fixed = true) "Låneskuld vid årets slut, mnkr";
+      discrete output Units.Money cash(start = cash0, fixed = true) "Kassa vid årets slut, mnkr";
+      discrete output Units.Money borrowing(start = 0, fixed = true) "Nya lån under året, mnkr";
+      discrete output Units.Money prefinancing(start = 0, fixed = true) "Lån i förväg under året, mnkr";
+      discrete output Units.Money repayment(start = 0, fixed = true) "Amortering under året, mnkr";
+      discrete output Units.Money cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
+      discrete output Units.Money debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
       discrete output Real resultShare(start = 100*result0/revenue0, fixed = true) "Årets resultat i procent av skatter och bidrag (kommunens finansiella mål)";
       discrete output Real interestShare(start = 100*interest0/revenue0, fixed = true) "Räntekostnader i procent av skatter och bidrag";
-      discrete output Real cumulativeInterest(start = 0, fixed = true) "Räntekostnader sammanlagt sedan basåret, mnkr";
+      discrete output Units.Money cumulativeInterest(start = 0, fixed = true) "Räntekostnader sammanlagt sedan basåret, mnkr";
       discrete output Real marketRate(start = averageRate0, fixed = true) "Marknadsränta för nya och omsatta lån under året, andel";
       discrete output Real rateOnOpeningDebt(start = averageRate0, fixed = true) "Årets ränta på den ingående skulden, andel";
       discrete output Real averageRate(start = averageRate0, fixed = true) "Snittränta på skulden vid årets slut, andel";
     protected
-      discrete Real financingGap(start = 0, fixed = true) "Finansieringsgap efter kassapolicy, mnkr";
+      discrete Units.Money financingGap(start = 0, fixed = true) "Finansieringsgap efter kassapolicy, mnkr";
     equation
       assert(debt >= 0, "Låneskulden får inte bli negativ");
       assert(abs(debtBalance) < 1e-7*max(1, debt), "Skuldbalansen stämmer inte");
@@ -1125,16 +1146,16 @@ marknadsräntan från <code>rateShockTime</code>.</li>
     Integer yearIndex "Antal beräknade år";
     Integer year "Kalenderår för det senast beräknade året (samma som tiden)";
     // Befolkning och verksamhet
-    Real p[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid årets slut";
-    Real population80Plus "Invånare 80 år och äldre vid årets slut";
-    Real population "Folkmängd vid årets slut";
-    Real births "Födda under året";
-    Real deaths "Döda under året";
-    Real recurringTaxAdjustment "Justering av skatt före slutavräkning, mnkr";
-    Real incomeEqualisationAdjustment "Befolkningseffekt på inkomstutjämning, mnkr";
-    Real regulationPopulationAdjustment "Befolkningseffekt på regleringsposten, mnkr";
-    Real wages "Löner, mnkr";
-    Real employerContributions "Sociala avgifter exklusive pensioner, mnkr";
+    Units.Persons p[5] "Invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid årets slut";
+    Units.Persons population80Plus "Invånare 80 år och äldre vid årets slut";
+    Units.Persons population "Folkmängd vid årets slut";
+    Units.Persons births "Födda under året";
+    Units.Persons deaths "Döda under året";
+    Units.Money recurringTaxAdjustment "Justering av skatt före slutavräkning, mnkr";
+    Units.Money incomeEqualisationAdjustment "Befolkningseffekt på inkomstutjämning, mnkr";
+    Units.Money regulationPopulationAdjustment "Befolkningseffekt på regleringsposten, mnkr";
+    Units.Money wages "Löner, mnkr";
+    Units.Money employerContributions "Sociala avgifter exklusive pensioner, mnkr";
     Real migration "Flyttnetto och restflöden under året";
     Real educationIndex "Utbildningsbehov, index (basår = 1)";
     Real careIndex "Äldreomsorgsbehov viktat efter ålder, index (basår = 1)";
@@ -1146,48 +1167,48 @@ marknadsräntan från <code>rateShockTime</code>.</li>
     Real priceIndex "Prisnivå för övriga kostnader, index (basår = 1)";
     Real revenueIndex "Taxor och avgifter, index (basår = 1)";
     Real productivity "Produktivitet, index (basår = 1)";
-    Real payroll "Lönekostnader exklusive pensioner, mnkr";
-    Real pensionExpense "Pensionskostnad, mnkr";
-    Real pensionCashPayments "Pensionsutbetalningar, mnkr";
-    Real otherOperatingExpense "Övriga verksamhetskostnader, mnkr";
-    Real operatingRevenue "Verksamhetens intäkter, mnkr";
-    Real cost "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
+    Units.Money payroll "Lönekostnader exklusive pensioner, mnkr";
+    Units.Money pensionExpense "Pensionskostnad, mnkr";
+    Units.Money pensionCashPayments "Pensionsutbetalningar, mnkr";
+    Units.Money otherOperatingExpense "Övriga verksamhetskostnader, mnkr";
+    Units.Money operatingRevenue "Verksamhetens intäkter, mnkr";
+    Units.Money cost "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
     // Intäkter, kapital och finansiering
-    Real tax "Skatteintäkter, mnkr; följer rikets skatteunderlag och kommunens folkmängd i förhållande till rikets (se komponenten Intäkter)";
-    Real grants "Generella statsbidrag och utjämning, mnkr; följer referensbanan och kommunens folkmängd i förhållande till rikets (se komponenten Intäkter)";
-    Real grantParts[6] "Bidragen per del med grantsByComponent: inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning, fastighetsavgift och övriga, mnkr";
-    Real depreciation "Avskrivningar, mnkr";
-    Real assets "Tillgångar i bruk vid årets slut, mnkr";
-    Real commissioned "Anläggningar tagna i bruk under året, mnkr";
-    Real projectPaid "Projektutbetalning, mnkr";
-    Real projectCommissioned "Driftsatt projektkapital, mnkr";
-    Real projectWorkInProgress "Projektets pågående arbeten vid årets slut, mnkr";
+    Units.Money tax "Skatteintäkter, mnkr; följer rikets skatteunderlag och kommunens folkmängd i förhållande till rikets (se komponenten Intäkter)";
+    Units.Money grants "Generella statsbidrag och utjämning, mnkr; följer referensbanan och kommunens folkmängd i förhållande till rikets (se komponenten Intäkter)";
+    Units.Money grantParts[6] "Bidragen per del med grantsByComponent: inkomstutjämning, kostnadsutjämning, regleringsbidrag, LSS-utjämning, fastighetsavgift och övriga, mnkr";
+    Units.Money depreciation "Avskrivningar, mnkr";
+    Units.Money assets "Tillgångar i bruk vid årets slut, mnkr";
+    Units.Money commissioned "Anläggningar tagna i bruk under året, mnkr";
+    Units.Money projectPaid "Projektutbetalning, mnkr";
+    Units.Money projectCommissioned "Driftsatt projektkapital, mnkr";
+    Units.Money projectWorkInProgress "Projektets pågående arbeten vid årets slut, mnkr";
     Real projectPlacesInUse "Förskoleplatser i bruk i projektet vid årets slut";
     Real missingProjectPlaces "Saknade projektplatser jämfört med öppningsplan";
-    Real workInProgress "Pågående arbeten vid årets slut, mnkr";
-    Real interest "Räntekostnader, mnkr";
-    Real result "Årets resultat, mnkr";
-    Real operatingCash "Kassaflöde från den löpande verksamheten, mnkr";
-    Real tradeReceivables "Kundfordringar vid årets slut, mnkr";
-    Real tradePayables "Leverantörsskulder vid årets slut, mnkr";
-    Real deferredGrants "Förutbetalda bidrag vid årets slut, mnkr";
-    Real workingCapitalCash "Kassaeffekt av ändrat rörelsekapital, mnkr";
-    Real borrowing "Nya lån under året, mnkr";
-    Real repayment "Amortering under året, mnkr";
-    Real debt "Låneskuld vid årets slut, mnkr";
-    Real cash "Kassa vid årets slut, mnkr";
+    Units.Money workInProgress "Pågående arbeten vid årets slut, mnkr";
+    Units.Money interest "Räntekostnader, mnkr";
+    Units.Money result "Årets resultat, mnkr";
+    Units.Money operatingCash "Kassaflöde från den löpande verksamheten, mnkr";
+    Units.Money tradeReceivables "Kundfordringar vid årets slut, mnkr";
+    Units.Money tradePayables "Leverantörsskulder vid årets slut, mnkr";
+    Units.Money deferredGrants "Förutbetalda bidrag vid årets slut, mnkr";
+    Units.Money workingCapitalCash "Kassaeffekt av ändrat rörelsekapital, mnkr";
+    Units.Money borrowing "Nya lån under året, mnkr";
+    Units.Money repayment "Amortering under året, mnkr";
+    Units.Money debt "Låneskuld vid årets slut, mnkr";
+    Units.Money cash "Kassa vid årets slut, mnkr";
     // Nyckeltal
     Real resultShare "Årets resultat i procent av skatter och bidrag (kommunens finansiella mål)";
     Real interestShare "Räntekostnader i procent av skatter och bidrag";
-    Real cumulativeInterest "Räntekostnader sammanlagt sedan basåret, mnkr";
+    Units.Money cumulativeInterest "Räntekostnader sammanlagt sedan basåret, mnkr";
     // Kontroller: ska vara noll
-    Real populationBalance "Kontroll av befolkningsbalansen, personer";
-    Real assetBalance "Kontroll av tillgångsbalansen, mnkr";
-    Real cashBalance "Kontroll av kassabalansen, mnkr";
-    Real debtBalance "Kontroll av skuldbalansen, mnkr";
-    Real annualInvestment "Årets investeringsutbetalningar, mnkr";
-    Real outstandingDeferredInvestment "Uppskjuten betalning som återstår vid årets slut, mnkr";
-    Real prefinancing "Förfinansiering genom lån under året, mnkr";
+    Units.Persons populationBalance "Kontroll av befolkningsbalansen, personer";
+    Units.Money assetBalance "Kontroll av tillgångsbalansen, mnkr";
+    Units.Money cashBalance "Kontroll av kassabalansen, mnkr";
+    Units.Money debtBalance "Kontroll av skuldbalansen, mnkr";
+    Units.Money annualInvestment "Årets investeringsutbetalningar, mnkr";
+    Units.Money outstandingDeferredInvestment "Uppskjuten betalning som återstår vid årets slut, mnkr";
+    Units.Money prefinancing "Förfinansiering genom lån under året, mnkr";
     Real annualInterestRate "Årets låneränta, andel";
     annotation(Documentation(info = "<html><p>Variablerna som en körning redovisar per år. Pengar i mnkr, befolkning i personer.</p></html>"));
   end Report;
@@ -1203,7 +1224,7 @@ marknadsräntan från <code>rateShockTime</code>.</li>
       Placement(transformation(origin = {-280, 110}, extent = {{-75, -56}, {75, 56}})));
     Components.Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces) "Verksamhet" annotation(
       Placement(transformation(origin = {-20, 110}, extent = {{-75, -56}, {75, 56}})));
-    Components.OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth) "Drift" annotation(
+    Components.OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
       Placement(transformation(origin = {250, 110}, extent = {{-75, -56}, {75, 56}})));
     Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, taxRatePath = taxRatePath, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, importedRevenueMode = importedRevenueMode, novemberPopulation0 = novemberPopulation0, openingCohorts = p0, ageIncomeWeights = ageIncomeWeights, equalisationCountyRate = equalisationCountyRate, importedComponents = importedComponents, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0, grantsByComponent = grantsByComponent, horizon = horizon, grantComponents0 = grantComponents0, incomeEqualisationPerCapita = incomeEqualisationPerCapitaPath, equalisationGuarantee = equalisationGuarantee, relativeTaxCapacity0 = incomeEqualisationCapacity, incomeEqualisationComposition = incomeEqualisationComposition, relativeTaxCapacity = relativeTaxCapacityPath, costEqualisationPerCapita = costEqualisationPerCapitaPath, regulationPerCapita = regulationPerCapitaPath, lssEqualisationPerCapita = lssEqualisationPerCapitaPath, propertyFee = propertyFeePath, otherGeneralGrants = otherGeneralGrantsPath) "Intäkter" annotation(
       Placement(transformation(origin = {-280, -110}, extent = {{-75, -56}, {75, 56}})));
@@ -1331,7 +1352,7 @@ inte. Att modellen stämmer med en referensimplementation visar att räkningen �
 
   package Continuous "Kontinuerlig tid inom året: lager och flöden med kopplingar; årets regler och bokslut följer kalendern"
     connector StockPort "Koppling till ett lager: nivån och flödet in i den anslutna komponenten"
-      Real level "Lagrets nivå, mnkr (skulder negativa)";
+      Units.Money level "Lagrets nivå, mnkr (skulder negativa)";
       flow Real rate "Flöde in i komponenten, mnkr per år";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-100, -100}, {100, 100}}, lineColor = {155, 95, 35}, fillColor = {155, 95, 35}, fillPattern = FillPattern.Solid)}));
     end StockPort;
@@ -1354,10 +1375,10 @@ efter basåret; flödena lägger då ihop årets belopp och lagren visar sin niv
 
     partial model Annualised "Ett flöde med årssumma"
       outer Clock clock;
-      parameter Real annual0 = 0 "Basårets belopp, mnkr (visas vid starttiden)";
-      input Real rate "Flöde, mnkr per år";
-      discrete output Real annual(start = annual0, fixed = true) "Årets belopp, mnkr";
-      Real accumulated(start = 0, fixed = true) "Summerat sedan årets början, mnkr";
+      parameter Units.Money annual0 = 0 "Basårets belopp, mnkr (visas vid starttiden)";
+      input Units.MoneyRate rate "Flöde, mnkr per år";
+      discrete output Units.Money annual(start = annual0, fixed = true) "Årets belopp, mnkr";
+      Units.Money accumulated(start = 0, fixed = true) "Summerat sedan årets början, mnkr";
     equation
       der(accumulated) = rate;
       when clock.yearEnd then
@@ -1368,10 +1389,10 @@ efter basåret; flödena lägger då ihop årets belopp och lagren visar sin niv
 
     model Stock "Lager: nivån ändras med summan av flödena in"
       outer Clock clock;
-      parameter Real level0 "Nivå vid basårets slut, mnkr (skulder negativa)";
+      parameter Units.Money level0 "Nivå vid basårets slut, mnkr (skulder negativa)";
       StockPort port annotation(Placement(transformation(extent = {{-10, -110}, {10, -90}}), iconTransformation(extent = {{-10, -110}, {10, -90}})));
-      Real level(start = level0, fixed = true) "Nivå, mnkr";
-      discrete output Real closing(start = level0, fixed = true) "Nivå vid årets slut, mnkr";
+      Units.Money level(start = level0, fixed = true) "Nivå, mnkr";
+      discrete output Units.Money closing(start = level0, fixed = true) "Nivå vid årets slut, mnkr";
     equation
       port.level = level;
       der(level) = port.rate;
@@ -1414,8 +1435,8 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       outer Clock clock;
       StockPort a "Sidan där de uppmätta flödena ansluter" annotation(Placement(transformation(extent = {{-110, -10}, {-90, 10}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
       StockPort b "Lagret" annotation(Placement(transformation(extent = {{90, -10}, {110, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
-      output Real rate "Flöde från a till b, mnkr per år";
-      discrete output Real annual(start = 0, fixed = true) "Årets belopp, mnkr";
+      output Units.MoneyRate rate "Flöde från a till b, mnkr per år";
+      discrete output Units.Money annual(start = 0, fixed = true) "Årets belopp, mnkr";
     protected
       Real accumulated(start = 0, fixed = true);
     equation
@@ -1467,7 +1488,7 @@ förra årsskiftet till årets slut; födda, döda och flyttningar fördelas all
 
     model Services "Verksamhetens behov och kapacitet per sektor; kapaciteten följer behovet kontinuerligt"
       parameter Real educationWeights[3] "Vikter för 0-6, 7-15 och 16-18 år i utbildningsbehovet";
-      parameter Real sectorCosts[3] "Kostnadsvikter för utbildning, äldreomsorg och övrigt, mnkr";
+      parameter Units.Money sectorCosts[3] "Kostnadsvikter för utbildning, äldreomsorg och övrigt, mnkr";
       parameter Real adjustment[3] "Andel av glappet mellan behov och kapacitet som stängs på ett år (0 = låst, 1 = direkt)";
       parameter Real fixedShare[3] "Fast andel av kapaciteten per sektor";
       parameter Real careWeights[3] = {1, 1, 1} "Äldreomsorgens kostnad per invånare 65-79, 80-89 och 90+";
@@ -1486,7 +1507,7 @@ förra årsskiftet till årets slut; födda, döda och flyttningar fördelas all
         Placement(transformation(extent = {{80, -20}, {120, 20}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
     protected
       parameter Real careBase(fixed = false) "Viktat antal äldre vid start";
-      parameter Real cohorts0[5](each fixed = false) "Invånare per åldersgrupp vid start";
+      parameter Units.Persons cohorts0[5](each fixed = false) "Invånare per åldersgrupp vid start";
     initial equation
       careBase = careWeights*cohorts.older;
       cohorts0 = cohorts.p;
@@ -1503,17 +1524,18 @@ stängs med andelen <code>adjustment</code> på ett år, som i årsmodellen.</p>
     end Services;
 
     model OperatingAccounts "Driftens kostnader och intäkter som flöden; löne- och prisnivåer sätts ett år i taget"
-      parameter Real population0 "Folkmängd vid basårets slut";
-      parameter Real payroll0 "Lönekostnader exklusive pensioner i basåret, mnkr";
-      parameter Real employerContributions0 = 0 "Sociala avgifter exklusive pensioner, mnkr";
+      parameter Units.Persons population0 "Folkmängd vid basårets slut";
+      parameter Units.Money payroll0 "Lönekostnader exklusive pensioner i basåret, mnkr";
+      parameter Units.Money employerContributions0 = 0 "Sociala avgifter exklusive pensioner, mnkr";
       parameter Integer horizon = 1;
       parameter Real employerContributionRatePath[horizon] = fill(-1, horizon) "Sociala avgifter som andel av löner";
-      parameter Real pension0 "Pensionskostnad i basåret, mnkr";
-      parameter Real otherOperatingExpense0 "Övriga verksamhetskostnader i basåret, mnkr";
-      parameter Real operatingRevenue0 "Verksamhetens intäkter i basåret, mnkr";
-      parameter Real netCostRoundingAdjustment "Avrundningsjustering, mnkr";
+      parameter Units.Money pension0 "Pensionskostnad i basåret, mnkr";
+      parameter Units.Money otherOperatingExpense0 "Övriga verksamhetskostnader i basåret, mnkr";
+      parameter Units.Money operatingRevenue0 "Verksamhetens intäkter i basåret, mnkr";
+      parameter Units.Money netCostRoundingAdjustment "Avrundningsjustering, mnkr";
       parameter Real operatingRevenueGrowth "Verksamhetsintäkternas årliga ökning, andel";
       parameter Real productivityGrowth "Årlig produktivitetsökning, andel";
+      parameter Real costDrift = 0 "Kostnadsökning utöver demografi och pris, andel per år";
       outer Components.Calendar calendar;
       outer Clock clock;
       Interfaces.CohortsInput cohorts "Befolkning just nu" annotation(
@@ -1522,36 +1544,37 @@ stängs med andelen <code>adjustment</code> på ett år, som i årsmodellen.</p>
         Placement(transformation(extent = {{-120, -20}, {-80, 20}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
       Interfaces.CostDriversInput drivers "Årets löne-, pris- och pensionsantaganden" annotation(
         Placement(transformation(extent = {{-120, -60}, {-80, -20}}), iconTransformation(extent = {{-110, -50}, {-90, -30}})));
-      output Real wagesRate "Löner, mnkr per år";
-      output Real employerContributionsRate "Sociala avgifter exklusive pensioner, mnkr per år";
-      output Real pensionExpenseRate "Pensionskostnad, mnkr per år";
-      output Real pensionCashPaymentsRate "Pensionsutbetalningar, mnkr per år";
-      output Real otherOperatingExpenseRate "Övriga verksamhetskostnader, mnkr per år";
-      output Real operatingRevenueRate "Verksamhetens intäkter, mnkr per år";
+      output Units.MoneyRate wagesRate "Löner, mnkr per år";
+      output Units.MoneyRate employerContributionsRate "Sociala avgifter exklusive pensioner, mnkr per år";
+      output Units.MoneyRate pensionExpenseRate "Pensionskostnad, mnkr per år";
+      output Units.MoneyRate pensionCashPaymentsRate "Pensionsutbetalningar, mnkr per år";
+      output Units.MoneyRate otherOperatingExpenseRate "Övriga verksamhetskostnader, mnkr per år";
+      output Units.MoneyRate operatingRevenueRate "Verksamhetens intäkter, mnkr per år";
       discrete output Real wageIndex(start = 1, fixed = true) "Lönenivå under året, index (basår = 1)";
       discrete output Real priceIndex(start = 1, fixed = true) "Prisnivå för övriga kostnader under året, index (basår = 1)";
       discrete output Real revenueIndex(start = 1, fixed = true) "Taxor och avgifter under året, index (basår = 1)";
       discrete output Real productivity(start = 1, fixed = true) "Produktivitet under året, index (basår = 1)";
-      discrete output Real wages(start = payroll0 - employerContributions0, fixed = true) "Löner, mnkr";
-      discrete output Real employerContributions(start = employerContributions0, fixed = true) "Sociala avgifter exklusive pensioner, mnkr";
-      discrete output Real payroll(start = payroll0, fixed = true) "Lönekostnader exklusive pensioner, mnkr";
-      discrete output Real pensionExpense(start = pension0, fixed = true) "Pensionskostnad, mnkr";
-      discrete output Real pensionCashPayments(start = pension0, fixed = true) "Pensionsutbetalningar, mnkr";
-      discrete output Real otherOperatingExpense(start = otherOperatingExpense0, fixed = true) "Övriga verksamhetskostnader, mnkr";
-      discrete output Real operatingRevenue(start = operatingRevenue0, fixed = true) "Verksamhetens intäkter, mnkr";
-      discrete output Real cost(start = payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment, fixed = true) "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
+      discrete output Real standard(start = 1, fixed = true) "Kostnadsnivå utöver demografi och pris under året, index (basår = 1)";
+      discrete output Units.Money wages(start = payroll0 - employerContributions0, fixed = true) "Löner, mnkr";
+      discrete output Units.Money employerContributions(start = employerContributions0, fixed = true) "Sociala avgifter exklusive pensioner, mnkr";
+      discrete output Units.Money payroll(start = payroll0, fixed = true) "Lönekostnader exklusive pensioner, mnkr";
+      discrete output Units.Money pensionExpense(start = pension0, fixed = true) "Pensionskostnad, mnkr";
+      discrete output Units.Money pensionCashPayments(start = pension0, fixed = true) "Pensionsutbetalningar, mnkr";
+      discrete output Units.Money otherOperatingExpense(start = otherOperatingExpense0, fixed = true) "Övriga verksamhetskostnader, mnkr";
+      discrete output Units.Money operatingRevenue(start = operatingRevenue0, fixed = true) "Verksamhetens intäkter, mnkr";
+      discrete output Units.Money cost(start = payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment, fixed = true) "Verksamhetens nettokostnad exklusive avskrivningar, mnkr";
     protected
-      discrete Real level[4](each start = 1, each fixed = true) "Löne-, pris-, taxe- och produktivitetsnivå för det pågående året";
+      discrete Real level[5](each start = 1, each fixed = true) "Löne-, pris-, taxe-, produktivitets- och standardnivå för det pågående året";
       Real accumulated[7](each start = 0, each fixed = true) "Löner, sociala avgifter, pensionskostnad, pensionsutbetalningar, övriga kostnader och verksamhetsintäkter sedan årets början";
     equation
       when calendar.tick then
-        level = {pre(level[1])*(1 + drivers.wageGrowth), pre(level[2])*(1 + drivers.priceGrowth), pre(level[3])*(1 + operatingRevenueGrowth), pre(level[4])*(1 + productivityGrowth)};
+        level = {pre(level[1])*(1 + drivers.wageGrowth), pre(level[2])*(1 + drivers.priceGrowth), pre(level[3])*(1 + operatingRevenueGrowth), pre(level[4])*(1 + productivityGrowth), pre(level[5])*(1 + costDrift)};
       end when;
-      wagesRate = (payroll0 - employerContributions0)*level[1]*serviceVolume/level[4];
-      employerContributionsRate = if employerContributionRatePath[calendar.pathIndex] < 0 then employerContributions0*level[1]*serviceVolume/level[4] else wagesRate*employerContributionRatePath[calendar.pathIndex];
+      wagesRate = (payroll0 - employerContributions0)*level[1]*serviceVolume*level[5]/level[4];
+      employerContributionsRate = if employerContributionRatePath[calendar.pathIndex] < 0 then employerContributions0*level[1]*serviceVolume*level[5]/level[4] else wagesRate*employerContributionRatePath[calendar.pathIndex];
       pensionExpenseRate = drivers.pensionExpense;
       pensionCashPaymentsRate = drivers.pensionCashPayments;
-      otherOperatingExpenseRate = otherOperatingExpense0*level[2]*serviceVolume;
+      otherOperatingExpenseRate = otherOperatingExpense0*level[2]*serviceVolume*level[5];
       operatingRevenueRate = operatingRevenue0*level[3]*cohorts.population/population0;
       der(accumulated) = {wagesRate, employerContributionsRate, pensionExpenseRate, pensionCashPaymentsRate, otherOperatingExpenseRate, operatingRevenueRate, netCostRoundingAdjustment};
       when clock.yearEnd then
@@ -1559,6 +1582,7 @@ stängs med andelen <code>adjustment</code> på ett år, som i årsmodellen.</p>
         priceIndex = pre(level[2]);
         revenueIndex = pre(level[3]);
         productivity = pre(level[4]);
+        standard = pre(level[5]);
         wages = accumulated[1];
         employerContributions = accumulated[2];
         payroll = accumulated[1] + accumulated[2];
@@ -1577,9 +1601,9 @@ taxenivåerna sätts när året börjar och gäller hela året, som avtal och bu
 
     model Capital "Investeringar, pågående arbeten, tillgångar i bruk och avskrivning som lager och flöden"
       parameter Integer baseYear "Basår";
-      parameter Real assets0 "Tillgångar i bruk vid basårets slut, mnkr";
-      parameter Real depreciation0 "Avskrivningar i basåret, mnkr";
-      parameter Real life "Sammanvägd avskrivningstid, år";
+      parameter Units.Money assets0 "Tillgångar i bruk vid basårets slut, mnkr";
+      parameter Units.Money depreciation0 "Avskrivningar i basåret, mnkr";
+      parameter Units.Duration life "Sammanvägd avskrivningstid, år";
       parameter Integer constructionYears(min = 0, max = 5) = 0;
       parameter Real constructionShare(min = 0, max = 1) = 0.5;
       parameter Real workInProgress0(min = 0) = 0;
@@ -1588,7 +1612,7 @@ taxenivåerna sätts när året börjar och gäller hela året, som avtal och bu
       parameter Integer projectOpeningStep = 1;
       parameter Real projectOpeningTime = baseYear + projectOpeningStep - 0.5 "Tidpunkt då projektet tas i bruk; standard mitt i öppningsåret, som årsmodellens halvårsavskrivning";
       parameter Real projectPlaces = 0;
-      parameter Real commissioningTime = 1/52 "Tid för att ta ett färdigt projekt i bruk, år";
+      parameter Units.Duration commissioningTime = 1/52 "Tid för att ta ett färdigt projekt i bruk, år";
       final parameter Real depreciationRate = -log(1 - 1/max(life, 1.000001)) "Avskrivningstakt per år; skriver av samma andel på ett år som 1/life";
       final parameter Integer releaseYears = max(1, constructionYears);
       outer Components.Calendar calendar;
@@ -1607,14 +1631,14 @@ taxenivåerna sätts när året börjar och gäller hela året, som avtal och bu
       Transfer openProject "Projektet tas i bruk" annotation(Placement(transformation(origin = {40, -50}, extent = {{-10, -10}, {10, 10}})));
       Outflow depreciation(annual0 = depreciation0) "Avskrivning" annotation(Placement(transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}})));
       discrete Boolean opened(start = false, fixed = true) "Projektet är i bruk";
-      Real regular "Investeringar utöver projektet, mnkr per år";
+      Units.MoneyRate regular "Investeringar utöver projektet, mnkr per år";
       output Real projectPlacesNow = if opened then projectPlaces else 0 "Projektplatser i bruk";
-      discrete output Real workInProgress(start = workInProgress0 + projectOpeningStock, fixed = true) "Pågående arbeten vid årets slut, mnkr";
-      discrete output Real commissioned(start = 0, fixed = true) "Anläggningar tagna i bruk under året, mnkr";
+      discrete output Units.Money workInProgress(start = workInProgress0 + projectOpeningStock, fixed = true) "Pågående arbeten vid årets slut, mnkr";
+      discrete output Units.Money commissioned(start = 0, fixed = true) "Anläggningar tagna i bruk under året, mnkr";
       discrete output Real projectPlacesInUse(start = 0, fixed = true) "Projektplatser i bruk vid årets slut";
-      discrete output Real assetBalance(start = 0, fixed = true) "Kontroll av tillgångsbalansen, mnkr; ska vara noll";
+      discrete output Units.Money assetBalance(start = 0, fixed = true) "Kontroll av tillgångsbalansen, mnkr; ska vara noll";
     protected
-      Real delayed "Investering som tas i bruk efter byggtiden, mnkr per år";
+      Units.MoneyRate delayed "Investering som tas i bruk efter byggtiden, mnkr per år";
     equation
       payProject.rate = if calendar.pathIndex == 1 then projectPayment else 0;
       regular = investment - payProject.rate;
@@ -1667,12 +1691,12 @@ nivån, med en takt som ger samma årliga andel som årsmodellens avskrivningsti
       parameter Real netCostRoundingAdjustment = 0;
       outer Components.Calendar calendar;
       outer Clock clock;
-      input Real wages "mnkr per år";
-      input Real employerContributions "mnkr per år";
-      input Real pensionExpense "mnkr per år";
-      input Real pensionCashPayments "mnkr per år";
-      input Real otherOperatingExpense "mnkr per år";
-      input Real operatingRevenue "mnkr per år";
+      input Units.MoneyRate wages "mnkr per år";
+      input Units.MoneyRate employerContributions "mnkr per år";
+      input Units.MoneyRate pensionExpense "mnkr per år";
+      input Units.MoneyRate pensionCashPayments "mnkr per år";
+      input Units.MoneyRate otherOperatingExpense "mnkr per år";
+      input Units.MoneyRate operatingRevenue "mnkr per år";
       StockPort cash "Kassan" annotation(Placement(transformation(extent = {{130, -10}, {150, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
       Stock receivables(level0 = receivables0) "Kundfordringar" annotation(Placement(transformation(origin = {40, 60}, extent = {{-20, -20}, {20, 20}})));
       Stock payables(level0 = -payables0) "Leverantörsskulder (negativ nivå)" annotation(Placement(transformation(origin = {40, -10}, extent = {{-20, -20}, {20, 20}})));
@@ -1689,12 +1713,12 @@ nivån, med en takt som ger samma årliga andel som årsmodellens avskrivningsti
       Outflow pensionCost "Pensionskostnad" annotation(Placement(transformation(origin = {0, -70}, extent = {{-10, -10}, {10, 10}})));
       Transfer pensionPayment "Pensionsutbetalning" annotation(Placement(transformation(origin = {80, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
       Transfer grantAdvance "Ändring av förutbetalda bidrag" annotation(Placement(transformation(origin = {-40, -30}, extent = {{-10, -10}, {10, 10}})));
-      discrete output Real tradeReceivables(start = receivables0, fixed = true) "Kundfordringar vid årets slut, mnkr";
-      discrete output Real tradePayables(start = payables0, fixed = true) "Leverantörsskulder vid årets slut, mnkr";
-      discrete output Real deferredGrants(start = grantAdvances0, fixed = true) "Förutbetalda bidrag vid årets slut, mnkr";
-      discrete output Real cashEffect(start = 0, fixed = true) "Kassaeffekt av ändrat rörelsekapital under året, mnkr";
+      discrete output Units.Money tradeReceivables(start = receivables0, fixed = true) "Kundfordringar vid årets slut, mnkr";
+      discrete output Units.Money tradePayables(start = payables0, fixed = true) "Leverantörsskulder vid årets slut, mnkr";
+      discrete output Units.Money deferredGrants(start = grantAdvances0, fixed = true) "Förutbetalda bidrag vid årets slut, mnkr";
+      discrete output Units.Money cashEffect(start = 0, fixed = true) "Kassaeffekt av ändrat rörelsekapital under året, mnkr";
     protected
-      discrete Real grantChange(start = 0, fixed = true) "Årets ändring av förutbetalda bidrag, mnkr per år";
+      discrete Units.MoneyRate grantChange(start = 0, fixed = true) "Årets ändring av förutbetalda bidrag, mnkr per år";
     equation
       payroll.rate = wages + employerContributions;
       rounding.rate = netCostRoundingAdjustment;
@@ -1740,19 +1764,19 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
     end Payments;
 
     model Finance "Kassa och låneskuld: skatt, bidrag, ränta och finansiering som flöden; ränta på aktuell skuld"
-      parameter Real debt0 "Låneskuld vid basårets slut, mnkr";
-      parameter Real cash0 "Kassa vid basårets slut, mnkr";
-      parameter Real interest0 "Räntekostnader i basåret, mnkr";
-      parameter Real tax0 = 0 "Skatteintäkter i basåret, mnkr";
-      parameter Real grants0 = 0 "Generella bidrag i basåret, mnkr";
-      parameter Real financialIncome "Finansiella intäkter per år, mnkr";
-      parameter Real otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
+      parameter Units.Money debt0 "Låneskuld vid basårets slut, mnkr";
+      parameter Units.Money cash0 "Kassa vid basårets slut, mnkr";
+      parameter Units.Money interest0 "Räntekostnader i basåret, mnkr";
+      parameter Units.Money tax0 = 0 "Skatteintäkter i basåret, mnkr";
+      parameter Units.Money grants0 = 0 "Generella bidrag i basåret, mnkr";
+      parameter Units.MoneyRate financialIncome "Finansiella intäkter per år, mnkr";
+      parameter Units.MoneyRate otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
       parameter Boolean liquidityPolicy = false;
       parameter Real cashReserve = 0;
-      parameter Real plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
-      parameter Real reserveRestoreTime = 1/12 "Tid för att låna upp till kassareserven när kassan understiger den, år";
+      parameter Units.Money plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
+      parameter Units.Duration reserveRestoreTime = 1/12 "Tid för att låna upp till kassareserven när kassan understiger den, år";
       parameter Real averageRate0 = 0 "Snittränta på skulden vid basårets slut, andel";
-      parameter Real rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
+      parameter Units.Duration rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
       parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
       parameter Real rateShockTime = 1e9 "Datum för höjningen som decimalår (2026,5 = 1 juli 2026)";
       outer Components.Calendar calendar;
@@ -1775,17 +1799,17 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       Transfer borrowing "Nya lån" annotation(Placement(transformation(origin = {50, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
       Transfer prefinancing "Lån i förväg" annotation(Placement(transformation(origin = {50, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
       Transfer repayment "Amortering" annotation(Placement(transformation(origin = {50, -30}, extent = {{-10, -10}, {10, 10}})));
-      Real net "Kassaflöde före finansiering, mnkr per år";
+      Units.MoneyRate net "Kassaflöde före finansiering, mnkr per år";
       Real marketRate "Marknadsränta för nya och omsatta lån just nu, andel";
-      Real fixedInterest(start = averageRate0*debt0, fixed = true) "Årlig räntekostnad på lånen med deras bundna räntor, mnkr per år";
+      Units.MoneyRate fixedInterest(start = averageRate0*debt0, fixed = true) "Årlig räntekostnad på lånen med deras bundna räntor, mnkr per år";
       Real averageRate "Snittränta på skulden just nu, andel";
-      Real reserve "Kassareserven just nu: policyns reserv plus det som lånats i förväg under första året, mnkr";
+      Units.Money reserve "Kassareserven just nu: policyns reserv plus det som lånats i förväg under första året, mnkr";
       Boolean surplusCash "Kassan över reserven finansierar underskott";
       Boolean belowReserve "Kassan under reserven fylls på först";
-      discrete output Real debtLevel(start = debt0, fixed = true) "Låneskuld vid årets slut, mnkr";
-      discrete output Real cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
-      discrete output Real debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
-      discrete output Real cumulativeInterest(start = 0, fixed = true) "Räntekostnader sammanlagt sedan basåret, mnkr";
+      discrete output Units.Money debtLevel(start = debt0, fixed = true) "Låneskuld vid årets slut, mnkr";
+      discrete output Units.Money cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
+      discrete output Units.Money debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
+      discrete output Units.Money cumulativeInterest(start = 0, fixed = true) "Räntekostnader sammanlagt sedan basåret, mnkr";
     equation
       tax.rate = taxAndGrants.tax;
       grants.rate = taxAndGrants.grants;
@@ -1845,7 +1869,7 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
     partial model Economy "Kommunens ekonomi med kontinuerlig tid inom året: samma antaganden och utdata som Annual"
       extends Assumptions;
       extends Report;
-      discrete Real equityBalance(start = 0, fixed = true) "Kontroll: förändringen av alla lager minus årets resultat, mnkr; ska vara noll";
+      discrete Units.Money equityBalance(start = 0, fixed = true) "Kontroll: förändringen av alla lager minus årets resultat, mnkr; ska vara noll";
       inner Components.Calendar calendar(horizon = horizon, baseYear = base.year - 1) "Årets regler: räknas fram när året börjar" annotation(
         Placement(transformation(origin = {-200, 140}, extent = {{-10, -10}, {10, 10}})));
       inner Clock clock(horizon = horizon, baseYear = base.year) "Bokslut vid årets slut" annotation(
@@ -1858,7 +1882,7 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
         Placement(transformation(origin = {-60, 100}, extent = {{-15, -10}, {15, 10}})));
       Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces) "Verksamhet" annotation(
         Placement(transformation(origin = {0, 100}, extent = {{-20, -15}, {20, 15}})));
-      OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth) "Drift" annotation(
+      OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
         Placement(transformation(origin = {60, 100}, extent = {{-20, -15}, {20, 15}})));
       Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, taxRatePath = taxRatePath, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, importedRevenueMode = importedRevenueMode, novemberPopulation0 = novemberPopulation0, openingCohorts = p0, ageIncomeWeights = ageIncomeWeights, equalisationCountyRate = equalisationCountyRate, importedComponents = importedComponents, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0, grantsByComponent = grantsByComponent, horizon = horizon, grantComponents0 = grantComponents0, incomeEqualisationPerCapita = incomeEqualisationPerCapitaPath, equalisationGuarantee = equalisationGuarantee, relativeTaxCapacity0 = incomeEqualisationCapacity, incomeEqualisationComposition = incomeEqualisationComposition, relativeTaxCapacity = relativeTaxCapacityPath, costEqualisationPerCapita = costEqualisationPerCapitaPath, regulationPerCapita = regulationPerCapitaPath, lssEqualisationPerCapita = lssEqualisationPerCapitaPath, propertyFee = propertyFeePath, otherGeneralGrants = otherGeneralGrantsPath) "Intäkter: räknas fram när året börjar" annotation(
         Placement(transformation(origin = {-120, 20}, extent = {{-20, -15}, {20, 15}})));
@@ -1870,11 +1894,11 @@ inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första
       Capital capital(baseYear = base.year, assets0 = assets0, depreciation0 = depreciation0, life = life, constructionYears = constructionYears, constructionShare = constructionShare, workInProgress0 = workInProgress0, projectOpeningStock = projectOpeningStock, projectPayment = projectPayment, projectOpeningStep = projectOpeningStep, projectPlaces = projectPlaces) "Kapital" annotation(
         Placement(transformation(origin = {0, -80}, extent = {{-20, -15}, {20, 15}})));
     protected
-      discrete Real demographyYear[4](each fixed = false) "Födda, döda, flyttnetto och befolkningsbalans under det avslutade året";
+      discrete Units.Persons demographyYear[4](each fixed = false) "Födda, döda, flyttnetto och befolkningsbalans under det avslutade året";
       discrete Real revenueYear[11](each fixed = false) "Skatt, bidrag, tre befolkningsjusteringar och sex bidragsdelar för det avslutade året";
       discrete Real interestRateYear(fixed = false) "Årets räntekostnad delad med årets genomsnittliga skuld, andel";
-      discrete Real netWorth(fixed = false) "Summan av alla lager vid årets slut, mnkr";
-      Real netWorthNow "Summan av alla lager just nu, mnkr";
+      discrete Units.Money netWorth(fixed = false) "Summan av alla lager vid årets slut, mnkr";
+      Units.Money netWorthNow "Summan av alla lager just nu, mnkr";
     initial equation
       demographyYear = {demography.births, demography.deaths, demography.migration, demography.populationBalance};
       revenueYear = cat(1, {revenues.tax, revenues.grants, revenues.recurringTaxAdjustment, revenues.incomeEqualisationAdjustment, revenues.regulationPopulationAdjustment}, revenues.grantParts);

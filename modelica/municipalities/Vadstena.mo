@@ -98,6 +98,54 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       careCostPerInhabitant = {18268, 169577})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.733527, 0.216743, 0.049731};
+    constant BaseYear vadstena2019 = BaseYear(
+      year = 2019,
+      cohorts = {{470, 629, 232, 3778, 2312}, {479, 653, 223, 3815, 2344}, {452, 617, 246, 3741, 2372}},
+      reportedPopulation = {7421, 7514, 7428},
+      births = {62, 54}, deaths = 110,
+      equalisationNextYear = {9133, -12, 1024, 86},
+      relativeTaxCapacity = {0.9379, 0.9266},
+      tax = 366.5, priorYearSettlement = 0.2, grants = 96.8,
+      grantComponents = {69.5, 3.1, 5.3, 0.9, 16.1},
+      payroll = 332.1, pension = 26.4, otherOperatingExpense = 218.8, operatingRevenue = 147.9, netCostRoundingAdjustment = 0,
+      depreciation = 26.4, financialIncome = 4.8, interestExpense = 3.7, otherFinancialExpense = 1.1,
+      debt = 162.1, openingDebt = 0.2, cash = 22.6, assets = 425.7, investment = 185.8, taxRate = 22.8,
+      sectorShares = {0.3925, 0.2853, 0.3222}, educationShares = {0.2779, 0.5466, 0.1755},
+      careCostPerInhabitant = {16170, 168230})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.732293, 0.218803, 0.048904};
+    constant BaseYear vadstena2018 = BaseYear(
+      year = 2018,
+      cohorts = {{447, 608, 226, 3752, 2315}, {470, 629, 232, 3778, 2312}, {479, 653, 223, 3815, 2344}},
+      reportedPopulation = {7348, 7421, 7514},
+      births = {54, 62}, deaths = 106,
+      equalisationNextYear = {9273, 410, 702, 116},
+      relativeTaxCapacity = {0.9533, 0.9379},
+      tax = 359.9, priorYearSettlement = -1.1, grants = 86.8,
+      grantComponents = {61.2, 2.4, 1.2, 2.4, 15.8},
+      payroll = 318.5, pension = 23.8, otherOperatingExpense = 207.9, operatingRevenue = 130.8, netCostRoundingAdjustment = 0,
+      depreciation = 20, financialIncome = 3.2, interestExpense = 0, otherFinancialExpense = 1.2,
+      debt = 0.2, openingDebt = 0, cash = 30.5, assets = 266.7, investment = 75.6, taxRate = 22.8,
+      sectorShares = {0.4006, 0.2808, 0.3187}, educationShares = {0.2731, 0.5525, 0.1745},
+      careCostPerInhabitant = {14750, 164484})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.732509, 0.215444, 0.052048};
+    constant BaseYear vadstena2017 = BaseYear(
+      year = 2017,
+      cohorts = {{438, 619, 243, 3787, 2320}, {447, 608, 226, 3752, 2315}, {470, 629, 232, 3778, 2312}},
+      reportedPopulation = {7407, 7348, 7421},
+      births = {48, 54}, deaths = 106,
+      equalisationNextYear = {8251, 326, 157, 327},
+      relativeTaxCapacity = {0.9457, 0.9533},
+      tax = 355, priorYearSettlement = 0.4, grants = 87.8,
+      grantComponents = {56.9, 7.8, -0.1, 4.9, 14.3},
+      payroll = 314.4, pension = 23.1, otherOperatingExpense = 211.7, operatingRevenue = 137.3, netCostRoundingAdjustment = 0,
+      depreciation = 17.3, financialIncome = 2.3, interestExpense = 0, otherFinancialExpense = 0.6,
+      debt = 0, openingDebt = 0, cash = 82.6, assets = 215.1, investment = 24.4, taxRate = 22.8,
+      sectorShares = {0.4073, 0.2721, 0.3206}, educationShares = {0.2653, 0.5198, 0.2149},
+      careCostPerInhabitant = {13594, 154171})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.727509, 0.218858, 0.053633};
 
     package SCB "Vadstenas demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;
