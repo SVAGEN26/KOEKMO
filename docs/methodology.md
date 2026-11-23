@@ -8,7 +8,10 @@ the same in Swedish.
 Scope: the municipality's own accounts (kommunen), not the group. Money is
 nominal mnkr, population is persons, time is the calendar year. The start is the
 base year's closing accounts (31 December); each step computes one year, and the
-default horizon is eight years. Every amount has its base-year value from the
+default horizon is eight years. The model is built for 8–10 years, like SKR's
+forecasts. The site allows up to 100; after SKR's last year (2033) its growth
+rates are held and Sweden's population keeps SCB's last projected growth after
+2070, so such years are arithmetic, not a forecast. Every amount has its base-year value from the
 accounts: Motala's annual reports for Motala, SCB's municipal accounts (TAB6777,
 TAB6779, TAB6782) for the others.
 

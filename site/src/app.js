@@ -331,7 +331,10 @@ function selectMunicipality(code,firstYear=null) {
   })).catch(()=>null);
   selectPeriod(firstYears.includes(firstYear)?firstYear:firstYears[0]);
 }
-function report(e){$('error').textContent=e.message;$('error').hidden=false;}
+function report(e){
+  // Five age groups with fixed residual flows can empty a group over a long horizon.
+  const hint=/tömmer en åldersgrupp/.test(e.message)?' Med fem åldersgrupper ligger restflödena fast och kan till slut tömma en grupp. Välj ett tidigare slutår eller befolkningsmodellen med ettårsåldrar.':'';
+  $('error').textContent=e.message+hint;$('error').hidden=false;}
 const sliderMarkup=([key,label,min,max,step,unit,help])=>`<div class="slider"><div class="slider-top"><label for="${key}">${label}</label><button type="button" class="info-button" data-info="${key}" aria-expanded="false" aria-controls="${key}-info" aria-label="Vad betyder ${safe(label)}?">?</button><div class="number"><input id="${key}" data-key="${key}" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}"><span>${unit}</span></div></div><p id="${key}-info" class="slider-info" hidden>${safe(explanations[key]??'')}</p><input id="${key}-range" data-key="${key}" type="range" min="${min}" max="${max}" step="${step}" aria-label="${label}, reglage"><div class="slider-help"><span>${help}</span></div></div>`;
 // Rebuilding the panel keeps the groups the user has opened.
 function makeGroups(defs){
@@ -927,10 +930,11 @@ function openMunicipality(code,firstYear=null){
 function route(){
   const query=new URLSearchParams(location.search),code=query.get('kommun');
   if(!Object.hasOwn(municipalities,code)){showStart();return;}
-  const firstYear=Number(query.get('start'));
+  const firstYear=Number(query.get('start')),endYear=Number(query.get('slut'));
   openMunicipality(code,firstYear);
   const shared=query.get('s')&&readShared(query.get('s'));
-  if(shared) applyShared(shared,b.baseYear+1,Number(query.get('slut')));
+  if(shared) applyShared(shared,b.baseYear+1,endYear);
+  else if(endYear>b.baseYear&&endYear<=b.baseYear+MAX_YEARS) selectPeriod(b.baseYear+1,{endYear});
 }
 async function boot(){try{
   $('engine').textContent='Hämtar OpenModelica…';

@@ -34,7 +34,9 @@ described under [Browser engine](#browser-engine).
 Open a municipality and start year directly, for example
 [Linköping from 2025](http://127.0.0.1:8000/?kommun=0580&start=2025). The first
 forecast year is 2025 (from the 2024 accounts) or 2026 (from the 2025 accounts);
-Motala also has a run from 2022.
+Motala also has a run from 2022. The end year can be set up to 100 years ahead, but
+the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
+(2033) its growth rates are held, so later years are arithmetic, not a forecast.
 
 ## What the site does
 
@@ -222,7 +224,7 @@ The site has one engine: OpenModelica's compiler built for WebAssembly. A worker
 loads `Kommunekonomi.mo`, the municipality's package and `MotalaBrowser.mo`, and
 runs `buildModel` with the `wasm-jit` target (about a second). Each scenario
 re-runs the compiled model with `-override`, in 20–90 ms. `MotalaBrowser` adds no
-equations: it fixes the array capacity at 30 years and makes every input a free
+equations: it fixes the array capacity at 100 years and makes every input a free
 parameter with a literal default (OpenModelica folds defaults that depend on the
 base year at compile time, out of `-override`'s reach). No cross-origin isolation
 is needed.

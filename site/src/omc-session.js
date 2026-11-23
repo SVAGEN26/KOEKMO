@@ -10,7 +10,7 @@ export const OUTPUTS=['population','population80Plus','births','deaths','migrati
   'repayment','prefinancing','outstandingDeferredInvestment','projectPaid','projectCommissioned','projectWorkInProgress',
   'projectPlacesInUse','missingProjectPlaces','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
 export const MODEL='MotalaBrowser';
-export const MAX_YEARS=30;
+export const MAX_YEARS=100;
 // Simulation time is the calendar year: MotalaBrowser starts at the 2025 accounts.
 export const BASE_YEAR=2025;
 

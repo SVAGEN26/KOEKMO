@@ -33,7 +33,7 @@ export function rateFixing(table,code,year) {
 export function validate(b,a) {
   const keys=['years','taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','productivity','migrationDelta','birthChange','interestRate','taxRate','investment','adjustment','equalisationOffset','fixedShare','populationRevenueElasticity'];
   for(const k of keys) if(!Number.isFinite(a[k])) throw Error(`Invalid assumption: ${k}`);
-  if(a.years<1||a.years>30||!Number.isInteger(a.years)) throw Error('Forecast horizon must be 1–30 years');
+  if(a.years<1||a.years>100||!Number.isInteger(a.years)) throw Error('Forecast horizon must be 1–100 years');
   for(const k of ['taxGrowth','grantGrowth','wageGrowth','priceGrowth','pensionGrowth','operatingRevenueGrowth','productivity']) if(a[k]<=-100||a[k]>100) throw Error(`Rate outside supported range: ${k}`);
   if(a.birthChange < -100||a.birthChange>100||a.interestRate<0||a.interestRate>30||a.taxRate<=0||a.taxRate>40||a.investment<0||Math.abs(a.migrationDelta)>3000) throw Error('Scenario outside supported ranges');
   for(const k of ['adjustment','equalisationOffset','fixedShare']) if(a[k]<0||a[k]>1) throw Error(`Fraction outside [0,1]: ${k}`);
@@ -175,7 +175,9 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   const national=year=>{
     const population=b.nationalPopulation?.population;
     const last=b.nationalPopulation?.extrapolateAfter;
-    const v=last&&year>last?population[last]*(population[last]/population[last-1])**(year-last):population?.[year];
+    // After the last year SCB projects (2070), or after extrapolateAfter, Sweden's population keeps its last growth.
+    const end=last??Math.max(...Object.keys(population??{}).map(Number));
+    const v=year>end?population[end]*(population[end]/population[end-1])**(year-end):population?.[year];
     if(!Number.isFinite(v))throw Error(`Rikets folkmängd saknas för ${year}`);
     return v;
   };
