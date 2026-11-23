@@ -6,15 +6,16 @@
 OpenModelica's checker (--unitChecking) knows only SI units. It says nothing about "MSEK" or "a",
 so a check of the library as written passes without checking anything. This script copies
 Kommunekonomi.mo to a temporary folder, writes the money units as an SI unit the checker knows
-("MSEK" and "SEK" as "mol", "a" as "s", "1/a" as "1/s"), and checks Motala.Annual, Motala.Continuous and
-Kommunekonomi.Continuous.Economy. Any equation the checker calls inconsistent fails the script.
+("MSEK" and "SEK" as "mol", "a" as "s", "1/a" as "1/s"), and checks Motala.Annual, Motala.Continuous,
+Motala.Examples.ContinuousCohort and Kommunekonomi.Continuous.Economy. Any equation the checker calls inconsistent fails the script.
 
 What it covers: equations between variables that declare a unit (Kommunekonomi.Units), including
 der() of a stock against its flows and the connections between components. It does not cover
 algorithm sections: the annual rules (`when calendar.tick` with `:=`), which hold most of Annual and
 the yearly steps of Continuous, are not checked. Removing `*Units.year` from the migration step in
 Components.Demography goes unnoticed. Variables without a unit are inferred by the checker, not
-checked, and SEK and MSEK are the same unit to it (the factor 1e6 is a plain number).
+checked, and SEK and MSEK are the same unit to it (the factor 1e6 is a plain number). Vector equations
+(`x = y .* z` on whole arrays) are not checked either; write an equation as a for-loop to have it checked.
 """
 import os
 import re
@@ -26,7 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
-MODELS = ('Motala.Annual', 'Motala.Continuous', 'Kommunekonomi.Continuous.Economy')
+MODELS = ('Motala.Annual', 'Motala.Continuous', 'Motala.Examples.ContinuousCohort', 'Kommunekonomi.Continuous.Economy')
 SI = {'"MSEK"': '"mol"', '"MSEK/a"': '"mol/s"', '"SEK"': '"mol"', '"a"': '"s"', '"1/a"': '"1/s"'}
 
 
