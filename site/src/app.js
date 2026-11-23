@@ -5,6 +5,7 @@ import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
 import {openScenarioReport} from './pdf-report.js';
 import {createModelView} from './model-view.js';
+import {connect as connectAi,isLoopback} from './ai-link.js';
 const $=id=>document.getElementById(id),nf=new Intl.NumberFormat('sv-SE',{maximumFractionDigits:0}),fmt=x=>nf.format(x),decimal=x=>new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}).format(x);
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const definitions=[
@@ -874,6 +875,80 @@ function renderMunicipalityEvidence(period) {
   $('municipality-package').textContent=`Hämta ${packageName}.mo ↓`;
 }
 // A scenario as a link: the municipality, period and every changed assumption and model option.
+// The page's side of the AI tools (ai-tools.js): values in the units of the controls, as the user sees them.
+let seriesData=null;
+async function settled(){await draw();while(drawing)await new Promise(r=>setTimeout(r,50));if(!$('error').hidden)throw Error($('error').textContent);}
+function assumptionList(){
+  return controlDefinitions([...definitions,...advanced]).map(([key,label,min,max,step,unit,help])=>({key,label,unit,min,max,step,
+    value:Number(((overrides[key]??b.assumptions[key])-(sourcedRate(key)?b.assumptions[key]:0)).toFixed(4)),
+    default:sourcedRate(key)?0:b.assumptions[key],changed:changedKey(key),locked:$(key).disabled,help,explanation:explanations[key]??''}));
+}
+function toOverrides(values){
+  const list=new Map(assumptionList().map(a=>[a.key,a]));
+  return Object.fromEntries(Object.entries(values).map(([k,v])=>{
+    if(list.get(k)?.locked) throw Error(`${list.get(k).label} är låst i det här läget (till exempel av SKR:s kommunvisa intäkter).`);
+    return [k,v+(sourcedRate(k)?b.assumptions[k]:0)];
+  }));
+}
+function logAi(text){const item=document.createElement('li');item.textContent=`${new Date().toLocaleTimeString('sv-SE')} ${text}`;$('ai-log').prepend(item);while($('ai-log').children.length>30)$('ai-log').lastChild.remove();}
+const aiAdapter={
+  state:()=>({municipality:activeMunicipality,name:municipalities[activeMunicipality].name,baseYear:b.baseYear,
+    forecastYears:[b.baseYear+1,b.baseYear+b.assumptions.years],
+    revenue:path?`SKR:s kommunvisa intäkter (${path.vintage})`:b.planningInputs?'SKR:s årsvisa antaganden':'Illustrativa antaganden',
+    changed:Object.fromEntries(assumptionList().filter(a=>a.changed).map(a=>[a.key,a.value]))}),
+  municipalities:()=>Object.entries(municipalities).map(([code,{name,firstYears}])=>({code,name,startYears:firstYears})),
+  assumptions:assumptionList,
+  results:()=>run?.rows??null,
+  async preview(values){
+    const [result]=await engine.simulateMany(b,history,[{overrides:{...overrides,...toOverrides(values)},revenuePath:path}]);
+    if(result.error) throw Error(result.error);
+    return result.run.rows;
+  },
+  async apply(values,reason){
+    Object.assign(overrides,toOverrides(values));$('preset').value='custom';syncControls();
+    logAi(`Ändrade ${Object.entries(values).map(([k,v])=>`${k} = ${v}`).join(', ')}${reason?`: ${reason}`:''}`);
+    await settled();return run.rows;
+  },
+  async reset(reason){overrides={};$('preset').value='base';syncControls();logAi(`Återställde antagandena${reason?`: ${reason}`:''}`);await settled();return run.rows;},
+  async select(code,startYear){
+    const url=new URL(location.href);url.search='';url.searchParams.set('kommun',code);if(startYear!==2026)url.searchParams.set('start',startYear);
+    window.history.pushState(null,'',url);openMunicipality(code,startYear);logAi(`Valde ${municipalities[code].name}, start ${startYear}`);await settled();
+  },
+  async series(name,code){
+    code=code??activeMunicipality;
+    if(['skrPlanning','skrRevenue'].includes(name)){
+      if(code!==activeMunicipality) throw Error('SKR-serierna gäller kommunen sidan visar; välj den först med select_municipality.');
+      if(name==='skrPlanning') return b.planningInputs?{municipality:code,unit:'procent per år',sources:b.planningInputs.sources,rows:b.planningInputs.rows}:{municipality:code,rows:[],note:'Planeringsunderlagen är avstängda eller saknas för perioden.'};
+      return path?{municipality:code,unit:'mnkr; befolkning 1 november året före',vintage:path.vintage,source:path.source??path.provenance?.workbook,rows:path.rows}:{municipality:code,rows:[],note:'Ingen SKR-bana för kommunen och perioden.'};
+    }
+    seriesData??=await fetch('series.json').then(r=>r.ok?r.json():Promise.reject(Error('series.json saknas')));
+    if(name in {pkv:1,nationalPopulation:1,hindcast:1}) return seriesData.national[name==='nationalPopulation'?'population':name];
+    const m=seriesData.municipalities[code];
+    if(!m) throw Error(`Okänd kommun ${code}.`);
+    return {municipality:code,name:m.name,...m[name]};
+  }
+};
+function setupAiLink(){
+  let link=null;
+  try{$('ai-address').value=localStorage.getItem('motala.ai-address')||$('ai-address').value;}catch{}
+  const status=(state,text='')=>{
+    const labels={connected:'Kopplad. Ett AI-program kan nu använda sidan via bryggan.',closed:'Frånkopplad.',error:'Fel: '};
+    $('ai-status').textContent=(labels[state]??'')+(state==='error'?text:text&&state!=='connected'?` ${text}`:'');
+    $('ai-connect').textContent=state==='connected'?'Koppla från':'Koppla';
+    if(state!=='connected') link=null;
+  };
+  $('ai-address').oninput=()=>{$('ai-remote').hidden=isLoopback($('ai-address').value);};
+  $('ai-connect').onclick=()=>{
+    if(link){link.close();return;}
+    const address=$('ai-address').value.trim();
+    try{
+      link=connectAi({address,token:$('ai-token').value.trim(),adapter:aiAdapter,onStatus:status,
+        onCall:(call,answer)=>{if(!['set_assumptions','reset_assumptions','select_municipality'].includes(call.name))logAi(`${call.name}${answer.error?` (fel: ${answer.error})`:''}`);}});
+      try{localStorage.setItem('motala.ai-address',address);}catch{}
+      $('ai-status').textContent='Kopplar …';
+    }catch(e){status('error',e.message);}
+  };
+}
 const SHARE_VERSION=1;
 function shareUrl(){
   const url=new URL(location.href);
@@ -970,6 +1045,7 @@ async function boot(){try{
     selectMunicipality(code,startYear);
   };
   setupSavedScenarios();
+  setupAiLink();
   $('explanation-year').onchange=renderExplanation;
   renderMunicipalityCards();
   $('municipality-cards').addEventListener('click',event=>{

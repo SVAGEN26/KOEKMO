@@ -1008,3 +1008,18 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
 - Webben: intäktsmodellen "Justering per delpost" och åldersviktad skatt (bara Motala har åldersprofil) är
   standard. Skillnaden mot proportionell justering är några mnkr per år. Åldersprofil för fler kommuner
   (SCB TAB744) skulle ge inkomstutjämningens åldersrespons överallt.
+
+## AI kopplad till sidan (2026-11-23)
+
+- `mcp/bridge.ts` (TypeScript, körs direkt med Node 26): lokal brygga mellan ett AI-program (MCP över HTTP på
+  127.0.0.1:8765/mcp eller stdio) och den öppna sidan. Sidan kopplar ut till bryggan med adress och token
+  ("Koppla till AI (lokalt)", av som standard). Bryggan räknar inget och gör inga utgående anrop.
+- Verktygen i `site/src/ai-tools.js`: get_state, list_municipalities, list_assumptions, preview_scenario,
+  set_assumptions, reset_assumptions, select_municipality, get_results, list_series, get_series. Sidans del i
+  `site/src/ai-link.js` och `aiAdapter` i `app.js`. Värden i reglagens enheter, samma intervall.
+- `series.json` byggs av `scripts/build.py`: bokslut 2017/2020-2025 per kommun, kostnadsökning, PKV, rikets
+  folkmängd och bakåttestets sammanfattning, med källor.
+- Prövat i headless Chrome mot Motala: anrop från en MCP-klient ändrade skattesats och investeringar på sidan.
+- Kvar: en chattruta i sidan mot en lokal modell (llama.cpp med flera), opt-in; Python-servern
+  (`scripts/mcp_server.py`) kör native OpenModelica och sessioner år för år och finns kvar.
+

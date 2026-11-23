@@ -11,6 +11,7 @@
     "prestart": "python3 scripts/build.py",
     "start": "python3 scripts/serve.py",
     "stage:omc": "python3 scripts/stage_omc.py",
-    "check:units": "python3 scripts/check_units.py"
+    "check:units": "python3 scripts/check_units.py",
+    "bridge": "node mcp/bridge.ts"
   }
 }

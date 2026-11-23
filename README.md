@@ -111,6 +111,44 @@ and 107 mnkr below in 2033.
 The new rate and inflation controls are checked with native OpenModelica
 (`-override` on `MotalaBrowser`); a run in the browser has not been checked yet.
 
+## Connect an AI to the page
+
+An AI assistant can work in the page you have open, the way it works in OMEdit:
+read the assumptions and the series, try scenarios and change the page while you
+watch. A page cannot listen for connections, so a small local bridge sits between
+the assistant (MCP) and the page:
+
+```sh
+node mcp/bridge.ts            # prints the page address, a token and http://127.0.0.1:8765/mcp
+node mcp/bridge.ts --stdio    # MCP over stdin/stdout, for clients that start the bridge
+```
+
+In the page, open "Koppla till AI (lokalt)" under the assumptions, give the
+address and token, and press Koppla. The assistant connects to
+`http://127.0.0.1:8765/mcp` with `Authorization: Bearer <token>`, or starts the
+bridge with `--stdio` (give it a fixed `--token` so you can type it in the page).
+For Claude Code:
+`claude mcp add --transport http ekonomilabb http://127.0.0.1:8765/mcp --header "Authorization: Bearer <token>"`.
+
+| Tool | What it does |
+| --- | --- |
+| `get_state`, `list_municipalities` | What the page shows; the municipalities and start years |
+| `list_assumptions` | Every control: unit, range, current value, default, and what it means |
+| `preview_scenario` | Try values without changing the page; results and the difference year by year |
+| `set_assumptions`, `reset_assumptions` | Change the page, with a reason shown in the page's log |
+| `select_municipality` | Change municipality and start year |
+| `get_results` | The page's scenario year by year |
+| `list_series`, `get_series` | Accounts per municipality (SCB), cost growth, SKR 26:28, PKV, Sweden's population, the hindcast |
+
+It is all opt-in and local. The link is off until you connect. The bridge listens
+on 127.0.0.1 only, makes no outgoing requests, holds no API keys, and needs the
+token from both the page and HTTP clients. The page sends only to the address you
+give, and warns when that is not this computer. The page runs every tool with its
+own OpenModelica build and the same validation as the controls; the assistant
+sends values, never model text. The tools are in `site/src/ai-tools.js`, the page
+side in `site/src/ai-link.js`. Chrome asks before the published https site may
+reach a port on this computer; served locally (`npm start`) it does not.
+
 ## Local MCP server: let an AI run the budget
 
 `scripts/mcp_server.py` lets an AI assistant run the model year by year over the
@@ -139,7 +177,8 @@ and refuses other browser origins.
 The prompt `budget_round` asks the assistant to act as the finance committee.
 Only parameters of `Kommunekonomi.Assumptions` can be set; no client text
 reaches the compiler. Sessions go to `build/mcp/sessions/`. A run takes 2–3
-seconds and is cached. The site is not connected to the server.
+seconds and is cached. It runs native OpenModelica, not the page; for the page,
+see [Connect an AI to the page](#connect-an-ai-to-the-page).
 
 ## The models
 
