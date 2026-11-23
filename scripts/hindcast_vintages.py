@@ -187,7 +187,9 @@ def simulate(origin, horizon, source, directory):
         raise SystemExit(f'Simulation failed for {origin}:\n{source}\n{process.stdout[-3000:]}')
     rows = {}
     for row in csv.DictReader(result.open()):
-        rows[round(float(row['time']))] = row  # the last row at each whole year is the post-event state
+        t = float(row['time'])
+        if abs(t - round(t)) < 1e-6:  # whole years only: in Continuous a row between year ends is mid-year
+            rows[round(t)] = row  # the last row at each whole year is the post-event state
     return {year: {k: float(row[k]) for k in OUTPUTS} for year, row in rows.items() if year > origin}
 
 
