@@ -205,16 +205,18 @@ up to three years, not past 2025. Outcomes are Motala's annual reports
 (`research/data/annual-ledgers.json`) and SCB for the others. Results are in
 `data/vintage-hindcast.json`; the README has a summary. One year ahead the
 model's result is off by 40 mnkr on average for Motala, the municipality's
-budget by 24. With hindsight values for prices and the tax base the tax error
-falls to about 10 mnkr, so most of the error comes from the forecasts the model
-is given and from the state's grant decisions.
+budget by 24. With hindsight values for prices and the tax base, tax and net cost
+come within about 10–20 mnkr, but the result error grows (55/90/117 mnkr after
+1/2/3 years) because the grants error remains: the state's grant decisions are
+not in the model. With SKR's assumptions the small three-year result error comes
+from errors that cancel.
 
 **Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025; results in
 `research/data/age-group-hindcast.json`.
 
-Limits: few cases (five base years, fewer at longer horizons), one
-municipality's annual reports, and SKR's own historical Motala forecasts are no
+Limits: few cases (five base years, fewer at longer horizons), at most three
+years ahead while the site runs eight, one municipality's annual reports, and SKR's own historical Motala forecasts are no
 longer available to compare with. The hindcast uses only data known at the
 base year; later outcomes are the answer, not inputs.
 

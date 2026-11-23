@@ -938,3 +938,16 @@ där sajten påverkas, i JavaScript-referensen:
 - Linköping redovisar pensioner avvikande ("med undantag av pensionsredovisningen", AR 2025 s. 61):
   resultat 594/233 mnkr 2025/2024 i rapporten mot 418/161 hos SCB. Modellen använder SCB. Ej utrett.
 - Boxholm och Åtvidaberg 2023 har resultaträkningen som bild; inget OCR-verktyg finns installerat.
+
+## Kritisk granskning av modellen (2026-11-23)
+
+Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `compare_hindcasts.py 0583`.
+- Webbens `Annual` har inga `der()`; `Continuous.Economy` är en hybrid (lager med `der()`, årliga regler för
+  skatt, bidrag, nivåer och demografi). Presentera som hybrid.
+- Bakåttestet: med facit för priser och skatteunderlag blir Motalas resultatfel större (MAE 55/90/117 mot
+  40/59/58 mnkr) på grund av bidragen. Det lilla felet efter tre år med SKR:s antaganden är fel som tar ut
+  varandra (nettokostnad −187, skatt och bidrag −175). README och metodtexten rättade 2026-11-23.
+- Kostnaden saknar ökning utöver demografi och pris; i Linköping växer intäkterna cirka en procentenhet
+  snabbare per år. För Motala med facit för priser är nettokostnadsfelet +8/+21/+5 mnkr. Ej åtgärdat.
+- Biblioteket har inga `unit=`. `life` = bokfört värde/avskrivning används på nya investeringar (i praktiken
+  degressivt). Ränta bara på ingående skuld ger fel med samma tecken (−2/−5/−9). Ej åtgärdat.

@@ -15,7 +15,8 @@ nominal mnkr. The equations are in [docs/methodology.md](docs/methodology.md).
 
 It is not a better forecast than SKR's. Run from SKR's December circulars
 2020–2024, Motala's result one year ahead is off by 40 mnkr on average; the
-municipality's own budget was off by 24. See [Accuracy](#accuracy).
+municipality's own budget was off by 24. The test covers three years at most. See
+[Accuracy](#accuracy).
 
 ## Run it
 
@@ -189,26 +190,32 @@ cell map and never runs macros; see `data/skr-motala/README.md`.
 The goal is a tool for decisions, not a better forecast than SKR's. The model is
 still checked against what happened, using only what was known at the start.
 
-`scripts/hindcast_vintages.py` starts from each set of accounts 2020–2024 with
-the assumptions in SKR's December circular of that year and runs up to three
-years, not past 2025. Motala, mean error (model minus outcome) after 1/2/3 years,
-mnkr, from `data/vintage-hindcast.json`:
+`scripts/hindcast_vintages.py` starts from each set of accounts 2020–2024 and runs
+up to three years, not past 2025. Motala, mean error (model minus outcome) after
+1/2/3 years, mnkr, with 5, 4 and 3 cases, from `data/vintage-hindcast.json`. "SKR"
+uses only the assumptions in SKR's December circular of the start year; "hindsight"
+uses the outcomes for prices and the tax base (a diagnosis, not a forecast):
 
-| Line | 1 year | 2 years | 3 years |
-| --- | --- | --- | --- |
-| Result | −38 | −47 | +18 |
-| Tax | −35 | −51 | −71 |
-| General grants | −23 | −61 | −104 |
-| Payroll | −10 | −24 | −103 |
-| Debt | +57 | +94 | +22 |
+| Line | SKR, 1/2/3 years | Hindsight, 1/2/3 years |
+| --- | --- | --- |
+| Result | −38 / −47 / +18 | −41 / −90 / −117 |
+| Tax | −35 / −51 / −71 | −10 / −11 / −14 |
+| General grants | −23 / −61 / −104 | −23 / −61 / −103 |
+| Net cost | −20 / −64 / −187 | +8 / +21 / +5 |
+| Debt | +57 / +94 / +22 | |
 
-Cases: 5, 4 and 3. One year ahead the mean absolute error of the result is
-40 mnkr; the municipality's budget had 24 and last year's outcome 59. With hindsight
-values for prices and the tax base the tax error drops to −10/−11/−14, so most
-of the error comes from the forecasts the model is given, and for grants from
-the state's decisions. SKR's own Motala forecasts from those dates are no longer
-on SKR's site, so they cannot be compared. `scripts/compare_hindcasts.py CODE`
-prints every line for `Annual` and `Continuous` side by side.
+Read it this way. With SKR's assumptions the three-year result error is small only
+because two large errors cancel: net cost too low by 187 and tax and grants too low
+by 175. With hindsight for prices and the tax base, tax and net cost come close, but
+the result gets worse, because the grants error remains: the state raised the
+general grants more than the model's 2 % a year. One year ahead the mean absolute
+error of the result is 40 mnkr; the municipality's budget had 24 and last year's
+outcome 59. Simple constant growth rates ("standard") happen to give 11 mnkr after
+three years; with three cases that is noise. SKR's own Motala forecasts from those
+dates are no longer on SKR's site, so they cannot be compared. Only Motala, Finspång
+and Mjölby are tested this way, and only up to three years, while the site runs
+eight by default. `scripts/compare_hindcasts.py CODE [skr|hindsight|prices|standard]`
+prints every line.
 
 Population: `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025 (78 cases per variant). One year ahead,
