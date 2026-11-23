@@ -25,7 +25,7 @@ Connecting a new control requires an implemented, tested mechanism behind it.
 MotalaDynamics is the continuous M2 scenario model. It implements population,
 staffing, capacity/construction, operating costs, approximate revenue and
 debt-interest feedback, with an explicit pension cash bridge. Equations and
-research provenance are in ../docs/dynamics-equations.md. run_dynamics.py runs
+research provenance are in dynamics-equations.md. run_dynamics.py runs
 the native model and exports annual integrals and end-of-year stocks with a
 source snapshot. This report is separate from the dashboard. Service parameters
 are illustrative; observed volumes, sector accounts and adjustment rates still

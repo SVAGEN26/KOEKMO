@@ -10,7 +10,7 @@ package MotalaDynamics "Continuous municipal service and finance scenarios"
 Time is in seconds; divide by yearSeconds for years after 31 December 2025.
 Simulate Examples.Base or another Examples model. Continuous is the component inside
 these scenarios, not a standalone top-level input harness. All policy assumptions are parameters or public inputs.
-See docs/dynamics-equations.md for derivation, research and parameter provenance.</p>
+See research/dynamics-equations.md for derivation, research and parameter provenance.</p>
 <p>Three service aggregates use demographic equivalents, not observed pupil/care volumes.
 Initial staffing, capacities and their sector allocations are illustrative. Annual results
 must be integrated; an end-of-year result rate is not an annual result.</p></html>"));

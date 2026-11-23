@@ -290,7 +290,7 @@ def main(argv=None):
         (output / 'source/data').mkdir()
         for name in ('baseline.json', 'history.json', 'operating-accounts-history.json', 'sources.json'):
             shutil.copy2(ROOT.parent / 'data' / name, output / 'source/data' / name)
-        shutil.copy2(ROOT.parent / 'docs/dynamics-equations.md', output / 'equations.md')
+        shutil.copy2(ROOT / 'dynamics-equations.md', output / 'equations.md')
         shutil.copy2(ROOT / 'data/dynamics-evidence.json', output / 'evidence.json')
         shutil.copy2(__file__, output / 'source/dynamics.py')
         (output / 'parameters.json').write_text(json.dumps(overrides, indent=2) + '\n')

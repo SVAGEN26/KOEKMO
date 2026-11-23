@@ -685,7 +685,7 @@ ska inte samtidigt skatta ett permanentinkomstfilter och flera nya
 bemannings-/anpassningstider. En senare koppling till Modelica måste gå genom
 faktiska kostnads- och beslutsflöden så att bokföringsbalanserna bevaras.
 
-[Forsknings- och datakatalogen](../modelica/data/municipal-economics-research.json)
+[Forsknings- och datakatalogen](data/municipal-economics-research.json)
 anger SCB:s resultaträkningar 1998–2025 och kostnads-/intäktsserier 2011–2025.
 Tabellernas metadata är verifierade; Motala-raderna är ännu inte hämtade.
 Källavstämning återstår. Träningsregeln och testprotokollet för det första
@@ -693,14 +693,14 @@ försöket är nu låsta enligt nedan.
 Det befintliga upplägget med tolv redan undersökta fall är inte ett nytt
 oberoende sluttest. Ingen ny prognospoäng eller kandidatbefordran följer av
 denna hypotes.
-Den [oberoende omprövningen](../modelica/reviews/full-goal-reconsideration-20261015.txt)
+Den [oberoende omprövningen](reviews/full-goal-reconsideration-20261015.txt)
 stöder detta som nästa avgränsade försök, men godkänner inte prognosprecision
 i förväg.
 
 ### Låst försök med rapporterad budgetsignal
 
 `research/run_budget_response.py` prövar den reducerade årsmodellen separat
-från Modelica. [Protokollet](../modelica/data/budget-response-protocol.json)
+från Modelica. [Protokollet](data/budget-response-protocol.json)
 registrerades före någon skattning mot nya Motala-data. Huvudförsöket använder
 orensade rapporterade poster konsekvent över hela serien: R=T+G, C är positiv
 nettokostnad inklusive avskrivning, F finansnetto och B=R-C+F. Här används

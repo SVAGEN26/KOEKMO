@@ -148,7 +148,7 @@ def main(argv=None):
     shutil.copy2(args.protocol, args.out/'protocol.json')
     shutil.copy2(ROOT/'run_regulation.py', args.out/'sources/run_regulation.py')
     shutil.copy2(ROOT/'README.txt', args.out/'sources/README.txt')
-    equations = ROOT.parent/'docs/dynamics-equations.md'
+    equations = ROOT/'dynamics-equations.md'
     if not equations.is_file():
         equations = ROOT.parent/'equations.md'
     shutil.copy2(equations, args.out/'equations.md')

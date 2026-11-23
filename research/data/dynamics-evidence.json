@@ -36,7 +36,7 @@
     "Finansieringspolicyn antar tillgänglig upplåning. Skatteutjämning och avskrivning är förenklade."
   ],
   "research": {
-    "equationsAndLiterature": "docs/dynamics-equations.md",
+    "equationsAndLiterature": "research/dynamics-equations.md",
     "staffingConstraints": "https://skr.se/personalochkompetensforsorjning/skrspersonalprognos.8994.html",
     "interpretation": "SKR:s underlag motiverar att personalbehov och tillgänglig personal hålls isär; det skattar inte våra lokala förändringstak."
   },

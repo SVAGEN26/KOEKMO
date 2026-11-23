@@ -1,6 +1,35 @@
 # Projektminne: Motala ekonomilabb
 
-Uppdaterat 2026-11-18.
+Uppdaterat 2026-11-23. Överst läget och det som är öppet; därunder daterade avsnitt,
+inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
+
+## Läget 2026-11-23
+
+- Mål: ett interaktivt verktyg för beslutsfattare. Bakåttestet är en kontroll, inte målet.
+- Webbplatsen kör `Kommunekonomi.Annual` i webbläsaren (OpenModelica wasm-jit) för alla 13 kommuner i
+  Östergötland, med start 2025 eller 2026. Scenarier: Högre ränta, Högre inflation, flytt- och stressbanor.
+- `Kommunekonomi.Continuous.Economy` (lager och flöden) och den lokala MCP-servern (`scripts/mcp_server.py`)
+  finns men är inte kopplade till webbplatsen.
+- Bakåttest från SKR:s decembercirkulär 2020–2024: Motalas resultat ett år fram fel med i snitt 40 mnkr,
+  budgeten 24. Största felen: löner och bidrag efter tre år.
+- Dokumentation omskriven 2026-11-23: ny README, `modelica/README.md` och `docs/methodology.md`.
+  M2-delen av README flyttad till `research/M2.md`; `docs/dynamics-equations.md` flyttad till
+  `research/dynamics-equations.md`. Lokal gren `master` (gammal historik från 2026-11-06) raderad.
+
+## Öppet
+
+1. Grenen `higher-interest` (räntebindning, Högre ränta, Högre inflation) och `docs-refresh` är inte
+   pushade eller sammanslagna. `hindcast-lines` ingår i `higher-interest`.
+2. De nya ränte- och inflationsreglagen är inte provade i webbläsaren, bara med native `-override`.
+3. Beslut för beslutsfattare: daterade beslut på webben, flagga för balanskravet och de finansiella målen,
+   förklaring av vad som ändrade resultatet. MCP-servern har beslut med motivering; webben har det inte.
+4. Var den kontinuerliga modellen och MCP-servern ska höra hemma. Webbläsaren tar ett Euler-steg per år.
+5. Lönefelet efter tre år (−103 mnkr för Motala): kontrollera löneglidning och bemanning mot
+   årsredovisningarna innan en ny mekanism läggs till.
+6. Från granskningen av länsgrenen: arbetaren laddar alla 13 kommunpaket vid start; kommunlistan finns i
+   både `municipalities.js` och `base-years.json`; Finspångs novemberbefolkning läses ur två arkiv.
+7. Underlag: delårsrapport 2026 ej funnen i diariet; historiska SKR- och budgetversioner med datum bara
+   delvis insamlade; Linköpings ränta saknar källa för 2020, 2021 och 2023.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 
@@ -517,7 +546,7 @@ Uppdaterat 2026-11-18.
 - 651 respektive 124 befolkningsvärden; 384 Kolada-rader. Alla 20 nyckeltal har värden men inte nödvändigtvis för varje år. SHA-256, kommunurval, radantal och metadata kontrollerades.
 - Återskapningsskript: `scripts/fetch_planning_data.py`. Källarkivering ändrar inte modellens indata. `scripts/prepare_planning_inputs.py` bearbetar det granskade urvalet till `data/planning-inputs.json`.
 
-## Återstår
+## Återstod (2026-11-06; se Öppet överst för dagens läge)
 
 1. Lokal SKR-intäktsimport är nu genomförd, inget manuellt kommunval återstår. Se `data/skr-motala/selection-receipt.json` och `skr-map.json`.
 2. Granska PDF:ernas innehåll och kontrollera definitioner/enheter i befolknings- och Kolada-data före modelländringar. Bevara skillnader mellan hemkommun, lägeskommun och egen regi.
@@ -527,7 +556,7 @@ Uppdaterat 2026-11-18.
 
 ## Modellens evidensläge
 
-En bokslutsserie 1998–2025 finns redan. Bättre precision än SKR är inte visad. SKR:s prisprognoser (PKV) är inte dess skatte- och bidragsmodell. Separata forskningsmodeller M1/M2 ska inte blandas ihop med webblabbets JavaScript-motor. Se README.md för historiska försök och deras begränsningar.
+En bokslutsserie 1998–2025 finns redan. Bättre precision än SKR är inte visad. SKR:s prisprognoser (PKV) är inte dess skatte- och bidragsmodell. Separata forskningsmodeller M1/M2 ska inte blandas ihop med webblabbets JavaScript-motor. Se `research/M2.md` för historiska försök och deras begränsningar.
 
 Det finns inget tillgängligt verktyg för att ändra kontoövergripande minne i denna session. Denna fil och hänvisningen i projektets AGENTS.md är det beständiga projektminnet.
 
