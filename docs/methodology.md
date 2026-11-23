@@ -33,8 +33,8 @@ Six components, connected in this order each year:
 6. **Capital** and **Finance** give depreciation, result, cash flow, debt,
    cash and interest. **WorkingCapital** is optional.
 
-`Continuous.Economy` uses the same assumptions and outputs with time continuous
-within the year; see the last section.
+`Continuous.Economy` uses the same assumptions and outputs in continuous time;
+see [Continuous time](#continuous-time).
 
 ## Demography
 
@@ -221,14 +221,90 @@ reaches cash. Inventories and land for development are not included.
 
 ## Continuous time
 
-`Kommunekonomi.Continuous.Economy` keeps the annual rules (tax and grants,
-wage and price levels, the demography) but moves money between stocks within
-the year: cash, debt, assets, work in progress, receivables, payables, pension
-provision and grant advances. Liabilities have negative levels, so the sum of
-stocks changes only by the result, which the model checks (`equityBalance`).
-Interest accrues on the current debt and costs follow the year's average
-population. Population, tax and grants are identical to `Annual`;
-`tests/test_continuous.py` checks that.
+`Kommunekonomi.Continuous.Economy` has the same assumptions, parameters and
+outputs as `Annual`. What changes gradually is a stock with flows; only rules
+that are annual by law or practice are events.
+
+Continuous:
+
+- **Money.** Cash, debt, assets in use, work in progress, receivables,
+  payables, pension provision and grant advances are stocks. Liabilities have
+  negative levels, so the sum of stocks changes only by the result
+  (`equityBalance`, checked at every year end). Interest accrues on the current
+  debt; a deficit is borrowed when it arises.
+- **Population** (`Continuous.Demography`, five groups). Births, deaths, ageing
+  and migration are flows in persons per year. Births follow the 19–64 group as
+  in `Annual`. Deaths are a death rate times the group: deaths per mean
+  population, as SCB defines it (`Data.deathRatesPerYear`). Ageing out of a
+  group is its size over its width in years (7, 9, 3, 46), the rate at which a
+  uniform group crosses its upper bound. Migration is the calibrated residual
+  plus the scenario's change, spread evenly. The residual is calibrated for these
+  flows (`Data.calibratedMigrationRates`): the even inflow that takes each group
+  from one year end to the next in the two latest years.
+- **Single years** (`Continuous.CohortDemography`, used by
+  `Motala.Examples.ContinuousCohort`). Stocks are birth cohorts by sex, labelled
+  by age at year end as in SCB's statistics. Births, deaths and migration are
+  flows; a death risk q becomes the rate −ln(1 − q), so a closed cohort survives
+  a year as in `Annual`. Age now is computed with birthdays spread evenly over
+  the year, so the age groups move smoothly.
+- **Wage, price, fee, productivity and cost-standard levels**
+  (`OperatingAccounts`) grow as `der(level) = rate · level`. A path's annual
+  growth (SKR's hourly wage and PKV) is growth of the annual mean, which belongs
+  to the turn of the year between two means. The rate is ln(1 + this year's
+  growth) on 1 January and moves linearly to ln(1 + next year's) on
+  31 December. With constant growth the annual means equal `Annual`'s exactly.
+  When growth changes, the mean grows by about
+  (last year's + 4 · this year's + next year's)/6: smoothed, not delayed. The
+  level at the base year's end assumes the base year grew like the first
+  forecast year.
+- Capacity, costs, working capital and depreciation, as before.
+
+Events:
+
+- **Year end, 31 December** (`clock`): flows are summed to the year's amounts
+  and stocks are read. Every balance is checked.
+- **1 January** (`calendar`): decisions for the year. The tax rate, the year's
+  tax and general grants and the employer contribution rate are set. Tax and
+  grants are paid as one twelfth a month, so they flow evenly and the year's
+  total is the decided amount (`revenueBalance`); with a given path (`revenueFromReference`) the
+  totals equal the path. Annual paths (investment, pensions, migration, the
+  interest-rate path) are read and flow evenly.
+- **1 November**: the population that day is the basis for next year's tax and
+  grants (revenue mode 2). `Annual` interpolates it between year ends.
+- **Single years only**: the birth cohorts are relabelled at the turn of the
+  year. No one moves; the population is unchanged.
+
+Not modelled within the year: the final tax settlement (slutavräkning) and wage
+agreements' revision dates. Outside revenue mode 2, tax and grants use the
+population at the previous year end, as in `Annual`. Pension expense and
+investment are annual amounts spread evenly.
+
+`tests/test_continuous.py` checks the balances, the tax and grant totals
+against a given path, the annual indices with constant growth, the smoothing of
+a wage jump, the population against `Annual` (within 0.1 %) and that no age
+group jumps at a year end.
+
+**Against `Annual` and outcomes.** Hindcast from SKR's December circulars
+2020–2024 (`HINDCAST_MODEL=Continuous python3 scripts/hindcast_vintages.py`,
+`scripts/compare_hindcasts.py`). Tax and grants are within 0.6 mnkr of `Annual`
+and population within 4 persons. Net cost is 2–10 mnkr lower than `Annual` and
+the result 2–10 mnkr higher (Mjölby's −3 to −11 in net cost was there before).
+What this change added is mostly payroll, up to 5 mnkr a year: the labour index
+of the 2022 and 2023 circulars jumps (7.2 % then 4.2 %; 5.7 % then 0.0 %) and is
+smoothed. Against the outcome the result's mean absolute error is lower in some
+cells and higher in others (after 1/2/3 years: Motala 34/57/59 against
+`Annual`'s 40/59/58 mnkr, Mjölby 40/70/126 against 41/65/116, Finspång
+35/75/59 against 39/76/59). Where it is lower, net cost's mean error has grown
+in the other direction (Motala year 1: −20 to −27 mnkr) while tax and grants
+stay too low: errors that cancel. It is not more accurate.
+
+**In the browser.** The staged wasm compiler builds `Motala.Continuous` and
+runs it with `euler`, `rungekutta`, `dassl`, `ida` and `gbode`; `heun`,
+`impeuler`, `trapezoid`, `rungekuttaSsc`, `imprungekutta` and `irksco` fail at
+start. `rungekutta` with 12 steps a year matches native DASSL to 0.01 mnkr and
+runs in about 30 ms after a 2 s build. The site's one Euler step a year is off
+by 40 mnkr in the result and 236 mnkr in debt after eight years. The site does
+not run it.
 
 ## Validation
 

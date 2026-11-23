@@ -151,14 +151,18 @@ seconds and is cached. The site is not connected to the server.
 | One package per municipality | `modelica/municipalities/*.mo` | Generated from SCB and Kolada |
 | M1, M2 (research) | `research/` | Nothing on the site; see [research/M2.md](research/M2.md) |
 
-`Continuous.Economy` has the same assumptions and outputs as `Annual`, with
-money moving between stocks through connectors and time continuous within the
-year. In the hindcasts of Motala, Mjölby and Finspång it gives the same tax and
-grants; the year-end population differs by up to 150 persons, net cost by −12 to
-+3 mnkr, interest by −1 to +4 and the result by −5 to +12 mnkr a year, because
-interest accrues on the current debt and capacity adjusts within the year. It is
-no more accurate. The site
-does not run it: the browser build takes one Euler step per year.
+`Continuous.Economy` has the same assumptions and outputs as `Annual` in
+continuous time. Money and population are stocks with flows: births, deaths,
+ageing and migration, costs, and wage and price levels that grow within the
+year. Only annual rules are events: the year-end close, decisions from
+1 January (tax rate, tax and grants, paid evenly), the 1 November population
+count and reading the annual paths. In the hindcasts of Motala, Mjölby and
+Finspång its tax and grants are within 0.6 mnkr of `Annual` and its population
+within 4 persons; net cost is 2–10 mnkr lower and the result 2–10 mnkr higher a
+year. It is no more accurate; see
+[docs/methodology.md](docs/methodology.md#continuous-time). The site does not
+run it. The browser's compiler can: `rungekutta` with 12 steps a year matches
+native OpenModelica to 0.01 mnkr; the site's one Euler step a year does not.
 
 In OMEdit, load `Kommunekonomi.mo` first, then `Motala.mo`, and open
 `Motala.Annual` or `Motala.Continuous` in Diagram view. Defaults are

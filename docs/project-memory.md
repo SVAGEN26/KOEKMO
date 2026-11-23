@@ -8,8 +8,8 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 - Mål: ett interaktivt verktyg för beslutsfattare. Bakåttestet är en kontroll, inte målet.
 - Webbplatsen kör `Kommunekonomi.Annual` i webbläsaren (OpenModelica wasm-jit) för alla 13 kommuner i
   Östergötland, med start 2025 eller 2026. Scenarier: Högre ränta, Högre inflation, flytt- och stressbanor.
-- `Kommunekonomi.Continuous.Economy` (lager och flöden) och den lokala MCP-servern (`scripts/mcp_server.py`)
-  finns men är inte kopplade till webbplatsen.
+- `Kommunekonomi.Continuous.Economy` (lager och flöden i kontinuerlig tid, även befolkningen; gren
+  `continuous-model`) och den lokala MCP-servern (`scripts/mcp_server.py`) finns men är inte kopplade till webbplatsen.
 - Bakåttest från SKR:s decembercirkulär 2020–2024: Motalas resultat ett år fram fel med i snitt 40 mnkr,
   budgeten 24. Med facit för priser, skatteunderlag och statens bidrag per del: resultat −18/−20/+2 mnkr.
 - Åttaårstest 2017–2019 till 2025, alla 13 kommuner (`scripts/hindcast_long.py`), med facit för priser,
@@ -30,7 +30,9 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
    antaganden med förklaringar, scenarioknappar, balanskravsflagga med valfritt resultatmål och delbar
    adress byggdes 2026-11-23 på grenen `site-navigation`. Balanskravet: kommunallagen 11 kap. 5 § och
    12 §, kontrollerat i två sammanfattningar av lagtexten på riksdagen.se och lagen.nu, inte ordagrant.)
-4. Var den kontinuerliga modellen och MCP-servern ska höra hemma. Webbläsaren tar ett Euler-steg per år.
+4. Var den kontinuerliga modellen och MCP-servern ska höra hemma. Webbläsarens kompilator klarar den kontinuerliga
+   modellen med `rungekutta` och 12 steg per år (2026-11-23); webbplatsen kör fortfarande Annual med ett Euler-steg
+   per år. Vad som krävs för att koppla in den: se avsnittet om kontinuerlig demografi längst ned.
 5. Lönefelet efter tre år (−103 mnkr för Motala): kontrollera löneglidning och bemanning mot
    årsredovisningarna innan en ny mekanism läggs till.
 6. Från granskningen av länsgrenen: arbetaren laddar alla 13 kommunpaket vid start; kommunlistan finns i
@@ -1008,3 +1010,41 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
 - Webben: intäktsmodellen "Justering per delpost" och åldersviktad skatt (bara Motala har åldersprofil) är
   standard. Skillnaden mot proportionell justering är några mnkr per år. Åldersprofil för fler kommuner
   (SCB TAB744) skulle ge inkomstutjämningens åldersrespons överallt.
+
+## Kontinuerlig demografi, nivåer och händelser (2026-11-23)
+
+- Användaren vill att modellen ska vara kontinuerlig i tiden där ekonomin är det. Gren `continuous-model` (från
+  `site-navigation`). `Continuous.Economy` har nu befolkningen som lager: `Continuous.Demography` (fem grupper;
+  födda, döda, åldrande = gruppen/bredden i år, flyttningar som flöden) och `Continuous.CohortDemography`
+  (födelseårsgrupper per kön, märkta med åldern vid årets slut; etiketten byts vid årsskiftet med `reinit`, ingen
+  flyttas). `PopulationPath` (linjär befolkning mellan årsskiften) är borttagen.
+- Dödstal för fem grupper: döda/medelfolkmängd (`Data.deathRatesPerYear`). Restflödet kalibreras för flödena
+  (`Data.calibratedMigrationRates`, exp(A) som serie). Ettårsåldrar: risk q blir dödstal -ln(1 - q).
+- Löne-, pris-, taxe-, produktivitets- och standardnivåer: `der(nivå) = takt · nivå`. Takten är ln(1 + årets ökning)
+  1 januari och går linjärt mot ln(1 + nästa års) 31 december (`CostDrivers.wageGrowthNext`, `priceGrowthNext`).
+  Konstant ökning ger exakt Annuals årsmedel; ändrad ökning blir ungefär (förra + 4 · årets + nästa)/6.
+- Kvar som händelser: bokslutet 31 december; 1 januari (skattesats, årets skatt och bidrag, sociala avgifter,
+  årsbanor); folkbokföringen 1 november (läses ur lagret, används i intäktsläge 2; `Revenue.novemberObserved`,
+  standard falskt så Annual är oförändrad). Skatt och bidrag betalas jämnt; årets summa är beslutet (`revenueBalance`, ny kontroll).
+- `hindcast_vintages.py` tog för Continuous raden närmast året (tid Y + 5/12) och rapporterade befolkningen i maj;
+  rättat till hela år. Befolkningsskillnaden "upp till 150 personer" i README var det felet.
+- Bakåttest, SKR-antaganden, Continuous minus Annual efter 1/2/3 år (före → efter ändringen). Skatt och bidrag:
+  inom 0,6 mnkr. Befolkning: 0 → högst 4 personer. Nettokostnad: Motala −0,4/−1,7/−1,7 → −6,9/−6,5/−1,9; Mjölby
+  −3,3/−7,5/−10,5 → −7,3/−10,4/−10,0; Finspång 0,0/−0,4/−1,3 → −3,2/−3,1/−1,8. Ökningen är löner: arbetskraftens
+  PKV i cirkulären 2022 och 2023 hoppar (7,2 → 4,2 %; 5,7 → 0,0 %) och jämnas ut. Resultatets medelabsfel mot utfall:
+  Motala 40/59/58 (Annual) mot 34/57/59, Mjölby 41/65/116 mot 40/70/126, Finspång 39/76/59 mot 35/75/59. Där felet
+  minskar har nettokostnadens medelfel vuxit åt andra hållet (Motala år 1: −20 → −27): fel som tar ut varandra.
+  Ingen träffsäkerhetsvinst.
+- Webbläsarens kompilator (wasm-jit, staged 2026-11-06) i Node: `Motala.Continuous` byggs på cirka 2 s och körs
+  om på 25–30 ms med `rungekutta`, 12 steg per år (Annual: 1,5 s och 30–50 ms). `euler`, `rungekutta`, `dassl`,
+  `ida` och `gbode` fungerar; `heun`, `impeuler`, `trapezoid`, `rungekuttaSsc`, `imprungekutta` och `irksco` faller
+  vid start. `rungekutta` och `dassl` med 12 steg per år ger samma värden som native DASSL inom 0,01 mnkr.
+  Euler: 1 steg/år ger resultatet 40 och skulden 236 mnkr fel efter åtta år, 12 steg 5 och 30, 52 steg 1 och 7.
+  Balanskontrollerna håller med alla lösare. `ContinuousCohort` byggs på 9 s (AnnualCohort 8 s).
+- För att koppla in den på webben behövs: ett `MotalaBrowser`-omslag och kommunvisa Browser-modeller för
+  Continuous; `buildModel(..., method="rungekutta", numberOfIntervals = 12*MAX_YEARS)` i `omc-session.js`;
+  restflödet från webben (`residualMigrationPath` i `scenario-inputs.js`) är kalibrerat för årssteg och måste
+  räknas om för flödena; JavaScript-referensen (`site/src/engine.js`) och paritetstesterna gäller bara Annual.
+- Tester 2026-11-23: `npm test` 54 JS och 54 Python (tre nya i `test_continuous.py`), `npm run validate:modelica`
+  och `npm run check:units` (nu även `Motala.Examples.ContinuousCohort`) passerar. Annuals bakåttestfiler är
+  oförändrade efter omkörning. Enhetskontrollen prövar inte vektorekvationer; demografin är skriven med for-slingor.
