@@ -93,16 +93,18 @@ Indices compound the year's growth. Productivity lowers payroll only.
 
 `costDrift` is cost growth beyond demography and prices: higher standards, new
 tasks, anything that is neither volume nor price. Its default is 0. Its history
-comes from `scripts/cost_residual.py`:
-SCB's net cost excluding depreciation (TAB6777), deflated with SKR's price index
-for municipal activities (PKV outcomes), minus the demographic need weighted like
-the model's sectors. Over 2010–2025 the mean lies between −0.1 and 0.6 % a year
-in the 13 municipalities (Linköping 0.34, Motala 0.30), with single years off by
-several percent. Norrköping's 2022 and 2023 are left out: the Ostlänken provision
-is not split between operating and financial items. The need weights are the 2025
-ones for every year. Used as a forecast, the mean up to the base year made costs
-too high eight years ahead (see Validation), so the default stays 0 and the site
-offers it as a scenario. Pension
+comes from `scripts/cost_residual.py`, measured on the basis the model applies it
+to: the drift on gross payroll and other costs that makes the model's net cost grow
+as SCB's did (TAB6777, without depreciation), with SKR's price index for municipal
+activities (PKV outcomes), the model's service volume (fixed share 0.25, half the
+gap closed each year) and operating revenue following prices and population.
+Over 2011–2025 the mean lies between −0.2 and 0.5 % a year in the 13
+municipalities (Linköping 0.32, Motala 0.22), with single years off by 2–3 % (the
+standard deviation). Norrköping's 2022 and 2023 are left out: the Ostlänken
+provision is not split between operating and financial items. The mean known in
+each base year (`knownBy`) uses the weights known then. Used as a forecast it made
+costs too high eight years ahead (see Validation), so the default stays 0 and the
+site offers it as a scenario. Pension
 expense and pension payments are separate annual paths: the expense hits the
 result, the payment hits cash. Without a source the payments equal the expense.
 The rounding term reconciles the base year's rounded components to the reported
@@ -137,16 +139,22 @@ the per-inhabitant amounts, with income equalisation following Sweden's tax
 capacity. Income equalisation follows the law (2004:773): the municipality
 receives 95 % of a tax rate times the gap between 115 % of Sweden's mean tax
 capacity and its own, and pays 85 % when above (`Data.equalisationShare`). A
-changed share in working age changes its own tax capacity.
+changed share in working age changes its own tax capacity. The hindcasts use
+this mode; the site does not, because it has SKR's path.
 
 **Imported SKR path** (`importedRevenue`), three modes:
 
 - 0, proportional: the path scaled by the model's population against SKR's;
 - 1, published: SKR's amounts as they are;
-- 2, per component: tax before settlement, income equalisation and the
-  regulation item each adjusted for population and tax rate; optional age
-  weighting of taxable income (SCB TAB744), with income equalisation taking back
-  the age effect at the county rate.
+- 2, per component (the site's default): tax before settlement, income
+  equalisation and the regulation item each adjusted for population and tax
+  rate; with age weighting of taxable income (SCB TAB744, Motala only, on by
+  default), income equalisation takes back the age effect at the county rate.
+  Cost and LSS equalisation, the property fee and other grants follow SKR's path.
+
+SKR's path is SKR's own calculation of the equalisation law for the
+municipality (Modellverktyget Skatter och bidrag). The model only adjusts it
+for its own population; it does not compute cost or LSS equalisation.
 
 `revenueFromReference` takes a path as given, for example a budget's amounts.
 
@@ -154,10 +162,12 @@ changed share in working age changes its own tax capacity.
 decided; the site's rule `holdRegulation` keeps the regulation grant per
 inhabitant after that year. A user can add a further increase, `grantIncrease`
 billion kronor more nationally for every year from the second forecast year,
-spread equally per inhabitant like the regulation grant. The site adds it to the
-reference path before the model scales it by population:
+spread equally per inhabitant like the regulation grant. The model
+(`Components.Revenue`, all revenue modes, Annual and Continuous) adds it to the
+grants after the population scaling; with grants by component it goes into the
+regulation grant:
 
-    extra_t = grantIncrease · 1e3 · (t − 1) · pop_ref,t / Sweden_{t−1}   (mnkr)
+    stateIncrease_t = grantIncrease · 1e3 · (t − 1) · pop_{t−1} / Sweden_{t−1}   (mnkr)
 
 with pop_ref,t SKR's population for the year, or without SKR's path the
 population and Sweden's population of the year before the base year. Nationally
@@ -226,6 +236,9 @@ population. Population, tax and grants are identical to `Annual`;
 asset, debt and cash balances and non-negative debt. `npm test` and
 `npm run validate:modelica` check native OpenModelica and the browser build
 against the independent JavaScript reference (`site/src/engine.js`).
+`npm run check:units` runs OpenModelica's unit checker on the library with the
+money units written as SI units it knows; see [modelica/README.md](../modelica/README.md)
+for what it covers.
 
 **Hindcast.** `scripts/hindcast_vintages.py` starts from each set of accounts
 2020–2024 with only what SKR's December circular of that year assumed, and runs
@@ -233,23 +246,31 @@ up to three years, not past 2025. Outcomes are Motala's annual reports
 (`research/data/annual-ledgers.json`) and SCB for the others. Results are in
 `data/vintage-hindcast.json`; the README has a summary. One year ahead the
 model's result is off by 40 mnkr on average for Motala, the municipality's
-budget by 24. The "components" set adds the state's grant decisions in the
-circular. With hindsight values for prices, the tax base and the state's grants per
-component (as booked), tax, grants and net cost come within about 10–20 mnkr and
-the result's mean absolute error is 43/58/39 mnkr after 1/2/3 years. With SKR's
-assumptions the small three-year result error comes from errors that cancel.
+budget by 24 and keeping the base year's result (persistence) by 59. The
+"components" set adds the state's grant decisions in the circular. With hindsight
+values for prices, the tax base and the state's grants per component (as booked),
+tax, grants and net cost come within about 10–20 mnkr, but the result's mean
+absolute error is 43/57/39 mnkr after 1/2/3 years, no better than SKR's
+assumptions (40/59/58). With SKR's assumptions the small three-year result error
+comes from errors that cancel.
 
 **Eight years.** `scripts/hindcast_long.py` runs all 13 municipalities from SCB's
 accounts of 2017, 2018 and 2019 to 2025, 39 runs, with hindsight for prices, the
-tax base, the state's grants and Sweden's population. The result has no bias at
-any horizon; its mean absolute error is 1.7–4.0 % of tax and grants. The population
-is 6 % too high after eight years (migration calibrated on 2015–2017), which raises
-costs and revenue together, and debt is a third too low because investment is held
-at the base year's level. A historical cost residual as `costDrift` makes it worse
-(net cost +11.5 % after eight years), so its default is 0. Results in
-`data/long-hindcast.json`. Base years 2017–2019 use SCB's older series
-(`scripts/fetch_history.py`); Linköping and Vadstena get a 2 % interest rate there,
-since SCB's debt gives none.
+tax base, the state's grants and Sweden's population. Norrköping 2022 and 2023
+are not scored (the Ostlänken provision). The benchmark keeps the base year's
+result as a share of tax and grants. The model's mean absolute error is 1.7, 2.2
+and 2.4 % of tax and grants in years 1–3 against 2.4, 3.7 and 3.4 for the
+benchmark; from year 4 the benchmark does as well or better (year 8: 2.2 both).
+The result is too low by 0.7–0.8 % in years 3–6. With the standard rates instead
+of hindsight the model loses to the benchmark at every horizon. The population is
+6 % too high after eight years (migration calibrated on 2015–2017), which raises
+costs and grants together, and debt is a third too low because investment is held
+at the base year's level. The historical cost residual known in the base year, as
+`costDrift`, makes it worse (net cost +12.9 % after eight years), so its default
+is 0. Results in `data/long-hindcast.json`. Base years 2017–2019 use SCB's older
+series (`scripts/fetch_history.py`); Linköping and Vadstena get a 2 % interest
+rate there, since SCB's debt gives none. Boxholm's care weights for 2017 and 2018
+are the 2019 ones.
 
 **Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025; results in
@@ -257,9 +278,11 @@ municipalities from 2022–2024 to 2025; results in
 
 Limits: against SKR's circulars few cases (five base years, fewer at longer
 horizons) and at most three years; the eight-year test has no forecasts of its time
-and so tests the structure, not a forecast. SKR's own historical Motala forecasts
-are no longer available to compare with. The hindcast uses only data known at the
-base year; later outcomes are the answer, not inputs.
+and covers one period whose runs overlap, so its cases are not independent. SKR's
+own historical forecasts for the municipalities are no longer available to compare
+with. The forecast sets use only data known at the base year (the closing accounts
+and Kolada figures of the base year, published the following spring, included);
+the hindsight and prices sets use outcomes on purpose.
 
 ## Browser engine
 

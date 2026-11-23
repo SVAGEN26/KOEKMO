@@ -1,22 +1,35 @@
 #!/usr/bin/env python3
-"""How much faster did net cost grow than prices and demographic need? The 13 municipalities in Östergötland.
+"""How much faster did costs grow than prices and the model's service volume? The 13 municipalities in Östergötland.
 
     python3 scripts/cost_residual.py
 
-Net cost excluding depreciation (SCB TAB6777: 030 minus 025) is deflated with SKR's price index
-for municipal activities (PKV, outcomes 2009-2025, table of October 2026). Demographic need is
-weighted like the model's sectors: education by ages 0-18, elderly care by 65-79 and 80+ with
-the Kolada cost weights, the rest by the whole population, with the base year's sector shares.
-The residual is real growth minus need growth: the part that is neither price nor demography
-(standard, new tasks, efficiency, accounting changes). Writes data/cost-residual.json.
+The residual is measured on the basis the model applies costDrift to. The model multiplies payroll and
+other operating expenses (gross, before operating revenue) by the cost standard; their volume follows the
+service volume: per sector, capacity closes half the gap to 0.25 + 0.75 x demand each year (the model's
+defaults adjustment 0.5 and fixedShare 0.25), and demand in year y is the need from the population at the
+end of year y-1. Operating revenue follows prices and the population, not the standard. The residual of a
+year is the costDrift that makes the model's net cost grow as the outcome did:
 
-The residual is the history of the model's costDrift (cost growth beyond demography and prices),
-whose default is 0. `knownBy` gives the mean over the years up to each base year;
-scripts/hindcast_long.py tests it as a forecast (set drift) and finds it made costs too high. The weights are the 2025 ones for every year.
+  net_y / (1 + PKV_y) = gross_{y-1} x volume growth x (1 + residual) - revenue_{y-1} x population growth
+
+  gross cost   SCB TAB6777 item 022 (verksamhetens kostnader, without depreciation); revenue item 010; net
+               cost their difference. One-offs the annual report marks as jämförelsestörande are added back
+               (annual-report-inputs.json, nonRecurring). Pension costs are in 022; the model does not
+               scale them (about 5-8 % of the item).
+  PKV          SKR's price index for municipal activities (outcomes 2009-2025, table of October 2026).
+  volume       the model's service volume from the population: education by ages 0-18, elderly care by
+               65-79 and 80+ with the Kolada cost weights, the rest by the whole population, weighted with the
+               sector shares.
+
+`knownBy` gives the mean up to each base year, computed with the care weights and sector shares known
+in that base year (the earliest there are when none are: `weightsFrom` says which). `costDrift` and the
+summaries use the 2025 weights. The earlier measure on net cost with the full need (`netResidual`) is kept
+for comparison. The model's default is 0: scripts/hindcast_long.py tests `knownBy` as a forecast (set drift).
 
 Years 2009-2016 come from data/downloads/*-history (scripts/fetch_history.py), 2017-2025 from each
 municipality's archive (data/municipalities/<code>/base-years.json); Motala's accounts from the PKV
-archive (1998-2025) and its population 2015-2025 from data/demography-inputs.json.
+archive (1998-2025) and its population 2015-2025 from data/demography-inputs.json. The residual
+needs the population two years back, so it starts in 2011.
 
 SKR's workbook is not redistributed (.gitignore). Download PKV-2610.xlsx into the archive folder from
 the URL in its manifest.json and check its SHA-256; data/cost-residual.json keeps the index values.
@@ -69,21 +82,63 @@ def population(code):
     return out
 
 
-def net_cost(code):
+FIXED_SHARE, ADJUSTMENT = 0.25, 0.5  # the model's defaults (Assumptions.fixedShare, adjustment)
+
+
+def accounts(code):
     old = jsonstat(HISTORY / 'TAB6777.json', code)
     recent = jsonstat(ARCHIVE / 'TAB6777-0583.json') if code == '0583' else \
         jsonstat(ROOT / json.loads((ROOT / f'data/municipalities/{code}/base-years.json').read_text())['archive'] / 'TAB6777.json')
-    accounts = {item: {**old.get(item, {}), **years} for item, years in recent.items()}
-    net = {y: -accounts['030'][y] + accounts['025'][y] for y in accounts['030']}  # both negative in SCB's signs
+    table = {item: {**old.get(item, {}), **years} for item, years in recent.items()}
+    net = {y: -table['030'][y] + table['025'][y] for y in table['030']}  # both negative in SCB's signs
+    gross = {y: -table['022'][y] for y in table['022']}
     # One-offs the annual report marks as jämförelsestörande (positive = lowered the cost) go back in.
     for y, item in supplement(code).get('nonRecurring', {}).items():
         net[int(y)] += item.get('operating', 0.0)
-    return net
+        gross[int(y)] += item.get('operating', 0.0)
+    return net, gross
 
 
 def supplement(code):
     path = ROOT / f'data/municipalities/{code}/annual-report-inputs.json'
     return json.loads(path.read_text()) if path.exists() else {}
+
+
+def weights(folder, year):
+    """Care weights and sector shares known in a base year, or the earliest there are."""
+    care = json.loads((folder / 'care-weights.json').read_text())['baseYears']
+    sectors = json.loads((folder / 'sector-costs.json').read_text())['years']
+    pick = lambda table: str(max((int(k) for k in table if int(k) <= year), default=min(int(k) for k in table)))
+    c, s = pick(care), pick(sectors)
+    return care[c]['costPerInhabitant'], sectors[s]['shares'], {'care': int(c), 'sectors': int(s)}
+
+
+def series(pop, net, gross, prices, care, shares):
+    def need(y):
+        p = pop[y]
+        return (sum(p[0:19]), sum(p[65:80]) * care['65-79'] + sum(p[80:]) * care['80+'], sum(p))
+    share = (shares['education'], shares['elderly'], shares['other'])
+    first = need(FIRST - 1)
+    capacity = [FIXED_SHARE + (1 - FIXED_SHARE) * 1.0] * 3  # steady state with the population at the end of FIRST - 1
+    volume = {FIRST: sum(s * c for s, c in zip(share, capacity))}
+    for y in range(FIRST + 1, 2026):
+        demand = [n / f for n, f in zip(need(y - 1), first)]
+        capacity = [c + ADJUSTMENT * (FIXED_SHARE + (1 - FIXED_SHARE) * d - c) for c, d in zip(capacity, demand)]
+        volume[y] = sum(s * c for s, c in zip(share, capacity))
+    rows = {}
+    for y in range(FIRST + 1, 2026):
+        v, q = volume[y] / volume[y - 1], sum(pop[y - 1]) / sum(pop[y - 2])
+        revenue = gross[y - 1] - net[y - 1]
+        # The model: net cost = gross x prices x volume x (1 + costDrift) - revenue x prices x population growth.
+        # The drift that gives this year's net cost in real terms:
+        drift = (net[y] / (1 + prices[y]['pkv']) + revenue * q) / (gross[y - 1] * v) - 1
+        net_real = net[y] / net[y - 1] / (1 + prices[y]['pkv']) - 1
+        a, b = need(y - 1), need(y)
+        need_growth = sum(s * (b[i] / a[i] - 1) for i, s in enumerate(share))
+        rows[y] = {'grossCost': gross[y], 'netCost': net[y], 'pkv': prices[y]['pkv'], 'volumeGrowth': v - 1,
+                   'populationGrowth': q - 1, 'residual': drift,
+                   'netRealGrowth': net_real, 'needGrowth': need_growth, 'netResidual': net_real - need_growth}
+    return rows
 
 
 def main():
@@ -93,36 +148,32 @@ def main():
               'method': __doc__.split('\n\n', 1)[1].strip(), 'pkv': prices, 'municipalities': {}}
     for code, name in NAMES.items():
         folder = ROOT / ('data' if code == '0583' else f'data/municipalities/{code}')
-        net = net_cost(code)
+        net, gross = accounts(code)
         pop = population(code)
-        care = json.loads((folder / 'care-weights.json').read_text())['baseYears']['2025']['costPerInhabitant']
-        shares = json.loads((folder / 'sector-costs.json').read_text())['years']['2025']['shares']
-
-        def need(y):
-            p = pop[y]
-            return (sum(p[0:19]), sum(p[65:80]) * care['65-79'] + sum(p[80:]) * care['80+'], sum(p))
-        rows = {}
-        for y in range(FIRST, 2026):
-            real = net[y] / net[y - 1] / (1 + prices[y]['pkv']) - 1
-            a, b = need(y - 1), need(y)
-            need_growth = sum(s * (b[i] / a[i] - 1) for i, s in enumerate((shares['education'], shares['elderly'], shares['other'])))
-            rows[y] = {'netCost': net[y], 'nominalGrowth': net[y] / net[y - 1] - 1, 'pkv': prices[y]['pkv'],
-                       'realGrowth': real, 'needGrowth': need_growth, 'residual': real - need_growth}
         # Years whose growth contains a one-off that is not split out (annual-report-inputs.json, trendExclude).
         excluded = set(supplement(code).get('trendExclude', []))
+        rows = series(pop, net, gross, prices, *weights(folder, 2025)[:2])
         residuals = {y: r['residual'] for y, r in rows.items() if y not in excluded}
         summary = {}
-        for a, b in ((FIRST, 2019), (FIRST, 2025), (2016, 2025), (2020, 2025)):
+        for a, b in ((FIRST + 1, 2019), (FIRST + 1, 2025), (2016, 2025), (2020, 2025)):
             values = [r for y, r in residuals.items() if a <= y <= b]
+            net_values = [rows[y]['netResidual'] for y in residuals if a <= y <= b]
             summary[f'{a}-{b}'] = {'mean': statistics.mean(values), 'median': statistics.median(values),
-                                   'stdev': statistics.stdev(values), 'years': len(values)}
-        known = {origin: statistics.mean(r for y, r in residuals.items() if y <= origin) for origin in range(2015, 2026)}
-        result['municipalities'][code] = {'name': name, 'excludedYears': sorted(excluded), 'costDrift': summary[f'{FIRST}-2025']['mean'],
-                                          'knownBy': known, 'years': rows, 'summary': summary}
-        print(f"{name:13s} residual {FIRST}-2025: mean {100 * summary[f'{FIRST}-2025']['mean']:5.2f} %, "
-              f"median {100 * summary[f'{FIRST}-2025']['median']:5.2f} %, sd {100 * summary[f'{FIRST}-2025']['stdev']:4.2f}; "
-              f"2016-2025 mean {100 * summary['2016-2025']['mean']:5.2f} %; real growth mean "
-              f"{100 * statistics.mean(r['realGrowth'] for r in rows.values()):4.2f} %")
+                                   'stdev': statistics.stdev(values), 'years': len(values),
+                                   'netResidualMean': statistics.mean(net_values)}
+        known, weights_from = {}, {}
+        for origin in range(2015, 2026):
+            care, shares, used = weights(folder, origin)
+            r = series(pop, net, gross, prices, care, shares)
+            known[origin] = statistics.mean(r[y]['residual'] for y in r if y <= origin and y not in excluded)
+            weights_from[origin] = used
+        period = f'{FIRST + 1}-2025'
+        result['municipalities'][code] = {'name': name, 'excludedYears': sorted(excluded), 'costDrift': summary[period]['mean'],
+                                          'knownBy': known, 'weightsFrom': weights_from, 'years': rows, 'summary': summary}
+        print(f"{name:13s} residual {period}: mean {100 * summary[period]['mean']:5.2f} %, "
+              f"median {100 * summary[period]['median']:5.2f} %, sd {100 * summary[period]['stdev']:4.2f}; "
+              f"on net cost {100 * summary[period]['netResidualMean']:5.2f} %; known by 2017/2019 "
+              f"{100 * known[2017]:5.2f}/{100 * known[2019]:5.2f} %")
     (ROOT / 'data/cost-residual.json').write_text(json.dumps(result, indent=1, ensure_ascii=False) + '\n')
 
 

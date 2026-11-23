@@ -18,8 +18,17 @@ Tiden är kalenderår. Starttiden är basåret (bokslutet 31 december), och `hor
 är åtta år, 2026–2033 från bokslut 2025. Belopp i mnkr, löpande priser. Enheterna står i typerna i
 `Kommunekonomi.Units`: `Money` (`MSEK`; i `Annual` årets belopp), `MoneyRate` (`MSEK/a`, flöden i `Continuous`),
 `MoneyPerPerson` (`SEK`, kronor per invånare), `Persons` och `Duration` (`a`). Andelar, index och tillväxttakter
-är dimensionslösa och har ingen enhet angiven, skattesatsen är i procent. OpenModelicas enhetskontroll
-(`--unitChecking`) varnar inte, men den känner inte valutan, så det är ingen fullständig kontroll. Beskrivningar är på svenska;
+är dimensionslösa och har ingen enhet angiven, skattesatsen är i procent. Ett årsbelopp blir ett flöde genom
+division med `Units.year`. Modelicas `time` räknas här i år, inte i sekunder som standarden antar.
+
+OpenModelicas enhetskontroll (`--unitChecking`) känner bara SI-enheter och säger inget om `MSEK` eller `a`.
+`npm run check:units` (`scripts/check_units.py`) skriver därför om enheterna till SI-enheter som kontrollen känner
+(`MSEK` och `SEK` som `mol`, `a` som `s`) och kontrollerar `Motala.Annual`, `Motala.Continuous` och
+`Kommunekonomi.Continuous.Economy`. Den hittade 13 motsägelser, mest årsbelopp som kopplades direkt till flöden i
+`Continuous`; de är rättade och siffrorna oförändrade. Kontrollen täcker ekvationer och kopplingar mellan variabler
+med angiven enhet, men inte algoritmavsnitt: årsreglerna (`when calendar.tick` med `:=`), där det mesta av `Annual`
+räknas, kontrolleras inte. Där är enheterna deklarerade men bara granskade för hand. Variabler utan enhet får en
+enhet härledd i stället för kontrollerad, och kronor och miljoner kronor är samma enhet för den. Beskrivningar är på svenska;
 namnen i koden är ASCII, eftersom Modelica inte tillåter å, ä eller ö i namn.
 
 Standardvärdena är illustrativa. Hämta `Scenario.mo` från sajten för att återskapa ett scenario med

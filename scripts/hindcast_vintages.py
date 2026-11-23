@@ -42,8 +42,13 @@ scripts/hindcast_long.py shows that the historical mean of that residual made ei
 forecasts worse.
 
 Sweden's population after the base year comes from the circular, not from SCB's later
-outcome. Motala's own population is the model's projection from the base year. Nothing
-after the base year is used as input.
+outcome. Motala's own population is the model's projection from the base year. In the skr,
+components, hold and standard sets the inputs are what a budget revision in the spring after the
+base year would have: the December circular, SCB's equalisation table of that December, and the
+base year's closing accounts and Kolada figures. The prices and hindsight sets are diagnostics
+that use outcomes on purpose.
+
+Benchmark: persistence, the base year's result kept, scored at every horizon.
 
 The outcome is the municipality's annual report (research/data/annual-ledgers.json).
 The budget result is from research/benchmark/municipal-budget-history.json. SKR's own
@@ -259,7 +264,14 @@ def main():
         errors = [r['budgetResult'] - r['outcome']['result'] for r in with_budget]
         summary['budget'] = {1: {'cases': len(errors), 'resultMeanAbsError': sum(map(abs, errors)) / len(errors),
                                  'resultMeanError': sum(errors) / len(errors)}}
-    summary['persistence'] = {1: {'cases': len(one), 'resultMeanAbsError': sum(abs(r['persistenceResult'] - r['outcome']['result']) for r in one) / len(one)}}
+    # Persistence: the base year's result kept, scored at every horizon like the model.
+    summary['persistence'] = {}
+    for horizon in (1, 2, 3):
+        cases = [r for r in runs if r['horizon'] == horizon and r['assumptions'] == 'skr']
+        if cases:
+            errors = [r['persistenceResult'] - r['outcome']['result'] for r in cases]
+            summary['persistence'][horizon] = {'cases': len(cases), 'resultMeanAbsError': sum(map(abs, errors)) / len(errors),
+                                               'resultMeanError': sum(errors) / len(errors)}
     out = {'municipality': CODE, 'source': f'Model {PACKAGE}.{MODEL}; outcomes from ' + ('Motala kommun annual reports (kommunen); ' if CODE == '0583' else 'SCB:s räkenskapssammandrag (kommunen); ') + \
                      
                      'SKR December circulars 20:57, 21:49, 22:54, 23:56 and 24:56',

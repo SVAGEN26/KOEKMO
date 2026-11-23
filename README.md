@@ -9,17 +9,20 @@ visitor's browser. Motala (0583) is the main case; all 13 municipalities in
 
 The model covers the municipality's own accounts (kommunen, not the group):
 population by age, service demand and capacity, payroll, pensions and other
-costs, tax and general grants (with income equalisation as the law computes it),
-investment, depreciation, working capital, cash, debt and interest. All money is
-nominal mnkr; the library declares units (`Kommunekonomi.Units`: `MSEK`, `MSEK/a`,
-`SEK` per inhabitant, years). The equations are in [docs/methodology.md](docs/methodology.md).
+costs, tax and general grants (SKR's calculation for the municipality, adjusted
+per component for the model's population), investment, depreciation, working
+capital, cash, debt and interest. All money is nominal mnkr; the library declares
+units (`Kommunekonomi.Units`: `MSEK`, `MSEK/a`, `SEK` per inhabitant, persons per
+year, years); `npm run check:units` checks the equations, not the annual rules in
+algorithm sections (see [modelica/README.md](modelica/README.md)). The equations are in [docs/methodology.md](docs/methodology.md).
 
-It is not a better forecast than SKR's. Run from SKR's December circulars
+It is not a forecast to trust over simpler ones. Run from SKR's December circulars
 2020–2024, Motala's result one year ahead is off by 40 mnkr on average; the
 municipality's own budget was off by 24. Run eight years from the 2017–2019 accounts
-of all 13 municipalities, with what actually happened to prices, the tax base and the
-state's grants, the result has no bias and a mean absolute error of 2–4 % of tax and
-grants. See [Accuracy](#accuracy).
+of all 13 municipalities, even with what actually happened to prices, the tax base
+and the state's grants, the model beats "the base year's result share kept" only in
+the first three years. Its use is to show how a decision moves the result, cash and
+debt, not to say what the result will be. See [Accuracy](#accuracy).
 
 ## Run it
 
@@ -52,8 +55,9 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   each showing how many values are changed and with its own reset. A `?` next to
   each control explains it and where the default comes from. Two controls set
   what the model otherwise leaves out: cost growth beyond demography and prices
-  (default 0; history −0.1 to 0.6 % a year) and the state's further increase of
-  the general grants beyond SKR's path, in billion kronor nationally per year. Further options:
+  (default 0; history −0.2 to 0.5 % a year) and the state's further increase of
+  the general grants beyond SKR's path, in billion kronor nationally per year
+  (`grantIncrease` in the Modelica model, so the MCP server has it too). Further options:
   a dated building project, working capital, a cash policy, SKR's revenue path
   as published, proportionally adjusted or adjusted per component, and five age
   groups (default) or single years of age.
@@ -149,9 +153,11 @@ seconds and is cached. The site is not connected to the server.
 
 `Continuous.Economy` has the same assumptions and outputs as `Annual`, with
 money moving between stocks through connectors and time continuous within the
-year. It gives the same population, tax and grants; interest is 2–5 mnkr and net
-cost 5–25 mnkr a year higher, because interest accrues on the current debt and
-costs follow the year's average population. It is no more accurate. The site
+year. In the hindcasts of Motala, Mjölby and Finspång it gives the same tax and
+grants; the year-end population differs by up to 150 persons, net cost by −12 to
++3 mnkr, interest by −1 to +4 and the result by −5 to +12 mnkr a year, because
+interest accrues on the current debt and capacity adjusts within the year. It is
+no more accurate. The site
 does not run it: the browser build takes one Euler step per year.
 
 In OMEdit, load `Kommunekonomi.mo` first, then `Motala.mo`, and open
@@ -194,7 +200,9 @@ cell map and never runs macros; see `data/skr-motala/README.md`.
 ## Accuracy
 
 The goal is a tool for decisions, not a better forecast than SKR's. The model is
-still checked against what happened, using only what was known at the start.
+still checked against what happened. The forecast sets use only what was known at
+the start; the "hindsight" sets use outcomes on purpose, to separate errors in the
+inputs from errors in the model.
 
 **Up to three years against SKR's circulars.** `scripts/hindcast_vintages.py`
 starts from each set of accounts 2020–2024 and runs up to three years, not past
@@ -215,38 +223,57 @@ grants per component (a diagnosis, not a forecast):
 Read it this way. With SKR's assumptions the three-year result error is small only
 because two large errors cancel: net cost too low by 187 and tax and grants too low
 by 175. With what actually happened to prices, the tax base and the state's grants,
-every line comes close and the result's mean absolute error is 43 / 58 / 39 mnkr:
-the model's structure holds, and the forecast errors come from the inputs. One year
-ahead the municipality's budget had 24 mnkr and last year's outcome 59. SKR's own
-Motala forecasts from those dates are no longer on SKR's site, so they cannot be
-compared. Mjölby and Finspång are tested the same way
+tax, grants and net cost come close, but the result's mean absolute error is still
+43 / 57 / 39 mnkr against 40 / 59 / 58 with SKR's assumptions. Keeping the base
+year's result ("persistence") misses by 59 / 76 / 41. One year ahead the
+municipality's budget missed by 24. Mjölby and Finspång, the same way (mean
+absolute error of the result, mnkr):
+
+| | SKR | Hindsight | Persistence |
+| --- | --- | --- | --- |
+| Motala | 40 / 59 / 58 | 43 / 57 / 39 | 59 / 76 / 41 |
+| Mjölby | 41 / 65 / 116 | 28 / 40 / 59 | 44 / 82 / 91 |
+| Finspång | 38 / 76 / 59 | 24 / 43 / 13 | 38 / 52 / 38 |
+
+Five, four and three cases per horizon, from one period, are too few to rank the
+sets. SKR's own forecasts for the municipalities from those dates are no longer on
+SKR's site, so they cannot be compared
 (`scripts/compare_hindcasts.py CODE [skr|components|hold|prices|hindsight|standard]`).
 
 **Eight years, 13 municipalities.** `scripts/hindcast_long.py` starts from SCB's
 accounts of 2017, 2018 and 2019 and runs to 2025 (8, 7 and 6 years) for all 13
 municipalities, 39 runs, against SCB's outcomes. No forecasts from those years are
-collected, so it is a test of the structure with hindsight for prices, the tax base,
-the state's grants and Sweden's population; the municipality's population, costs,
-debt and result are the model's. Mean error / mean absolute error in percent of tax
-and grants (population: percent), from `data/long-hindcast.json`:
+collected, so "hindsight" uses the outcomes for prices, the tax base, the state's
+grants and Sweden's population; the municipality's population, costs, debt and
+result are the model's. Norrköping 2022 and 2023 are left out: the outcome holds the
+Ostlänken provision (−3 281 and −80 mnkr), not split into operating and financial
+items. Mean error / mean absolute error in percent of tax and grants (population:
+percent), from `data/long-hindcast.json`:
 
-| Years ahead (cases) | 1 (39) | 2 (39) | 4 (39) | 6 (39) | 8 (13) |
-| --- | --- | --- | --- | --- | --- |
-| Result | 0.0 / 1.7 | −0.2 / 2.2 | 0.0 / 4.0 | −0.9 / 3.0 | −0.2 / 2.2 |
-| Net cost | −0.2 / 1.9 | −0.1 / 2.1 | 0.7 / 3.6 | 3.2 / 4.1 | 5.1 / 5.7 |
-| Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
-| General grants | 0.0 / 0.0 | 0.4 / 0.4 | 1.1 / 1.1 | 1.9 / 1.9 | 3.1 / 3.1 |
-| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.9 / 2.3 | 3.3 / 3.8 | 6.0 / 6.1 |
-| Debt | −0.3 / 4.9 | −1.7 / 8.7 | −1.5 / 15.5 | −12.0 / 28.4 | −32.4 / 34.0 |
+| Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Result | 0.0 / 1.7 | −0.2 / 2.2 | −0.7 / 2.4 | −0.8 / 3.3 | −0.8 / 2.9 | −0.2 / 2.2 |
+| Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
+| Result, standard rates | −1.1 / 2.5 | −3.0 / 4.1 | −4.7 / 5.1 | −4.1 / 4.9 | −2.8 / 3.4 | −3.4 / 4.0 |
+| Net cost | −0.2 / 1.9 | −0.1 / 2.1 | 1.1 / 2.3 | 1.4 / 2.9 | 3.1 / 4.0 | 5.1 / 5.7 |
+| Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.2 / 1.5 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
+| General grants | 0.0 / 0.0 | 0.4 / 0.4 | 0.8 / 0.8 | 1.1 / 1.1 | 1.9 / 1.9 | 3.1 / 3.1 |
+| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.4 / 1.7 | 1.9 / 2.4 | 3.3 / 3.7 | 6.0 / 6.1 |
+| Debt | −0.3 / 4.9 | −1.7 / 8.7 | −1.5 / 12.4 | −0.9 / 15.6 | −11.7 / 28.5 | −32.4 / 34.0 |
 
-The result has no bias at any horizon, but partly because errors cancel again: the
-population grows too fast (6 % after eight years: migration calibrated on 2015–2017,
-the years of high refugee immigration), which raises costs and revenue alike. Debt
-comes out too low because investment stays at the base year's amount. The same test
-with costs growing by each municipality's historical residual beyond demography and
-prices (set "drift") makes net cost 11.5 % too high and the result 6.9 % too low
-after eight years, so that cost growth is 0 by default and a scenario control on
-the site.
+The model with hindsight beats persistence in years 1–3 only; from year 4 the base
+year's result share does as well or better. With the model's standard rates instead
+of hindsight it is worse than persistence at every horizon. The result is too low by
+0.7–0.8 % of tax and grants in years 3–6, about a third of a usual result target of
+2 %. The population grows too fast (6 % after eight years: migration calibrated on
+2015–2017, the years of high refugee immigration), which raises costs and grants
+together, so part of the result error cancels. Debt comes out too low because
+investment stays at the base year's amount. With costs growing by each
+municipality's historical residual up to the base year (set "drift",
+`data/cost-residual.json`, measured on the model's basis), net cost is 12.9 % too
+high and the result 8.3 % too low after eight years, so cost growth is 0 by default
+and a scenario control on the site. The test covers one period, 2017–2025, and its
+runs overlap, so the 39 cases are not independent.
 
 Population: `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025 (78 cases per variant). One year ahead,

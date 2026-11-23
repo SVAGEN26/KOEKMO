@@ -43,8 +43,9 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     const imported=revenuePath?.rows.find(r=>r.year===b.baseYear+t);
     const referencePop=imported?.population??total0;
     const referenceTax=imported?.tax??annual.referenceTax;
-    const increase=(a.grantIncrease??0)*1e3*(t-1)*(imported?referencePop/national(b.baseYear+t-1):totalTax0/national0);
-    const referenceGrants=(imported?.grants??b.grants*Math.pow(1+a.grantGrowth/100,t))+increase;
+    // The state's increase beyond the reference: grantIncrease billion more nationally for every year after the first, per inhabitant.
+    const increase=(a.grantIncrease??0)*1e3*(t-1)*sum(previousP)/national(b.baseYear+t-1);
+    const referenceGrants=imported?.grants??b.grants*Math.pow(1+a.grantGrowth/100,t);
     const localPopFactor=imported?sum(previousP)/referencePop:popFactor;
     const standardTax=referenceTax*localPopFactor;
     // Working-age composition is a local deviation around the population-based reference.
@@ -52,7 +53,7 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     // An imported SKR path already reflects the population's composition.
     const deviation=imported?0:standardTax*(composition-1);
     tax=(standardTax+deviation)*a.taxRate/b.taxRate;
-    grants=referenceGrants*localPopFactor-a.equalisationOffset*deviation;
+    grants=referenceGrants*localPopFactor-a.equalisationOffset*deviation+increase;
     const interest=previousDebt*a.interestRate/100;
     const result=tax+grants-cost-depreciation+b.financialIncome-interest-b.otherFinancialExpense;
     const operatingCash=result+depreciation+pensionExpense-pensionCashPayments;

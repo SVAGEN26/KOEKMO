@@ -1,6 +1,6 @@
 {
  "source": "SKR PKV (oktober 2026) and SCB TAB6777 and BefolkningNy, CC BY 4.0; data/downloads/20261109T162833Z, data/downloads/20261123T134822Z-history and the municipal archives",
- "method": "python3 scripts/cost_residual.py\n\nNet cost excluding depreciation (SCB TAB6777: 030 minus 025) is deflated with SKR's price index\nfor municipal activities (PKV, outcomes 2009-2025, table of October 2026). Demographic need is\nweighted like the model's sectors: education by ages 0-18, elderly care by 65-79 and 80+ with\nthe Kolada cost weights, the rest by the whole population, with the base year's sector shares.\nThe residual is real growth minus need growth: the part that is neither price nor demography\n(standard, new tasks, efficiency, accounting changes). Writes data/cost-residual.json.\n\nThe mean residual is the default for the model's costDrift (cost growth beyond demography and\nprices) on the site. `knownBy` gives the mean over the years up to each base year, for hindcasts\nthat may only use what was known then. The weights are the 2025 ones for every year.\n\nYears 2009-2016 come from data/downloads/*-history (scripts/fetch_history.py), 2017-2025 from each\nmunicipality's archive (data/municipalities/<code>/base-years.json); Motala's accounts from the PKV\narchive (1998-2025) and its population 2015-2025 from data/demography-inputs.json.\n\nSKR's workbook is not redistributed (.gitignore). Download PKV-2610.xlsx into the archive folder from\nthe URL in its manifest.json and check its SHA-256; data/cost-residual.json keeps the index values.",
+ "method": "python3 scripts/cost_residual.py\n\nThe residual is measured on the basis the model applies costDrift to. The model multiplies payroll and\nother operating expenses (gross, before operating revenue) by the cost standard; their volume follows the\nservice volume: per sector, capacity closes half the gap to 0.25 + 0.75 x demand each year (the model's\ndefaults adjustment 0.5 and fixedShare 0.25), and demand in year y is the need from the population at the\nend of year y-1. Operating revenue follows prices and the population, not the standard. The residual of a\nyear is the costDrift that makes the model's net cost grow as the outcome did:\n\n  net_y / (1 + PKV_y) = gross_{y-1} x volume growth x (1 + residual) - revenue_{y-1} x population growth\n\n  gross cost   SCB TAB6777 item 022 (verksamhetens kostnader, without depreciation); revenue item 010; net\n               cost their difference. One-offs the annual report marks as jämförelsestörande are added back\n               (annual-report-inputs.json, nonRecurring). Pension costs are in 022; the model does not\n               scale them (about 5-8 % of the item).\n  PKV          SKR's price index for municipal activities (outcomes 2009-2025, table of October 2026).\n  volume       the model's service volume from the population: education by ages 0-18, elderly care by\n               65-79 and 80+ with the Kolada cost weights, the rest by the whole population, weighted with the\n               sector shares.\n\n`knownBy` gives the mean up to each base year, computed with the care weights and sector shares known\nin that base year (the earliest there are when none are: `weightsFrom` says which). `costDrift` and the\nsummaries use the 2025 weights. The earlier measure on net cost with the full need (`netResidual`) is kept\nfor comparison. The model's default is 0: scripts/hindcast_long.py tests `knownBy` as a forecast (set drift).\n\nYears 2009-2016 come from data/downloads/*-history (scripts/fetch_history.py), 2017-2025 from each\nmunicipality's archive (data/municipalities/<code>/base-years.json); Motala's accounts from the PKV\narchive (1998-2025) and its population 2015-2025 from data/demography-inputs.json. The residual\nneeds the population two years back, so it starts in 2011.\n\nSKR's workbook is not redistributed (.gitignore). Download PKV-2610.xlsx into the archive folder from\nthe URL in its manifest.json and check its SHA-256; data/cost-residual.json keeps the index values.",
  "pkv": {
   "2009": {
    "pkv": 0.0151,
@@ -92,1392 +92,2088 @@
   "0509": {
    "name": "Ödeshög",
    "excludedYears": [],
-   "costDrift": 0.003884522450606326,
+   "costDrift": 0.003781272986472158,
    "knownBy": {
-    "2015": 0.006426211171582872,
-    "2016": 0.0016197461872105184,
-    "2017": -0.005408882749703791,
-    "2018": 0.0038490929427484042,
-    "2019": 0.0033947993129136043,
-    "2020": 0.0007986950297025295,
-    "2021": 0.0024152217921463003,
-    "2022": 0.005608960484494405,
-    "2023": 0.0074360195611066215,
-    "2024": 0.0047734596189690235,
-    "2025": 0.003884522450606326
+    "2015": 0.007237534882984886,
+    "2016": 0.006663882124125812,
+    "2017": -0.00018539041647141246,
+    "2018": 0.004857503707749192,
+    "2019": 0.004008016926703273,
+    "2020": 0.0023441265804927,
+    "2021": 0.0031608041562276186,
+    "2022": 0.0053520521916056996,
+    "2023": 0.006323497357969503,
+    "2024": 0.004226102319383878,
+    "2025": 0.003781272986472158
    },
-   "years": {
-    "2010": {
-     "netCost": 222.25300000000001,
-     "nominalGrowth": 0.014483293773964068,
-     "pkv": 0.023399999999999997,
-     "realGrowth": -0.00871282609540358,
-     "needGrowth": -0.010429078744481611,
-     "residual": 0.0017162526490780306
-    },
-    "2011": {
-     "netCost": 223.725,
-     "nominalGrowth": 0.0066230827030455686,
-     "pkv": 0.0158,
-     "realGrowth": -0.009034177295682677,
-     "needGrowth": -0.007897233549029551,
-     "residual": -0.0011369437466531261
-    },
-    "2012": {
-     "netCost": 218.116,
-     "nominalGrowth": -0.025070957648899217,
-     "pkv": 0.0202,
-     "realGrowth": -0.044374590912467426,
-     "needGrowth": -0.018840634997558663,
-     "residual": -0.025533955914908764
-    },
-    "2013": {
-     "netCost": 228.89499999999998,
-     "nominalGrowth": 0.049418657961818324,
-     "pkv": 0.0261,
-     "realGrowth": 0.022725521841748586,
-     "needGrowth": -0.01411097374560267,
-     "residual": 0.036836495587351255
-    },
-    "2014": {
-     "netCost": 241.996,
-     "nominalGrowth": 0.057235850499137264,
-     "pkv": 0.0236,
-     "realGrowth": 0.03286034632584722,
-     "needGrowth": 0.003828027541244345,
-     "residual": 0.029032318784602877
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 249.50199999999998,
-     "nominalGrowth": 0.031017041603993434,
-     "pkv": 0.0262,
-     "realGrowth": 0.004694057302663701,
-     "needGrowth": 0.007050957632636742,
-     "residual": -0.0023569003299730405
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 257.96000000000004,
-     "nominalGrowth": 0.03389952785949624,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.006414351908865079,
-     "needGrowth": 0.03363339562788868,
-     "residual": -0.027219043719023603
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 253.85299999999998,
-     "nominalGrowth": -0.015921073034579236,
-     "pkv": 0.03655,
-     "realGrowth": -0.050620879875142855,
-     "needGrowth": 0.003988405432961095,
-     "residual": -0.05460928530810395
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 281.212,
-     "nominalGrowth": 0.10777497212953957,
-     "pkv": 0.0324,
-     "realGrowth": 0.07300946544899234,
-     "needGrowth": -0.004903433033373621,
-     "residual": 0.07791289848236596
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 289.205,
-     "nominalGrowth": 0.028423395872153367,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.0015460073704893773,
-     "needGrowth": 0.002239850726088972,
-     "residual": -0.0006938433555995949
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 290.472,
-     "nominalGrowth": 0.00438097543265159,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.014526704440529614,
-     "needGrowth": 0.010635643361878602,
-     "residual": -0.025162347802408218
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 304.18600000000004,
-     "nominalGrowth": 0.04721281225040652,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.020355979749702158,
-     "needGrowth": 0.00015896357067438083,
-     "residual": 0.020197016179027777
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 332.38300000000004,
-     "nominalGrowth": 0.09269657380681551,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.04186472278222042,
-     "needGrowth": -0.002069102010451244,
-     "residual": 0.04393382479267166
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 360.46299999999997,
-     "nominalGrowth": 0.08448085491736923,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.023885360314753523,
-     "needGrowth": -0.007302427242311912,
-     "residual": 0.031187787557065437
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 366.00100000000003,
-     "nominalGrowth": 0.015363574070015762,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.027975070664312596,
-     "needGrowth": 0.004527308906644753,
-     "residual": -0.03250237957095735
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 287.833,
+     "netCost": 223.725,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.003910904529180637,
+     "populationGrowth": -0.005645464809935996,
+     "residual": -0.004378385303354104,
+     "netRealGrowth": -0.009034177295682677,
+     "needGrowth": -0.007897233549029551,
+     "netResidual": -0.0011369437466531261
+    },
+    "2012": {
+     "grossCost": 286.327,
+     "netCost": 218.116,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.004790305475775969,
+     "populationGrowth": -0.007380772142316472,
+     "residual": -0.03149566020753747,
+     "netRealGrowth": -0.044374590912467426,
+     "needGrowth": -0.018840634997558663,
+     "netResidual": -0.025533955914908764
+    },
+    "2013": {
+     "grossCost": 298.451,
+     "netCost": 228.89499999999998,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.009278838058603078,
+     "populationGrowth": -0.008579599618684486,
+     "residual": 0.024776512541407447,
+     "netRealGrowth": 0.022725521841748586,
+     "needGrowth": -0.01411097374560267,
+     "netResidual": 0.036836495587351255
+    },
+    "2014": {
+     "grossCost": 314.329,
+     "netCost": 241.996,
+     "pkv": 0.0236,
+     "volumeGrowth": -0.009840333999443063,
+     "populationGrowth": -0.0050000000000000044,
+     "residual": 0.0342137483166014,
+     "netRealGrowth": 0.03286034632584722,
+     "needGrowth": 0.003828027541244345,
+     "netResidual": 0.029032318784602877
+    },
+    "2015": {
+     "grossCost": 325.472,
+     "netCost": 249.50199999999998,
+     "pkv": 0.0262,
+     "volumeGrowth": -0.003526517254270889,
+     "populationGrowth": 0.012756088132972465,
+     "residual": 0.010111457330815643,
+     "netRealGrowth": 0.004694057302663701,
+     "needGrowth": 0.007050957632636742,
+     "netResidual": -0.0023569003299730405
+    },
+    "2016": {
+     "grossCost": 369.846,
+     "netCost": 257.96000000000004,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0010700195020527659,
+     "populationGrowth": -0.0007633587786259888,
+     "residual": 0.003665026450769382,
+     "netRealGrowth": 0.006414351908865079,
+     "needGrowth": 0.03363339562788868,
+     "netResidual": -0.027219043719023603
+    },
+    "2017": {
+     "grossCost": 379.839,
+     "netCost": 253.85299999999998,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.012339935371737942,
+     "populationGrowth": 0.018907563025210017,
+     "residual": -0.041415965011352474,
+     "netRealGrowth": -0.050620879875142855,
+     "needGrowth": 0.003988405432961095,
+     "netResidual": -0.05460928530810395
+    },
+    "2018": {
+     "grossCost": 379.214,
+     "netCost": 281.212,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.007517424675599571,
+     "populationGrowth": 0.001499531396438547,
+     "residual": 0.041461751895877974,
+     "netRealGrowth": 0.07300946544899234,
+     "needGrowth": -0.004903433033373621,
+     "netResidual": 0.07791289848236596
+    },
+    "2019": {
+     "grossCost": 377.472,
+     "netCost": 289.205,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.002048392647350017,
+     "populationGrowth": -0.0037432154220475855,
+     "residual": -0.0018654819573336034,
+     "netRealGrowth": 0.0015460073704893773,
+     "needGrowth": 0.002239850726088972,
+     "netResidual": -0.0006938433555995949
+    },
+    "2020": {
+     "grossCost": 377.102,
+     "netCost": 290.472,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.0018158721690397783,
+     "populationGrowth": 0.002630095810633115,
+     "residual": -0.012308327925871332,
+     "netRealGrowth": -0.014526704440529614,
+     "needGrowth": 0.010635643361878602,
+     "netResidual": -0.025162347802408218
+    },
+    "2021": {
+     "grossCost": 389.228,
+     "netCost": 304.18600000000004,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.0048761677428375005,
+     "populationGrowth": 0.0001873711823121571,
+     "residual": 0.010793932379748794,
+     "netRealGrowth": 0.020355979749702158,
+     "needGrowth": 0.00015896357067438083,
+     "netResidual": 0.020197016179027777
+    },
+    "2022": {
+     "grossCost": 421.119,
+     "netCost": 332.38300000000004,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.0026083448728460024,
+     "populationGrowth": -0.00543274634694646,
+     "residual": 0.02884716226339168,
+     "netRealGrowth": 0.04186472278222042,
+     "needGrowth": -0.002069102010451244,
+     "netResidual": 0.04393382479267166
+    },
+    "2023": {
+     "grossCost": 450.986,
+     "netCost": 360.46299999999997,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.0011048141938625466,
+     "populationGrowth": 0.0015068751177245154,
+     "residual": 0.01804513188192991,
+     "netRealGrowth": 0.023885360314753523,
+     "needGrowth": -0.007302427242311912,
+     "netResidual": 0.031187787557065437
+    },
+    "2024": {
+     "grossCost": 460.529,
+     "netCost": 366.00100000000003,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": -0.001377632746395463,
+     "populationGrowth": -0.007146887342486363,
+     "residual": -0.022447679275728882,
+     "netRealGrowth": -0.027975070664312596,
+     "needGrowth": 0.004527308906644753,
+     "netResidual": -0.03250237957095735
+    },
+    "2025": {
+     "grossCost": 475.012,
      "netCost": 369.42,
-     "nominalGrowth": 0.009341504531408251,
      "pkv": 0.006124572694627295,
-     "realGrowth": 0.0031973494377195433,
+     "volumeGrowth": 0.002194953806679445,
+     "populationGrowth": -0.0079560522826293,
+     "residual": -0.0012841285822819959,
+     "netRealGrowth": 0.0031973494377195433,
      "needGrowth": 0.012646884512553675,
-     "residual": -0.009449535074834132
+     "netResidual": -0.009449535074834132
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.0033947993129136043,
-     "median": -0.0009153935511263605,
-     "stdev": 0.03732780303808738,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.003897000450654911,
+     "median": 0.003665026450769382,
+     "stdev": 0.027866728692151205,
+     "years": 9,
+     "netResidualMean": 0.0035813044977842236
     },
-    "2010-2025": {
-     "mean": 0.003884522450606326,
-     "median": -0.0009153935511263605,
-     "stdev": 0.03416013169361983,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.003781272986472158,
+     "median": 0.003665026450769382,
+     "stdev": 0.024002949870160117,
+     "years": 15,
+     "netResidualMean": 0.004029073770708213
     },
     "2016-2025": {
-     "mean": 0.0023595092180203987,
-     "median": -0.005071689215216863,
-     "stdev": 0.04058995410450794,
-     "years": 10
+     "mean": 0.002349142211914945,
+     "median": 0.001190448934243693,
+     "stdev": 0.024329733837688244,
+     "years": 10,
+     "netResidualMean": 0.0023595092180203987
     },
     "2020-2025": {
-     "mean": 0.004700727680094196,
-     "median": 0.005373740552096822,
-     "stdev": 0.031486630844387804,
-     "years": 6
+     "mean": 0.0036076817901980287,
+     "median": 0.004754901898733399,
+     "stdev": 0.019252244292663277,
+     "years": 6,
+     "netResidualMean": 0.004700727680094196
     }
    }
   },
   "0512": {
    "name": "Ydre",
    "excludedYears": [],
-   "costDrift": 0.0032948352026486126,
+   "costDrift": 0.004403331686369401,
    "knownBy": {
-    "2015": -0.002900747139630734,
-    "2016": 0.0006163231167331014,
-    "2017": 0.004292537629733594,
-    "2018": 0.007634996619598244,
-    "2019": 0.006212667381735201,
-    "2020": 0.007651775473619476,
-    "2021": 0.006847124550070122,
-    "2022": 0.004109432739689178,
-    "2023": 0.00726817362778837,
-    "2024": 0.007652501570537878,
-    "2025": 0.0032948352026486126
+    "2015": 0.006070441471748312,
+    "2016": 0.009299812132616178,
+    "2017": 0.011027375938718323,
+    "2018": 0.01111668449694729,
+    "2019": 0.009736118732088066,
+    "2020": 0.01041014129056278,
+    "2021": 0.008916650231504756,
+    "2022": 0.006787432896581791,
+    "2023": 0.007894276432115137,
+    "2024": 0.007920194317671405,
+    "2025": 0.004403331686369401
    },
-   "years": {
-    "2010": {
-     "netCost": 152.47199999999998,
-     "nominalGrowth": -0.014331982235323837,
-     "pkv": 0.023399999999999997,
-     "realGrowth": -0.03686924197315211,
-     "needGrowth": -0.009465167349588851,
-     "residual": -0.02740407462356326
-    },
-    "2011": {
-     "netCost": 155.659,
-     "nominalGrowth": 0.02090219843643437,
-     "pkv": 0.0158,
-     "realGrowth": 0.005022837602317809,
-     "needGrowth": -0.011959734882785698,
-     "residual": 0.016982572485103507
-    },
-    "2012": {
-     "netCost": 157.666,
-     "nominalGrowth": 0.012893568634001262,
-     "pkv": 0.0202,
-     "realGrowth": -0.00716176373848143,
-     "needGrowth": -0.021576842335063712,
-     "residual": 0.014415078596582281
-    },
-    "2013": {
-     "netCost": 165.88400000000001,
-     "nominalGrowth": 0.05212284195704853,
-     "pkv": 0.0261,
-     "realGrowth": 0.02536092189557393,
-     "needGrowth": 0.004750087144168576,
-     "residual": 0.020610834751405353
-    },
-    "2014": {
-     "netCost": 170.226,
-     "nominalGrowth": 0.026174917412167487,
-     "pkv": 0.0236,
-     "realGrowth": 0.0025155504222034164,
-     "needGrowth": 0.027393911706980502,
-     "residual": -0.024878361284777085
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 172.129,
-     "nominalGrowth": 0.0111792558128605,
-     "pkv": 0.0262,
-     "realGrowth": -0.014637248282147297,
-     "needGrowth": 0.0024932844803879,
-     "residual": -0.0171305327625352
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 183.999,
-     "nominalGrowth": 0.06895990797599483,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.040542687188867,
-     "needGrowth": 0.018823942533950887,
-     "residual": 0.021718744654916113
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 199.593,
-     "nominalGrowth": 0.08475046060032931,
-     "pkv": 0.03655,
-     "realGrowth": 0.046500854372996114,
-     "needGrowth": 0.016474815152259067,
-     "residual": 0.030026039220737048
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 211.202,
-     "nominalGrowth": 0.05816336244257059,
-     "pkv": 0.0324,
-     "realGrowth": 0.024954826077654646,
-     "needGrowth": -0.009419842460860795,
-     "residual": 0.03437466853851544
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 216.658,
-     "nominalGrowth": 0.025833088701811446,
-     "pkv": 0.026835900002466495,
-     "realGrowth": -0.0009766032728819596,
-     "needGrowth": 0.005611692486150229,
-     "residual": -0.006588295759032189
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 225.711,
-     "nominalGrowth": 0.0417847483130096,
-     "pkv": 0.019186394962074527,
-     "realGrowth": 0.022172934668909017,
-     "needGrowth": 0.00013007827644679346,
-     "residual": 0.022042856392462222
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 231.42800000000003,
-     "nominalGrowth": 0.025328849723761815,
-     "pkv": 0.026321041904701303,
-     "realGrowth": -0.0009667464082175892,
-     "needGrowth": 0.0010372892007551758,
-     "residual": -0.002004035608972765
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 239.131,
-     "nominalGrowth": 0.0332846500855557,
-     "pkv": 0.048789300485049994,
-     "realGrowth": -0.014783379647679062,
-     "needGrowth": 0.013959489337203094,
-     "residual": -0.028742868984882156
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 262.354,
-     "nominalGrowth": 0.09711413409386482,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.035812753539752995,
-     "needGrowth": -0.012519051633324877,
-     "residual": 0.04833180517307787
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 278.983,
-     "nominalGrowth": 0.06338382490833006,
-     "pkv": 0.04458593954369805,
-     "realGrowth": 0.01799553742111759,
-     "needGrowth": 0.0049624446520865895,
-     "residual": 0.013033092769031002
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 190.026,
+     "netCost": 155.659,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.0035494377560958412,
+     "populationGrowth": 0.0,
+     "residual": 0.007613947078685346,
+     "netRealGrowth": 0.005022837602317809,
+     "needGrowth": -0.011959734882785698,
+     "netResidual": 0.016982572485103507
+    },
+    "2012": {
+     "grossCost": 195.258,
+     "netCost": 157.666,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.006182909744597231,
+     "populationGrowth": -0.0016339869281045694,
+     "residual": 2.099747836314947e-05,
+     "netRealGrowth": -0.00716176373848143,
+     "needGrowth": -0.021576842335063712,
+     "netResidual": 0.014415078596582281
+    },
+    "2013": {
+     "grossCost": 215.77,
+     "netCost": 165.88400000000001,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.010867933733807678,
+     "populationGrowth": -0.014729950900163713,
+     "residual": 0.028823623107516072,
+     "netRealGrowth": 0.02536092189557393,
+     "needGrowth": 0.004750087144168576,
+     "netResidual": 0.020610834751405353
+    },
+    "2014": {
+     "grossCost": 214.299,
+     "netCost": 170.226,
+     "pkv": 0.0236,
+     "volumeGrowth": -0.004309308274359602,
+     "populationGrowth": 0.0013842746400885009,
+     "residual": 0.006591713587474013,
+     "netRealGrowth": 0.0025155504222034164,
+     "needGrowth": 0.027393911706980502,
+     "netResidual": -0.024878361284777085
+    },
+    "2015": {
+     "grossCost": 229.467,
+     "netCost": 172.129,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.00795303770434419,
+     "populationGrowth": 0.011888305225324913,
+     "residual": -0.016999807412343304,
+     "netRealGrowth": -0.014637248282147297,
+     "needGrowth": 0.0024932844803879,
+     "netResidual": -0.0171305327625352
+    },
+    "2016": {
+     "grossCost": 276.7,
+     "netCost": 183.999,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.004846914952562509,
+     "populationGrowth": -0.0005464480874316502,
+     "residual": 0.0253059805537017,
+     "netRealGrowth": 0.040542687188867,
+     "needGrowth": 0.018823942533950887,
+     "netResidual": 0.021718744654916113
+    },
+    "2017": {
+     "grossCost": 277.78,
+     "netCost": 199.593,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.009449271273017645,
+     "populationGrowth": 0.004647348277747376,
+     "residual": 0.02281409876319973,
+     "netRealGrowth": 0.046500854372996114,
+     "needGrowth": 0.016474815152259067,
+     "netResidual": 0.030026039220737048
+    },
+    "2018": {
+     "grossCost": 269.194,
+     "netCost": 211.202,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.010880198469286118,
+     "populationGrowth": 0.01578231292516996,
+     "residual": 0.01136913320793842,
+     "netRealGrowth": 0.024954826077654646,
+     "needGrowth": -0.009419842460860795,
+     "netResidual": 0.03437466853851544
+    },
+    "2019": {
+     "grossCost": 274.256,
+     "netCost": 216.658,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.001919542552500042,
+     "populationGrowth": 0.002678810608089943,
+     "residual": -0.002104626385928454,
+     "netRealGrowth": -0.0009766032728819596,
+     "needGrowth": 0.005611692486150229,
+     "netResidual": -0.006588295759032189
+    },
+    "2020": {
+     "grossCost": 285.568,
+     "netCost": 225.711,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.003163413347322619,
+     "populationGrowth": 0.0010686615014694478,
+     "residual": 0.014531329083810718,
+     "netRealGrowth": 0.022172934668909017,
+     "needGrowth": 0.00013007827644679346,
+     "netResidual": 0.022042856392462222
+    },
+    "2021": {
+     "grossCost": 292.042,
+     "netCost": 231.42800000000003,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.0020401111405117245,
+     "populationGrowth": -0.005604483586869491,
+     "residual": -0.003970857893246915,
+     "netRealGrowth": -0.0009667464082175892,
+     "needGrowth": 0.0010372892007551758,
+     "netResidual": -0.002004035608972765
+    },
+    "2022": {
+     "grossCost": 308.06,
+     "netCost": 239.131,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.001838838348358518,
+     "populationGrowth": -0.008319914117015603,
+     "residual": -0.015252663428796831,
+     "netRealGrowth": -0.014783379647679062,
+     "needGrowth": 0.013959489337203094,
+     "netResidual": -0.028742868984882156
+    },
+    "2023": {
+     "grossCost": 328.036,
+     "netCost": 262.354,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.006566206013676856,
+     "populationGrowth": -0.0032476319350474014,
+     "residual": 0.020372940445051668,
+     "netRealGrowth": 0.035812753539752995,
+     "needGrowth": -0.012519051633324877,
+     "netResidual": 0.04833180517307787
+    },
+    "2024": {
+     "grossCost": 347.386,
+     "netCost": 278.983,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": -0.0005590743969905443,
+     "populationGrowth": -0.01248981808308447,
+     "residual": 0.012457554031587437,
+     "netRealGrowth": 0.01799553742111759,
+     "needGrowth": 0.0049624446520865895,
+     "netResidual": 0.013033092769031002
+    },
+    "2025": {
+     "grossCost": 344.18,
      "netCost": 266.019,
-     "nominalGrowth": -0.046468781251904234,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.0522732029152958,
+     "volumeGrowth": 0.003088228282479344,
+     "populationGrowth": -0.003024470717624461,
+     "residual": -0.04552338692147173,
+     "netRealGrowth": -0.0522732029152958,
      "needGrowth": 0.009796957400394572,
-     "residual": -0.062070160315690376
+     "netResidual": -0.062070160315690376
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.006212667381735201,
-     "median": 0.015698825540842894,
-     "stdev": 0.023086066278833875,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.009270562219845187,
+     "median": 0.007613947078685346,
+     "stdev": 0.014757584920849479,
+     "years": 9,
+     "netResidualMean": 0.009947860937879475
     },
-    "2010-2025": {
-     "mean": 0.0032948352026486126,
-     "median": 0.013724085682806642,
-     "stdev": 0.02907869934735531,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.004403331686369401,
+     "median": 0.007613947078685346,
+     "stdev": 0.01950666105639334,
+     "years": 15,
+     "netResidualMean": 0.005341429191062738
     },
     "2016-2025": {
-     "mean": 0.00701218460801622,
-     "median": 0.017375918711973557,
-     "stdev": 0.03296659747754089,
-     "years": 10
+     "mean": 0.003999950145584574,
+     "median": 0.011913343619762928,
+     "stdev": 0.021696808457738203,
+     "years": 10,
+     "netResidualMean": 0.00701218460801622
     },
     "2020-2025": {
-     "mean": -0.0015682184291623672,
-     "median": 0.005514528580029118,
-     "stdev": 0.03914033735144215,
-     "years": 6
+     "mean": -0.002897514113844276,
+     "median": 0.004243348069170261,
+     "stdev": 0.024705560355565814,
+     "years": 6,
+     "netResidualMean": -0.0015682184291623672
     }
    }
   },
   "0513": {
    "name": "Kinda",
    "excludedYears": [],
-   "costDrift": 0.004749214033337208,
+   "costDrift": 0.0032204700206848033,
    "knownBy": {
-    "2015": 0.0021929293207463754,
-    "2016": 0.0010956017945705538,
-    "2017": 0.0043390601173166725,
-    "2018": 0.0038999300598051736,
-    "2019": 0.005139347238661276,
-    "2020": 0.0010292800498723216,
-    "2021": 0.0004977104853620801,
-    "2022": 0.002815710303802757,
-    "2023": 0.005895392512142768,
-    "2024": 0.006273092727950107,
-    "2025": 0.004749214033337208
+    "2015": -0.0002395303337493049,
+    "2016": 0.0010007857429923568,
+    "2017": 0.003306946136477656,
+    "2018": 0.0028487002325074257,
+    "2019": 0.004480753263488661,
+    "2020": 0.001237985082708215,
+    "2021": 0.0009007503818310573,
+    "2022": 0.0030229367838343624,
+    "2023": 0.004284571796971435,
+    "2024": 0.0047652269892457045,
+    "2025": 0.0032204700206848033
    },
-   "years": {
-    "2010": {
-     "netCost": 433.293,
-     "nominalGrowth": 0.038653492118283284,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.014904721632092333,
-     "needGrowth": -0.012680804509126144,
-     "residual": 0.027585526141218477
-    },
-    "2011": {
-     "netCost": 440.959,
-     "nominalGrowth": 0.017692415986411136,
-     "pkv": 0.0158,
-     "realGrowth": 0.0018629808883747767,
-     "needGrowth": -0.0016116104991759572,
-     "residual": 0.0034745913875507337
-    },
-    "2012": {
-     "netCost": 425.169,
-     "nominalGrowth": -0.035808317780111176,
-     "pkv": 0.0202,
-     "realGrowth": -0.05489935089209097,
-     "needGrowth": -0.009765947217583767,
-     "residual": -0.0451334036745072
-    },
-    "2013": {
-     "netCost": 449.188,
-     "nominalGrowth": 0.05649282990998872,
-     "pkv": 0.0261,
-     "realGrowth": 0.029619754322179892,
-     "needGrowth": 0.0027005779095160077,
-     "residual": 0.026919176412663885
-    },
-    "2014": {
-     "netCost": 475.623,
-     "nominalGrowth": 0.05885063714970129,
-     "pkv": 0.0236,
-     "realGrowth": 0.03443790264722657,
-     "needGrowth": 0.0015541130061048128,
-     "residual": 0.032883789641121756
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 472.873,
-     "nominalGrowth": -0.005781890278645063,
-     "pkv": 0.0262,
-     "realGrowth": -0.03116535790162256,
-     "needGrowth": 0.0014067460819468377,
-     "residual": -0.0325721039835694
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 490.999,
-     "nominalGrowth": 0.038331645071721265,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.010728645756121535,
-     "needGrowth": 0.01621700911860591,
-     "residual": -0.005488363362484375
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 523.6160000000001,
-     "nominalGrowth": 0.06642987052926808,
-     "pkv": 0.03655,
-     "realGrowth": 0.028826270348046856,
-     "needGrowth": 0.0017830019715073578,
-     "residual": 0.0270432683765395
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 542.6790000000001,
-     "nominalGrowth": 0.03640645052863167,
-     "pkv": 0.0324,
-     "realGrowth": 0.0038807153512512294,
-     "needGrowth": 0.003493825751538045,
-     "residual": 0.00038688959971318456
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 570.8199999999999,
-     "nominalGrowth": 0.051855701068218574,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.02436591968170565,
-     "needGrowth": 0.008071817833339445,
-     "residual": 0.016294101848366205
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 565.384,
-     "nominalGrowth": -0.009523142146385721,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.02816907412655223,
-     "needGrowth": 0.011902317711465,
-     "residual": -0.04007139183801723
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 583.174,
-     "nominalGrowth": 0.031465340370438355,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.005012367724810618,
-     "needGrowth": 0.010361922449061194,
-     "residual": -0.005349554724250576
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 638.355,
-     "nominalGrowth": 0.09462184528116824,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.04370043132106849,
-     "needGrowth": 0.013068723195977605,
-     "residual": 0.030631708125090883
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 700.938,
-     "nominalGrowth": 0.09803792560565827,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.03668492809278412,
-     "needGrowth": -0.009246333127778781,
-     "residual": 0.0459312612205629
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 744.7620000000001,
-     "nominalGrowth": 0.06252193489295776,
-     "pkv": 0.04458593954369805,
-     "realGrowth": 0.01717043535651519,
-     "needGrowth": 0.005609539607262329,
-     "residual": 0.011560895749252861
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 543.348,
+     "netCost": 440.959,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.004755301690922309,
+     "populationGrowth": -0.0049943940474976856,
+     "residual": 0.005439054984377911,
+     "netRealGrowth": 0.0018629808883747767,
+     "needGrowth": -0.0016116104991759572,
+     "netResidual": 0.0034745913875507337
+    },
+    "2012": {
+     "grossCost": 532.774,
+     "netCost": 425.169,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.002889484613200377,
+     "populationGrowth": 0.0037902069248105796,
+     "residual": -0.04106901998678458,
+     "netRealGrowth": -0.05489935089209097,
+     "needGrowth": -0.009765947217583767,
+     "netResidual": -0.0451334036745072
+    },
+    "2013": {
+     "grossCost": 559.586,
+     "netCost": 449.188,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.0050984002118500404,
+     "populationGrowth": -0.005612817634452538,
+     "residual": 0.027743638139145377,
+     "netRealGrowth": 0.029619754322179892,
+     "needGrowth": 0.0027005779095160077,
+     "netResidual": 0.026919176412663885
+    },
+    "2014": {
+     "grossCost": 590.944,
+     "netCost": 475.623,
+     "pkv": 0.0236,
+     "volumeGrowth": -0.0015988796043678866,
+     "populationGrowth": 0.005952380952380931,
+     "residual": 0.030465723259335276,
+     "netRealGrowth": 0.03443790264722657,
+     "needGrowth": 0.0015541130061048128,
+     "netResidual": 0.032883789641121756
+    },
+    "2015": {
+     "grossCost": 595.531,
+     "netCost": 472.873,
+     "pkv": 0.0262,
+     "volumeGrowth": -5.7784016641360125e-05,
+     "populationGrowth": -0.0007141399714344354,
+     "residual": -0.025166561644601626,
+     "netRealGrowth": -0.03116535790162256,
+     "needGrowth": 0.0014067460819468377,
+     "netResidual": -0.0325721039835694
+    },
+    "2016": {
+     "grossCost": 669.723,
+     "netCost": 490.999,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0005787942959230019,
+     "populationGrowth": 0.0,
+     "residual": 0.007935542661958284,
+     "netRealGrowth": 0.010728645756121535,
+     "needGrowth": 0.01621700911860591,
+     "netResidual": -0.005488363362484375
+    },
+    "2017": {
+     "grossCost": 678.336,
+     "netCost": 523.6160000000001,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.006263778225382266,
+     "populationGrowth": 0.008065339458907639,
+     "residual": 0.016916217346138795,
+     "netRealGrowth": 0.028826270348046856,
+     "needGrowth": 0.0017830019715073578,
+     "netResidual": 0.0270432683765395
+    },
+    "2018": {
+     "grossCost": 685.374,
+     "netCost": 542.6790000000001,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.0038404310870261416,
+     "populationGrowth": 0.0008102086287218313,
+     "residual": -0.0006575348906125988,
+     "netRealGrowth": 0.0038807153512512294,
+     "needGrowth": 0.003493825751538045,
+     "netResidual": 0.00038688959971318456
+    },
+    "2019": {
+     "grossCost": 701.969,
+     "netCost": 570.8199999999999,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.003275136758764896,
+     "populationGrowth": 0.003339404978749183,
+     "residual": 0.01665849961093513,
+     "netRealGrowth": 0.02436591968170565,
+     "needGrowth": 0.008071817833339445,
+     "netResidual": 0.016294101848366205
+    },
+    "2020": {
+     "grossCost": 696.167,
+     "netCost": 565.384,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.005019683547458076,
+     "populationGrowth": 0.002521432173474558,
+     "residual": -0.02731771832144947,
+     "netRealGrowth": -0.02816907412655223,
+     "needGrowth": 0.011902317711465,
+     "netResidual": -0.04007139183801723
+    },
+    "2021": {
+     "grossCost": 722.114,
+     "netCost": 583.174,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.00709900878173908,
+     "populationGrowth": 0.0051307847082495694,
+     "residual": -0.0020498432059397054,
+     "netRealGrowth": 0.005012367724810618,
+     "needGrowth": 0.010361922449061194,
+     "netResidual": -0.005349554724250576
+    },
+    "2022": {
+     "grossCost": 785.576,
+     "netCost": 638.355,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.007728102329769948,
+     "populationGrowth": 0.005705134621158958,
+     "residual": 0.028441954470739716,
+     "netRealGrowth": 0.04370043132106849,
+     "needGrowth": 0.013068723195977605,
+     "netResidual": 0.030631708125090883
+    },
+    "2023": {
+     "grossCost": 857.666,
+     "netCost": 700.938,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.0089859922058102,
+     "populationGrowth": 0.001990445859872514,
+     "residual": 0.02100823091584325,
+     "netRealGrowth": 0.03668492809278412,
+     "needGrowth": -0.009246333127778781,
+     "netResidual": 0.0459312612205629
+    },
+    "2024": {
+     "grossCost": 910.75,
+     "netCost": 744.7620000000001,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.0015550900543446211,
+     "populationGrowth": -0.007548669050456924,
+     "residual": 0.011080998535885955,
+     "netRealGrowth": 0.01717043535651519,
+     "needGrowth": 0.005609539607262329,
+     "netResidual": 0.011560895749252861
+    },
+    "2025": {
+     "grossCost": 902.127,
      "netCost": 733.898,
-     "nominalGrowth": -0.014587210410842655,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.020585704462022236,
+     "volumeGrowth": 0.003728613814777626,
+     "populationGrowth": -0.0035028022417934457,
+     "residual": -0.021122131564699664,
+     "netRealGrowth": -0.020585704462022236,
      "needGrowth": -0.002476738076165962,
-     "residual": -0.018108966385856275
+     "netResidual": -0.018108966385856275
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.005139347238661276,
-     "median": 0.00988434661795847,
-     "stdev": 0.026749797170476264,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.004251728831099107,
+     "median": 0.007935542661958284,
+     "stdev": 0.023748283420340213,
+     "years": 9,
+     "netResidualMean": 0.0026453273605993653
     },
-    "2010-2025": {
-     "mean": 0.004749214033337208,
-     "median": 0.007517743568401797,
-     "stdev": 0.027673234540549534,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.0032204700206848033,
+     "median": 0.007935542661958284,
+     "stdev": 0.02250183198993569,
+     "years": 15,
+     "netResidualMean": 0.003226793226145124
     },
     "2016-2025": {
-     "mean": 0.006282984860891708,
-     "median": 0.005973892674483023,
-     "stdev": 0.02533389122524899,
-     "years": 10
+     "mean": 0.005089421555879969,
+     "median": 0.00950827059892212,
+     "stdev": 0.01806694400926028,
+     "years": 10,
+     "netResidualMean": 0.006282984860891708
     },
     "2020-2025": {
-     "mean": 0.004098992024463761,
-     "median": 0.0031056705125011427,
-     "stdev": 0.03175876269612993,
-     "years": 6
+     "mean": 0.0016735818050633473,
+     "median": 0.004515577664973125,
+     "stdev": 0.022595919303393566,
+     "years": 6,
+     "netResidualMean": 0.004098992024463761
     }
    }
   },
   "0560": {
    "name": "Boxholm",
    "excludedYears": [],
-   "costDrift": 0.0059974861573262265,
+   "costDrift": 0.004629020398079212,
    "knownBy": {
-    "2015": 0.007330024587447188,
-    "2016": 0.00883310511344581,
-    "2017": 0.009324472523498674,
-    "2018": 0.014157702459568365,
-    "2019": 0.01705785682711886,
-    "2020": 0.00872339874750403,
-    "2021": 0.010971482073308733,
-    "2022": 0.008558002813736068,
-    "2023": 0.005546217141584672,
-    "2024": 0.0041509142176437705,
-    "2025": 0.0059974861573262265
+    "2015": 0.006332860531142725,
+    "2016": 0.010187176123533148,
+    "2017": 0.01083911201676405,
+    "2018": 0.012906741951758977,
+    "2019": 0.015273867386715335,
+    "2020": 0.00692360724125114,
+    "2021": 0.010535956227773834,
+    "2022": 0.008704053566042804,
+    "2023": 0.0062551398005017585,
+    "2024": 0.003979171180234315,
+    "2025": 0.004629020398079212
    },
-   "years": {
-    "2010": {
-     "netCost": 225.288,
-     "nominalGrowth": 0.03566404633843612,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.011983629410236452,
-     "needGrowth": -0.011829295070000459,
-     "residual": 0.023812924480236912
-    },
-    "2011": {
-     "netCost": 228.333,
-     "nominalGrowth": 0.013516032811334844,
-     "pkv": 0.0158,
-     "realGrowth": -0.0022484418080972457,
-     "needGrowth": -0.011051876138132053,
-     "residual": 0.008803434330034807
-    },
-    "2012": {
-     "netCost": 229.685,
-     "nominalGrowth": 0.005921176527265093,
-     "pkv": 0.0202,
-     "realGrowth": -0.013996102208130634,
-     "needGrowth": -0.003108347622381331,
-     "residual": -0.010887754585749303
-    },
-    "2013": {
-     "netCost": 233.586,
-     "nominalGrowth": 0.016984130439515077,
-     "pkv": 0.0261,
-     "realGrowth": -0.00888399723271116,
-     "needGrowth": 0.008862421927275141,
-     "residual": -0.0177464191599863
-    },
-    "2014": {
-     "netCost": 247.99800000000002,
-     "nominalGrowth": 0.06169890318769111,
-     "pkv": 0.0236,
-     "realGrowth": 0.03722049940180838,
-     "needGrowth": 0.014706013357617198,
-     "residual": 0.022514486044191186
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 257.521,
-     "nominalGrowth": 0.03839950322180008,
-     "pkv": 0.0262,
-     "realGrowth": 0.011888036661274581,
-     "needGrowth": -0.005595439754681244,
-     "residual": 0.017483476415955827
+     "care": 2019,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 274.91900000000004,
-     "nominalGrowth": 0.06755953883372623,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.03917954544755364,
-     "needGrowth": 0.021327957178116093,
-     "residual": 0.01785158826943755
+     "care": 2019,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 292.72999999999996,
-     "nominalGrowth": 0.06478635525372889,
-     "pkv": 0.03655,
-     "realGrowth": 0.027240707398320296,
-     "needGrowth": 0.014476663004451586,
-     "residual": 0.01276404439386871
+     "care": 2019,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 316.00899999999996,
-     "nominalGrowth": 0.07952379325658465,
-     "pkv": 0.0324,
-     "realGrowth": 0.04564489854376652,
-     "needGrowth": -0.00717864340435938,
-     "residual": 0.0528235419481259
+     "care": 2019,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 339.125,
-     "nominalGrowth": 0.07314981535336029,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.045103521751413744,
-     "needGrowth": 0.0019442756163404365,
-     "residual": 0.043159246135073305
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 318.071,
-     "nominalGrowth": -0.06208330261702899,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.0797397786909505,
-     "needGrowth": -0.00511859664230622,
-     "residual": -0.07462118204864428
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 344.107,
-     "nominalGrowth": 0.08185593782520262,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.05411064730528836,
-     "needGrowth": 0.018410248648127882,
-     "residual": 0.03570039865716048
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 358.501,
-     "nominalGrowth": 0.041830012176445,
-     "pkv": 0.048789300485049994,
-     "realGrowth": -0.006635544723221698,
-     "needGrowth": 0.013768203577914216,
-     "residual": -0.020403748301135914
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 373.692,
-     "nominalGrowth": 0.04237366144027499,
-     "pkv": 0.059181913279810816,
-     "realGrowth": -0.015869088802213605,
-     "needGrowth": 0.017737907794169862,
-     "residual": -0.03360699659638347
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 384.40500000000003,
-     "nominalGrowth": 0.02866799396294284,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.015238521770366331,
-     "needGrowth": 0.00014480494716251504,
-     "residual": -0.015383326717528846
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 277.008,
+     "netCost": 228.333,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.0044359856512501405,
+     "populationGrowth": -0.0051448170731707155,
+     "residual": 0.001723026571597952,
+     "netRealGrowth": -0.0022484418080972457,
+     "needGrowth": -0.011051876138132053,
+     "netResidual": 0.008803434330034807
+    },
+    "2012": {
+     "grossCost": 279.944,
+     "netCost": 229.685,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.0063757523096221735,
+     "populationGrowth": -0.0030645470216433823,
+     "residual": -0.005736062108567586,
+     "netRealGrowth": -0.013996102208130634,
+     "needGrowth": -0.003108347622381331,
+     "netResidual": -0.010887754585749303
+    },
+    "2013": {
+     "grossCost": 296.152,
+     "netCost": 233.586,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.004331823224608233,
+     "populationGrowth": 0.00019212295869364127,
+     "residual": -0.0029354327327365537,
+     "netRealGrowth": -0.00888399723271116,
+     "needGrowth": 0.008862421927275141,
+     "netResidual": -0.0177464191599863
+    },
+    "2014": {
+     "grossCost": 315.39,
+     "netCost": 247.99800000000002,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.001096491974492908,
+     "populationGrowth": 0.013830195927775568,
+     "residual": 0.03114834467340266,
+     "netRealGrowth": 0.03722049940180838,
+     "needGrowth": 0.014706013357617198,
+     "netResidual": 0.022514486044191186
+    },
+    "2015": {
+     "grossCost": 330.992,
+     "netCost": 257.521,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.005952205726549975,
+     "populationGrowth": 0.008336491095111809,
+     "residual": 0.005146310804290399,
+     "netRealGrowth": 0.011888036661274581,
+     "needGrowth": -0.005595439754681244,
+     "netResidual": 0.017483476415955827
+    },
+    "2016": {
+     "grossCost": 383.637,
+     "netCost": 274.91900000000004,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0008927109046241721,
+     "populationGrowth": 0.0011273957158963732,
+     "residual": 0.029813702712513157,
+     "netRealGrowth": 0.03917954544755364,
+     "needGrowth": 0.021327957178116093,
+     "netResidual": 0.01785158826943755
+    },
+    "2017": {
+     "grossCost": 380.557,
+     "netCost": 292.72999999999996,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.008405617954843292,
+     "populationGrowth": 0.008445945945946054,
+     "residual": 0.01339628154487471,
+     "netRealGrowth": 0.027240707398320296,
+     "needGrowth": 0.014476663004451586,
+     "netResidual": 0.01276404439386871
+    },
+    "2018": {
+     "grossCost": 387.761,
+     "netCost": 316.00899999999996,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.009800550159177135,
+     "populationGrowth": 0.014889261120416997,
+     "residual": 0.02846740007424664,
+     "netRealGrowth": 0.04564489854376652,
+     "needGrowth": -0.00717864340435938,
+     "netResidual": 0.0528235419481259
+    },
+    "2019": {
+     "grossCost": 397.523,
+     "netCost": 339.125,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.0020790379112278767,
+     "populationGrowth": -0.0007335411699981309,
+     "residual": 0.034471043824519265,
+     "netRealGrowth": 0.045103521751413744,
+     "needGrowth": 0.0019442756163404365,
+     "netResidual": 0.043159246135073305
+    },
+    "2020": {
+     "grossCost": 379.819,
+     "netCost": 318.071,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.0017484586061413676,
+     "populationGrowth": 0.0049550376215818925,
+     "residual": -0.06892565643118254,
+     "netRealGrowth": -0.0797397786909505,
+     "needGrowth": -0.00511859664230622,
+     "netResidual": -0.07462118204864428
+    },
+    "2021": {
+     "grossCost": 408.395,
+     "netCost": 344.107,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": -0.0007284304650173601,
+     "populationGrowth": -0.006391526661796987,
+     "residual": 0.04503591343676461,
+     "netRealGrowth": 0.05411064730528836,
+     "needGrowth": 0.018410248648127882,
+     "netResidual": 0.03570039865716048
+    },
+    "2022": {
+     "grossCost": 432.224,
+     "netCost": 358.501,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.006629661274510257,
+     "populationGrowth": 0.013049071861790162,
+     "residual": -0.010099571190205991,
+     "netRealGrowth": -0.006635544723221698,
+     "needGrowth": 0.013768203577914216,
+     "netResidual": -0.020403748301135914
+    },
+    "2023": {
+     "grossCost": 444.857,
+     "netCost": 373.692,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.008584995390339856,
+     "populationGrowth": -0.002539912917271403,
+     "residual": -0.021991772044630875,
+     "netRealGrowth": -0.015869088802213605,
+     "needGrowth": 0.017737907794169862,
+     "netResidual": -0.03360699659638347
+    },
+    "2024": {
+     "grossCost": 477.119,
+     "netCost": 384.40500000000003,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.011494584807285824,
+     "populationGrowth": 0.004547108039286929,
+     "residual": -0.023300119660399576,
+     "netRealGrowth": -0.015238521770366331,
+     "needGrowth": 0.00014480494716251504,
+     "netResidual": -0.015383326717528846
+    },
+    "2025": {
+     "grossCost": 471.226,
      "netCost": 396.207,
-     "nominalGrowth": 0.030701993990712717,
      "pkv": 0.006124572694627295,
-     "realGrowth": 0.02442781138946004,
+     "volumeGrowth": 0.0061664550752644764,
+     "populationGrowth": -0.0010863661053774898,
+     "residual": 0.013221896496701913,
+     "netRealGrowth": 0.02442781138946004,
      "needGrowth": -0.009268253863103027,
-     "residual": 0.033696065252563065
+     "netResidual": 0.033696065252563065
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.01705785682711886,
-     "median": 0.01766753234269669,
-     "stdev": 0.021384186263129823,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.015054957262682293,
+     "median": 0.01339628154487471,
+     "stdev": 0.016079059361339146,
+     "years": 9,
+     "netResidualMean": 0.016307293754550187
     },
-    "2010-2025": {
-     "mean": 0.0059974861573262265,
-     "median": 0.015123760404912269,
-     "stdev": 0.03287389252404768,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.004629020398079212,
+     "median": 0.005146310804290399,
+     "stdev": 0.029116846508149108,
+     "years": 15,
+     "netResidualMean": 0.004809790269132181
     },
     "2016-2025": {
-     "mean": 0.00519796309925365,
-     "median": 0.01530781633165313,
-     "stdev": 0.040311444382867476,
-     "years": 10
+     "mean": 0.0040089118763201315,
+     "median": 0.013309089020788312,
+     "stdev": 0.03494214635377623,
+     "years": 10,
+     "netResidualMean": 0.00519796309925365
     },
     "2020-2025": {
-     "mean": -0.012436464958994827,
-     "median": -0.01789353750933238,
-     "stdev": 0.0420301321195352,
-     "years": 6
+     "mean": -0.01100988489882541,
+     "median": -0.016045671617418433,
+     "stdev": 0.038353690095448055,
+     "years": 6,
+     "netResidualMean": -0.012436464958994827
     }
    }
   },
   "0561": {
    "name": "Åtvidaberg",
    "excludedYears": [],
-   "costDrift": -0.00041519925423633185,
+   "costDrift": -0.0013073196847171564,
    "knownBy": {
-    "2015": 0.00874986391440427,
-    "2016": 0.006937229311058422,
-    "2017": 0.007570265082839372,
-    "2018": 0.008683705059449874,
-    "2019": 0.007312739287723353,
-    "2020": 0.0031034239461832673,
-    "2021": 0.002591617656594451,
-    "2022": 0.00159702204264102,
-    "2023": 0.002557254320100854,
-    "2024": 0.0017063116315991402,
-    "2025": -0.00041519925423633185
+    "2015": 0.005337390762951077,
+    "2016": 0.0053729888068640985,
+    "2017": 0.005925380651875993,
+    "2018": 0.006657655063075488,
+    "2019": 0.0049583609748446505,
+    "2020": 0.0012179711714725983,
+    "2021": 0.0005668007401043199,
+    "2022": 0.0006334709118396009,
+    "2023": 0.0010580419608991433,
+    "2024": 0.0007492008090565652,
+    "2025": -0.0013073196847171564
    },
-   "years": {
-    "2010": {
-     "netCost": 486.90400000000005,
-     "nominalGrowth": 0.043096744339495396,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.01924637906927429,
-     "needGrowth": -0.003214026763427701,
-     "residual": 0.02246040583270199
-    },
-    "2011": {
-     "netCost": 501.422,
-     "nominalGrowth": 0.029816965972758513,
-     "pkv": 0.0158,
-     "realGrowth": 0.013798942678439063,
-     "needGrowth": -0.0019218773067565117,
-     "residual": 0.015720819985195575
-    },
-    "2012": {
-     "netCost": 511.121,
-     "nominalGrowth": 0.019342988540590467,
-     "pkv": 0.0202,
-     "realGrowth": -0.0008400425989114613,
-     "needGrowth": -0.019434744382590314,
-     "residual": 0.018594701783678853
-    },
-    "2013": {
-     "netCost": 507.489,
-     "nominalGrowth": -0.007105949471847173,
-     "pkv": 0.0261,
-     "realGrowth": -0.03236131904477846,
-     "needGrowth": -0.006029704608661333,
-     "residual": -0.026331614436117125
-    },
-    "2014": {
-     "netCost": 546.837,
-     "nominalGrowth": 0.07753468548086762,
-     "pkv": 0.0236,
-     "realGrowth": 0.052691173779667366,
-     "needGrowth": -0.004893813679134906,
-     "residual": 0.05758498745880227
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 546.322,
-     "nominalGrowth": -0.0009417797259512195,
-     "pkv": 0.0262,
-     "realGrowth": -0.02644882062556153,
-     "needGrowth": 0.009081296512274413,
-     "residual": -0.035530117137835944
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 565.128,
-     "nominalGrowth": 0.03442292274519421,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.006923832869527358,
-     "needGrowth": 0.010862411178544024,
-     "residual": -0.003938578309016666
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 595.325,
-     "nominalGrowth": 0.05343391231720962,
-     "pkv": 0.03655,
-     "realGrowth": 0.016288565257063903,
-     "needGrowth": 0.004287049771757882,
-     "residual": 0.012001515485306022
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 627.428,
-     "nominalGrowth": 0.053925166925628876,
-     "pkv": 0.0324,
-     "realGrowth": 0.020849638633890777,
-     "needGrowth": 0.003258413761556887,
-     "residual": 0.017591224872333888
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 641.2230000000001,
-     "nominalGrowth": 0.021986586508730976,
-     "pkv": 0.026835900002466495,
-     "realGrowth": -0.004722578840225422,
-     "needGrowth": 0.00030337381758990464,
-     "residual": -0.005025952657815327
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 628.416,
-     "nominalGrowth": -0.019972770783331262,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.03842198634025429,
-     "needGrowth": 0.0005677431289633108,
-     "residual": -0.038989729469217596
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 643.922,
-     "nominalGrowth": 0.024674737753335396,
-     "pkv": 0.026321041904701303,
-     "realGrowth": -0.0016040830151066165,
-     "needGrowth": 0.0014341685137759124,
-     "residual": -0.003038251528882529
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 676.629,
-     "nominalGrowth": 0.05079341907870827,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.0019108877185640694,
-     "needGrowth": 0.012249013043364222,
-     "residual": -0.010338125324800152
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 728.582,
-     "nominalGrowth": 0.07678210659016971,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.016616780450734003,
-     "needGrowth": 0.001576506523655304,
-     "residual": 0.015040273927078698
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 762.8299999999999,
-     "nominalGrowth": 0.04700637677021935,
-     "pkv": 0.04458593954369805,
-     "realGrowth": 0.0023171259873349115,
-     "needGrowth": 0.012524011994759766,
-     "residual": -0.010206886007424854
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 613.931,
+     "netCost": 501.422,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.0012052600362852939,
+     "populationGrowth": 0.0005218298834579471,
+     "residual": 0.012645306084355878,
+     "netRealGrowth": 0.013798942678439063,
+     "needGrowth": -0.0019218773067565117,
+     "netResidual": 0.015720819985195575
+    },
+    "2012": {
+     "grossCost": 639.199,
+     "netCost": 511.121,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.0012580173084831836,
+     "populationGrowth": 0.0011300417246176142,
+     "residual": 0.0007799936240333594,
+     "netRealGrowth": -0.0008400425989114613,
+     "needGrowth": -0.019434744382590314,
+     "netResidual": 0.018594701783678853
+    },
+    "2013": {
+     "grossCost": 627.466,
+     "netCost": 507.489,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.00774326722796026,
+     "populationGrowth": -0.006164799861074988,
+     "residual": -0.019520135369538782,
+     "netRealGrowth": -0.03236131904477846,
+     "needGrowth": -0.006029704608661333,
+     "netResidual": -0.026331614436117125
+    },
+    "2014": {
+     "grossCost": 668.451,
+     "netCost": 546.837,
+     "pkv": 0.0236,
+     "volumeGrowth": -0.00600234734500904,
+     "populationGrowth": 0.0012231347195525988,
+     "residual": 0.04914738050089529,
+     "netRealGrowth": 0.052691173779667366,
+     "needGrowth": -0.004893813679134906,
+     "netResidual": 0.05758498745880227
+    },
+    "2015": {
+     "grossCost": 697.615,
+     "netCost": 546.322,
+     "pkv": 0.0262,
+     "volumeGrowth": -0.004691237787959435,
+     "populationGrowth": 0.0010471204188482464,
+     "residual": -0.01683410763027815,
+     "netRealGrowth": -0.02644882062556153,
+     "needGrowth": 0.009081296512274413,
+     "netResidual": -0.035530117137835944
+    },
+    "2016": {
+     "grossCost": 757.633,
+     "netCost": 565.128,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0008832375642184864,
+     "populationGrowth": 0.006363319386331945,
+     "residual": 0.0059138124526560976,
+     "netRealGrowth": 0.006923832869527358,
+     "needGrowth": 0.010862411178544024,
+     "netResidual": -0.003938578309016666
+    },
+    "2017": {
+     "grossCost": 782.537,
+     "netCost": 595.325,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.004653661294999445,
+     "populationGrowth": 0.0062364660025984175,
+     "residual": 0.009038729003018053,
+     "netRealGrowth": 0.016288565257063903,
+     "needGrowth": 0.004287049771757882,
+     "netResidual": 0.012001515485306022
+    },
+    "2018": {
+     "grossCost": 783.153,
+     "netCost": 627.428,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.004164314505909816,
+     "populationGrowth": 0.001205130412326838,
+     "residual": 0.011935921071762223,
+     "netRealGrowth": 0.020849638633890777,
+     "needGrowth": 0.003258413761556887,
+     "netResidual": 0.017591224872333888
+    },
+    "2019": {
+     "grossCost": 794.552,
+     "netCost": 641.2230000000001,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.0035089608841587516,
+     "populationGrowth": -0.00808185022783936,
+     "residual": -0.008868390668066772,
+     "netRealGrowth": -0.004722578840225422,
+     "needGrowth": 0.00030337381758990464,
+     "netResidual": -0.005025952657815327
+    },
+    "2020": {
+     "grossCost": 785.232,
+     "netCost": 628.416,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.001990527250257612,
+     "populationGrowth": -0.002947039958394737,
+     "residual": -0.03350003843755056,
+     "netRealGrowth": -0.03842198634025429,
+     "needGrowth": 0.0005677431289633108,
+     "netResidual": -0.038989729469217596
+    },
+    "2021": {
+     "grossCost": 810.646,
+     "netCost": 643.922,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.0018318555966678751,
+     "populationGrowth": -0.00660697209423633,
+     "residual": -0.0044269389846021134,
+     "netRealGrowth": -0.0016040830151066165,
+     "needGrowth": 0.0014341685137759124,
+     "netResidual": -0.003038251528882529
+    },
+    "2022": {
+     "grossCost": 872.101,
+     "netCost": 676.629,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.0015836264148525458,
+     "populationGrowth": 0.0030629211516584043,
+     "residual": 0.0005633057330869384,
+     "netRealGrowth": 0.0019108877185640694,
+     "needGrowth": 0.012249013043364222,
+     "netResidual": -0.010338125324800152
+    },
+    "2023": {
+     "grossCost": 918.157,
+     "netCost": 728.582,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.005542202084180214,
+     "populationGrowth": 0.0038387715930903177,
+     "residual": 0.00816527239369802,
+     "netRealGrowth": 0.016616780450734003,
+     "needGrowth": 0.001576506523655304,
+     "netResidual": 0.015040273927078698
+    },
+    "2024": {
+     "grossCost": 939.226,
+     "netCost": 762.8299999999999,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.004040184384535017,
+     "populationGrowth": -0.003997914131757319,
+     "residual": -0.0030147660082072703,
+     "netRealGrowth": 0.0023171259873349115,
+     "needGrowth": 0.012524011994759766,
+     "netResidual": -0.010206886007424854
+    },
+    "2025": {
+     "grossCost": 974.912,
      "netCost": 744.517,
-     "nominalGrowth": -0.024006659412975195,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.029947814540404516,
+     "volumeGrowth": 0.007669155349597556,
+     "populationGrowth": 0.0006108202443280142,
+     "residual": -0.031635139036019555,
+     "netRealGrowth": -0.029947814540404516,
      "needGrowth": 0.0022900480013638993,
-     "residual": -0.032237862541768414
+     "netResidual": -0.032237862541768414
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.007312739287723353,
-     "median": 0.013861167735250798,
-     "stdev": 0.026517603117001833,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.004915389896537466,
+     "median": 0.0059138124526560976,
+     "stdev": 0.020496148646594586,
+     "years": 9,
+     "netResidualMean": 0.005629665227170172
     },
-    "2010-2025": {
-     "mean": -0.00041519925423633185,
-     "median": -0.0034884149189495974,
-     "stdev": 0.02564713075895879,
-     "years": 16
+    "2011-2025": {
+     "mean": -0.0013073196847171564,
+     "median": 0.0005633057330869384,
+     "stdev": 0.02030351889012982,
+     "years": 15,
+     "netResidualMean": -0.0019402395933655534
     },
     "2016-2025": {
-     "mean": -0.005914237155420693,
-     "median": -0.0044822654834159965,
-     "stdev": 0.018709638362979356,
-     "years": 10
+     "mean": -0.004582823248022494,
+     "median": -0.001225730137560166,
+     "stdev": 0.016146805194758525,
+     "years": 10,
+     "netResidualMean": -0.005914237155420693
     },
     "2020-2025": {
-     "mean": -0.013295096824169142,
-     "median": -0.010272505666112503,
-     "stdev": 0.01972520903470833,
-     "years": 6
+     "mean": -0.01064138405659909,
+     "median": -0.003720852496404692,
+     "stdev": 0.017545802112045223,
+     "years": 6,
+     "netResidualMean": -0.013295096824169142
     }
    }
   },
   "0562": {
    "name": "Finspång",
    "excludedYears": [],
-   "costDrift": 0.0014591222198678385,
+   "costDrift": 0.001891393583900114,
    "knownBy": {
-    "2015": 0.009276862975658714,
-    "2016": 0.004341138852912363,
-    "2017": 0.007394910384853834,
-    "2018": 0.004284962411530207,
-    "2019": 0.00475638431864302,
-    "2020": 0.004965265751129666,
-    "2021": 0.0034720999430748,
-    "2022": 0.0033758657517281485,
-    "2023": 0.004370883160829148,
-    "2024": 0.0020432943624777516,
-    "2025": 0.0014591222198678385
+    "2015": 0.010560909537104313,
+    "2016": 0.008043702144178285,
+    "2017": 0.009677907484461084,
+    "2018": 0.007327333652128967,
+    "2019": 0.006859358369995911,
+    "2020": 0.00565564276945737,
+    "2021": 0.004621271066918342,
+    "2022": 0.004306443132423611,
+    "2023": 0.005133796179262445,
+    "2024": 0.002509922982087457,
+    "2025": 0.001891393583900114
    },
-   "years": {
-    "2010": {
-     "netCost": 897.366,
-     "nominalGrowth": 0.030776281828175156,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.007207623439686506,
-     "needGrowth": 0.003424509718297814,
-     "residual": 0.0037831137213886917
-    },
-    "2011": {
-     "netCost": 945.8380000000001,
-     "nominalGrowth": 0.05401586420702387,
-     "pkv": 0.0158,
-     "realGrowth": 0.03762144537017509,
-     "needGrowth": -0.0017605569514492114,
-     "residual": 0.0393820023216243
-    },
-    "2012": {
-     "netCost": 950.7,
-     "nominalGrowth": 0.005140415166233536,
-     "pkv": 0.0202,
-     "realGrowth": -0.014761404463601746,
-     "needGrowth": -0.0028263030229704325,
-     "residual": -0.011935101440631313
-    },
-    "2013": {
-     "netCost": 963.154,
-     "nominalGrowth": 0.013099821184390459,
-     "pkv": 0.0261,
-     "realGrowth": -0.01266950474184736,
-     "needGrowth": 0.0010970972196591726,
-     "residual": -0.013766601961506532
-    },
-    "2014": {
-     "netCost": 1043.011,
-     "nominalGrowth": 0.08291197461672795,
-     "pkv": 0.0236,
-     "realGrowth": 0.057944484776013994,
-     "needGrowth": 0.018253788233302443,
-     "residual": 0.039690696542711554
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 1070.6699999999998,
-     "nominalGrowth": 0.026518416392540267,
-     "pkv": 0.0262,
-     "realGrowth": 0.0003102868763791289,
-     "needGrowth": 0.001803218206013553,
-     "residual": -0.0014929313296344242
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 1097.729,
-     "nominalGrowth": 0.025272959922291838,
-     "pkv": 0.027309999999999997,
-     "realGrowth": -0.0019828874222076465,
-     "needGrowth": 0.023290318461358095,
-     "residual": -0.02527320588356574
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 1177.157,
-     "nominalGrowth": 0.07235665633321142,
-     "pkv": 0.03655,
-     "realGrowth": 0.034544070554446415,
-     "needGrowth": 0.005772759446002278,
-     "residual": 0.028771311108444136
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 1211.795,
-     "nominalGrowth": 0.02942513190678908,
-     "pkv": 0.0324,
-     "realGrowth": -0.002881507258050031,
-     "needGrowth": 0.01771311411700878,
-     "residual": -0.02059462137505881
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 1263.291,
-     "nominalGrowth": 0.0424956366382101,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.015250476376708288,
-     "needGrowth": 0.0062512948940499575,
-     "residual": 0.008999181482658332
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 1289.0739999999998,
-     "nominalGrowth": 0.020409391027087054,
-     "pkv": 0.019186394962074527,
-     "realGrowth": 0.001199972910802094,
-     "needGrowth": -0.005854107165194041,
-     "residual": 0.007054080075996135
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 1318.314,
-     "nominalGrowth": 0.022682949155750753,
-     "pkv": 0.026321041904701303,
-     "realGrowth": -0.0035447901781286983,
-     "needGrowth": 0.009407933767400033,
-     "residual": -0.012952723945528731
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 1389.891,
-     "nominalGrowth": 0.05429434869082783,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.0052489553461614324,
-     "needGrowth": 0.0030278998905930985,
-     "residual": 0.002221055455568334
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 1505.012,
-     "nominalGrowth": 0.08282735840436395,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.022324253112795178,
-     "needGrowth": 0.005018143633653049,
-     "residual": 0.01730610947914213
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 1524.479,
-     "nominalGrowth": 0.012934780586467243,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.03030019623953284,
-     "needGrowth": 0.00024275257490894808,
-     "residual": -0.03054294881444179
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 1122.805,
+     "netCost": 945.8380000000001,
+     "pkv": 0.0158,
+     "volumeGrowth": 0.0012841911443617349,
+     "populationGrowth": 0.0006752520136978912,
+     "residual": 0.030219294404065122,
+     "netRealGrowth": 0.03762144537017509,
+     "needGrowth": -0.0017605569514492114,
+     "netResidual": 0.0393820023216243
+    },
+    "2012": {
+     "grossCost": 1149.895,
+     "netCost": 950.7,
+     "pkv": 0.0202,
+     "volumeGrowth": 3.392625190756782e-05,
+     "populationGrowth": 0.0007711958355425264,
+     "residual": -0.01234679512986614,
+     "netRealGrowth": -0.014761404463601746,
+     "needGrowth": -0.0028263030229704325,
+     "netResidual": -0.011935101440631313
+    },
+    "2013": {
+     "grossCost": 1167.944,
+     "netCost": 963.154,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.0010174253656991539,
+     "populationGrowth": 0.001348552713962281,
+     "residual": -0.009233141295453495,
+     "netRealGrowth": -0.01266950474184736,
+     "needGrowth": 0.0010970972196591726,
+     "netResidual": -0.013766601961506532
+    },
+    "2014": {
+     "grossCost": 1247.626,
+     "netCost": 1043.011,
+     "pkv": 0.0236,
+     "volumeGrowth": -0.00010315743093680663,
+     "populationGrowth": 0.005386946274830384,
+     "residual": 0.04883711986103734,
+     "netRealGrowth": 0.057944484776013994,
+     "needGrowth": 0.018253788233302443,
+     "netResidual": 0.039690696542711554
+    },
+    "2015": {
+     "grossCost": 1319.436,
+     "netCost": 1070.6699999999998,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.006788744756352383,
+     "populationGrowth": 0.01181648567191318,
+     "residual": -0.004560441614757993,
+     "netRealGrowth": 0.0003102868763791289,
+     "needGrowth": 0.001803218206013553,
+     "netResidual": -0.0014929313296344242
+    },
+    "2016": {
+     "grossCost": 1431.85,
+     "netCost": 1097.729,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.004052114978852828,
+     "populationGrowth": 0.0023167848699763294,
+     "residual": -0.005203259491588508,
+     "netRealGrowth": -0.0019828874222076465,
+     "needGrowth": 0.023290318461358095,
+     "netResidual": -0.02527320588356574
+    },
+    "2017": {
+     "grossCost": 1481.806,
+     "netCost": 1177.157,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.010655872428795066,
+     "populationGrowth": 0.015425255908297464,
+     "residual": 0.01922201141614721,
+     "netRealGrowth": 0.034544070554446415,
+     "needGrowth": 0.005772759446002278,
+     "netResidual": 0.028771311108444136
+    },
+    "2018": {
+     "grossCost": 1517.234,
+     "netCost": 1211.795,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.007502728374801482,
+     "populationGrowth": 0.0023692279104339242,
+     "residual": -0.009235430104644338,
+     "netRealGrowth": -0.002881507258050031,
+     "needGrowth": 0.01771311411700878,
+     "netResidual": -0.02059462137505881
+    },
+    "2019": {
+     "grossCost": 1531.958,
+     "netCost": 1263.291,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.01050163050719144,
+     "populationGrowth": 0.008388561894610014,
+     "residual": 0.0033324567256323157,
+     "netRealGrowth": 0.015250476376708288,
+     "needGrowth": 0.0062512948940499575,
+     "netResidual": 0.008999181482658332
+    },
+    "2020": {
+     "grossCost": 1577.622,
+     "netCost": 1289.0739999999998,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.007592084264168353,
+     "populationGrowth": 0.00707785642062686,
+     "residual": -0.005320881467466232,
+     "netRealGrowth": 0.001199972910802094,
+     "needGrowth": -0.005854107165194041,
+     "netResidual": 0.007054080075996135
+    },
+    "2021": {
+     "grossCost": 1603.444,
+     "netCost": 1318.314,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.0015529727934051607,
+     "populationGrowth": -0.006708652792990155,
+     "residual": -0.005667633640459857,
+     "netRealGrowth": -0.0035447901781286983,
+     "needGrowth": 0.009407933767400033,
+     "netResidual": -0.012952723945528731
+    },
+    "2022": {
+     "grossCost": 1666.51,
+     "netCost": 1389.891,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.004442217009963834,
+     "populationGrowth": 0.005697220307833595,
+     "residual": 0.000882529984155056,
+     "netRealGrowth": 0.0052489553461614324,
+     "needGrowth": 0.0030278998905930985,
+     "netResidual": 0.002221055455568334
+    },
+    "2023": {
+     "grossCost": 1785.028,
+     "netCost": 1505.012,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.0034436305951075497,
+     "populationGrowth": 0.0006395906619762748,
+     "residual": 0.015228808002054839,
+     "netRealGrowth": 0.022324253112795178,
+     "needGrowth": 0.005018143633653049,
+     "netResidual": 0.01730610947914213
+    },
+    "2024": {
+     "grossCost": 1798.954,
+     "netCost": 1524.479,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.003954980547281162,
+     "populationGrowth": -0.009542071862301937,
+     "residual": -0.030876748486460492,
+     "netRealGrowth": -0.03030019623953284,
+     "needGrowth": 0.00024275257490894808,
+     "netResidual": -0.03054294881444179
+    },
+    "2025": {
+     "grossCost": 1792.885,
      "netCost": 1526.569,
-     "nominalGrowth": 0.0013709601772144975,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.004724675896426556,
+     "volumeGrowth": 0.0024205487052981756,
+     "populationGrowth": -0.0032727943210104637,
+     "residual": -0.006906985403893118,
+     "netRealGrowth": -0.004724675896426556,
      "needGrowth": 0.0025787840228543024,
-     "residual": -0.007303459919280858
+     "netResidual": -0.007303459919280858
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.00475638431864302,
-     "median": 0.0011450911958771337,
-     "stdev": 0.024083685870223012,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.006781312752285724,
+     "median": -0.004560441614757993,
+     "stdev": 0.02131854870749199,
+     "years": 9,
+     "netResidualMean": 0.004864525496115723
     },
-    "2010-2025": {
-     "mean": 0.0014591222198678385,
-     "median": 0.00036406206296695485,
-     "stdev": 0.021479544542547004,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.001891393583900114,
+     "median": -0.005203259491588508,
+     "stdev": 0.0194390416759043,
+     "years": 15,
+     "netResidualMean": 0.0013041894530997815
     },
     "2016-2025": {
-     "mean": -0.0032315222336066866,
-     "median": -0.002541202231856262,
-     "stdev": 0.019366062758947516,
-     "years": 10
+     "mean": -0.0024545132466523125,
+     "median": -0.00526207047952737,
+     "stdev": 0.013852079923891009,
+     "years": 10,
+     "netResidualMean": -0.0032315222336066866
     },
     "2020-2025": {
-     "mean": -0.00403631461142413,
-     "median": -0.002541202231856262,
-     "stdev": 0.016795409201256033,
-     "years": 6
+     "mean": -0.005443485168678301,
+     "median": -0.0054942575539630445,
+     "stdev": 0.014942691610186494,
+     "years": 6,
+     "netResidualMean": -0.00403631461142413
     }
    }
   },
   "0563": {
    "name": "Valdemarsvik",
    "excludedYears": [],
-   "costDrift": 0.000956125212586673,
+   "costDrift": -0.0017562849853479002,
    "knownBy": {
-    "2015": 0.007502380751011282,
-    "2016": 0.008837830953694165,
-    "2017": 0.010082753829586207,
-    "2018": 0.013726474233862952,
-    "2019": 0.014601810792066197,
-    "2020": 0.008791817552985462,
-    "2021": 0.008757834160194452,
-    "2022": 0.00723144536521574,
-    "2023": 0.008596255657494762,
-    "2024": 0.005995273860211891,
-    "2025": 0.000956125212586673
+    "2015": 0.005064066023112513,
+    "2016": 0.00728975999557574,
+    "2017": 0.010390696201368852,
+    "2018": 0.012267887059230667,
+    "2019": 0.011606732746924043,
+    "2020": 0.004576344928915355,
+    "2021": 0.00439525371553475,
+    "2022": 0.0030312087686023372,
+    "2023": 0.0036266900754975064,
+    "2024": 0.001547033070534411,
+    "2025": -0.0017562849853479002
    },
-   "years": {
-    "2010": {
-     "netCost": 345.86600000000004,
-     "nominalGrowth": 0.0558891680582736,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.031746304532219494,
-     "needGrowth": -0.011280256043271718,
-     "residual": 0.043026560575491216
-    },
-    "2011": {
-     "netCost": 339.255,
-     "nominalGrowth": -0.019114339079296716,
-     "pkv": 0.0158,
-     "realGrowth": -0.03437127296642717,
-     "needGrowth": -0.01566139225194283,
-     "residual": -0.018709880714484338
-    },
-    "2012": {
-     "netCost": 346.945,
-     "nominalGrowth": 0.02266731514642384,
-     "pkv": 0.0202,
-     "realGrowth": 0.002418462209786254,
-     "needGrowth": -0.013904549850958825,
-     "residual": 0.01632301206074508
-    },
-    "2013": {
-     "netCost": 362.179,
-     "nominalGrowth": 0.043908976927178545,
-     "pkv": 0.0261,
-     "realGrowth": 0.017355985700398202,
-     "needGrowth": -0.006100389166989445,
-     "residual": 0.023456374867387646
-    },
-    "2014": {
-     "netCost": 383.349,
-     "nominalGrowth": 0.0584517600413057,
-     "pkv": 0.0236,
-     "realGrowth": 0.03404822200205704,
-     "needGrowth": 0.004600217176101278,
-     "residual": 0.029448004825955762
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 382.568,
-     "nominalGrowth": -0.002037308040453989,
-     "pkv": 0.0262,
-     "realGrowth": -0.027516378912935124,
-     "needGrowth": 0.02101340819609255,
-     "residual": -0.048529787109027674
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 404.202,
-     "nominalGrowth": 0.05654942389326867,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.028462123305787568,
-     "needGrowth": 0.011611591135996104,
-     "residual": 0.016850532169791464
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 439.474,
-     "nominalGrowth": 0.08726329904354757,
-     "pkv": 0.03655,
-     "realGrowth": 0.04892508710968846,
-     "needGrowth": 0.030127873148857964,
-     "residual": 0.018797213960830495
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 477.85999999999996,
-     "nominalGrowth": 0.08734532645844806,
-     "pkv": 0.0324,
-     "realGrowth": 0.053220967123642104,
-     "needGrowth": 0.010344729655565186,
-     "residual": 0.04287623746807692
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 502.70199999999994,
-     "nominalGrowth": 0.051985937303812735,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.024492752251149108,
-     "needGrowth": 0.0020129124352537137,
-     "residual": 0.022479839815895394
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 479.33500000000004,
-     "nominalGrowth": -0.04648280691145035,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.06443296554794431,
-     "needGrowth": -0.015124850710122411,
-     "residual": -0.049308114837821895
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 494.73900000000003,
-     "nominalGrowth": 0.03213618867806445,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.005666011448592245,
-     "needGrowth": -0.0027180053909011087,
-     "residual": 0.008384016839493354
+     "care": 2020,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 514.846,
-     "nominalGrowth": 0.04064163124394882,
-     "pkv": 0.048789300485049994,
-     "realGrowth": -0.00776864260279253,
-     "needGrowth": 0.0033165775717362766,
-     "residual": -0.011085220174528808
+     "care": 2020,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 556.741,
-     "nominalGrowth": 0.08137384771368517,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.020951957501951668,
-     "needGrowth": -0.005386831955170373,
-     "residual": 0.026338789457122043
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 567.322,
-     "nominalGrowth": 0.019005246604794745,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.02448883521261791,
-     "needGrowth": 0.005929636089130387,
-     "residual": -0.030418471301748295
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 457.423,
+     "netCost": 339.255,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.004230096016226925,
+     "populationGrowth": -0.00652925361669443,
+     "residual": -0.023734633326812693,
+     "netRealGrowth": -0.03437127296642717,
+     "needGrowth": -0.01566139225194283,
+     "netResidual": -0.018709880714484338
+    },
+    "2012": {
+     "grossCost": 470.69,
+     "netCost": 346.945,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.007643171971000062,
+     "populationGrowth": -0.012628865979381398,
+     "residual": 0.006221950283715083,
+     "netRealGrowth": 0.002418462209786254,
+     "needGrowth": -0.013904549850958825,
+     "netResidual": 0.01632301206074508
+    },
+    "2013": {
+     "grossCost": 485.215,
+     "netCost": 362.179,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.008663550649612217,
+     "populationGrowth": -0.008483424693291552,
+     "residual": 0.019394346376429228,
+     "netRealGrowth": 0.017355985700398202,
+     "needGrowth": -0.006100389166989445,
+     "netResidual": 0.023456374867387646
+    },
+    "2014": {
+     "grossCost": 502.363,
+     "netCost": 383.349,
+     "pkv": 0.0236,
+     "volumeGrowth": -0.006208694757614319,
+     "populationGrowth": -0.001579570883243342,
+     "residual": 0.03141783870551196,
+     "netRealGrowth": 0.03404822200205704,
+     "needGrowth": 0.004600217176101278,
+     "netResidual": 0.029448004825955762
+    },
+    "2015": {
+     "grossCost": 518.796,
+     "netCost": 382.568,
+     "pkv": 0.0262,
+     "volumeGrowth": -0.0013372013369685742,
+     "populationGrowth": 0.009492419248516848,
+     "residual": -0.01743479732373643,
+     "netRealGrowth": -0.027516378912935124,
+     "needGrowth": 0.02101340819609255,
+     "netResidual": -0.048529787109027674
+    },
+    "2016": {
+     "grossCost": 581.977,
+     "netCost": 404.202,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.006862805080791512,
+     "populationGrowth": 0.01175395063340745,
+     "residual": 0.01709468673575687,
+     "netRealGrowth": 0.028462123305787568,
+     "needGrowth": 0.011611591135996104,
+     "netResidual": 0.016850532169791464
+    },
+    "2017": {
+     "grossCost": 605.827,
+     "netCost": 439.474,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.007191504887913869,
+     "populationGrowth": 0.008003097973409146,
+     "residual": 0.02902451870318079,
+     "netRealGrowth": 0.04892508710968846,
+     "needGrowth": 0.030127873148857964,
+     "netResidual": 0.018797213960830495
+    },
+    "2018": {
+     "grossCost": 636.59,
+     "netCost": 477.85999999999996,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.014631149248714781,
+     "populationGrowth": 0.014214368036880476,
+     "residual": 0.027477041830837656,
+     "netRealGrowth": 0.053220967123642104,
+     "needGrowth": 0.010344729655565186,
+     "netResidual": 0.04287623746807692
+    },
+    "2019": {
+     "grossCost": 639.674,
+     "netCost": 502.70199999999994,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.011352339977637405,
+     "populationGrowth": 0.00454545454545463,
+     "residual": 0.00807499990146443,
+     "netRealGrowth": 0.024492752251149108,
+     "needGrowth": 0.0020129124352537137,
+     "netResidual": 0.022479839815895394
+    },
+    "2020": {
+     "grossCost": 627.313,
+     "netCost": 479.33500000000004,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.006691771625118914,
+     "populationGrowth": -0.010432378079436866,
+     "residual": -0.05916578510438586,
+     "netRealGrowth": -0.06443296554794431,
+     "needGrowth": -0.015124850710122411,
+     "netResidual": -0.049308114837821895
+    },
+    "2021": {
+     "grossCost": 630.617,
+     "netCost": 494.73900000000003,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": -0.002079533292749458,
+     "populationGrowth": -0.017274228375460443,
+     "residual": 0.002338994027032415,
+     "netRealGrowth": 0.005666011448592245,
+     "needGrowth": -0.0027180053909011087,
+     "netResidual": 0.008384016839493354
+    },
+    "2022": {
+     "grossCost": 652.264,
+     "netCost": 514.846,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": -0.001233990191458867,
+     "populationGrowth": -0.009952177846710653,
+     "residual": -0.00701379008018721,
+     "netRealGrowth": -0.00776864260279253,
+     "needGrowth": 0.0033165775717362766,
+     "netResidual": -0.011085220174528808
+    },
+    "2023": {
+     "grossCost": 697.188,
+     "netCost": 556.741,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.0016152372598221554,
+     "populationGrowth": -0.003916449086161844,
+     "residual": 0.014074747630813622,
+     "netRealGrowth": 0.020951957501951668,
+     "needGrowth": -0.005386831955170373,
+     "netResidual": 0.026338789457122043
+    },
+    "2024": {
+     "grossCost": 712.098,
+     "netCost": 567.322,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": -0.00037664458449271354,
+     "populationGrowth": -0.011664482306684154,
+     "residual": -0.021536864485909413,
+     "netRealGrowth": -0.02448883521261791,
+     "needGrowth": 0.005929636089130387,
+     "netResidual": -0.030418471301748295
+    },
+    "2025": {
+     "grossCost": 676.882,
      "netCost": 535.899,
-     "nominalGrowth": -0.0553882980036029,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.06113842397615332,
+     "volumeGrowth": 0.0036285126340984686,
+     "populationGrowth": -0.0021217345179684877,
+     "residual": -0.05257752865392895,
+     "netRealGrowth": -0.06113842397615332,
      "needGrowth": 0.01349268052563827,
-     "residual": -0.0746311045017916
+     "netResidual": -0.0746311045017916
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.014601810792066197,
-     "median": 0.020638526888362943,
-     "stdev": 0.02806574397063478,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.010837327987371878,
+     "median": 0.01709468673575687,
+     "stdev": 0.019896778172231358,
+     "years": 9,
+     "netResidualMean": 0.011443505260574529
     },
-    "2010-2025": {
-     "mean": 0.000956125212586673,
-     "median": 0.016586772115268274,
-     "stdev": 0.03560894724461579,
-     "years": 16
+    "2011-2025": {
+     "mean": -0.0017562849853479002,
+     "median": 0.006221950283715083,
+     "stdev": 0.028232960908765557,
+     "years": 15,
+     "netResidualMean": -0.0018485704782736298
     },
     "2016-2025": {
-     "mean": -0.0029716281104680926,
-     "median": 0.012617274504642409,
-     "stdev": 0.0375735810074256,
-     "years": 10
+     "mean": -0.004220897949532565,
+     "median": 0.005206996964248423,
+     "stdev": 0.031195210637032726,
+     "years": 10,
+     "netResidualMean": -0.0029716281104680926
     },
     "2020-2025": {
-     "mean": -0.02178668408654587,
-     "median": -0.02075184573813855,
-     "stdev": 0.03732378168990929,
-     "years": 6
+     "mean": -0.020646704444427566,
+     "median": -0.014275327283048311,
+     "stdev": 0.029745142181481544,
+     "years": 6,
+     "netResidualMean": -0.02178668408654587
     }
    }
   },
   "0580": {
    "name": "Linköping",
    "excludedYears": [],
-   "costDrift": 0.0033543036098514123,
+   "costDrift": 0.003185253590900087,
    "knownBy": {
-    "2015": 0.008957433696151007,
-    "2016": 0.008635778623229614,
-    "2017": 0.005113871492546969,
-    "2018": 0.005514340507189366,
-    "2019": 0.006358728902366255,
-    "2020": 0.0041736906022384265,
-    "2021": 0.006229626593278441,
-    "2022": 0.0027472054191070715,
-    "2023": 0.0036768279745920196,
-    "2024": 0.003170666878539087,
-    "2025": 0.0033543036098514123
+    "2015": 0.00791471890965445,
+    "2016": 0.009225702247984802,
+    "2017": 0.006668464240804329,
+    "2018": 0.007167335736146599,
+    "2019": 0.007690292357483617,
+    "2020": 0.0053037802375977775,
+    "2021": 0.006811640671234409,
+    "2022": 0.0033936012093667423,
+    "2023": 0.003918872947894085,
+    "2024": 0.0032675109933335716,
+    "2025": 0.003185253590900087
    },
-   "years": {
-    "2010": {
-     "netCost": 5995.082,
-     "nominalGrowth": 0.05900231511167697,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.03478826960296755,
-     "needGrowth": 0.0070819384478365615,
-     "residual": 0.027706331155130985
-    },
-    "2011": {
-     "netCost": 6292.233,
-     "nominalGrowth": 0.04956579409589401,
-     "pkv": 0.0158,
-     "realGrowth": 0.0332405927307482,
-     "needGrowth": 0.0044021560538146706,
-     "residual": 0.028838436676933525
-    },
-    "2012": {
-     "netCost": 6241.839,
-     "nominalGrowth": -0.008008921475094799,
-     "pkv": 0.0202,
-     "realGrowth": -0.027650383723872518,
-     "needGrowth": 0.006733080330169029,
-     "residual": -0.034383464054041545
-    },
-    "2013": {
-     "netCost": 6275.517000000001,
-     "nominalGrowth": 0.005395525261065126,
-     "pkv": 0.0261,
-     "realGrowth": -0.020177833290064173,
-     "needGrowth": 0.011061120233692174,
-     "residual": -0.031238953523756347
-    },
-    "2014": {
-     "netCost": 6876.751,
-     "nominalGrowth": 0.09580628974473338,
-     "pkv": 0.0236,
-     "realGrowth": 0.07054151010622633,
-     "needGrowth": 0.011062162811063226,
-     "residual": 0.05947934729516311
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 7162.717,
-     "nominalGrowth": 0.041584463360677004,
-     "pkv": 0.0262,
-     "realGrowth": 0.014991681310345895,
-     "needGrowth": 0.011648776682869583,
-     "residual": 0.003342904627476311
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 7562.353,
-     "nominalGrowth": 0.05579391172372161,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.02772669566510766,
-     "needGrowth": 0.0210208474794064,
-     "residual": 0.00670584818570126
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 7833.939,
-     "nominalGrowth": 0.035912896422581664,
-     "pkv": 0.03655,
-     "realGrowth": -0.0006146385388243747,
-     "needGrowth": 0.018924839883407173,
-     "residual": -0.019539478422231547
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 8297.702,
-     "nominalGrowth": 0.05919921000150752,
-     "pkv": 0.0324,
-     "realGrowth": 0.02595816544121221,
-     "needGrowth": 0.017240072816883664,
-     "residual": 0.008718092624328547
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 8755.812,
-     "nominalGrowth": 0.05520926155217443,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.027631836352468575,
-     "needGrowth": 0.01367361189351033,
-     "residual": 0.013958224458958245
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 8850.931,
-     "nominalGrowth": 0.010863526992128225,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.008166188256718221,
-     "needGrowth": 0.009510504142321633,
-     "residual": -0.017676692399039854
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 9422.508,
-     "nominalGrowth": 0.0645781782729975,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.037275993384386474,
-     "needGrowth": 0.008431070889667868,
-     "residual": 0.02884492249471861
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 9551.528999999999,
-     "nominalGrowth": 0.013692851202673273,
-     "pkv": 0.048789300485049994,
-     "realGrowth": -0.03346377510348841,
-     "needGrowth": 0.005578073567460954,
-     "residual": -0.03904184867094937
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 10301.277,
-     "nominalGrowth": 0.07849507654743038,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.018234038011294418,
-     "needGrowth": 0.00247211681539807,
-     "residual": 0.015761921195896346
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 10742.174,
-     "nominalGrowth": 0.04280022758343471,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.001709492625416087,
-     "needGrowth": 0.0022060958407858836,
-     "residual": -0.0039155884662019705
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 7548.53,
+     "netCost": 6292.233,
+     "pkv": 0.0158,
+     "volumeGrowth": 0.0026557269179388054,
+     "populationGrowth": 0.011928951551593014,
+     "residual": 0.026759225750848215,
+     "netRealGrowth": 0.0332405927307482,
+     "needGrowth": 0.0044021560538146706,
+     "netResidual": 0.028838436676933525
+    },
+    "2012": {
+     "grossCost": 7577.879,
+     "netCost": 6241.839,
+     "pkv": 0.0202,
+     "volumeGrowth": 0.0029928484774985886,
+     "populationGrowth": 0.006269806578516057,
+     "residual": -0.024923324978725736,
+     "netRealGrowth": -0.027650383723872518,
+     "needGrowth": 0.006733080330169029,
+     "netResidual": -0.034383464054041545
+    },
+    "2013": {
+     "grossCost": 8369.683,
+     "netCost": 6275.517000000001,
+     "pkv": 0.0261,
+     "volumeGrowth": 0.0040363883666076905,
+     "populationGrowth": 0.008056524631110173,
+     "residual": -0.019158948098676465,
+     "netRealGrowth": -0.020177833290064173,
+     "needGrowth": 0.011061120233692174,
+     "netResidual": -0.031238953523756347
+    },
+    "2014": {
+     "grossCost": 8371.728,
+     "netCost": 6876.751,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.006191769547173376,
+     "populationGrowth": 0.011318264757172347,
+     "residual": 0.049226779092790274,
+     "netRealGrowth": 0.07054151010622633,
+     "needGrowth": 0.011062162811063226,
+     "netResidual": 0.05947934729516311
+    },
+    "2015": {
+     "grossCost": 8804.246,
+     "netCost": 7162.717,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.007273857634819247,
+     "populationGrowth": 0.011178279916379319,
+     "residual": 0.006986032090006811,
+     "netRealGrowth": 0.014991681310345895,
+     "needGrowth": 0.011648776682869583,
+     "netResidual": 0.003342904627476311
+    },
+    "2016": {
+     "grossCost": 9431.74,
+     "netCost": 7562.353,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.008047039506922093,
+     "populationGrowth": 0.007143750699560858,
+     "residual": 0.01571555536564495,
+     "netRealGrowth": 0.02772669566510766,
+     "needGrowth": 0.0210208474794064,
+     "netResidual": 0.00670584818570126
+    },
+    "2017": {
+     "grossCost": 9882.021,
+     "netCost": 7833.939,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.012023676590189103,
+     "populationGrowth": 0.01863812873449011,
+     "residual": -0.008717566525056952,
+     "netRealGrowth": -0.0006146385388243747,
+     "needGrowth": 0.018924839883407173,
+     "netResidual": -0.019539478422231547
+    },
+    "2018": {
+     "grossCost": 10342.007,
+     "netCost": 8297.702,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.013234140003060446,
+     "populationGrowth": 0.017347272762278765,
+     "residual": 0.01079650656704878,
+     "netRealGrowth": 0.02595816544121221,
+     "needGrowth": 0.017240072816883664,
+     "netResidual": 0.008718092624328547
+    },
+    "2019": {
+     "grossCost": 10678.515,
+     "netCost": 8755.812,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.013226038022866149,
+     "populationGrowth": 0.0158591975775928,
+     "residual": 0.0119210322548986,
+     "netRealGrowth": 0.027631836352468575,
+     "needGrowth": 0.01367361189351033,
+     "netResidual": 0.013958224458958245
+    },
+    "2020": {
+     "grossCost": 10910.01,
+     "netCost": 8850.931,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.011857711884096567,
+     "populationGrowth": 0.0125253052150478,
+     "residual": -0.016107330179254253,
+     "netRealGrowth": -0.008166188256718221,
+     "needGrowth": 0.009510504142321633,
+     "netResidual": -0.017676692399039854
+    },
+    "2021": {
+     "grossCost": 11469.339,
+     "netCost": 9422.508,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.009576615922580078,
+     "populationGrowth": 0.009598223868605427,
+     "residual": 0.02226246965666734,
+     "netRealGrowth": 0.037275993384386474,
+     "needGrowth": 0.008431070889667868,
+     "netResidual": 0.02884492249471861
+    },
+    "2022": {
+     "grossCost": 11761.906,
+     "netCost": 9551.528999999999,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.008045164671363736,
+     "populationGrowth": 0.005534091461340429,
+     "residual": -0.034273600355595235,
+     "netRealGrowth": -0.03346377510348841,
+     "needGrowth": 0.005578073567460954,
+     "netResidual": -0.03904184867094937
+    },
+    "2023": {
+     "grossCost": 12456.996,
+     "netCost": 10301.277,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.006202457309755438,
+     "populationGrowth": 0.006923341811305717,
+     "residual": 0.009844935310726388,
+     "netRealGrowth": 0.018234038011294418,
+     "needGrowth": 0.00247211681539807,
+     "netResidual": 0.015761921195896346
+    },
+    "2024": {
+     "grossCost": 12869.354,
+     "netCost": 10742.174,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.0041423543275938,
+     "populationGrowth": 0.004385833338333089,
+     "residual": -0.004777244218791998,
+     "netRealGrowth": -0.001709492625416087,
+     "needGrowth": 0.0022060958407858836,
+     "netResidual": -0.0039155884662019705
+    },
+    "2025": {
+     "grossCost": 13150.0,
      "netCost": 10869.693,
-     "nominalGrowth": 0.01187087455481528,
      "pkv": 0.006124572694627295,
-     "realGrowth": 0.00571132245065642,
+     "volumeGrowth": 0.0031590202518736454,
+     "populationGrowth": 0.0037693245083749716,
+     "residual": 0.0022242821309705896,
+     "netRealGrowth": 0.00571132245065642,
      "needGrowth": -0.0003975321288798685,
-     "residual": 0.006108854579536288
+     "netResidual": 0.006108854579536288
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.006358728902366255,
-     "median": 0.007711970405014904,
-     "stdev": 0.029058602193741317,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.007622810168753164,
+     "median": 0.01079650656704878,
+     "stdev": 0.023008311281103606,
+     "years": 9,
+     "netResidualMean": 0.0039867730965035065
     },
-    "2010-2025": {
-     "mean": 0.0033543036098514123,
-     "median": 0.006407351382618774,
-     "stdev": 0.026825091481608512,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.003185253590900087,
+     "median": 0.006986032090006811,
+     "stdev": 0.021811321074090492,
+     "years": 15,
+     "netResidualMean": 0.001730835106832774
     },
     "2016-2025": {
-     "mean": -7.574441928344649e-06,
-     "median": 0.006407351382618774,
-     "stdev": 0.020186478601259533,
-     "years": 10
+     "mean": 0.0008889040007258209,
+     "median": 0.006034608720848489,
+     "stdev": 0.017088606581475964,
+     "years": 10,
+     "netResidualMean": -7.574441928344649e-06
     },
     "2020-2025": {
-     "mean": -0.0016530718776733252,
-     "median": 0.0010966330566671589,
-     "stdev": 0.024304127932685028,
-     "years": 6
+     "mean": -0.0034710812758795284,
+     "median": -0.0012764810439107044,
+     "stdev": 0.019910525534533548,
+     "years": 6,
+     "netResidualMean": -0.0016530718776733252
     }
    }
   },
@@ -1487,870 +2183,1305 @@
     2022,
     2023
    ],
-   "costDrift": 0.0012656283027190692,
+   "costDrift": 0.0013179961896942183,
    "knownBy": {
-    "2015": 0.007044239255966982,
-    "2016": 0.0058913071864141785,
-    "2017": 0.005449700268994596,
-    "2018": 0.003599292254448436,
-    "2019": 0.0050995034493590274,
-    "2020": 0.000817444253214592,
-    "2021": -0.0018562897335383445,
-    "2022": -0.0018562897335383445,
-    "2023": -0.0018562897335383445,
-    "2024": 0.0013305823237629317,
-    "2025": 0.0012656283027190692
+    "2015": 0.007061468810466409,
+    "2016": 0.007036701782285548,
+    "2017": 0.006432874649265706,
+    "2018": 0.004098965146883876,
+    "2019": 0.005666436376340172,
+    "2020": 0.0012233635070358017,
+    "2021": -0.0009283466431645359,
+    "2022": -0.000952347411878723,
+    "2023": -0.0009725376606059595,
+    "2024": 0.0015698513258922686,
+    "2025": 0.0013179961896942183
    },
-   "years": {
-    "2010": {
-     "netCost": 5621.0019999999995,
-     "nominalGrowth": 0.06536962399345714,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.041009990222256265,
-     "needGrowth": 0.0030453987264518045,
-     "residual": 0.03796459149580446
-    },
-    "2011": {
-     "netCost": 5641.959,
-     "nominalGrowth": 0.0037283388264228723,
-     "pkv": 0.0158,
-     "realGrowth": -0.01188389562273795,
-     "needGrowth": 0.001459101579190826,
-     "residual": -0.013342997201928776
-    },
-    "2012": {
-     "netCost": 5851.094,
-     "nominalGrowth": 0.03706779861392118,
-     "pkv": 0.0202,
-     "realGrowth": 0.016533815540012986,
-     "needGrowth": 0.009738521859701584,
-     "residual": 0.006795293680311402
-    },
-    "2013": {
-     "netCost": 6022.786,
-     "nominalGrowth": 0.029343572330234213,
-     "pkv": 0.0261,
-     "realGrowth": 0.0031610684438496683,
-     "needGrowth": 0.014852385159184791,
-     "residual": -0.011691316715335123
-    },
-    "2014": {
-     "netCost": 6468.858,
-     "nominalGrowth": 0.07406406271117727,
-     "pkv": 0.0236,
-     "realGrowth": 0.04930056927625759,
-     "needGrowth": 0.01137194441271749,
-     "residual": 0.037928624863540095
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 6652.229,
-     "nominalGrowth": 0.028346734462249668,
-     "pkv": 0.0262,
-     "realGrowth": 0.0020919260010228147,
-     "needGrowth": 0.017480686587612978,
-     "residual": -0.015388760586590163
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 6959.153,
-     "nominalGrowth": 0.046138519885590146,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.018327982678636667,
-     "needGrowth": 0.01935426790953931,
-     "residual": -0.0010262852309026425
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 7320.950999999999,
-     "nominalGrowth": 0.0519887980620628,
-     "pkv": 0.03655,
-     "realGrowth": 0.014894407469068227,
-     "needGrowth": 0.012535955622010713,
-     "residual": 0.0023584518470575137
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 7525.322,
-     "nominalGrowth": 0.02791590873917893,
-     "pkv": 0.0324,
-     "realGrowth": -0.004343366196068454,
-     "needGrowth": 0.006860605665852386,
-     "residual": -0.01120397186192084
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 7978.707,
-     "nominalGrowth": 0.06024792028832793,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.03253881198133146,
-     "needGrowth": 0.013937407777777109,
-     "residual": 0.018601404203554352
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 7822.021000000001,
-     "nominalGrowth": -0.019638019042433785,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.038093536370207404,
-     "needGrowth": 0.003909611338022359,
-     "residual": -0.042003147708229764
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 7864.674,
-     "nominalGrowth": 0.005452938569200816,
-     "pkv": 0.026321041904701303,
-     "realGrowth": -0.020332919703928476,
-     "needGrowth": 0.010934443883892172,
-     "residual": -0.031267363587820646
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 11532.393,
-     "nominalGrowth": 0.4663535958388103,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.39813935474040685,
-     "needGrowth": 0.006138794144090692,
-     "residual": 0.39200056059631616
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 8839.996000000001,
-     "nominalGrowth": -0.23346386131655406,
-     "pkv": 0.059181913279810816,
-     "realGrowth": -0.27629415771477095,
-     "needGrowth": -0.0012219144442512102,
-     "residual": -0.2750722432705197
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 9610.112000000001,
-     "nominalGrowth": 0.08711723398969862,
-     "pkv": 0.04458593954369805,
-     "realGrowth": 0.04071593617714142,
-     "needGrowth": 0.001142889165763176,
-     "residual": 0.039573047011378246
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 6980.668,
+     "netCost": 5641.959,
+     "pkv": 0.0158,
+     "volumeGrowth": 0.0011420245224194048,
+     "populationGrowth": 0.006158416760796648,
+     "residual": -0.009695905638153368,
+     "netRealGrowth": -0.01188389562273795,
+     "needGrowth": 0.001459101579190826,
+     "netResidual": -0.013342997201928776
+    },
+    "2012": {
+     "grossCost": 7162.184,
+     "netCost": 5851.094,
+     "pkv": 0.0202,
+     "volumeGrowth": 0.0011309772546479469,
+     "populationGrowth": 0.004405997693194941,
+     "residual": 0.013062267841025932,
+     "netRealGrowth": 0.016533815540012986,
+     "needGrowth": 0.009738521859701584,
+     "netResidual": 0.006795293680311402
+    },
+    "2013": {
+     "grossCost": 7348.1,
+     "netCost": 6022.786,
+     "pkv": 0.0261,
+     "volumeGrowth": 0.004225088496363494,
+     "populationGrowth": 0.011491085030967074,
+     "residual": 0.00045891127635955264,
+     "netRealGrowth": 0.0031610684438496683,
+     "needGrowth": 0.014852385159184791,
+     "netResidual": -0.011691316715335123
+    },
+    "2014": {
+     "grossCost": 7696.942,
+     "netCost": 6468.858,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.007687680567861621,
+     "populationGrowth": 0.012299052405316147,
+     "residual": 0.03467268877034391,
+     "netRealGrowth": 0.04930056927625759,
+     "needGrowth": 0.01137194441271749,
+     "netResidual": 0.037928624863540095
+    },
+    "2015": {
+     "grossCost": 8028.595,
+     "netCost": 6652.229,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.00814166232986202,
+     "populationGrowth": 0.011469244629866315,
+     "residual": -0.004516766195753585,
+     "netRealGrowth": 0.0020919260010228147,
+     "needGrowth": 0.017480686587612978,
+     "netResidual": -0.015388760586590163
+    },
+    "2016": {
+     "grossCost": 8648.913,
+     "netCost": 6959.153,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.010701175505776872,
+     "populationGrowth": 0.01295062942128733,
+     "residual": 0.006633960283418228,
+     "netRealGrowth": 0.018327982678636667,
+     "needGrowth": 0.01935426790953931,
+     "netResidual": -0.0010262852309026425
+    },
+    "2017": {
+     "grossCost": 9150.969,
+     "netCost": 7320.950999999999,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.012734887493431657,
+     "populationGrowth": 0.016988360637793187,
+     "residual": 0.0025363211360718285,
+     "netRealGrowth": 0.014894407469068227,
+     "needGrowth": 0.012535955622010713,
+     "netResidual": 0.0023584518470575137
+    },
+    "2018": {
+     "grossCost": 9554.241,
+     "netCost": 7525.322,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.011144909684023485,
+     "populationGrowth": 0.011222490905046456,
+     "residual": -0.012239000936736466,
+     "netRealGrowth": -0.004343366196068454,
+     "needGrowth": 0.006860605665852386,
+     "netResidual": -0.01120397186192084
+    },
+    "2019": {
+     "grossCost": 9789.031,
+     "netCost": 7978.707,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.008173302173744235,
+     "populationGrowth": 0.005314808375967761,
+     "residual": 0.01843361281625233,
+     "netRealGrowth": 0.03253881198133146,
+     "needGrowth": 0.013937407777777109,
+     "netResidual": 0.018601404203554352
+    },
+    "2020": {
+     "grossCost": 9763.188,
+     "netCost": 7822.021000000001,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.00943543148684367,
+     "populationGrowth": 0.010552245969677188,
+     "residual": -0.03817253765668571,
+     "netRealGrowth": -0.038093536370207404,
+     "needGrowth": 0.003909611338022359,
+     "netResidual": -0.042003147708229764
+    },
+    "2021": {
+     "grossCost": 9937.389,
+     "netCost": 7864.674,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.006189158518056903,
+     "populationGrowth": 0.002144288997073529,
+     "residual": -0.021917394336022467,
+     "netRealGrowth": -0.020332919703928476,
+     "needGrowth": 0.010934443883892172,
+     "netResidual": -0.031267363587820646
+    },
+    "2022": {
+     "grossCost": 13564.032,
+     "netCost": 11532.393,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.007315477361295342,
+     "populationGrowth": 0.006830315449058322,
+     "residual": 0.30696008637006433,
+     "netRealGrowth": 0.39813935474040685,
+     "needGrowth": 0.006138794144090692,
+     "netResidual": 0.39200056059631616
+    },
+    "2023": {
+     "grossCost": 11200.137,
+     "netCost": 8839.996000000001,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.006020725023086371,
+     "populationGrowth": 0.004582646859294659,
+     "residual": -0.23880698507963938,
+     "netRealGrowth": -0.27629415771477095,
+     "needGrowth": -0.0012219144442512102,
+     "netResidual": -0.2750722432705197
+    },
+    "2024": {
+     "grossCost": 11646.243,
+     "netCost": 9610.112000000001,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.002557384890268466,
+     "populationGrowth": 0.0002963065049614855,
+     "residual": 0.029565542751122997,
+     "netRealGrowth": 0.04071593617714142,
+     "needGrowth": 0.001142889165763176,
+     "netResidual": 0.039573047011378246
+    },
+    "2025": {
+     "grossCost": 11754.969,
      "netCost": 9673.917000000001,
-     "nominalGrowth": 0.00663936070672233,
      "pkv": 0.006124572694627295,
-     "realGrowth": 0.000511654347847168,
+     "volumeGrowth": 0.0018927433925168824,
+     "populationGrowth": -0.001260651818989711,
+     "residual": -0.0016877496452183394,
+     "netRealGrowth": 0.000511654347847168,
      "needGrowth": 9.042831869831072e-05,
-     "residual": 0.0004212260291488573
+     "netResidual": 0.0004212260291488573
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.0050995034493590274,
-     "median": 0.0006660833080774356,
-     "stdev": 0.020264118937891235,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.005482898816980929,
+     "median": 0.0025363211360718285,
+     "stdev": 0.014819389809837883,
+     "years": 9,
+     "netResidualMean": 0.0014478269997539796
     },
-    "2010-2025": {
-     "mean": 0.0012656283027190692,
-     "median": -0.0003025296008768926,
-     "stdev": 0.02517851727093644,
-     "years": 14
+    "2011-2025": {
+     "mean": 0.0013179961896942183,
+     "median": 0.00045891127635955264,
+     "stdev": 0.02004032657514022,
+     "years": 13,
+     "netResidualMean": -0.001557368865979807
     },
     "2016-2025": {
-     "mean": -0.0030683299122168653,
-     "median": -0.0003025296008768926,
-     "stdev": 0.025942121063684025,
-     "years": 8
+     "mean": -0.0021059056984747,
+     "median": 0.0004242857454267446,
+     "stdev": 0.02177495117762105,
+     "years": 8,
+     "netResidualMean": -0.0030683299122168653
     },
     "2020-2025": {
-     "mean": -0.008319059563880826,
-     "median": -0.015423068779335894,
-     "stdev": 0.03665737268342771,
-     "years": 4
+     "mean": -0.00805303472170088,
+     "median": -0.011802571990620403,
+     "stdev": 0.029183780596703224,
+     "years": 4,
+     "netResidualMean": -0.008319059563880826
     }
    }
   },
   "0582": {
    "name": "Söderköping",
    "excludedYears": [],
-   "costDrift": -0.0006669440315986673,
+   "costDrift": 0.0007787685847069496,
    "knownBy": {
-    "2015": 0.0025605798145460715,
-    "2016": 0.0033192812819915008,
-    "2017": 0.003597436986627803,
-    "2018": 0.002605839824342035,
-    "2019": 0.004145130163921988,
-    "2020": 0.0013754801965636144,
-    "2021": 0.0026640246029826144,
-    "2022": 0.0013069247532007527,
-    "2023": 0.0038439043395617854,
-    "2024": 0.0008724212069245623,
-    "2025": -0.0006669440315986673
+    "2015": 0.004155488499755777,
+    "2016": 0.006300037178295821,
+    "2017": 0.00730388978106982,
+    "2018": 0.005827738325180479,
+    "2019": 0.006339788072085166,
+    "2020": 0.0033928941579652204,
+    "2021": 0.004548501522415422,
+    "2022": 0.003722776327548296,
+    "2023": 0.0056358733606348774,
+    "2024": 0.0020375544779693594,
+    "2025": 0.0007787685847069496
    },
-   "years": {
-    "2010": {
-     "netCost": 596.014,
-     "nominalGrowth": 0.025456885368312587,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.0020098547667701805,
-     "needGrowth": -0.004664097664311029,
-     "residual": 0.006673952431081209
-    },
-    "2011": {
-     "netCost": 608.735,
-     "nominalGrowth": 0.021343458375138846,
-     "pkv": 0.0158,
-     "realGrowth": 0.0054572340767264915,
-     "needGrowth": -0.005555738656922489,
-     "residual": 0.011012972733648981
-    },
-    "2012": {
-     "netCost": 621.244,
-     "nominalGrowth": 0.02054917164283321,
-     "pkv": 0.0202,
-     "realGrowth": 0.00034225803061471716,
-     "needGrowth": 0.009467190429092685,
-     "residual": -0.009124932398477968
-    },
-    "2013": {
-     "netCost": 613.582,
-     "nominalGrowth": -0.01233331830971407,
-     "pkv": 0.0261,
-     "realGrowth": -0.03745572391551899,
-     "needGrowth": -0.0022578109265167074,
-     "residual": -0.03519791298900228
-    },
-    "2014": {
-     "netCost": 659.267,
-     "nominalGrowth": 0.07445622589971679,
-     "pkv": 0.0236,
-     "realGrowth": 0.049683690796909596,
-     "needGrowth": 0.004844806619030122,
-     "residual": 0.04483888417787947
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 677.83,
-     "nominalGrowth": 0.028157028942749962,
-     "pkv": 0.0262,
-     "realGrowth": 0.0019070638693723385,
-     "needGrowth": 0.004746548937225322,
-     "residual": -0.0028394850678529837
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 714.664,
-     "nominalGrowth": 0.054341058967587674,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.02631246553385802,
-     "needGrowth": 0.018440975447193943,
-     "residual": 0.007871490086664077
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 759.53,
-     "nominalGrowth": 0.06277915216101548,
-     "pkv": 0.03655,
-     "realGrowth": 0.02530428070137991,
-     "needGrowth": 0.01975975378229799,
-     "residual": 0.005544526919081919
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 789.823,
-     "nominalGrowth": 0.039883875554619364,
-     "pkv": 0.0324,
-     "realGrowth": 0.00724900770497805,
-     "needGrowth": 0.012575945178922158,
-     "residual": -0.005326937473944108
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 831.846,
-     "nominalGrowth": 0.05320559163255578,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.025680531455927857,
-     "needGrowth": 0.007681788235786289,
-     "residual": 0.01799874322014157
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 831.315,
-     "nominalGrowth": -0.000638339307996838,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.0194515295416684,
-     "needGrowth": 0.006869489935351724,
-     "residual": -0.026321019477020126
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 878.7489999999999,
-     "nominalGrowth": 0.05705899689046845,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.029949649018909286,
-     "needGrowth": 0.013111635945317675,
-     "residual": 0.01683801307359161
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 922.0699999999999,
-     "nominalGrowth": 0.049298491378084064,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.00048550351610066045,
-     "needGrowth": 0.015463776960282245,
-     "residual": -0.014978273444181584
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 1023.9399999999999,
-     "nominalGrowth": 0.11047968158599675,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.048431499502611164,
-     "needGrowth": 0.01160686054035596,
-     "residual": 0.036824638962255206
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 1028.262,
-     "nominalGrowth": 0.004220950446315319,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.038642094986473974,
-     "needGrowth": 0.0020862476635225826,
-     "residual": -0.04072834264999656
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 767.768,
+     "netCost": 608.735,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.0017490366241167399,
+     "populationGrowth": -0.0012818686796752798,
+     "residual": 0.005853602845149242,
+     "netRealGrowth": 0.0054572340767264915,
+     "needGrowth": -0.005555738656922489,
+     "netResidual": 0.011012972733648981
+    },
+    "2012": {
+     "grossCost": 798.282,
+     "netCost": 621.244,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.0029115931755514524,
+     "populationGrowth": 0.0013548203080433474,
+     "residual": 0.003473704120538157,
+     "netRealGrowth": 0.00034225803061471716,
+     "needGrowth": 0.009467190429092685,
+     "netResidual": -0.009124932398477968
+    },
+    "2013": {
+     "grossCost": 804.206,
+     "netCost": 613.582,
+     "pkv": 0.0261,
+     "volumeGrowth": 0.002134730283714914,
+     "populationGrowth": 0.0071209855443994385,
+     "residual": -0.029641233732574324,
+     "netRealGrowth": -0.03745572391551899,
+     "needGrowth": -0.0022578109265167074,
+     "netResidual": -0.03519791298900228
+    },
+    "2014": {
+     "grossCost": 847.697,
+     "netCost": 659.267,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.0003056993414538578,
+     "populationGrowth": 0.003676730538075379,
+     "residual": 0.0384610295655905,
+     "netRealGrowth": 0.049683690796909596,
+     "needGrowth": 0.004844806619030122,
+     "netResidual": 0.04483888417787947
+    },
+    "2015": {
+     "grossCost": 903.03,
+     "netCost": 677.83,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.0019786671964650004,
+     "populationGrowth": 0.0051426558647411635,
+     "residual": 0.0006463400970553312,
+     "netRealGrowth": 0.0019070638693723385,
+     "needGrowth": 0.004746548937225322,
+     "netResidual": -0.0028394850678529837
+    },
+    "2016": {
+     "grossCost": 997.213,
+     "netCost": 714.664,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.002926888363864899,
+     "populationGrowth": -0.0019624334174376257,
+     "residual": 0.0162866392180272,
+     "netRealGrowth": 0.02631246553385802,
+     "needGrowth": 0.018440975447193943,
+     "netResidual": 0.007871490086664077
+    },
+    "2017": {
+     "grossCost": 1022.758,
+     "netCost": 759.53,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.008353859331241553,
+     "populationGrowth": 0.011376404494382042,
+     "residual": 0.012896380968830945,
+     "netRealGrowth": 0.02530428070137991,
+     "needGrowth": 0.01975975378229799,
+     "netResidual": 0.005544526919081919
+    },
+    "2018": {
+     "grossCost": 1052.861,
+     "netCost": 789.823,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.011651071322257733,
+     "populationGrowth": 0.008262741285932407,
+     "residual": -0.0040934649863240136,
+     "netRealGrowth": 0.00724900770497805,
+     "needGrowth": 0.012575945178922158,
+     "netResidual": -0.005326937473944108
+    },
+    "2019": {
+     "grossCost": 1086.536,
+     "netCost": 831.846,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.010601368032042924,
+     "populationGrowth": 0.0066799807175814685,
+     "residual": 0.010223837829832494,
+     "netRealGrowth": 0.025680531455927857,
+     "needGrowth": 0.007681788235786289,
+     "netResidual": 0.01799874322014157
+    },
+    "2020": {
+     "grossCost": 1095.319,
+     "netCost": 831.315,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.00848506184660991,
+     "populationGrowth": 0.0005472704884388335,
+     "residual": -0.023053155481887355,
+     "netRealGrowth": -0.0194515295416684,
+     "needGrowth": 0.006869489935351724,
+     "netResidual": -0.026321019477020126
+    },
+    "2021": {
+     "grossCost": 1138.489,
+     "netCost": 878.7489999999999,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.006934311861806819,
+     "populationGrowth": -0.0006837139340899467,
+     "residual": 0.01552414904961763,
+     "netRealGrowth": 0.029949649018909286,
+     "needGrowth": 0.013111635945317675,
+     "netResidual": 0.01683801307359161
+    },
+    "2022": {
+     "grossCost": 1182.091,
+     "netCost": 922.0699999999999,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.008890904744532468,
+     "populationGrowth": 0.0038998357963875296,
+     "residual": -0.007559231699507674,
+     "netRealGrowth": 0.00048550351610066045,
+     "needGrowth": 0.015463776960282245,
+     "netResidual": -0.014978273444181584
+    },
+    "2023": {
+     "grossCost": 1282.13,
+     "netCost": 1023.9399999999999,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.010871420239743967,
+     "populationGrowth": 0.010972534587337268,
+     "residual": 0.02900501773892894,
+     "netRealGrowth": 0.048431499502611164,
+     "needGrowth": 0.01160686054035596,
+     "netResidual": 0.036824638962255206
+    },
+    "2024": {
+     "grossCost": 1285.412,
+     "netCost": 1028.262,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.010651235241313284,
+     "populationGrowth": 0.0022246191182417885,
+     "residual": -0.04063099128359271,
+     "netRealGrowth": -0.038642094986473974,
+     "needGrowth": 0.0020862476635225826,
+     "netResidual": -0.04072834264999656
+    },
+    "2025": {
+     "grossCost": 1324.566,
      "netCost": 1024.894,
-     "nominalGrowth": -0.003275429802910068,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.009342781950312573,
+     "volumeGrowth": 0.007302511977521853,
+     "populationGrowth": -0.00524651913634222,
+     "residual": -0.015711095479080117,
+     "netRealGrowth": -0.009342781950312573,
      "needGrowth": 0.014414640659134538,
-     "residual": -0.02375742260944711
+     "netResidual": -0.02375742260944711
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.004145130163921988,
-     "median": 0.006109239675081564,
-     "stdev": 0.020493318704854536,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.006011870658458392,
+     "median": 0.005853602845149242,
+     "stdev": 0.018138956178248164,
+     "years": 9,
+     "netResidualMean": 0.0038641499120154084
     },
-    "2010-2025": {
-     "mean": -0.0006669440315986673,
-     "median": 0.0013525209256144677,
-     "stdev": 0.02411696429189945,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.0007787685847069496,
+     "median": 0.003473704120538157,
+     "stdev": 0.021575376399198126,
+     "years": 15,
+     "netResidualMean": -0.001156337129110659
     },
     "2016-2025": {
-     "mean": -0.0026034583392855106,
-     "median": 0.00010879472256890548,
-     "stdev": 0.023937844715841008,
-     "years": 10
+     "mean": -0.0007111914125154661,
+     "median": 0.00306518642175424,
+     "stdev": 0.02138637373961234,
+     "years": 10,
+     "netResidualMean": -0.0026034583392855106
     },
     "2020-2025": {
-     "mean": -0.00868706769079976,
-     "median": -0.01936784802681435,
-     "stdev": 0.029418156347118047,
-     "years": 6
+     "mean": -0.007070884525920214,
+     "median": -0.011635163589293895,
+     "stdev": 0.025567994623262934,
+     "years": 6,
+     "netResidualMean": -0.00868706769079976
     }
    }
   },
   "0583": {
    "name": "Motala",
    "excludedYears": [],
-   "costDrift": 0.003008951683905803,
+   "costDrift": 0.002165404738499429,
    "knownBy": {
-    "2015": 0.004023104101865499,
-    "2016": 0.005878106998858303,
-    "2017": 0.005323051472872747,
-    "2018": 0.005240485715802955,
-    "2019": 0.0033809893722516796,
-    "2020": 0.00418793697880806,
-    "2021": 0.005130870960826723,
-    "2022": 0.0017245254764188848,
-    "2023": 0.0039783536764737325,
-    "2024": 0.0033377405787385762,
-    "2025": 0.003008951683905803
+    "2015": 0.0054442725265796185,
+    "2016": 0.00803192289924746,
+    "2017": 0.007694211793829913,
+    "2018": 0.00701242854017857,
+    "2019": 0.004453392253793758,
+    "2020": 0.004681691115452968,
+    "2021": 0.005242910423177382,
+    "2022": 0.0022214329298379056,
+    "2023": 0.004175877656248195,
+    "2024": 0.0030997457226963976,
+    "2025": 0.002165404738499429
    },
-   "years": {
-    "2010": {
-     "netCost": 1767.864,
-     "nominalGrowth": 0.0361362741236706,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.012445059726080121,
-     "needGrowth": -0.00020390839165949535,
-     "residual": 0.012648968117739617
-    },
-    "2011": {
-     "netCost": 1793.206,
-     "nominalGrowth": 0.014334813085169484,
-     "pkv": 0.0158,
-     "realGrowth": -0.001442397041573673,
-     "needGrowth": -0.005319624957040459,
-     "residual": 0.003877227915466786
-    },
-    "2012": {
-     "netCost": 1759.305,
-     "nominalGrowth": -0.018905245688448424,
-     "pkv": 0.0202,
-     "realGrowth": -0.0383309602905787,
-     "needGrowth": -0.004783258440514295,
-     "residual": -0.0335477018500644
-    },
-    "2013": {
-     "netCost": 1827.206,
-     "nominalGrowth": 0.038595354415521976,
-     "pkv": 0.0261,
-     "realGrowth": 0.012177521114435264,
-     "needGrowth": 0.004766908620893091,
-     "residual": 0.007410612493542173
-    },
-    "2014": {
-     "netCost": 1964.67,
-     "nominalGrowth": 0.07523180199714763,
-     "pkv": 0.0236,
-     "realGrowth": 0.050441385303973796,
-     "needGrowth": 0.007563206052673194,
-     "residual": 0.0428781792513006
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 2023.5279999999998,
-     "nominalGrowth": 0.029958211811652813,
-     "pkv": 0.0262,
-     "realGrowth": 0.0036622605843430467,
-     "needGrowth": 0.01279092190113483,
-     "residual": -0.009128661316791783
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 2148.627,
-     "nominalGrowth": 0.061822223364341955,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.033594750722120814,
-     "needGrowth": 0.01658662634130569,
-     "residual": 0.017008124380815125
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 2265.366,
-     "nominalGrowth": 0.05433190591014636,
-     "pkv": 0.03655,
-     "realGrowth": 0.017154894515601038,
-     "needGrowth": 0.015717231724627183,
-     "residual": 0.0014376627909738551
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 2372.666,
-     "nominalGrowth": 0.04736541468354338,
-     "pkv": 0.0324,
-     "realGrowth": 0.014495752308740117,
-     "needGrowth": 0.0099157926494955,
-     "residual": 0.004579959659244617
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 2412.513,
-     "nominalGrowth": 0.016794188478277183,
-     "pkv": 0.026835900002466495,
-     "realGrowth": -0.00977927585524152,
-     "needGrowth": 0.0035752018644682744,
-     "residual": -0.013354477719709795
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 2497.437,
-     "nominalGrowth": 0.035201468344419284,
-     "pkv": 0.019186394962074527,
-     "realGrowth": 0.015713586309146876,
-     "needGrowth": 0.003456173264775009,
-     "residual": 0.012257413044371867
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 2613.9519999999998,
-     "nominalGrowth": 0.04665382950600949,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.019811332683556282,
-     "needGrowth": 0.0043081879205242694,
-     "residual": 0.015503144763032013
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 2645.04,
-     "nominalGrowth": 0.011893102857282845,
-     "pkv": 0.048789300485049994,
-     "realGrowth": -0.035179799804120004,
-     "needGrowth": 0.003971820532355168,
-     "residual": -0.03915162033647517
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 2913.293,
-     "nominalGrowth": 0.10141736986964278,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.039875545513279986,
-     "needGrowth": 0.006597425236093229,
-     "residual": 0.033278120277186754
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 3028.398,
-     "nominalGrowth": 0.03951027239621974,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.00485902303997654,
-     "needGrowth": 0.0007718197495770727,
-     "residual": -0.005630842789553612
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 2309.678,
+     "netCost": 1793.206,
+     "pkv": 0.0158,
+     "volumeGrowth": -7.6465646872248e-05,
+     "populationGrowth": 0.002676672322730278,
+     "residual": -0.0004515759156364929,
+     "netRealGrowth": -0.001442397041573673,
+     "needGrowth": -0.005319624957040459,
+     "netResidual": 0.003877227915466786
+    },
+    "2012": {
+     "grossCost": 2310.689,
+     "netCost": 1759.305,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.0019913330253549244,
+     "populationGrowth": -0.003027052794660978,
+     "residual": -0.02850200255453028,
+     "netRealGrowth": -0.0383309602905787,
+     "needGrowth": -0.004783258440514295,
+     "netResidual": -0.0335477018500644
+    },
+    "2013": {
+     "grossCost": 2350.567,
+     "netCost": 1827.206,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.0027097234133683923,
+     "populationGrowth": 0.000932389786745702,
+     "residual": 0.012237054355139332,
+     "netRealGrowth": 0.012177521114435264,
+     "needGrowth": 0.004766908620893091,
+     "netResidual": 0.007410612493542173
+    },
+    "2014": {
+     "grossCost": 2498.468,
+     "netCost": 1964.67,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.00045208264800677966,
+     "populationGrowth": 0.007643251247999583,
+     "residual": 0.04044188289430162,
+     "netRealGrowth": 0.050441385303973796,
+     "needGrowth": 0.007563206052673194,
+     "netResidual": 0.0428781792513006
+    },
+    "2015": {
+     "grossCost": 2633.379,
+     "netCost": 2023.5279999999998,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.0030191610494967325,
+     "populationGrowth": 0.008746770332092924,
+     "residual": 0.0017242000393813406,
+     "netRealGrowth": 0.0036622605843430467,
+     "needGrowth": 0.01279092190113483,
+     "netResidual": -0.009128661316791783
+    },
+    "2016": {
+     "grossCost": 2867.043,
+     "netCost": 2148.627,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0063381495386869435,
+     "populationGrowth": 0.008153961838518686,
+     "residual": 0.021230335778379406,
+     "netRealGrowth": 0.033594750722120814,
+     "needGrowth": 0.01658662634130569,
+     "netResidual": 0.017008124380815125
+    },
+    "2017": {
+     "grossCost": 2949.338,
+     "netCost": 2265.366,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.009379977216481539,
+     "populationGrowth": 0.008274479640118404,
+     "residual": 0.005498114400370735,
+     "netRealGrowth": 0.017154894515601038,
+     "needGrowth": 0.015717231724627183,
+     "netResidual": 0.0014376627909738551
+    },
+    "2018": {
+     "grossCost": 3042.315,
+     "netCost": 2372.666,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.010599869958076047,
+     "populationGrowth": 0.006727079384160062,
+     "residual": 0.00207230687140747,
+     "netRealGrowth": 0.014495752308740117,
+     "needGrowth": 0.0099157926494955,
+     "netResidual": 0.004579959659244617
+    },
+    "2019": {
+     "grossCost": 3080.378,
+     "netCost": 2412.513,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.00905064286123558,
+     "populationGrowth": 0.0031688442903397007,
+     "residual": -0.01583655551010399,
+     "netRealGrowth": -0.00977927585524152,
+     "needGrowth": 0.0035752018644682744,
+     "netResidual": -0.013354477719709795
+    },
+    "2020": {
+     "grossCost": 3178.256,
+     "netCost": 2497.437,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.0059640498105311135,
+     "populationGrowth": -0.00032046146450892543,
+     "residual": 0.006235960102825455,
+     "netRealGrowth": 0.015713586309146876,
+     "needGrowth": 0.003456173264775009,
+     "netResidual": 0.012257413044371867
+    },
+    "2021": {
+     "grossCost": 3322.93,
+     "netCost": 2613.9519999999998,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.00435335996770192,
+     "populationGrowth": -0.0007556155977377355,
+     "residual": 0.011004389708335394,
+     "netRealGrowth": 0.019811332683556282,
+     "needGrowth": 0.0043081879205242694,
+     "netResidual": 0.015503144763032013
+    },
+    "2022": {
+     "grossCost": 3374.617,
+     "netCost": 2645.04,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.0039334999396631876,
+     "populationGrowth": 0.0007791017415215151,
+     "residual": -0.03131794475034155,
+     "netRealGrowth": -0.035179799804120004,
+     "needGrowth": 0.003971820532355168,
+     "netResidual": -0.03915162033647517
+    },
+    "2023": {
+     "grossCost": 3678.388,
+     "netCost": 2913.293,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.0038132519342781723,
+     "populationGrowth": 0.0012364335760406409,
+     "residual": 0.027603432721146293,
+     "netRealGrowth": 0.039875545513279986,
+     "needGrowth": 0.006597425236093229,
+     "netResidual": 0.033278120277186754
+    },
+    "2024": {
+     "grossCost": 3802.653,
+     "netCost": 3028.398,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.004897755351028987,
+     "populationGrowth": 0.0,
+     "residual": -0.008703486867957855,
+     "netRealGrowth": -0.00485902303997654,
+     "needGrowth": 0.0007718197495770727,
+     "netResidual": -0.005630842789553612
+    },
+    "2025": {
+     "grossCost": 3774.261,
      "netCost": 3023.109,
-     "nominalGrowth": -0.0017464679345318146,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.00782312731720558,
+     "volumeGrowth": 0.00352433047183065,
+     "populationGrowth": -0.005099707281375765,
+     "residual": -0.01075504019522544,
+     "netRealGrowth": -0.00782312731720558,
      "needGrowth": -0.005900245578619781,
-     "residual": -0.0019228817385857997
+     "netResidual": -0.0019228817385857997
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.0033809893722516796,
-     "median": 0.004228593787355702,
-     "stdev": 0.020148382522876113,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.0042681955954121265,
+     "median": 0.00207230687140747,
+     "stdev": 0.019915202265413993,
+     "years": 9,
+     "netResidualMean": 0.0023512139560863533
     },
-    "2010-2025": {
-     "mean": 0.003008951683905803,
-     "median": 0.004228593787355702,
-     "stdev": 0.021117677134110963,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.002165404738499429,
+     "median": 0.00207230687140747,
+     "stdev": 0.019568037994971733,
+     "years": 15,
+     "netResidualMean": 0.002366283921650215
     },
     "2016-2025": {
-     "mean": 0.002400460233129985,
-     "median": 0.003008811225109236,
-     "stdev": 0.01971834279303157,
-     "years": 10
+     "mean": 0.0007031512258835915,
+     "median": 0.0037852106358891024,
+     "stdev": 0.01771776156806888,
+     "years": 10,
+     "netResidualMean": 0.002400460233129985
     },
     "2020-2025": {
-     "mean": 0.0023888888699960084,
-     "median": 0.005167265652893034,
-     "stdev": 0.02462534247778243,
-     "years": 6
+     "mean": -0.0009887815468696177,
+     "median": -0.0012337633825661998,
+     "stdev": 0.02043674334237378,
+     "years": 6,
+     "netResidualMean": 0.0023888888699960084
     }
    }
   },
   "0584": {
    "name": "Vadstena",
    "excludedYears": [],
-   "costDrift": 0.0029434749510099086,
+   "costDrift": 0.0010037462608342004,
    "knownBy": {
-    "2015": 0.01163677615955694,
-    "2016": 0.01785638249896733,
-    "2017": 0.016618747944461602,
-    "2018": 0.011890358311177967,
-    "2019": 0.011564248519562441,
-    "2020": 0.006425741137287149,
-    "2021": 0.00915517738210672,
-    "2022": 0.006552592586799358,
-    "2023": 0.006780971159983272,
-    "2024": 0.004215048035293332,
-    "2025": 0.0029434749510099086
+    "2015": 0.005647655355631808,
+    "2016": 0.01019197648218284,
+    "2017": 0.011743562818539785,
+    "2018": 0.008502520498634425,
+    "2019": 0.0067833761077151535,
+    "2020": 0.002689651459736131,
+    "2021": 0.005833996633233887,
+    "2022": 0.003243059315532796,
+    "2023": 0.0032377698671769086,
+    "2024": 0.001774723594951011,
+    "2025": 0.0010037462608342004
    },
-   "years": {
-    "2010": {
-     "netCost": 316.53499999999997,
-     "nominalGrowth": 0.06316482438727822,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.03885560327074278,
-     "needGrowth": -0.0029805734346614126,
-     "residual": 0.04183617670540419
-    },
-    "2011": {
-     "netCost": 324.403,
-     "nominalGrowth": 0.024856650923278822,
-     "pkv": 0.0158,
-     "realGrowth": 0.008915781574403203,
-     "needGrowth": -0.020448018020312854,
-     "residual": 0.029363799594716057
-    },
-    "2012": {
-     "netCost": 317.142,
-     "nominalGrowth": -0.02238265367459613,
-     "pkv": 0.0202,
-     "realGrowth": -0.041739515462258514,
-     "needGrowth": 0.006284880634889842,
-     "residual": -0.048024396097148356
-    },
-    "2013": {
-     "netCost": 332.148,
-     "nominalGrowth": 0.04731634409822738,
-     "pkv": 0.0261,
-     "realGrowth": 0.02067668268027223,
-     "needGrowth": 0.00564213598128995,
-     "residual": 0.01503454669898228
-    },
-    "2014": {
-     "netCost": 354.114,
-     "nominalGrowth": 0.06613316955092285,
-     "pkv": 0.0236,
-     "realGrowth": 0.04155252984654445,
-     "needGrowth": -0.0005608879702665431,
-     "residual": 0.042113417816810994
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 360.77299999999997,
-     "nominalGrowth": 0.018804678719282375,
-     "pkv": 0.0262,
-     "realGrowth": -0.00720651070036793,
-     "needGrowth": 0.003296377061055591,
-     "residual": -0.01050288776142352
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 387.236,
-     "nominalGrowth": 0.0733508327951371,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.044816883701255916,
-     "needGrowth": -0.01035713683417375,
-     "residual": 0.05517402053542966
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 411.954,
-     "nominalGrowth": 0.0638318751355762,
-     "pkv": 0.03655,
-     "realGrowth": 0.02631988339740121,
-     "needGrowth": 0.0183645773344797,
-     "residual": 0.00795530606292151
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 419.36899999999997,
-     "nominalGrowth": 0.017999582477655096,
-     "pkv": 0.0324,
-     "realGrowth": -0.013948486557869955,
-     "needGrowth": 0.011988272197221164,
-     "residual": -0.02593675875509112
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 429.397,
-     "nominalGrowth": 0.023912115583173854,
-     "pkv": 0.026835900002466495,
-     "realGrowth": -0.002847372612591381,
-     "needGrowth": -0.011476633007614083,
-     "residual": 0.008629260395022702
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 419.781,
-     "nominalGrowth": -0.022394194649706378,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.04079782640085983,
-     "needGrowth": 0.004161506284605932,
-     "residual": -0.04495933268546576
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 454.87,
-     "nominalGrowth": 0.08358882369616527,
-     "pkv": 0.026321041904701303,
-     "realGrowth": 0.05579909156415952,
-     "needGrowth": 0.016620115489037517,
-     "residual": 0.039178976075122
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 464.65500000000003,
-     "nominalGrowth": 0.021511640688548495,
-     "pkv": 0.048789300485049994,
-     "realGrowth": -0.02600871288817108,
-     "needGrowth": -0.0013302879312820821,
-     "residual": -0.024678424956889
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 498.653,
-     "nominalGrowth": 0.07316826462644332,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.013204862329383227,
-     "needGrowth": 0.0034549697180090728,
-     "residual": 0.009749892611374154
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 512.213,
-     "nominalGrowth": 0.027193258638772644,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.016650311139093987,
-     "needGrowth": 0.015057564571271833,
-     "residual": -0.03170787571036582
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 432.619,
+     "netCost": 324.403,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.0011177150379980683,
+     "populationGrowth": -0.003908355795148255,
+     "residual": 0.006694339861408105,
+     "netRealGrowth": 0.008915781574403203,
+     "needGrowth": -0.020448018020312854,
+     "netResidual": 0.029363799594716057
+    },
+    "2012": {
+     "grossCost": 433.151,
+     "netCost": 317.142,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.008109441051170396,
+     "populationGrowth": -0.01001217697199297,
+     "residual": -0.025903813293363664,
+     "netRealGrowth": -0.041739515462258514,
+     "needGrowth": 0.006284880634889842,
+     "netResidual": -0.048024396097148356
+    },
+    "2013": {
+     "grossCost": 444.659,
+     "netCost": 332.148,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.0015493338400236478,
+     "populationGrowth": 0.002870028700286964,
+     "residual": 0.017484024301656298,
+     "netRealGrowth": 0.02067668268027223,
+     "needGrowth": 0.00564213598128995,
+     "netResidual": 0.01503454669898228
+    },
+    "2014": {
+     "grossCost": 465.871,
+     "netCost": 354.114,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.0017477733884863067,
+     "populationGrowth": 0.00613246116107935,
+     "residual": 0.030788689801251934,
+     "netRealGrowth": 0.04155252984654445,
+     "needGrowth": -0.0005608879702665431,
+     "netResidual": 0.042113417816810994
+    },
+    "2015": {
+     "grossCost": 493.733,
+     "netCost": 360.77299999999997,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.0010765926681364224,
+     "populationGrowth": 0.0013544629554380627,
+     "residual": -0.006222726650579102,
+     "netRealGrowth": -0.00720651070036793,
+     "needGrowth": 0.003296377061055591,
+     "netResidual": -0.01050288776142352
+    },
+    "2016": {
+     "grossCost": 532.54,
+     "netCost": 387.236,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0016626136705391037,
+     "populationGrowth": 0.0018936832138509718,
+     "residual": 0.03154280831857159,
+     "netRealGrowth": 0.044816883701255916,
+     "needGrowth": -0.01035713683417375,
+     "netResidual": 0.05517402053542966
+    },
+    "2017": {
+     "grossCost": 549.206,
+     "netCost": 411.954,
+     "pkv": 0.03655,
+     "volumeGrowth": -0.0029712637855385804,
+     "populationGrowth": -0.007965438099095445,
+     "residual": 0.019995780270880115,
+     "netRealGrowth": 0.02631988339740121,
+     "needGrowth": 0.0183645773344797,
+     "netResidual": 0.00795530606292151
+    },
+    "2018": {
+     "grossCost": 550.179,
+     "netCost": 419.36899999999997,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.004876862307074958,
+     "populationGrowth": 0.009934676102340667,
+     "residual": -0.012794314681079055,
+     "netRealGrowth": -0.013948486557869955,
+     "needGrowth": 0.011988272197221164,
+     "netResidual": -0.02593675875509112
+    },
+    "2019": {
+     "grossCost": 577.336,
+     "netCost": 429.397,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.0067827023729674085,
+     "populationGrowth": 0.012532003773076505,
+     "residual": -0.005933246637128686,
+     "netRealGrowth": -0.002847372612591381,
+     "needGrowth": -0.011476633007614083,
+     "netResidual": 0.008629260395022702
+    },
+    "2020": {
+     "grossCost": 579.126,
+     "netCost": 419.781,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": -0.000553899060769969,
+     "populationGrowth": -0.011445302102741528,
+     "residual": -0.032740648321473276,
+     "netRealGrowth": -0.04079782640085983,
+     "needGrowth": 0.004161506284605932,
+     "netResidual": -0.04495933268546576
+    },
+    "2021": {
+     "grossCost": 595.375,
+     "netCost": 454.87,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.001446936092015516,
+     "populationGrowth": -0.0006731287022078147,
+     "residual": 0.038757891985339965,
+     "netRealGrowth": 0.05579909156415952,
+     "needGrowth": 0.016620115489037517,
+     "netResidual": 0.039178976075122
+    },
+    "2022": {
+     "grossCost": 612.715,
+     "netCost": 464.65500000000003,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.007491021533124753,
+     "populationGrowth": 0.014145224302842596,
+     "residual": -0.023845017753625575,
+     "netRealGrowth": -0.02600871288817108,
+     "needGrowth": -0.0013302879312820821,
+     "netResidual": -0.024678424956889
+    },
+    "2023": {
+     "grossCost": 645.185,
+     "netCost": 498.653,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.004143489469897288,
+     "populationGrowth": -0.006243358129649268,
+     "residual": 0.004343793805654084,
+     "netRealGrowth": 0.013204862329383227,
+     "needGrowth": 0.0034549697180090728,
+     "netResidual": 0.009749892611374154
+    },
+    "2024": {
+     "grossCost": 663.854,
+     "netCost": 512.213,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.0042832730551272125,
+     "populationGrowth": -0.006282582542440851,
+     "residual": -0.018499665399939413,
+     "netRealGrowth": -0.016650311139093987,
+     "needGrowth": 0.015057564571271833,
+     "netResidual": -0.03170787571036582
+    },
+    "2025": {
+     "grossCost": 670.11,
      "netCost": 514.134,
-     "nominalGrowth": 0.0037503929029525374,
      "pkv": 0.006124572694627295,
-     "realGrowth": -0.0023597274692498393,
+     "volumeGrowth": 0.00858564989564825,
+     "populationGrowth": 0.007532956685499137,
+     "residual": -0.008611701695060314,
+     "netRealGrowth": -0.0023597274692498393,
      "needGrowth": 0.013770393843991601,
-     "residual": -0.01613012131324144
+     "netResidual": -0.01613012131324144
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.011564248519562441,
-     "median": 0.01183190354700249,
-     "stdev": 0.03256796282393026,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.006183504587957504,
+     "median": 0.006694339861408105,
+     "stdev": 0.020179615054304337,
+     "years": 9,
+     "netResidualMean": 0.008200700943357802
     },
-    "2010-2025": {
-     "mean": 0.0029434749510099086,
-     "median": 0.008292283228972106,
-     "stdev": 0.03293501942298095,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.0010037462608342004,
+     "median": -0.005933246637128686,
+     "stdev": 0.022622240255411177,
+     "years": 15,
+     "netResidualMean": 0.0003506281673836235
     },
     "2016-2025": {
-     "mean": -0.0022725057741183104,
-     "median": -0.004087407625159965,
-     "stdev": 0.0321955573593229,
-     "years": 10
+     "mean": -0.0007784320107860565,
+     "median": -0.0072724741660945,
+     "stdev": 0.023957357976838824,
+     "years": 10,
+     "netResidualMean": -0.0022725057741183104
     },
     "2020-2025": {
-     "mean": -0.011424480996577644,
-     "median": -0.02040427313506522,
-     "stdev": 0.03079894941552524,
-     "years": 6
+     "mean": -0.006765891229850755,
+     "median": -0.013555683547499864,
+     "stdev": 0.02570335768394402,
+     "years": 6,
+     "netResidualMean": -0.011424480996577644
     }
    }
   },
   "0586": {
    "name": "Mjölby",
    "excludedYears": [],
-   "costDrift": 0.003973082202846388,
+   "costDrift": 0.00451482316841012,
    "knownBy": {
-    "2015": 0.009778998548277016,
-    "2016": 0.00798823602023411,
-    "2017": 0.009989864786083361,
-    "2018": 0.009981250445569483,
-    "2019": 0.009441883198003709,
-    "2020": 0.006328079349586107,
-    "2021": 0.0038971214188467237,
-    "2022": 0.0026639234743248905,
-    "2023": 0.005604064216120927,
-    "2024": 0.0040558865741518735,
-    "2025": 0.003973082202846388
+    "2015": 0.00892138528811164,
+    "2016": 0.007779334877459835,
+    "2017": 0.010525241876313731,
+    "2018": 0.010486952917881584,
+    "2019": 0.01002668406701632,
+    "2020": 0.007364410053203341,
+    "2021": 0.005481943495387453,
+    "2022": 0.004442642584055394,
+    "2023": 0.006499385519866678,
+    "2024": 0.004675480115659317,
+    "2025": 0.00451482316841012
    },
-   "years": {
-    "2010": {
-     "netCost": 1052.1109999999999,
-     "nominalGrowth": 0.04722986161501219,
-     "pkv": 0.023399999999999997,
-     "realGrowth": 0.02328499278386964,
-     "needGrowth": -0.005915557934804388,
-     "residual": 0.02920055071867403
-    },
-    "2011": {
-     "netCost": 1068.3029999999999,
-     "nominalGrowth": 0.015390011130004266,
-     "pkv": 0.0158,
-     "realGrowth": -0.0004036118035004588,
-     "needGrowth": -0.0005331781226793346,
-     "residual": 0.00012956631917887583
-    },
-    "2012": {
-     "netCost": 1083.431,
-     "nominalGrowth": 0.01416077648382541,
-     "pkv": 0.0202,
-     "realGrowth": -0.005919646653768429,
-     "needGrowth": -0.001331806251643707,
-     "residual": -0.004587840402124722
-    },
-    "2013": {
-     "netCost": 1140.299,
-     "nominalGrowth": 0.05248880639376208,
-     "pkv": 0.0261,
-     "realGrowth": 0.025717577617933918,
-     "needGrowth": 0.006140631236242748,
-     "residual": 0.01957694638169117
-    },
-    "2014": {
-     "netCost": 1200.356,
-     "nominalGrowth": 0.05266776520894956,
-     "pkv": 0.0236,
-     "realGrowth": 0.02839758226743805,
-     "needGrowth": 0.004151340988288456,
-     "residual": 0.024246241279149594
-    },
+   "weightsFrom": {
     "2015": {
-     "netCost": 1232.912,
-     "nominalGrowth": 0.02712195382036664,
-     "pkv": 0.0262,
-     "realGrowth": 0.0008984153384978821,
-     "needGrowth": 0.010789888345404728,
-     "residual": -0.009891473006906846
+     "care": 2017,
+     "sectors": 2015
     },
     "2016": {
-     "netCost": 1274.6680000000001,
-     "nominalGrowth": 0.033867786184253346,
-     "pkv": 0.027309999999999997,
-     "realGrowth": 0.006383454054037729,
-     "needGrowth": 0.009139793202061052,
-     "residual": -0.0027563391480233228
+     "care": 2017,
+     "sectors": 2016
     },
     "2017": {
-     "netCost": 1378.011,
-     "nominalGrowth": 0.08107444448279844,
-     "pkv": 0.03655,
-     "realGrowth": 0.0429544590061246,
-     "needGrowth": 0.018953192859096486,
-     "residual": 0.024001266147028116
+     "care": 2017,
+     "sectors": 2017
     },
     "2018": {
-     "netCost": 1456.646,
-     "nominalGrowth": 0.057064130837852556,
-     "pkv": 0.0324,
-     "realGrowth": 0.023890091861538787,
-     "needGrowth": 0.013977756140080334,
-     "residual": 0.009912335721458453
+     "care": 2018,
+     "sectors": 2018
     },
     "2019": {
-     "netCost": 1522.77,
-     "nominalGrowth": 0.045394694386968526,
-     "pkv": 0.026835900002466495,
-     "realGrowth": 0.018073768539313306,
-     "needGrowth": 0.01348619056940156,
-     "residual": 0.004587577969911747
+     "care": 2019,
+     "sectors": 2019
     },
     "2020": {
-     "netCost": 1534.082,
-     "nominalGrowth": 0.007428567676011522,
-     "pkv": 0.019186394962074527,
-     "realGrowth": -0.011536483752317528,
-     "needGrowth": 0.013273475382272389,
-     "residual": -0.024809959134589915
+     "care": 2020,
+     "sectors": 2020
     },
     "2021": {
-     "netCost": 1565.408,
-     "nominalGrowth": 0.02042002969854262,
-     "pkv": 0.026321041904701303,
-     "realGrowth": -0.0057496747754555155,
-     "needGrowth": 0.01709374104383098,
-     "residual": -0.022843415819286495
+     "care": 2021,
+     "sectors": 2021
     },
     "2022": {
-     "netCost": 1647.24,
-     "nominalGrowth": 0.052275189599133354,
-     "pkv": 0.048789300485049994,
-     "realGrowth": 0.003323726808112326,
-     "needGrowth": 0.015458178668049433,
-     "residual": -0.012134451859937107
+     "care": 2022,
+     "sectors": 2022
     },
     "2023": {
-     "netCost": 1838.027,
-     "nominalGrowth": 0.11582222384109175,
-     "pkv": 0.059181913279810816,
-     "realGrowth": 0.05347552658437249,
-     "needGrowth": 0.009649632724903079,
-     "residual": 0.04382589385946941
+     "care": 2023,
+     "sectors": 2023
     },
     "2024": {
-     "netCost": 1896.102,
-     "nominalGrowth": 0.03159638024903888,
-     "pkv": 0.04458593954369805,
-     "realGrowth": -0.012435127453786499,
-     "needGrowth": 0.005183472959628383,
-     "residual": -0.017618600413414884
+     "care": 2024,
+     "sectors": 2024
     },
     "2025": {
+     "care": 2025,
+     "sectors": 2025
+    }
+   },
+   "years": {
+    "2011": {
+     "grossCost": 1413.934,
+     "netCost": 1068.3029999999999,
+     "pkv": 0.0158,
+     "volumeGrowth": -0.0022183342255516214,
+     "populationGrowth": 0.003337213814512907,
+     "residual": 0.0027336797290362647,
+     "netRealGrowth": -0.0004036118035004588,
+     "needGrowth": -0.0005331781226793346,
+     "netResidual": 0.00012956631917887583
+    },
+    "2012": {
+     "grossCost": 1453.772,
+     "netCost": 1083.431,
+     "pkv": 0.0202,
+     "volumeGrowth": -0.0012731224807865926,
+     "populationGrowth": 0.008392636138613963,
+     "residual": -0.00114940226915905,
+     "netRealGrowth": -0.005919646653768429,
+     "needGrowth": -0.001331806251643707,
+     "netResidual": -0.004587840402124722
+    },
+    "2013": {
+     "grossCost": 1508.97,
+     "netCost": 1140.299,
+     "pkv": 0.0261,
+     "volumeGrowth": -0.0010348831028405003,
+     "populationGrowth": 0.0046791700226287425,
+     "residual": 0.021415195946159926,
+     "netRealGrowth": 0.025717577617933918,
+     "needGrowth": 0.006140631236242748,
+     "netResidual": 0.01957694638169117
+    },
+    "2014": {
+     "grossCost": 1552.115,
+     "netCost": 1200.356,
+     "pkv": 0.0236,
+     "volumeGrowth": 0.001791503650463211,
+     "populationGrowth": 0.004504676464974322,
+     "residual": 0.020731432149929008,
+     "netRealGrowth": 0.02839758226743805,
+     "needGrowth": 0.004151340988288456,
+     "netResidual": 0.024246241279149594
+    },
+    "2015": {
+     "grossCost": 1573.817,
+     "netCost": 1232.912,
+     "pkv": 0.0262,
+     "volumeGrowth": 0.0024535821565765392,
+     "populationGrowth": 0.004370463269106617,
+     "residual": -0.0007664090399085444,
+     "netRealGrowth": 0.0008984153384978821,
+     "needGrowth": 0.010789888345404728,
+     "netResidual": -0.009891473006906846
+    },
+    "2016": {
+     "grossCost": 1701.741,
+     "netCost": 1274.6680000000001,
+     "pkv": 0.027309999999999997,
+     "volumeGrowth": 0.0052374701412771785,
+     "populationGrowth": 0.006583926138943541,
+     "residual": 0.001183211201376544,
+     "netRealGrowth": 0.006383454054037729,
+     "needGrowth": 0.009139793202061052,
+     "netResidual": -0.0027563391480233228
+    },
+    "2017": {
+     "grossCost": 1762.007,
+     "netCost": 1378.011,
+     "pkv": 0.03655,
+     "volumeGrowth": 0.005940168191733708,
+     "populationGrowth": 0.003984662807307693,
+     "residual": 0.027073516120357466,
+     "netRealGrowth": 0.0429544590061246,
+     "needGrowth": 0.018953192859096486,
+     "netResidual": 0.024001266147028116
+    },
+    "2018": {
+     "grossCost": 1848.777,
+     "netCost": 1456.646,
+     "pkv": 0.0324,
+     "volumeGrowth": 0.01001911466081884,
+     "populationGrowth": 0.011644451100793818,
+     "residual": 0.011091148609701618,
+     "netRealGrowth": 0.023890091861538787,
+     "needGrowth": 0.013977756140080334,
+     "netResidual": 0.009912335721458453
+    },
+    "2019": {
+     "grossCost": 1921.481,
+     "netCost": 1522.77,
+     "pkv": 0.026835900002466495,
+     "volumeGrowth": 0.010299906786964685,
+     "populationGrowth": 0.01310189126170469,
+     "residual": 0.00665080934789164,
+     "netRealGrowth": 0.018073768539313306,
+     "needGrowth": 0.01348619056940156,
+     "netResidual": 0.004587577969911747
+    },
+    "2020": {
+     "grossCost": 1929.271,
+     "netCost": 1534.082,
+     "pkv": 0.019186394962074527,
+     "volumeGrowth": 0.010270966497974321,
+     "populationGrowth": 0.014064954517224892,
+     "residual": -0.01632740438774616,
+     "netRealGrowth": -0.011536483752317528,
+     "needGrowth": 0.013273475382272389,
+     "netResidual": -0.024809959134589915
+    },
+    "2021": {
+     "grossCost": 1977.356,
+     "netCost": 1565.408,
+     "pkv": 0.026321041904701303,
+     "volumeGrowth": 0.010186834868204597,
+     "populationGrowth": 0.007277181353123385,
+     "residual": -0.013134310769303381,
+     "netRealGrowth": -0.0057496747754555155,
+     "needGrowth": 0.01709374104383098,
+     "netResidual": -0.022843415819286495
+    },
+    "2022": {
+     "grossCost": 2093.134,
+     "netCost": 1647.24,
+     "pkv": 0.048789300485049994,
+     "volumeGrowth": 0.011651906200762951,
+     "populationGrowth": 0.011051502145922765,
+     "residual": -0.006640852170184952,
+     "netRealGrowth": 0.003323726808112326,
+     "needGrowth": 0.015458178668049433,
+     "netResidual": -0.012134451859937107
+    },
+    "2023": {
+     "grossCost": 2290.265,
+     "netCost": 1838.027,
+     "pkv": 0.059181913279810816,
+     "volumeGrowth": 0.0118239488967109,
+     "populationGrowth": 0.007145636563019586,
+     "residual": 0.031410663380653236,
+     "netRealGrowth": 0.05347552658437249,
+     "needGrowth": 0.009649632724903079,
+     "netResidual": 0.04382589385946941
+    },
+    "2024": {
+     "grossCost": 2364.692,
+     "netCost": 1896.102,
+     "pkv": 0.04458593954369805,
+     "volumeGrowth": 0.009751661792244848,
+     "populationGrowth": 0.00368796319061504,
+     "residual": -0.018819585531958172,
+     "netRealGrowth": -0.012435127453786499,
+     "needGrowth": 0.005183472959628383,
+     "netResidual": -0.017618600413414884
+    },
+    "2025": {
+     "grossCost": 2422.621,
      "netCost": 1927.9389999999999,
-     "nominalGrowth": 0.016790763366105743,
      "pkv": 0.006124572694627295,
-     "realGrowth": 0.010601262468833195,
+     "volumeGrowth": 0.007039074975689674,
+     "populationGrowth": 0.004164333706606849,
+     "residual": 0.0022706552093063603,
+     "netRealGrowth": 0.010601262468833195,
      "needGrowth": 0.00787024583556909,
-     "residual": 0.0027310166332641054
+     "netResidual": 0.0027310166332641054
     }
    },
    "summary": {
-    "2010-2019": {
-     "mean": 0.009441883198003709,
-     "median": 0.0072499568456851,
-     "stdev": 0.013960986845499459,
-     "years": 10
+    "2011-2019": {
+     "mean": 0.009884797977264985,
+     "median": 0.00665080934789164,
+     "stdev": 0.01072394188557786,
+     "years": 9,
+     "netResidualMean": 0.007246475695707007
     },
-    "2010-2025": {
-     "mean": 0.003973082202846388,
-     "median": 0.0014302914762214906,
-     "stdev": 0.01985999495964075,
-     "years": 16
+    "2011-2025": {
+     "mean": 0.00451482316841012,
+     "median": 0.0022706552093063603,
+     "stdev": 0.015405958290805927,
+     "years": 15,
+     "netResidualMean": 0.0022912509684578784
     },
     "2016-2025": {
-     "mean": 0.0004895323955880108,
-     "median": -1.2661257379608694e-05,
-     "stdev": 0.02166344893808009,
-     "years": 10
+     "mean": 0.00247578510100942,
+     "median": 0.0017269332053414521,
+     "stdev": 0.017222351779416823,
+     "years": 10,
+     "netResidualMean": 0.0004895323955880108
     },
     "2020-2025": {
-     "mean": -0.0051415861224158145,
-     "median": -0.014876526136675994,
-     "stdev": 0.02594057708814087,
-     "years": 6
+     "mean": -0.003540139044872178,
+     "median": -0.009887581469744167,
+     "stdev": 0.01872945334448745,
+     "years": 6,
+     "netResidualMean": -0.0051415861224158145
     }
    }
   }

@@ -12,8 +12,10 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
   finns men är inte kopplade till webbplatsen.
 - Bakåttest från SKR:s decembercirkulär 2020–2024: Motalas resultat ett år fram fel med i snitt 40 mnkr,
   budgeten 24. Med facit för priser, skatteunderlag och statens bidrag per del: resultat −18/−20/+2 mnkr.
-- Åttaårstest 2017–2019 till 2025, alla 13 kommuner (`scripts/hindcast_long.py`): resultatet utan
-  systematiskt fel, medelabsolutfel 1,7–4,0 % av skatt och bidrag; folkmängden 6 % för hög efter åtta år.
+- Åttaårstest 2017–2019 till 2025, alla 13 kommuner (`scripts/hindcast_long.py`), med facit för priser,
+  skatteunderlag och bidrag: resultatets medelabsolutfel 1,7/2,2/2,4 % av skatt och bidrag år 1–3 mot
+  2,4/3,7/3,4 för "basårets andel kvar"; från år 4 är jämförelsen lika bra eller bättre. Resultatet
+  0,7–0,8 % för lågt år 3–6. Med standardtakter förlorar modellen mot jämförelsen vid alla horisonter.
 - Dokumentation omskriven 2026-11-23: ny README, `modelica/README.md` och `docs/methodology.md`.
   M2-delen av README flyttad till `research/M2.md`; `docs/dynamics-equations.md` flyttad till
   `research/dynamics-equations.md`. Lokal gren `master` (gammal historik från 2026-11-06) raderad.
@@ -984,3 +986,25 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
   tillfällig mapp), inte ur årsredovisningarna. Linköping och Vadstena 2017–2019 saknar ränta i SCB:s skuld
   och får 2 %.
 
+## Granskningens rättelser (2026-11-23)
+
+- Enheter: `scripts/check_units.py` (`npm run check:units`) skriver om MSEK/SEK till mol och a till s och kör
+  `--unitChecking` på Motala.Annual, Motala.Continuous och Continuous.Economy. 13 motsägelser hittades
+  (årsbelopp kopplade direkt till flöden i Continuous, `life`); rättade med `Units.year` (= 1), siffrorna
+  oförändrade (validate_modelica och Continuous-bakåttestet). Kontrollen täcker ekvationer, inte algoritmavsnitt
+  (årsreglerna i Annual): ett borttaget `*Units.year` i flyttsteget märks inte. Variabler utan enhet härleds.
+- Flyttflöden har typen `Units.PersonsPerYear` (1/a); årets antal är flödet gånger `Units.year`.
+- `grantIncrease` finns nu i Modelica (`Assumptions`, `Components.Revenue.stateIncrease`): mdkr i riket per år och
+  år från andra prognosåret, kommunens del = folkmängden fg år / rikets. Läggs efter befolkningsskalningen i alla
+  intäktsmodeller, i regleringsbidraget med bidrag per del. Webben och MCP-servern sätter parametern direkt.
+- `cost_residual.py` mäter nu kostnadsökningen på modellens bas: den costDrift på bruttokostnaden (022) som
+  ger nettokostnadens tillväxt när volymen följer modellens kapacitet (fast andel 0,25, anpassning 0,5) och
+  intäkterna pris och folkmängd. Medel 2011–2025 -0,2 till 0,5 %/år (Linköping 0,32, Motala 0,22). `knownBy`
+  använder de vikter som fanns vid basåret. Varianten drift: nettokostnad +12,9 %, resultat -8,3 % efter åtta år.
+- `hindcast_long.py`: Norrköping 2022 och 2023 räknas inte (Ostlänken, -3 281 och -80 mnkr); jämförelsen
+  "basårets resultatandel kvar" finns i `summaryByHorizon.persistence`. `--rescore` räknar om utan att simulera.
+- `hindcast_vintages.py`: persistens vid alla horisonter. Motala 59/76/41 mnkr, modellen med facit 43/57/39,
+  med SKR:s antaganden 40/59/58. Påståendet att felen kommer från indata är struket.
+- Webben: intäktsmodellen "Justering per delpost" och åldersviktad skatt (bara Motala har åldersprofil) är
+  standard. Skillnaden mot proportionell justering är några mnkr per år. Åldersprofil för fler kommuner
+  (SCB TAB744) skulle ge inkomstutjämningens åldersrespons överallt.
