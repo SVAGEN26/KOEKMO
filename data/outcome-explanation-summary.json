@@ -1,0 +1,1309 @@
+{
+ "origin": 2021,
+ "years": [
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "municipalities": [
+  {
+   "municipality": "0509",
+   "name": "Ödeshög",
+   "believed": [
+    24.19373183547404,
+    23.73863262179287,
+    25.25839036786499,
+    27.02164948103109
+   ],
+   "explained": [
+    10.35915773227762,
+    0.2984246053991342,
+    -18.69769373922901,
+    -14.52936121408464
+   ],
+   "outcome": [
+    22.907000000000004,
+    18.018000000000033,
+    16.52500000000004,
+    15.243999999999991
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -7.644119807478603,
+     "grants": -0.016000000095687028,
+     "payroll": 0.9484561787526218,
+     "pension": -1.2809309168915206e-11,
+     "otherCosts": -11.174638216100448,
+     "operatingRevenue": -2.2477637419794263,
+     "depreciation": 11.369597335583272,
+     "interest": 0.011543419945482025,
+     "result": -12.547842267722384,
+     "debt": 4.844244932114293,
+     "population": -34.010782384561026,
+     "otherFinancialNet": -1.3949999999999998
+    },
+    {
+     "year": 2023,
+     "tax": -11.902204722427996,
+     "grants": 0.8191045999621025,
+     "payroll": -0.9221805282591902,
+     "pension": -1.1642242725429242e-11,
+     "otherCosts": -9.974087233978196,
+     "operatingRevenue": -2.746192765073829,
+     "depreciation": 12.78655690388366,
+     "interest": 0.42499336542615396,
+     "result": -17.7195753946009,
+     "debt": 53.623263422800704,
+     "population": -22.957333101545373,
+     "otherFinancialNet": -1.4849999999999997
+    },
+    {
+     "year": 2024,
+     "tax": -12.136526459059894,
+     "grants": 2.3355209616175046,
+     "payroll": -1.7618708063398856,
+     "pension": 5.9330318435968366e-12,
+     "otherCosts": 5.9267687396838085,
+     "operatingRevenue": -5.460974581285498,
+     "depreciation": 13.185651956332787,
+     "interest": 1.4431637708185319,
+     "result": -35.22269373922905,
+     "debt": 72.6523052057087,
+     "population": -8.771253065976452,
+     "otherFinancialNet": -1.0770000000000002
+    },
+    {
+     "year": 2025,
+     "tax": -15.916277725356508,
+     "grants": 3.7874514746868186,
+     "payroll": -19.491156609148703,
+     "pension": 6.487255177489715e-12,
+     "otherCosts": 3.086590999992609,
+     "operatingRevenue": -15.23276951246207,
+     "depreciation": 14.192569401107452,
+     "interest": 2.2997616589952656,
+     "result": -29.77336121408463,
+     "debt": 73.0160970187082,
+     "population": -21.394180010917808,
+     "otherFinancialNet": -2.233999999999999
+    }
+   ]
+  },
+  {
+   "municipality": "0512",
+   "name": "Ydre",
+   "believed": [
+    9.68300933488618,
+    7.828666559568717,
+    7.816519196901311,
+    8.014879866338958
+   ],
+   "explained": [
+    2.328561439389347,
+    -8.820747612194282,
+    -12.25447103476867,
+    -10.63345697572498
+   ],
+   "outcome": [
+    16.270999999999987,
+    4.163000000000035,
+    0.6820000000000213,
+    10.721000000000037
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -10.861345290676695,
+     "grants": 0.007999999972511773,
+     "payroll": -1.1714087337290096,
+     "pension": -3.8902214782865485e-12,
+     "otherCosts": -3.5941344128764,
+     "operatingRevenue": -7.336826719654354,
+     "depreciation": 0.9319264508576701,
+     "interest": -0.022116753996744176,
+     "result": -13.94243856061064,
+     "debt": -1.0254878902518243,
+     "population": -14.396672867098005,
+     "otherFinancialNet": 0.4189999999999998
+    },
+    {
+     "year": 2023,
+     "tax": -10.599872307714094,
+     "grants": 1.4745178745263843,
+     "payroll": -4.387870031839213,
+     "pension": 7.489120434911456e-12,
+     "otherCosts": 2.1143459163282046,
+     "operatingRevenue": -3.318622956144651,
+     "depreciation": 1.6024546030487308,
+     "interest": 0.45783973531730027,
+     "result": -12.983747612194318,
+     "debt": 26.717805118899875,
+     "population": 4.020450268943932,
+     "otherFinancialNet": -0.7259999999999998
+    },
+    {
+     "year": 2024,
+     "tax": -7.880142156874911,
+     "grants": 3.7508963947110914,
+     "payroll": -13.19931853702127,
+     "pension": -4.74997818855627e-12,
+     "otherCosts": 11.140940932296473,
+     "operatingRevenue": -5.282401335213088,
+     "depreciation": 1.6473653065676395,
+     "interest": 2.5468362355532967,
+     "result": -12.936471034768692,
+     "debt": 67.2169108470972,
+     "population": -13.698087924442916,
+     "otherFinancialNet": -1.3619999999999999
+    },
+    {
+     "year": 2025,
+     "tax": -9.596784043524906,
+     "grants": 5.415520482952175,
+     "payroll": -13.173870877450298,
+     "pension": 1.057287590811029e-11,
+     "otherCosts": 10.104769039093071,
+     "operatingRevenue": -14.297600767021379,
+     "depreciation": 1.27840233145219,
+     "interest": 4.75929215502612,
+     "result": -21.354456975725018,
+     "debt": 82.9819654913795,
+     "population": -36.508380781347114,
+     "otherFinancialNet": 0.11999999999999988
+    }
+   ]
+  },
+  {
+   "municipality": "0513",
+   "name": "Kinda",
+   "believed": [
+    60.6502119488423,
+    63.05476632755733,
+    69.06410263460066,
+    74.75144403977612
+   ],
+   "explained": [
+    48.36123426507953,
+    27.83943794356111,
+    10.87896231620118,
+    28.4815441769826
+   ],
+   "outcome": [
+    36.88100000000007,
+    16.580999999999868,
+    -16.783999999999896,
+    3.0170000000001007
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -0.6930055120895986,
+     "grants": 0.022000000032505795,
+     "payroll": -8.758120791455383,
+     "pension": 6.139089236967266e-12,
+     "otherCosts": -8.877705745607841,
+     "operatingRevenue": -5.180357202617017,
+     "depreciation": -0.1443991518338592,
+     "interest": 0.0056287091374878084,
+     "result": 11.48023426507946,
+     "debt": 7.1821648867638,
+     "population": 31.068113718600216,
+     "otherFinancialNet": -0.4560000000000002
+    },
+    {
+     "year": 2023,
+     "tax": -6.323971085760718,
+     "grants": 2.1103226142478206,
+     "payroll": -20.937983728114773,
+     "pension": 5.165645688975928e-12,
+     "otherCosts": -12.55405727417235,
+     "operatingRevenue": -11.120601027654118,
+     "depreciation": 2.725539158357982,
+     "interest": 0.04481440119586866,
+     "result": 11.25843794356124,
+     "debt": 3.217187784855412,
+     "population": 156.9676973373298,
+     "otherFinancialNet": -4.142
+    },
+    {
+     "year": 2024,
+     "tax": 1.7248204223814128,
+     "grants": 6.021496283810109,
+     "payroll": -23.973907234581077,
+     "pension": -7.8017592386459e-12,
+     "otherCosts": -17.39807033927991,
+     "operatingRevenue": -16.74458862681101,
+     "depreciation": 2.6441718542198878,
+     "interest": -0.03742851717213913,
+     "result": 27.662962316201074,
+     "debt": -2.741946385576199,
+     "population": 240.77074891357915,
+     "otherFinancialNet": -2.116999999999999
+    },
+    {
+     "year": 2025,
+     "tax": 0.5241079550449967,
+     "grants": 9.041702963161185,
+     "payroll": -40.93969688756391,
+     "pension": 8.022027486731531e-12,
+     "otherCosts": 3.1339091394220304,
+     "operatingRevenue": -15.278313166989307,
+     "depreciation": 1.1189974588581677,
+     "interest": 0.19674386351015904,
+     "result": 25.4645441769825,
+     "debt": 10.050511978600696,
+     "population": 321.53702283890016,
+     "otherFinancialNet": -5.3260000000000005
+    }
+   ]
+  },
+  {
+   "municipality": "0560",
+   "name": "Boxholm",
+   "believed": [
+    6.994101279882784,
+    6.758748657438616,
+    8.214977303086926,
+    9.511127151002313
+   ],
+   "explained": [
+    -5.033819734744043,
+    -18.0712228586392,
+    -16.75897964260554,
+    -10.4730983423085
+   ],
+   "outcome": [
+    -2.2509999999999284,
+    -1.7620000000001224,
+    1.1509999999999925,
+    1.3520000000000485
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": 0.13842314362409525,
+     "grants": -0.030999999988395643,
+     "payroll": -3.559462215511104,
+     "pension": 2.5579538487363607e-12,
+     "otherCosts": -0.2960766500475813,
+     "operatingRevenue": -7.986444783831729,
+     "depreciation": -0.8579646942756867,
+     "interest": 0.08530165438015569,
+     "result": -2.7828197347441144,
+     "debt": 24.68978442902221,
+     "population": 39.04668558026242,
+     "otherFinancialNet": 0.49699999999999966
+    },
+    {
+     "year": 2023,
+     "tax": -1.3810683192206739,
+     "grants": 2.1252401121894167,
+     "payroll": -1.3382871359365822,
+     "pension": 1.1070255823142361e-11,
+     "otherCosts": 14.821290992773669,
+     "operatingRevenue": -3.816119751546239,
+     "depreciation": -1.1453855880246344,
+     "interest": 0.893656631239037,
+     "result": -16.309222858639078,
+     "debt": 43.78639287569,
+     "population": 38.04875119798362,
+     "otherFinancialNet": 0.02299999999999991
+    },
+    {
+     "year": 2024,
+     "tax": 1.9575517838857195,
+     "grants": 3.8360748558793887,
+     "payroll": 1.4025801424155588,
+     "pension": -2.205169380431471e-11,
+     "otherCosts": 3.885059092959409,
+     "operatingRevenue": -23.727323006938875,
+     "depreciation": -8.54119151904323,
+     "interest": 2.9638355591206,
+     "result": -17.90997964260553,
+     "debt": 176.6435640372373,
+     "population": 67.04034873175715,
+     "otherFinancialNet": -0.23700000000000054
+    },
+    {
+     "year": 2025,
+     "tax": 0.5039003053342981,
+     "grants": 6.209158703199805,
+     "payroll": 0.2868171518495046,
+     "pension": 1.2825296380469808e-12,
+     "otherCosts": 14.658427870223278,
+     "operatingRevenue": -4.3684676987117115,
+     "depreciation": -4.610278106328039,
+     "interest": 3.6407227363850074,
+     "result": -11.825098342308548,
+     "debt": 183.185940485875,
+     "population": 155.06025833108288,
+     "otherFinancialNet": -0.16500000000000004
+    }
+   ]
+  },
+  {
+   "municipality": "0561",
+   "name": "Åtvidaberg",
+   "believed": [
+    64.07524843510726,
+    66.6704279827145,
+    73.49745239795254,
+    79.20250444594467
+   ],
+   "explained": [
+    61.3844127177772,
+    18.45256542294385,
+    14.50032036374125,
+    62.23386870745594
+   ],
+   "outcome": [
+    62.396000000000065,
+    36.90000000000008,
+    27.811999999999856,
+    75.96399999999991
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": 0.9237989530068944,
+     "grants": -0.026999999927710405,
+     "payroll": -15.046331081385631,
+     "pension": 1.3208989457780262e-11,
+     "otherCosts": -3.402864893660933,
+     "operatingRevenue": -25.466485559725214,
+     "depreciation": -3.6678781544639705,
+     "interest": -0.18702519492592495,
+     "result": -1.0115872822228624,
+     "debt": -28.098534563292617,
+     "population": -47.935333647359585,
+     "otherFinancialNet": 1.2639999999999996
+    },
+    {
+     "year": 2023,
+     "tax": 3.252681309966988,
+     "grants": 0.25106910093498414,
+     "payroll": -28.12277562097745,
+     "pension": 5.10880227011512e-12,
+     "otherCosts": 29.467764315755062,
+     "operatingRevenue": -16.233713640041685,
+     "depreciation": 3.180968139455622,
+     "interest": -0.3974854863219095,
+     "result": -18.447434577056228,
+     "debt": 20.528931874316015,
+     "population": -6.495287345220277,
+     "otherFinancialNet": -1.5790000000000004
+    },
+    {
+     "year": 2024,
+     "tax": 14.779560329706783,
+     "grants": 1.818284934912299,
+     "payroll": -43.8463826862245,
+     "pension": -9.389111710333964e-11,
+     "otherCosts": 70.25209753860793,
+     "operatingRevenue": 0.337118886292302,
+     "depreciation": 0.6166236970463359,
+     "interest": 0.865305237833951,
+     "result": -13.311679636258605,
+     "debt": 5.253987813389301,
+     "population": -18.64630396100074,
+     "otherFinancialNet": -2.3489999999999993
+    },
+    {
+     "year": 2025,
+     "tax": 11.045550828491514,
+     "grants": 2.648507034011004,
+     "payroll": -54.235140209658084,
+     "pension": 1.2569500995596172e-11,
+     "otherCosts": 33.767760555714005,
+     "operatingRevenue": -50.2127921799009,
+     "depreciation": 2.1941075770775242,
+     "interest": -0.0013309480003380614,
+     "result": -13.730131292543973,
+     "debt": -5.839988471119597,
+     "population": -47.3616913925398,
+     "otherFinancialNet": 4.524
+    }
+   ]
+  },
+  {
+   "municipality": "0562",
+   "name": "Finspång",
+   "believed": [
+    75.73995405630876,
+    75.36727828760695,
+    86.03687007862231,
+    97.45239268006162
+   ],
+   "explained": [
+    62.70838608039753,
+    -22.61445477865595,
+    -44.95530665989349,
+    30.03607398158692
+   ],
+   "outcome": [
+    52.3689999999998,
+    -5.972000000000236,
+    24.19700000000026,
+    89.91300000000004
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -1.7234575290879093,
+     "grants": -0.029000000098847067,
+     "payroll": -2.9374895211649346,
+     "pension": -1.9326762412674725e-11,
+     "otherCosts": 7.781537290027018,
+     "operatingRevenue": 14.031301439551896,
+     "depreciation": 1.7593477216228308,
+     "interest": -1.0449376605028995,
+     "result": 10.33938608039773,
+     "debt": -121.66773380204609,
+     "population": -36.930867712118925,
+     "otherFinancialNet": 3.6590000000000025
+    },
+    {
+     "year": 2023,
+     "tax": -2.0085134610610567,
+     "grants": -0.14038217295370714,
+     "payroll": -7.516307458531173,
+     "pension": 2.984279490192421e-13,
+     "otherCosts": 22.133254014630438,
+     "operatingRevenue": 16.129667696350793,
+     "depreciation": 4.384176458500917,
+     "interest": -4.988896173608424,
+     "result": -16.642454778655715,
+     "debt": -174.14145548189003,
+     "population": 148.1237333416684,
+     "otherFinancialNet": -16.570999999999994
+    },
+    {
+     "year": 2024,
+     "tax": 15.706760913607013,
+     "grants": 3.545861928458123,
+     "payroll": 61.85724917094876,
+     "pension": -5.002220859751105e-12,
+     "otherCosts": 36.926171750837966,
+     "operatingRevenue": 27.255661094568495,
+     "depreciation": 0.36819263396728275,
+     "interest": -6.774022959222982,
+     "result": -69.15230665989375,
+     "debt": -289.9583414559661,
+     "population": 194.1812886498301,
+     "otherFinancialNet": -23.243
+    },
+    {
+     "year": 2025,
+     "tax": -5.5809364340709635,
+     "grants": 5.076631264293098,
+     "payroll": 55.72206975563199,
+     "pension": 4.604316927725449e-12,
+     "otherCosts": 31.732070010488883,
+     "operatingRevenue": 41.090770099210204,
+     "depreciation": 2.489552795105382,
+     "interest": -8.767301613384788,
+     "result": -59.876926018413116,
+     "debt": -410.50796823265205,
+     "population": 289.2748510262718,
+     "otherFinancialNet": -19.247000000000003
+    }
+   ]
+  },
+  {
+   "municipality": "0563",
+   "name": "Valdemarsvik",
+   "believed": [
+    21.77574147614428,
+    14.14808339390544,
+    11.9543419934945,
+    10.97862847600214
+   ],
+   "explained": [
+    -2.3563833059888,
+    -47.96639761680706,
+    -64.50324249390553,
+    -40.92315039914308
+   ],
+   "outcome": [
+    17.398999999999997,
+    -14.763999999999893,
+    -19.45799999999992,
+    17.19900000000013
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -6.543164435818596,
+     "grants": -0.041000000088587285,
+     "payroll": -3.778935330626439,
+     "pension": -1.305267005591304e-11,
+     "otherCosts": 17.578027604803765,
+     "operatingRevenue": 0.20675349090120676,
+     "depreciation": -0.898039411636919,
+     "interest": 0.12491949845537298,
+     "result": -19.755383305988797,
+     "debt": 45.3314227176038,
+     "population": -79.5597836173356,
+     "otherFinancialNet": -0.358
+    },
+    {
+     "year": 2023,
+     "tax": -9.797842059198842,
+     "grants": -0.6730837403466978,
+     "payroll": -2.215956634109773,
+     "pension": -4.263256414560601e-13,
+     "otherCosts": 21.18794379604867,
+     "operatingRevenue": -2.1000305530351113,
+     "depreciation": 0.4218140334397589,
+     "interest": 1.0276400688483136,
+     "result": -33.20239761680716,
+     "debt": 83.6000063009705,
+     "population": -100.97028172668615,
+     "otherFinancialNet": -0.21600000000000008
+    },
+    {
+     "year": 2024,
+     "tax": -4.83447407754619,
+     "grants": -0.38611442044961564,
+     "payroll": 2.5827089465205404,
+     "pension": 1.821831574488897e-11,
+     "otherCosts": 32.365460657746326,
+     "operatingRevenue": -5.74832328442551,
+     "depreciation": -4.383531110566402,
+     "interest": 2.861692217765629,
+     "result": -45.04524249390561,
+     "debt": 131.56177990545717,
+     "population": -196.16345655925033,
+     "otherFinancialNet": -0.6559999999999996
+    },
+    {
+     "year": 2025,
+     "tax": -6.94284487963472,
+     "grants": -1.6151289916591907,
+     "payroll": 4.245599623512078,
+     "pension": -7.716494110354688e-12,
+     "otherCosts": 41.93286492726975,
+     "operatingRevenue": -1.3172304488919906,
+     "depreciation": -3.582140373997319,
+     "interest": 4.46262190218045,
+     "result": -58.12215039914321,
+     "debt": 184.0950706785897,
+     "population": -309.08637891211856,
+     "otherFinancialNet": -1.1940000000000004
+    }
+   ]
+  },
+  {
+   "municipality": "0580",
+   "name": "Linköping",
+   "believed": [
+    1012.884341116289,
+    1069.418613738583,
+    1145.364747518122,
+    1221.981251863913
+   ],
+   "explained": [
+    572.0937058457275,
+    135.3649199355696,
+    103.4041938205228,
+    486.8042192743342
+   ],
+   "outcome": [
+    -512.152000000002,
+    350.8320000000027,
+    160.94400000000172,
+    417.95700000000164
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -141.40385011594117,
+     "grants": -0.021999999300987838,
+     "payroll": -59.36524723230741,
+     "pension": 1.8610535335028544e-10,
+     "otherCosts": 459.3612122559716,
+     "operatingRevenue": -114.72916635945376,
+     "depreciation": 0.13206552021148354,
+     "interest": -1.21175286390584,
+     "result": 1084.2457058457294,
+     "debt": 33.71222863447599,
+     "population": 104.28906564210774,
+     "otherFinancialNet": 1739.393
+    },
+    {
+     "year": 2023,
+     "tax": -156.58371537899802,
+     "grants": 5.650425993555928,
+     "payroll": 35.414261128481485,
+     "pension": 9.993073035730049e-11,
+     "otherCosts": 452.79067819182,
+     "operatingRevenue": -2.0791947127818275,
+     "depreciation": -14.881536940105264,
+     "interest": 20.6571935861526,
+     "result": -215.46708006443313,
+     "debt": 318.05584563915113,
+     "population": 622.7169906600902,
+     "otherFinancialNet": 431.602
+    },
+    {
+     "year": 2024,
+     "tax": 78.6671112028398,
+     "grants": 13.778886685983935,
+     "payroll": 266.97839072459556,
+     "pension": -1.9690560293383896e-10,
+     "otherCosts": 559.7988584442173,
+     "operatingRevenue": 85.92339263459598,
+     "depreciation": -30.202496777219096,
+     "interest": -246.8865556888366,
+     "result": -57.539806179478916,
+     "debt": -13136.866851404355,
+     "population": 1240.4933324439917,
+     "otherFinancialNet": 313.855
+    },
+    {
+     "year": 2025,
+     "tax": 10.181720624714217,
+     "grants": 20.348077968583084,
+     "payroll": 92.13912187008009,
+     "pension": -1.5916157281026244e-12,
+     "otherCosts": 445.10170974272387,
+     "operatingRevenue": -6.230789340101637,
+     "depreciation": -22.29851109311386,
+     "interest": -322.481530540831,
+     "result": 68.84721927433253,
+     "debt": -9022.413559585579,
+     "population": 1809.7092874379887,
+     "otherFinancialNet": 237.08500000000004
+    }
+   ]
+  },
+  {
+   "municipality": "0581",
+   "name": "Norrköping",
+   "believed": [
+    1079.898392845404,
+    1113.264256454009,
+    1191.072712045402,
+    1273.595349571796
+   ],
+   "explained": [
+    757.5793179210295,
+    -129.3683679360738,
+    -391.5397021638237,
+    261.508458964774
+   ],
+   "outcome": [
+    -2883.2449999999994,
+    450.54199999999867,
+    294.92299999999796,
+    363.6710000000012
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -80.27385353716272,
+     "grants": -0.007999999410913006,
+     "payroll": -97.20122950055884,
+     "pension": 1.0169287634198554e-10,
+     "otherCosts": -2999.613345261123,
+     "operatingRevenue": 87.47005324854831,
+     "depreciation": -35.894999436804255,
+     "interest": -7.575544010565011,
+     "result": 3640.824317921029,
+     "debt": -463.3583184839408,
+     "population": 11.668497858801857,
+     "otherFinancialNet": 493.35699999999997
+    },
+    {
+     "year": 2023,
+     "tax": -140.7967768954104,
+     "grants": 14.190765940648362,
+     "payroll": -57.612364824345605,
+     "pension": -1.4290435501607135e-10,
+     "otherCosts": 112.20287032197302,
+     "operatingRevenue": -188.64748417544206,
+     "depreciation": -13.3638217655581,
+     "interest": 20.632189073840323,
+     "result": -579.9103679360725,
+     "debt": 1168.8238712171005,
+     "population": 635.2369837811857,
+     "otherFinancialNet": -202.7919999999998
+    },
+    {
+     "year": 2024,
+     "tax": -28.99140415776128,
+     "grants": 35.927297762043054,
+     "payroll": 88.38017165820656,
+     "pension": -6.032223609508947e-10,
+     "otherCosts": 117.40798459701091,
+     "operatingRevenue": 188.89205862095082,
+     "depreciation": -11.586459405727737,
+     "interest": -34.99504246018478,
+     "result": -686.4627021638216,
+     "debt": -2113.7639672147197,
+     "population": 1478.4123864861904,
+     "otherFinancialNet": -723.0780000000002
+    },
+    {
+     "year": 2025,
+     "tax": -41.921343680394784,
+     "grants": 59.88043252871603,
+     "payroll": -28.131127765314886,
+     "pension": 3.6902747524436563e-10,
+     "otherCosts": 66.57807134460018,
+     "operatingRevenue": 198.6786593052757,
+     "depreciation": -30.05165951974527,
+     "interest": -127.59999487078039,
+     "result": -102.1625410352272,
+     "debt": -3562.3427666588905,
+     "population": 2208.7605589836894,
+     "otherFinancialNet": -437.9989999999999
+    }
+   ]
+  },
+  {
+   "municipality": "0582",
+   "name": "Söderköping",
+   "believed": [
+    12.07583247068646,
+    7.467399233526066,
+    6.213448668649448,
+    4.380102554335053
+   ],
+   "explained": [
+    -10.85841432588893,
+    -59.27074803641153,
+    -83.15303501779692,
+    -54.96299056025407
+   ],
+   "outcome": [
+    20.053999999999967,
+    -37.29800000000007,
+    11.047999999999849,
+    49.78599999999996
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -5.275483003585919,
+     "grants": 0.023999999926076043,
+     "payroll": -23.36354102040775,
+     "pension": -1.3770318219030742e-11,
+     "otherCosts": 50.94946105004436,
+     "operatingRevenue": 5.2386769232862775,
+     "depreciation": 2.5308978861715374,
+     "interest": -0.01620967027967879,
+     "result": -30.912414325888896,
+     "debt": 8.315516439666908,
+     "population": -121.08194888071921,
+     "otherFinancialNet": -0.7579999999999996
+    },
+    {
+     "year": 2023,
+     "tax": -12.332707402582287,
+     "grants": 5.230253224360013,
+     "payroll": -40.30325778125177,
+     "pension": -1.9809931472991593e-11,
+     "otherCosts": 62.431077302808035,
+     "operatingRevenue": 13.084900539830983,
+     "depreciation": 3.497272116235038,
+     "interest": 0.7641027602477202,
+     "result": -21.97274803641146,
+     "debt": 58.63299235981299,
+     "population": -116.84497764336993,
+     "otherFinancialNet": -1.5250000000000004
+    },
+    {
+     "year": 2024,
+     "tax": -29.29407516080414,
+     "grants": 12.6068014441081,
+     "payroll": -9.087592037249578,
+     "pension": 1.354436562905903e-10,
+     "otherCosts": 97.64068557543544,
+     "operatingRevenue": 20.22587507598263,
+     "depreciation": 3.2963139394976793,
+     "interest": 3.035228899268752,
+     "result": -94.20103501779677,
+     "debt": 141.84071343841606,
+     "population": -4.119208579220867,
+     "otherFinancialNet": -2.8139999999999974
+    },
+    {
+     "year": 2025,
+     "tax": -46.04865793282556,
+     "grants": 21.016605856678268,
+     "payroll": -18.65329022797323,
+     "pension": -2.2438939595303964e-11,
+     "otherCosts": 71.99428691064236,
+     "operatingRevenue": -16.10610083496914,
+     "depreciation": 1.9490282955424902,
+     "interest": 6.181812670947586,
+     "result": -104.74899056025403,
+     "debt": 275.75567570308,
+     "population": 76.26348963227974,
+     "otherFinancialNet": -2.097999999999999
+    }
+   ]
+  },
+  {
+   "municipality": "0583",
+   "name": "Motala",
+   "believed": [
+    67.62602135152133,
+    51.2893955650643,
+    54.58900692262432,
+    58.87534635845486
+   ],
+   "explained": [
+    6.374524986010783,
+    -102.6756609363265,
+    -133.4394170056457,
+    12.16921118783421
+   ],
+   "outcome": [
+    125.1,
+    23,
+    1,
+    105
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -15.217649757375057,
+     "grants": 2.767137630144134e-10,
+     "payroll": 20.11796363829194,
+     "pension": 6.221512194315437e-11,
+     "otherCosts": 110.16066578516688,
+     "operatingRevenue": 13.486045443111152,
+     "depreciation": -16.27737084434142,
+     "interest": 0.8926121208236424,
+     "result": -118.72547501398921,
+     "debt": 266.80284585842196,
+     "population": -64.70638641830737,
+     "otherFinancialNet": -2.0999999999999988
+    },
+    {
+     "year": 2023,
+     "tax": -23.292703252820047,
+     "grants": 6.957844121885273,
+     "payroll": -18.666969092430918,
+     "pension": -2.2609469851886388e-10,
+     "otherCosts": 109.59586801709906,
+     "operatingRevenue": -7.384645308422819,
+     "depreciation": 3.7885786609128047,
+     "interest": 6.238678911611469,
+     "result": -125.6756609363265,
+     "debt": 516.589928133564,
+     "population": -80.4830834957611,
+     "otherFinancialNet": -0.9999999999999991
+    },
+    {
+     "year": 2024,
+     "tax": 10.059382192665907,
+     "grants": 14.786031468014244,
+     "payroll": 21.62058577069911,
+     "pension": -6.8098415795248e-11,
+     "otherCosts": 126.01028472597295,
+     "operatingRevenue": -1.5543255613401925,
+     "depreciation": -2.0378042126974094,
+     "interest": 9.137438821079051,
+     "result": -134.4394170056457,
+     "debt": 624.067149351803,
+     "population": 121.9788147976069,
+     "otherFinancialNet": -1.9999999999999991
+    },
+    {
+     "year": 2025,
+     "tax": -7.839027053721111,
+     "grants": 26.460735370437988,
+     "payroll": -12.266056702174865,
+     "pension": -1.6996182239381596e-11,
+     "otherCosts": 135.91489455751207,
+     "operatingRevenue": 36.48282383465039,
+     "depreciation": 0.7630045700273911,
+     "interest": 14.523478538185117,
+     "result": -92.83078881216579,
+     "debt": 744.1349335939051,
+     "population": 470.96029191497655,
+     "otherFinancialNet": -6.999999999999999
+    }
+   ]
+  },
+  {
+   "municipality": "0584",
+   "name": "Vadstena",
+   "believed": [
+    21.16861022286275,
+    22.78339683727114,
+    27.02488098170028,
+    31.27196047662602
+   ],
+   "explained": [
+    4.315984598136822,
+    -30.58764375416519,
+    -50.36229427429265,
+    -22.00961775096567
+   ],
+   "outcome": [
+    22.450000000000028,
+    -0.5509999999999415,
+    -3.880000000000159,
+    12.119000000000003
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": 0.3987786462229792,
+     "grants": -0.022000000010095278,
+     "payroll": 1.5721554134301527,
+     "pension": -2.34123831432953e-12,
+     "otherCosts": 10.731545151387934,
+     "operatingRevenue": -4.390442448846699,
+     "depreciation": 2.577210889550667,
+     "interest": 0.3504401448627119,
+     "result": -18.134015401863206,
+     "debt": 49.27680451230282,
+     "population": 84.38585227481144,
+     "otherFinancialNet": 1.126
+    },
+    {
+     "year": 2023,
+     "tax": -6.588072713207396,
+     "grants": 2.8551526202399913,
+     "payroll": 11.717707079578247,
+     "pension": -2.921751729445532e-11,
+     "otherCosts": 13.360298680784126,
+     "operatingRevenue": 0.721554232719285,
+     "depreciation": 3.7459022532298007,
+     "interest": 2.1793698803521906,
+     "result": -30.036643754165247,
+     "debt": 112.39454601313116,
+     "population": 167.20531612503692,
+     "otherFinancialNet": 3.9929999999999994
+    },
+    {
+     "year": 2024,
+     "tax": -4.141972614114195,
+     "grants": 5.629295313132104,
+     "payroll": 16.857325998774,
+     "pension": -2.0179413695586845e-11,
+     "otherCosts": 25.17402799157486,
+     "operatingRevenue": -0.7480816519869791,
+     "depreciation": 5.253535264490949,
+     "interest": 3.44464606650274,
+     "result": -46.48229427429249,
+     "debt": 138.36230502284388,
+     "population": 145.50863534964537,
+     "otherFinancialNet": 3.5230000000000006
+    },
+    {
+     "year": 2025,
+     "tax": 1.8735931262884833,
+     "grants": 8.243058825011502,
+     "payroll": -8.428336863548907,
+     "pension": 2.6147972675971687e-12,
+     "otherCosts": 42.14214719671503,
+     "operatingRevenue": -1.3871548896736101,
+     "depreciation": 6.50592517391177,
+     "interest": 3.8653793055119596,
+     "result": -34.128617750965674,
+     "debt": 164.71299759990495,
+     "population": 184.34578947123464,
+     "otherFinancialNet": 1.242
+    }
+   ]
+  },
+  {
+   "municipality": "0586",
+   "name": "Mjölby",
+   "believed": [
+    142.2180497588874,
+    152.7125505118486,
+    172.468654386382,
+    192.0899337432068
+   ],
+   "explained": [
+    118.40890186361,
+    22.18504878167664,
+    -3.900707068946076,
+    81.17614858137745
+   ],
+   "outcome": [
+    128.2349999999999,
+    4.253999999999998,
+    2.314000000000057,
+    38.94299999999967
+   ],
+   "remainingByLine": [
+    {
+     "year": 2022,
+     "tax": -13.114587012215907,
+     "grants": -0.015000000045347406,
+     "payroll": -35.536120892654935,
+     "pension": -8.995471034722868e-12,
+     "otherCosts": 8.192327934077525,
+     "operatingRevenue": -23.81281797588872,
+     "depreciation": -1.5312115468124006,
+     "interest": -0.07830234636184397,
+     "result": -9.826098136389902,
+     "debt": -8.200690316816917,
+     "population": 58.60117757938133,
+     "otherFinancialNet": -1.8829999999999982
+    },
+    {
+     "year": 2023,
+     "tax": -23.985655808271986,
+     "grants": 2.9298087090766103,
+     "payroll": -31.21071115894688,
+     "pension": 2.3732127374387346e-11,
+     "otherCosts": -15.434518072199467,
+     "operatingRevenue": -17.765926801589615,
+     "depreciation": 1.5105945551368052,
+     "interest": -0.07118800647439016,
+     "result": 17.931048781676644,
+     "debt": 16.81566634641615,
+     "population": 214.04461191383962,
+     "otherFinancialNet": 11.501000000000001
+    },
+    {
+     "year": 2024,
+     "tax": -10.716894487836043,
+     "grants": 7.141892911072489,
+     "payroll": -1.3062077136910375,
+     "pension": -7.599965101690032e-11,
+     "otherCosts": 2.75900540256373,
+     "operatingRevenue": -21.4031692649952,
+     "depreciation": 6.5025665983225025,
+     "interest": 0.67717194006498,
+     "result": -6.214707068946133,
+     "debt": 54.33080681686306,
+     "population": 355.39201493443034,
+     "otherFinancialNet": 27.349999999999998
+    },
+    {
+     "year": 2025,
+     "tax": -0.30817901004002124,
+     "grants": 11.383951695224255,
+     "payroll": -91.7893166205331,
+     "pension": -1.0686562745831907e-11,
+     "otherCosts": 23.678644565959758,
+     "operatingRevenue": -34.444669369488395,
+     "depreciation": 6.482363572472025,
+     "interest": 3.581263216429395,
+     "result": 42.233148581377776,
+     "debt": 208.529294662972,
+     "population": 487.68534576282036,
+     "otherFinancialNet": 7.508999999999996
+    }
+   ]
+  }
+ ],
+ "units": "mnkr; gaps in per cent",
+ "medianGap": {
+  "believed": {
+   "2022": {
+    "resultPercentOfTaxAndGrants": 1.5383086441458103,
+    "resultChangePercentOfTaxAndGrants": 1.5383086441458103,
+    "payrollPercent": -2.1280926983447137,
+    "otherCostsPercent": -6.065514945675327
+   },
+   "2023": {
+    "resultPercentOfTaxAndGrants": 4.34142851988924,
+    "resultChangePercentOfTaxAndGrants": 3.6992774459493787,
+    "payrollPercent": -4.8089139996420025,
+    "otherCostsPercent": -4.729354550954061
+   },
+   "2024": {
+    "resultPercentOfTaxAndGrants": 5.378567807278833,
+    "resultChangePercentOfTaxAndGrants": 1.1962385810513165,
+    "payrollPercent": -6.332784066835051,
+    "otherCostsPercent": -2.0605665303532055
+   },
+   "2025": {
+    "resultPercentOfTaxAndGrants": 2.8777914970999117,
+    "resultChangePercentOfTaxAndGrants": 2.0321459767620014,
+    "payrollPercent": -6.7114828583070025,
+    "otherCostsPercent": -3.308415958607076
+   }
+  },
+  "explained": {
+   "2022": {
+    "resultPercentOfTaxAndGrants": 3.3574618756113725,
+    "resultChangePercentOfTaxAndGrants": 3.3574618756113725,
+    "payrollPercent": -1.1066244939878733,
+    "otherCostsPercent": 1.1045979386802154
+   },
+   "2023": {
+    "resultPercentOfTaxAndGrants": 4.064542721097235,
+    "resultChangePercentOfTaxAndGrants": 1.7043319076194767,
+    "payrollPercent": -0.8551062341928959,
+    "otherCostsPercent": 5.025067863522858
+   },
+   "2024": {
+    "resultPercentOfTaxAndGrants": 4.420121730588346,
+    "resultChangePercentOfTaxAndGrants": 1.4854029937406974,
+    "payrollPercent": 0.5379435210430555,
+    "otherCostsPercent": 8.600519486402808
+   },
+   "2025": {
+    "resultPercentOfTaxAndGrants": 3.270736012518351,
+    "resultChangePercentOfTaxAndGrants": 1.3315087047706644,
+    "payrollPercent": -2.1952967266039916,
+    "otherCostsPercent": 7.573143049182013
+   }
+  }
+ },
+ "priceSurpriseReachingOtherCosts": {
+  "2022": 0.8459416475262836,
+  "2023": 0.4848405527593914,
+  "2024": 0.19327823749058204,
+  "2025": 0.30403815014964736
+ },
+ "taxAndGrantsForecasts": [
+  {
+   "forecast": "SKR 21:35",
+   "published": "2021-09-30",
+   "rows": [
+    {
+     "year": 2021,
+     "municipalities": 13,
+     "meanErrorPercent": -0.9838216836779868,
+     "meanAbsErrorPercent": 0.9838216836779868
+    },
+    {
+     "year": 2022,
+     "municipalities": 13,
+     "meanErrorPercent": -2.824194730484634,
+     "meanAbsErrorPercent": 2.824194730484634
+    },
+    {
+     "year": 2023,
+     "municipalities": 13,
+     "meanErrorPercent": -4.849602487470749,
+     "meanAbsErrorPercent": 4.849602487470749
+    },
+    {
+     "year": 2024,
+     "municipalities": 13,
+     "meanErrorPercent": -5.558396011761737,
+     "meanAbsErrorPercent": 5.558396011761737
+    },
+    {
+     "year": 2025,
+     "municipalities": 13,
+     "meanErrorPercent": -5.286637570502265,
+     "meanAbsErrorPercent": 5.286637570502265
+    }
+   ]
+  },
+  {
+   "forecast": "SKR 22:28",
+   "published": "2022-08-25",
+   "rows": [
+    {
+     "year": 2022,
+     "municipalities": 13,
+     "meanErrorPercent": -0.8465048798525292,
+     "meanAbsErrorPercent": 0.8465048798525292
+    },
+    {
+     "year": 2023,
+     "municipalities": 13,
+     "meanErrorPercent": -2.9853789021323367,
+     "meanAbsErrorPercent": 2.9853789021323367
+    },
+    {
+     "year": 2024,
+     "municipalities": 13,
+     "meanErrorPercent": -2.7960529826952323,
+     "meanAbsErrorPercent": 2.7960529826952323
+    },
+    {
+     "year": 2025,
+     "municipalities": 13,
+     "meanErrorPercent": -1.9452647598886132,
+     "meanAbsErrorPercent": 2.283124085764487
+    }
+   ]
+  },
+  {
+   "forecast": "SKR 23:56",
+   "published": "2023-12-14",
+   "rows": [
+    {
+     "year": 2023,
+     "municipalities": 13,
+     "meanErrorPercent": -0.6876390776144811,
+     "meanAbsErrorPercent": 0.6876390776144811
+    },
+    {
+     "year": 2024,
+     "municipalities": 13,
+     "meanErrorPercent": -1.1504724191298192,
+     "meanAbsErrorPercent": 1.1504724191298192
+    },
+    {
+     "year": 2025,
+     "municipalities": 13,
+     "meanErrorPercent": -0.5484395494746105,
+     "meanAbsErrorPercent": 0.9309493538116499
+    }
+   ]
+  },
+  {
+   "forecast": "SKR 24:56",
+   "published": "2024-12-12",
+   "rows": [
+    {
+     "year": 2024,
+     "municipalities": 13,
+     "meanErrorPercent": -0.6726828410098601,
+     "meanAbsErrorPercent": 0.6726828410098601
+    },
+    {
+     "year": 2025,
+     "municipalities": 13,
+     "meanErrorPercent": 0.43189721703080547,
+     "meanAbsErrorPercent": 0.6169920846709338
+    }
+   ]
+  },
+  {
+   "forecast": "The model from the 2021 accounts (believed)",
+   "published": "accounts in spring; circular of December",
+   "rows": [
+    {
+     "year": 2022,
+     "municipalities": 13,
+     "meanErrorPercent": -2.1768054086460014,
+     "meanAbsErrorPercent": 2.1768054086460014
+    },
+    {
+     "year": 2023,
+     "municipalities": 13,
+     "meanErrorPercent": -3.805430529744739,
+     "meanAbsErrorPercent": 3.805430529744739
+    },
+    {
+     "year": 2024,
+     "municipalities": 13,
+     "meanErrorPercent": -4.922398329834007,
+     "meanAbsErrorPercent": 4.922398329834007
+    },
+    {
+     "year": 2025,
+     "municipalities": 13,
+     "meanErrorPercent": -5.070624798656708,
+     "meanAbsErrorPercent": 5.070624798656708
+    }
+   ]
+  }
+ ],
+ "notes": [
+  "believed: the model with what was known in the spring after the base year. explained: the same model with wages, prices, pensions, tax base, grants, interest rate and investments set to their outcomes.",
+  "result gaps are absolute, as a share of the year's tax and grants; resultChange compares the change from the year before. payroll and otherCosts are the model minus the outcome, as a share of the outcome.",
+  "Outcomes in the forecast comparison are SCB's account summary for all 13, so that the municipalities are measured alike. SKR's forecasts are dated; the model's run uses the closing accounts and the December circular, which came later than SKR 21:35."
+ ]
+}

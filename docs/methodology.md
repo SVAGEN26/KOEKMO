@@ -455,6 +455,56 @@ ten-year revenue slope is not evidence of a weaker response to population.
 `data/cost-residual.json` took the need a year late until 2026-11-24; it now
 follows the model's timing.
 
+**Explaining an outcome.** `scripts/explain_outcome.py [code Package]` treats the
+closing accounts as the facts and asks what explains them. It runs
+`Continuous.Economy` from the 2021 accounts to 2025, first as things were believed
+(the `skr` set: SKR's December circular for the tax base, wages and prices; years
+beyond the circular keep its last rate), then with one more input set to its
+outcome in each run, cumulatively:
+
+| Step | Parameter | Outcome from |
+| --- | --- | --- |
+| wages | `wageGrowthPath` | SKR's labour-cost index (PKV) |
+| prices | `priceGrowthPath` | SKR's price index for other costs |
+| pensions | `pensionExpensePath` | the accounts |
+| tax base | `referenceTax` | SCB, the national tax base |
+| grants | the component paths with `grantsByComponent` | the accounts, per component |
+| interest | `interestRatePath` | interest expense over the mean debt of the year |
+| investment | `investmentPath` | the accounts |
+
+No equation changes. What is left after the last step is what these inputs do not
+carry: the municipality's decisions on volume and savings, one-off items, financial
+items other than interest (constant in the model), the municipality's population
+(the model's projection throughout) and model error. The order is fixed; where
+causes interact (debt and rate, wages and volume) a step's share depends on it. The
+labour index includes the employer's pension surcharge, while payroll in the model
+excludes pensions, so the wage step is somewhat too strong in 2023–2024 and too weak
+in 2025.
+
+Results for the 13 municipalities (`data/outcome-explanation-summary.json`, medians):
+payroll is 2 to 7 % too low as believed and within about 2 % with the wage index
+set in. Other costs are 2 to 6 % too low as believed and 5 to 9 % too high from 2023
+with the price index set in: 85 % of the price surprise reached them in 2022, 20 to
+50 % by 2023–2025. The model has no rule that cuts purchases when the result falls;
+the balance requirement works through decisions, which are the user's to set. The
+result's level is therefore not closer to the accounts with the outcomes set in
+(3.3 to 4.4 % of tax and grants, against 1.5 to 5.4 % as believed, where too-low
+revenue and too-low costs cancelled). Its change from the year before is closer in
+2023 and 2025 (1.7 and 1.3 % against 3.7 and 2.0 %), not in 2022 (3.4 against 1.5).
+One period, 13 municipalities.
+
+**SKR's old forecasts.** `scripts/read_skr_vintages.py` selects each municipality in
+a macro-free copy of the four recovered workbooks (21:35, 22:28, 23:56, 24:56),
+recalculates it in LibreOffice with macros disabled, and reads tax (Blad 1 row 38)
+and general grants (row 40) after checking the municipality's name, the circular,
+the years and the sums. Motala's 2021 figures equal the copy recalculated by hand
+earlier, and every forecast for the year under way is within 3 % of the outcome
+(`tests/test_explain_outcome.py`). Mean error for tax and grants against SCB, 13
+municipalities: SKR 21:35 −2.8, −4.8, −5.6 and −5.3 % for 2022–2025; SKR 22:28
+−3.0, −2.8 and −1.9 % for 2023–2025; the model from the 2021 accounts −2.2, −3.8,
+−4.9 and −5.1 %. The model's run has later information than SKR 21:35 (the closing
+accounts and the December circular), so the two are not a ranking.
+
 **Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025; results in
 `research/data/age-group-hindcast.json`.
@@ -462,11 +512,9 @@ municipalities from 2022–2024 to 2025; results in
 Limits: against SKR's circulars few cases (five base years, fewer at longer
 horizons) and at most three years; the eight-year test has no forecasts of its time
 and covers one period whose runs overlap, so its cases are not independent. SKR's
-own historical forecasts for the municipalities are no longer on SKR's site. Four
-workbooks were recovered from the Internet Archive (`data/skr-historical/`), and
-only circular 21:35 is read out for Motala so far: its tax and grants for 2022–2025
-were 63, 155, 177 and 197 mnkr too low, the model's own from the 2021 accounts 75,
-162 and 198 mnkr too low for 2022–2024. The forecast sets use only data known at the base year (the closing accounts
+own historical forecasts for the municipalities are no longer on SKR's site; four
+workbooks were recovered from the Internet Archive and are compared below. The
+forecast sets use only data known at the base year (the closing accounts
 and Kolada figures of the base year, published the following spring, included);
 the hindsight and prices sets use outcomes on purpose.
 

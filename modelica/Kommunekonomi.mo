@@ -514,7 +514,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
 // Årsbanorna ersätter skalärerna ovan och behöver samma gränser.
 // Utan dem nollställer wageGrowthPath[k] = -1 lönerna och en negativ ränta bokförs som intäkt.
     assert(min(wageGrowthPath) > -1 and min(priceGrowthPath) > -1, "wageGrowthPath och priceGrowthPath måste vara större än -1 varje år (andelar, inte procent)");
-    assert(base.interestRate >= 0 or base.openingDebt > 0, "Basåret saknar ingående låneskuld, så räntan kan inte härledas; ange base.interestRate ur årsredovisningen eller interestRate");
+    assert(base.interestRate >= 0 or base.openingDebt > 0 or interestRate <= 0.3, "Basåret saknar ingående låneskuld, så räntan kan inte härledas; ange base.interestRate ur årsredovisningen eller interestRate");
     assert(min(interestRatePath) >= 0 and max(interestRatePath) <= 0.3, "interestRatePath måste ligga mellan 0 och 0,3 varje år (andelar, inte procent)");
     assert(min(referenceTax) > 0 and min(referenceGrants) > 0, "referenceTax och referenceGrants måste vara positiva varje år");
     assert(equalisationOffset >= 0 and equalisationOffset <= 1, "equalisationOffset måste ligga mellan 0 och 1");

@@ -52,8 +52,10 @@ Benchmark: persistence, the base year's result kept, scored at every horizon.
 
 The outcome is the municipality's annual report (research/data/annual-ledgers.json).
 The budget result is from research/benchmark/municipal-budget-history.json. SKR's own
-forecast for Motala at the time is not available: the old municipal workbooks
-(Prognosunderlag) are no longer on SKR's site. Writes data/vintage-hindcast.json.
+forecasts of tax and grants for the municipality at the time are not part of this test: four
+old workbooks (Prognosunderlag) were recovered from the Internet Archive and are read by
+scripts/read_skr_vintages.py; scripts/explain_outcome.py shows them beside the model.
+Writes data/vintage-hindcast.json.
 """
 import csv
 import json
@@ -67,7 +69,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
 LAST = 2025
-CODE, PACKAGE = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 else ('0583', 'Motala')
+CODE, PACKAGE = (sys.argv[1], sys.argv[2]) if len(sys.argv) > 2 and sys.argv[1].isdigit() else ('0583', 'Motala')
 # HINDCAST_MODEL=Continuous runs the package's Continuous model (Kommunekonomi.Continuous.Economy) instead of Annual.
 MODEL = os.environ.get('HINDCAST_MODEL', 'Annual')
 SUFFIX = '' if MODEL == 'Annual' else '-' + MODEL.lower()
@@ -193,7 +195,8 @@ def simulate(origin, horizon, source, directory):
     return {year: {k: float(row[k]) for k in OUTPUTS} for year, row in rows.items() if year > origin}
 
 
-def main():
+def outcomes():
+    """What happened, per year: the annual reports for Motala, SCB's account summary for the others."""
     regional_years = {}
     if CODE == '0583':
         ledgers = {r['year']: r for r in load('research/data/annual-ledgers.json')['rows']}
@@ -215,7 +218,14 @@ def main():
                                'pension': r['pension'], 'population': r['reportedPopulation'][-1], 'sourceId': 'scb',
                                'otherExpense': r['otherOperatingExpense'], 'operatingRevenue': r['operatingRevenue'],
                                'depreciation': r['depreciation'], 'interest': r['interestExpense'], 'debt': r['debt'], 'cash': r['cash'],
+                               'investment': r['investment'], 'financialIncome': r['financialIncome'],
+                               'financialExpense': r['interestExpense'] + r['otherFinancialExpense'],
                                'result': r['tax'] + r['grants'] - net + r['financialIncome'] - r['interestExpense'] - r['otherFinancialExpense']}
+    return ledgers, ledger_sources, budgets, regional_years
+
+
+def main():
+    ledgers, ledger_sources, budgets, regional_years = outcomes()
     runs = []
     with tempfile.TemporaryDirectory(prefix='motala-vintage-') as tmp:
         for origin in ORIGINS:
@@ -290,7 +300,7 @@ def main():
                   'The 2023 annual report moved payroll tax on pensions from pension to payroll; personnel is compared as a total.',
                   'Fixed assets for 2020 and 2021 include work in progress, which those reports do not show separately.',
                   'The budget result is the adopted budget for the following year, set in November before the circular.',
-                  'The SKR forecast for Motala at the time is not available; only the national assumptions are.']
+                  'SKR\'s own forecast for Motala is not used here, only the national assumptions (see scripts/explain_outcome.py).']
                  if CODE == '0583' else
                  ['One-off items in the base year may carry into the forecast. '
                   'The correction of the previous year\'s tax settlement is taken out of the base before growth is applied.',

@@ -1,0 +1,1020 @@
+{
+ "municipality": "0512",
+ "model": "Ydre.Continuous",
+ "origin": 2021,
+ "years": [
+  2022,
+  2023,
+  2024,
+  2025
+ ],
+ "circular": "21:49",
+ "method": "Explain what happened: run the model from a base year as things were believed, then set one cause at a time\nto what happened, and see how far each takes the result towards the accounts.\n\n    OMC=/path/to/omc python3 scripts/explain_outcome.py [code Package] [--origin 2021]\n    python3 scripts/explain_outcome.py --summary     # after all 13: data/outcome-explanation-summary.json\n\nThe closing accounts are the facts. The first run is a forecast with what was known in the spring after the\nbase year (the `skr` set of scripts/hindcast_vintages.py: SKR's December circular for the national tax base,\nwages and prices; grants 2 % a year). Each later run keeps the earlier changes and sets one more input to its\noutcome. Only inputs are changed, through the model's ordinary parameters; no equation is.\n\n  believed    SKR's December circular of the base year. Years beyond the circular's three keep its last rates.\n  wages       wageGrowthPath: SKR's labour-cost index as it turned out (PKV, October 2026).\n  prices      priceGrowthPath: SKR's price index for other costs as it turned out.\n  pensions    pensionExpensePath: the pension cost in the accounts.\n  taxBase     referenceTax: the national tax base as it turned out (SCB; 2025 is SKR's estimate).\n  grants      the state's general grants as booked, per component (as the hindsight set).\n  interest    interestRatePath: the year's interest expense over the mean of the debt at the start and the end of\n              the year, accounts.\n  investment  investmentPath: the year's investments in the accounts.\n\nWhat is left after the last outcome step is what these causes do not explain: the municipality's own decisions on\nvolume and savings, one-off items, financial items other than interest (constant in the model), the\nmunicipality's population (the model's projection throughout) and model error. The steps are cumulative in\nthis order; with another order a step's share can differ where causes interact (wages and volume, debt and rate).\n\nBeside the runs: SKR's own forecast of the municipality's tax and grants at the time, from the recovered\nworkbooks (data/skr-historical/forecasts.json), where one was read out.\n\nHINDCAST_MODEL=Annual runs the annual model; the default here is Continuous, the model the site runs.\nWrites data/outcome-explanation.json (Motala) or data/municipalities/<code>/outcome-explanation.json.",
+ "units": "mnkr; population in persons",
+ "steps": [
+  {
+   "step": "believed",
+   "label": "Som man trodde då (SKR:s decembercirkulär)"
+  },
+  {
+   "step": "wages",
+   "label": "Lönerna som de blev"
+  },
+  {
+   "step": "prices",
+   "label": "Priserna som de blev"
+  },
+  {
+   "step": "pensions",
+   "label": "Pensionskostnaden som den blev"
+  },
+  {
+   "step": "taxBase",
+   "label": "Rikets skatteunderlag som det blev"
+  },
+  {
+   "step": "grants",
+   "label": "Statens bidrag som de blev"
+  },
+  {
+   "step": "interest",
+   "label": "Räntan som den blev"
+  },
+  {
+   "step": "investment",
+   "label": "Investeringarna som de blev"
+  }
+ ],
+ "inputs": {
+  "believed": {
+   "2022": {
+    "taxBase": 0.035,
+    "wages": 0.016,
+    "prices": 0.022000000000000002
+   },
+   "2023": {
+    "taxBase": 0.037000000000000005,
+    "wages": 0.034,
+    "prices": 0.02
+   },
+   "2024": {
+    "taxBase": 0.034,
+    "wages": 0.021,
+    "prices": 0.022000000000000002
+   },
+   "2025": {
+    "taxBase": 0.034,
+    "wages": 0.021,
+    "prices": 0.022000000000000002
+   }
+  },
+  "outcome": {
+   "2022": {
+    "taxBase": 0.05803262361897521,
+    "wages": 0.02660080062266,
+    "prices": 0.1,
+    "pension": 10.776,
+    "interestRate": 0.012291139240506328,
+    "investment": 12.985
+   },
+   "2023": {
+    "taxBase": 0.0478293281159079,
+    "wages": 0.06582297392246672,
+    "prices": 0.04469999999999996,
+    "pension": 17.515,
+    "interestRate": 0.03931428571428571,
+    "investment": 12.689
+   },
+   "2024": {
+    "taxBase": 0.0349559026599191,
+    "wages": 0.05219185653801395,
+    "prices": 0.028000000000000025,
+    "pension": 25.585,
+    "interestRate": 0.05487128712871287,
+    "investment": 19.325
+   },
+   "2025": {
+    "taxBase": 0.03565,
+    "wages": -0.002712992352954746,
+    "prices": 0.02539632121650026,
+    "pension": 19.884999999999998,
+    "interestRate": 0.06332499999999999,
+    "investment": 17.682
+   }
+  },
+  "beyondCircular": [
+   2025
+  ]
+ },
+ "baseYear": {
+  "result": 11.622000000000028,
+  "otherFinancialNet": 1.527
+ },
+ "ladder": [
+  {
+   "year": 2022,
+   "step": "believed",
+   "label": "Som man trodde då (SKR:s decembercirkulär)",
+   "result": 9.68300933488618,
+   "change": null,
+   "gap": -6.587990665113807
+  },
+  {
+   "year": 2022,
+   "step": "wages",
+   "label": "Lönerna som de blev",
+   "result": 8.021258374450156,
+   "change": -1.6617509604360237,
+   "gap": -8.24974162554983
+  },
+  {
+   "year": 2022,
+   "step": "prices",
+   "label": "Priserna som de blev",
+   "result": -1.346676296676549,
+   "change": -9.367934671126704,
+   "gap": -17.617676296676535
+  },
+  {
+   "year": 2022,
+   "step": "pensions",
+   "label": "Pensionskostnaden som den blev",
+   "result": 3.739787767426776,
+   "change": 5.086464064103325,
+   "gap": -12.53121223257321
+  },
+  {
+   "year": 2022,
+   "step": "taxBase",
+   "label": "Rikets skatteunderlag som det blev",
+   "result": 7.730542271334627,
+   "change": 3.9907545039078505,
+   "gap": -8.54045772866536
+  },
+  {
+   "year": 2022,
+   "step": "grants",
+   "label": "Statens bidrag som de blev",
+   "result": 2.982535937233877,
+   "change": -4.748006334100749,
+   "gap": -13.28846406276611
+  },
+  {
+   "year": 2022,
+   "step": "interest",
+   "label": "Räntan som den blev",
+   "result": 2.431797009933376,
+   "change": -0.5507389273005012,
+   "gap": -13.83920299006661
+  },
+  {
+   "year": 2022,
+   "step": "investment",
+   "label": "Investeringarna som de blev",
+   "result": 2.328561439389347,
+   "change": -0.1032355705440291,
+   "gap": -13.94243856061064
+  },
+  {
+   "year": 2023,
+   "step": "believed",
+   "label": "Som man trodde då (SKR:s decembercirkulär)",
+   "result": 7.828666559568717,
+   "change": null,
+   "gap": 3.665666559568682
+  },
+  {
+   "year": 2023,
+   "step": "wages",
+   "label": "Lönerna som de blev",
+   "result": 0.9946484472398254,
+   "change": -6.8340181123288914,
+   "gap": -3.1683515527602095
+  },
+  {
+   "year": 2023,
+   "step": "prices",
+   "label": "Priserna som de blev",
+   "result": -11.84470143388927,
+   "change": -12.839349881129095,
+   "gap": -16.007701433889306
+  },
+  {
+   "year": 2023,
+   "step": "pensions",
+   "label": "Pensionskostnaden som den blev",
+   "result": -12.94823667251865,
+   "change": -1.1035352386293802,
+   "gap": -17.111236672518686
+  },
+  {
+   "year": 2023,
+   "step": "taxBase",
+   "label": "Rikets skatteunderlag som det blev",
+   "result": -6.879529373009291,
+   "change": 6.068707299509359,
+   "gap": -11.042529373009327
+  },
+  {
+   "year": 2023,
+   "step": "grants",
+   "label": "Statens bidrag som de blev",
+   "result": -5.751211963089361,
+   "change": 1.12831740991993,
+   "gap": -9.914211963089397
+  },
+  {
+   "year": 2023,
+   "step": "interest",
+   "label": "Räntan som den blev",
+   "result": -8.437045865157899,
+   "change": -2.685833902068538,
+   "gap": -12.600045865157934
+  },
+  {
+   "year": 2023,
+   "step": "investment",
+   "label": "Investeringarna som de blev",
+   "result": -8.820747612194282,
+   "change": -0.38370174703638327,
+   "gap": -12.983747612194318
+  },
+  {
+   "year": 2024,
+   "step": "believed",
+   "label": "Som man trodde då (SKR:s decembercirkulär)",
+   "result": 7.816519196901311,
+   "change": null,
+   "gap": 7.134519196901289
+  },
+  {
+   "year": 2024,
+   "step": "wages",
+   "label": "Lönerna som de blev",
+   "result": -4.493688746617124,
+   "change": -12.310207943518435,
+   "gap": -5.175688746617146
+  },
+  {
+   "year": 2024,
+   "step": "prices",
+   "label": "Priserna som de blev",
+   "result": -18.45144711143274,
+   "change": -13.957758364815614,
+   "gap": -19.13344711143276
+  },
+  {
+   "year": 2024,
+   "step": "pensions",
+   "label": "Pensionskostnaden som den blev",
+   "result": -27.30604523531025,
+   "change": -8.854598123877512,
+   "gap": -27.98804523531027
+  },
+  {
+   "year": 2024,
+   "step": "taxBase",
+   "label": "Rikets skatteunderlag som det blev",
+   "result": -20.89950579883961,
+   "change": 6.406539436470641,
+   "gap": -21.58150579883963
+  },
+  {
+   "year": 2024,
+   "step": "grants",
+   "label": "Statens bidrag som de blev",
+   "result": -6.726193563316428,
+   "change": 14.17331223552318,
+   "gap": -7.408193563316448
+  },
+  {
+   "year": 2024,
+   "step": "interest",
+   "label": "Räntan som den blev",
+   "result": -11.12243601711668,
+   "change": -4.3962424538002525,
+   "gap": -11.804436017116702
+  },
+  {
+   "year": 2024,
+   "step": "investment",
+   "label": "Investeringarna som de blev",
+   "result": -12.25447103476867,
+   "change": -1.1320350176519902,
+   "gap": -12.936471034768692
+  },
+  {
+   "year": 2025,
+   "step": "believed",
+   "label": "Som man trodde då (SKR:s decembercirkulär)",
+   "result": 8.014879866338958,
+   "change": null,
+   "gap": -2.706120133661079
+  },
+  {
+   "year": 2025,
+   "step": "wages",
+   "label": "Lönerna som de blev",
+   "result": -0.3238773629513219,
+   "change": -8.33875722929028,
+   "gap": -11.04487736295136
+  },
+  {
+   "year": 2025,
+   "step": "prices",
+   "label": "Priserna som de blev",
+   "result": -15.06335384429525,
+   "change": -14.739476481343928,
+   "gap": -25.78435384429529
+  },
+  {
+   "year": 2025,
+   "step": "pensions",
+   "label": "Pensionskostnaden som den blev",
+   "result": -17.89616165015249,
+   "change": -2.8328078058572395,
+   "gap": -28.617161650152525
+  },
+  {
+   "year": 2025,
+   "step": "taxBase",
+   "label": "Rikets skatteunderlag som det blev",
+   "result": -11.00834789353206,
+   "change": 6.88781375662043,
+   "gap": -21.729347893532097
+  },
+  {
+   "year": 2025,
+   "step": "grants",
+   "label": "Statens bidrag som de blev",
+   "result": -2.620747347750523,
+   "change": 8.387600545781536,
+   "gap": -13.34174734775056
+  },
+  {
+   "year": 2025,
+   "step": "interest",
+   "label": "Räntan som den blev",
+   "result": -8.338755938762773,
+   "change": -5.71800859101225,
+   "gap": -19.059755938762812
+  },
+  {
+   "year": 2025,
+   "step": "investment",
+   "label": "Investeringarna som de blev",
+   "result": -10.63345697572498,
+   "change": -2.2947010369622074,
+   "gap": -21.354456975725018
+  }
+ ],
+ "remainingByLine": [
+  {
+   "year": 2022,
+   "tax": -10.861345290676695,
+   "grants": 0.007999999972511773,
+   "payroll": -1.1714087337290096,
+   "pension": -3.8902214782865485e-12,
+   "otherCosts": -3.5941344128764,
+   "operatingRevenue": -7.336826719654354,
+   "depreciation": 0.9319264508576701,
+   "interest": -0.022116753996744176,
+   "result": -13.94243856061064,
+   "debt": -1.0254878902518243,
+   "population": -14.396672867098005,
+   "otherFinancialNet": 0.4189999999999998
+  },
+  {
+   "year": 2023,
+   "tax": -10.599872307714094,
+   "grants": 1.4745178745263843,
+   "payroll": -4.387870031839213,
+   "pension": 7.489120434911456e-12,
+   "otherCosts": 2.1143459163282046,
+   "operatingRevenue": -3.318622956144651,
+   "depreciation": 1.6024546030487308,
+   "interest": 0.45783973531730027,
+   "result": -12.983747612194318,
+   "debt": 26.717805118899875,
+   "population": 4.020450268943932,
+   "otherFinancialNet": -0.7259999999999998
+  },
+  {
+   "year": 2024,
+   "tax": -7.880142156874911,
+   "grants": 3.7508963947110914,
+   "payroll": -13.19931853702127,
+   "pension": -4.74997818855627e-12,
+   "otherCosts": 11.140940932296473,
+   "operatingRevenue": -5.282401335213088,
+   "depreciation": 1.6473653065676395,
+   "interest": 2.5468362355532967,
+   "result": -12.936471034768692,
+   "debt": 67.2169108470972,
+   "population": -13.698087924442916,
+   "otherFinancialNet": -1.3619999999999999
+  },
+  {
+   "year": 2025,
+   "tax": -9.596784043524906,
+   "grants": 5.415520482952175,
+   "payroll": -13.173870877450298,
+   "pension": 1.057287590811029e-11,
+   "otherCosts": 10.104769039093071,
+   "operatingRevenue": -14.297600767021379,
+   "depreciation": 1.27840233145219,
+   "interest": 4.75929215502612,
+   "result": -21.354456975725018,
+   "debt": 82.9819654913795,
+   "population": -36.508380781347114,
+   "otherFinancialNet": 0.11999999999999988
+  }
+ ],
+ "outcome": {
+  "2022": {
+   "tax": 189.823,
+   "grants": 76.192,
+   "payroll": 161.863,
+   "pension": 10.776,
+   "otherCosts": 135.421,
+   "operatingRevenue": 68.929,
+   "depreciation": 10.75,
+   "interest": 0.971,
+   "result": 16.270999999999987,
+   "debt": 79.0,
+   "population": 3683.0,
+   "otherFinancialNet": 1.108,
+   "source": "SCB räkenskapssammandrag (data/downloads/20261119T090401Z)"
+  },
+  "2023": {
+   "tax": 193.936,
+   "grants": 83.244,
+   "payroll": 175.244,
+   "pension": 17.515,
+   "otherCosts": 135.277,
+   "operatingRevenue": 65.682,
+   "depreciation": 10.164,
+   "interest": 2.752,
+   "result": 4.163000000000035,
+   "debt": 61.0,
+   "population": 3637.0,
+   "otherFinancialNet": 2.2529999999999997,
+   "source": "SCB räkenskapssammandrag (data/downloads/20261119T090401Z)"
+  },
+  "2024": {
+   "tax": 193.452,
+   "grants": 96.528,
+   "payroll": 192.26299999999998,
+   "pension": 25.585,
+   "otherCosts": 129.53800000000004,
+   "operatingRevenue": 68.403,
+   "depreciation": 10.433,
+   "interest": 2.771,
+   "result": 0.6820000000000213,
+   "debt": 40.0,
+   "population": 3626.0,
+   "otherFinancialNet": 2.889,
+   "source": "SCB räkenskapssammandrag (data/downloads/20261119T090401Z)"
+  },
+  "2025": {
+   "tax": 197.566,
+   "grants": 91.572,
+   "payroll": 190.86599999999999,
+   "pension": 19.884999999999998,
+   "otherCosts": 133.42900000000003,
+   "operatingRevenue": 78.161,
+   "depreciation": 11.272,
+   "interest": 2.533,
+   "result": 10.721000000000037,
+   "debt": 40.0,
+   "population": 3619.0,
+   "otherFinancialNet": 1.407,
+   "source": "SCB räkenskapssammandrag (data/downloads/20261119T090401Z)"
+  }
+ },
+ "runs": {
+  "believed": {
+   "2022": {
+    "tax": 175.0657857070216,
+    "grants": 80.85120668808489,
+    "payroll": 159.0316999050601,
+    "pension": 15.84960000000046,
+    "otherCosts": 122.48083629291,
+    "operatingRevenue": 61.59217431668426,
+    "depreciation": 11.59341010863641,
+    "interest": 0.3706110702976154,
+    "result": 9.68300933488618,
+    "debt": 68.32358055647758,
+    "population": 3668.603322461327
+   },
+   "2023": {
+    "tax": 177.4915003430108,
+    "grants": 83.3805176580924,
+    "payroll": 164.0447157196479,
+    "pension": 16.38848640000137,
+    "otherCosts": 124.6315042125995,
+    "operatingRevenue": 62.36337686510772,
+    "depreciation": 11.52059466943578,
+    "interest": 0.3214273049577613,
+    "result": 7.828666559568717,
+    "debt": 59.57431932747416,
+    "population": 3641.020446442856
+   },
+   "2024": {
+    "tax": 179.4900225323876,
+    "grants": 85.8655537210579,
+    "payroll": 166.8269926296567,
+    "pension": 16.73264461440379,
+    "otherCosts": 126.8687833279111,
+    "operatingRevenue": 63.12059805077197,
+    "depreciation": 11.45311656343557,
+    "interest": 0.2781179719094373,
+    "result": 7.816519196901311,
+    "debt": 50.90468356713986,
+    "population": 3612.301909772427
+   },
+   "2025": {
+    "tax": 181.5191519368284,
+    "grants": 88.3376248631964,
+    "payroll": 169.4823525401467,
+    "pension": 17.08403015280746,
+    "otherCosts": 129.0146136705902,
+    "operatingRevenue": 63.86339952950927,
+    "depreciation": 11.39058486558892,
+    "interest": 0.2337152340625926,
+    "result": 8.014879866338958,
+    "debt": 42.09921883521667,
+    "population": 3582.491615473429
+   }
+  },
+  "wages": {
+   "2022": {
+    "tax": 175.0657857071475,
+    "grants": 80.85120668814301,
+    "payroll": 160.6905495127326,
+    "pension": 15.84960000001184,
+    "otherCosts": 122.4808494732251,
+    "operatingRevenue": 61.5921746308204,
+    "depreciation": 11.59340999869123,
+    "interest": 0.3734996670010741,
+    "result": 8.021258374450156,
+    "debt": 69.98533162686671,
+    "population": 3668.603321558388
+   },
+   "2023": {
+    "tax": 177.4915007079053,
+    "grants": 83.38051724923311,
+    "payroll": 170.8559531354162,
+    "pension": 16.38848639998925,
+    "otherCosts": 124.6314985262867,
+    "operatingRevenue": 62.36337699563275,
+    "depreciation": 11.52059463137781,
+    "interest": 0.3442138124603111,
+    "result": 0.9946484472398254,
+    "debt": 68.07008854824213,
+    "population": 3641.020445254509
+   },
+   "2024": {
+    "tax": 179.4900228659844,
+    "grants": 85.86555332035942,
+    "payroll": 179.063458607978,
+    "pension": 16.73264461439697,
+    "otherCosts": 126.8687869463874,
+    "operatingRevenue": 63.1205985000985,
+    "depreciation": 11.45311645195879,
+    "interest": 0.3518568123379816,
+    "result": -4.493688746617124,
+    "debt": 71.71066084289828,
+    "population": 3612.301907744182
+   },
+   "2025": {
+    "tax": 181.5191520915404,
+    "grants": 88.33762456942907,
+    "payroll": 177.6919316059625,
+    "pension": 17.08403015278341,
+    "otherCosts": 129.0146006581447,
+    "operatingRevenue": 63.8633974880986,
+    "depreciation": 11.39058565890686,
+    "interest": 0.3629034362204355,
+    "result": -0.3238773629513219,
+    "debt": 71.24395254693255,
+    "population": 3582.491620266302
+   }
+  },
+  "prices": {
+   "2022": {
+    "tax": 175.065785706896,
+    "grants": 80.8512066880268,
+    "payroll": 160.6912218879755,
+    "pension": 15.84959999998908,
+    "otherCosts": 131.8272394835028,
+    "operatingRevenue": 61.59217376242166,
+    "depreciation": 11.59341036320909,
+    "interest": 0.3943707193435253,
+    "result": -1.346676296676549,
+    "debt": 79.35326593346011,
+    "population": 3668.603325151667
+   },
+   "2023": {
+    "tax": 177.4914980995548,
+    "grants": 83.3805199741133,
+    "payroll": 170.856098071979,
+    "pension": 16.38848639999731,
+    "otherCosts": 137.3914144984186,
+    "operatingRevenue": 62.36337725591588,
+    "depreciation": 11.52059453498219,
+    "interest": 0.423503258095939,
+    "result": -11.84470143388927,
+    "debt": 90.27737283236561,
+    "population": 3641.020447669772
+   },
+   "2024": {
+    "tax": 179.4900214995099,
+    "grants": 85.86555478838338,
+    "payroll": 179.0635898959663,
+    "pension": 16.73264461438414,
+    "otherCosts": 140.6789969745221,
+    "operatingRevenue": 63.12059856886966,
+    "depreciation": 11.45311643121113,
+    "interest": 0.4992740521106511,
+    "result": -18.45144711143274,
+    "debt": 107.8757035125774,
+    "population": 3612.30190987256
+   },
+   "2025": {
+    "tax": 181.5191511599546,
+    "grants": 88.33762560836317,
+    "payroll": 177.6920663401369,
+    "pension": 17.08403015280141,
+    "otherCosts": 143.5338290499849,
+    "operatingRevenue": 63.86339909281291,
+    "depreciation": 11.39058506704116,
+    "interest": 0.5830190954616162,
+    "result": -15.06335384429525,
+    "debt": 122.1484722898324,
+    "population": 3582.491617255421
+   }
+  },
+  "pensions": {
+   "2022": {
+    "tax": 175.0657857070561,
+    "grants": 80.85120668810082,
+    "payroll": 160.691240597449,
+    "pension": 10.77600000000244,
+    "otherCosts": 131.8272228188698,
+    "operatingRevenue": 61.59217373773394,
+    "depreciation": 11.59341037221051,
+    "interest": 0.3815045769327104,
+    "result": 3.739787767426776,
+    "debt": 74.26680186036475,
+    "population": 3668.603325238884
+   },
+   "2023": {
+    "tax": 177.4914980390674,
+    "grants": 83.38052003757565,
+    "payroll": 170.8560861303884,
+    "pension": 17.51499999999771,
+    "otherCosts": 137.391410146306,
+    "operatingRevenue": 62.36337713706671,
+    "depreciation": 11.52059457865902,
+    "interest": 0.4005410308770589,
+    "result": -12.94823667251865,
+    "debt": 86.29444395422253,
+    "population": 3641.020448148203
+   },
+   "2024": {
+    "tax": 179.4900212201725,
+    "grants": 85.86555508769511,
+    "payroll": 179.0635993558443,
+    "pension": 25.58500000000096,
+    "otherCosts": 140.6789992780328,
+    "operatingRevenue": 63.12059858728414,
+    "depreciation": 11.45311642536203,
+    "interest": 0.5015050712220248,
+    "result": -27.30604523531025,
+    "debt": 112.7473727641713,
+    "population": 3612.301910276429
+   },
+   "2025": {
+    "tax": 181.5191509790166,
+    "grants": 88.33762580940083,
+    "payroll": 177.6920708186751,
+    "pension": 19.88500000000091,
+    "otherCosts": 143.5338293070566,
+    "operatingRevenue": 63.86339781061885,
+    "depreciation": 11.39058542232813,
+    "interest": 0.6148507011280218,
+    "result": -17.89616165015249,
+    "debt": 129.8529489919962,
+    "population": 3582.491620625198
+   }
+  },
+  "taxBase": {
+   "2022": {
+    "tax": 178.9616547094826,
+    "grants": 80.93599755270851,
+    "payroll": 160.6911867511631,
+    "pension": 10.7760000000057,
+    "otherCosts": 131.827277180149,
+    "operatingRevenue": 61.59217380638601,
+    "depreciation": 11.59341034398072,
+    "interest": 0.3714095219447409,
+    "result": 7.730542271334627,
+    "debt": 70.27604738469022,
+    "population": 3668.603324962875
+   },
+   "2023": {
+    "tax": 183.3361293322426,
+    "grants": 83.56899505998632,
+    "payroll": 170.8560443760251,
+    "pension": 17.51499999999196,
+    "otherCosts": 137.3914068680996,
+    "operatingRevenue": 62.36337693950986,
+    "depreciation": 11.52059465159662,
+    "interest": 0.3649848090341691,
+    "result": -6.879529373009291,
+    "debt": 76.2349821060981,
+    "population": 3641.020448549611
+   },
+   "2024": {
+    "tax": 185.5718589679744,
+    "grants": 86.12310776183402,
+    "payroll": 179.0635824498815,
+    "pension": 25.58500000000437,
+    "otherCosts": 140.679006559475,
+    "operatingRevenue": 63.12059859834717,
+    "depreciation": 11.45311642208009,
+    "interest": 0.434365695554378,
+    "result": -20.89950579883961,
+    "debt": 96.2813714828595,
+    "population": 3612.301910631594
+   },
+   "2025": {
+    "tax": 187.9692167082661,
+    "grants": 88.67455453143444,
+    "payroll": 177.6920443404837,
+    "pension": 19.88500000000029,
+    "otherCosts": 143.5338318931238,
+    "operatingRevenue": 63.86339856015645,
+    "depreciation": 11.39058533328303,
+    "interest": 0.5140561264983534,
+    "result": -11.00834789353206,
+    "debt": 106.4991340431087,
+    "population": 3582.491620378008
+   }
+  },
+  "grants": {
+   "2022": {
+    "tax": 178.961654709263,
+    "grants": 76.19999999994685,
+    "payroll": 160.6913654237476,
+    "pension": 10.77599999999248,
+    "otherCosts": 131.8270954759228,
+    "operatingRevenue": 61.59217357483473,
+    "depreciation": 11.59341044019594,
+    "interest": 0.3834210069507496,
+    "result": 2.982535937233877,
+    "debt": 75.02405362256263,
+    "population": 3668.603325912832
+   },
+   "2023": {
+    "tax": 183.3361286183909,
+    "grants": 84.7185169632214,
+    "payroll": 170.8560882792386,
+    "pension": 17.51500000001067,
+    "otherCosts": 137.391380078453,
+    "operatingRevenue": 62.36337697754915,
+    "depreciation": 11.52059465044461,
+    "interest": 0.3861715141048642,
+    "result": -5.751211963089361,
+    "debt": 79.85467093521409,
+    "population": 3641.020449487222
+   },
+   "2024": {
+    "tax": 185.5718582256617,
+    "grants": 100.2788959806966,
+    "payroll": 179.0636095183025,
+    "pension": 25.58500000002281,
+    "otherCosts": 140.6789786711697,
+    "operatingRevenue": 63.12059861422581,
+    "depreciation": 11.45311641782449,
+    "interest": 0.4168417765822738,
+    "result": -6.726193563316428,
+    "debt": 85.72774808071543,
+    "population": 3612.301911456183
+   },
+   "2025": {
+    "tax": 187.969216172231,
+    "grants": 96.98752023044233,
+    "payroll": 177.6920852321815,
+    "pension": 19.88500000000292,
+    "otherCosts": 143.5338088116062,
+    "operatingRevenue": 63.86339917146706,
+    "depreciation": 11.39058506016619,
+    "interest": 0.439403817934332,
+    "result": -2.620747347750523,
+    "debt": 87.55791036830139,
+    "population": 3582.491618733038
+   }
+  },
+  "interest": {
+   "2022": {
+    "tax": 178.9616547094106,
+    "grants": 76.2000000000097,
+    "payroll": 160.6913950393546,
+    "pension": 10.77600000000137,
+    "otherCosts": 131.8270635275646,
+    "operatingRevenue": 61.5921735335703,
+    "depreciation": 11.59341045842599,
+    "interest": 0.93416220771084,
+    "result": 2.431797009933376,
+    "debt": 75.57479253164198,
+    "population": 3668.603326099962
+   },
+   "2023": {
+    "tax": 183.3361284654182,
+    "grants": 84.71851711268876,
+    "payroll": 170.8560898519822,
+    "pension": 17.51500000000005,
+    "otherCosts": 137.3913734137948,
+    "operatingRevenue": 62.36337701049059,
+    "depreciation": 11.5205946280834,
+    "interest": 3.072010559894902,
+    "result": -8.437045865157899,
+    "debt": 83.0912437687167,
+    "population": 3641.020449401017
+   },
+   "2024": {
+    "tax": 185.5718583966076,
+    "grants": 100.2788958140488,
+    "payroll": 179.0636413483125,
+    "pension": 25.58500000002491,
+    "otherCosts": 140.6789699405724,
+    "operatingRevenue": 63.12059864150847,
+    "depreciation": 11.45311640848159,
+    "interest": 4.81306117189154,
+    "result": -11.12243601711668,
+    "debt": 93.36056337736204,
+    "population": 3612.301911313669
+   },
+   "2025": {
+    "tax": 187.9692163407808,
+    "grants": 96.98752005800362,
+    "payroll": 177.6920899694234,
+    "pension": 19.88500000000607,
+    "otherCosts": 143.5337993530791,
+    "operatingRevenue": 63.86340041563179,
+    "depreciation": 11.39058469407041,
+    "interest": 6.157418736600489,
+    "result": -8.338755938762773,
+    "debt": 100.9087346220577,
+    "population": 3582.491615574425
+   }
+  },
+  "investment": {
+   "2022": {
+    "tax": 178.9616547093233,
+    "grants": 76.1999999999725,
+    "payroll": 160.691591266271,
+    "pension": 10.77599999999611,
+    "otherCosts": 131.8268655871236,
+    "operatingRevenue": 61.59217328034565,
+    "depreciation": 11.68192645085767,
+    "interest": 0.9488832460032558,
+    "result": 2.328561439389347,
+    "debt": 77.97451210974818,
+    "population": 3668.603327132902
+   },
+   "2023": {
+    "tax": 183.3361276922859,
+    "grants": 84.71851787452638,
+    "payroll": 170.8561299681608,
+    "pension": 17.51500000000749,
+    "otherCosts": 137.3913459163282,
+    "operatingRevenue": 62.36337704385535,
+    "depreciation": 11.76645460304873,
+    "interest": 3.2098397353173,
+    "result": -8.820747612194282,
+    "debt": 87.71780511889988,
+    "population": 3641.020450268944
+   },
+   "2024": {
+    "tax": 185.5718578431251,
+    "grants": 100.2788963947111,
+    "payroll": 179.0636814629787,
+    "pension": 25.58499999999525,
+    "otherCosts": 140.6789409322965,
+    "operatingRevenue": 63.12059866478692,
+    "depreciation": 12.08036530656764,
+    "interest": 5.317836235553297,
+    "result": -12.25447103476867,
+    "debt": 107.2169108470972,
+    "population": 3612.301912075557
+   },
+   "2025": {
+    "tax": 187.9692159564751,
+    "grants": 96.98752048295218,
+    "payroll": 177.6921291225497,
+    "pension": 19.88500000001057,
+    "otherCosts": 143.5337690390931,
+    "operatingRevenue": 63.86339923297862,
+    "depreciation": 12.55040233145219,
+    "interest": 7.292292155026121,
+    "result": -10.63345697572498,
+    "debt": 122.9819654913795,
+    "population": 3582.491619218653
+   }
+  }
+ },
+ "skrForecasts": [
+  {
+   "circular": "21:35",
+   "published": "2021-09-30",
+   "rows": [
+    {
+     "year": 2022,
+     "tax": 184.729,
+     "grants": 74.126
+    },
+    {
+     "year": 2023,
+     "tax": 191.615,
+     "grants": 73.41
+    },
+    {
+     "year": 2024,
+     "tax": 197.961,
+     "grants": 75.013
+    },
+    {
+     "year": 2025,
+     "tax": 205.386,
+     "grants": 75.839
+    }
+   ]
+  },
+  {
+   "circular": "22:28",
+   "published": "2022-08-25",
+   "rows": [
+    {
+     "year": 2022,
+     "tax": 189.48,
+     "grants": 71.878
+    },
+    {
+     "year": 2023,
+     "tax": 189.766,
+     "grants": 78.133
+    },
+    {
+     "year": 2024,
+     "tax": 198.113,
+     "grants": 80.304
+    },
+    {
+     "year": 2025,
+     "tax": 206.996,
+     "grants": 81.406
+    }
+   ]
+  },
+  {
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "rows": [
+    {
+     "year": 2023,
+     "tax": 193.935,
+     "grants": 78.861
+    },
+    {
+     "year": 2024,
+     "tax": 193.686,
+     "grants": 89.356
+    },
+    {
+     "year": 2025,
+     "tax": 202.842,
+     "grants": 89.573
+    }
+   ]
+  },
+  {
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "rows": [
+    {
+     "year": 2024,
+     "tax": 193.454,
+     "grants": 93.501
+    },
+    {
+     "year": 2025,
+     "tax": 199.344,
+     "grants": 91.293
+    }
+   ]
+  }
+ ]
+}

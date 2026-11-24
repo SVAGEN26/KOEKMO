@@ -38,6 +38,8 @@ const SERIES={
   pkv:'SKR:s prisindex för kommunal verksamhet, utfall per år (PKV): totalt, arbetskraft och övrigt.',
   nationalPopulation:'Rikets folkmängd 31 december: utfall och SCB:s prognos.',
   hindcast:'Modellens bakåttest 2017-2019 till 2025 för 13 kommuner, för årsmodellen och för den kontinuerliga modellen som sidan kör: medelfel per horisont och jämförelsen "basårets resultatandel kvar".',
+  explanation:'Varför en kommuns resultat 2022-2025 inte blev som man trodde 2021: modellen från bokslut 2021 med det man trodde då, och sedan med en orsak i taget satt till utfallet (löner, priser, pensioner, skatteunderlag, statsbidrag, ränta, investeringar). remaining är det stegen inte förklarar, per rad. Innehåller även SKR:s gamla prognoser för kommunens skatt och bidrag. Läs den när frågan gäller vad som förklarar ett utfall.',
+  explanationSummary:'Samma förklaringskörning för alla 13 kommuner i sammandrag: mediangap mot boksluten som man trodde och med utfallen insatta, hur stor del av prischocken som nådde övriga kostnader, och SKR:s gamla prognoser för skatt och bidrag mot utfallen.',
   responses:'Prövning av modellens samband mot 13 kommuners bokslut 2010-2025: hur mycket kostnader, skatt och bidrag, lån och avskrivningar faktiskt ändrades när behov, befolkning och investeringar ändrades, jämfört med vad modellen säger. Lutning 1 = som modellen; med 95 % intervall. Läs den innan du påstår hur säkert ett scenarios utslag är.'
 };
 

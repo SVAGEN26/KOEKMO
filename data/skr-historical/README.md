@@ -73,8 +73,8 @@ Inga makron eller formler kördes och originalets kontrollsumma är oförändrad
 
 December 2023 och 2024 motsvarar två av tillfällena i
 `scripts/hindcast_vintages.py`. De återfunna versionerna 2021 och 2022 har andra
-datum än decemberversionerna. Septemberversionen 21:35 har räknats om och
-används i webbens historiska körning från bokslutet 2021.
+datum än decemberversionerna. Septemberversionen 21:35 används i webbens historiska
+körning från bokslutet 2021. Alla fyra är omräknade för länets kommuner, se nedan.
 
 Den lokala makrofria kopian ligger i
 `recalculated/Prognosunderlag-Motala-0583-21035.xlsx`. Den togs fram genom
@@ -87,6 +87,22 @@ Skriptet kontrollerar kommunnamn, prognosversion, år och intäktssummorna.
 Publiceringsdatum kommer från cirkulären. Arkivdatum är separata observationer;
 de bevisar inte att filen var oförändrad sedan publiceringsdagen. Interna
 cirkulärnummer och årsrubriker har kontrollerats där ovanstående tabell anger det.
+
+## Utläsning för länets 13 kommuner (2026-11-24)
+
+`scripts/read_skr_vintages.py` väljer varje kommun i en makrofri kopia av alla fyra
+arbetsböckerna, tömmer cachade formelvärden, räknar om i lokal LibreOffice med makron
+spärrade och läser skatt (Blad 1 rad 38) och generella bidrag (rad 40) för bokens åtta år.
+Kommunnamn, cirkulär, år och delsummor kontrolleras. 2021 års XLS öppnas direkt av
+LibreOffice (standardlösenordet hanteras där). Resultatet ligger i `forecasts.json`:
+två belopp per kommun och år, med cellhänvisning. De omräknade kopiorna ligger lokalt i
+`recalculated/<cirkulär>/` och originalen även i det privata repot
+https://github.com/SVAGEN26/ekonomilabb-kallor (`skr-prognosunderlag/`).
+
+Motalas värden ur 21:35 är desamma som i den tidigare handgjorda omräkningen
+(`data/replay-2022.json`), och prognosen för innevarande år ligger inom 3 % av utfallet
+för alla kommuner och årgångar (`tests/test_explain_outcome.py`). Jämförelsen med utfall
+och med modellen: `scripts/explain_outcome.py` och README, avsnittet Accuracy.
 
 ## Återstående luckor och sökningar
 

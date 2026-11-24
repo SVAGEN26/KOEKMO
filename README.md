@@ -110,7 +110,8 @@ or `inflationShockPath` year by year) reaches prices the same year, wages and th
 tax base the year after, pension cost the same year, and the market rate by
 `inflationRateResponse` points per point. General grants stay fixed in kronor
 unless `inflationGrantCompensation` is set. The pass-through shares are
-illustrative assumptions, not estimates.
+illustrative assumptions, not estimates. In 2022–2025 the price surprise reached
+other costs in full only the first year (see Accuracy).
 
 **Högre inflation** (3 points the first year, half left each year after): for
 Motala from the 2025 accounts the result is 49 mnkr below the base path in 2026
@@ -306,15 +307,77 @@ default, gives 40 / 60 / 60 for Motala, 42 / 67 / 126 for Mjölby and
 Five, four and three cases per horizon, from one period, are too few to rank the
 sets (`scripts/compare_hindcasts.py CODE [skr|components|hold|prices|hindsight|standard]`).
 
-SKR's own forecasts for the municipalities from those dates are no longer on SKR's
-site. Four of the workbooks were recovered from the Internet Archive
-(`data/skr-historical/`: circulars 21:35, 22:28, 23:56 and 24:56); so far only
-21:35, of September 2021, is read out for Motala. Its tax and general grants for
-2022–2025 were 63, 155, 177 and 197 mnkr below the outcome. The model's own
-forecast from the 2021 accounts, with its standard growth rates and no SKR path,
-was 75, 162 and 198 mnkr below for 2022–2024. Both missed the inflation years by
-about the same amount. One vintage and one municipality; the other three
-workbooks are not yet compared.
+**What explains the outcome, 2022–2025.** The closing accounts are the facts.
+`scripts/explain_outcome.py` runs the continuous model from the 2021 accounts as
+things were believed then (SKR's December circular), and then sets one input at a
+time to what happened. Only parameters change, no equation. Motala's result, mnkr:
+
+| | 2022 | 2023 | 2024 | 2025 |
+| --- | --- | --- | --- | --- |
+| As believed in 2021 | 68 | 51 | 55 | 59 |
+| + wages as they turned out (`wageGrowthPath`) | 47 | −35 | −102 | −48 |
+| + prices (`priceGrowthPath`) | −46 | −162 | −241 | −196 |
+| + pension cost (`pensionExpensePath`) | −54 | −235 | −338 | −204 |
+| + the national tax base (`referenceTax`) | −7 | −164 | −262 | −122 |
+| + the state's grants (per component) | 7 | −93 | −115 | 51 |
+| + the interest rate paid (`interestRatePath`) | 6 | −103 | −127 | 30 |
+| + investments (`investmentPath`) | 6 | −103 | −133 | 12 |
+| Accounts | 125 | 23 | 1 | 105 |
+| Left to explain | −119 | −126 | −134 | −93 |
+
+The model gives the pattern: down in 2023 and 2024 with wages, prices and pensions,
+up in 2025. What is left sits in one line, other costs, 110 to 136 mnkr too high
+from 2022. Motala's annual report (2022, note 4) shows purchases and materials up
+1 to 4 % in 2022; SKR's price index for other costs says 10 %. Whether that is
+savings or an index that does not fit Motala's purchases cannot be told from the
+accounts.
+
+All 13 municipalities, medians (`data/outcome-explanation-summary.json`; model
+minus accounts, percent of the line; result: absolute gap, percent of tax and
+grants):
+
+| | 2022 | 2023 | 2024 | 2025 |
+| --- | --- | --- | --- | --- |
+| Payroll, as believed | −2.1 | −4.8 | −6.3 | −6.7 |
+| Payroll, outcomes set in | −1.1 | −0.9 | 0.5 | −2.2 |
+| Other costs, as believed | −6.1 | −4.7 | −2.1 | −3.3 |
+| Other costs, outcomes set in | 1.1 | 5.0 | 8.6 | 7.6 |
+| Result, as believed | 1.5 | 4.3 | 5.4 | 2.9 |
+| Result, outcomes set in | 3.4 | 4.1 | 4.4 | 3.3 |
+| Change in result from the year before, as believed | 1.5 | 3.7 | 1.2 | 2.0 |
+| Change in result, outcomes set in | 3.4 | 1.7 | 1.5 | 1.3 |
+
+Payroll follows the wage index. Other costs do not follow the price index: of the
+price surprise, 85 % reached them in 2022 and 20 to 50 % by 2023–2025 (median).
+The municipalities held their purchases back after the price shock. That is the
+municipality's own decision, and the model does not make it for the user. So with
+every outcome set in, the result's level is no closer to the accounts than the
+forecast was; the forecast was closer because its too-low revenue and too-low costs
+cancelled. The year-to-year change is closer in 2023 and 2025, not in 2022. The
+steps are cumulative in the order shown. Financial items other than interest stay
+at the base year's amount; they dominate in Linköping and Norrköping (Norrköping's
+2022 holds the Ostlänken provision). The site shows the tables for the chosen
+municipality under Källor & validering.
+
+**SKR's own old forecasts.** They are no longer on SKR's site. Four workbooks were
+recovered from the Internet Archive (`data/skr-historical/`), and
+`scripts/read_skr_vintages.py` reads tax and general grants for the 13
+municipalities out of each (`data/skr-historical/forecasts.json`; the workbooks
+stay local). Mean error against SCB's outcomes, percent, 13 municipalities:
+
+| Forecast | 2021 | 2022 | 2023 | 2024 | 2025 |
+| --- | --- | --- | --- | --- | --- |
+| SKR 21:35, September 2021 | −1.0 | −2.8 | −4.8 | −5.6 | −5.3 |
+| SKR 22:28, August 2022 | | −0.8 | −3.0 | −2.8 | −1.9 |
+| SKR 23:56, December 2023 | | | −0.7 | −1.2 | −0.5 |
+| SKR 24:56, December 2024 | | | | −0.7 | 0.4 |
+| The model from the 2021 accounts | | −2.2 | −3.8 | −4.9 | −5.1 |
+
+For Motala SKR 21:35 was 63, 155, 177 and 197 mnkr below the outcome 2022–2025,
+the model 75, 158, 196 and 233 mnkr below. Nobody foresaw the inflation. The dates
+differ: the model's run has the 2021 closing accounts and the December circular,
+both later than SKR 21:35. The outcome includes general grants decided after a
+forecast was made.
 
 **Eight years, 13 municipalities.** `scripts/hindcast_long.py` starts from SCB's
 accounts of 2017, 2018 and 2019 and runs to 2025 (8, 7 and 6 years) for all 13

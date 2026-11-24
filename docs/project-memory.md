@@ -19,6 +19,8 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
   skatteunderlag och bidrag: resultatets medelabsolutfel 1,7/2,2/2,4 % av skatt och bidrag år 1–3 mot
   2,4/3,7/3,4 för "basårets andel kvar"; från år 4 är jämförelsen lika bra eller bättre. Resultatet
   0,7–0,8 % för lågt år 3–6. Med standardtakter förlorar modellen mot jämförelsen vid alla horisonter.
+- Förklaring av utfallet 2022–2025 från bokslut 2021 (`scripts/explain_outcome.py`, alla 13 kommuner) och SKR:s
+  fyra gamla prognosunderlag utlästa för alla 13 (`scripts/read_skr_vintages.py`). Se avsnittet längst ned.
 - Dokumentation omskriven 2026-11-23: ny README, `modelica/README.md` och `docs/methodology.md`.
   M2-delen av README flyttad till `research/M2.md`; `docs/dynamics-equations.md` flyttad till
   `research/dynamics-equations.md`. Lokal gren `master` (gammal historik från 2026-11-06) raderad.
@@ -1179,3 +1181,47 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
   prototypen. Prövningen utvidgas inte till alla 290 kommuner nu. Följden är att intervallen förblir breda och att
   anpassningstakt och fast andel inte går att avgöra ur data; de står kvar som illustrativa antaganden.
 
+## Bokslutet som facit: vad förklarar utfallet 2022–2025 (2026-11-24)
+
+Användarens besked 2026-11-24: det som hänt har hänt, och verkligheten är kommunens bokslut. Huvudsaken är
+att Modelica-modellen ger rätt dynamik, alltså förklaringsmönster: skillnader ska gå att förklara med till
+exempel höjda statsbidrag, inflation eller räntor genom att ställa in parametrar. SKR:s modell är en sak; vi
+behöver en egen. Det privata repot https://github.com/SVAGEN26/ekonomilabb-kallor får användas för att
+arkivera data.
+
+- `scripts/read_skr_vintages.py` läser skatt och generella bidrag för länets 13 kommuner ur de fyra
+  återfunna arbetsböckerna (21:35, 22:28, 23:56, 24:56): `data/skr-historical/forecasts.json`. Omräkning i
+  lokal LibreOffice (`CALC_RUNTIME` eller `.local/calc-runtime`), makron spärrade. Motala 21:35 är lika med
+  den tidigare omräkningen. Originalen är arkiverade i det privata repot under `skr-prognosunderlag/`.
+- SKR:s fel för skatt och bidrag mot SCB:s utfall, medel över 13 kommuner: 21:35 −2,8/−4,8/−5,6/−5,3 % för
+  2022–2025; 22:28 −3,0/−2,8/−1,9 % för 2023–2025; 23:56 −1,2/−0,5 %; 24:56 +0,4 % för 2025. Modellen från
+  bokslut 2021 (decembercirkulärets riksantaganden, bidrag 2 % per år): −2,2/−3,8/−4,9/−5,1 %. Olika
+  prognosdatum, ingen rangordning.
+- `scripts/explain_outcome.py [kod Paket]` kör `Continuous.Economy` från bokslut 2021 till 2025: först som man
+  trodde, sedan med löner, priser, pensioner, skatteunderlag, statsbidrag, ränta och investeringar satta till
+  utfall, ett steg i taget. Bara parametrar ändras. `data/outcome-explanation.json` (Motala),
+  `data/municipalities/<kod>/outcome-explanation.json`, sammandrag i `data/outcome-explanation-summary.json`
+  (`--summary`). Sidan visar tabellerna under Källor & validering för vald kommun; AI-verktygen har serierna
+  `explanation` och `explanationSummary`.
+- Motala: som man trodde 68/51/55/59 mnkr, med alla utfall 6/−103/−133/12, bokslut 125/23/1/105. Mönstret
+  träffas; kvar är −119/−126/−134/−93, nästan allt i övriga kostnader (+110 till +136). Kontrollerat i
+  årsredovisning 2022, not 4: köp av huvudverksamhet 437,2→453,3, material och tjänster 496,4→504,6, medan
+  SKR:s index för övrig förbrukning anger 10 % för 2022. Ingen engångspost på den storleken i 2021 års not.
+  Om skillnaden är besparing eller ett index som inte passar Motalas inköp går inte att avgöra ur bokslutet.
+- Alla 13, medianer: lönekostnaden −2 till −7 % som man trodde, inom cirka 2 % med löneindex som utfall.
+  Övriga kostnader 5–9 % för höga från 2023 med prisindex som utfall; 85 % av prischocken nådde dem 2022,
+  20–50 % sammantaget 2023–2025. Resultatets nivå blir inte närmare bokslutet med utfallen insatta (3,3–4,4 %
+  av skatt och bidrag mot 1,5–5,4 % som man trodde, där för låga intäkter och för låga kostnader tog ut
+  varandra). Förändringen år för år blir närmare 2023 och 2025, inte 2022.
+- Tolkning (min): kommunerna höll igen på inköpen när resultatet pressades. Modellen har ingen sådan regel,
+  och det är avsiktligt enligt direktivet att verktyget ska visa vad beslut kostar; besparingen är användarens
+  reglage. Inte prövat: om en fast genomslagsandel för priser skulle förbättra inflationsscenariot.
+- Begränsningar: en period; stegens ordning är vald; finansiella poster utöver ränta ligger fast (stora i
+  Linköping och Norrköping, Norrköping 2022 innehåller Ostlänken-avsättningen); kommunens befolkning är
+  modellens; SKR:s arbetskraftsindex innehåller pensionspåslaget medan modellens löner inte gör det; 2025
+  ligger bortom cirkulärets tre år och får dess sista takt.
+- Modelländring: kontrollen "Basåret saknar ingående låneskuld" godtar nu en angiven `interestRate`, som
+  meddelandet lovar (Linköping 2021 har ingen ingående skuld). Inga siffror ändras.
+- `scripts/hindcast_vintages.py`: utfallsinläsningen ligger i `outcomes()`; kommunkoden läses bara ur
+  argument som är siffror (annars tog testkörningen fel argument). Bakåttestens siffror är oförändrade.
+- Tester 2026-11-24: 68 JavaScript, 76 Python, `check:units` och `validate:modelica` går igenom.

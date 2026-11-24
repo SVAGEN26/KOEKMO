@@ -35,7 +35,12 @@ def series_catalogue():
     responses = load('data/response-test.json')
     responses['prices'] = {k: v for k, v in responses['prices'].items() if k != 'rows'}
     national = load('data/national-population.json')
+    explained = load('data/outcome-explanation-summary.json')
     out = {'municipalities': {}, 'national': {
+        'explanationSummary': {'source': 'scripts/explain_outcome.py --summary, data/outcome-explanation-summary.json',
+                               'description': 'The explanation runs for all 13 municipalities side by side: median gaps to the accounts '
+                                              'as believed and with the outcomes set in, and SKR\'s old forecasts of tax and grants '
+                                              'against the outcomes', **{k: v for k, v in explained.items() if k != 'municipalities'}},
         'pkv': {'unit': 'share per year', 'source': residual['source'],
                 'description': "SKR's price index for municipal activities, outcomes: pkv (total), labour, other",
                 'rows': [{'year': int(y), **v} for y, v in sorted(residual['pkv'].items())]},
@@ -67,6 +72,25 @@ def series_catalogue():
                          'interestExpense': r['interestExpense'], 'debt': r['debt'], 'cash': r['cash'], 'assets': r['assets'],
                          'investment': r['investment'], 'grantComponents': r['grantComponents']})
         drift = residual['municipalities'].get(code, {})
+        e = load('data/outcome-explanation.json' if code == '0583' else f'data/municipalities/{code}/outcome-explanation.json')
+        years = [str(y) for y in e['years']]
+        explanation = {
+            'source': 'scripts/explain_outcome.py', 'unit': 'mnkr', 'model': e['model'], 'baseYear': e['origin'], 'years': e['years'],
+            'description': 'Why the result did not become what was believed: the model from the base year\'s accounts as things '
+                           'were believed then, and with one cause at a time set to what happened (cumulative, in this order). '
+                           'remaining is the model with every outcome set in, minus the accounts, per line. Only inputs are '
+                           'changed, no equation.',
+            'baseYearResult': e['baseYear']['result'],
+            'steps': [{'step': s['step'], 'label': s['label'], 'result': [e['runs'][s['step']][y]['result'] for y in years]} for s in e['steps']],
+            'outcome': {'result': [e['outcome'][y]['result'] for y in years], 'source': e['outcome'][years[0]]['source']},
+            'remaining': {k: [r[k] for r in e['remainingByLine']] for k in e['remainingByLine'][0] if k != 'year'},
+            'inputs': e['inputs'],
+            'taxAndGrants': {'outcome': [e['outcome'][y]['tax'] + e['outcome'][y]['grants'] for y in years],
+                             'believed': [e['runs']['believed'][y]['tax'] + e['runs']['believed'][y]['grants'] for y in years],
+                             'skr': [{'circular': f['circular'], 'published': f['published'],
+                                      'rows': [{'year': r['year'], 'forecast': r['tax'] + r['grants']} for r in f['rows']]}
+                                     for f in e['skrForecasts']],
+                             'skrSource': 'SKR, Prognosunderlag K; data/skr-historical/forecasts.json'}}
         out['municipalities'][code] = {
             'name': records['name'],
             'accounts': {'unit': 'mnkr; population in persons; taxRate in percent', 'source': records['source'],
@@ -75,6 +99,7 @@ def series_catalogue():
                                  'reports mark as jämförelsestörande (annual-report-inputs.json). grantComponents: income, cost, '
                                  'regulation and LSS equalisation and the property fee.',
                          'rows': rows},
+            'explanation': explanation,
             'costGrowth': {'unit': 'share per year', 'source': residual['source'],
                            'description': 'Cost growth beyond prices and the service volume, measured as the model uses costDrift '
                                           '(scripts/cost_residual.py)', 'excludedYears': drift.get('excludedYears', []),

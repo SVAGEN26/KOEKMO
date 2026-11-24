@@ -311,7 +311,8 @@ function selectMunicipality(code,firstYear=null) {
   $('model-package').href=`${packageName}.mo`;
   $('model-package').textContent=`Hämta ${packageName}.mo ↓`;
   $('wasm-status').textContent=`OpenModelica kompilerar Kommunekonomi.mo och ${packageName}.mo i din webbläsare.`;
-  for(const panel of $('evidence').children) panel.hidden=(panel.id==='municipality-evidence')===motala;
+  for(const panel of $('evidence').children) panel.hidden=panel.id!=='outcome-explanation'&&(panel.id==='municipality-evidence')===motala;
+  renderOutcomeExplanation(code).catch(()=>{$('outcome-explanation').hidden=true;});
   const options=$('skr-options');
   options.hidden=!motala&&!regional[code].current.skrRevenue;
   options.disabled=options.hidden;
@@ -856,6 +857,27 @@ function renderPlanning(){
   $('planning-documents').innerHTML=planning.documents.map(r=>`<a class="button secondary" href="${safe(r.file)}" download>${safe(r.title)} ↓</a>`).join('');
   $('planning-limitations').innerHTML=planning.limitations.map(x=>`<li>${safe(x)}</li>`).join('');
 }
+// Why the accounts did not become what was believed: the model from the 2021 accounts with one cause at a time set to
+// what happened (scripts/explain_outcome.py, in series.json). Shown for the municipality the page shows.
+async function renderOutcomeExplanation(code) {
+  seriesData??=await fetch('series.json').then(r=>r.ok?r.json():Promise.reject(Error('series.json saknas')));
+  if(code!==activeMunicipality) return;
+  const m=seriesData.municipalities[code],e=m.explanation,years=e.years,name=m.name;
+  const head=first=>`<thead><tr><th scope="col">${first}</th>${years.map(y=>`<th scope="col">${y}</th>`).join('')}</tr></thead>`;
+  const cells=(values,format=fmt)=>values.map(v=>`<td${v<0?' class="negative"':''}>${v==null?'–':format(Math.round(v))}</td>`).join('');
+  const signed=v=>signedPeople.format(v);
+  $('outcome-explanation').hidden=false;
+  $('outcome-explanation-lede').textContent=`${name} från bokslut ${e.baseYear}. Första raden är modellen med det man trodde då. På varje rad därefter är en sak till satt till det som faktiskt hände. Bara indata ändras, inga ekvationer. Sista raden är bokslutet.`;
+  const last=e.steps.at(-1).result;
+  $('outcome-explanation-steps').innerHTML=`<caption>Årets resultat, mnkr. Stegen läggs på varandra uppifrån och ned.</caption>${head('Resultat')}<tbody>${e.steps.map((s,i)=>`<tr><th scope="row">${i?'+ ':''}${safe(s.label)}</th>${cells(s.result)}</tr>`).join('')}<tr><th scope="row">Kvar att förklara</th>${cells(last.map((v,i)=>v-e.outcome.result[i]),signed)}</tr><tr><th scope="row">Bokslut</th>${cells(e.outcome.result)}</tr></tbody>`;
+  const lines=[['otherCosts','Övriga kostnader'],['payroll','Löner och avgifter'],['operatingRevenue','Verksamhetens intäkter'],['tax','Skatt'],['grants','Generella bidrag'],['depreciation','Avskrivningar'],['interest','Räntekostnad'],['otherFinancialNet','Finansiella poster utöver ränta'],['result','Resultat']].filter(([k])=>e.remaining[k]);
+  $('outcome-explanation-remaining').innerHTML=`<caption>Modellen med utfallen insatta minus bokslutet, mnkr. Högre kostnader och lägre intäkter i modellen ger lägre resultat.</caption>${head('Rad')}<tbody>${lines.map(([k,label])=>`<tr><th scope="row">${label}</th>${cells(e.remaining[k],signed)}</tr>`).join('')}</tbody>`;
+  const t=e.taxAndGrants,gap=(forecast,i)=>forecast==null?null:forecast-t.outcome[i];
+  const skr=t.skr.map(f=>[`SKR ${f.circular} (${f.published})`,years.map((y,i)=>gap(f.rows.find(r=>r.year===y)?.forecast,i))]);
+  $('outcome-explanation-revenue').innerHTML=`<caption>Prognos minus utfall för skatt och generella bidrag, mnkr. Minus betyder att prognosen låg under utfallet.</caption>${head('Prognos')}<tbody>${[...skr,[`Modellen från bokslut ${e.baseYear}`,t.believed.map((v,i)=>gap(v,i))]].map(([label,values])=>`<tr><th scope="row">${safe(label)}</th>${cells(values,signed)}</tr>`).join('')}<tr><th scope="row">Utfall</th>${cells(t.outcome)}</tr></tbody>`;
+  const b=e.inputs.believed,o=e.inputs.outcome,pct=v=>decimal(100*v);
+  $('outcome-explanation-note').textContent=`Trodde då (SKR:s decembercirkulär ${e.baseYear}) och utfall, procent per år: löner ${years.map(y=>`${pct(b[y].wages)}→${pct(o[y].wages)}`).join(', ')}; priser ${years.map(y=>`${pct(b[y].prices)}→${pct(o[y].prices)}`).join(', ')}; rikets skatteunderlag ${years.map(y=>`${pct(b[y].taxBase)}→${pct(o[y].taxBase)}`).join(', ')}. Löner och priser är SKR:s index för riket (PKV); arbetskraftsindexet innehåller även arbetsgivarens pensionspåslag. ${e.inputs.beyondCircular.length?`Cirkuläret når inte ${e.inputs.beyondCircular.join(', ')}; där gäller dess sista takt. `:''}Utfall: ${code===DEFAULT_MUNICIPALITY?'kommunens årsredovisningar':'SCB:s räkenskapssammandrag'}. SKR:s äldre prognoser är lästa ur arbetsböcker återfunna i Internet Archive. Modellens körning utgår från bokslutet och decembercirkuläret, som kom efter SKR 21:35; prognosdatumen är alltså inte desamma. Ordningen på stegen är vald; där orsaker samverkar kan ett stegs andel bli en annan med en annan ordning.`;
+}
 function renderMunicipalityEvidence(period) {
   const code=period.baseline.municipality,{name,packageName}=municipalities[code];
   $('municipality-evidence-title').textContent=`Källor för ${name}`;
@@ -923,7 +945,7 @@ const aiAdapter={
       return path?{municipality:code,unit:'mnkr; befolkning 1 november året före',vintage:path.vintage,source:path.source??path.provenance?.workbook,rows:path.rows}:{municipality:code,rows:[],note:'Ingen SKR-bana för kommunen och perioden.'};
     }
     seriesData??=await fetch('series.json').then(r=>r.ok?r.json():Promise.reject(Error('series.json saknas')));
-    if(name in {pkv:1,nationalPopulation:1,hindcast:1,responses:1}) return seriesData.national[name==='nationalPopulation'?'population':name];
+    if(name in {pkv:1,nationalPopulation:1,hindcast:1,responses:1,explanationSummary:1}) return seriesData.national[name==='nationalPopulation'?'population':name];
     const m=seriesData.municipalities[code];
     if(!m) throw Error(`Okänd kommun ${code}.`);
     return {municipality:code,name:m.name,...m[name]};
@@ -1064,6 +1086,7 @@ async function boot(){try{
   window.addEventListener('popstate',route);
   route();
   renderEvidence(files[2],files[3]);renderPlanning();
+  renderOutcomeExplanation(activeMunicipality).catch(()=>{$('outcome-explanation').hidden=true;});
   $('municipal-benchmarks').innerHTML=`<thead><tr><th scope="col">2025</th><th scope="col">Budget/prognos</th><th scope="col">Utfall</th><th scope="col">Absolut fel</th></tr></thead><tbody>${files[4].rows.map(r=>`<tr><th scope="row">${({budget:'Budget',april:'Aprilprognos',august:'Augustiprognos'})[r.stage]}</th><td>${fmt(r.forecast)}</td><td>${fmt(r.actual)}</td><td>${fmt(Math.abs(r.forecast-r.actual))}</td></tr>`).join('')}</tbody>`;
   document.querySelector('.controls').addEventListener('input',event=>{const el=event.target;if(!el.dataset.key)return;
     // An empty or half-typed number ("", "-", "2,") is not a value yet; wait for more input instead of computing with 0.
