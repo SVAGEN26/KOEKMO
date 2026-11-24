@@ -7,7 +7,8 @@ migration, interest or inflation, and see the result, cash and debt year by
 year. The model is written in Modelica and runs in the visitor's browser, by
 default in continuous time: money and people are stocks that change every day,
 and only what is decided once a year is a yearly step. Until November 2026 the
-project was called Motala ekonomilabb; the repository still has that name.
+project was called Motala ekonomilabb and the repository `Motala_Ekonomilab`;
+GitHub redirects the old address.
 Motala (0583) is the main case; all 13 municipalities in Östergötland run from
 their own accounts.
 

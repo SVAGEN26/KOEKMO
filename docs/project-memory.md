@@ -1349,7 +1349,9 @@ arkivera data.
 - Användaren 2026-11-24: "rename the project to KOEKMO (Kommun ekonomisk modell)". Projektet heter KOEKMO på sidan, i
   PDF-rapporten, i README, i `package.json` och i de två MCP-servrarna (`koekmo` och `koekmo-bridge`; `.mcp.json`).
   I löpande text skrivs uttydningen "kommunekonomisk modell" (min rättning av särskrivningen; säg till om den ska skrivas isär).
-- Inte ändrat: Modelica-biblioteket heter `Kommunekonomi` och kommunpaketen `Motala`, `Finspang` osv. GitHub-repot
-  heter kvar `SVAGEN26/Motala_Ekonomilab` och det privata `ekonomilabb-kallor`; ett byte av reponamn ändrar adressen
-  till den publicerade sidan och är inte gjort. Äldre avsnitt i den här filen har kvar det gamla namnet.
+- Inte ändrat: Modelica-biblioteket heter `Kommunekonomi` och kommunpaketen `Motala`, `Finspang` osv. Det privata
+  repot heter kvar `ekonomilabb-kallor`. Äldre avsnitt i den här filen har kvar det gamla namnet.
+- GitHub-repot bytte namn samma dag, på användarens ja: `SVAGEN26/Motala_Ekonomilab` → `SVAGEN26/KOEKMO`.
+  GitHub vidarebefordrar gamla adresser till repot, PR:er och körningar. Den publicerade sidans adress följer
+  reponamnet (https://svagen26.github.io/KOEKMO/); den gamla adressen vidarebefordras inte.
 - Den som har kopplat en AI-klient mot servern `motala-ekonomilabb` behöver lägga till den igen under det nya namnet.
