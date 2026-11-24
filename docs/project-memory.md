@@ -1375,3 +1375,7 @@ arkivera data.
   1,0 s mot 0,6 s förut. Siffrorna på sidan är oförändrade (Motala 61, 93, … 151 mnkr; Högre inflation 22, 6, −14).
 - Testerna: jämförelsen mot SCB:s framskrivning har toleransen en tusendels person och hundra kronor (förut 1e-6
   och 1e-7, som byggde på fasta steg). Övriga toleranser är oförändrade, även 1e-8 mot modellen som den är skriven.
+- Sidan publicerades 2026-11-24 från main 62591ad, före lösarbytet, med kompilatorn låst till cc09fe3f5b (körning
+  https://github.com/SVAGEN26/KOEKMO/actions/runs/45482892507). Arbetsflödets standard är `master`.
+- Med `ida` går hela testsviten igenom mot kompilatorn från 2026-11-23:
+  https://github.com/SVAGEN26/KOEKMO/actions/runs/45496480785 (grenen `solver-ida`, ingen publicering).
