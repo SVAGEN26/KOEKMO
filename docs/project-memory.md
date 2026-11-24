@@ -1163,8 +1163,18 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
   (var +12,9 och −8,3). Slutsatsen står kvar: resten som prognos gör det sämre. Övriga varianter är oförändrade.
 - Sidan: en rad om sambanden under "Vad är belagt?", AI-serien `responses` (`get_series`), reglagets hjälptext
   för kostnadsökning uppdaterad.
-- Uppföljning som resultaten pekar på: (a) låt bara en del av finansieringsbehovet bli banklån, eller lägg in
-  investeringsbidrag och avgifter; (b) räntans genomslag 2022–2024 mot räntebindningen.
+- Rättelse samma dag. Jag skrev först att modellen troligen överskattar hur mycket en investering höjer skulden
+  och föreslog en ändrad låneregel. Det höll inte när horisonten prövades: summerat över 2/3/5/8 år blir
+  lutningen 0,83/0,85/0,85/0,88 (5 år: 0,58–1,09), och med behovet ur balansräkningen 0,64/0,64/0,78/1,02. Det som
+  saknas under ett enskilt år är andra låneformer: övriga långfristiga skulder (leasing, lån inom koncernen) tar
+  0,45 av balansräkningsbehovet. Anslutningsavgifter och investeringsbidrag (SCB TAB4201, posterna 210 och 560,
+  hämtat med `scripts/fetch_investment_income.py`, arkiv `data/downloads/20261124T114939Z-investment-income`) var
+  0,2–4,5 % av investeringsutgifterna 2018–2025 (median 1,6 %): för lite för att spela roll. Balansposten 087
+  duger inte som mått; flera kommuner har 0 fram till 2018–2019 (ändrad redovisning). Slutsats: låneregeln
+  ändras inte. Den stämmer på de horisonter sidan visar; ett enskilt års skuld kan avvika.
+- Användaren 2026-11-24: "Huvudsaken är att det är tydligt. Modellen behöver inte vara för avancerad som sagt,
+  utan det ska vara en bra prognosmodell för kommunala beslutsfattare, det är vårt huvudsakliga direktiv."
+- Uppföljning som resultaten pekar på: räntans genomslag 2022–2024 mot räntebindningen.
 - Beslut av användaren 2026-11-24: projektet håller sig till Östergötlands 13 kommuner i den här inledande
   prototypen. Prövningen utvidgas inte till alla 290 kommuner nu. Följden är att intervallen förblir breda och att
   anpassningstakt och fast andel inte går att avgöra ur data; de står kvar som illustrativa antaganden.

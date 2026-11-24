@@ -1,6 +1,6 @@
 {
  "source": "SCB TAB6777 and BefolkningNy (CC BY 4.0), SKR PKV, Kolada sector shares and care weights; data/municipalities/<code>/base-years.json and the history archive",
- "method": "python3 scripts/response_test.py\n\nThe hindcasts (hindcast_vintages.py, hindcast_long.py) score levels: was the result right. The site is used\nfor something else: to see how much the result moves when the population, the investments or the prices move.\nThis script tests those responses. For each one it computes the change the model's own rule gives from the\nobserved driver, and compares it with the observed change in the accounts:\n\n  costs        real growth of gross operating cost (SCB TAB6777 item 022, deflated with SKR's PKV) against the\n               growth of the model's service volume from the observed population, 2012-2025.\n  revenue      growth of tax and general grants (items 040 and 050) against the growth of the population the\n               year before, 2011-2025. The model scales both with the population (elasticity 1).\n  financing    where a financing need (investment less the result and depreciation) shows up in the balance\n               sheet (SCB TAB6779), 2018-2025. The model borrows exactly what the cash flow does not cover.\n  depreciation depreciation against the model's rule (assets in use over a fixed life) with the observed\n               investments, 2017-2025.\n  prices       nominal cost growth beyond the service volume against PKV, year by year (13 municipalities' mean).\n\nA response is right when the slope is 1: the observed change is, on average, the change the model gives.\nA slope of 0.5 means history moved half as much as the model says. The slope is a regression of the observed\nchange on the model's, with a common effect per year removed (what happened to all 13 municipalities that\nyear: the pandemic, a national wage round, a reform of the grants). It is therefore identified from\ndifferences between municipalities, not from the national trend. The 95 % interval resamples municipalities\n(cluster bootstrap), since one municipality's years are not independent.\n\nEverything here uses outcomes for the drivers, on purpose: the question is what follows from a given\npopulation or investment, not whether the population was foreseen. Nothing here is a forecast.\n\nLimits. Thirteen municipalities in one county are few; the intervals are wide and say so. PKV is national,\nso a municipality's own wage drift is in the cost growth. The service volume uses each municipality's sector\nshares and care weights of 2025 for the whole period. Costs include pensions (5-8 % of the item), which the\nmodel does not scale with volume. The capacity starts at the need of 2009, so 2010-2011 are run-in and not\nscored. Years with a one-off that the annual report does not split out are left out (trendExclude). Not\ntested: the interest rate's pass-through, the tax rate, pension costs and the inflation scenario's pass-through.\n\nWrites data/response-test.json.",
+ "method": "python3 scripts/response_test.py\n\nThe hindcasts (hindcast_vintages.py, hindcast_long.py) score levels: was the result right. The site is used\nfor something else: to see how much the result moves when the population, the investments or the prices move.\nThis script tests those responses. For each one it computes the change the model's own rule gives from the\nobserved driver, and compares it with the observed change in the accounts:\n\n  costs        real growth of gross operating cost (SCB TAB6777 item 022, deflated with SKR's PKV) against the\n               growth of the model's service volume from the observed population, 2012-2025.\n  revenue      growth of tax and general grants (items 040 and 050) against the growth of the population the\n               year before, 2011-2025. The model scales both with the population (elasticity 1).\n  financing    where a financing need (investment less the result and depreciation) shows up in the balance\n               sheet (SCB TAB6779), 2018-2025, over one to eight years. The model borrows exactly what the cash\n               flow does not cover.\n  depreciation depreciation against the model's rule (assets in use over a fixed life) with the observed\n               investments, 2017-2025.\n  prices       nominal cost growth beyond the service volume against PKV, year by year (13 municipalities' mean).\n\nA response is right when the slope is 1: the observed change is, on average, the change the model gives.\nA slope of 0.5 means history moved half as much as the model says. The slope is a regression of the observed\nchange on the model's, with a common effect per year removed (what happened to all 13 municipalities that\nyear: the pandemic, a national wage round, a reform of the grants). It is therefore identified from\ndifferences between municipalities, not from the national trend. The 95 % interval resamples municipalities\n(cluster bootstrap), since one municipality's years are not independent.\n\nEverything here uses outcomes for the drivers, on purpose: the question is what follows from a given\npopulation or investment, not whether the population was foreseen. Nothing here is a forecast.\n\nLimits. Thirteen municipalities in one county are few; the intervals are wide and say so. PKV is national,\nso a municipality's own wage drift is in the cost growth. The service volume uses each municipality's sector\nshares and care weights of 2025 for the whole period. Costs include pensions (5-8 % of the item), which the\nmodel does not scale with volume. The capacity starts at the need of 2009, so 2010-2011 are run-in and not\nscored. Years with a one-off that the annual report does not split out are left out (trendExclude). Not\ntested: the interest rate's pass-through, the tax rate, pension costs and the inflation scenario's pass-through.\n\nWrites data/response-test.json.",
  "reading": "slope 1 = history moved as the model says; low and high are a 95 % interval from resampling municipalities",
  "costs": {
   "annual": {
@@ -629,6 +629,128 @@
    "high": 0.45112796902078495,
    "modelSays": -1.0
   },
+  "netBankDebtByHorizon": {
+   "1": {
+    "need": {
+     "slope": 0.707017571938049,
+     "low": 0.19807727919888346,
+     "high": 1.0220389065746582,
+     "r2": 0.26677632397808354,
+     "cases": 99,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.06200987523001038,
+     "spreadOfObservedChange": 0.08488235558734128
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.5301058731951659,
+     "low": 0.16693808341939276,
+     "high": 0.9493089440962651,
+     "r2": 0.2334858412215512,
+     "cases": 99,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.07737222430584983,
+     "spreadOfObservedChange": 0.08488235558734128
+    }
+   },
+   "2": {
+    "need": {
+     "slope": 0.8277050516263029,
+     "low": 0.37215969431024537,
+     "high": 1.0819898680539346,
+     "r2": 0.45074258659396893,
+     "cases": 85,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.10216119871575378,
+     "spreadOfObservedChange": 0.12594974414482435
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.6392566601512043,
+     "low": 0.2350302262081971,
+     "high": 1.0145672638397674,
+     "r2": 0.3715980712942043,
+     "cases": 85,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.12010435458216052,
+     "spreadOfObservedChange": 0.12594974414482435
+    }
+   },
+   "3": {
+    "need": {
+     "slope": 0.8545826182945903,
+     "low": 0.5214653923089088,
+     "high": 1.0796690419460344,
+     "r2": 0.6585827312515079,
+     "cases": 71,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.1338380498208271,
+     "spreadOfObservedChange": 0.14093812376446718
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.643119950813083,
+     "low": 0.2364385996196558,
+     "high": 0.9964792515816069,
+     "r2": 0.4655310189431433,
+     "cases": 71,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.14952396852898345,
+     "spreadOfObservedChange": 0.14093812376446718
+    }
+   },
+   "5": {
+    "need": {
+     "slope": 0.854909820531583,
+     "low": 0.5796161964261981,
+     "high": 1.085252536444075,
+     "r2": 0.7598509782183335,
+     "cases": 45,
+     "municipalities": 12,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.20744559368337018,
+     "spreadOfObservedChange": 0.20345122399265017
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.7805499283748534,
+     "low": 0.29307617610675335,
+     "high": 1.0876744264740892,
+     "r2": 0.562384875739019,
+     "cases": 45,
+     "municipalities": 12,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.19546834464761811,
+     "spreadOfObservedChange": 0.20345122399265017
+    }
+   },
+   "8": {
+    "need": {
+     "slope": 0.8752036329789773,
+     "low": 0.4536805945880452,
+     "high": 1.186006234878058,
+     "r2": 0.7867229970333667,
+     "cases": 11,
+     "municipalities": 11,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.3255129724970911,
+     "spreadOfObservedChange": 0.3211933092956289
+    },
+    "needFromBalanceSheet": {
+     "slope": 1.022845635563405,
+     "low": 0.542514109261553,
+     "high": 1.3670812467963585,
+     "r2": 0.7705101072451999,
+     "cases": 11,
+     "municipalities": 11,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.275642108669506,
+     "spreadOfObservedChange": 0.3211933092956289
+    }
+   }
+  },
   "meanNeed": 0.03835611360992788,
   "meanBySource": {
    "bankDebt": 0.04794473811495114,
@@ -640,6 +762,28 @@
    "shortTerm": 0.010207565519942063,
    "receivables": -0.01458208533189573,
    "remainder": -0.0006443483117977346
+  },
+  "investmentIncomeShare": {
+   "source": "SCB TAB4201 items 210 and 560, TAB5179 item 950; data/downloads/20261124T114939Z-investment-income",
+   "period": "2018-2025",
+   "byMunicipality": {
+    "Ödeshög": 0.015687075554924008,
+    "Ydre": 0.017305517325956914,
+    "Kinda": 0.03433242409719265,
+    "Boxholm": 0.01628928048736956,
+    "Åtvidaberg": 0.034034118589995443,
+    "Finspång": 0.012494400881442849,
+    "Valdemarsvik": 0.04454006688168209,
+    "Linköping": 0.018088562219520033,
+    "Norrköping": 0.0020415473837215436,
+    "Söderköping": 0.013725918074692934,
+    "Motala": 0.011509094487770976,
+    "Vadstena": 0.0032198503072487406,
+    "Mjölby": 0.016052168580239983
+   },
+   "lowest": 0.0020415473837215436,
+   "highest": 0.04454006688168209,
+   "median": 0.016052168580239983
   }
  },
  "depreciation": {

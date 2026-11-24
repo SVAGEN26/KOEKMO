@@ -13,7 +13,8 @@ observed driver, and compares it with the observed change in the accounts:
   revenue      growth of tax and general grants (items 040 and 050) against the growth of the population the
                year before, 2011-2025. The model scales both with the population (elasticity 1).
   financing    where a financing need (investment less the result and depreciation) shows up in the balance
-               sheet (SCB TAB6779), 2018-2025. The model borrows exactly what the cash flow does not cover.
+               sheet (SCB TAB6779), 2018-2025, over one to eight years. The model borrows exactly what the cash
+               flow does not cover.
   depreciation depreciation against the model's rule (assets in use over a fixed life) with the observed
                investments, 2017-2025.
   prices       nominal cost growth beyond the service volume against PKV, year by year (13 municipalities' mean).
@@ -365,9 +366,43 @@ def financing(cases):
     bounds = lambda i: [sorted(d[i] for d in draws)[int(q * len(draws))] for q in (0.025, 0.975)]
     out['netBankDebtOnInvestment'] = {'slope': a, 'low': bounds(0)[0], 'high': bounds(0)[1], 'modelSays': 1.0}
     out['netBankDebtOnSelfFinancing'] = {'slope': b, 'low': bounds(1)[0], 'high': bounds(1)[1], 'modelSays': -1.0}
+    # The same over several years: the sums of the need and of the change of net bank debt, overlapping windows.
+    by = {}
+    for c in cases:
+        by.setdefault(c['municipality'], {})[c['year']] = c
+    out['netBankDebtByHorizon'] = {}
+    for horizon in (1, 2, 3, 5, 8):
+        row = {}
+        for key in ('need', 'needFromBalanceSheet'):
+            summed = []
+            for municipality, years in by.items():
+                for year in years:
+                    span = [year - k for k in range(horizon)]
+                    if all(s in years for s in span):
+                        summed.append({'municipality': municipality, 'year': year, 'x': sum(years[s][key] for s in span),
+                                       'y': sum(years[s]['netBankDebt'] for s in span)})
+            row[key] = report(summed)
+        out['netBankDebtByHorizon'][horizon] = row
     out['meanNeed'] = statistics.mean(c['need'] for c in cases)
     out['meanBySource'] = {name: statistics.mean(c[name] for c in cases) for name in list(SOURCES) + ['remainder']}
     return out
+
+
+def investment_income(data):
+    """Connection fees and public investment grants as a share of investment expenditure, 2018-2025 (SCB TAB4201
+    items 210 and 560 over TAB5179 item 950). None when the archive of scripts/fetch_investment_income.py is not there."""
+    index = json.loads((ROOT / 'data/municipalities/ostergotland-sources.json').read_text())
+    archive = ROOT / index.get('investmentIncomeArchive', 'missing')
+    if not (archive / 'TAB4201.json').exists():
+        return None
+    shares = {}
+    for code in data:
+        income, spending = jsonstat(archive / 'TAB4201.json', code), jsonstat(archive / 'TAB5179.json', code)['950']
+        years = range(2018, LAST + 1)
+        shares[cr.NAMES[code]] = sum(income['210'].get(y, 0.0) + income['560'].get(y, 0.0) for y in years) / sum(spending[y] for y in years)
+    return {'source': 'SCB TAB4201 items 210 and 560, TAB5179 item 950; ' + str(archive.relative_to(ROOT)),
+            'period': '2018-2025', 'byMunicipality': shares, 'lowest': min(shares.values()), 'highest': max(shares.values()),
+            'median': statistics.median(shares.values())}
 
 
 def two_slopes(cases, a, b):
@@ -440,6 +475,7 @@ def main():
     revenue = {name: {h: report(cases) for h, cases in by.items()} for name, by in revenue_cases(data).items()}
     revenue['modelSaysPerComponent'] = component_share(data)
     debt = financing(debt_cases(data))
+    debt['investmentIncomeShare'] = investment_income(data)
     depreciation = {h: report(cases) for h, cases in depreciation_cases(data).items()}
     out = {'source': 'SCB TAB6777 and BefolkningNy (CC BY 4.0), SKR PKV, Kolada sector shares and care weights; '
                      'data/municipalities/<code>/base-years.json and the history archive',
@@ -471,6 +507,11 @@ def main():
         print(f'  {name:14s}     {line(r)}  mean {100 * debt["meanBySource"][name]:5.2f} % of tax and grants')
     print(f'  bank debt less lending and cash {line(debt["netBankDebt"])}')
     print(f'  the same on the need from the balance sheet {line(debt["netBankDebtOnBalanceSheetNeed"])}')
+    for h, row in debt['netBankDebtByHorizon'].items():
+        print(f'  over {h} y         {line(row["need"])}  | need from the balance sheet {line(row["needFromBalanceSheet"])}')
+    if debt['investmentIncomeShare']:
+        s = debt['investmentIncomeShare']
+        print(f"  connection fees and investment grants paid {100 * s['lowest']:.1f} to {100 * s['highest']:.1f} % of the investments 2018-2025 (median {100 * s['median']:.1f} %)")
     i, s = debt['netBankDebtOnInvestment'], debt['netBankDebtOnSelfFinancing']
     print(f'  on investment alone {i["slope"]:.2f} [{i["low"]:.2f}, {i["high"]:.2f}] (model 1), on result and depreciation alone '
           f'{s["slope"]:.2f} [{s["low"]:.2f}, {s["high"]:.2f}] (model -1); mean need {100 * debt["meanNeed"]:.2f} % of tax and grants')

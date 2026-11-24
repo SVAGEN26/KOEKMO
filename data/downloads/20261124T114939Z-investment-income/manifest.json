@@ -1,0 +1,35 @@
+{
+  "retrieved_at": "2026-11-24T11:49:39.455277+00:00",
+  "municipalities": [
+    "0509",
+    "0512",
+    "0513",
+    "0560",
+    "0561",
+    "0562",
+    "0563",
+    "0580",
+    "0581",
+    "0582",
+    "0583",
+    "0584",
+    "0586"
+  ],
+  "source": "Statistics Sweden (SCB), Statistikdatabasen, CC BY 4.0",
+  "files": [
+    {
+      "file": "TAB4201.json",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB4201/data?lang=sv&outputFormat=json-stat2&valueCodes[Region]=0509&valueCodes[Region]=0512&valueCodes[Region]=0513&valueCodes[Region]=0560&valueCodes[Region]=0561&valueCodes[Region]=0562&valueCodes[Region]=0563&valueCodes[Region]=0580&valueCodes[Region]=0581&valueCodes[Region]=0582&valueCodes[Region]=0583&valueCodes[Region]=0584&valueCodes[Region]=0586&valueCodes[Kontopost]=210&valueCodes[Kontopost]=560&valueCodes[Kontopost]=580&valueCodes[Kontopost]=892&valueCodes[ContentsCode]=*&valueCodes[Tid]=2011&valueCodes[Tid]=2012&valueCodes[Tid]=2013&valueCodes[Tid]=2014&valueCodes[Tid]=2015&valueCodes[Tid]=2016&valueCodes[Tid]=2017&valueCodes[Tid]=2018&valueCodes[Tid]=2019&valueCodes[Tid]=2020&valueCodes[Tid]=2021&valueCodes[Tid]=2022&valueCodes[Tid]=2023&valueCodes[Tid]=2024&valueCodes[Tid]=2025",
+      "query": null,
+      "bytes": 8914,
+      "sha256": "763be31d782a1bad88057f4e502c9764cb420c0184c841c67bbb5c33d01d9636"
+    },
+    {
+      "file": "TAB5179.json",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB5179/data?lang=sv&outputFormat=json-stat2&valueCodes[Region]=0509&valueCodes[Region]=0512&valueCodes[Region]=0513&valueCodes[Region]=0560&valueCodes[Region]=0561&valueCodes[Region]=0562&valueCodes[Region]=0563&valueCodes[Region]=0580&valueCodes[Region]=0581&valueCodes[Region]=0582&valueCodes[Region]=0583&valueCodes[Region]=0584&valueCodes[Region]=0586&valueCodes[Verksomrkom]=950&valueCodes[ContentsCode]=000002ZW&valueCodes[Tid]=2015&valueCodes[Tid]=2016&valueCodes[Tid]=2017&valueCodes[Tid]=2018&valueCodes[Tid]=2019&valueCodes[Tid]=2020&valueCodes[Tid]=2021&valueCodes[Tid]=2022&valueCodes[Tid]=2023&valueCodes[Tid]=2024&valueCodes[Tid]=2025",
+      "query": null,
+      "bytes": 4053,
+      "sha256": "60c2ff4802550121a74a4db68c4c7b2645e1bfe53480d5d6fd4b09328d8fc501"
+    }
+  ]
+}

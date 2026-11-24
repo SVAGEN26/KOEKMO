@@ -25,9 +25,9 @@ of all 13 municipalities, even with what actually happened to prices, the tax ba
 and the state's grants, the model beats "the base year's result share kept" only in
 the first three years. Its use is to show how a decision moves the result, cash and
 debt, not to say what the result will be. Those responses are tested against the 13
-municipalities' accounts: costs and depreciation have moved about as the model's
-rules say, tax and grants somewhat less, and debt by half to three quarters of what
-the model says, all with wide margins. See [Accuracy](#accuracy).
+municipalities' accounts: costs, depreciation and, over five years or more, debt
+have moved about as the model's rules say, and tax and grants somewhat less, all
+with wide margins. See [Accuracy](#accuracy).
 
 ## Run it
 
@@ -363,7 +363,8 @@ municipalities. From `data/response-test.json`:
 | The same, 1 year | 1 | 0.82 (0.30 to 1.30); 0.71 (0.09 to 1.31) | 180 |
 | Population the year before → tax and grants, 1 year | 0.94 | 0.78 (0.49 to 1.10) | 189 |
 | The same, 10 years | 0.94 | 0.44 (0.10 to 0.90) | 74 |
-| Financing need → bank debt less lending and cash | 1 | 0.71 (0.20 to 1.02); 0.53 (0.17 to 0.95) with the need from the balance sheet | 99 |
+| Financing need → bank debt less lending and cash, 1 year | 1 | 0.71 (0.20 to 1.02); 0.53 (0.17 to 0.95) with the need from the balance sheet | 99 |
+| The same, summed over 5 years | 1 | 0.85 (0.58 to 1.09); 0.78 (0.29 to 1.09) | 45 |
 | Investment → depreciation, 3 years | 1 | 0.89 (0.39 to 1.56) | 75 |
 | SKR's price index → cost beyond volume | 1 | 0.84 (−0.10 to 1.34) | 14 years |
 
@@ -377,13 +378,16 @@ municipalities. From `data/response-test.json`:
   below the model's 0.94 and clearly below over ten years. The 2020 reform of the
   cost equalisation moved grants towards municipalities that shrink, in the same
   period, so a weaker response to population is not shown.
-- **Debt.** Of a krona of financing need (investment less the result and
-  depreciation), 0.42 became bank debt and 0.24 came back from lending, mostly to
-  the municipality's own companies. Net of lending and cash it is 0.5 to 0.7,
-  depending on how the need is measured, and 1 is at or beyond the edge of the
-  interval. The rest came from investment grants and fees, other liabilities and
-  items the test does not identify. The model borrows all of it, so it probably
-  overstates how much an investment adds to the debt.
+- **Debt.** The model borrows the whole financing need (investment less the
+  result and depreciation). Within one year 0.5 to 0.7 of it became bank debt net
+  of lending and cash; the rest was covered for the time being by other
+  liabilities, such as leasing and loans within the group. Summed over five
+  years it is 0.8 to 0.85, and over eight years 0.9 to 1.0 (11 municipalities),
+  with 1 inside the interval. So the rule holds over the horizons the site
+  shows, and a single year's debt can be off. A quarter of the yearly change of
+  bank debt is lending to the municipality's own companies, which the model does
+  not have. Connection fees and investment grants paid only 0.2 to 4.5 % of the
+  investments 2018–2025 (SCB TAB4201), too little to matter.
 - **Depreciation** follows the model's rule within the margins.
 - **Not tested:** the interest rate's pass-through, the tax rate, pension costs
   and the inflation scenario's pass-through shares.

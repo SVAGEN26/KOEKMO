@@ -431,7 +431,15 @@ from resampling municipalities with their years (cluster bootstrap). Results in
   cash: 0.71 (0.20 to 1.02); with the need computed from the balance sheet's own
   change of fixed assets, 0.53 (0.17 to 0.95). On investment alone 0.76 (0.28 to
   1.11); on the result and depreciation alone −0.27 (−1.00 to 0.45) where the
-  model has −1.
+  model has −1. Summed over 2, 3, 5 and 8 years the slope is 0.83, 0.85, 0.85 and
+  0.88 (five years: 0.58 to 1.09), and with the need from the balance sheet 0.64,
+  0.64, 0.78 and 1.02. The one-year shortfall is other forms of borrowing: on the
+  balance-sheet need, other long-term liabilities (leasing, loans within the
+  group, investment grants) take 0.45 (0.09 to 0.76). The model's rule, all of
+  the need to debt, is therefore right over the horizons the site shows and too
+  strong for a single year. Connection fees and public investment grants (SCB
+  TAB4201 items 210 and 560) were 0.2 to 4.5 % of investment expenditure
+  2018–2025 (median 1.6 %), so they are not what is missing.
 - *Depreciation.* The model's rule with observed investments: 1.07, 0.89 and
   0.87 over 1, 3 and 5 years (three years: 0.39 to 1.56).
 - *Prices.* Nominal cost growth beyond the service volume against PKV, one point
