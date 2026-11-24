@@ -50,6 +50,12 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 10. Linköpings resultat stiger med SKR 26:28 (422 → 1 278 mnkr 2026–2033 utan kostnadsökning utöver
     demografi och pris): skatteunderlaget växer cirka 4,2 %/år mot löner 3,3 och priser 2,6 %.
     Inte jämfört med Linköpings egen plan.
+11. Startsidans kort visar SCB:s publicerade resultat (TAB6777 rad 120). För Norrköping 2025 är det +3 596 mnkr
+    (33,6 % av skatt och bidrag) mot 364 mnkr räknat ur delposterna som modellen använder. Skillnaden är inte
+    utredd; avsättningen för Ostlänken 2022 (−3 281 mnkr) är en möjlig förklaring att kontrollera i
+    årsredovisningen 2025. Kortet saknar en not om engångsposter.
+12. Förklaringskörningen 2022–2025: övriga kostnader följer inte SKR:s prisindex efter 2022. Inte prövat om
+    inflationsscenariots genomslag på priser bör vara lägre än 1 efter första året.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 
