@@ -1305,4 +1305,5 @@ arkivera data.
   OpenModelica master f802325f6 (2026-11-24). En körning med d3ca67ddd (2026-11-23) föll likadant:
   https://github.com/SVAGEN26/Motala_Ekonomilab/actions/runs/45451388595. Testerna för kontinuerlig tid i webbläsaren
   (`tests/jit-continuous.test.mjs`) kom med PR #2, så ingen tidigare körning har prövat dem mot en nyare kompilator.
-- Felet ligger alltså mellan OpenModelica 2026-09-22 och 2026-11-23. Inte utrett vilket steg i kompilatorn.
+  Likaså med 1c3a37775 (2026-11-20): https://github.com/SVAGEN26/Motala_Ekonomilab/actions/runs/45452400399.
+- Felet ligger alltså mellan OpenModelica 2026-09-22 och 2026-11-20. Inte utrett vilket steg i kompilatorn.
