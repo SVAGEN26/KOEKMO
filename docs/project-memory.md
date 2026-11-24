@@ -56,6 +56,11 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
     årsredovisningen 2025. Kortet saknar en not om engångsposter.
 12. Förklaringskörningen 2022–2025: övriga kostnader följer inte SKR:s prisindex efter 2022 (kommunernas
     besparingar). Inflationsscenariot har kvar fullt genomslag på priserna; inget reglage för det.
+14. Linköpings låneskuld i basåren 2024 och 2025 är fel i SCB-posterna (14 382 och 10 424 mnkr mot 16 583 och 16 616
+    mnkr i kommunens finansrapport), så räntan faller 361 → 263 mnkr 2026 i grundbanan. Inte åtgärdat; se avsnittet
+    "Budgetar och finansrapporter" längst ned. Beslut som väntar: brutto som Finspång, eller netto efter vidareutlåning.
+15. Bygget på main föll 2026-11-24: den kontinuerliga modellen startar inte i webbkompilatorn byggd från dagens
+    OpenModelica. Se samma avsnitt.
 13. Inflationsscenariots andelar (0,4 / 8 / 0,5) är satta efter en enda period. I pensionstalet ligger 2023 års
     pensionsavtal; det är inte separerat från inflationen.
 
@@ -1261,3 +1266,43 @@ arkivera data.
   2028 (då negativt), 109 under 2033 (tidigare 49 och 105). Läst från sidan i headless Chromium 2026-11-24.
 - Min bedömning, inte användarens beslut: jag ändrade standardvärdena utan att fråga först, eftersom de gamla
   saknade underlag och motsades av den enda period som finns. Säg till om de ska tillbaka.
+
+## Budgetar och finansrapporter för Finspång och Linköping (2026-11-24)
+
+- Hämtat till det privata repot (`budget-och-rapporter/`, commit 85dd9e0, lista `kallor-budget.csv`, eget manifest):
+  budget med plan 2022–2026 för båda, Finspångs delårsrapporter 2024 och 2025 (tertial 2), Linköpings finansrapporter
+  per 31 december 2024 och 2025. Årsredovisningarna 2021–2025 fanns redan. Ingen delårsrapport för 2026 låg ute på
+  https://finspang.se/kommunochpolitik/kommunfakta/ekonomi-budget-och-resultat eller
+  https://www.linkoping.se/kommun-och-politik/budget-mal-och-ekonomi/publikationer den dagen.
+- Linköping, Budget 2026 med plan 2027–2031, s. 49 (resultaträkning, mnkr): årets resultat 88 (2026), 111, 135, 165,
+  200, 205 (2031); skatt, bidrag och fastighetsavgift 11 357 (2026); nettokostnad 11 768; finansnetto 499 (intäkter 923,
+  kostnader 424). Budget 2025: resultat 113; bokslut 2024: 233 (kommunens redovisning). Modellens grundbana på sidan
+  samma dag: 456 (2026), 592, 781 (2028); skatt och bidrag 11 326, nettokostnad med avskrivningar 11 556.
+  Skillnaden 2026 på 368 mnkr: nettokostnad 212, finansnetto 187, intäkter −31.
+- Linköping, Finansrapport per 31 december 2025, s. 3 och 6–7: total upplåning 16 616 mnkr, varav 15 516 vidareutlånat
+  till bolagen och 1 100 kommunens egna lån; bruttoräntekostnad 338 mnkr (momentan), ränta på utlåningen 324, netto 14;
+  genomsnittlig ränta 2,03 %. Internbank sedan 1 januari 2024. Jämförelsekolumnen anger 16 583 mnkr per 2024-12-31
+  (egna lån 1 000). Finansrapporten per 31 december 2024 anger 16 270 (s. 3) och 16 071 (s. 5) för samma dag.
+  Skillnaden mellan de tre talen är inte utredd; kommunens egna lån är 1 000 i alla.
+- Modellens basår för Linköping har skulden 14 382 (2024) och 10 424 mnkr (2025) ur SCB-posterna 081, 082, 136 och 134.
+  Räntan 361 mnkr 2025 delad med ingående 14 382 ger 2,5 %, som på 10 424 ger 263 mnkr 2026. Med finansrapportens
+  skuld blir räntan 2,2 % och kostnaden oförändrad omkring 360 mnkr. `annual-report-inputs.json` har `externalBankDebt`
+  för detta (används för Finspång) men inte ifyllt för Linköping.
+- Finspång, Strategisk plan 2026–2028 med budget 2026, s. 36–37: årets resultat 25 (2026), 29, 12; nettokostnad +6,0 %
+  2026, skatt och bidrag +3,1 %; investeringar 236, 387, 309 mnkr. Modellens grundbana: resultat 79, 100, 109;
+  investeringar 121 per år (basårets nivå), skulden faller 1 777 → 1 588. Budget mot utfall 2021–2025: 14,8/64,6,
+  36/59,3, 0/−0,3, 33/18,6, 26/89,7. Utfallet låg över budget tre år av fem, i snitt 46 mot 22 mnkr.
+- Användaren 2026-11-24: "Eventuella kommunala bolag måste ju av nödvändigheten vara en abstraktion."
+  Öppet val: behålla bruttoskuld (som Finspång i dag) eller räkna kommunens egen skuld netto efter vidareutlåning.
+  Med brutto slår scenariot Högre ränta på hela upplåningen medan ränteintäkten från bolagen står still.
+
+## Bygget på main föll efter PR #2 (2026-11-24)
+
+- PR #2 slogs ihop (f4620ee). Körningen https://github.com/SVAGEN26/Motala_Ekonomilab/actions/runs/45443796322 föll i
+  teststeget: 9 av 68 JavaScript-tester, alla som kör den kontinuerliga modellen i webbkompilatorn, med
+  "CodegenWasmJit: in-wasm initialization failed". Årsmodellen går igenom. Inget publicerades.
+- Lokalt går alla 68 igenom med kompilatorn i `site/omc-web` (OpenModelica cc09fe3f5b, 2026-09-22). Bygget använde
+  OpenModelica master f802325f6 (2026-11-24). En körning med d3ca67ddd (2026-11-23) föll likadant:
+  https://github.com/SVAGEN26/Motala_Ekonomilab/actions/runs/45451388595. Testerna för kontinuerlig tid i webbläsaren
+  (`tests/jit-continuous.test.mjs`) kom med PR #2, så ingen tidigare körning har prövat dem mot en nyare kompilator.
+- Felet ligger alltså mellan OpenModelica 2026-09-22 och 2026-11-23. Inte utrett vilket steg i kompilatorn.
