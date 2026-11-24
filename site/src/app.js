@@ -916,7 +916,7 @@ function toOverrides(values){
     return [k,v+(sourcedRate(k)?b.assumptions[k]:0)];
   }));
 }
-function logAi(text){const item=document.createElement('li');item.textContent=`${new Date().toLocaleTimeString('sv-SE')} ${text}`;$('ai-log').prepend(item);while($('ai-log').children.length>30)$('ai-log').lastChild.remove();}
+function logAi(text){$('ai-log-empty').hidden=true;const item=document.createElement('li');item.textContent=`${new Date().toLocaleTimeString('sv-SE')} ${text}`;$('ai-log').prepend(item);while($('ai-log').children.length>30)$('ai-log').lastChild.remove();}
 const aiAdapter={
   state:()=>({municipality:activeMunicipality,name:municipalities[activeMunicipality].name,baseYear:b.baseYear,
     forecastYears:[b.baseYear+1,b.baseYear+b.assumptions.years],
@@ -962,8 +962,24 @@ function setupAiLink(){
     const labels={connected:'Kopplad. Ett AI-program kan nu använda sidan via bryggan.',closed:'Frånkopplad.',error:'Fel: '};
     $('ai-status').textContent=(labels[state]??'')+(state==='error'?text:text&&state!=='connected'?` ${text}`:'');
     $('ai-connect').textContent=state==='connected'?'Koppla från':'Koppla';
+    $('ai-toggle').dataset.state=state;
+    $('ai-toggle-state').textContent=state==='connected'?'kopplad':state==='error'?'fel':'av';
     if(state!=='connected') link=null;
   };
+  // The panel on the right: open or closed is remembered; Escape closes it and gives the button the focus back.
+  const show=(open,focus=false)=>{
+    $('ai-panel').hidden=!open;
+    $('ai-toggle').setAttribute('aria-expanded',String(open));
+    document.body.classList.toggle('ai-open',open);
+    try{localStorage.setItem('motala.ai-panel',open?'open':'closed');}catch{}
+    if(focus)(open?$('ai-address'):$('ai-toggle')).focus();
+  };
+  $('ai-toggle').onclick=()=>show($('ai-panel').hidden,true);
+  $('ai-close').onclick=()=>show(false,true);
+  $('ai-panel').onkeydown=e=>{if(e.key==='Escape')show(false,true);};
+  let remembered=null;
+  try{remembered=localStorage.getItem('motala.ai-panel');}catch{}
+  if(remembered==='open')show(true);
   $('ai-address').oninput=()=>{$('ai-remote').hidden=isLoopback($('ai-address').value);};
   $('ai-connect').onclick=()=>{
     if(link){link.close();return;}

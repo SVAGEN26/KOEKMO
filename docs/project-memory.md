@@ -1066,7 +1066,10 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
 
 - `mcp/bridge.ts` (TypeScript, körs direkt med Node 26): lokal brygga mellan ett AI-program (MCP över HTTP på
   127.0.0.1:8765/mcp eller stdio) och den öppna sidan. Sidan kopplar ut till bryggan med adress och token
-  ("Koppla till AI (lokalt)", av som standard). Bryggan räknar inget och gör inga utgående anrop.
+  (knappen "AI" uppe till höger öppnar en panel till höger, av som standard). Bryggan räknar inget och gör inga utgående anrop.
+- 2026-11-24: på användarens begäran flyttades kopplingen från en utfällbar rad längst ned i vänsterspalten till en
+  panel till höger, nåbar från alla flikar och från startsidan. På skärmar från 1100 px krymper sidan så att panelen
+  inte täcker graferna; smalare skärmar får panelen ovanpå. Knappen visar läget (av, kopplad, fel).
 - Verktygen i `site/src/ai-tools.js`: get_state, list_municipalities, list_assumptions, preview_scenario,
   set_assumptions, reset_assumptions, select_municipality, get_results, list_series, get_series. Sidans del i
   `site/src/ai-link.js` och `aiAdapter` i `app.js`. Värden i reglagens enheter, samma intervall.

@@ -4,7 +4,7 @@
 //   node mcp/bridge.ts --stdio         MCP over stdin/stdout for a client that starts the bridge itself
 //   options: --port 8765  --token <token>  --origin https://example.org  --host 127.0.0.1
 //
-// The bridge computes nothing. The page connects out to it ("Koppla till AI" with address and token), the bridge
+// The bridge computes nothing. The page connects out to it (the "AI" menu at the top right, with address and token), the bridge
 // forwards each tool call to the page, and the page runs it with its own OpenModelica build (site/src/ai-tools.js).
 // It listens on 127.0.0.1 only unless --host says otherwise, makes no outgoing requests, holds no API keys, and
 // requires the token from the page and from MCP clients over HTTP. The token is printed once to stderr.
@@ -71,7 +71,7 @@ export function createBridge(options: ReturnType<typeof parseArgs>) {
   }
 
   function callPage(name: string, args: Json): Promise<Json> {
-    if (!page) return Promise.reject(Error('Ingen sida är kopplad. Öppna ekonomilabbet, fäll ut "Koppla till AI (lokalt)" och koppla med bryggans adress och token.'));
+    if (!page) return Promise.reject(Error('Ingen sida är kopplad. Öppna ekonomilabbet, välj "AI" uppe till höger och koppla med bryggans adress och token.'));
     const id = nextCall++;
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
