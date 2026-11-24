@@ -14,7 +14,7 @@ const definitions=[
   ['pensionGrowth','Pensionskostnad, årlig ökning',-30,30,.5,'%', 'Separat från löner. Bas: 190 mnkr'],
   ['priceGrowth','Övriga priser, årlig ökning',0,6,.1,'%', 'Årlig prisförändring'],
   ['migrationDelta','Förändrat årligt flyttnetto',-400,600,10,'pers.', 'Förändring mot kalibrerat restflöde'],
-  ['interestRate','Genomsnittlig låneränta',0,7,.1,'%', 'På ingående banklåneskuld'],
+  ['interestRate','Genomsnittlig låneränta',0,7,.1,'%', 'På banklåneskulden'],
   ['investment','Årliga investeringar',0,800,1,'mnkr', 'Bokslut 2025: 413 mnkr'],
   ['productivity','Årlig produktivitetsökning',0,2,.1,'%', 'Scenario, ej belagd effektivisering'],
   ['costDrift','Kostnadsökning utöver demografi och pris',-2,3,.05,'%', 'Standard 0; historiskt -0,2 till 0,5 %/år'],
@@ -85,7 +85,7 @@ const skrSources={
 };
 const comparisonSelectors=[$('comparison-scenario'),$('comparison-preset')];
 const scenarioStorageKey='motala.saved-scenarios.v1';
-const savedControlIds=['planning-enabled','regulation-held','revenue-mode','demography-mode','split-payroll',
+const savedControlIds=['planning-enabled','regulation-held','time-model','revenue-mode','demography-mode','split-payroll',
   'employer-rate','construction-years','construction-share','liquidity-policy','cash-reserve','defer-investment-share',
   'prefinance-share','working-capital-enabled','collection-days','payment-days','grant-advance',
   'migration-profile','age-tax','project-choice'];
@@ -229,7 +229,7 @@ function updateModelOptions() {
   for(const option of demography.options) option.disabled=option.value.includes('observed')&&!b.experiments?.netMigration;
   $('age-tax').disabled=!b.ageIncome||!path||revenueMode!==2;
   $('project-controls').hidden=!b.project;
-  b.assumptions={...b.assumptions,revenueMode,
+  b.assumptions={...b.assumptions,revenueMode,timeModel:$('time-model').value,
     ageTax:!$('age-tax').disabled&&$('age-tax').checked,migrationProfile:$('migration-profile').value,
     projectChoice:b.project?$('project-choice').value:'none',
     demographyMode:demography.selectedOptions[0].disabled?'legacy':demography.value,splitPayroll,employerContributionRate,constructionYears,constructionShare,liquidityPolicy,
@@ -695,7 +695,7 @@ function renderComparisonContext(scenario,reference) {
   if(!reference) return;
   describe(reference);
   const keys={...Object.fromEntries([...definitions,...advanced].map(([key,label])=>[key,label])),
-    revenueMode:'Intäktsmodell',demographyMode:'Demografi',migrationProfile:'Flyttprofil',ageTax:'Åldersviktad skatt',
+    timeModel:'Tid i modellen',revenueMode:'Intäktsmodell',demographyMode:'Demografi',migrationProfile:'Flyttprofil',ageTax:'Åldersviktad skatt',
     splitPayroll:'Delad lönebana',constructionYears:'Byggtid',constructionShare:'Andel med byggtid',
     liquidityPolicy:'Kassapolicy',cashReserve:'Kassareserv',deferInvestmentShare:'Flyttad betalning',
     prefinanceShare:'Förfinansiering',workingCapitalEnabled:'Rörelsekapital',firstYearGrantAdvance:'Bidragsförskott',
@@ -703,7 +703,7 @@ function renderComparisonContext(scenario,reference) {
     projectChoice:'Projekt'};
   const diffs=Object.entries(keys).filter(([key])=>scenario.run.assumptions[key]!==reference.run.assumptions[key]);
   if(!diffs.length) return;
-  const options={revenueMode:'revenue-mode',demographyMode:'demography-mode',migrationProfile:'migration-profile',projectChoice:'project-choice'};
+  const options={timeModel:'time-model',revenueMode:'revenue-mode',demographyMode:'demography-mode',migrationProfile:'migration-profile',projectChoice:'project-choice'};
   const shares=['constructionShare','deferInvestmentShare','prefinanceShare'];
   const format=(key,x)=>{
     if(x==null) return 'Basvärde';
@@ -895,6 +895,7 @@ const aiAdapter={
   state:()=>({municipality:activeMunicipality,name:municipalities[activeMunicipality].name,baseYear:b.baseYear,
     forecastYears:[b.baseYear+1,b.baseYear+b.assumptions.years],
     revenue:path?`SKR:s kommunvisa intäkter (${path.vintage})`:b.planningInputs?'SKR:s årsvisa antaganden':'Illustrativa antaganden',
+    timeModel:b.assumptions.timeModel==='continuous'?'kontinuerlig tid (Kommunekonomi.Continuous.Economy): flöden under året, årsvärden vid bokslutet':'årssteg (Kommunekonomi.Annual)',
     changed:Object.fromEntries(assumptionList().filter(a=>a.changed).map(a=>[a.key,a.value]))}),
   municipalities:()=>Object.entries(municipalities).map(([code,{name,firstYears}])=>({code,name,startYears:firstYears})),
   assumptions:assumptionList,
@@ -1087,7 +1088,7 @@ async function boot(){try{
     updatePeriod();
   };
   $('planning-enabled').onchange=()=>{customPath=undefined;updatePeriod();};
-  for(const id of ['revenue-mode','demography-mode','split-payroll','employer-rate','construction-years','construction-share','migration-profile','age-tax','project-choice']) {
+  for(const id of ['time-model','revenue-mode','demography-mode','split-payroll','employer-rate','construction-years','construction-share','migration-profile','age-tax','project-choice']) {
     $(id).onchange=()=>{
       if(!$('employer-rate').reportValidity()) return;
       if($('construction-years').value!=='0'&&!$('construction-share').reportValidity()) return;

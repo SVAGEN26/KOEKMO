@@ -194,6 +194,66 @@ illustrativa tal som <code>mortality</code>; de är så små att risk och dödst
 inflöde per år som tar varje åldersgrupp från ett årsskifte till nästa, med årets födda som ett jämnt flöde in i 0-6 år.</p></html>"));
     end calibratedMigrationRates;
 
+    function meanPreservingRates "Takt vid varje årsskifte så att årsmedlens ökning blir banans"
+      input Real growth[:] "Ökning av årsmedlet per år, andel";
+      output Real rate[size(growth, 1) + 1] "Takt (ln per år) vid början av varje år och vid det sista årets slut";
+    protected
+      Integer n = size(growth, 1);
+      Real c[size(growth, 1)];
+      Real d[size(growth, 1)];
+      Real excess[size(growth, 1) + 1] "ln(årsmedel) minus årsmedlet av ln(nivå), för basåret och varje år";
+      Real target;
+      Real pivot;
+      Real integral;
+      Real a;
+      Real b;
+      Real u;
+      constant Integer m = 16 "Delintervall i Simpsons regel";
+    algorithm
+      // En ökning på -100 % eller lägre stoppas av modellens egen kontroll (Assumptions); här hålls logaritmen definierad.
+      // Takten går linjärt mellan årsskiftena. Mellan två årsmedel ökar ln(nivå) då med (förra + 4*årets + nästa takt)/6.
+      // Det ska bli ln(1 + ökning) minus skillnaden mellan ln(medel) och medel(ln), som räknas om tre gånger:
+      // ett tridiagonalt system. Basåret och tiden efter sista året växer med närmaste årsskiftes takt.
+      excess := zeros(n + 1);
+      for iteration in 1:4 loop
+        if n == 1 then
+          rate := fill(log(max(1e-9, 1 + growth[1])) - excess[2] + excess[1], 2);
+        else
+          for i in 1:n loop
+            target := 6*(log(max(1e-9, 1 + growth[i])) - excess[i + 1] + excess[i]);
+            if i == 1 then
+              c[1] := 1/5;
+              d[1] := target/5;
+            else
+              pivot := (if i == n then 5 else 4) - c[i - 1];
+              c[i] := 1/pivot;
+              d[i] := (target - d[i - 1])/pivot;
+            end if;
+          end for;
+          rate[n] := d[n];
+          for i in n - 1:-1:1 loop
+            rate[i] := d[i] - c[i]*rate[i + 1];
+          end for;
+          rate[n + 1] := rate[n];
+        end if;
+        // År i (0 = basåret, med takten rate[1] hela året): ln(nivå) = a*u + (b - a)*u^2/2 efter andelen u av året.
+        for i in 0:n loop
+          a := rate[max(1, i)];
+          b := rate[i + 1];
+          integral := 0;
+          for k in 0:m loop
+            u := k/m;
+            integral := integral + (if k == 0 or k == m then 1 elseif mod(k, 2) == 1 then 4 else 2)*exp(a*u + (b - a)*u^2/2);
+          end for;
+          excess[i + 1] := log(integral/(3*m)) - (a/3 + b/6);
+        end for;
+      end for;
+      annotation(Documentation(info = "<html><p>En bana anger ökningen av årsmedlet (SKR:s timlön och PKV, eller reglagens
+procent). I kontinuerlig tid behövs en takt för varje dag. Här väljs takterna vid årsskiftena så att nivån, när takten går
+linjärt mellan dem, får just banans ökning mellan årsmedlen. Med samma ökning varje år är takten konstant. När ökningen
+ändras mellan åren svänger takten mer än ökningen: 3 och 5 procent vartannat år ger takter mellan ungefär 1 och 7 procent.</p></html>"));
+    end meanPreservingRates;
+
     function startLevel "Indexnivå vid basårets slut när basårets medel är 1 och nivån växte med takten rate"
       input Real rate "Takt per år";
       output Real level "Nivå vid årets slut";
@@ -487,8 +547,10 @@ ett värde per prognosår. Tillväxt anges som andel (0,03 = tre procent), belop
     connector CostDrivers "Årets kostnadsantaganden"
       Real wageGrowth "Löneökning, andel";
       Real priceGrowth "Prisökning, andel";
-      Real wageGrowthNext "Löneökning nästa år, andel; den kontinuerliga modellen interpolerar takten mot den";
-      Real priceGrowthNext "Prisökning nästa år, andel";
+      Real wageRate "Lönenivåns takt vid årets början, ln per år; den kontinuerliga modellen går linjärt mot nästa";
+      Real wageRateNext "Lönenivåns takt vid årets slut, ln per år";
+      Real priceRate "Prisnivåns takt vid årets början, ln per år";
+      Real priceRateNext "Prisnivåns takt vid årets slut, ln per år";
       Units.Money pensionExpense "Pensionskostnad, mnkr";
       Units.Money pensionCashPayments "Pensionsutbetalningar, mnkr";
       annotation(
@@ -603,6 +665,8 @@ antalet år.</p></html>"));
       final parameter Real inflationGrantFactor[horizon] = {product({1 + (if j == 1 then 0 else inflationGrantCompensation*inflationShockPath[j - 1]) for j in 1:i}) for i in 1:horizon} "Bidragens faktor mot referensbanan";
       final parameter Real inflationWage[horizon] = {if i == 1 then 0 else inflationWagePassThrough*inflationShockPath[i - 1] for i in 1:horizon} "Extra löneökning per år, andel";
       final parameter Real inflationTaxFactor[horizon] = {product({1 + inflationWage[j] for j in 1:i}) for i in 1:horizon} "Skatteunderlaget följer lönerna: faktor mot referensbanan";
+      final parameter Real wageRate[horizon + 1] = Data.meanPreservingRates(wageGrowthPath + inflationWage) "Lönenivåns takt vid varje årsskifte i kontinuerlig tid, ln per år";
+      final parameter Real priceRate[horizon + 1] = Data.meanPreservingRates(priceGrowthPath + inflationShockPath) "Prisnivåns takt vid varje årsskifte i kontinuerlig tid, ln per år";
       final parameter Real inflationPensionFactor[horizon] = {product({1 + inflationPensionPassThrough*inflationShockPath[j] for j in 1:i}) for i in 1:horizon} "Pensionskostnadens faktor mot banan";
       Interfaces.DemographyDriversOutput demography "Årets demografiska antaganden" annotation(
         Placement(transformation(origin = {-624, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-260, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
@@ -620,8 +684,10 @@ antalet år.</p></html>"));
       demography.birthChange = birthChangePath[calendar.pathIndex];
       operations.wageGrowth = wageGrowthPath[calendar.pathIndex] + inflationWage[calendar.pathIndex];
       operations.priceGrowth = priceGrowthPath[calendar.pathIndex] + inflationShockPath[calendar.pathIndex];
-      operations.wageGrowthNext = wageGrowthPath[min(horizon, calendar.pathIndex + 1)] + inflationWage[min(horizon, calendar.pathIndex + 1)];
-      operations.priceGrowthNext = priceGrowthPath[min(horizon, calendar.pathIndex + 1)] + inflationShockPath[min(horizon, calendar.pathIndex + 1)];
+      operations.wageRate = wageRate[calendar.pathIndex];
+      operations.wageRateNext = wageRate[calendar.pathIndex + 1];
+      operations.priceRate = priceRate[calendar.pathIndex];
+      operations.priceRateNext = priceRate[calendar.pathIndex + 1];
       operations.pensionExpense = pensionExpensePath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
       operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
       revenue.tax = referenceTax[calendar.pathIndex]*inflationTaxFactor[calendar.pathIndex];
@@ -1800,9 +1866,9 @@ stängs med andelen <code>adjustment</code> på ett år, som i årsmodellen.</p>
       level = {Data.startLevel(rateNow[i]*Units.year) for i in 1:5};
     equation
       share = (time - (calendar.baseYear + calendar.pathIndex)*Units.year)/Units.year;
-      rateNow = {log(1 + drivers.wageGrowth), log(1 + drivers.priceGrowth), log(1 + operatingRevenueGrowth), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
-      rateNext = {log(1 + drivers.wageGrowthNext), log(1 + drivers.priceGrowthNext), log(1 + operatingRevenueGrowth), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
-      // Årets ökning gäller årsmedlet; takten ligger vid årsskiftet mellan två årsmedel och interpoleras linjärt mot nästa års.
+      rateNow = {drivers.wageRate, drivers.priceRate, log(1 + operatingRevenueGrowth), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
+      rateNext = {drivers.wageRateNext, drivers.priceRateNext, log(1 + operatingRevenueGrowth), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
+      // Banans ökning gäller årsmedlet. Takterna vid årsskiftena är valda så att årsmedlen får den ökningen (Data.meanPreservingRates).
       growth = rateNow + (rateNext - rateNow)*share;
       der(level) = growth .* level;
       wagesRate = (payroll0 - employerContributions0)/Units.year*level[1]*serviceVolume*level[5]/level[4];
@@ -1839,11 +1905,12 @@ stängs med andelen <code>adjustment</code> på ett år, som i årsmodellen.</p>
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {35, 115, 85}, fillColor = {230, 245, 238}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Drift")}),
         Documentation(info = "<html><p>Kostnaderna är flöden som följer verksamhetens volym och befolkningen under året. Löne-, pris-,
 taxe-, produktivitets- och standardnivån är lager som växer kontinuerligt: <code>der(nivå) = takt · nivå</code>.</p>
-<p>Banornas årliga ökning (till exempel SKR:s timlön och PKV) är ökningen av årsmedlet. Ett årsmedel ligger mitt i året, så
-ökningen mellan två årsmedel hör till årsskiftet mellan dem. Takten är därför ln(1 + årets ökning) vid årets början och går
-linjärt mot ln(1 + nästa års ökning) vid årets slut. Med samma ökning varje år blir årsmedlen exakt som i årsmodellen. När
-ökningen ändras blir årsmedlets ökning ungefär (förra + 4 · årets + nästa)/6: en jämnare bana utan tidsförskjutning.
-Nivån vid basårets slut sätts så att basårets medel är 1 om basåret växte som första prognosåret.</p>
+<p>Banornas årliga ökning (till exempel SKR:s timlön och PKV) är ökningen av årsmedlet. Takten går linjärt mellan
+årsskiftena, och takterna där är valda så att årsmedlet ökar som banan anger
+(<a href=\"modelica://Kommunekonomi.Data.meanPreservingRates\">Data.meanPreservingRates</a>). Löne- och prisnivåns årsmedel blir
+därför som i årsmodellen också när ökningen ändras mellan åren. Priset är att takten inom året
+svänger mer än de årliga ökningarna när de ändras mycket. Nivån vid basårets slut sätts så att basårets medel är 1 om
+basåret växte med takten vid första årsskiftet.</p>
 <p>Pensionskostnaden och pensionsutbetalningarna är årsbanor och flyter jämnt under året. Årets belopp är summan av
 flödena; <code>wageIndex</code> och de andra indexen i utdata är årets medelnivå. Pengarnas väg genom kassa och skulder
 finns i <code>Payments</code>.</p></html>"));
@@ -2077,7 +2144,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       surplusCash = liquidityPolicy and cash.level > reserve;
       belowReserve = liquidityPolicy and cash.level < reserve;
       borrowing.rate = (if net < 0 and not surplusCash then -net else 0) + (if belowReserve then (reserve - cash.level)/reserveRestoreTime else 0);
-      repayment.rate = if net > 0 and not belowReserve and debt.level < 0 then net else 0;
+      // Med kassapolicy amorterar kassan över reserven, dock inte mer än skulden; som i årsmodellen, där kassan går till reserven.
+      repayment.rate = (if net > 0 and not belowReserve and debt.level < 0 then net else 0)
+        + (if surplusCash then max(0, min(cash.level - reserve, -debt.level))/reserveRestoreTime else 0);
       connect(operating, tax.to);
       connect(operating, grants.to);
       connect(operating, financial.to);
@@ -2112,8 +2181,9 @@ driftens och investeringarnas betalningar kommer genom kopplingarna och mäts (<
 bundna räntor. Den närmar sig marknadsräntan gånger skulden med tidskonstanten <code>rateFixingYears</code>; nya lån tas till
 marknadsräntan. En räntechock (<code>rateShock</code> från <code>rateShockTime</code>) slår därför igenom gradvis.</p>
 <ul><li>Underskott före finansiering lånas när det uppstår; ett överskott amorterar, och när skulden är noll växer kassan.</li>
-<li>Med kassapolicy finansierar kassan över reserven underskott först, och en kassa under reserven fylls på genom lån
-inom ungefär <code>reserveRestoreTime</code>. Det som lånas i förväg första året hålls i kassan till året därpå.</li></ul></html>"));
+<li>Med kassapolicy går kassan mot reserven, som i årsmodellen: kassan över reserven finansierar underskott och amorterar
+lån, och en kassa under reserven fylls på genom lån, båda inom ungefär <code>reserveRestoreTime</code>. Det som lånas i
+förväg första året hålls i kassan till året därpå.</li></ul></html>"));
     end Finance;
 
     partial model Economy "Kommunens ekonomi i kontinuerlig tid: samma antaganden och utdata som Annual"

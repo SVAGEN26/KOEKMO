@@ -99,16 +99,15 @@ class ContinuousEconomy(unittest.TestCase):
             for key in ('wageIndex', 'priceIndex', 'revenueIndex'):
                 self.assertAlmostEqual(c[key], a[key], places=5, msg=f'{key} {year}')
 
-    def test_changed_growth_is_smoothed_not_delayed(self):
-        # A wage jump in 2028 (6 % instead of 3 %): the annual mean rises by about (3 + 4*6 + 3)/6 = 5 % that year
-        # and by about (6 + 4*3 + 3)/6 = 3.5 % the year after, and the level ends where the path does.
+    def test_changed_growth_keeps_the_annual_means(self):
+        # A wage jump in 2028 (6 % instead of 3 %): the annual mean still rises by the path's growth every year.
+        # The rates within the year are chosen for that (Data.meanPreservingRates); the level itself moves smoothly.
         idx = {y: r['wageIndex'] for y, r in self.reference.items()}
-        self.assertAlmostEqual(idx[2028]/idx[2027] - 1, 0.050, delta=0.003)
-        self.assertAlmostEqual(idx[2029]/idx[2028] - 1, 0.035, delta=0.003)
         path = 1.0
-        for g in WAGES:
+        for year, g in zip(range(2026, 2034), WAGES):
             path *= 1 + g
-        self.assertAlmostEqual(idx[2033]/path, 1, delta=0.003)
+            self.assertAlmostEqual(idx[year]/idx[year - 1] - 1, g, delta=1e-4, msg=str(year))
+            self.assertAlmostEqual(idx[year]/path, 1, delta=1e-4, msg=str(year))
 
     def test_demography_close_to_annual(self):
         for year, a in self.annual.items():

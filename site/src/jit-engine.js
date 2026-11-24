@@ -8,7 +8,7 @@ export const ENGINE='OpenModelica · wasm-jit';
 // Validate and prepare one scenario. Throws for inputs the model must not see.
 export function prepareJob(b,history,overrides={},revenuePath=null) {
   const prepared=prepareScenario(b,history,overrides,revenuePath);
-  return {prepared,job:{fields:prepared.fields,years:prepared.assumptions.years,baseYear:b.baseYear,cohort:prepared.cohort,ageMigration:prepared.ageMigration,municipality:b.municipality}};
+  return {prepared,job:{fields:prepared.fields,years:prepared.assumptions.years,baseYear:b.baseYear,cohort:prepared.cohort,ageMigration:prepared.ageMigration,municipality:b.municipality,continuous:prepared.continuous}};
 }
 
 // Turn the simulation's annual rows into the dashboard's ledger rows.
@@ -43,7 +43,7 @@ export function assemble(b,prepared,simRows,revenuePath=null) {
 export function createDirectSimulator(session) {
   return function simulate(b,history,overrides={},revenuePath=null) {
     const {prepared,job}=prepareJob(b,history,overrides,revenuePath);
-    return assemble(b,prepared,session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality),revenuePath);
+    return assemble(b,prepared,session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.continuous),revenuePath);
   };
 }
 

@@ -1,9 +1,15 @@
 # Methodology
 
-How `Kommunekonomi.Annual` computes a municipality's finances, the model the
-site runs. Updated 2026-11-23. The equations below are read from
-`modelica/Kommunekonomi.mo`; the Modelica documentation of each component says
-the same in Swedish.
+How the model computes a municipality's finances. Updated 2026-11-24. The
+library has two models with the same assumptions and outputs. The site runs
+`Kommunekonomi.Continuous.Economy` by default: money and population are stocks
+with flows in continuous time, and only annual rules are events. The yearly
+model, `Kommunekonomi.Annual`, takes one step a year and can be chosen on the
+site ("Tid i modellen"). The sections from Structure to Finance describe
+`Annual`, whose rules are the simplest to state; [Continuous time](#continuous-time)
+says what the default model does differently and what that changes. The
+equations are read from `modelica/Kommunekonomi.mo`; the Modelica documentation
+of each component says the same in Swedish.
 
 Scope: the municipality's own accounts (kommunen), not the group. Money is
 nominal mnkr, population is persons, time is the calendar year. The start is the
@@ -33,8 +39,8 @@ Six components, connected in this order each year:
 6. **Capital** and **Finance** give depreciation, result, cash flow, debt,
    cash and interest. **WorkingCapital** is optional.
 
-`Continuous.Economy` uses the same assumptions and outputs in continuous time;
-see [Continuous time](#continuous-time).
+`Continuous.Economy`, the site's default, has the same components, assumptions
+and outputs in continuous time; see [Continuous time](#continuous-time).
 
 ## Demography
 
@@ -249,14 +255,15 @@ Continuous:
   the year, so the age groups move smoothly.
 - **Wage, price, fee, productivity and cost-standard levels**
   (`OperatingAccounts`) grow as `der(level) = rate · level`. A path's annual
-  growth (SKR's hourly wage and PKV) is growth of the annual mean, which belongs
-  to the turn of the year between two means. The rate is ln(1 + this year's
-  growth) on 1 January and moves linearly to ln(1 + next year's) on
-  31 December. With constant growth the annual means equal `Annual`'s exactly.
-  When growth changes, the mean grows by about
-  (last year's + 4 · this year's + next year's)/6: smoothed, not delayed. The
-  level at the base year's end assumes the base year grew like the first
-  forecast year.
+  growth (SKR's hourly wage and PKV, or the site's percentages) is growth of the
+  annual mean. The rate moves linearly between the turns of the year, and the
+  rates there are chosen so that the annual mean grows by exactly the path's
+  growth (`Data.meanPreservingRates`: a tridiagonal system, with the base year
+  and the time after the last year growing at the nearest rate). The annual
+  wage and price indices therefore equal `Annual`'s, to a millionth in the
+  tests, also when growth changes between years. The price of that is the
+  shape within the year: when annual growth swings, the rate swings more
+  (3 and 5 % in alternate years give rates between about 1 and 7 %).
 - Capacity, costs, working capital and depreciation, as before.
 
 Events:
@@ -279,32 +286,75 @@ agreements' revision dates. Outside revenue mode 2, tax and grants use the
 population at the previous year end, as in `Annual`. Pension expense and
 investment are annual amounts spread evenly.
 
-`tests/test_continuous.py` checks the balances, the tax and grant totals
-against a given path, the annual indices with constant growth, the smoothing of
-a wage jump, the population against `Annual` (within 0.1 %) and that no age
-group jumps at a year end.
+`tests/test_continuous.py` (native OpenModelica) checks the balances, the tax
+and grant totals against a given path, the annual indices with constant and
+with changing growth, the population against `Annual` (within 0.1 %) and that
+no age group jumps at a year end. `tests/jit-continuous.test.mjs` runs the
+model the way the site does; see [Browser engine](#browser-engine).
 
-**Against `Annual` and outcomes.** Hindcast from SKR's December circulars
-2020–2024 (`HINDCAST_MODEL=Continuous python3 scripts/hindcast_vintages.py`,
-`scripts/compare_hindcasts.py`). Tax and grants are within 0.6 mnkr of `Annual`
-and population within 4 persons. Net cost is 2–10 mnkr lower than `Annual` and
-the result 2–10 mnkr higher (Mjölby's −3 to −11 in net cost was there before).
-What this change added is mostly payroll, up to 5 mnkr a year: the labour index
-of the 2022 and 2023 circulars jumps (7.2 % then 4.2 %; 5.7 % then 0.0 %) and is
-smoothed. Against the outcome the result's mean absolute error is lower in some
-cells and higher in others (after 1/2/3 years: Motala 34/57/59 against
-`Annual`'s 40/59/58 mnkr, Mjölby 40/70/126 against 41/65/116, Finspång
-35/75/59 against 39/76/59). Where it is lower, net cost's mean error has grown
-in the other direction (Motala year 1: −20 to −27 mnkr) while tax and grants
-stay too low: errors that cancel. It is not more accurate.
+**What differs from `Annual`.** With the same inputs, the wage and price
+indices and (with SCB's projection) the population at each year end are the
+same, and so are tax and grants; with adjustment per component they are within
+2 mnkr for Motala, since the 1 November population is read from the stock
+instead of interpolated. Three things differ, and they are timing within the
+year:
 
-**In the browser.** The staged wasm compiler builds `Motala.Continuous` and
-runs it with `euler`, `rungekutta`, `dassl`, `ida` and `gbode`; `heun`,
-`impeuler`, `trapezoid`, `rungekuttaSsc`, `imprungekutta` and `irksco` fail at
-start. `rungekutta` with 12 steps a year matches native DASSL to 0.01 mnkr and
-runs in about 30 ms after a 2 s build. The site's one Euler step a year is off
-by 40 mnkr in the result and 236 mnkr in debt after eight years. The site does
-not run it.
+- Capacity follows demand continuously, and costs are counted through the
+  year. Both models close the share `adjustment` (default 0.5) of a constant gap
+  between demand and capacity in a year. Under a steady trend they differ: the
+  continuous capacity is 1/ln 2 = 1.4 years behind demand and its costs are the
+  year's average, while `Annual`'s capacity is one year behind and its costs use
+  the year-end value. The continuous model's costs are therefore about a year
+  further behind a trend in demand. Where demand for schooling falls and total
+  cost with it, costs are higher: the service volume is 0.1 % higher for Motala
+  and 0.3 % for Linköping by 2033. Where demand rises they are lower (Mjölby in
+  the hindcast). Fees and other operating revenue follow the population during
+  the year instead of at its end.
+- Interest accrues on the debt as it grows, not on the opening debt: 1–2 mnkr
+  more a year for Motala.
+- Depreciation starts when an investment is paid, not with half a year's
+  delay on the year's total. The difference is 0.1 mnkr a year for Motala.
+
+For Motala from the 2025 accounts with the site's defaults the result is 5–11
+mnkr lower than `Annual`'s each year 2026–2033 (151 against 159 mnkr in 2033)
+and the debt 65 mnkr higher in 2033 (1 576 against 1 511 mnkr). For Linköping
+the result is 21–42 mnkr lower a year (0.3 % of net cost) and the debt 291 mnkr
+higher in 2033. The adjustment speed is an illustrative assumption in both
+models, not an estimate, so neither is shown to be closer to what will happen.
+
+**Against outcomes.** Hindcast from SKR's December circulars 2020–2024
+(`HINDCAST_MODEL=Continuous python3 scripts/hindcast_vintages.py`,
+`scripts/compare_hindcasts.py`) and eight years from the 2017–2019 accounts
+(`HINDCAST_MODEL=Continuous python3 scripts/hindcast_long.py`).
+From the circulars, the result's mean absolute error after 1/2/3 years is
+40/60/60 mnkr for Motala against `Annual`'s 40/59/58, 39/77/59 against 38/76/59
+for Finspång and 42/67/126 against 41/65/116 for Mjölby. Tax and grants are
+within 0.6 mnkr of `Annual` and population within 4 persons. Mjölby grows, so
+costs that trail the population by more are 3–10 mnkr lower, and the model's
+net cost was already too low there. In the
+eight-year test (hindsight set, 13 municipalities) the result's mean absolute
+error is 1.8/2.3/2.6/3.4/3.0/2.2 % of tax and grants in years 1/2/3/4/6/8
+against `Annual`'s 1.7/2.2/2.4/3.3/2.9/2.2, and its mean error
+0.2/0.3/−0.1/−0.2/−0.2/0.7 % against 0.0/−0.2/−0.7/−0.8/−0.8/−0.2: the result
+is about half a per cent of tax and grants higher, because the model's
+population grows too fast in that test and costs now follow it about a year
+later. Debt is 36 % too low after eight years against 32 %. The continuous model
+is not more accurate than `Annual`; the differences are within what the few
+cases can tell apart.
+
+**In the browser.** The staged wasm compiler runs the continuous model with
+`euler`, `rungekutta`, `dassl`, `ida` and `gbode`; `heun`, `impeuler`,
+`trapezoid`, `rungekuttaSsc`, `imprungekutta` and `irksco` fail at start. The
+site uses `rungekutta` with 12 steps a year, which matches native DASSL to
+0.01 mnkr; one Euler step a year is off by 40 mnkr in the result and 236 mnkr in
+debt after eight years. When the cash flow changes sign inside a step (a year
+that turns from borrowing to repaying), the fixed-step solver finds that moment
+by linear interpolation and every stock moves by up to 0.001 %: 0.03 mnkr in
+Motala's net cost in the test, against 0.00 with DASSL. Twelve explicit steps are too few for flows with time
+constants of days to weeks: payment terms in working capital, refilling the
+cash reserve and taking a project into use. Scenarios with those run with the
+implicit solver `ida` (with single-year ages its matrix-free linear solver,
+`-idaLS=spgmr`, since the 202 age stocks make the Jacobian cost 20 s a run).
 
 ## Validation
 
@@ -364,7 +414,31 @@ the hindsight and prices sets use outcomes on purpose.
 
 The site compiles `Kommunekonomi.mo`, the municipality's package and
 `MotalaBrowser.mo` with OpenModelica's web compiler (`wasm-jit`), and re-runs the
-compiled model with `-override` for every scenario. Inputs are validated in
-JavaScript, and the model asserts the same limits. The compiler revision and file
-hashes are in `omc-web/manifest.json` on the site. No resident-level data are
-used or stored.
+compiled model with `-override` for every scenario. `MotalaBrowser.mo` holds two
+wrappers without equations of their own: `MotalaBrowserContinuous` around
+`Motala.Continuous` (the default) and `MotalaBrowser` around `Motala.Annual`.
+Inputs are validated in JavaScript, and the model asserts the same limits. The
+compiler revision and file hashes are in `omc-web/manifest.json` on the site. No
+resident-level data are used or stored.
+
+For the continuous model the page computes the death rates and the residual
+flow in JavaScript (`calibrateContinuous` and `inflowBetween` in
+`site/src/scenario-inputs.js`), the same way as `Data.deathRatesPerYear` and
+`Data.calibratedMigrationRates`. With SCB's projection the residual flow is the
+even inflow that takes the five groups from one projected year end to the next,
+births included, so the model's population at each year end is the projection's.
+
+`tests/jit-continuous.test.mjs` runs the staged compiler in Node and checks that
+the page's inputs give `Motala.Continuous` as written (to 1e-8), that the
+population is SCB's projection at every year end, that tax and grants equal
+`Annual`'s, that wages and prices rise by the stated growth also through a
+3 → 9 → 0 % shock, that every option keeps the balance checks, that `ida` agrees
+with DASSL, that the exported `Scenario.mo` reproduces the page's run, that all
+13 municipalities run from the 2024 and 2025 accounts, and that twelve
+Runge-Kutta steps a year give native OpenModelica's DASSL within 0.01 mnkr.
+`tests/jit-parity.test.mjs` checks the yearly model against the independent
+JavaScript reference (`site/src/engine.js`), which covers `Annual` only.
+
+A run takes about 0.1 s in either model, 0.2 s with `ida`, and 0.4 s with
+single-year ages in continuous time (0.1 s in `Annual`; 1.5 s with `ida`). A
+page update runs about ten scenarios.

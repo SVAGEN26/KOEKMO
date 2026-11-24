@@ -11,8 +11,9 @@ Ladda alltid `Kommunekonomi.mo` först.
   `Budget2026`.
 - `municipalities/`: ett paket per kommun i Östergötland, genererat av `scripts/prepare_municipality.py`
   ur SCB och Kolada, med basår 2017–2025. Redigera inte för hand.
-- `MotalaBrowser.mo`: omslaget som webbläsaren kompilerar (wasm-jit). Fast kapacitet på 100 år och alla
-  indata som fria parametrar med bokstavliga standardvärden, så att `-override` når dem.
+- `MotalaBrowser.mo`: omslagen som webbläsaren kompilerar (wasm-jit): `MotalaBrowserContinuous` kring
+  `Motala.Continuous`, som sajten kör som standard, och `MotalaBrowser` kring `Motala.Annual`. Fast kapacitet på
+  100 år och alla indata som fria parametrar med bokstavliga standardvärden, så att `-override` når dem.
 - `validate.py`: kompilerar med lokal omc och jämför med JavaScript-referensen (`npm run validate:modelica`).
 
 Tiden är kalenderår. Starttiden är basåret (bokslutet 31 december), och `horizon` år räknas fram; standard
@@ -36,12 +37,15 @@ namnen i koden är ASCII, eftersom Modelica inte tillåter å, ä eller ö i nam
 
 `Continuous.Economy` har samma antaganden och utdata som `Annual`. Pengar och befolkning är lager med flöden:
 födda, döda, åldrande och flyttningar (`Continuous.Demography`, fem grupper; `Continuous.CohortDemography`,
-ettårsåldrar), kostnader och löne-, pris- och kostnadsnivåer som växer under året. Händelser finns bara för det som
+ettårsåldrar), kostnader och löne-, pris- och kostnadsnivåer som växer under året. Löne- och prisnivåns takt inom
+året är vald så att årsmedlet ökar som banan anger (`Data.meanPreservingRates`). Händelser finns bara för det som
 är årligt: bokslutet 31 december, beslut som gäller från 1 januari (skattesats, årets skatt och bidrag, som betalas
 jämnt), folkbokföringen 1 november och inläsningen av årsbanorna. Med ettårsåldrar byter födelseårsgrupperna
 etikett vid årsskiftet. Varför och hur stort det blir: [../docs/methodology.md](../docs/methodology.md#continuous-time).
-Den kontinuerliga modellen behöver en riktig lösare: `rungekutta` med 12 steg per år eller `dassl`, inte ett
-Euler-steg per år.
+Den kontinuerliga modellen behöver en riktig lösare, inte ett Euler-steg per år. Sajten kör `rungekutta` med
+12 steg per år. Betalningstider i dagar (rörelsekapital), kassareserven och ett projekt som tas i bruk är flöden
+med tidskonstanter på dagar till veckor; de scenarierna kör sajten med den implicita lösaren `ida`. I OMEdit
+räcker standardlösaren `dassl`.
 
 Standardvärdena är illustrativa. Hämta `Scenario.mo` från sajten för att återskapa ett scenario med
 planeringsunderlagen. Ekvationerna beskrivs i [../docs/methodology.md](../docs/methodology.md).

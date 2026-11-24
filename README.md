@@ -4,8 +4,10 @@ A scenario lab for a Swedish municipality's finances, for the people who make
 the decisions. Pick a municipality and a start year, change tax rate,
 investments, wages, migration, interest or inflation, and see the result, cash
 and debt year by year. The model is written in Modelica and runs in the
-visitor's browser. Motala (0583) is the main case; all 13 municipalities in
-Östergötland run from their own accounts.
+visitor's browser, by default in continuous time: money and people are stocks
+that change every day, and only what is decided once a year is a yearly step.
+Motala (0583) is the main case; all 13 municipalities in Östergötland run from
+their own accounts.
 
 The model covers the municipality's own accounts (kommunen, not the group):
 population by age, service demand and capacity, payroll, pensions and other
@@ -59,8 +61,9 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   the general grants beyond SKR's path, in billion kronor nationally per year
   (`grantIncrease` in the Modelica model, so the MCP server has it too). Further options:
   a dated building project, working capital, a cash policy, SKR's revenue path
-  as published, proportionally adjusted or adjusted per component, and five age
-  groups (default) or single years of age.
+  as published, proportionally adjusted or adjusted per component, five age
+  groups (default) or single years of age, and the model's time: continuous
+  (default) or one step a year.
 - **Prepared scenarios** as buttons: Higher interest, Higher inflation, a weaker
   economy, more migration and lower investment. See [Scenarios](#scenarios).
 - **Balance requirement.** Years with a deficit are shaded in the result chart.
@@ -73,9 +76,10 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   skiljer sig banorna?" splits the difference into revenue and costs per year.
   The comparison tab shows the latest accounts and SKR 26:28 for the
   municipality.
-- **Modellen.** A flow diagram of the six components with their equations and
-  Modelica code.
-- **Export.** Scenario as JSON or as `Scenario.mo` for OpenModelica, and a PDF
+- **Modellen.** A flow diagram of the six components with the equations and
+  Modelica code of the model that is running, continuous or yearly.
+- **Export.** Scenario as JSON or as `Scenario.mo` for OpenModelica (extending
+  the municipality's `Continuous` or `Annual` model, whichever ran), and a PDF
   report (A4 landscape, through the browser's print dialog).
 
 ## Scenarios
@@ -91,9 +95,10 @@ raises the market rate from `rateShockTime` (decimal year, 2026.5 = 1 July 2026)
 With `rateFixingYears = 0` the whole debt pays the year's rate, as before.
 
 **Högre ränta** adds 3 percentage points from 1 January of the first forecast
-year. For Motala from the 2025 accounts the average rate goes from 2.2 % to
-3.0 % in 2026 and 4.7 % in 2029; interest from 23 to 32 mnkr in 2026 and from 33
-to 71 mnkr in 2029. The hindcast does not use actual rates as inputs.
+year. For Motala from the 2025 accounts interest goes from 25 to 32 mnkr in 2026
+and from 32 to 69 mnkr in 2029; as a share of the year's mean debt that is from
+2.2 % to 2.9 % in 2026 and 4.5 % in 2029. The hindcast does not use actual rates
+as inputs.
 
 ### Higher inflation
 
@@ -106,10 +111,11 @@ illustrative assumptions, not estimates.
 
 **Högre inflation** (3 points the first year, half left each year after): for
 Motala from the 2025 accounts the result is 49 mnkr below the base path in 2026
-and 107 mnkr below in 2033.
+and 105 mnkr below in 2033.
 
-The new rate and inflation controls are checked with native OpenModelica
-(`-override` on `MotalaBrowser`); a run in the browser has not been checked yet.
+These numbers are the site's, read from the page in headless Chromium on
+2026-11-24 with the continuous model. The rate and inflation controls are also
+run in the staged compiler by `tests/jit-continuous.test.mjs`.
 
 ## Connect an AI to the page
 
@@ -184,8 +190,8 @@ see [Connect an AI to the page](#connect-an-ai-to-the-page).
 
 | Model | Where | Used by |
 | --- | --- | --- |
-| `Kommunekonomi.Annual` | `modelica/Kommunekonomi.mo` | The site, the MCP server, the hindcasts |
-| `Kommunekonomi.Continuous.Economy` | same | The MCP server (optional), the hindcasts |
+| `Kommunekonomi.Continuous.Economy` | `modelica/Kommunekonomi.mo` | The site (default), the MCP server (optional), the hindcasts |
+| `Kommunekonomi.Annual` | same | The site ("Tid i modellen: Årssteg"), the MCP server, the hindcasts |
 | `Motala.Annual`, `Motala.Continuous`, examples | `modelica/Motala.mo` | Motala's base years 2020–2025 |
 | One package per municipality | `modelica/municipalities/*.mo` | Generated from SCB and Kolada |
 | M1, M2 (research) | `research/` | Nothing on the site; see [research/M2.md](research/M2.md) |
@@ -195,13 +201,24 @@ continuous time. Money and population are stocks with flows: births, deaths,
 ageing and migration, costs, and wage and price levels that grow within the
 year. Only annual rules are events: the year-end close, decisions from
 1 January (tax rate, tax and grants, paid evenly), the 1 November population
-count and reading the annual paths. In the hindcasts of Motala, Mjölby and
-Finspång its tax and grants are within 0.6 mnkr of `Annual` and its population
-within 4 persons; net cost is 2–10 mnkr lower and the result 2–10 mnkr higher a
-year. It is no more accurate; see
-[docs/methodology.md](docs/methodology.md#continuous-time). The site does not
-run it. The browser's compiler can: `rungekutta` with 12 steps a year matches
-native OpenModelica to 0.01 mnkr; the site's one Euler step a year does not.
+count and reading the annual paths. The site runs it by default; `Annual` takes
+one step a year and is a choice under "Pröva modellvarianter".
+
+With the same inputs the two give the same wage and price indices, the same
+population at each year end (with SCB's projection) and the same tax and grants
+(within 2 mnkr with adjustment per component, where the continuous model reads
+the population on 1 November instead of interpolating it). They differ in
+timing: capacity follows demand continuously and trails a steady trend by 1.4
+years where `Annual`'s trails by one, costs are counted through the year
+instead of at its end, interest accrues on the debt as it grows, and
+depreciation starts when an investment is paid. Where demand for schooling
+falls, costs are therefore higher than in `Annual`: for Motala from the 2025
+accounts the result is 5–11 mnkr lower each year (151 against 159 mnkr in 2033)
+and the debt 65 mnkr higher in 2033 (1 576 against 1 511); for Linköping the
+result is 21–42 mnkr lower a year. The adjustment speed is an illustrative
+assumption in both. The continuous model is no more accurate against outcomes
+than `Annual`; see [Accuracy](#accuracy) and
+[docs/methodology.md](docs/methodology.md#continuous-time).
 
 In OMEdit, load `Kommunekonomi.mo` first, then `Motala.mo`, and open
 `Motala.Annual` or `Motala.Continuous` in Diagram view. Defaults are
@@ -278,6 +295,11 @@ absolute error of the result, mnkr):
 | Mjölby | 41 / 65 / 116 | 28 / 40 / 59 | 44 / 82 / 91 |
 | Finspång | 38 / 76 / 59 | 24 / 43 / 13 | 38 / 52 / 38 |
 
+These tables are for the yearly model. The continuous model, the site's
+default, gives 40 / 60 / 60 for Motala, 42 / 67 / 126 for Mjölby and
+39 / 77 / 59 for Finspång with SKR's assumptions (`HINDCAST_MODEL=Continuous`,
+`data/vintage-hindcast-continuous.json`): the same accuracy.
+
 Five, four and three cases per horizon, from one period, are too few to rank the
 sets. SKR's own forecasts for the municipalities from those dates are no longer on
 SKR's site, so they cannot be compared
@@ -291,11 +313,13 @@ grants and Sweden's population; the municipality's population, costs, debt and
 result are the model's. Norrköping 2022 and 2023 are left out: the outcome holds the
 Ostlänken provision (−3 281 and −80 mnkr), not split into operating and financial
 items. Mean error / mean absolute error in percent of tax and grants (population:
-percent), from `data/long-hindcast.json`:
+percent), from `data/long-hindcast.json` (the yearly model; the row "continuous
+model" is the site's default, from `data/long-hindcast-continuous.json`):
 
 | Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
 | --- | --- | --- | --- | --- | --- | --- |
 | Result | 0.0 / 1.7 | −0.2 / 2.2 | −0.7 / 2.4 | −0.8 / 3.3 | −0.8 / 2.9 | −0.2 / 2.2 |
+| Result, continuous model | 0.2 / 1.8 | 0.3 / 2.3 | −0.1 / 2.6 | −0.2 / 3.4 | −0.2 / 3.0 | 0.7 / 2.2 |
 | Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
 | Result, standard rates | −1.1 / 2.5 | −3.0 / 4.1 | −4.7 / 5.1 | −4.1 / 4.9 | −2.8 / 3.4 | −3.4 / 4.0 |
 | Net cost | −0.2 / 1.9 | −0.1 / 2.1 | 1.1 / 2.3 | 1.4 / 2.9 | 3.1 / 4.0 | 5.1 / 5.7 |
@@ -305,7 +329,10 @@ percent), from `data/long-hindcast.json`:
 | Debt | −0.3 / 4.9 | −1.7 / 8.7 | −1.5 / 12.4 | −0.9 / 15.6 | −11.7 / 28.5 | −32.4 / 34.0 |
 
 The model with hindsight beats persistence in years 1–3 only; from year 4 the base
-year's result share does as well or better. With the model's standard rates instead
+year's result share does as well or better. The continuous model's result is
+about half a per cent of tax and grants higher than the yearly model's, since
+its costs trail the population by about a year more and the population grows too
+fast in this test; its errors are as large. With the model's standard rates instead
 of hindsight it is worse than persistence at every horizon. The result is too low by
 0.7–0.8 % of tax and grants in years 3–6, about a third of a usual result target of
 2 %. The population grows too fast (6 % after eight years: migration calibrated on
@@ -330,16 +357,30 @@ Details and the history of earlier attempts are in
 The site has one engine: OpenModelica's compiler built for WebAssembly. A worker
 (`site/src/omc-worker.js`) fetches the compiler (about 100 MB, cached afterwards),
 loads `Kommunekonomi.mo`, the municipality's package and `MotalaBrowser.mo`, and
-runs `buildModel` with the `wasm-jit` target (about a second). Each scenario
-re-runs the compiled model with `-override`, in 20–90 ms. `MotalaBrowser` adds no
-equations: it fixes the array capacity at 100 years and makes every input a free
-parameter with a literal default (OpenModelica folds defaults that depend on the
-base year at compile time, out of `-override`'s reach). No cross-origin isolation
-is needed.
+runs `buildModel` with the `wasm-jit` target (two to three seconds; nine with
+single-year ages). Each scenario re-runs the compiled model with `-override`, in
+about 0.1 s. `MotalaBrowser.mo` holds two wrappers that add no equations,
+`MotalaBrowserContinuous` (the default) and `MotalaBrowser` (the yearly model):
+they fix the array capacity at 100 years and make every input a free parameter
+with a literal default (OpenModelica folds defaults that depend on the base year
+at compile time, out of `-override`'s reach). No cross-origin isolation is
+needed.
 
-`site/src/engine.js` is an independent JavaScript reference used only by the
-tests; the site does not ship it. `tests/jit-parity.test.mjs` runs the staged
-compiler in Node against it (skipped when no compiler is staged).
+The continuous model is integrated with Runge-Kutta, twelve steps a year, which
+gives native OpenModelica's DASSL within 0.01 mnkr (0.03 mnkr in a year where the
+cash flow changes sign; see [docs/methodology.md](docs/methodology.md#continuous-time)). Scenarios with working
+capital, a cash reserve or the project have flows with time constants of days
+to weeks and run with the implicit solver IDA instead (0.2 s). Single-year ages
+in continuous time take 0.4 s a run, and 1.5 s with IDA; a page update runs
+about ten scenarios, so that combination is slow.
+
+`site/src/engine.js` is an independent JavaScript reference for the yearly model,
+used only by the tests; the site does not ship it. `tests/jit-parity.test.mjs`
+runs the staged compiler in Node against it. The continuous model has no
+JavaScript reference: `tests/jit-continuous.test.mjs` checks it against
+`Motala.Continuous` as written, against SCB's and SKR's inputs, against the
+yearly model where the two must agree, and against native OpenModelica. Both
+are skipped when no compiler is staged.
 
 Build the compiler once (Ubuntu 24.04):
 

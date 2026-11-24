@@ -3,15 +3,18 @@
 Uppdaterat 2026-11-23. Överst läget och det som är öppet; därunder daterade avsnitt,
 inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 
-## Läget 2026-11-23
+## Läget 2026-11-24
 
 - Mål: ett interaktivt verktyg för beslutsfattare. Bakåttestet är en kontroll, inte målet.
-- Webbplatsen kör `Kommunekonomi.Annual` i webbläsaren (OpenModelica wasm-jit) för alla 13 kommuner i
-  Östergötland, med start 2025 eller 2026. Scenarier: Högre ränta, Högre inflation, flytt- och stressbanor.
-- `Kommunekonomi.Continuous.Economy` (lager och flöden i kontinuerlig tid, även befolkningen; gren
-  `continuous-model`) och den lokala MCP-servern (`scripts/mcp_server.py`) finns men är inte kopplade till webbplatsen.
+- Webbplatsen kör som standard `Kommunekonomi.Continuous.Economy` i webbläsaren (OpenModelica wasm-jit): lager och
+  flöden i kontinuerlig tid, även befolkningen. `Kommunekonomi.Annual` (ett steg per år) går att välja under
+  "Pröva modellvarianter". Alla 13 kommuner i Östergötland, med start 2025 eller 2026. Scenarier: Högre ränta,
+  Högre inflation, flytt- och stressbanor.
+- En AI kan arbeta i den öppna sidan genom en lokal brygga (`mcp/bridge.ts`). Den lokala MCP-servern
+  (`scripts/mcp_server.py`, native OpenModelica) finns kvar vid sidan av.
 - Bakåttest från SKR:s decembercirkulär 2020–2024: Motalas resultat ett år fram fel med i snitt 40 mnkr,
   budgeten 24. Med facit för priser, skatteunderlag och statens bidrag per del: resultat −18/−20/+2 mnkr.
+  Den kontinuerliga modellen ger samma träffsäkerhet (se avsnittet längst ned).
 - Åttaårstest 2017–2019 till 2025, alla 13 kommuner (`scripts/hindcast_long.py`), med facit för priser,
   skatteunderlag och bidrag: resultatets medelabsolutfel 1,7/2,2/2,4 % av skatt och bidrag år 1–3 mot
   2,4/3,7/3,4 för "basårets andel kvar"; från år 4 är jämförelsen lika bra eller bättre. Resultatet
@@ -30,9 +33,9 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
    antaganden med förklaringar, scenarioknappar, balanskravsflagga med valfritt resultatmål och delbar
    adress byggdes 2026-11-23 på grenen `site-navigation`. Balanskravet: kommunallagen 11 kap. 5 § och
    12 §, kontrollerat i två sammanfattningar av lagtexten på riksdagen.se och lagen.nu, inte ordagrant.)
-4. Var den kontinuerliga modellen och MCP-servern ska höra hemma. Webbläsarens kompilator klarar den kontinuerliga
-   modellen med `rungekutta` och 12 steg per år (2026-11-23); webbplatsen kör fortfarande Annual med ett Euler-steg
-   per år. Vad som krävs för att koppla in den: se avsnittet om kontinuerlig demografi längst ned.
+4. Den kontinuerliga modellen är standard på webben sedan 2026-11-24. Kvar: ettårsåldrar i kontinuerlig tid tar
+   0,4 s per körning (1,5 s med rörelsekapital, kassapolicy eller projekt), cirka 4 s per ändring på sidan.
+   Var Python-MCP-servern ska höra hemma är inte avgjort.
 5. Lönefelet efter tre år (−103 mnkr för Motala): kontrollera löneglidning och bemanning mot
    årsredovisningarna innan en ny mekanism läggs till.
 6. Från granskningen av länsgrenen: arbetaren laddar alla 13 kommunpaket vid start; kommunlistan finns i
@@ -1062,3 +1065,64 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
 - Prövat i headless Chrome mot Motala: anrop från en MCP-klient ändrade skattesats och investeringar på sidan.
 - Kvar: en chattruta i sidan mot en lokal modell (llama.cpp med flera), opt-in; Python-servern
   (`scripts/mcp_server.py`) kör native OpenModelica och sessioner år för år och finns kvar.
+
+## Kontinuerlig modell som standard på webben (2026-11-24)
+
+- Användaren bad om det: "I would like the continuous variant of the model to be the default". Grenen
+  `continuous-model` slogs ihop med `site-navigation` (AI-bryggan) och kopplades in.
+- `modelica/MotalaBrowser.mo` har två omslag: `MotalaBrowserContinuous` (kring `Motala.Continuous`) och
+  `MotalaBrowser` (kring `Motala.Annual`). Valet "Tid i modellen" (`time-model`, antagandet `timeModel`) finns under
+  "Pröva modellvarianter"; standard `continuous`. `engine.js` och `jit-parity.test.mjs` gäller fortfarande bara Annual.
+- Sidan räknar dödstal och restflöde för kontinuerlig tid i JavaScript (`calibrateContinuous`, `continuousYear`,
+  `inflowBetween` i `scenario-inputs.js`), som `Data.deathRatesPerYear` och `Data.calibratedMigrationRates`. Med SCB:s
+  befolkningsprognos är restflödet det jämna flöde som tar grupperna från ett årsskifte i prognosen till nästa,
+  med födslarna i matrisen. Prövat: sidans indata ger `Motala.Continuous` som den står, inom 1e-8, och folkmängden
+  är prognosens vid varje årsskifte.
+- Fel som rättades i modellen: agentens interpolering av löne- och pristakten gav årsmedlet ökningen
+  (förra + 4 · årets + nästa)/6. Med SKR 26:28 (arbetskraft 3,1, 2,7, 4,1 %) blev 2027 3,0 % i stället för 2,7 %:
+  11 mnkr för höga lönekostnader för Motala. Nu väljs takterna vid årsskiftena så att årsmedlet ökar exakt som
+  banan (`Data.meanPreservingRates`: tridiagonalt system, fyra omgångar för skillnaden mellan ln(medel) och
+  medel(ln)). Prövat med 3 → 9 → 0 %: inom 1e-5. Kostnaden: takten inom året svänger mer än årsökningarna.
+- Det som skiljer mot Annual efter rättelsen: (1) kapaciteten anpassas kontinuerligt. Båda stänger andelen
+  `adjustment` (0,5) av ett konstant glapp på ett år, men vid en jämn trend ligger den kontinuerliga kapaciteten
+  1/ln 2 = 1,4 år efter behovet och kostnaden räknas under året; Annual ligger ett år efter och räknar med
+  årsslutets värde. Kostnaderna ligger alltså ungefär ett år längre efter en trend. Där elevantalet sjunker blir
+  de högre: tjänstevolym +0,1 % i Motala och +0,3 % i Linköping 2033. (2) Ränta på aktuell skuld (1–2 mnkr mer per
+  år i Motala). (3) Avskrivning från betalningen (0,1 mnkr). (4) Verksamhetens intäkter följer årets befolkning.
+  Motala från bokslut 2025 med sidans standardval, avläst på sidan i headless Chromium: resultat
+  61/93/103/101/120/132/138/151 mnkr 2026–2033 mot Annuals 66/103/114/108/127/140/147/159; skuld 2033 1 576 mot
+  1 511 mnkr. Linköping (Node, proportionell intäktsjustering): resultat 21–42 mnkr lägre per år, skuld +291 mnkr
+  2033. Anpassningstakten är ett illustrativt antagande i båda modellerna.
+- Kassapolicyn i `Continuous.Finance` använde kassan över reserven bara till underskott. Linköping (överskott) behöll
+  650 mnkr i kassan medan Annual amorterade. Nu amorterar kassan över reserven inom `reserveRestoreTime`, som i Annual.
+- Lösare i webbläsaren: `rungekutta`, 12 steg per år, inom 0,01 mnkr från native DASSL (test). Rörelsekapital
+  (betalningstid i dagar; Motalas kundfordringar motsvarar 7,8 dagar), kassareservens påfyllning (en månad) och
+  projektets driftsättning (en vecka) är för snabba flöden för 12 explicita steg: Runge-Kutta blev instabil
+  ("Låneskulden får inte bli negativ"). De scenarierna körs med `-s=ida`. Med ettårsåldrar kostar IDA:s
+  Jacobian 20 s per körning (202 ålderslager); `-idaLS=spgmr` tar 1,5 s och avviker 0,007 mnkr.
+- Tider per körning i Node med den stagade kompilatorn: Annual 0,09 s, Continuous 0,10 s, med IDA 0,2 s;
+  ettårsåldrar 0,12 s i Annual, 0,37 s i Continuous. `variableFilter` i `buildModel` lagrar bara de serier sidan
+  läser. På sidan tar en ändring cirka 1 s i båda modellerna (tio körningar), 1,5–2 s med IDA, 3,6 s med
+  ettårsåldrar.
+- Bakåttest från SKR:s cirkulär, resultatets medelabsolutfel efter 1/2/3 år, Continuous mot Annual: Motala
+  40/60/60 mot 40/59/58, Finspång 39/77/59 mot 38/76/59, Mjölby 42/67/126 mot 41/65/116. Mjölby växer, så
+  kostnaderna, som följer befolkningen senare, blir 3–10 mnkr lägre, och nettokostnaden var redan för låg.
+  Den tidigare siffran 34/57/59 för Motala kom från interpoleringsfelet ovan.
+- Åttaårstestet med Continuous (`HINDCAST_MODEL=Continuous python3 scripts/hindcast_long.py`,
+  `data/long-hindcast-continuous.json`), facit-varianten, resultatets medelfel / medelabsolutfel i % av skatt och
+  bidrag år 1/2/3/4/6/8: 0,2/1,8, 0,3/2,3, −0,1/2,6, −0,2/3,4, −0,2/3,0, 0,7/2,2 mot Annuals 0,0/1,7, −0,2/2,2,
+  −0,7/2,4, −0,8/3,3, −0,8/2,9, −0,2/2,2. Resultatet blir cirka 0,5 % högre: befolkningen växer för fort i testet
+  och kostnaderna följer den ungefär ett år senare. Skulden −36 % mot −32 % efter åtta år. Ingen träffsäkerhetsvinst.
+  Annuals fil är oförändrad utom metodtexten. Skriptet behöver de lokala arkiven i `data/downloads/` (finns inte i
+  ett nytt worktree; kopierades dit).
+- Lösarens noggrannhet: när kassaflödet byter tecken inom ett steg hittar Runge-Kutta med fasta steg tidpunkten med
+  linjär interpolation, och alla lager flyttas upp till 0,001 % (0,03 mnkr i Motalas nettokostnad i ett scenario med
+  skattesats 22,2 och investering 300). DASSL och IDA gör det inte. Inga inställningar hänger kvar mellan körningar
+  i kompilatorn (prövat); felet i mitt första test var att en andra session byggde om samma modell med DASSL.
+- Sidans övriga texter följer modellen: fliken Modellen visar den kontinuerliga modellens ekvationer och kod,
+  `Scenario.mo` utgår från kommunens `Continuous`, PDF-rapporten anger tidsmodellen, AI-verktyget `get_state` likaså.
+  README:s siffror för Högre ränta och Högre inflation är avlästa på nytt (ränta 25 → 32 mnkr 2026, 32 → 69 mnkr
+  2029; resultat 49 och 105 mnkr under grundbanan 2026 och 2033).
+- Inte gjort: månadsvärden i diagrammen (flödena är jämna, så kurvan mellan årsskiftena är nästan rak);
+  säsong i flyttningar, läsår och löneavtalens datum finns inte i modellen.
+

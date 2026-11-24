@@ -31,6 +31,7 @@ def series_catalogue():
     load = lambda path: json.loads((ROOT / path).read_text())
     residual = load('data/cost-residual.json')
     long = load('data/long-hindcast.json')
+    long_continuous = load('data/long-hindcast-continuous.json')
     national = load('data/national-population.json')
     out = {'municipalities': {}, 'national': {
         'pkv': {'unit': 'share per year', 'source': residual['source'],
@@ -38,10 +39,13 @@ def series_catalogue():
                 'rows': [{'year': int(y), **v} for y, v in sorted(residual['pkv'].items())]},
         'population': {'unit': 'persons, 31 December', 'source': national.get('source'), 'note': national.get('note'),
                        'rows': [{'year': int(y), 'population': v} for y, v in sorted(national['population'].items())]},
-        'hindcast': {'source': 'scripts/hindcast_long.py, data/long-hindcast.json', 'units': long['units'],
+        'hindcast': {'source': 'scripts/hindcast_long.py, data/long-hindcast.json and data/long-hindcast-continuous.json', 'units': long['units'],
                      'description': 'Model against outcomes 2017-2019 to 2025, 13 municipalities: mean error and mean absolute '
                                     'error per horizon, and the benchmark persistence (the base year\'s result share kept)',
-                     'summaryByHorizon': long['summaryByHorizon']}}}
+                     'models': 'summaryByHorizon is the yearly model (Kommunekonomi.Annual); summaryByHorizonContinuous is the '
+                               'continuous model, which the site runs by default. Persistence is the same for both.',
+                     'summaryByHorizon': long['summaryByHorizon'],
+                     'summaryByHorizonContinuous': {k: v for k, v in long_continuous['summaryByHorizon'].items() if k != 'persistence'}}}}
     for folder in sorted((ROOT / 'data/municipalities').glob('[0-9]*')):
         if not (folder / 'base-years.json').is_file():
             continue

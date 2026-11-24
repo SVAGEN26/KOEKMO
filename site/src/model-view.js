@@ -22,7 +22,15 @@ export const COMPONENTS=[
       'uppåldrade = överlevande / gruppens bredd i år (7, 9, 3, 46)',
       'grupp = överlevande − uppåldrade + inflöde + restflöde + flyttnetto · vikt',
       'kontroll: Δbefolkning = födda − döda + flyttnetto'],
-    limits:'Breda åldersgrupper. Födslar följer gruppen 19–64 som en grov exponering. Grundmodellens ändrade flyttnetto använder fasta vikter. SCB-varianten fördelar ändringen enligt tidigare inflyttares åldrar.'},
+    limits:'Breda åldersgrupper. Födslar följer gruppen 19–64 som en grov exponering. Grundmodellens ändrade flyttnetto använder fasta vikter. SCB-varianten fördelar ändringen enligt tidigare inflyttares åldrar.',
+    flow:{model:'Demography',
+      text:`Befolkningen är fem lager: 0–6, 7–15, 16–18, 19–64 och 65+ år. Födda, döda, åldrande och flyttningar är flöden som pågår hela året. Restflödet är det jämna flöde per år som tar varje åldersgrupp från ett årsskifte till nästa: kalibrerat mot kommunens historik, eller mot den inlästa befolkningsprognosen så att årsskiftenas folkmängd blir prognosens. Med ettårsåldrar är varje födelseår ett lager, och åldern byter etikett vid årsskiftet.`,
+      eq:['födda per år = födda i basåret · (19–64 år just nu / 19–64 år i basåret) · (1 + förändring i födelsetal)',
+        'döda per år = dödstal · invånare i gruppen',
+        'åldras upp per år = invånare i gruppen / gruppens bredd i år (7, 9, 3, 46)',
+        'd(grupp)/dt = in från yngre grupp − åldras upp − döda + restflöde + flyttnetto · vikt',
+        'kontroll vid årsslutet: Δbefolkning = årets födda − döda + flyttnetto'],
+      limits:'Breda åldersgrupper. Födslar följer gruppen 19–64 som en grov exponering. Dödstalet är döda delat med årets medelfolkmängd. Flyttningarna är jämnt fördelade över året; säsongen (sommarflyttar, terminsstart) finns inte med.'}},
   {id:'services',model:'Services',name:'Verksamhet',sub:'Efterfrågan och kapacitet',x:380,y:40,color:'#237355',
     keys:['adjustment'],
     values:r=>[['Utbildning',idx(r.educationIndex)],['Äldreomsorg',idx(r.careIndex)],['Index','basår = 100']],
@@ -32,7 +40,16 @@ export const COMPONENTS=[
       'övrigt = befolkning / bas',
       'kapacitet = fg + anpassning · (fast andel + rörlig andel · efterfrågan − fg)',
       'tjänstevolym = sektorkapacitet vägd med sektorkostnader i basåret'],
-    limits:'Kostnadsvikterna fördelar basårets kostnader mellan verksamheterna. Indexet beskriver det beräknade behovet.'},
+    limits:'Kostnadsvikterna fördelar basårets kostnader mellan verksamheterna. Indexet beskriver det beräknade behovet.',
+    flow:{model:'Services',
+      text:`Åldersgrupperna blir efterfrågan på tre verksamheter: utbildning, äldreomsorg och övrigt. Efterfrågan följer befolkningen dag för dag, och kapaciteten närmar sig efterfrågan kontinuerligt; en fast andel ändras inte alls. Kostnaderna räknas med kapaciteten under året, inte vid årets slut. När efterfrågan har en jämn trend ligger kapaciteten cirka 1,4 år efter med anpassningen 0,5; i årsmodellen ett år. Där elevantalet sjunker blir kostnaderna därför något högre än i årsmodellen.`,
+      eq:['utbildning = åldersviktat behov för 0–6, 7–15 och 16–18 år',
+        'äldreomsorg = åldersviktat behov för 65–79, 80–89 och 90+ år',
+        'övrigt = befolkning / bas',
+        'd(kapacitet)/dt = takt · (fast andel + rörlig andel · efterfrågan − kapacitet)',
+        'takt = −ln(1 − anpassning): ett konstant glapp stängs med andelen anpassning på ett år',
+        'tjänstevolym = sektorkapacitet vägd med sektorkostnader i basåret'],
+      limits:'Kostnadsvikterna fördelar basårets kostnader mellan verksamheterna. Indexet beskriver det beräknade behovet. Läsårets rytm (ändrad kapacitet i augusti) finns inte med.'}},
   {id:'operations',model:'OperatingAccounts',name:'Drift',sub:'Löner, pensioner, övrigt',x:720,y:40,color:'#237355',
     keys:['wageGrowth','priceGrowth','pensionGrowth','costDrift','productivity','operatingRevenueGrowth'],
     values:r=>[['Personal exkl. pension',fmt(r.payroll)],['Övriga kostnader',fmt(r.otherOperatingExpense)],['Nettokostnad',fmt(r.cost)]],
@@ -43,7 +60,16 @@ export const COMPONENTS=[
       'standard = fg · (1 + kostnadsökning utöver demografi och pris)',
       'verksamhetsintäkter = basårets intäkter · intäktsindex · befolkning / basårets befolkning',
       'nettokostnad = löner + sociala avgifter + pension + övriga kostnader − verksamhetsintäkter + avrundning'],
-    limits:'Produktivitet sänker lönekostnaden. Standard är kostnadsökningen utöver demografi och pris; 0 om inget annat väljs. En eventuell avrundningspost stämmer av basåret.'},
+    limits:'Produktivitet sänker lönekostnaden. Standard är kostnadsökningen utöver demografi och pris; 0 om inget annat väljs. En eventuell avrundningspost stämmer av basåret.',
+    flow:{model:'OperatingAccounts',
+      text:`Kostnaderna är flöden i mnkr per år som pågår hela året; årets belopp är summan. Löne- och prisnivån växer varje dag. Banornas årliga ökning (SKR:s arbetskraftskostnad och priser, eller reglagens procent) gäller årsmedlet, och takten inom året är vald så att årsmedlet ökar just så mycket. Pensionskostnaden har en egen årsbana och flyter jämnt. Verksamhetens intäkter följer befolkningen just nu.`,
+      eq:['d(nivå)/dt = takt · nivå, för löner, priser, taxor, produktivitet och standard',
+        'takten går linjärt mellan årsskiftena; årsmedlets ökning = banans ökning',
+        'löner per år = basårets löner · lönenivå · tjänstevolym · standard / produktivitet',
+        'övriga kostnader per år = basårets övriga kostnader · prisnivå · tjänstevolym · standard',
+        'verksamhetsintäkter per år = basårets intäkter · taxenivå · befolkning / basårets befolkning',
+        'årets nettokostnad = summan under året av löner + sociala avgifter + pension + övriga kostnader − verksamhetsintäkter + avrundning'],
+      limits:'Lönerna stiger jämnt; avtalens datum (ofta 1 april) finns inte med. När den årliga ökningen ändras mycket mellan åren svänger takten inom året mer än årsökningarna. Standard är kostnadsökningen utöver demografi och pris; 0 om inget annat väljs.'}},
   {id:'revenues',model:'Revenue',name:'Intäkter',sub:'Skatt och bidrag',x:40,y:330,color:'#285f8c',
     keys:['taxGrowth','grantIncrease','grantGrowth','taxRate','equalisationOffset'],
     values:r=>[['Skatt',fmt(r.tax)],['Bidrag',fmt(r.grants)],['Summa',fmt(r.tax+r.grants)]],
@@ -54,7 +80,16 @@ export const COMPONENTS=[
       'skatt = (referensskatt · befolkningsfaktor + avvikelse) · skattesats / basårets skattesats',
       'statens höjning = bidragshöjning (mdkr i riket) · (år − 1) · kommunen fg år / riket fg år',
       'bidrag = referensbidrag · befolkningsfaktor − utjämning · avvikelse + statens höjning'],
-    limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning. Rikets folkmängd hämtas från respektive prognosunderlag.'},
+    limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning. Rikets folkmängd hämtas från respektive prognosunderlag.',
+    flow:{model:'Revenue',
+      text:`Skatt och generella bidrag beslutas för ett år i taget och betalas ut med en tolftedel i månaden: årets belopp bestäms 1 januari och flyter sedan jämnt in i kassan. Beloppet räknas som i årsmodellen, från referensbanan (SKR:s beräkning för kommunen när planeringsunderlagen är aktiva) och befolkningen. Varianten per delpost justerar skatt före avräkning, inkomstutjämning och regleringspost med folkmängden den 1 november året innan; den läses ur befolkningslagret den dagen. En annan skattesats ändrar bara skatten.`,
+      eq:['beslut 1 januari: årets skatt och bidrag, med samma formler som årsmodellen',
+        'befolkningsfaktor = (kommunen fg år / kommunen året före basåret) / (riket fg år / riket året före basåret)',
+        'med SKR:s bana: befolkningsfaktor = kommunen fg år / SKR:s befolkning',
+        'per delpost: folkmängden 1 november året innan / SKR:s folkmängd',
+        'statens höjning = bidragshöjning (mdkr i riket) · (år − 1) · kommunen fg år / riket fg år',
+        'flöde in i kassan = årets skatt och bidrag / 1 år; kontroll: summan under året = beslutet'],
+      limits:'Utjämningen är en förenklad känslighet, inte lagens beräkning av inkomst-, kostnads- och LSS-utjämning. Slutavräkningen av skatten har inget eget flöde inom året.'}},
   {id:'capital',model:'Capital',name:'Kapital',sub:'Tillgångar och avskrivning',x:380,y:330,color:'#9b5f23',
     keys:['investment'],
     values:r=>[['Investering',fmt(r.investment)],['Avskrivning',fmt(r.depreciation)],['Tillgångar',fmt(r.assets)]],
@@ -63,7 +98,15 @@ export const COMPONENTS=[
       'pågående arbeten = fg år + utbetald investering − taget i bruk',
       'avskrivning = (tillgångar i bruk fg år + ½ · taget i bruk) / livslängd',
       'tillgångar i bruk = fg år + taget i bruk − avskrivning'],
-    limits:'Byggtiden är ett gemensamt antagande för de fördröjda investeringarna.'},
+    limits:'Byggtiden är ett gemensamt antagande för de fördröjda investeringarna.',
+    flow:{model:'Capital',
+      text:`Tre lager: pågående arbeten, projektets pågående arbeten och tillgångar i bruk. Investeringarna betalas jämnt under året. Utan byggtid går de direkt till tillgångar i bruk; med byggtid ligger byggandelen bland pågående arbeten och tas i bruk efter byggtiden. Avskrivningen är ett flöde på de tillgångar som är i bruk just då, så en investering börjar skrivas av när den betalas.`,
+      eq:['livslängd = basårets tillgångar i bruk / basårets avskrivningar',
+        'd(pågående arbeten)/dt = utbetald byggandel − taget i bruk',
+        'avskrivning per år = −ln(1 − 1/livslängd) · tillgångar i bruk just nu',
+        'd(tillgångar i bruk)/dt = direkt investering + taget i bruk − avskrivning',
+        'kontroll vid årsslutet: Δlager = årets investering − årets avskrivning'],
+      limits:'Byggtiden är ett gemensamt antagande för de fördröjda investeringarna. Avskrivningstakten skriver av samma andel av ett oförändrat bestånd på ett år som årsmodellen. Projektet tas i bruk mitt i sitt öppningsår.'}},
   {id:'finance',model:'Finance',name:'Finans',sub:'Resultat, kassa och lån',x:720,y:330,color:'#694b91',
     keys:['interestRate'],
     values:r=>[['Resultat',fmt(r.result)],['Räntor',fmt(r.interest)],['Låneskuld',fmt(r.debt)]],
@@ -73,7 +116,16 @@ export const COMPONENTS=[
       'kassaflöde = resultat + avskrivning + pensionskostnad − pensionsutbetalning',
       'behov = investering − kassaflöde → lån om positivt, amortering om negativt',
       'låneskuld = fg år + nya lån − amortering'],
-    limits:'Standardräntan är basårets räntekostnad delad med dess ingående låneskuld. Övriga finansiella poster hålls fasta. Rörelsekapital kan aktiveras i scenariot. Borgen och ny leasing har inga egna flöden.'}
+    limits:'Standardräntan är basårets räntekostnad delad med dess ingående låneskuld. Övriga finansiella poster hålls fasta. Rörelsekapital kan aktiveras i scenariot. Borgen och ny leasing har inga egna flöden.',
+    flow:{model:'Finance',
+      text:`Kassa och låneskuld är lager. Skatt, bidrag, löner, inköp, räntor och investeringar är flöden in i och ut ur kassan. När flödena ger underskott lånar kommunen i samma takt, och ett överskott amorterar. Räntan räknas på den skuld som finns just då, så ett lån som tas upp i mars kostar ränta från mars. Med kassapolicy går kassan mot reserven inom en månad: kassan över reserven betalar underskott och amorterar lån, och en kassa under reserven fylls på med lån. Med rörelsekapital går kundernas betalningar och leverantörernas fakturor genom egna lager med betalningstid i dagar.`,
+      eq:['ränta per år = räntesats · låneskuld just nu (med räntebindning: lånens bundna räntor)',
+        'netto = driftens kassaflöde + investeringar, mnkr per år',
+        'nya lån per år = −netto när netto är negativt; amortering per år = netto när det är positivt',
+        'd(skuld)/dt = nya lån − amortering;  d(kassa)/dt = netto + nya lån − amortering',
+        'årets resultat = skatt + bidrag − nettokostnad − avskrivning + finansiella intäkter − ränta − övriga finansiella kostnader',
+        'kontroll vid årsslutet: förändringen av alla lager = årets resultat'],
+      limits:'Standardräntan är basårets räntekostnad delad med dess ingående låneskuld. Övriga finansiella poster flyter jämnt. Lönerna betalas jämnt, inte den 27:e. Borgen och ny leasing har inga egna flöden.'}}
 ];
 const W=260,H=150,byId=Object.fromEntries(COMPONENTS.map(c=>[c.id,c]));
 
@@ -121,12 +173,21 @@ export {modelicaSection};
 
 export function createModelView(root,{source}) {
   let run=null,year=null,selected='finance',paramSignature='';
-  const code={};
-  source.then(text=>{for(const c of COMPONENTS) code[c.id]=modelicaSection(text,c.model);if(run) renderPanel();}).catch(()=>{});
+  const code={},flowCode={};
+  // The continuous model has the same parts, in the package Kommunekonomi.Continuous; Revenue is shared.
+  source.then(text=>{
+    const continuous=text.slice(text.indexOf('package Continuous '));
+    for(const c of COMPONENTS) {
+      code[c.id]=modelicaSection(text,c.model);
+      flowCode[c.id]=c.id==='revenues'?code[c.id]:modelicaSection(continuous,c.flow.model);
+    }
+    if(run) renderPanel();
+  }).catch(()=>{});
+  const continuous=()=>run?.assumptions?.timeModel==='continuous';
 
   root.innerHTML=`<div class="model-toolbar"><label for="model-year">År</label><input id="model-year" type="range" min="1" max="1" step="1"><output id="model-year-label"></output></div>
 <div class="model-diagram" id="model-diagram"></div>
-<p class="chart-note">Klicka på en del för att läsa hur den räknar och ändra dess antaganden. Pilarna är modellens kopplingar; pengaflödenas tjocklek motsvarar beloppet för valt år. Diagrammet följer placeringen i <code>Kommunekonomi.Annual</code>.</p>
+<p class="chart-note">Klicka på en del för att läsa hur den räknar och ändra dess antaganden. Pilarna är modellens kopplingar; pengaflödenas tjocklek motsvarar beloppet för valt år. Diagrammet följer placeringen i <code>Kommunekonomi.Annual</code>; den kontinuerliga modellen (<code>Kommunekonomi.Continuous.Economy</code>) har samma delar. Beloppen är årets.</p>
 <div class="model-detail" id="model-detail" aria-live="polite"></div>
 <section class="panel"><p class="eyebrow">FRÅN INTÄKTER TILL LÅN</p><h2 id="waterfall-title">Resultat och finansiering</h2><div id="model-waterfall"></div><p class="chart-note">Samma beräkning som i Finans. Positiva poster ökar, negativa minskar. Kassaflödet räknas från resultatet; investeringar som inte täcks lånas.</p></section>`;
   const $=id=>root.querySelector('#'+id);
@@ -192,13 +253,14 @@ ${flows}${labels}${input}${nodes}</svg>`;
   }
 
   function renderPanel(){
-    const c=byId[selected],controls=c.keys.map(control).filter(Boolean);
-    paramSignature=controls.map(x=>x.label+x.unit+x.min+x.max).join('|');
+    const flow=continuous(),part=byId[selected],c=flow?{...part,...part.flow}:part,controls=c.keys.map(control).filter(Boolean);
+    const shown=flow?flowCode[c.id]:code[c.id],library=flow&&c.id!=='revenues'?'KOMMUNEKONOMI.CONTINUOUS':'KOMMUNEKONOMI.COMPONENTS';
+    paramSignature=flow+controls.map(x=>x.label+x.unit+x.min+x.max).join('|');
     $('model-detail').innerHTML=`<section class="panel model-panel" style="--node:${c.color}">
-<div class="model-panel-text"><p class="eyebrow">${safe(c.model.toUpperCase())} · KOMMUNEKONOMI.COMPONENTS</p><h2>${safe(c.name)}</h2><p>${safe(c.text)}</p>
-<h3>Ekvationer, ett steg per år</h3><ul class="equations">${c.eq.map(e=>`<li><code>${safe(e)}</code></li>`).join('')}</ul>
+<div class="model-panel-text"><p class="eyebrow">${safe(c.model.toUpperCase())} · ${library}</p><h2>${safe(c.name)}</h2><p>${safe(c.text)}</p>
+<h3>${flow?'Ekvationer, kontinuerlig tid':'Ekvationer, ett steg per år'}</h3><ul class="equations">${c.eq.map(e=>`<li><code>${safe(e)}</code></li>`).join('')}</ul>
 <p class="chart-note">${safe(c.limits)}</p>
-${code[c.id]?`<details><summary>Visa Modelica-koden</summary><pre class="modelica"><code>${safe(code[c.id])}</code></pre></details>`:''}</div>
+${shown?`<details><summary>Visa Modelica-koden</summary><pre class="modelica"><code>${safe(shown)}</code></pre></details>`:''}</div>
 <div class="model-panel-params"><p class="eyebrow">ANTAGANDEN</p>${controls.length?controls.map(x=>`<div class="slider"><div class="slider-top"><label for="m-${x.key}">${safe(x.label)}</label><div class="number"><input id="m-${x.key}" data-mkey="${x.key}" type="number" min="${x.min}" max="${x.max}" step="any" value="${safe(x.value)}"><span>${safe(x.unit)}</span></div></div><input data-mkey="${x.key}" type="range" min="${x.min}" max="${x.max}" step="${x.step}" value="${safe(x.value)}" aria-label="${safe(x.label)}, reglage"><div class="slider-help"><span>${safe(x.help)}</span></div></div>`).join(''):'<p class="muted">Inga justerbara antaganden.</p>'}
 <p class="small muted">Samma antaganden som i Scenariolabbet. Ändringar gäller från första prognosåret.</p></div></section>`;
   }
@@ -234,7 +296,7 @@ ${bars.map((b,i)=>{const y=8+i*rowH,a=Math.min(b.from,b.to),w=Math.max(1,Math.ab
       const i=run.rows.findIndex(r=>r.year===year);yearInput.min='1';yearInput.value=String(i);
       $('model-year-label').textContent=String(year);
       renderDiagram();renderWaterfall();
-      const signature=byId[selected].keys.map(control).filter(Boolean).map(x=>x.label+x.unit+x.min+x.max).join('|');
+      const signature=continuous()+byId[selected].keys.map(control).filter(Boolean).map(x=>x.label+x.unit+x.min+x.max).join('|');
       if(signature!==paramSignature||!$('model-detail').firstChild) renderPanel(); else syncParams();
     },
     show(id){select(id);}

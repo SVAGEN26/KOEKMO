@@ -39,6 +39,10 @@ out (annual-report-inputs.json, trendExclude): Norrköping 2022 and 2023, the pr
 Investment stays at the base year's amount: the model has no investment forecast. Where the base
 year gives no plausible interest rate (SCB's debt lacks loans passed on to companies: Linköping and
 Vadstena 2017-2019), the run uses 2 %. Writes data/long-hindcast.json.
+
+HINDCAST_MODEL=Continuous runs the packages' Continuous model (Kommunekonomi.Continuous.Economy, the model
+the site runs by default) with the same inputs, twelve output points a year, and writes
+data/long-hindcast-continuous.json.
 """
 import csv
 import json
@@ -55,6 +59,9 @@ import prepare_municipality as pm  # noqa: E402
 from hindcast_vintages import modelica_array, pkv_outcomes, tax_base_outcomes  # noqa: E402
 
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
+MODEL = os.environ.get('HINDCAST_MODEL', 'Annual')
+STEPS = 1 if MODEL == 'Annual' else 12
+OUTPUT = 'data/long-hindcast.json' if MODEL == 'Annual' else f'data/long-hindcast-{MODEL.lower()}.json'
 LAST = 2025
 ORIGINS = (2017, 2018, 2019)
 SETS = ('hindsight', 'drift', 'standard')
@@ -139,7 +146,7 @@ def model_source(package, code, origin, records, assumptions):
                   f'lssEqualisationPerCapitaPath = {per_capita(4)}',
                   'propertyFeePath = {' + ', '.join(f'{record(y)}.grantComponents[5]' for y in years) + '}',
                   'otherGeneralGrantsPath = {' + ', '.join(f'{record(y)}.grants - sum({record(y)}.grantComponents)' for y in years) + '}']
-    return f'model Run\n  extends {package}.Annual(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+    return f'model Run\n  extends {package}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
 def simulate(package_file, origin, source, directory):
@@ -148,12 +155,13 @@ def simulate(package_file, origin, source, directory):
         f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
         f'loadFile({json.dumps(str(package_file))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
-        f'simulate(Run, startTime = {origin}, stopTime = {LAST}, numberOfIntervals = {LAST - origin}, outputFormat = "csv"); getErrorString();\n')
+        f'simulate(Run, startTime = {origin}, stopTime = {LAST}, numberOfIntervals = {(LAST - origin)*STEPS}, outputFormat = "csv"); getErrorString();\n')
     process = subprocess.run([OMC, 'run.mos'], cwd=directory, capture_output=True, text=True, timeout=600)
     result = directory / 'Run_res.csv'
     if not result.exists():
         raise SystemExit(f'Simulation failed for {origin}:\n{source}\n{process.stdout[-3000:]}')
-    rows = {round(float(row['time'])): row for row in csv.DictReader(result.open())}
+    # Whole years only; the last row at a year end is the one after the year's events.
+    rows = {round(float(row['time'])): row for row in csv.DictReader(result.open()) if abs(float(row['time']) - round(float(row['time']))) < 1e-6}
     if max(rows) < LAST:
         raise SystemExit(f'Simulation stopped before {LAST} for {origin}:\n{source}\n{process.stdout[-3000:]}')
     return {year: {k: float(row[k]) for k in OUTPUTS} for year, row in rows.items() if year > origin}
@@ -191,7 +199,7 @@ def share(o):
 
 def main():
     if '--rescore' in sys.argv:
-        runs = load('data/long-hindcast.json')['runs']  # score again without simulating
+        runs = load(OUTPUT)['runs']  # score again without simulating
     else:
         runs = simulate_all()
     for r in runs:
@@ -216,12 +224,12 @@ def main():
         errors = [100 * (share(r['baseYear']) - share(r['outcome'])) for r in cases]
         summary.setdefault('persistence', {})[horizon] = {'cases': len(cases), 'result': {
             'meanErrorPercent': sum(errors) / len(errors), 'meanAbsErrorPercent': sum(map(abs, errors)) / len(errors)}}
-    out = {'source': 'Model Kommunekonomi.Annual with SCB base years; outcomes SCB räkenskapssammandrag (kommunen), '
+    out = {'source': f'Model Kommunekonomi.{"Annual" if MODEL == "Annual" else "Continuous.Economy"} with SCB base years; outcomes SCB räkenskapssammandrag (kommunen), '
                      'data/municipalities/<code>/base-years.json; Motala from data/downloads/20261109T162149Z',
            'method': __doc__.strip(),
            'units': 'mnkr; population in persons. Percent: error / outcome of tax and grants (population: / outcome)',
            'summaryByHorizon': summary, 'runs': runs}
-    (ROOT / 'data/long-hindcast.json').write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
+    (ROOT / OUTPUT).write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     print('\npersistence (base year\'s result share kept): result, mean error / mean absolute error, percent')
     for horizon, row in summary['persistence'].items():
         print(f'{horizon:2d} {row["cases"]:3d} {row["result"]["meanErrorPercent"]:7.2f} /{row["result"]["meanAbsErrorPercent"]:6.2f}')

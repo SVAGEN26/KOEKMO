@@ -37,7 +37,7 @@ const SERIES={
   skrRevenue:'SKR:s beräkning av kommunens skatt och bidrag per prognosår (Prognosunderlag 26:28). Den kommun sidan visar.',
   pkv:'SKR:s prisindex för kommunal verksamhet, utfall per år (PKV): totalt, arbetskraft och övrigt.',
   nationalPopulation:'Rikets folkmängd 31 december: utfall och SCB:s prognos.',
-  hindcast:'Modellens bakåttest 2017-2019 till 2025 för 13 kommuner: medelfel per horisont och jämförelsen "basårets resultatandel kvar".'
+  hindcast:'Modellens bakåttest 2017-2019 till 2025 för 13 kommuner, för årsmodellen och för den kontinuerliga modellen som sidan kör: medelfel per horisont och jämförelsen "basårets resultatandel kvar".'
 };
 
 const round=x=>typeof x==='number'?Math.round(x*10)/10:x;
