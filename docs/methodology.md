@@ -462,8 +462,11 @@ municipalities from 2022–2024 to 2025; results in
 Limits: against SKR's circulars few cases (five base years, fewer at longer
 horizons) and at most three years; the eight-year test has no forecasts of its time
 and covers one period whose runs overlap, so its cases are not independent. SKR's
-own historical forecasts for the municipalities are no longer available to compare
-with. The forecast sets use only data known at the base year (the closing accounts
+own historical forecasts for the municipalities are no longer on SKR's site. Four
+workbooks were recovered from the Internet Archive (`data/skr-historical/`), and
+only circular 21:35 is read out for Motala so far: its tax and grants for 2022–2025
+were 63, 155, 177 and 197 mnkr too low, the model's own from the 2021 accounts 75,
+162 and 198 mnkr too low for 2022–2024. The forecast sets use only data known at the base year (the closing accounts
 and Kolada figures of the base year, published the following spring, included);
 the hindsight and prices sets use outcomes on purpose.
 

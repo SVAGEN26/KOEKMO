@@ -304,9 +304,17 @@ default, gives 40 / 60 / 60 for Motala, 42 / 67 / 126 for Mjölby and
 `data/vintage-hindcast-continuous.json`): the same accuracy.
 
 Five, four and three cases per horizon, from one period, are too few to rank the
-sets. SKR's own forecasts for the municipalities from those dates are no longer on
-SKR's site, so they cannot be compared
-(`scripts/compare_hindcasts.py CODE [skr|components|hold|prices|hindsight|standard]`).
+sets (`scripts/compare_hindcasts.py CODE [skr|components|hold|prices|hindsight|standard]`).
+
+SKR's own forecasts for the municipalities from those dates are no longer on SKR's
+site. Four of the workbooks were recovered from the Internet Archive
+(`data/skr-historical/`: circulars 21:35, 22:28, 23:56 and 24:56); so far only
+21:35, of September 2021, is read out for Motala. Its tax and general grants for
+2022–2025 were 63, 155, 177 and 197 mnkr below the outcome. The model's own
+forecast from the 2021 accounts, with its standard growth rates and no SKR path,
+was 75, 162 and 198 mnkr below for 2022–2024. Both missed the inflation years by
+about the same amount. One vintage and one municipality; the other three
+workbooks are not yet compared.
 
 **Eight years, 13 municipalities.** `scripts/hindcast_long.py` starts from SCB's
 accounts of 2017, 2018 and 2019 and runs to 2025 (8, 7 and 6 years) for all 13
