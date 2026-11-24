@@ -103,3 +103,7 @@ details.assumption-group .slider:last-child{border-bottom:0}
 @media(max-width:420px){.municipality-cards{grid-template-columns:1fr}}
 /* The view tabs scroll sideways on narrow screens instead of widening the page */
 @media(max-width:720px){.toolbar nav{display:flex;max-width:100%;overflow-x:auto;scrollbar-width:none}.toolbar nav::-webkit-scrollbar{display:none}.toolbar nav .tab{flex:none}}
+#ai-link input[type=url],#ai-link input[type=password]{width:100%;border:1px solid var(--line);border-radius:7px;background:#f7f8f4;padding:9px;font-size:12px;margin:7px 0 10px}
+#ai-link .warning-text{color:var(--red);margin:0 0 8px}
+.ai-log{padding-left:16px;margin:8px 0 0;max-height:180px;overflow-y:auto;color:var(--muted)}
+.ai-log li{margin-bottom:4px}
