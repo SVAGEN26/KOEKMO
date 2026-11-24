@@ -13,16 +13,13 @@ export const MODEL='MotalaBrowser';
 // The same wrapper around Motala.Continuous: stocks and flows in continuous time.
 export const CONTINUOUS_MODEL='MotalaBrowserContinuous';
 export const MAX_YEARS=100;
-// Continuous time is integrated with Runge-Kutta, twelve steps a year; with these the staged compiler gives the
-// values of native OpenModelica's DASSL within 0.01 mnkr. When the cash flow changes sign inside a step the solver
-// finds that moment by linear interpolation, which moves every stock by up to 0.001 % (0.03 mnkr on Motala's payroll).
-// The yearly model takes one step a year (its equations are events).
+// Continuous time is integrated with IDA, an implicit solver with its own step control; twelve values a year are
+// stored. It gives the values of native OpenModelica's DASSL within 0.01 mnkr, and it also takes the flows with
+// time constants of days to weeks (payment terms, the cash reserve, a project taken into use). The explicit
+// Runge-Kutta solver used until November 2026 was twice as fast but does not start in OpenModelica's web compiler
+// after September 2026. The yearly model takes one step a year (its equations are events).
 export const STEPS_PER_YEAR=12;
-export const CONTINUOUS_METHOD='rungekutta';
-// Payment terms of days, the cash reserve and a project taken into use are flows with time constants of days to
-// weeks: too fast for twelve explicit steps a year. Those scenarios run with the implicit solver IDA instead.
-export const STIFF_METHOD='ida';
-export const hasFastFlows=fields=>!!(fields.workingCapitalEnabled||fields.liquidityPolicy||fields.projectPayment>0||fields.projectOpeningStock>0);
+export const CONTINUOUS_METHOD='ida';
 // Simulation time is the calendar year: MotalaBrowser starts at the 2025 accounts.
 export const BASE_YEAR=2025;
 
@@ -38,7 +35,7 @@ export function overrideFlags(fields) {
   return parts.join(',');
 }
 
-export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stiffMethod=STIFF_METHOD,stepsPerYear=STEPS_PER_YEAR,implicitAlways=false}={}) {
+export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear=STEPS_PER_YEAR}={}) {
   const errors=()=>String(omc.omc_eval('getErrorString()')).trim().replace(/^"|"$/g,'');
   for(const {name,text} of sources) {
     const reply=String(omc.omc_eval(`loadString(${JSON.stringify(text)},${JSON.stringify(name)})`)).trim();
@@ -90,7 +87,7 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stiffMethod=
       fields={...fields,wageGrowthPath:extend(fields.wageGrowthPath),priceGrowthPath:extend(fields.priceGrowthPath)};
     }
     // With single-year ages the 202 age stocks make IDA's Jacobian cost 20 s a run; its matrix-free linear solver takes 1.5 s.
-    const solver=continuous&&(implicitAlways||hasFastFlows(fields))&&stiffMethod!==method?` -s=${stiffMethod}${cohort&&stiffMethod==='ida'?' -idaLS=spgmr':''}`:'';
+    const solver=continuous&&cohort&&method==='ida'?' -idaLS=spgmr':'';
     const flags=`-override=stopTime=${baseYear+years},${overrideFlags({...fields,...ageMigration})}${solver}`;
     if(!omc.omc_sim_start(model,`${model}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
     let code;
