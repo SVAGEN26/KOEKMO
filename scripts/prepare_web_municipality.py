@@ -95,6 +95,9 @@ def prepare(code, year, source):
                           'tradeSource':'https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6779'},
         'experiments':{'wages':salary['100'][year],'employerContributions':salary['110'][year]},
     }
+    if book.get('onLending'):
+        # Borrowed and lent on to the municipality's companies: not in debt, and its interest in neither cost nor income.
+        baseline['onLending'] = book['onLending']
     work_in_progress = supplement.get('workInProgress', {}).get(str(year))
     if work_in_progress is not None:
         # SCB's tangible fixed assets (6779:025) include work in progress. The model keeps it

@@ -37,7 +37,7 @@ out (annual-report-inputs.json, trendExclude): Norrköping 2022 and 2023, the pr
 (-3 281 and -80 mnkr). They stay in the runs with "excluded": true.
 
 Investment stays at the base year's amount: the model has no investment forecast. Where the base
-year gives no plausible interest rate (SCB's debt lacks loans passed on to companies: Linköping and
+year gives no plausible interest rate (no debt at the start of the year: Linköping and
 Vadstena 2017-2019), the run uses 2 %. Writes data/long-hindcast.json.
 
 HINDCAST_MODEL=Continuous runs the packages' Continuous model (Kommunekonomi.Continuous.Economy, the model

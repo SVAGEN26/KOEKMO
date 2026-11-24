@@ -16,9 +16,14 @@ Definitions (SCB item codes):
   equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and
   property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating
   expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial
-  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); debt is bank loans and bonds
+  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds
   (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025
   (including work in progress, which SCB does not separate); investment 5179:950.
+  Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables
+  from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest
+  expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's
+  items do not give the borrowing or the lending, annual-report-inputs.json gives them from the municipality's reports:
+  externalBankDebt (all borrowing), ownDebt (the municipality's own) and onLending (lent to its companies).
 For Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);
 for 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.
 """
@@ -117,17 +122,39 @@ def build(code, archive):
     def g(table, item, year):
         return table.get(item, {}).get(year, 0.0)
 
+    def lending(year):
+        # Lent on to the municipality's own companies. Their debt is not the municipality's to carry in the model.
+        reported = supplement.get('onLending', {}).get(str(year))
+        return reported if reported is not None else g(bs, '034', year)
+
     def debt(year):
+        # The municipality's own debt: what it has borrowed, less what it has lent on.
+        own = supplement.get('ownDebt', {}).get(str(year))
+        if own is not None:
+            return own
         official = supplement.get('externalBankDebt', {}).get(str(year))
-        return official if official is not None else sum(g(bs, i, year) for i in ('081', '082', '136', '134'))
+        borrowed = official if official is not None else sum(g(bs, i, year) for i in ('081', '082', '136', '134'))
+        if lending(year) - borrowed > 1:
+            # Lending beyond the borrowing is paid with the municipality's own money, or SCB's items miss borrowing.
+            raise SystemExit(f'{code} {year}: lending to the companies ({lending(year):.0f}) exceeds the borrowing in SCB\'s items '
+                             f'({borrowed:.0f}); give ownDebt from the annual report in annual-report-inputs.json')
+        return max(borrowed - lending(year), 0.0)
+
+    def passed_on(year, interest):
+        # Interest on the lent part, at the rate the municipality itself pays on all its borrowing in the year.
+        lent = (lending(year) + lending(year - 1)) / 2
+        borrowed = lent + (debt(year) + debt(year - 1)) / 2
+        return min(max(g(tx, '260', year), 0.0), interest * lent / borrowed) if lent > 0 and borrowed > 0 else 0.0
 
     years = {}
     for y in YEARS:
         payroll = g(ct, '100', y) + g(ct, '110', y)
         pension = sum(g(ct, i, y) for i in ('115', '120', '180', '185', '186'))
         expense = -g(rr, '022', y)
-        interest = supplement.get('bankInterest', {}).get(str(y), g(tx, '380', y))
-        financial_cost = -g(rr, '072', y)
+        gross_interest = supplement.get('bankInterest', {}).get(str(y), g(tx, '380', y))
+        through = passed_on(y, gross_interest)
+        interest = gross_interest - through
+        financial_cost = -g(rr, '072', y) - through
         # The latest care weights up to the base year; without any (Boxholm before 2019), the earliest there is.
         latest_care_year = max((int(key) for key in care if int(key) <= y), default=min((int(key) for key in care), default=None))
         care_row = care[str(latest_care_year)] if latest_care_year else {
@@ -144,7 +171,7 @@ def build(code, archive):
                                 g(tx, '120', y) - g(tx, '180', y), g(tx, '140', y) - g(tx, '200', y), g(tx, '210', y)],
             'payroll': payroll, 'pension': pension, 'otherOperatingExpense': expense - payroll - pension,
             'operatingRevenue': g(rr, '010', y), 'netCostRoundingAdjustment': 0.0,
-            'depreciation': -g(rr, '025', y), 'financialIncome': g(rr, '060', y), 'interestExpense': interest,
+            'depreciation': -g(rr, '025', y), 'financialIncome': g(rr, '060', y) - through, 'interestExpense': interest,
             'otherFinancialExpense': financial_cost - interest,
             'debt': debt(y), 'openingDebt': debt(y - 1), 'cash': g(bs, '065', y), 'assets': g(bs, '025', y),
             'investment': g(inv, '950', y), 'taxRate': rates[y],
@@ -153,6 +180,8 @@ def build(code, archive):
             'careCostPerInhabitant': [round(care_row['costPerInhabitant'][k]) for k in ('65-79', '80+')],
             'careReferenceYears': care_row['years'],
         }
+        if lending(y) or through:
+            record['onLending'] = {'loans': lending(y), 'interest': through}
         care_from = max(care_row['years'], default=None)
         if care_from is None or not y - 2 <= care_from <= y:
             print(f"Warning: {code} {y}: elderly-care weights come from {care_from}, "
@@ -233,7 +262,9 @@ def modelica(package, name, code, archive, years, older_shares):
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv {archive}. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "{name}s ekonomi år för år från bokslutet {last}"

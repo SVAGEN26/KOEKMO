@@ -268,7 +268,9 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261119T090411Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Åtvidabergs ekonomi år för år från bokslutet 2025"

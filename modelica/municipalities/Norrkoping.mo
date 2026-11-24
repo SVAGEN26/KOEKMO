@@ -12,8 +12,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 8159.8, priorYearSettlement = -1.2, grants = 2530.8,
       grantComponents = {1763.4, -103.3, 383.5, 165.4, 321},
       payroll = 6292.8, pension = 500.1, otherOperatingExpense = 4962.1, operatingRevenue = 2081.1, netCostRoundingAdjustment = 0,
-      depreciation = 737, financialIncome = 1179.9, interestExpense = 769.1, otherFinancialExpense = 326.8,
-      debt = 17943.9, openingDebt = 16292.7, cash = 123.4, assets = 18450.1, investment = 1171.1, taxRate = 21.75,
+      depreciation = 737, financialIncome = 791.8, interestExpense = 381, otherFinancialExpense = 326.8,
+      debt = 8852, openingDebt = 8404, cash = 123.4, assets = 18450.1, investment = 1171.1, taxRate = 21.75,
       sectorShares = {0.4312, 0.1695, 0.3993}, educationShares = {0.2733, 0.542, 0.1847},
       careCostPerInhabitant = {26164, 165903})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -28,8 +28,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 7877, priorYearSettlement = -37, grants = 2555.1,
       grantComponents = {1695.3, -58.1, 443.7, 156.6, 306.3},
       payroll = 6169.2, pension = 709.1, otherOperatingExpense = 4767.9, operatingRevenue = 2036.1, netCostRoundingAdjustment = 0,
-      depreciation = 689.7, financialIncome = 1425.8, interestExpense = 975.6, otherFinancialExpense = 287.7,
-      debt = 16292.7, openingDebt = 11681, cash = 0, assets = 17862.7, investment = 1615.7, taxRate = 21.75,
+      depreciation = 689.7, financialIncome = 920.5, interestExpense = 470.2, otherFinancialExpense = 287.7,
+      debt = 8404, openingDebt = 7203, cash = 0, assets = 17862.7, investment = 1615.7, taxRate = 21.75,
       sectorShares = {0.433, 0.1703, 0.3967}, educationShares = {0.2752, 0.545, 0.1798},
       careCostPerInhabitant = {25541, 163400})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -44,8 +44,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 7735.7, priorYearSettlement = 37.6, grants = 2372,
       grantComponents = {1645, -64.7, 339.1, 155.9, 292.9},
       payroll = 5984.2, pension = 592.4, otherOperatingExpense = 4623.5, operatingRevenue = 2360.1, netCostRoundingAdjustment = 0,
-      depreciation = 635.5, financialIncome = 1248.3, interestExpense = 799.6, otherFinancialExpense = 630.4,
-      debt = 11681, openingDebt = 11394, cash = 0, assets = 16187.9, investment = 2411.9, taxRate = 21.75,
+      depreciation = 635.5, financialIncome = 804.7, interestExpense = 356, otherFinancialExpense = 630.4,
+      debt = 7203, openingDebt = 6399, cash = 0, assets = 16187.9, investment = 2411.9, taxRate = 21.75,
       sectorShares = {0.4413, 0.1702, 0.3886}, educationShares = {0.2729, 0.542, 0.1851},
       careCostPerInhabitant = {24411, 159933})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -60,8 +60,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 7343.9, priorYearSettlement = 45.8, grants = 2302.7,
       grantComponents = {1530, -56.3, 398.4, 121.9, 279.7},
       payroll = 5644.4, pension = 397.8, otherOperatingExpense = 7521.8, operatingRevenue = 2031.6, netCostRoundingAdjustment = 0,
-      depreciation = 609.7, financialIncome = 639.8, interestExpense = 309.5, otherFinancialExpense = 718,
-      debt = 11394, openingDebt = 11142, cash = 0, assets = 14441.4, investment = 1120.1, taxRate = 21.75,
+      depreciation = 609.7, financialIncome = 459.7, interestExpense = 129.4, otherFinancialExpense = 718,
+      debt = 6399, openingDebt = 5858, cash = 0, assets = 14441.4, investment = 1120.1, taxRate = 21.75,
       sectorShares = {0.4445, 0.1722, 0.3832}, educationShares = {0.283, 0.5305, 0.1865},
       careCostPerInhabitant = {23124, 158888})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -76,8 +76,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 6909.3, priorYearSettlement = 23.6, grants = 2331.2,
       grantComponents = {1447.5, -63.4, 426.6, 134.8, 269.8},
       payroll = 5400.7, pension = 427.6, otherOperatingExpense = 4109, operatingRevenue = 2072.7, netCostRoundingAdjustment = 0,
-      depreciation = 551.1, financialIncome = 775.3, interestExpense = 232.4, otherFinancialExpense = 360.2,
-      debt = 11142, openingDebt = 10070.5, cash = 49.4, assets = 13663, investment = 1295.6, taxRate = 21.75,
+      depreciation = 551.1, financialIncome = 637.8, interestExpense = 94.8, otherFinancialExpense = 360.2,
+      debt = 5858, openingDebt = 5445, cash = 49.4, assets = 13663, investment = 1295.6, taxRate = 21.75,
       sectorShares = {0.4487, 0.1792, 0.3721}, educationShares = {0.2746, 0.5432, 0.1823},
       careCostPerInhabitant = {22360, 161797})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -92,8 +92,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 6539.4, priorYearSettlement = -34.5, grants = 2324.4,
       grantComponents = {1424.2, -52.9, 146.3, 141.6, 257},
       payroll = 5273.9, pension = 382.4, otherOperatingExpense = 4106.9, operatingRevenue = 1941.2, netCostRoundingAdjustment = 0,
-      depreciation = 418.6, financialIncome = 645.7, interestExpense = 238.4, otherFinancialExpense = 335.5,
-      debt = 10070.5, openingDebt = 8219, cash = 0.7, assets = 11011.4, investment = 1519, taxRate = 21.75,
+      depreciation = 418.6, financialIncome = 501.3, interestExpense = 93.9, otherFinancialExpense = 335.5,
+      debt = 5445, openingDebt = 4585, cash = 0.7, assets = 11011.4, investment = 1519, taxRate = 21.75,
       sectorShares = {0.4455, 0.182, 0.3725}, educationShares = {0.2843, 0.5327, 0.183},
       careCostPerInhabitant = {21488, 166516})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -108,8 +108,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 6486.8, priorYearSettlement = 3.3, grants = 2029.6,
       grantComponents = {1410.9, 71.7, 99.4, 141.6, 246.8},
       payroll = 5233.4, pension = 389.6, otherOperatingExpense = 4166, operatingRevenue = 1810.3, netCostRoundingAdjustment = 0,
-      depreciation = 317, financialIncome = 627.9, interestExpense = 268, otherFinancialExpense = 142.1,
-      debt = 8219, openingDebt = 7869.2, cash = 0, assets = 9462.2, investment = 1391.8, taxRate = 21.75,
+      depreciation = 317, financialIncome = 459.8, interestExpense = 99.9, otherFinancialExpense = 142.1,
+      debt = 4585, openingDebt = 3881, cash = 0, assets = 9462.2, investment = 1391.8, taxRate = 21.75,
       sectorShares = {0.4452, 0.186, 0.3688}, educationShares = {0.2973, 0.5273, 0.1754},
       careCostPerInhabitant = {20061, 168103})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -124,8 +124,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 6238.5, priorYearSettlement = -20.5, grants = 2009.2,
       grantComponents = {1408.7, 99.9, 22.2, 121.3, 240.4},
       payroll = 5147, pension = 376.4, otherOperatingExpense = 4030.9, operatingRevenue = 2028.9, netCostRoundingAdjustment = 0,
-      depreciation = 272.2, financialIncome = 338, interestExpense = 253.2, otherFinancialExpense = 57,
-      debt = 7869.2, openingDebt = 6496.9, cash = 0.1, assets = 8362, investment = 1325.2, taxRate = 21.75,
+      depreciation = 272.2, financialIncome = 174, interestExpense = 89.2, otherFinancialExpense = 57,
+      debt = 3881, openingDebt = 3326, cash = 0.1, assets = 8362, investment = 1325.2, taxRate = 21.75,
       sectorShares = {0.4317, 0.1857, 0.3826}, educationShares = {0.3098, 0.5235, 0.1667},
       careCostPerInhabitant = {18681, 164228})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -140,8 +140,8 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
       tax = 6048, priorYearSettlement = 7.3, grants = 1933.2,
       grantComponents = {1377.9, 94, -1.4, 110.7, 227.6},
       payroll = 4983.7, pension = 349.2, otherOperatingExpense = 3818.1, operatingRevenue = 1830, netCostRoundingAdjustment = 0,
-      depreciation = 263, financialIncome = 298.7, interestExpense = 286.1, otherFinancialExpense = 15.9,
-      debt = 6496.9, openingDebt = 6265.5, cash = 0, assets = 7280.3, investment = 1130, taxRate = 21.75,
+      depreciation = 263, financialIncome = 183.7, interestExpense = 171.2, otherFinancialExpense = 15.9,
+      debt = 3326, openingDebt = 6265.5, cash = 0, assets = 7280.3, investment = 1130, taxRate = 21.75,
       sectorShares = {0.435, 0.1871, 0.3779}, educationShares = {0.3035, 0.5274, 0.1691},
       careCostPerInhabitant = {17204, 156152})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -268,7 +268,9 @@ package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket 
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261119T090421Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Norrköpings ekonomi år för år från bokslutet 2025"

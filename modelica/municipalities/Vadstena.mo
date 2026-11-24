@@ -13,7 +13,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {85.6, -0.2, 19.8, -0.8, 21},
       payroll = 383.9, pension = 32.1, otherOperatingExpense = 254.1, operatingRevenue = 156, netCostRoundingAdjustment = 0,
       depreciation = 41.8, financialIncome = 3.5, interestExpense = 11.4, otherFinancialExpense = 2.3,
-      debt = 466.7, openingDebt = 430.1, cash = 67.6, assets = 819.1, investment = 89.2, taxRate = 22.8,
+      debt = 466.7, openingDebt = 429.5, cash = 67.6, assets = 819.1, investment = 89.2, taxRate = 22.8,
       sectorShares = {0.3522, 0.2656, 0.3822}, educationShares = {0.2759, 0.5649, 0.1592},
       careCostPerInhabitant = {23763, 140538})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -29,7 +29,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {71.7, -4.2, 22.7, 0.5, 18.9},
       payroll = 358.4, pension = 42.7, otherOperatingExpense = 262.7, operatingRevenue = 151.6, netCostRoundingAdjustment = 0,
       depreciation = 37.3, financialIncome = 4, interestExpense = 9.6, otherFinancialExpense = 5.1,
-      debt = 430.1, openingDebt = 259.1, cash = 60.6, assets = 770.5, investment = 189.1, taxRate = 22.8,
+      debt = 429.5, openingDebt = 258.5, cash = 60.6, assets = 770.5, investment = 189.1, taxRate = 22.8,
       sectorShares = {0.3549, 0.2611, 0.384}, educationShares = {0.2807, 0.5603, 0.1591},
       careCostPerInhabitant = {23342, 144709})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -45,7 +45,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {75.6, -7.2, 17.5, -2.1, 20.1},
       payroll = 343.9, pension = 35.4, otherOperatingExpense = 265.9, operatingRevenue = 146.5, netCostRoundingAdjustment = 0,
       depreciation = 31.4, financialIncome = 3.5, interestExpense = 6.4, otherFinancialExpense = 5.1,
-      debt = 259.1, openingDebt = 197.7, cash = 36.1, assets = 620, investment = 129.1, taxRate = 22.8,
+      debt = 258.5, openingDebt = 197.1, cash = 36.1, assets = 620, investment = 129.1, taxRate = 22.8,
       sectorShares = {0.3603, 0.2786, 0.3611}, educationShares = {0.2778, 0.5603, 0.162},
       careCostPerInhabitant = {21742, 151254})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -61,7 +61,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {73.4, -2.7, 20.7, -2.6, 18.7},
       payroll = 331.4, pension = 25.3, otherOperatingExpense = 256, operatingRevenue = 148.1, netCostRoundingAdjustment = 0,
       depreciation = 27.4, financialIncome = 2.5, interestExpense = 3, otherFinancialExpense = 1.2,
-      debt = 197.7, openingDebt = 176, cash = 54.2, assets = 524.5, investment = 105.3, taxRate = 22.8,
+      debt = 197.1, openingDebt = 175.4, cash = 54.2, assets = 524.5, investment = 105.3, taxRate = 22.8,
       sectorShares = {0.3574, 0.2791, 0.3635}, educationShares = {0.2868, 0.5324, 0.1809},
       careCostPerInhabitant = {20498, 158210})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -77,7 +77,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {68.1, -2.8, 22.1, -1.4, 18.2},
       payroll = 324.2, pension = 28.7, otherOperatingExpense = 242.4, operatingRevenue = 140.5, netCostRoundingAdjustment = 0,
       depreciation = 26.8, financialIncome = 3.9, interestExpense = 1.6, otherFinancialExpense = 1.5,
-      debt = 176, openingDebt = 184.1, cash = 57.6, assets = 450.3, investment = 40.6, taxRate = 22.8,
+      debt = 175.4, openingDebt = 183.5, cash = 57.6, assets = 450.3, investment = 40.6, taxRate = 22.8,
       sectorShares = {0.3617, 0.2784, 0.3598}, educationShares = {0.2762, 0.5279, 0.1959},
       careCostPerInhabitant = {19387, 162997})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -93,7 +93,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {68.1, -0.1, 7.6, 0.6, 16.7},
       payroll = 329.5, pension = 23, otherOperatingExpense = 226.6, operatingRevenue = 159.3, netCostRoundingAdjustment = 0,
       depreciation = 33.5, financialIncome = 2.6, interestExpense = 1.6, otherFinancialExpense = 1,
-      debt = 184.1, openingDebt = 162.1, cash = 66.8, assets = 434.5, investment = 43.7, taxRate = 22.8,
+      debt = 183.5, openingDebt = 161.5, cash = 66.8, assets = 434.5, investment = 43.7, taxRate = 22.8,
       sectorShares = {0.3807, 0.2853, 0.334}, educationShares = {0.2768, 0.5441, 0.1791},
       careCostPerInhabitant = {18268, 169577})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -109,7 +109,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {69.5, 3.1, 5.3, 0.9, 16.1},
       payroll = 332.1, pension = 26.4, otherOperatingExpense = 218.8, operatingRevenue = 147.9, netCostRoundingAdjustment = 0,
       depreciation = 26.4, financialIncome = 4.8, interestExpense = 3.7, otherFinancialExpense = 1.1,
-      debt = 162.1, openingDebt = 0.2, cash = 22.6, assets = 425.7, investment = 185.8, taxRate = 22.8,
+      debt = 161.5, openingDebt = 0, cash = 22.6, assets = 425.7, investment = 185.8, taxRate = 22.8,
       sectorShares = {0.3925, 0.2853, 0.3222}, educationShares = {0.2779, 0.5466, 0.1755},
       careCostPerInhabitant = {16170, 168230})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -125,7 +125,7 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       grantComponents = {61.2, 2.4, 1.2, 2.4, 15.8},
       payroll = 318.5, pension = 23.8, otherOperatingExpense = 207.9, operatingRevenue = 130.8, netCostRoundingAdjustment = 0,
       depreciation = 20, financialIncome = 3.2, interestExpense = 0, otherFinancialExpense = 1.2,
-      debt = 0.2, openingDebt = 0, cash = 30.5, assets = 266.7, investment = 75.6, taxRate = 22.8,
+      debt = 0, openingDebt = 0, cash = 30.5, assets = 266.7, investment = 75.6, taxRate = 22.8,
       sectorShares = {0.4006, 0.2808, 0.3187}, educationShares = {0.2731, 0.5525, 0.1745},
       careCostPerInhabitant = {14750, 164484})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -268,7 +268,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261119T090544Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Vadstenas ekonomi år för år från bokslutet 2025"

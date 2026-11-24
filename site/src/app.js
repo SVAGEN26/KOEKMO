@@ -6,7 +6,9 @@ import {modelicaSource} from './modelica-adapter.js';
 import {openScenarioReport} from './pdf-report.js';
 import {createModelView} from './model-view.js';
 import {connect as connectAi,isLoopback} from './ai-link.js';
-const $=id=>document.getElementById(id),nf=new Intl.NumberFormat('sv-SE',{maximumFractionDigits:0}),fmt=x=>nf.format(x),decimal=x=>new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}).format(x);
+const $=id=>document.getElementById(id),nf=new Intl.NumberFormat('sv-SE',{maximumFractionDigits:0}),nf1=new Intl.NumberFormat('sv-SE',{maximumFractionDigits:1}),
+  unsignedZero=text=>/^[−-]0(,0+)?$/.test(text)?text.slice(1):text,  // a stock that is paid off is 0, not −0
+  fmt=x=>unsignedZero(nf.format(x)),decimal=x=>unsignedZero(nf1.format(x));
 const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const definitions=[
   ['taxGrowth','Skatteunderlag, årlig tillväxt',0,7,.1,'%', 'Illustrativ nationell referens'],
@@ -300,10 +302,10 @@ function selectMunicipality(code,firstYear=null) {
   $('municipality').value=code;
   $('municipality-brand').textContent=name;
   $('municipality-footer').textContent=name;
-  $('debt-note').textContent=code==='0562'
-    ?'Finspångs externa banklån omfattar även vidareutlåning till kommunbolagen. Modellen håller intäkterna från vidareutlåningen på basårets nivå.'
-    :motala?'Investeringar finansieras med kassaflöde och nya lån. Överskott amorterar skuld.'
-    :'Skulden utgår från SCB:s poster för lån, obligationer och kortfristig del av långfristig skuld. Upplåning som finansierar kommunbolag kan ingå.';
+  const lentOn=regional?.[code]?.current?.baseline?.onLending?.loans;
+  $('debt-note').textContent=motala?'Investeringar finansieras med kassaflöde och nya lån. Överskott amorterar skuld.'
+    :lentOn>1?`Skulden är kommunens egna lån. Därutöver har kommunen lånat ${fmt(lentOn)} mnkr som den har lånat vidare till sina bolag. Den delen ingår inte, och räntan på den är borttagen ur både kostnader och intäkter.`
+    :'Skulden är kommunens lån och obligationer med kortfristig del, enligt SCB. Investeringar finansieras med kassaflöde och nya lån.';
   $('municipality-code').textContent=`${code} / Östergötland`;
   $('municipality-title').textContent=`${name}${name.endsWith('s')?'':'s'} framtid?`;
   $('municipality-notice').textContent=motala

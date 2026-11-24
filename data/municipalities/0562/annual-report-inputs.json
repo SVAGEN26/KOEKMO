@@ -8,15 +8,36 @@
     "population": "https://api.kolada.se/v3/data/kpi/N01951/municipality/0562/year/2025"
   },
   "novemberPopulationArchive": "data/downloads/20261118T204714Z",
-  "population": {"2025": 21502},
-  "externalBankDebt": {"2021": 1191, "2022": 1277, "2023": 1474, "2024": 1650, "2025": 1777},
-  "bankInterest": {"2024": 45, "2025": 43},
-  "workInProgress": {"2025": 50},
-  "grantAdvances": {"2025": 0},
-  "budgetResult": {"2021": 14.8, "2022": 36, "2023": 0, "2024": 33, "2025": 26},
+  "population": {
+    "2025": 21502
+  },
+  "externalBankDebt": {
+    "2021": 1191,
+    "2022": 1277,
+    "2023": 1474,
+    "2024": 1650,
+    "2025": 1777
+  },
+  "bankInterest": {
+    "2024": 45,
+    "2025": 43
+  },
+  "workInProgress": {
+    "2025": 50
+  },
+  "grantAdvances": {
+    "2025": 0
+  },
+  "budgetResult": {
+    "2021": 14.8,
+    "2022": 36,
+    "2023": 0,
+    "2024": 33,
+    "2025": 26
+  },
   "locators": {
     "population": "Årsredovisning 2025 s. 6 och 9 samt Kolada N01951, totalt. Modellen skalar SCB:s åldersceller proportionellt till totalen.",
-    "externalBankDebt": "Årsredovisning 2025 s. 9 och 27. Hela externupplåningen via internbanken inklusive vidareutlåning till kommunens bolag.",
+    "externalBankDebt": "Årsredovisning 2025 s. 9 och 27. Hela externupplåningen via internbanken inklusive vidareutlåning till kommunens bolag. Modellen drar av fordran på kommunens bolag (SCB TAB6779 post 034: 1 354 mnkr 2024, 1 487 mnkr 2025), så att kommunens egna lån återstår: 296 och 290 mnkr. Årsredovisning 2025 s. 27: kommunen lånade 131 mnkr, vidareutlånade 138 mnkr och minskade sina egna lån med 7 mnkr.",
     "bankInterest": "Årsredovisning 2025 s. 46, not 9, Ränta på lån. Övriga finansiella kostnader lämnas i resultaträkningen.",
     "workInProgress": "Årsredovisning 2025 s. 47, not 11 och 12 (44 plus 6 mnkr).",
     "grantAdvances": "Årsredovisning 2025 s. 50, not 21, Förutbetalda generella statsbidrag.",

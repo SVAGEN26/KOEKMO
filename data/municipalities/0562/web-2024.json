@@ -4,7 +4,7 @@
     "municipality": "0562",
     "name": "Finspång",
     "baseYear": 2024,
-    "source": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf",
+    "source": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777",
     "ageGroups": [
       "0–6",
       "7–15",
@@ -56,7 +56,7 @@
       "productivity": 0.0,
       "migrationDelta": 0,
       "birthChange": 0,
-      "interestRate": 3.0529172320217097,
+      "interestRate": 2.9364321541904617,
       "taxRate": 22.15,
       "investment": 98.471,
       "adjustment": 0.5,
@@ -88,14 +88,14 @@
     "tax": 1195.266,
     "grants": 440.202,
     "cash": 74.451,
-    "debt": 1650,
+    "debt": 296.44399999999996,
     "assets": 1278.407,
     "investment": 98.471,
     "deaths": 257.0,
     "depreciation": 82.875,
-    "financialIncome": 57.878,
+    "financialIncome": 21.25986939820742,
     "otherFinancialExpense": 16.795,
-    "interestExpense": 45,
+    "interestExpense": 8.38186939820742,
     "priorYearSettlement": -5.574,
     "taxRate": 22.15,
     "operatingAccounts": {
@@ -535,6 +535,10 @@
         ]
       ],
       "novemberPopulation": 21647
+    },
+    "onLending": {
+      "loans": 1353.556,
+      "interest": 36.61813060179258
     }
   },
   "history": [
@@ -632,6 +636,6 @@
     "population": "https://api.kolada.se/v3/data/kpi/N01951/municipality/0562/year/2024",
     "statistics": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
     "archive": "data/downloads/20261118T203655Z",
-    "accounts": "https://finspang.se/download/18.2f4a5b5b196f115d1d1c6207/1748932728911/%C3%85rsredovisning%202024.pdf"
+    "accounts": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777"
   }
 }

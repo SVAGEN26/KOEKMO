@@ -5,7 +5,7 @@
  "name": "Linköping",
  "packageName": "Linkoping",
  "unit": "mnkr; persons",
- "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); debt is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
+ "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\n  Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables\n  from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest\n  expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's\n  items do not give the borrowing or the lending, annual-report-inputs.json gives them from the municipality's reports:\n  externalBankDebt (all borrowing), ownDebt (the municipality's own) and onLending (lent to its companies).\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
  "olderShares": [
   0.679480956541436,
   0.26482865741190176,
@@ -735,10 +735,10 @@
    "operatingRevenue": 2127.18,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 313.042,
-   "financialIncome": 1044.281,
-   "interestExpense": 287.309,
+   "financialIncome": 783.7248603852645,
+   "interestExpense": 26.752860385264512,
    "otherFinancialExpense": 172.76,
-   "debt": 14382.151,
+   "debt": 1000,
    "openingDebt": 600.0,
    "cash": 55.558,
    "assets": 5967.989,
@@ -763,6 +763,10 @@
     2023,
     2024
    ],
+   "onLending": {
+    "loans": 15583,
+    "interest": 260.5561396147355
+   },
    "interestRate": 0.0154,
    "olderShares": [
     0.6889005544801339,
@@ -831,11 +835,11 @@
    "operatingRevenue": 2280.307,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 331.039,
-   "financialIncome": 1134.204,
-   "interestExpense": 360.753,
+   "financialIncome": 796.2704011867827,
+   "interestExpense": 22.819401186782727,
    "otherFinancialExpense": 185.91300000000007,
-   "debt": 10424.353000000001,
-   "openingDebt": 14382.151,
+   "debt": 1100,
+   "openingDebt": 1000,
    "cash": 612.581,
    "assets": 6452.722,
    "investment": 952.2,
@@ -859,6 +863,11 @@
     2024,
     2025
    ],
+   "onLending": {
+    "loans": 15516,
+    "interest": 337.93359881321726
+   },
+   "interestRate": 0.0203,
    "olderShares": [
     0.679480956541436,
     0.26482865741190176,

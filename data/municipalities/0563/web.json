@@ -100,7 +100,7 @@
       "productivity": 0.0,
       "migrationDelta": 0,
       "birthChange": 0,
-      "interestRate": 2.81794348965919,
+      "interestRate": 2.8179434896591897,
       "taxRate": 22.48,
       "investment": 36.386,
       "adjustment": 0.5,
@@ -132,14 +132,14 @@
     "tax": 386.695,
     "grants": 203.047,
     "cash": 27.375,
-    "debt": 343.3,
+    "debt": 309.90000000000003,
     "assets": 543.877,
     "investment": 36.386,
     "deaths": 90.0,
     "depreciation": 28.358,
-    "financialIncome": 2.193,
+    "financialIncome": 1.2518068744538307,
     "otherFinancialExpense": 0.8049999999999997,
-    "interestExpense": 9.674,
+    "interestExpense": 8.73280687445383,
     "priorYearSettlement": -0.06,
     "taxRate": 22.48,
     "operatingAccounts": {
@@ -579,6 +579,10 @@
         ]
       ],
       "novemberPopulation": 7522
+    },
+    "onLending": {
+      "loans": 33.4,
+      "interest": 0.9411931255461694
     }
   },
   "history": [

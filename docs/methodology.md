@@ -211,6 +211,29 @@ rate. `rateShock` raises the market rate from a date, counted for the rest of
 that year. The default rate is the base year's reported average rate when the
 annual report gives one, otherwise interest expense over opening debt.
 
+Debt is the municipality's own. Some municipalities borrow for their companies
+through an internal bank; the companies are not in the model. The base year's debt
+is therefore the borrowing less the loans passed on to the municipality's own
+companies (SCB TAB6779: bank loans, bonds and the short-term part, 081 + 082 + 136
++ 134, less long-term receivables from the companies, 034). Interest on the
+passed-on part is taken out of both interest expense and financial income: the
+year's interest times the passed-on share of the mean borrowing, never more than
+the interest income booked (TAB6782, 260). The result does not change, and the
+rate on the municipality's own debt is the rate it pays on all its borrowing.
+What the municipality earns above that rate stays in financial income, held at
+the base year's amount. Finspång's borrowing is the annual reports' figure;
+Linköping's own loans from 2024 and Norrköping's for all years come from their
+reports, because SCB's items do not separate them
+(`data/municipalities/<code>/annual-report-inputs.json`: `externalBankDebt`,
+`ownDebt`, `onLending`, with page references). Check: Finspång's annual report
+2025 says the municipality borrowed 131 mnkr, passed on 138 and reduced its own
+loans by 7; the rule gives 296 and 290 mnkr for 2024 and 2025. Linköping's
+finance report for 31 December 2025 gives 16 616 mnkr borrowed, 15 516 passed on,
+a gross interest cost of 338 mnkr and 324 on the lending; the rule gives 23 mnkr
+on the municipality's own 1 100. Three figures exist for Linköping's borrowing at
+the end of 2024 (16 071, 16 270 and 16 583 mnkr in two reports); its own loans
+are 1 000 in all of them.
+
 Extra inflation s (`inflationShockPath`) reaches the prices of other costs the
 same year. Everything that is set afterwards follows the delayed inflation
 d[t] = (s[t−1] + s[t−2])/2: wage growth rises by `inflationWagePassThrough`·d
@@ -323,8 +346,8 @@ year:
 For Motala from the 2025 accounts with the site's defaults the result is 5–11
 mnkr lower than `Annual`'s each year 2026–2033 (151 against 159 mnkr in 2033)
 and the debt 65 mnkr higher in 2033 (1 576 against 1 511 mnkr). For Linköping
-the result is 21–42 mnkr lower a year (0.3 % of net cost) and the debt 291 mnkr
-higher in 2033. The adjustment speed is an illustrative assumption in both
+the result is 21–46 mnkr lower a year (0.3 % of net cost) and the debt 173 mnkr
+higher in 2030 (430 against 257 mnkr); both have repaid it by 2031. The adjustment speed is an illustrative assumption in both
 models, not an estimate, so neither is shown to be closer to what will happen.
 
 **Against outcomes.** Hindcast from SKR's December circulars 2020–2024
@@ -332,18 +355,18 @@ models, not an estimate, so neither is shown to be closer to what will happen.
 `scripts/compare_hindcasts.py`) and eight years from the 2017–2019 accounts
 (`HINDCAST_MODEL=Continuous python3 scripts/hindcast_long.py`).
 From the circulars, the result's mean absolute error after 1/2/3 years is
-40/60/60 mnkr for Motala against `Annual`'s 40/59/58, 39/77/59 against 38/76/59
+40/60/60 mnkr for Motala against `Annual`'s 40/59/58, 37/76/59 against 37/75/59
 for Finspång and 42/67/126 against 41/65/116 for Mjölby. Tax and grants are
 within 0.6 mnkr of `Annual` and population within 4 persons. Mjölby grows, so
 costs that trail the population by more are 3–10 mnkr lower, and the model's
 net cost was already too low there. In the
 eight-year test (hindsight set, 13 municipalities) the result's mean absolute
-error is 1.8/2.3/2.6/3.4/3.0/2.2 % of tax and grants in years 1/2/3/4/6/8
-against `Annual`'s 1.7/2.2/2.4/3.3/2.9/2.2, and its mean error
-0.2/0.3/−0.1/−0.2/−0.2/0.7 % against 0.0/−0.2/−0.7/−0.8/−0.8/−0.2: the result
+error is 1.8/2.3/2.5/3.4/3.0/2.1 % of tax and grants in years 1/2/3/4/6/8
+against `Annual`'s 1.7/2.2/2.3/3.2/2.9/2.1, and its mean error
+0.3/0.3/−0.1/−0.2/−0.2/0.9 % against 0.1/−0.1/−0.7/−0.8/−0.8/0.0: the result
 is about half a per cent of tax and grants higher, because the model's
 population grows too fast in that test and costs now follow it about a year
-later. Debt is 36 % too low after eight years against 32 %. The continuous model
+later. Debt is too low by 24 % of tax and grants after eight years against 20 %. The continuous model
 is not more accurate than `Annual`; the differences are within what the few
 cases can tell apart.
 
@@ -390,13 +413,13 @@ accounts of 2017, 2018 and 2019 to 2025, 39 runs, with hindsight for prices, the
 tax base, the state's grants and Sweden's population. Norrköping 2022 and 2023
 are not scored (the Ostlänken provision). The benchmark keeps the base year's
 result as a share of tax and grants. The model's mean absolute error is 1.7, 2.2
-and 2.4 % of tax and grants in years 1–3 against 2.4, 3.7 and 3.4 for the
-benchmark; from year 4 the benchmark does as well or better (year 8: 2.2 both).
+and 2.3 % of tax and grants in years 1–3 against 2.4, 3.7 and 3.4 for the
+benchmark; from year 4 the benchmark does as well or better (year 8: 2.1 against 2.2).
 The result is too low by 0.7–0.8 % in years 3–6. With the standard rates instead
 of hindsight the model loses to the benchmark at every horizon. The population is
 6 % too high after eight years (migration calibrated on 2015–2017), which raises
-costs and grants together, and debt is a third too low because investment is held
-at the base year's level. The historical cost residual known in the base year, as
+costs and grants together, and debt is too low by 20 % of tax and grants because
+investment is held at the base year's level. The historical cost residual known in the base year, as
 `costDrift`, makes it worse (net cost +11.5 % after eight years), so its default
 is 0. Results in `data/long-hindcast.json`. Base years 2017–2019 use SCB's older
 series (`scripts/fetch_history.py`); Linköping and Vadstena get a 2 % interest
@@ -493,19 +516,21 @@ set in. Other costs are 2 to 6 % too low as believed and 5 to 9 % too high from 
 with the price index set in: 85 % of the price surprise reached them in 2022, 20 to
 50 % by 2023–2025. The model has no rule that cuts purchases when the result falls;
 the balance requirement works through decisions, which are the user's to set. The
-result's level is therefore not closer to the accounts with the outcomes set in
-(3.3 to 4.4 % of tax and grants, against 1.5 to 5.4 % as believed, where too-low
-revenue and too-low costs cancelled). Its change from the year before is closer in
-2023 and 2025 (1.7 and 1.3 % against 3.7 and 2.0 %), not in 2022 (3.4 against 1.5).
-One period, 13 municipalities.
+result's level is therefore not reliably closer to the accounts with the outcomes
+set in: 3.4, 2.3, 4.2 and 2.9 % of tax and grants in 2022–2025, against 1.6, 4.3,
+5.4 and 2.9 % as believed, where too-low revenue and too-low costs cancelled in
+2022. The 2023 median is fragile: the gaps fall in two groups, around 2 % and
+around 5 %, and one municipality moves it between 2.3 and 4.1. Its change from the
+year before is closer in 2023 and 2025 (1.4 and 1.3 % against 3.7 and 2.0 %), not
+in 2022 (3.4 against 1.6). One period, 13 municipalities.
 
 The inflation scenario is tested in the same script: the believed run with
 `inflationShockPath` set to the price surprise (SKR's index for other costs, outcome
 minus circular: 7.8, 2.5, 0.6, 0.3 points) and nothing else. Medians, model minus
 accounts: tax −2.9, −3.2, −0.1, 0.4 %; payroll −2.1, −3.4, −3.0, −2.8 %; pension cost
-9.2, −2.0, −8.7, −2.3 %; interest −19, −6, 10, −52 % (no fixed-rate period in the
+9.2, −2.0, −8.7, −2.3 %; interest −20, −13, 11, −53 % (no fixed-rate period in the
 run). The result's change from the believed run, percent of tax and grants: −3.5,
-−6.6, −7.5, −5.4, and with `inflationGrantCompensation = 1` −3.5, −4.6, −4.8, −2.5,
+−6.6, −7.4, −5.4, and with `inflationGrantCompensation = 1` −3.5, −4.6, −4.7, −2.5,
 against −0.5, −4.3, −4.6, −1.2 in the accounts. The shares come from the same
 period, so this is a fit, not an independent test: labour-cost index 5.0 points and
 tax base 3.7 points above the circular over four years against 10.5 points of

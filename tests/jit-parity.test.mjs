@@ -205,7 +205,7 @@ test('Finspång uses its own base year, reacts to migration, and keeps the Motal
   const base=simulate(baseline,localHistory,{years:3});
   const alternative=simulate(baseline,localHistory,{years:3,migrationDelta:300,splitPayroll:true,constructionYears:2});
   assert.ok(Math.abs(base.rows[0].population-21502)<1e-8);
-  assert.equal(base.rows[0].debt,1777);
+  assert.equal(base.rows[0].debt,290);  // own debt: external borrowing 1 777 less 1 487 lent on to the companies
   assert.equal(base.rows.at(-1).year,2028);
   assert.equal(alternative.rows[0].workInProgress,50);
   assert.ok(Math.abs(alternative.rows[1].population-base.rows[1].population-300)<1e-8);

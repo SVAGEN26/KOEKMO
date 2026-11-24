@@ -4,7 +4,7 @@
     "municipality": "0562",
     "name": "Finspång",
     "baseYear": 2025,
-    "source": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf",
+    "source": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777",
     "ageGroups": [
       "0–6",
       "7–15",
@@ -100,7 +100,7 @@
       "productivity": 0.0,
       "migrationDelta": 0,
       "birthChange": 0,
-      "interestRate": 2.606060606060606,
+      "interestRate": 2.482208358847152,
       "taxRate": 22.15,
       "investment": 121.437,
       "adjustment": 0.5,
@@ -132,14 +132,14 @@
     "tax": 1252.033,
     "grants": 452.823,
     "cash": 147.842,
-    "debt": 1777,
+    "debt": 290.0,
     "assets": 1261.846,
     "investment": 121.437,
     "deaths": 272.0,
     "depreciation": 82.461,
-    "financialIncome": 51.127,
+    "financialIncome": 15.485357747300853,
     "otherFinancialExpense": 14.04,
-    "interestExpense": 43,
+    "interestExpense": 7.35835774730085,
     "priorYearSettlement": -0.174,
     "taxRate": 22.15,
     "operatingAccounts": {
@@ -580,6 +580,10 @@
           0.0
         ]
       ]
+    },
+    "onLending": {
+      "loans": 1487.0,
+      "interest": 35.64164225269915
     },
     "workInProgress": 50
   },
@@ -1605,6 +1609,6 @@
     "population": "https://api.kolada.se/v3/data/kpi/N01951/municipality/0562/year/2025",
     "statistics": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
     "archive": "data/downloads/20261118T203655Z",
-    "accounts": "https://finspang.se/download/18.3115788119e021efdebf1ae/1778251379180/%C3%85rsredovisning%202025.pdf"
+    "accounts": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777"
   }
 }
