@@ -1164,6 +1164,8 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
 - Sidan: en rad om sambanden under "Vad är belagt?", AI-serien `responses` (`get_series`), reglagets hjälptext
   för kostnadsökning uppdaterad.
 - Uppföljning som resultaten pekar på: (a) låt bara en del av finansieringsbehovet bli banklån, eller lägg in
-  investeringsbidrag och avgifter; (b) samma prövning på alla 290 kommuner skulle ge mycket smalare intervall och
-  kunna avgöra anpassningstakt och fast andel; (c) räntans genomslag 2022–2024 mot räntebindningen.
+  investeringsbidrag och avgifter; (b) räntans genomslag 2022–2024 mot räntebindningen.
+- Beslut av användaren 2026-11-24: projektet håller sig till Östergötlands 13 kommuner i den här inledande
+  prototypen. Prövningen utvidgas inte till alla 290 kommuner nu. Följden är att intervallen förblir breda och att
+  anpassningstakt och fast andel inte går att avgöra ur data; de står kvar som illustrativa antaganden.
 
