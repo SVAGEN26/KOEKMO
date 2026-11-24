@@ -63,8 +63,9 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
     "Skulden netto efter vidareutlåning" längst ned. Kvar: Motalas avlästa basår 2020–2021 har kvar 72–74 mnkr som
     var utlånade till ett bolag (SCB 034; 0 från 2022). Norrköpings ingående skuld för basåret 2017 (2016) finns inte
     i rapporterna och tas ur SCB:s poster (6 266 mnkr mot egna lån 3 326 vid 2017 års slut).
-15. Bygget på main föll 2026-11-24: den kontinuerliga modellen startar inte i webbkompilatorn byggd från dagens
-    OpenModelica. Se samma avsnitt.
+15. Bygget på main föll 2026-11-24: lösaren `rungekutta` startar inte i webbkompilatorn byggd från OpenModelica
+    efter september 2026. Sidan kör sedan samma dag `ida` i stället; se avsnittet "Lösare i webbläsaren: ida".
+    Felet i OpenModelica är inte rapporterat uppströms härifrån.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 
@@ -1355,3 +1356,22 @@ arkivera data.
   GitHub vidarebefordrar gamla adresser till repot, PR:er och körningar. Den publicerade sidans adress följer
   reponamnet (https://svagen26.github.io/KOEKMO/); den gamla adressen vidarebefordras inte.
 - Den som har kopplat en AI-klient mot servern `motala-ekonomilabb` behöver lägga till den igen under det nya namnet.
+
+## Lösare i webbläsaren: ida (2026-11-24)
+
+- Orsaken till de fallna byggena: `rungekutta` startar inte i den nyare webbkompilatorn, oavsett modell. Minsta
+  exempel: `model DiagOde Real x(start=1,fixed=true); equation der(x)=-x; end DiagOde;` med
+  `buildModel(DiagOde, method="rungekutta")` följt av `omc_sim_start` ger "CodegenWasmJit: in-wasm initialization
+  failed" (`openmodelica_wasm_jit/src/sim_runtime_wasmer.rs`, när `rt_sim_start` ger −2 eller fäller).
+- Prövat i båda kompilatorerna (körning https://github.com/SVAGEN26/KOEKMO/actions/runs/45493459378, grenen
+  `diag-wasm-init`): v1.28.0-dev.842+gcc09fe3f5b (2026-09-22) startar `euler`, `rungekutta`, `dassl`, `ida`, `cvode`,
+  `gbode`, `qss`; v1.28.0-dev.2088+gd3ca67ddd (2026-11-23) startar `euler`, `dassl`, `ida`, `cvode`. `heun`,
+  `impeuler`, `trapezoid`, `imprungekutta`, `irksco`, `rungekuttaSsc` och `symSolver` faller i båda.
+- Användarens besked 2026-11-24: "Jag antar du får köra Ida då". Sidan kör `ida` för all kontinuerlig tid
+  (`CONTINUOUS_METHOD` i `site/src/omc-session.js`), med `-idaLS=spgmr` för ettårsåldrar. Uppdelningen i en explicit
+  lösare och en för snabba flöden (`STIFF_METHOD`, `hasFastFlows`) är borttagen.
+- Mätt i Node med den lokala kompilatorn, Motala åtta år, per körning: `rungekutta` 0,11 s, `dassl` 0,25 s, `ida`
+  cirka 0,18 s; ettårsåldrar 0,37 s, 20 s respektive 1,3 s. På sidan (headless Chromium) tar ett scenariobyte
+  1,0 s mot 0,6 s förut. Siffrorna på sidan är oförändrade (Motala 61, 93, … 151 mnkr; Högre inflation 22, 6, −14).
+- Testerna: jämförelsen mot SCB:s framskrivning har toleransen en tusendels person och hundra kronor (förut 1e-6
+  och 1e-7, som byggde på fasta steg). Övriga toleranser är oförändrade, även 1e-8 mot modellen som den är skriven.

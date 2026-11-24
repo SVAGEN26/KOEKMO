@@ -42,10 +42,9 @@ ettårsåldrar), kostnader och löne-, pris- och kostnadsnivåer som växer unde
 är årligt: bokslutet 31 december, beslut som gäller från 1 januari (skattesats, årets skatt och bidrag, som betalas
 jämnt), folkbokföringen 1 november och inläsningen av årsbanorna. Med ettårsåldrar byter födelseårsgrupperna
 etikett vid årsskiftet. Varför och hur stort det blir: [../docs/methodology.md](../docs/methodology.md#continuous-time).
-Den kontinuerliga modellen behöver en riktig lösare, inte ett Euler-steg per år. Sajten kör `rungekutta` med
-12 steg per år. Betalningstider i dagar (rörelsekapital), kassareserven och ett projekt som tas i bruk är flöden
-med tidskonstanter på dagar till veckor; de scenarierna kör sajten med den implicita lösaren `ida`. I OMEdit
-räcker standardlösaren `dassl`.
+Den kontinuerliga modellen behöver en riktig lösare, inte ett Euler-steg per år. Sajten kör den implicita
+lösaren `ida`, som också klarar flöden med tidskonstanter på dagar till veckor: betalningstider i dagar
+(rörelsekapital), kassareserven och ett projekt som tas i bruk. I OMEdit räcker standardlösaren `dassl`.
 
 Standardvärdena är illustrativa. Hämta `Scenario.mo` från sajten för att återskapa ett scenario med
 planeringsunderlagen. Ekvationerna beskrivs i [../docs/methodology.md](../docs/methodology.md).

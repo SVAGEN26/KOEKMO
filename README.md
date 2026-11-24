@@ -554,13 +554,15 @@ with a literal default (OpenModelica folds defaults that depend on the base year
 at compile time, out of `-override`'s reach). No cross-origin isolation is
 needed.
 
-The continuous model is integrated with Runge-Kutta, twelve steps a year, which
-gives native OpenModelica's DASSL within 0.01 mnkr (0.03 mnkr in a year where the
-cash flow changes sign; see [docs/methodology.md](docs/methodology.md#continuous-time)). Scenarios with working
-capital, a cash reserve or the project have flows with time constants of days
-to weeks and run with the implicit solver IDA instead (0.2 s). Single-year ages
-in continuous time take 0.4 s a run, and 1.5 s with IDA; a page update runs
-about ten scenarios, so that combination is slow.
+The continuous model is integrated with the implicit solver IDA, which gives
+native OpenModelica's DASSL within 0.01 mnkr (see
+[docs/methodology.md](docs/methodology.md#continuous-time)) and also takes the
+flows with time constants of days to weeks in scenarios with working capital, a
+cash reserve or the project. A run takes about 0.2 s, and 1.3 s with single-year
+ages; a page update runs about ten scenarios, so a change shows in about a second,
+and in over ten with single-year ages. Until November 2026 the page used
+Runge-Kutta with twelve steps a year, about twice as fast; that solver does not
+start in OpenModelica's web compiler after September 2026.
 
 `site/src/engine.js` is an independent JavaScript reference for the yearly model,
 used only by the tests; the site does not ship it. `tests/jit-parity.test.mjs`

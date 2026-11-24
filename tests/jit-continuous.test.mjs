@@ -10,7 +10,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync,spawnSync} from 'node:child_process';
 import {boot,read,runModel,staged,skip} from './support/omc-node.mjs';
-import {createSession,hasFastFlows} from '../site/src/omc-session.js';
+import {createSession,CONTINUOUS_METHOD} from '../site/src/omc-session.js';
 import {createDirectSimulator} from '../site/src/jit-engine.js';
 import {calibrateContinuous,continuousYear,extendPlanning,inflowBetween,sum} from '../site/src/scenario-inputs.js';
 import {modelicaSource} from '../site/src/modelica-adapter.js';
@@ -55,7 +55,7 @@ test('the page\'s calibration is the library\'s: site inputs give Motala.Continu
   const site=continuous({...b,planningInputs:null},history);
   const keys=['population','births','deaths','migration','cost','payroll','otherOperatingExpense','operatingRevenue','depreciation',
     'tax','grants','result','debt','cash','assets','interest','borrowing','repayment','educationIndex','careIndex'];
-  const model=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:'rungekutta'},keys);
+  const model=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
   assert.equal(site.rows.length,9);
   for(const [i,row] of model.entries()) for(const k of keys) {
     close(site.rows[i+1][k],row[k],1e-8*Math.max(1,Math.abs(row[k])),`${row.year} ${k}`);
@@ -67,8 +67,9 @@ test('with SCB\'s projection the population is the projection at every year end,
   const flow=continuous(sourced,history,{},revenue),yearly=annual(sourced,history,{},revenue);
   for(const [i,row] of flow.rows.slice(1).entries()) {
     const projected=planning.rows.find(r=>r.year===row.year).cohorts;
-    row.cohorts.forEach((x,j)=>close(x,projected[j],1e-6,`${row.year} group ${j+1}`));
-    for(const k of ['tax','grants','pensionExpense']) close(row[k],yearly.rows[i+1][k],1e-7,`${row.year} ${k}`);
+    // The solver controls its own steps to a relative tolerance of 1e-6: a thousandth of a person and a hundred kronor.
+    row.cohorts.forEach((x,j)=>close(x,projected[j],1e-3,`${row.year} group ${j+1}`));
+    for(const k of ['tax','grants','pensionExpense']) close(row[k],yearly.rows[i+1][k],1e-4,`${row.year} ${k}`);
   }
   assertBooks(flow,'Motala');
 });
@@ -150,29 +151,23 @@ test('optional mechanisms keep the books in continuous time',{skip},()=>{
   close(terms.tradePayables/(terms.otherOperatingExpense*35/365),1,0.01,'payables');
 });
 
-test('fast flows are run with the implicit solver, and it agrees with DASSL',{skip},()=>{
-  const overrides={workingCapitalEnabled:true,liquidityPolicy:true,cashReserve:90,years:4};
-  const run=continuous(sourced,history,overrides,revenue);
-  assert.ok(hasFastFlows({workingCapitalEnabled:true})&&hasFastFlows({projectPayment:4})&&!hasFastFlows({investment:400}));
-  const dassl=createDirectSimulator(createSession(omc,[],{stiffMethod:'dassl'}))(sourced,history,{...overrides,timeModel:'continuous'},revenue);
-  for(const [i,row] of run.rows.slice(1).entries()) for(const k of ['result','debt','cash','interest','cost']) {
-    close(row[k],dassl.rows[i+1][k],0.01,`${row.year} ${k}`);
-  }
-  // Without fast flows the explicit solver is within 0.01 mnkr of DASSL as well. Both sessions use the same build.
-  const everywhere=createDirectSimulator(createSession(omc,[],{stiffMethod:'dassl',implicitAlways:true}));
-  const explicit=continuous(sourced,history,{},revenue);
-  const implicit=everywhere(sourced,history,{timeModel:'continuous'},revenue);
-  for(const [i,row] of explicit.rows.slice(1).entries()) for(const k of ['result','debt','cash','interest','cost']) {
-    close(row[k],implicit.rows[i+1][k],0.01,`${row.year} ${k}`);
-  }
-  // Lower investment and a higher tax rate make the cash flow change sign during a year. The explicit solver finds
-  // that moment by linear interpolation: every stock moves by up to 0.001 %, here 0.03 mnkr in the net cost.
-  const turning={taxRate:22.2,investment:300,migrationDelta:150,years:5};
-  const stepped=continuous(sourced,history,turning,revenue).rows,exact=everywhere(sourced,history,{...turning,timeModel:'continuous'},revenue).rows;
-  assert.ok(stepped.slice(1).some(r=>r.repayment>0)&&stepped.slice(1).some(r=>r.borrowing>0),'the scenario both borrows and repays');
-  for(const [i,row] of stepped.slice(1).entries()) for(const k of ['result','debt','cash','interest','cost']) {
-    close(row[k],exact[i+1][k],0.1,`${row.year} ${k}`);
-  }
+test('the page\'s solver agrees with DASSL, with and without fast flows',{skip},()=>{
+  // Both sessions use the same loaded classes; the second builds the wrapper again for DASSL.
+  const dassl=createDirectSimulator(createSession(omc,[],{method:'dassl'}));
+  const compare=(overrides,tolerance,label)=>{
+    const page=continuous(sourced,history,overrides,revenue).rows,reference=dassl(sourced,history,{...overrides,timeModel:'continuous'},revenue).rows;
+    for(const [i,row] of page.slice(1).entries()) for(const k of ['result','debt','cash','interest','cost']) {
+      close(row[k],reference[i+1][k],tolerance,`${label} ${row.year} ${k}`);
+    }
+    return page;
+  };
+  assert.equal(CONTINUOUS_METHOD,'ida');
+  compare({},0.01,'base path');
+  // Payment terms of days and a cash reserve refilled within a month: flows too fast for a few explicit steps a year.
+  compare({workingCapitalEnabled:true,liquidityPolicy:true,cashReserve:90,years:4},0.01,'fast flows');
+  // Lower investment and a higher tax rate make the cash flow change sign during a year.
+  const turning=compare({taxRate:22.2,investment:300,migrationDelta:150,years:5},0.01,'turning');
+  assert.ok(turning.slice(1).some(r=>r.repayment>0)&&turning.slice(1).some(r=>r.borrowing>0),'the scenario both borrows and repays');
 });
 
 test('single-year ages run in continuous time for the calibrated and the observed flows',{skip},()=>{
@@ -200,7 +195,7 @@ test('the exported Scenario.mo is the scenario the page ran',{skip},()=>{
   assert.doesNotMatch(source,/deathRates=/);
   assert.equal(String(omc.omc_eval(`loadString(${JSON.stringify(source.replace('model Scenario','model ExportedScenario').replace('end Scenario','end ExportedScenario'))})`)).trim(),'true');
   const keys=['population','tax','grants','cost','result','debt','cash'];
-  const exported=runModel(omc,'ExportedScenario',{start:2025,stop:2030,intervals:60,method:'rungekutta'},keys);
+  const exported=runModel(omc,'ExportedScenario',{start:2025,stop:2030,intervals:60,method:CONTINUOUS_METHOD},keys);
   const page=simulate(sourced,history,overrides,revenue).rows;
   // The page's wrapper holds the last year's wage and price growth for a hundred years; the export ends at the horizon.
   for(const [i,row] of exported.entries()) for(const k of keys) close(page[i+1][k],row[k],0.005,`${row.year} ${k}`);
@@ -225,7 +220,7 @@ test('all 13 municipalities run eight years in continuous time from the 2024 and
 });
 
 const native=process.env.OMC||spawnSync('which',['omc'],{encoding:'utf8'}).stdout.trim();
-test('twelve Runge-Kutta steps a year in the browser give native OpenModelica\'s DASSL',{skip:skip||(!native&&'native OpenModelica (OMC or omc on PATH) not found')},()=>{
+test('the page\'s solver in the browser gives native OpenModelica\'s DASSL',{skip:skip||(!native&&'native OpenModelica (OMC or omc on PATH) not found')},()=>{
   const keys=['population','tax','grants','cost','depreciation','interest','result','debt','cash','assets'];
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuous-'));
   try {
@@ -240,7 +235,7 @@ simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96,
       const values=line.split(',').map(Number),t=values[0];
       if(Math.abs(t-Math.round(t))<1e-9) reference.set(Math.round(t),Object.fromEntries(names.map((n,i)=>[n,values[i]])));
     }
-    const browser=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:'rungekutta'},keys);
+    const browser=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
     for(const row of browser) for(const k of keys) close(row[k],reference.get(row.year)[k],0.01,`${row.year} ${k}`);
   } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });

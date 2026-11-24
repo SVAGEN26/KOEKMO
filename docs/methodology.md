@@ -370,19 +370,22 @@ later. Debt is too low by 24 % of tax and grants after eight years against 20 %.
 is not more accurate than `Annual`; the differences are within what the few
 cases can tell apart.
 
-**In the browser.** The staged wasm compiler runs the continuous model with
-`euler`, `rungekutta`, `dassl`, `ida` and `gbode`; `heun`, `impeuler`,
-`trapezoid`, `rungekuttaSsc`, `imprungekutta` and `irksco` fail at start. The
-site uses `rungekutta` with 12 steps a year, which matches native DASSL to
-0.01 mnkr; one Euler step a year is off by 40 mnkr in the result and 236 mnkr in
-debt after eight years. When the cash flow changes sign inside a step (a year
-that turns from borrowing to repaying), the fixed-step solver finds that moment
-by linear interpolation and every stock moves by up to 0.001 %: 0.03 mnkr in
-Motala's net cost in the test, against 0.00 with DASSL. Twelve explicit steps are too few for flows with time
-constants of days to weeks: payment terms in working capital, refilling the
-cash reserve and taking a project into use. Scenarios with those run with the
-implicit solver `ida` (with single-year ages its matrix-free linear solver,
-`-idaLS=spgmr`, since the 202 age stocks make the Jacobian cost 20 s a run).
+**In the browser.** The site runs the continuous model with the implicit solver
+`ida` and stores twelve values a year. It matches native DASSL to 0.01 mnkr, with
+and without the flows that have time constants of days to weeks (payment terms in
+working capital, refilling the cash reserve, taking a project into use). With
+single-year ages it uses IDA's matrix-free linear solver (`-idaLS=spgmr`), since
+the 202 age stocks make the Jacobian cost 20 s a run; that takes 1.3 s. One Euler
+step a year is off by 40 mnkr in the result and 236 mnkr in debt after eight
+years. Which solvers start depends on the compiler. In the web compiler built
+from OpenModelica of 22 September 2026 (cc09fe3f5b), `euler`, `rungekutta`,
+`dassl`, `ida`, `cvode`, `gbode` and `qss` start; in the one from 23 November 2026
+(d3ca67ddd) `rungekutta`, `gbode` and `qss` fail at start with "in-wasm
+initialization failed", also for `der(x) = -x`. `heun`, `impeuler`, `trapezoid`,
+`rungekuttaSsc`, `imprungekutta`, `irksco` and `symSolver` fail in both. Until
+24 November 2026 the site used `rungekutta` with 12 steps a year, about twice as
+fast as `ida` (a scenario change took 0.6 s on the page, now 1.0 s); `dassl`
+gives the same values but takes 20 s a run with single-year ages.
 
 ## Validation
 
@@ -589,8 +592,8 @@ population is SCB's projection at every year end, that tax and grants equal
 `Annual`'s, that wages and prices rise by the stated growth also through a
 3 → 9 → 0 % shock, that every option keeps the balance checks, that `ida` agrees
 with DASSL, that the exported `Scenario.mo` reproduces the page's run, that all
-13 municipalities run from the 2024 and 2025 accounts, and that twelve
-Runge-Kutta steps a year give native OpenModelica's DASSL within 0.01 mnkr.
+13 municipalities run from the 2024 and 2025 accounts, and that the page's
+solver gives native OpenModelica's DASSL within 0.01 mnkr.
 `tests/jit-parity.test.mjs` checks the yearly model against the independent
 JavaScript reference (`site/src/engine.js`), which covers `Annual` only.
 
