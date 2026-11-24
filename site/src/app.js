@@ -307,7 +307,7 @@ function selectMunicipality(code,firstYear=null) {
     :lentOn>1?`Skulden är kommunens egna lån. Därutöver har kommunen lånat ${fmt(lentOn)} mnkr som den har lånat vidare till sina bolag. Den delen ingår inte, och räntan på den är borttagen ur både kostnader och intäkter.`
     :'Skulden är kommunens lån och obligationer med kortfristig del, enligt SCB. Investeringar finansieras med kassaflöde och nya lån.';
   $('municipality-code').textContent=`${code} / Östergötland`;
-  $('municipality-title').textContent=`${name}${name.endsWith('s')?'':'s'} framtid?`;
+  $('municipality-title').textContent=`${/[aeiouyåäö]$/i.test(name)?name:name+'s'} kommun`;  // Motala kommun, Linköpings kommun
   $('municipality-notice').textContent=motala
     ?'Bokslut, hämtad befolkningsprognos och omräknad SKR-referens för Motala. Intäktsmodellen och flera kostnadssamband är förenklade; bättre prognosprecision är inte visad.'
     :'Basår från SCB:s kommunräkenskaper och befolkningsstatistik. Kostnadsvikter från Kolada.';
@@ -747,7 +747,7 @@ function renderExplanation() {
   if(Math.abs(residual)>1e-7) bridge.push(['Finansiella intäkter och övrigt',signedMoney.format(residual)]);
   bridge.push(['Skillnad i årets resultat',change(a.result,b.result)]);
   $('explanation-tables').innerHTML=comparisonTable('explanation-needs','Befolkning, behov och finansiering',['Mått',scenario.label,reference.label,'Skillnad'],rows,`Prognosår ${year}.`)+
-    comparisonTable('explanation-result','Vad bygger upp resultatskillnaden?',['Post','Bidrag till skillnaden (mnkr)'],bridge,'En kostnadsökning ger ett negativt bidrag till resultatskillnaden.');
+    comparisonTable('explanation-result','Resultatskillnaden per post',['Post','Bidrag till skillnaden (mnkr)'],bridge,'En kostnadsökning ger ett negativt bidrag till resultatskillnaden.');
 }
 // Each draw asks the OpenModelica worker for every scenario it shows in one batch.
 // While a batch runs, further input only marks the view dirty; the latest state is drawn next.
@@ -819,7 +819,7 @@ async function drawOnce() {
     const deficits=forecastRows.filter(r=>r.result<0).map(r=>r.year);
     const belowTarget=target==null?[]:forecastRows.filter(r=>r.result>=0&&100*r.result/(r.tax+r.grants)<target).map(r=>r.year);
     const targetSeries=target==null?[]:[{name:`Resultatmål ${decimal(target)} %`,values:run.rows.map(r=>target/100*(r.tax+r.grants)),color:'#516e9c',dash:true,thin:true}];
-    chart('result-chart',[...stresses,...targetSeries,{name:'Grundbana',values:base.rows.map(r=>r.result),color:'#ad8053',dash:true},{name:'Ditt scenario',values:run.rows.map(r=>r.result),color:'#17634e'}],
+    chart('result-chart',[...stresses,...targetSeries,{name:'Grundbana',values:base.rows.map(r=>r.result),color:'#ad8053',dash:true},{name:'Scenariot',values:run.rows.map(r=>r.result),color:'#17634e'}],
       {unit:'mnkr',bands:run.rows.map((r,i)=>i>0&&r.result<0?i:-1).filter(i=>i>0)});
     $('target-legend').hidden=target==null;
     renderBalanceFlag(deficits,belowTarget,target,forecastRows);
