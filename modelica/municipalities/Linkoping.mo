@@ -12,10 +12,10 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       tax = 9362.8, priorYearSettlement = -1.3, grants = 1668.4,
       grantComponents = {1499.8, -598.4, 444.6, -19.1, 340.7},
       payroll = 5913.4, pension = 461.4, otherOperatingExpense = 6775.2, operatingRevenue = 2280.3, netCostRoundingAdjustment = 0,
-      depreciation = 331, financialIncome = 1134.2, interestExpense = 360.8, otherFinancialExpense = 185.9,
-      debt = 10424.4, openingDebt = 14382.2, cash = 612.6, assets = 6452.7, investment = 952.2, taxRate = 20.2,
+      depreciation = 331, financialIncome = 796.3, interestExpense = 22.8, otherFinancialExpense = 185.9,
+      debt = 1100, openingDebt = 1000, cash = 612.6, assets = 6452.7, investment = 952.2, taxRate = 20.2,
       sectorShares = {0.4575, 0.1629, 0.3797}, educationShares = {0.2597, 0.5604, 0.1799},
-      careCostPerInhabitant = {19746, 134652})
+      careCostPerInhabitant = {19746, 134652}, interestRate = 0.0203)
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.679481, 0.264829, 0.05569};
     constant BaseYear linkoping2024 = BaseYear(
@@ -28,8 +28,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       tax = 8945.7, priorYearSettlement = -42.4, grants = 1686.3,
       grantComponents = {1483.6, -591.9, 512, -62.6, 322.5},
       payroll = 5725.7, pension = 696.1, otherOperatingExpense = 6447.5, operatingRevenue = 2127.2, netCostRoundingAdjustment = 0,
-      depreciation = 313, financialIncome = 1044.3, interestExpense = 287.3, otherFinancialExpense = 172.8,
-      debt = 14382.2, openingDebt = 600, cash = 55.6, assets = 5968, investment = 713.5, taxRate = 20.2,
+      depreciation = 313, financialIncome = 783.7, interestExpense = 26.8, otherFinancialExpense = 172.8,
+      debt = 1000, openingDebt = 600, cash = 55.6, assets = 5968, investment = 713.5, taxRate = 20.2,
       sectorShares = {0.4597, 0.16, 0.3803}, educationShares = {0.2643, 0.5575, 0.1782},
       careCostPerInhabitant = {19988, 140422}, interestRate = 0.0154)
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -268,7 +268,9 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261119T090538Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Linköpings ekonomi år för år från bokslutet 2025"

@@ -109,7 +109,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       grantComponents = {59.1, 1.5, 3.8, 1.9, 15.2},
       payroll = 225.7, pension = 16.2, otherOperatingExpense = 155.6, operatingRevenue = 58.4, netCostRoundingAdjustment = 0,
       depreciation = 6.6, financialIncome = 2.7, interestExpense = 0.2, otherFinancialExpense = 0.1,
-      debt = 24, openingDebt = 34.5, cash = 12, assets = 99.1, investment = 13.3, taxRate = 21.82,
+      debt = 24, openingDebt = 31.5, cash = 12, assets = 99.1, investment = 13.3, taxRate = 21.82,
       sectorShares = {0.4502, 0.2412, 0.3086}, educationShares = {0.2992, 0.515, 0.1858},
       careCostPerInhabitant = {19049, 182509})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -125,7 +125,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       grantComponents = {58.9, 0.3, 0.9, 3.8, 15},
       payroll = 222.5, pension = 15.6, otherOperatingExpense = 149.7, operatingRevenue = 71.8, netCostRoundingAdjustment = 0,
       depreciation = 6.5, financialIncome = 2.8, interestExpense = 0.1, otherFinancialExpense = 0.1,
-      debt = 34.5, openingDebt = 44.5, cash = 32.2, assets = 89.9, investment = 4, taxRate = 21.82,
+      debt = 31.5, openingDebt = 41.5, cash = 32.2, assets = 89.9, investment = 4, taxRate = 21.82,
       sectorShares = {0.4627, 0.2397, 0.2976}, educationShares = {0.306, 0.4998, 0.1942},
       careCostPerInhabitant = {19049, 182509})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -141,7 +141,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       grantComponents = {55.8, -0.4, -0.1, -1.2, 12.7},
       payroll = 220.4, pension = 14.4, otherOperatingExpense = 145.7, operatingRevenue = 87.8, netCostRoundingAdjustment = 0,
       depreciation = 6.5, financialIncome = 1.6, interestExpense = 0.4, otherFinancialExpense = 0.1,
-      debt = 44.5, openingDebt = 45.1, cash = 37.8, assets = 98.8, investment = 10.5, taxRate = 21.82,
+      debt = 41.5, openingDebt = 42.1, cash = 37.8, assets = 98.8, investment = 10.5, taxRate = 21.82,
       sectorShares = {0.4992, 0.2482, 0.2527}, educationShares = {0.2812, 0.5344, 0.1844},
       careCostPerInhabitant = {19049, 182509})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -268,7 +268,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261119T090407Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Boxholms ekonomi år för år från bokslutet 2025"

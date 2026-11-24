@@ -90,7 +90,7 @@
     "wages": 0.05219185653801395,
     "prices": 0.028000000000000025,
     "pension": 696.12,
-    "interestRate": 0.03835350478045509,
+    "interestRate": 0.03344107548158064,
     "investment": 713.472
    },
    "2025": {
@@ -98,7 +98,7 @@
     "wages": -0.002712992352954746,
     "prices": 0.02539632121650026,
     "pension": 461.432,
-    "interestRate": 0.029085356001796948,
+    "interestRate": 0.021732763035031168,
     "investment": 952.2
    }
   },
@@ -261,7 +261,7 @@
    "label": "Priserna som de blev",
    "result": 12.05853961538378,
    "change": -723.7840433841984,
-   "gap": -148.88546038461794
+   "gap": -148.885460384618
   },
   {
    "year": 2024,
@@ -269,7 +269,7 @@
    "label": "Pensionskostnaden som den blev",
    "result": -237.8390165854089,
    "change": -249.89755620079268,
-   "gap": -398.7830165854106
+   "gap": -398.7830165854107
   },
   {
    "year": 2024,
@@ -277,7 +277,7 @@
    "label": "Rikets skatteunderlag som det blev",
    "result": 78.82399154661653,
    "change": 316.6630081320254,
-   "gap": -82.1200084533852
+   "gap": -82.12000845338525
   },
   {
    "year": 2024,
@@ -285,23 +285,23 @@
    "label": "Statens bidrag som de blev",
    "result": 113.2221459281009,
    "change": 34.398154381484375,
-   "gap": -47.72185407190082
+   "gap": -47.72185407190088
   },
   {
    "year": 2024,
    "step": "interest",
    "label": "Räntan som den blev",
-   "result": 103.0567341444894,
-   "change": -10.165411783611503,
-   "gap": -57.887265855512325
+   "result": 108.2928610309864,
+   "change": -4.929284897114499,
+   "gap": -52.65113896901538
   },
   {
    "year": 2024,
    "step": "investment",
    "label": "Investeringarna som de blev",
-   "result": 103.4041938205228,
-   "change": 0.34745967603340944,
-   "gap": -57.539806179478916
+   "result": 108.6645040444891,
+   "change": 0.37164301350270534,
+   "gap": -52.27949595551267
   },
   {
    "year": 2025,
@@ -355,17 +355,17 @@
    "year": 2025,
    "step": "interest",
    "label": "Räntan som den blev",
-   "result": 492.3650162823651,
-   "change": -0.15520427893170563,
-   "gap": 74.40801628236346
+   "result": 501.6485332016728,
+   "change": 9.12831264037601,
+   "gap": 83.69153320167118
   },
   {
    "year": 2025,
    "step": "investment",
    "label": "Investeringarna som de blev",
-   "result": 486.8042192743342,
-   "change": -5.5607970080309315,
-   "gap": 68.84721927433253
+   "result": 496.6983678903871,
+   "change": -4.95016531128573,
+   "gap": 78.74136789038545
   }
  ],
  "remainingByLine": [
@@ -401,33 +401,33 @@
   },
   {
    "year": 2024,
-   "tax": 78.6671112028398,
-   "grants": 13.778886685983935,
-   "payroll": 266.97839072459556,
-   "pension": -1.9690560293383896e-10,
-   "otherCosts": 559.7988584442173,
-   "operatingRevenue": 85.92339263459598,
-   "depreciation": -30.202496777219096,
-   "interest": -246.8865556888366,
-   "result": -57.539806179478916,
-   "debt": -13136.866851404355,
-   "population": 1240.4933324439917,
-   "otherFinancialNet": 313.855
+   "tax": 78.66711120859145,
+   "grants": 13.778886687068052,
+   "payroll": 266.9783908910613,
+   "pension": 2.468141246936284e-10,
+   "otherCosts": 559.7988584522654,
+   "operatingRevenue": 85.92339263547319,
+   "depreciation": -30.20249677667516,
+   "interest": 8.40927353490153,
+   "result": -52.27949595551267,
+   "debt": 240.0238383715921,
+   "population": 1240.4933324446902,
+   "otherFinancialNet": 574.4111396147355
   },
   {
    "year": 2025,
-   "tax": 10.181720624714217,
-   "grants": 20.348077968583084,
-   "payroll": 92.13912187008009,
-   "pension": -1.5916157281026244e-12,
-   "otherCosts": 445.10170974272387,
-   "operatingRevenue": -6.230789340101637,
-   "depreciation": -22.29851109311386,
-   "interest": -322.481530540831,
-   "result": 68.84721927433253,
-   "debt": -9022.413559585579,
-   "population": 1809.7092874379887,
-   "otherFinancialNet": 237.08500000000004
+   "tax": 10.181720626826063,
+   "grants": 20.34807796873997,
+   "payroll": 92.13912185439676,
+   "pension": 9.117684385273606e-11,
+   "otherCosts": 445.10170957833543,
+   "operatingRevenue": -6.230789378789723,
+   "depreciation": -22.298511056759708,
+   "interest": 5.5579197637775515,
+   "result": 78.74136789038545,
+   "debt": 286.784981538156,
+   "population": 1809.7092874402006,
+   "otherFinancialNet": 575.0185988132173
   }
  ],
  "outcome": {
@@ -469,11 +469,11 @@
    "otherCosts": 6447.515,
    "operatingRevenue": 2127.18,
    "depreciation": 313.042,
-   "interest": 287.309,
-   "result": 160.94400000000172,
-   "debt": 14382.151,
+   "interest": 26.752860385264512,
+   "result": 160.94400000000178,
+   "debt": 1000,
    "population": 168035.0,
-   "otherFinancialNet": 871.521,
+   "otherFinancialNet": 610.9648603852645,
    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090538Z)"
   },
   "2025": {
@@ -484,11 +484,11 @@
    "otherCosts": 6775.214,
    "operatingRevenue": 2280.307,
    "depreciation": 331.039,
-   "interest": 360.753,
+   "interest": 22.819401186782727,
    "result": 417.95700000000164,
-   "debt": 10424.353000000001,
+   "debt": 1100,
    "population": 168714.0,
-   "otherFinancialNet": 948.2909999999999,
+   "otherFinancialNet": 610.3574011867827,
    "source": "SCB räkenskapssammandrag (data/downloads/20261119T090538Z)"
   }
  },
@@ -845,30 +845,30 @@
     "population": 168026.716991119
    },
    "2024": {
-    "tax": 9024.357110419065,
-    "grants": 1700.036887540223,
-    "payroll": 5992.697246666293,
-    "pension": 696.1200000004369,
-    "otherCosts": 7007.313837593906,
-    "operatingRevenue": 2213.103392667594,
-    "depreciation": 283.3682959175599,
-    "interest": 40.24127630494093,
-    "result": 103.0567341444894,
-    "debt": 1261.768544685589,
+    "tax": 9024.357110418294,
+    "grants": 1700.036887540076,
+    "payroll": 5992.697246598588,
+    "pension": 696.1200000003771,
+    "otherCosts": 7007.313837592105,
+    "operatingRevenue": 2213.103392667599,
+    "depreciation": 283.3682959173888,
+    "interest": 35.00514948716327,
+    "result": 108.2928610309864,
+    "debt": 1256.532417799208,
     "population": 169275.49333275
    },
    "2025": {
-    "tax": 9372.935719950803,
-    "grants": 1688.745078676531,
-    "payroll": 6005.492942026846,
-    "pension": 461.4320000001634,
-    "otherCosts": 7220.315323890154,
-    "operatingRevenue": 2274.076122885329,
-    "depreciation": 305.5779156615707,
-    "interest": 35.87372365198428,
-    "result": 492.3650162823651,
-    "debt": 1219.625612741929,
-    "population": 170523.7092898875
+    "tax": 9372.935719954376,
+    "grants": 1688.745078677262,
+    "payroll": 6005.49294147223,
+    "pension": 461.4320000003431,
+    "otherCosts": 7220.315329562122,
+    "operatingRevenue": 2274.076124569853,
+    "depreciation": 305.5779146119111,
+    "interest": 26.59020435409315,
+    "result": 501.6485332016728,
+    "debt": 1205.105969986188,
+    "population": 170523.7092897791
    }
   },
   "investment": {
@@ -899,30 +899,30 @@
     "population": 168026.7169906601
    },
    "2024": {
-    "tax": 9024.35711120284,
-    "grants": 1700.036886685984,
-    "payroll": 5992.697390724595,
-    "pension": 696.1199999998031,
-    "otherCosts": 7007.313858444218,
-    "operatingRevenue": 2213.103392634596,
-    "depreciation": 282.8395032227809,
-    "interest": 40.42244431116342,
-    "result": 103.4041938205228,
-    "debt": 1245.284148595645,
-    "population": 169275.493332444
+    "tax": 9024.357111208592,
+    "grants": 1700.036886687068,
+    "payroll": 5992.69739089106,
+    "pension": 696.1200000002468,
+    "otherCosts": 7007.313858452266,
+    "operatingRevenue": 2213.103392635473,
+    "depreciation": 282.8395032233248,
+    "interest": 35.16213392016604,
+    "result": 108.6645040444891,
+    "debt": 1240.023838371592,
+    "population": 169275.4933324447
    },
    "2025": {
-    "tax": 9372.935720624715,
-    "grants": 1688.745077968583,
-    "payroll": 6005.49312187008,
-    "pension": 461.4319999999984,
-    "otherCosts": 7220.315709742724,
-    "operatingRevenue": 2274.076210659898,
-    "depreciation": 308.7404889068861,
-    "interest": 38.27146945916898,
-    "result": 486.8042192743342,
-    "debt": 1401.939440414423,
-    "population": 170523.709287438
+    "tax": 9372.935720626827,
+    "grants": 1688.74507796874,
+    "payroll": 6005.493121854397,
+    "pension": 461.4320000000912,
+    "otherCosts": 7220.315709578335,
+    "operatingRevenue": 2274.07621062121,
+    "depreciation": 308.7404889432403,
+    "interest": 28.37732095056028,
+    "result": 496.6983678903871,
+    "debt": 1386.784981538156,
+    "population": 170523.7092874402
    }
   }
  },
@@ -957,13 +957,13 @@
     "labourIndexAboveBelieved": 0.031191856538013946,
     "taxBaseAboveBelieved": 0.0009559026599191001,
     "pensionOverBelievedPath": 0.5467091089398675,
-    "paidRateAboveBaseYear": 0.03351280419663524
+    "paidRateAboveBaseYear": 0.028600374897760787
    },
    "2025": {
     "labourIndexAboveBelieved": -0.023712992352954747,
     "taxBaseAboveBelieved": 0.0016499999999999987,
     "pensionOverBelievedPath": 0.004168280472148123,
-    "paidRateAboveBaseYear": 0.024244655417977098
+    "paidRateAboveBaseYear": 0.016892062451211318
    }
   },
   "runs": {

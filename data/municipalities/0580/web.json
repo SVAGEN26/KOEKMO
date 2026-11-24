@@ -100,7 +100,7 @@
       "productivity": 0.0,
       "migrationDelta": 0,
       "birthChange": 0,
-      "interestRate": 2.5083382868112007,
+      "interestRate": 2.03,
       "taxRate": 20.2,
       "investment": 952.2,
       "adjustment": 0.5,
@@ -132,14 +132,14 @@
     "tax": 9362.754,
     "grants": 1668.397,
     "cash": 612.581,
-    "debt": 10424.353000000001,
+    "debt": 1100,
     "assets": 6452.722,
     "investment": 952.2,
     "deaths": 1263.0,
     "depreciation": 331.039,
-    "financialIncome": 1134.204,
+    "financialIncome": 796.2704011867827,
     "otherFinancialExpense": 185.91300000000007,
-    "interestExpense": 360.753,
+    "interestExpense": 22.819401186782727,
     "priorYearSettlement": -1.341,
     "taxRate": 20.2,
     "operatingAccounts": {
@@ -579,6 +579,10 @@
         ]
       ],
       "novemberPopulation": 168872
+    },
+    "onLending": {
+      "loans": 15516,
+      "interest": 337.93359881321726
     }
   },
   "history": [
@@ -1596,6 +1600,8 @@
   "budgetResult": null,
   "sources": {
     "annual2024": "https://www.linkoping.se/kommun-och-politik/budget-mal-och-ekonomi/publikationer",
+    "financeReport2025": "https://drive.google.com/file/d/1MfBx0_fUOSA33fz1xZZgAkz-JiGobjYY/view",
+    "financeReport2024": "https://drive.google.com/file/d/1E38WysfU2q4lOFthYfgZ5EqXLnvwZccI/view",
     "statistics": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
     "archive": "data/downloads/20261119T090538Z",
     "accounts": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777",

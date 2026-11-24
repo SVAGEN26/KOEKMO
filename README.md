@@ -225,7 +225,7 @@ depreciation starts when an investment is paid. Where demand for schooling
 falls, costs are therefore higher than in `Annual`: for Motala from the 2025
 accounts the result is 5–11 mnkr lower each year (151 against 159 mnkr in 2033)
 and the debt 65 mnkr higher in 2033 (1 576 against 1 511); for Linköping the
-result is 21–42 mnkr lower a year. The adjustment speed is an illustrative
+result is 21–46 mnkr lower a year. The adjustment speed is an illustrative
 assumption in both. The continuous model is no more accurate against outcomes
 than `Annual`; see [Accuracy](#accuracy) and
 [docs/methodology.md](docs/methodology.md#continuous-time).
@@ -254,6 +254,22 @@ are published with source and terms in their `source` block.
 | Tax, grants and November population 2026–2033 | SKR 26:28, recalculated per municipality | `scripts/recalculate_skr.py` |
 | Tax-base growth and cost indices | SKR circulars and PKV | `scripts/prepare_planning_inputs.py` |
 | Fixed-rate period | Annual reports | `data/rate-fixing.json` |
+| Loans passed on to the municipality's companies | SCB TAB6779 (item 034); Linköping's finance reports and Norrköping's annual reports | `scripts/prepare_municipality.py`, `annual-report-inputs.json` |
+
+**Debt is the municipality's own.** Linköping, Norrköping and Finspång borrow for
+their companies through an internal bank: of Linköping's 16 616 mnkr at the end of
+2025, 15 516 was lent on (finance report, 31 December 2025). The companies are not
+in the model, so their loans are taken out of the base year's debt, and the
+interest on them, at the rate the municipality pays, out of both interest expense
+and financial income. The result is unchanged. The base path from the 2025
+accounts starts with 1 100 mnkr of debt for Linköping, 290 for Finspång and 8 852
+for Norrköping (16 616, 1 777 and 17 955 with the companies' loans). The margin
+the municipality earns on the lending stays in financial income, held at the base
+year's amount. Where SCB's items do not show the lending (Linköping from 2024,
+Norrköping), the figures come from the municipality's reports, with page
+references in `annual-report-inputs.json`. Motala's base years are read from its
+annual reports and are not adjusted; it had 72–88 mnkr lent to a company until
+2021 (SCB TAB6779, item 034).
 
 To add a municipality: `scripts/fetch_municipality.py CODE`,
 `scripts/fetch_care_data.py CODE`, `scripts/prepare_care.py ARCHIVE --output
@@ -303,11 +319,11 @@ absolute error of the result, mnkr):
 | --- | --- | --- | --- |
 | Motala | 40 / 59 / 58 | 43 / 57 / 39 | 59 / 76 / 41 |
 | Mjölby | 41 / 65 / 116 | 28 / 40 / 59 | 44 / 82 / 91 |
-| Finspång | 38 / 76 / 59 | 24 / 43 / 13 | 38 / 52 / 38 |
+| Finspång | 37 / 75 / 59 | 22 / 42 / 13 | 38 / 52 / 38 |
 
 These tables are for the yearly model. The continuous model, the site's
 default, gives 40 / 60 / 60 for Motala, 42 / 67 / 126 for Mjölby and
-39 / 77 / 59 for Finspång with SKR's assumptions (`HINDCAST_MODEL=Continuous`,
+37 / 76 / 59 for Finspång with SKR's assumptions (`HINDCAST_MODEL=Continuous`,
 `data/vintage-hindcast-continuous.json`): the same accuracy.
 
 Five, four and three cases per horizon, from one period, are too few to rank the
@@ -348,21 +364,25 @@ grants):
 | Payroll, outcomes set in | −1.1 | −0.9 | 0.5 | −2.2 |
 | Other costs, as believed | −6.1 | −4.7 | −2.1 | −3.3 |
 | Other costs, outcomes set in | 1.1 | 5.0 | 8.6 | 7.6 |
-| Result, as believed | 1.5 | 4.3 | 5.4 | 2.9 |
-| Result, outcomes set in | 3.4 | 4.1 | 4.4 | 3.3 |
-| Change in result from the year before, as believed | 1.5 | 3.7 | 1.2 | 2.0 |
-| Change in result, outcomes set in | 3.4 | 1.7 | 1.5 | 1.3 |
+| Result, as believed | 1.6 | 4.3 | 5.4 | 2.9 |
+| Result, outcomes set in | 3.4 | 2.3 | 4.2 | 2.9 |
+| Change in result from the year before, as believed | 1.6 | 3.7 | 1.2 | 2.0 |
+| Change in result, outcomes set in | 3.4 | 1.4 | 1.5 | 1.3 |
 
 Payroll follows the wage index. Other costs do not follow the price index: of the
 price surprise, 85 % reached them in 2022 and 20 to 50 % by 2023–2025 (median).
 The municipalities held their purchases back after the price shock. That is the
 municipality's own decision, and the model does not make it for the user. So with
-every outcome set in, the result's level is no closer to the accounts than the
-forecast was; the forecast was closer because its too-low revenue and too-low costs
-cancelled. The year-to-year change is closer in 2023 and 2025, not in 2022. The
-steps are cumulative in the order shown. Financial items other than interest stay
-at the base year's amount; they dominate in Linköping and Norrköping (Norrköping's
-2022 holds the Ostlänken provision). The site shows the tables for the chosen
+every outcome set in, the result's level is further from the accounts in 2022,
+closer in 2023 and 2024 and the same in 2025; the forecast was close in 2022
+because its too-low revenue and too-low costs cancelled. The 2023 median is
+fragile: the gaps fall in two groups, around 2 % and around 5 %, and one
+municipality moves the median between 2.3 and 4.1. The year-to-year change is
+closer in 2023 and 2025, not in 2022. The steps are cumulative in the order
+shown. Debt and interest are the municipality's own, without what it has lent on
+to its companies (see Data). Financial items other than interest stay at the base
+year's amount; they dominate in Linköping and Norrköping (Norrköping's 2022 holds
+the Ostlänken provision). The site shows the tables for the chosen
 municipality under Källor & validering.
 
 **Does the inflation scenario give what happened?** The same script runs the
@@ -377,9 +397,9 @@ the result's change from the believed run in percent of tax and grants:
 | Payroll | −2.1 | −3.4 | −3.0 | −2.8 |
 | Pension cost | 9.2 | −2.0 | −8.7 | −2.3 |
 | Other costs | 1.1 | 5.0 | 8.6 | 7.6 |
-| Interest | −19 | −6 | 10 | −52 |
-| Result: the scenario | −3.5 | −6.6 | −7.5 | −5.4 |
-| Result: the scenario, the state compensating the grants | −3.5 | −4.6 | −4.8 | −2.5 |
+| Interest | −20 | −13 | 11 | −53 |
+| Result: the scenario | −3.5 | −6.6 | −7.4 | −5.4 |
+| Result: the scenario, the state compensating the grants | −3.5 | −4.6 | −4.7 | −2.5 |
 | Result: the accounts | −0.5 | −4.3 | −4.6 | −1.2 |
 
 With the grants compensated the year after (`inflationGrantCompensation = 1`, a
@@ -434,15 +454,15 @@ model" is the site's default, from `data/long-hindcast-continuous.json`):
 
 | Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Result | 0.0 / 1.7 | −0.2 / 2.2 | −0.7 / 2.4 | −0.8 / 3.3 | −0.8 / 2.9 | −0.2 / 2.2 |
-| Result, continuous model | 0.2 / 1.8 | 0.3 / 2.3 | −0.1 / 2.6 | −0.2 / 3.4 | −0.2 / 3.0 | 0.7 / 2.2 |
+| Result | 0.1 / 1.7 | −0.1 / 2.2 | −0.7 / 2.3 | −0.8 / 3.2 | −0.8 / 2.9 | 0.0 / 2.1 |
+| Result, continuous model | 0.3 / 1.8 | 0.3 / 2.3 | −0.1 / 2.5 | −0.2 / 3.4 | −0.2 / 3.0 | 0.9 / 2.1 |
 | Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
-| Result, standard rates | −1.1 / 2.5 | −3.0 / 4.1 | −4.7 / 5.1 | −4.1 / 4.9 | −2.8 / 3.4 | −3.4 / 4.0 |
+| Result, standard rates | −1.0 / 2.5 | −2.9 / 4.1 | −4.7 / 5.0 | −4.1 / 4.8 | −2.8 / 3.4 | −3.2 / 4.1 |
 | Net cost | −0.2 / 1.9 | −0.1 / 2.1 | 1.1 / 2.3 | 1.4 / 2.9 | 3.1 / 4.0 | 5.1 / 5.7 |
 | Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.2 / 1.5 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
 | General grants | 0.0 / 0.0 | 0.4 / 0.4 | 0.8 / 0.8 | 1.1 / 1.1 | 1.9 / 1.9 | 3.1 / 3.1 |
 | Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.4 / 1.7 | 1.9 / 2.4 | 3.3 / 3.7 | 6.0 / 6.1 |
-| Debt | −0.3 / 4.9 | −1.7 / 8.7 | −1.5 / 12.4 | −0.9 / 15.6 | −11.7 / 28.5 | −32.4 / 34.0 |
+| Debt | 0.2 / 4.2 | −0.7 / 7.9 | −0.3 / 11.5 | 0.5 / 14.3 | −1.4 / 17.9 | −19.7 / 20.9 |
 
 The model with hindsight beats persistence in years 1–3 only; from year 4 the base
 year's result share does as well or better. The continuous model's result is
@@ -453,11 +473,12 @@ of hindsight it is worse than persistence at every horizon. The result is too lo
 0.7–0.8 % of tax and grants in years 3–6, about a third of a usual result target of
 2 %. The population grows too fast (6 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
-together, so part of the result error cancels. Debt comes out too low because
-investment stays at the base year's amount. With costs growing by each
+together, so part of the result error cancels. Debt, the municipality's own
+without loans passed on to its companies, comes out too low (20 % of tax and
+grants after eight years) because investment stays at the base year's amount. With costs growing by each
 municipality's historical residual up to the base year (set "drift",
 `data/cost-residual.json`, measured on the model's basis), net cost is 11.5 % too
-high and the result 6.9 % too low after eight years, so cost growth is 0 by default
+high and the result 6.7 % too low after eight years, so cost growth is 0 by default
 and a scenario control on the site. The test covers one period, 2017–2025, and its
 runs overlap, so the 39 cases are not independent.
 

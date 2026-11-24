@@ -5,7 +5,7 @@
  "name": "Boxholm",
  "packageName": "Boxholm",
  "unit": "mnkr; persons",
- "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); debt is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
+ "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\n  Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables\n  from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest\n  expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's\n  items do not give the borrowing or the lending, annual-report-inputs.json gives them from the municipality's reports:\n  externalBankDebt (all borrowing), ownDebt (the municipality's own) and onLending (lent to its companies).\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
  "olderShares": [
   0.719676549865229,
   0.2526954177897574,
@@ -73,11 +73,11 @@
    "operatingRevenue": 87.827,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 6.473,
-   "financialIncome": 1.637,
-   "interestExpense": 0.41,
+   "financialIncome": 1.625,
+   "interestExpense": 0.39799999999999996,
    "otherFinancialExpense": 0.09100000000000003,
-   "debt": 44.5,
-   "openingDebt": 45.136,
+   "debt": 41.5,
+   "openingDebt": 42.136,
    "cash": 37.84,
    "assets": 98.829,
    "investment": 10.52,
@@ -99,6 +99,10 @@
    "careReferenceYears": [
     2019
    ],
+   "onLending": {
+    "loans": 3.0,
+    "interest": 0.012
+   },
    "olderShares": [
     0.751432664756447,
     0.1833810888252149,
@@ -166,11 +170,11 @@
    "operatingRevenue": 71.752,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 6.516,
-   "financialIncome": 2.807,
-   "interestExpense": 0.133,
+   "financialIncome": 2.796898734177215,
+   "interestExpense": 0.1228987341772152,
    "otherFinancialExpense": 0.14100000000000001,
-   "debt": 34.5,
-   "openingDebt": 44.5,
+   "debt": 31.5,
+   "openingDebt": 41.5,
    "cash": 32.183,
    "assets": 89.946,
    "investment": 3.951,
@@ -192,6 +196,10 @@
    "careReferenceYears": [
     2019
    ],
+   "onLending": {
+    "loans": 3.0,
+    "interest": 0.01010126582278481
+   },
    "olderShares": [
     0.7622080679405521,
     0.1818825194621373,
@@ -259,11 +267,11 @@
    "operatingRevenue": 58.398,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 6.583,
-   "financialIncome": 2.682,
-   "interestExpense": 0.184,
-   "otherFinancialExpense": 0.12,
+   "financialIncome": 2.6725641025641025,
+   "interestExpense": 0.17456410256410257,
+   "otherFinancialExpense": 0.11999999999999997,
    "debt": 24.0,
-   "openingDebt": 34.5,
+   "openingDebt": 31.5,
    "cash": 11.954,
    "assets": 99.147,
    "investment": 13.33,
@@ -285,6 +293,10 @@
    "careReferenceYears": [
     2019
    ],
+   "onLending": {
+    "loans": 0.0,
+    "interest": 0.009435897435897437
+   },
    "olderShares": [
     0.7693379790940766,
     0.1818815331010453,

@@ -46,7 +46,8 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
    delvis insamlade; Linköpings ränta saknar källa för 2020, 2021 och 2023.
 8. Folkmängden växer för fort i åttaårstestet (+6 % efter åtta år från 2017): flyttningarna kalibreras
    på 2015–2017, åren med stor flyktinginvandring. Pröva kortare eller längre kalibreringsfönster.
-9. Investeringarna hålls på basårets nivå; skulden blir en tredjedel för låg efter åtta år.
+9. Investeringarna hålls på basårets nivå; skulden blir 20 % av skatt och bidrag för låg efter åtta år
+   (24 % i den kontinuerliga modellen; 32 och 36 % före 2026-11-24, då bolagens lån räknades in).
 10. Linköpings resultat stiger med SKR 26:28 (422 → 1 278 mnkr 2026–2033 utan kostnadsökning utöver
     demografi och pris): skatteunderlaget växer cirka 4,2 %/år mot löner 3,3 och priser 2,6 %.
     Inte jämfört med Linköpings egen plan.
@@ -58,9 +59,10 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
     besparingar). Inflationsscenariot har kvar fullt genomslag på priserna; inget reglage för det.
 13. Inflationsscenariots andelar (0,4 / 8 / 0,5) är satta efter en enda period. I pensionstalet ligger 2023 års
     pensionsavtal; det är inte separerat från inflationen.
-14. Linköpings låneskuld i basåren 2024 och 2025 är fel i SCB-posterna (14 382 och 10 424 mnkr mot 16 583 och 16 616
-    mnkr i kommunens finansrapport), så räntan faller 361 → 263 mnkr 2026 i grundbanan. Inte åtgärdat; se avsnittet
-    "Budgetar och finansrapporter" längst ned. Beslut som väntar: brutto som Finspång, eller netto efter vidareutlåning.
+14. Åtgärdat 2026-11-24: skulden är kommunens egna lån, utan vidareutlåningen till bolagen. Se avsnittet
+    "Skulden netto efter vidareutlåning" längst ned. Kvar: Motalas avlästa basår 2020–2021 har kvar 72–74 mnkr som
+    var utlånade till ett bolag (SCB 034; 0 från 2022). Norrköpings ingående skuld för basåret 2017 (2016) finns inte
+    i rapporterna och tas ur SCB:s poster (6 266 mnkr mot egna lån 3 326 vid 2017 års slut).
 15. Bygget på main föll 2026-11-24: den kontinuerliga modellen startar inte i webbkompilatorn byggd från dagens
     OpenModelica. Se samma avsnitt.
 
@@ -1226,9 +1228,11 @@ arkivera data.
   Om skillnaden är besparing eller ett index som inte passar Motalas inköp går inte att avgöra ur bokslutet.
 - Alla 13, medianer: lönekostnaden −2 till −7 % som man trodde, inom cirka 2 % med löneindex som utfall.
   Övriga kostnader 5–9 % för höga från 2023 med prisindex som utfall; 85 % av prischocken nådde dem 2022,
-  20–50 % sammantaget 2023–2025. Resultatets nivå blir inte närmare bokslutet med utfallen insatta (3,3–4,4 %
-  av skatt och bidrag mot 1,5–5,4 % som man trodde, där för låga intäkter och för låga kostnader tog ut
-  varandra). Förändringen år för år blir närmare 2023 och 2025, inte 2022.
+  20–50 % sammantaget 2023–2025. Resultatets nivå blir inte säkert närmare bokslutet med utfallen insatta
+  (3,4/2,3/4,2/2,9 % av skatt och bidrag 2022–2025 mot 1,6/4,3/5,4/2,9 % som man trodde, där för låga intäkter
+  och för låga kostnader tog ut varandra 2022). Medianen 2023 är skör: gapen ligger i två grupper, kring 2 och
+  kring 5 %, och en kommun flyttar den mellan 2,3 och 4,1. Förändringen år för år blir närmare 2023 och 2025,
+  inte 2022. (Talen räknades om 2026-11-24 med skulden netto; före det 3,4/4,1/4,4/3,3 mot 1,5/4,3/5,4/2,9.)
 - Tolkning (min): kommunerna höll igen på inköpen när resultatet pressades. Modellen har ingen sådan regel,
   och det är avsiktligt enligt direktivet att verktyget ska visa vad beslut kostar; besparingen är användarens
   reglage. Inte prövat: om en fast genomslagsandel för priser skulle förbättra inflationsscenariot.
@@ -1307,3 +1311,35 @@ arkivera data.
   (`tests/jit-continuous.test.mjs`) kom med PR #2, så ingen tidigare körning har prövat dem mot en nyare kompilator.
   Likaså med 1c3a37775 (2026-11-20): https://github.com/SVAGEN26/Motala_Ekonomilab/actions/runs/45452400399.
 - Felet ligger alltså mellan OpenModelica 2026-09-22 och 2026-11-20. Inte utrett vilket steg i kompilatorn.
+
+## Skulden netto efter vidareutlåning (2026-11-24)
+
+- Användarens val: netto. Skulden i basåren är kommunens egna lån; lån som kommunen tagit upp och lånat vidare till
+  sina bolag räknas inte, och räntan på dem är borttagen ur både räntekostnad och finansiella intäkter. Resultatet
+  ändras inte. Regeln ligger i `scripts/prepare_municipality.py` (`lending`, `debt`, `passed_on`).
+- Regel: upplåning (SCB TAB6779 081 + 082 + 136 + 134, eller årsredovisningens tal i `externalBankDebt`) minus
+  långfristig fordran på kommunens koncernföretag (034). Räntan på den vidareutlånade delen = årets ränta gånger
+  den delens andel av medelupplåningen, högst ränteintäkterna (TAB6782 260). Marginalen stannar i finansiella intäkter.
+- Där SCB:s poster inte räcker anges `ownDebt` och `onLending` i `annual-report-inputs.json`:
+  Linköping 2024–2025 (1 000 och 1 100; vidareutlånat 15 583 och 15 516; finansrapporten per 31 december 2025
+  s. 3 och 7). SCB:s poster ger −1 381 mnkr netto för 2024 och är inte användbara.
+  Norrköping 2017–2025 (3 326, 3 881, 4 585, 5 445, 5 858, 6 399, 7 203, 8 404, 8 852; årsredovisning 2025 del 1
+  s. 6 och 16, 2024 del 1 s. 16; 2017–2019 härledda ur 2021 del 1 s. 11, samma räkning ger 5 446 och 5 860 för
+  2020 och 2021). Äldre rapporter har en annan avgränsning med utlåning till föreningar inräknad (2023 del 1 s. 13:
+  7 642, 6 843, 6 303, 5 894, 5 033 för 2023–2019).
+- Kontroll mot källa: Finspång 296 → 290 mnkr 2024–2025; årsredovisning 2025 s. 27 säger att kommunen lånade 131,
+  vidareutlånade 138 och minskade sina egna lån med 7. Linköping: 23 mnkr ränta på egna lån 2025 mot finansrapportens
+  14 (momentan, inklusive derivat) av 338 brutto.
+- Basår 2025, skuld före → efter (mnkr): Finspång 1 777 → 290, Linköping 10 424 → 1 100, Norrköping 17 944 → 8 852,
+  Valdemarsvik 343 → 310, Vadstena oförändrad (0,6 mnkr 2018–2024). Boxholm 3 mnkr 2017–2018. Övriga oförändrade.
+- Grundbanan från bokslut 2025 på sidan: Linköping resultat 357 mnkr 2026 (förut 456; räntan föll då 361 → 263 av
+  SCB:s skuldposter), Finspång 82 (79), Norrköping 428. Linköpings och Finspångs egna lån är återbetalda 2031
+  respektive 2029 i grundbanan, eftersom investeringarna hålls på basårets nivå (öppen punkt 9) och Linköpings
+  resultat stiger (öppen punkt 10).
+- Omräknat: basår och Modelica-paket (5 kommuner ändrade), webbunderlag, `data/long-hindcast*.json`, Finspångs
+  `vintage-hindcast*.json`, förklaringen 2022–2025 för 5 kommuner och sammanfattningen. `cost-residual.json` och
+  `response-test.json` oförändrade (svarstestet läser SCB:s balansposter direkt och har utlåningen som egen källa).
+- Åttaårstestet, skuldens fel i procent av skatt och bidrag efter 1/2/3/4/6/8 år: 0,2/−0,7/−0,3/0,5/−1,4/−19,7
+  (förut −0,3/−1,7/−1,5/−0,9/−11,7/−32,4). Resultatets fel ändras högst 0,15 procentenheter.
+- Sidan: skuldnoten säger hur mycket som är vidareutlånat (`baseline.onLending`); en återbetald skuld visas som 0,
+  inte −0.

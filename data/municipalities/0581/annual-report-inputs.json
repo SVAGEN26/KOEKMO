@@ -1,15 +1,50 @@
 {
   "sources": {
     "annual2024": "https://norrkoping.se/download/18.8f5aac4196f138bba110e5d/1748936883175/Norrk%C3%B6pings-kommun-%C3%85rsredovisning2024-del1.pdf",
-    "annual2025": "https://norrkoping.se/download/18.3a8c6b3019eafce305b3e1/1781159178882/%C3%85rsredovisning%202025%20-%20del%201.pdf"
+    "annual2025": "https://norrkoping.se/download/18.3a8c6b3019eafce305b3e1/1781159178882/%C3%85rsredovisning%202025%20-%20del%201.pdf",
+    "annual2021": "https://norrkoping.se/kommun-och-politik/om-norrkoping/ekonomi-fakturor-och-budget/arsredovisning",
+    "annual2023": "https://norrkoping.se/kommun-och-politik/om-norrkoping/ekonomi-fakturor-och-budget/arsredovisning"
   },
   "nonRecurring": {
-    "2024": {"operating": 230, "financial": -101},
-    "2025": {"operating": 3232, "financial": 0}
+    "2024": {
+      "operating": 230,
+      "financial": -101
+    },
+    "2025": {
+      "operating": 3232,
+      "financial": 0
+    }
   },
-  "trendExclude": [2022, 2023],
+  "trendExclude": [
+    2022,
+    2023
+  ],
   "locators": {
     "trendExclude": "Tillväxtår som scripts/cost_residual.py hoppar över: 2022 års nettokostnad innehåller avsättningen -3 281 mnkr för Ostlänken (Årsredovisning 2025 del 1 s. 6, femårsöversikten, not 2-5), men fördelningen på verksamhet och finansiella poster är inte kontrollerad. 2022 och 2023 års tillväxt räknas därför inte.",
-    "nonRecurring": "Jämförelsestörande poster för medfinansiering av Ostlänken, kommunen, mnkr. operating: kostnadsreducering i verksamhetens nettokostnader (positiv = sänker kostnaden; läggs tillbaka i basåret). financial: finansiell kostnad (negativ = kostnad; tas bort ur basåret). 2025: Årsredovisning 2025 del 1, s. 60, tabellen Resultat mot budget; återföring av avsättningen eftersom kommunen bedömer att medfinansieringen inte genomförs. 2024: Årsredovisning 2024 del 1, s. 55, samma tabell. Femårsöversikten i 2025 års rapport, s. 6, not 2-5, anger nettot +3 232, +129, -80 och -3 281 mnkr för 2025-2022."
+    "nonRecurring": "Jämförelsestörande poster för medfinansiering av Ostlänken, kommunen, mnkr. operating: kostnadsreducering i verksamhetens nettokostnader (positiv = sänker kostnaden; läggs tillbaka i basåret). financial: finansiell kostnad (negativ = kostnad; tas bort ur basåret). 2025: Årsredovisning 2025 del 1, s. 60, tabellen Resultat mot budget; återföring av avsättningen eftersom kommunen bedömer att medfinansieringen inte genomförs. 2024: Årsredovisning 2024 del 1, s. 55, samma tabell. Femårsöversikten i 2025 års rapport, s. 6, not 2-5, anger nettot +3 232, +129, -80 och -3 281 mnkr för 2025-2022.",
+    "ownDebt": "Bruttolåneskuld Norrköpings kommun (den kommunala förvaltningen), mnkr. 2021-2025: Årsredovisning 2025 del 1, s. 6, femårsöversikten (8 852, 8 404, 7 203, 6 399, 5 858). 2020: Årsredovisning 2024 del 1, s. 16 (5 445). 2017-2019: egen härledning ur Årsredovisning 2021 del 1, s. 11: kommunkoncernens bruttoskuld minus inlåning från bolagen, netto lån till bolagen och utlåning till föreningar; samma räkning ger 5 446 för 2020 och 5 860 för 2021. Äldre rapporter har en annan avgränsning, med utlåningen till föreningar inräknad: Årsredovisning 2023 del 1, s. 13, anger 7 642 (2023), 6 843, 6 303, 5 894 och 5 033 (2019).",
+    "onLending": "Bolagskoncernens och kommunalförbundens del av bruttoskulden, mnkr. 2025: Årsredovisning 2025 del 1, s. 16 (9 103). 2020-2024: Årsredovisning 2024 del 1, s. 16 (7 990, 8 404, 8 656, 8 296, 8 476). 2019: Årsredovisning 2023 del 1, s. 13 (7 434). 2017-2018: netto lån till bolagen, Årsredovisning 2021 del 1, s. 11 (6 444, 6 806), en något snävare avgränsning. Används bara för att dela räntekostnaden mellan kommunens egna lån och vidareutlåningen."
+  },
+  "ownDebt": {
+    "2017": 3326,
+    "2018": 3881,
+    "2019": 4585,
+    "2020": 5445,
+    "2021": 5858,
+    "2022": 6399,
+    "2023": 7203,
+    "2024": 8404,
+    "2025": 8852
+  },
+  "onLending": {
+    "2017": 6444,
+    "2018": 6806,
+    "2019": 7434,
+    "2020": 7990,
+    "2021": 8404,
+    "2022": 8656,
+    "2023": 8296,
+    "2024": 8476,
+    "2025": 9103
   }
 }

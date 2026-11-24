@@ -12,8 +12,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 386.7, priorYearSettlement = -0.1, grants = 203,
       grantComponents = {135.7, -3.3, 20, 15.3, 35.4},
       payroll = 373.6, pension = 34.3, otherOperatingExpense = 269, operatingRevenue = 141, netCostRoundingAdjustment = 0,
-      depreciation = 28.4, financialIncome = 2.2, interestExpense = 9.7, otherFinancialExpense = 0.8,
-      debt = 343.3, openingDebt = 343.3, cash = 27.4, assets = 543.9, investment = 36.4, taxRate = 22.48,
+      depreciation = 28.4, financialIncome = 1.3, interestExpense = 8.7, otherFinancialExpense = 0.8,
+      debt = 309.9, openingDebt = 309.9, cash = 27.4, assets = 543.9, investment = 36.4, taxRate = 22.48,
       sectorShares = {0.3646, 0.2667, 0.3687}, educationShares = {0.2467, 0.5704, 0.1829},
       careCostPerInhabitant = {21484, 181384})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -28,8 +28,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 379.6, priorYearSettlement = -1.9, grants = 204.4,
       grantComponents = {125.3, 4.1, 23.1, 14, 34.8},
       payroll = 381, pension = 56.4, otherOperatingExpense = 274.7, operatingRevenue = 144.8, netCostRoundingAdjustment = 0,
-      depreciation = 28.3, financialIncome = 2.3, interestExpense = 8.7, otherFinancialExpense = 1.5,
-      debt = 343.3, openingDebt = 303.3, cash = 42, assets = 531.7, investment = 47.4, taxRate = 22.48,
+      depreciation = 28.3, financialIncome = 1.4, interestExpense = 7.8, otherFinancialExpense = 1.5,
+      debt = 309.9, openingDebt = 269.9, cash = 42, assets = 531.7, investment = 47.4, taxRate = 22.48,
       sectorShares = {0.3511, 0.2865, 0.3623}, educationShares = {0.2485, 0.5694, 0.1821},
       careCostPerInhabitant = {21523, 191457})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -44,8 +44,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 379.9, priorYearSettlement = 2, grants = 187.5,
       grantComponents = {120.2, 4.6, 17.8, 13.2, 28.5},
       payroll = 370.6, pension = 46, otherOperatingExpense = 280.6, operatingRevenue = 140.4, netCostRoundingAdjustment = 0,
-      depreciation = 21.5, financialIncome = 1.6, interestExpense = 4.4, otherFinancialExpense = 1.2,
-      debt = 303.3, openingDebt = 228.3, cash = 24.9, assets = 504.9, investment = 87.2, taxRate = 22.48,
+      depreciation = 21.5, financialIncome = 1, interestExpense = 3.8, otherFinancialExpense = 1.2,
+      debt = 269.9, openingDebt = 189.4, cash = 24.9, assets = 504.9, investment = 87.2, taxRate = 22.48,
       sectorShares = {0.3608, 0.2726, 0.3666}, educationShares = {0.2507, 0.5612, 0.1882},
       careCostPerInhabitant = {20225, 188828})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -60,8 +60,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 367.7, priorYearSettlement = 2.5, grants = 186,
       grantComponents = {110.3, 6.3, 21.1, 15.5, 26.5},
       payroll = 351.6, pension = 27.4, otherOperatingExpense = 273.2, operatingRevenue = 137.4, netCostRoundingAdjustment = 0,
-      depreciation = 20.6, financialIncome = 1, interestExpense = 1.5, otherFinancialExpense = 0.5,
-      debt = 228.3, openingDebt = 242.8, cash = 22.4, assets = 434.1, investment = 48.2, taxRate = 22.48,
+      depreciation = 20.6, financialIncome = 0.8, interestExpense = 1.2, otherFinancialExpense = 0.5,
+      debt = 189.4, openingDebt = 203.9, cash = 22.4, assets = 434.1, investment = 48.2, taxRate = 22.48,
       sectorShares = {0.3744, 0.2646, 0.361}, educationShares = {0.2515, 0.5583, 0.1902},
       careCostPerInhabitant = {14339, 156002})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -76,8 +76,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 350, priorYearSettlement = 1.3, grants = 190.7,
       grantComponents = {107.3, 11, 23, 16.2, 26},
       payroll = 339.3, pension = 26.6, otherOperatingExpense = 264.7, operatingRevenue = 135.9, netCostRoundingAdjustment = 0,
-      depreciation = 18.6, financialIncome = 0.5, interestExpense = 1.1, otherFinancialExpense = 0.3,
-      debt = 242.8, openingDebt = 227.8, cash = 55.3, assets = 408.3, investment = 34.9, taxRate = 22.48,
+      depreciation = 18.6, financialIncome = 0.3, interestExpense = 0.9, otherFinancialExpense = 0.3,
+      debt = 203.9, openingDebt = 188.9, cash = 55.3, assets = 408.3, investment = 34.9, taxRate = 22.48,
       sectorShares = {0.3931, 0.2277, 0.3792}, educationShares = {0.2563, 0.5684, 0.1753},
       careCostPerInhabitant = {14339, 156002})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -92,8 +92,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 333.6, priorYearSettlement = -1.9, grants = 181.4,
       grantComponents = {111.9, 4.3, 8.1, 13.7, 22.5},
       payroll = 341.6, pension = 28.5, otherOperatingExpense = 257.3, operatingRevenue = 148, netCostRoundingAdjustment = 0,
-      depreciation = 18.1, financialIncome = 0.8, interestExpense = 1.3, otherFinancialExpense = 0.3,
-      debt = 227.8, openingDebt = 192.8, cash = 38.9, assets = 392, investment = 64, taxRate = 22.48,
+      depreciation = 18.1, financialIncome = 0.5, interestExpense = 1, otherFinancialExpense = 0.3,
+      debt = 188.9, openingDebt = 156.1, cash = 38.9, assets = 392, investment = 64, taxRate = 22.48,
       sectorShares = {0.3835, 0.2203, 0.3962}, educationShares = {0.2629, 0.5696, 0.1675},
       careCostPerInhabitant = {14339, 156002})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -108,8 +108,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 340.5, priorYearSettlement = 0.2, grants = 160,
       grantComponents = {110, -2.6, 5.6, 16.8, 21.5},
       payroll = 356.5, pension = 37.3, otherOperatingExpense = 245.9, operatingRevenue = 137, netCostRoundingAdjustment = 0,
-      depreciation = 16.2, financialIncome = 1.2, interestExpense = 1, otherFinancialExpense = 0.5,
-      debt = 192.8, openingDebt = 127.8, cash = 35.4, assets = 347.3, investment = 25.5, taxRate = 22.48,
+      depreciation = 16.2, financialIncome = 1, interestExpense = 0.8, otherFinancialExpense = 0.5,
+      debt = 156.1, openingDebt = 90.8, cash = 35.4, assets = 347.3, investment = 25.5, taxRate = 22.48,
       sectorShares = {0.3829, 0.229, 0.3881}, educationShares = {0.2687, 0.5693, 0.162},
       careCostPerInhabitant = {13352, 155470})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -124,8 +124,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 333.9, priorYearSettlement = -1.1, grants = 149.4,
       grantComponents = {102.4, -4.5, 1.2, 15.1, 21.2},
       payroll = 350.3, pension = 38, otherOperatingExpense = 248.3, operatingRevenue = 158.7, netCostRoundingAdjustment = 0,
-      depreciation = 15.5, financialIncome = 1.3, interestExpense = 0.9, otherFinancialExpense = 0.5,
-      debt = 127.8, openingDebt = 127.8, cash = 43.2, assets = 338.1, investment = 26.6, taxRate = 22.48,
+      depreciation = 15.5, financialIncome = 1, interestExpense = 0.6, otherFinancialExpense = 0.5,
+      debt = 90.8, openingDebt = 90.5, cash = 43.2, assets = 338.1, investment = 26.6, taxRate = 22.48,
       sectorShares = {0.4051, 0.2176, 0.3772}, educationShares = {0.2718, 0.5605, 0.1677},
       careCostPerInhabitant = {12983, 153084})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -140,8 +140,8 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       tax = 325.3, priorYearSettlement = 0.4, grants = 138,
       grantComponents = {97.2, -3.9, -0.1, 12.5, 18.9},
       payroll = 341, pension = 23.4, otherOperatingExpense = 241.4, operatingRevenue = 166.4, netCostRoundingAdjustment = 0,
-      depreciation = 14.7, financialIncome = 1.3, interestExpense = 0.9, otherFinancialExpense = 0.8,
-      debt = 127.8, openingDebt = 127.8, cash = 49.7, assets = 329.7, investment = 37.1, taxRate = 22.48,
+      depreciation = 14.7, financialIncome = 1, interestExpense = 0.6, otherFinancialExpense = 0.8,
+      debt = 90.5, openingDebt = 90.5, cash = 49.7, assets = 329.7, investment = 37.1, taxRate = 22.48,
       sectorShares = {0.4289, 0.2263, 0.3447}, educationShares = {0.2377, 0.5908, 0.1715},
       careCostPerInhabitant = {12555, 154243})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -268,7 +268,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261119T090414Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Valdemarsviks ekonomi år för år från bokslutet 2025"

@@ -12,8 +12,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1252, priorYearSettlement = -0.2, grants = 452.8,
       grantComponents = {253.3, 38.2, 57.2, 35.1, 67.2},
       payroll = 1117.3, pension = 108.5, otherOperatingExpense = 567.1, operatingRevenue = 266.3, netCostRoundingAdjustment = 0,
-      depreciation = 82.5, financialIncome = 51.1, interestExpense = 43, otherFinancialExpense = 14,
-      debt = 1777, openingDebt = 1650, cash = 147.8, assets = 1311.8, investment = 121.4, taxRate = 22.15,
+      depreciation = 82.5, financialIncome = 15.5, interestExpense = 7.4, otherFinancialExpense = 14,
+      debt = 290, openingDebt = 296.4, cash = 147.8, assets = 1311.8, investment = 121.4, taxRate = 22.15,
       sectorShares = {0.4469, 0.2363, 0.3168}, educationShares = {0.2476, 0.5546, 0.1978},
       careCostPerInhabitant = {23782, 185493})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -28,8 +28,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1195.3, priorYearSettlement = -5.6, grants = 440.2,
       grantComponents = {261.1, 21.3, 66.6, 22.1, 65.9},
       payroll = 1115.2, pension = 136.2, otherOperatingExpense = 547.5, operatingRevenue = 274.5, netCostRoundingAdjustment = 0,
-      depreciation = 82.9, financialIncome = 57.9, interestExpense = 45, otherFinancialExpense = 16.8,
-      debt = 1650, openingDebt = 1474, cash = 74.5, assets = 1278.4, investment = 98.5, taxRate = 22.15,
+      depreciation = 82.9, financialIncome = 21.3, interestExpense = 8.4, otherFinancialExpense = 16.8,
+      debt = 296.4, openingDebt = 285.4, cash = 74.5, assets = 1278.4, investment = 98.5, taxRate = 22.15,
       sectorShares = {0.4476, 0.2379, 0.3145}, educationShares = {0.2551, 0.5518, 0.1931},
       careCostPerInhabitant = {23206, 183691})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -44,8 +44,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1179.3, priorYearSettlement = 5.7, grants = 403.9,
       grantComponents = {255.2, 16.3, 51.1, 20.5, 59.2},
       payroll = 1127, pension = 111.3, otherOperatingExpense = 546.7, operatingRevenue = 280, netCostRoundingAdjustment = 0,
-      depreciation = 74.4, financialIncome = 39.3, interestExpense = 44.1, otherFinancialExpense = 4.9,
-      debt = 1474, openingDebt = 1277, cash = 27.2, assets = 1264.4, investment = 200.7, taxRate = 22.15,
+      depreciation = 74.4, financialIncome = 3.4, interestExpense = 8.2, otherFinancialExpense = 4.9,
+      debt = 285.4, openingDebt = 228.4, cash = 27.2, assets = 1264.4, investment = 200.7, taxRate = 22.15,
       sectorShares = {0.445, 0.2292, 0.3257}, educationShares = {0.2493, 0.5631, 0.1877},
       careCostPerInhabitant = {21031, 177681})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -60,8 +60,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1132.1, priorYearSettlement = 7, grants = 387.1,
       grantComponents = {232.7, 12.7, 60.4, 18.2, 57},
       payroll = 1053.8, pension = 75.8, otherOperatingExpense = 537, operatingRevenue = 276.6, netCostRoundingAdjustment = 0,
-      depreciation = 72.1, financialIncome = 16.8, interestExpense = 19.1, otherFinancialExpense = 2.6,
-      debt = 1277, openingDebt = 1191, cash = 85.8, assets = 1139.2, investment = 100.9, taxRate = 22.15,
+      depreciation = 72.1, financialIncome = 1.1, interestExpense = 3.5, otherFinancialExpense = 2.6,
+      debt = 228.4, openingDebt = 217.4, cash = 85.8, assets = 1139.2, investment = 100.9, taxRate = 22.15,
       sectorShares = {0.4518, 0.2287, 0.3195}, educationShares = {0.2648, 0.5511, 0.1842},
       careCostPerInhabitant = {19593, 177603})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -76,8 +76,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1071.7, priorYearSettlement = 3.6, grants = 379.6,
       grantComponents = {216.7, 14.2, 64.8, 15.2, 55.6},
       payroll = 1023.7, pension = 84.4, otherOperatingExpense = 495.3, operatingRevenue = 285.1, netCostRoundingAdjustment = 0,
-      depreciation = 70.6, financialIncome = 21.2, interestExpense = 19.3, otherFinancialExpense = 3.4,
-      debt = 1191, openingDebt = 1164.8, cash = 96.6, assets = 1109.7, investment = 63.4, taxRate = 22.15,
+      depreciation = 70.6, financialIncome = 6, interestExpense = 4, otherFinancialExpense = 3.4,
+      debt = 217.4, openingDebt = 272.1, cash = 96.6, assets = 1109.7, investment = 63.4, taxRate = 22.15,
       sectorShares = {0.4636, 0.2289, 0.3076}, educationShares = {0.2709, 0.5427, 0.1864},
       careCostPerInhabitant = {18809, 175376})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -92,8 +92,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1021.7, priorYearSettlement = -5.3, grants = 362.2,
       grantComponents = {216.7, 9.6, 22.4, 14.7, 49.2},
       payroll = 994.9, pension = 81.3, otherOperatingExpense = 501.4, operatingRevenue = 288.5, netCostRoundingAdjustment = 0,
-      depreciation = 55.5, financialIncome = 23.2, interestExpense = 20.5, otherFinancialExpense = 8.2,
-      debt = 1164.8, openingDebt = 1178.4, cash = 112, assets = 930.7, investment = 92.7, taxRate = 22.15,
+      depreciation = 55.5, financialIncome = 7.5, interestExpense = 4.8, otherFinancialExpense = 8.2,
+      debt = 272.1, openingDebt = 274.9, cash = 112, assets = 930.7, investment = 92.7, taxRate = 22.15,
       sectorShares = {0.4615, 0.2268, 0.3117}, educationShares = {0.282, 0.53, 0.188},
       careCostPerInhabitant = {18691, 174633})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -108,8 +108,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 1022.7, priorYearSettlement = 0.5, grants = 303.9,
       grantComponents = {208.5, 7.3, 15.2, 11.7, 47.2},
       payroll = 975.1, pension = 68.3, otherOperatingExpense = 488.5, operatingRevenue = 268.7, netCostRoundingAdjustment = 0,
-      depreciation = 52.6, financialIncome = 27, interestExpense = 22, otherFinancialExpense = 2.7,
-      debt = 1178.4, openingDebt = 1168.3, cash = 93.2, assets = 896.5, investment = 52, taxRate = 22.15,
+      depreciation = 52.6, financialIncome = 10.4, interestExpense = 5.4, otherFinancialExpense = 2.7,
+      debt = 274.9, openingDebt = 299.8, cash = 93.2, assets = 896.5, investment = 52, taxRate = 22.15,
       sectorShares = {0.4503, 0.2362, 0.3135}, educationShares = {0.2838, 0.5249, 0.1913},
       careCostPerInhabitant = {18071, 171278})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -124,8 +124,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 989.3, priorYearSettlement = -3.2, grants = 295.1,
       grantComponents = {199.1, 17.6, 3.4, 4.3, 45.7},
       payroll = 947.6, pension = 70.5, otherOperatingExpense = 499.1, operatingRevenue = 305.4, netCostRoundingAdjustment = 0,
-      depreciation = 57.7, financialIncome = 32.7, interestExpense = 23, otherFinancialExpense = 2.3,
-      debt = 1168.3, openingDebt = 1177.2, cash = 114, assets = 900.6, investment = 47.4, taxRate = 22.15,
+      depreciation = 57.7, financialIncome = 16.1, interestExpense = 6.3, otherFinancialExpense = 2.3,
+      debt = 299.8, openingDebt = 342.7, cash = 114, assets = 900.6, investment = 47.4, taxRate = 22.15,
       sectorShares = {0.4515, 0.2315, 0.317}, educationShares = {0.2923, 0.5176, 0.1901},
       careCostPerInhabitant = {17404, 165681})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -140,8 +140,8 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       tax = 972.1, priorYearSettlement = 1.1, grants = 278.3,
       grantComponents = {193.3, 6, -0.2, 12.8, 39},
       payroll = 914.2, pension = 66, otherOperatingExpense = 501.6, operatingRevenue = 304.6, netCostRoundingAdjustment = 0,
-      depreciation = 47.4, financialIncome = 26.8, interestExpense = 11.5, otherFinancialExpense = 18.3,
-      debt = 1177.2, openingDebt = 1196.1, cash = 115.8, assets = 914, investment = 76.3, taxRate = 22.15,
+      depreciation = 47.4, financialIncome = 18.8, interestExpense = 3.5, otherFinancialExpense = 18.3,
+      debt = 342.7, openingDebt = 371.5, cash = 115.8, assets = 914, investment = 76.3, taxRate = 22.15,
       sectorShares = {0.4395, 0.2308, 0.3297}, educationShares = {0.2953, 0.5156, 0.1892},
       careCostPerInhabitant = {16734, 160972})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
@@ -268,7 +268,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
     annotation(Documentation(info = "<html><p>Källa: SCB, Statistikdatabasen (CC BY 4.0): räkenskapssammandraget (TAB6777, TAB6779,
 TAB6782, TAB4202, TAB5179), befolkningen per ettårsålder och befolkningsförändringar; Kolada för omsorgskostnad per invånare
 och nettokostnad per verksamhet. Arkiv data/downloads/20261118T203655Z. Kompletteringar från årsredovisning och kontroll av total befolkning dokumenteras i respektive kommuns data. Anläggningstillgångarna innehåller
-pågående arbeten, som SCB inte särredovisar. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
+pågående arbeten, som SCB inte särredovisar. Skulden är kommunens egna lån: det som
+kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och räntan på den delen är borttagen ur både
+räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
   model Annual "Finspångs ekonomi år för år från bokslutet 2025"

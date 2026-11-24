@@ -5,7 +5,7 @@
  "name": "Finspång",
  "packageName": "Finspang",
  "unit": "mnkr; persons",
- "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); debt is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
+ "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\n  Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables\n  from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest\n  expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's\n  items do not give the borrowing or the lending, annual-report-inputs.json gives them from the municipality's reports:\n  externalBankDebt (all borrowing), ownDebt (the municipality's own) and onLending (lent to its companies).\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
  "olderShares": [
   0.6824909747292419,
   0.2671480144404332,
@@ -73,11 +73,11 @@
    "operatingRevenue": 304.649,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 47.373,
-   "financialIncome": 26.793,
-   "interestExpense": 11.496,
+   "financialIncome": 18.75678593856655,
+   "interestExpense": 3.4597859385665544,
    "otherFinancialExpense": 18.269,
-   "debt": 1177.237,
-   "openingDebt": 1196.063,
+   "debt": 342.7160000000001,
+   "openingDebt": 371.54200000000014,
    "cash": 115.845,
    "assets": 913.97,
    "investment": 76.27,
@@ -101,6 +101,10 @@
     2016,
     2017
    ],
+   "onLending": {
+    "loans": 834.521,
+    "interest": 8.036214061433446
+   },
    "olderShares": [
     0.7395305164319249,
     0.2163380281690141,
@@ -168,11 +172,11 @@
    "operatingRevenue": 305.439,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 57.745,
-   "financialIncome": 32.742,
-   "interestExpense": 22.957,
+   "financialIncome": 16.073790637482215,
+   "interestExpense": 6.288790637482219,
    "otherFinancialExpense": 2.2729999999999997,
-   "debt": 1168.35,
-   "openingDebt": 1177.237,
+   "debt": 299.82899999999995,
+   "openingDebt": 342.7160000000001,
    "cash": 113.996,
    "assets": 900.601,
    "investment": 47.354,
@@ -196,6 +200,10 @@
     2017,
     2018
    ],
+   "onLending": {
+    "loans": 868.521,
+    "interest": 16.668209362517782
+   },
    "olderShares": [
     0.7345759552656105,
     0.22050326188257222,
@@ -263,11 +271,11 @@
    "operatingRevenue": 268.667,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 52.575,
-   "financialIncome": 26.986,
-   "interestExpense": 22.008,
+   "financialIncome": 10.367711989050427,
+   "interestExpense": 5.389711989050426,
    "otherFinancialExpense": 2.7230000000000025,
-   "debt": 1178.408,
-   "openingDebt": 1168.35,
+   "debt": 274.88699999999994,
+   "openingDebt": 299.82899999999995,
    "cash": 93.202,
    "assets": 896.519,
    "investment": 52.018,
@@ -291,6 +299,10 @@
     2018,
     2019
    ],
+   "onLending": {
+    "loans": 903.521,
+    "interest": 16.618288010949573
+   },
    "olderShares": [
     0.7368323784882647,
     0.21622620587691738,
@@ -358,11 +370,11 @@
    "operatingRevenue": 288.548,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 55.478,
-   "financialIncome": 23.233,
-   "interestExpense": 20.526,
+   "financialIncome": 7.49848305926696,
+   "interestExpense": 4.791483059266959,
    "otherFinancialExpense": 8.18,
-   "debt": 1164.82,
-   "openingDebt": 1178.408,
+   "debt": 272.1039999999999,
+   "openingDebt": 274.88699999999994,
    "cash": 112.012,
    "assets": 930.704,
    "investment": 92.667,
@@ -386,6 +398,10 @@
     2019,
     2020
    ],
+   "onLending": {
+    "loans": 892.716,
+    "interest": 15.734516940733041
+   },
    "olderShares": [
     0.7350285608992077,
     0.2177998894416805,
@@ -453,11 +469,11 @@
    "operatingRevenue": 285.13,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 70.557,
-   "financialIncome": 21.215,
-   "interestExpense": 19.265,
+   "financialIncome": 5.953337360239745,
+   "interestExpense": 4.003337360239746,
    "otherFinancialExpense": 3.375,
-   "debt": 1191,
-   "openingDebt": 1164.82,
+   "debt": 217.44399999999996,
+   "openingDebt": 272.1039999999999,
    "cash": 96.641,
    "assets": 1109.695,
    "investment": 63.39,
@@ -481,6 +497,10 @@
     2020,
     2021
    ],
+   "onLending": {
+    "loans": 973.556,
+    "interest": 15.261662639760255
+   },
    "olderShares": [
     0.7261882914296202,
     0.22572949164984402,
@@ -548,11 +568,11 @@
    "operatingRevenue": 276.619,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 72.085,
-   "financialIncome": 16.752,
-   "interestExpense": 19.099,
+   "financialIncome": 1.1035733030794148,
+   "interestExpense": 3.450573303079416,
    "otherFinancialExpense": 2.5710000000000015,
-   "debt": 1277,
-   "openingDebt": 1191,
+   "debt": 228.44399999999996,
+   "openingDebt": 217.44399999999996,
    "cash": 85.811,
    "assets": 1139.239,
    "investment": 100.885,
@@ -576,6 +596,10 @@
     2021,
     2022
    ],
+   "onLending": {
+    "loans": 1048.556,
+    "interest": 15.648426696920584
+   },
    "olderShares": [
     0.7210921751878322,
     0.2314458493677845,
@@ -643,11 +667,11 @@
    "operatingRevenue": 280.016,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 74.39,
-   "financialIncome": 39.285,
-   "interestExpense": 44.114,
+   "financialIncome": 3.411514442748093,
+   "interestExpense": 8.240514442748093,
    "otherFinancialExpense": 4.874000000000002,
-   "debt": 1474,
-   "openingDebt": 1277,
+   "debt": 285.44399999999996,
+   "openingDebt": 228.44399999999996,
    "cash": 27.227,
    "assets": 1264.437,
    "investment": 200.686,
@@ -671,6 +695,10 @@
     2022,
     2023
    ],
+   "onLending": {
+    "loans": 1188.556,
+    "interest": 35.873485557251904
+   },
    "olderShares": [
     0.7045951859956237,
     0.24963530269876003,
@@ -738,11 +766,11 @@
    "operatingRevenue": 274.475,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 82.875,
-   "financialIncome": 57.878,
-   "interestExpense": 45,
+   "financialIncome": 21.25986939820742,
+   "interestExpense": 8.38186939820742,
    "otherFinancialExpense": 16.795,
-   "debt": 1650,
-   "openingDebt": 1474,
+   "debt": 296.44399999999996,
+   "openingDebt": 285.44399999999996,
    "cash": 74.451,
    "assets": 1278.407,
    "investment": 98.471,
@@ -766,6 +794,10 @@
     2023,
     2024
    ],
+   "onLending": {
+    "loans": 1353.556,
+    "interest": 36.61813060179258
+   },
    "olderShares": [
     0.6948722594672948,
     0.25964848704475446,
@@ -833,11 +865,11 @@
    "operatingRevenue": 266.316,
    "netCostRoundingAdjustment": 0.0,
    "depreciation": 82.461,
-   "financialIncome": 51.127,
-   "interestExpense": 43,
+   "financialIncome": 15.485357747300853,
+   "interestExpense": 7.35835774730085,
    "otherFinancialExpense": 14.04,
-   "debt": 1777,
-   "openingDebt": 1650,
+   "debt": 290.0,
+   "openingDebt": 296.44399999999996,
    "cash": 147.842,
    "assets": 1311.846,
    "investment": 121.437,
@@ -861,6 +893,10 @@
     2024,
     2025
    ],
+   "onLending": {
+    "loans": 1487.0,
+    "interest": 35.64164225269915
+   },
    "olderShares": [
     0.6824909747292419,
     0.2671480144404332,

@@ -100,7 +100,7 @@
       "productivity": 0.0,
       "migrationDelta": 0,
       "birthChange": 0,
-      "interestRate": 4.7204756982890475,
+      "interestRate": 4.5333219945500876,
       "taxRate": 21.75,
       "investment": 1171.061,
       "adjustment": 0.5,
@@ -132,14 +132,14 @@
     "tax": 8159.794,
     "grants": 2530.753,
     "cash": 123.441,
-    "debt": 17943.891,
+    "debt": 8852,
     "assets": 18450.051,
     "investment": 1171.061,
     "deaths": 1260.0,
     "depreciation": 736.972,
-    "financialIncome": 1179.898,
+    "financialIncome": 791.7863804219893,
     "otherFinancialExpense": 326.793,
-    "interestExpense": 769.092,
+    "interestExpense": 380.98038042198937,
     "priorYearSettlement": -1.162,
     "taxRate": 21.75,
     "operatingAccounts": {
@@ -579,6 +579,10 @@
         ]
       ],
       "novemberPopulation": 145026
+    },
+    "onLending": {
+      "loans": 9103,
+      "interest": 388.1116195780106
     }
   },
   "history": [
@@ -1597,6 +1601,8 @@
   "sources": {
     "annual2024": "https://norrkoping.se/download/18.8f5aac4196f138bba110e5d/1748936883175/Norrk%C3%B6pings-kommun-%C3%85rsredovisning2024-del1.pdf",
     "annual2025": "https://norrkoping.se/download/18.3a8c6b3019eafce305b3e1/1781159178882/%C3%85rsredovisning%202025%20-%20del%201.pdf",
+    "annual2021": "https://norrkoping.se/kommun-och-politik/om-norrkoping/ekonomi-fakturor-och-budget/arsredovisning",
+    "annual2023": "https://norrkoping.se/kommun-och-politik/om-norrkoping/ekonomi-fakturor-och-budget/arsredovisning",
     "statistics": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
     "archive": "data/downloads/20261119T090421Z",
     "accounts": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777",
