@@ -25,6 +25,10 @@ volume and savings, one-off items, financial items other than interest (constant
 municipality's population (the model's projection throughout) and model error. The steps are cumulative in
 this order; with another order a step's share can differ where causes interact (wages and volume, debt and rate).
 
+Two more runs test the model's inflation scenario: the believed run with inflationShockPath set to the price
+surprise and nothing else, once with the default shares and once with the state compensating the grants. They
+show whether the mechanism a user gets from the scenario button gives what the accounts show.
+
 Beside the runs: SKR's own forecast of the municipality's tax and grants at the time, from the recovered
 workbooks (data/skr-historical/forecasts.json), where one was read out.
 
@@ -79,7 +83,7 @@ def interest_rate(ledgers, year):
     return ledgers[year]['interest'] / debt if debt > 0 else 0
 
 
-def model_source(origin, horizon, v, done, ledgers, older_shares=None):
+def model_source(origin, horizon, v, done, ledgers, older_shares=None, extra=()):
     """The model with every input in `done` set to its outcome."""
     n0, path = hv.national_path(origin, horizon, v)
     years = [origin + i for i in range(1, horizon + 1)]
@@ -117,6 +121,7 @@ def model_source(origin, horizon, v, done, ledgers, older_shares=None):
         lines.append('interestRatePath = ' + hv.modelica_array([rate(y) for y in years]))
     if 'investment' in done:
         lines.append('investmentPath = ' + hv.modelica_array([ledgers[y]['investment'] for y in years]))
+    lines += extra
     return f'model Run\n  extends {hv.PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
@@ -142,17 +147,23 @@ def main():
     older = regional.get(ORIGIN, {}).get('olderShares')
     runs = {}
     with tempfile.TemporaryDirectory(prefix='explain-') as tmp:
-        def run(name, done):
+        def run(name, done, extra=()):
             directory = Path(tmp) / name
             directory.mkdir()
             hv.MODEL = MODEL  # simulate() takes twelve steps a year for the continuous model
-            result = hv.simulate(ORIGIN, horizon, model_source(ORIGIN, horizon, v, done, ledgers, older), directory)
+            result = hv.simulate(ORIGIN, horizon, model_source(ORIGIN, horizon, v, done, ledgers, older, extra), directory)
             return {y: {'tax': m['tax'], 'grants': m['grants'], 'payroll': m['payroll'], 'pension': m['pensionExpense'],
                         'otherCosts': m['otherOperatingExpense'], 'operatingRevenue': m['operatingRevenue'],
                         'depreciation': m['depreciation'], 'interest': m['interest'], 'result': m['result'],
                         'debt': m['debt'], 'population': m['population']} for y, m in result.items()}
         for k, step in enumerate(STEPS):
             runs[step] = run(step, STEPS[:k + 1])
+        # The model's inflation scenario, fed only the price surprise: does its mechanism give what happened?
+        pkv = hv.pkv_outcomes()
+        shock = [pkv[y]['other'] - v['other'][y] for y in years]
+        path = 'inflationShockPath = ' + hv.modelica_array(shock)
+        scenario = {'mechanism': run('mechanism', STEPS[:1], [path]),
+                    'compensated': run('compensated', STEPS[:1], [path, 'inflationGrantCompensation = 1'])}
     outcome = {y: {'tax': o['tax'], 'grants': o['grants'], 'payroll': o.get('payroll'), 'pension': o.get('pension'),
                    'otherCosts': o.get('otherExpense'), 'operatingRevenue': o.get('operatingRevenue'),
                    'depreciation': o.get('depreciation'), 'interest': o.get('interest'), 'result': o['result'],
@@ -185,6 +196,18 @@ def main():
            'baseYear': {'result': o0['result'], 'otherFinancialNet': other_net(o0)},
            'ladder': ladder, 'remainingByLine': remaining, 'outcome': {str(y): o for y, o in outcome.items()},
            'runs': {s: {str(y): r for y, r in rows.items()} for s, rows in runs.items()},
+           'inflationScenario': {
+               'description': 'The believed run with the model\'s inflation scenario and nothing else: inflationShockPath is the '
+                              'price surprise (SKR\'s price index for other costs, outcome minus the circular). mechanism has '
+                              'the model\'s default shares; compensated also has inflationGrantCompensation = 1 (the state '
+                              'raises the grants by the year before\'s extra inflation).',
+               'shock': shock, 'delayed': [((shock[i - 1] if i > 0 else 0) + (shock[i - 2] if i > 1 else 0)) / 2 for i in range(len(years))],
+               'evidence': {str(y): {'labourIndexAboveBelieved': pkv[y]['labour'] - v['labour'][y],
+                                     'taxBaseAboveBelieved': hv.tax_base_outcomes()[y] - v['taxBase'][y],
+                                     'pensionOverBelievedPath': ledgers[y]['pension'] / runs['believed'][y]['pension'] - 1,
+                                     'paidRateAboveBaseYear': interest_rate(ledgers, y) - interest_rate(ledgers, ORIGIN)}
+                            for y in years},
+               'runs': {name: {str(y): r for y, r in rows.items()} for name, rows in scenario.items()}},
            'skrForecasts': skr_forecasts(years)}
     suffix = '' if MODEL == 'Continuous' else '-annual'
     target = ROOT / (f'data/outcome-explanation{suffix}.json' if hv.CODE == '0583' else f'data/municipalities/{hv.CODE}/outcome-explanation{suffix}.json')
@@ -194,6 +217,8 @@ def main():
     for step in STEPS:
         print(f'{LABELS[step]:46s}' + ''.join(f'{runs[step][y]["result"]:8.0f}' for y in years))
     print(f'{"Bokslut":46s}' + ''.join(f'{outcome[y]["result"]:8.0f}' for y in years))
+    for name, label in (('mechanism', 'Inflationsscenariot, bara prischocken'), ('compensated', 'Inflationsscenariot med statlig kompensation')):
+        print(f'{label:46s}' + ''.join(f'{scenario[name][y]["result"]:8.0f}' for y in years))
     print(f'{"Kvar att förklara":46s}' + ''.join(f'{runs[last][y]["result"] - outcome[y]["result"]:8.0f}' for y in years))
     for k in (*LINES, 'otherFinancialNet'):
         if all(k in r for r in remaining):
@@ -231,6 +256,26 @@ def summary():
     reached = {y: median([(d['outcome'][str(y)]['otherCosts'] - d['runs']['wages'][str(y)]['otherCosts'])
                           / (d['runs']['prices'][str(y)]['otherCosts'] - d['runs']['wages'][str(y)]['otherCosts'])
                           for d in runs.values()]) for y in years}
+    # The inflation scenario against the accounts: each line, and the result's change from the believed run.
+    scenario = {'lines': {}, 'resultAgainstBelieved': {}}
+    for line in ('tax', 'grants', 'payroll', 'pension', 'otherCosts', 'interest'):
+        scenario['lines'][line] = {str(y): median([share(d['inflationScenario']['runs']['mechanism'][str(y)][line] - d['outcome'][str(y)][line],
+                                                         d['outcome'][str(y)][line]) for d in runs.values() if d['outcome'][str(y)][line]])
+                                   for y in years}
+    usual = [d for code, d in runs.items() if code != '0581']  # Norrköping's 2022 holds the Ostlänken provision
+    for name, source in (('mechanism', lambda d, y: d['inflationScenario']['runs']['mechanism'][y]['result']),
+                         ('compensated', lambda d, y: d['inflationScenario']['runs']['compensated'][y]['result']),
+                         ('accounts', lambda d, y: d['outcome'][y]['result'])):
+        scenario['resultAgainstBelieved'][name] = {
+            str(y): median([share(source(d, str(y)) - d['runs']['believed'][str(y)]['result'],
+                                  d['outcome'][str(y)]['tax'] + d['outcome'][str(y)]['grants']) for d in usual]) for y in years}
+    first = next(iter(runs.values()))['inflationScenario']
+    evidence = {str(y): {'priceSurprise': first['shock'][i], 'delayed': first['delayed'][i],
+                         'labourIndexAboveBelieved': first['evidence'][str(y)]['labourIndexAboveBelieved'],
+                         'taxBaseAboveBelieved': first['evidence'][str(y)]['taxBaseAboveBelieved'],
+                         'pensionOverBelievedPath': median([d['inflationScenario']['evidence'][str(y)]['pensionOverBelievedPath'] for d in runs.values()]),
+                         'paidRateAboveBaseYear': median([d['inflationScenario']['evidence'][str(y)]['paidRateAboveBaseYear'] for d in runs.values()])}
+                for i, y in enumerate(years)}
     forecasts = []
     path = ROOT / 'data/skr-historical/forecasts.json'
     for v in json.loads(path.read_text())['vintages'] if path.exists() else []:
@@ -259,6 +304,11 @@ def summary():
                                         'payrollPercent': median(g['payroll']), 'otherCostsPercent': median(g['otherCosts'])}
                                for y, g in by_year.items()} for name, by_year in gaps.items()},
            'priceSurpriseReachingOtherCosts': {str(y): v for y, v in reached.items()},
+           'inflationScenario': {'description': 'The model\'s inflation scenario from the base year, fed the price surprise only. lines: '
+                                                'median of the model minus the accounts, per cent of the line. resultAgainstBelieved: '
+                                                'median change of the result from the believed run, per cent of tax and grants '
+                                                '(12 municipalities, without Norrköping). evidence: what the shares are set after.',
+                                 **scenario, 'evidence': evidence},
            'taxAndGrantsForecasts': forecasts,
            'notes': ['believed: the model with what was known in the spring after the base year. explained: the same model '
                      'with wages, prices, pensions, tax base, grants, interest rate and investments set to their outcomes.',
@@ -272,6 +322,12 @@ def summary():
         for y, g in by_year.items():
             print(name, y, {k: round(v, 1) for k, v in g.items()})
     print('price surprise reaching other costs', {y: round(v, 2) for y, v in reached.items()})
+    for line, by_year in scenario['lines'].items():
+        print('scenario', line, {y: round(v, 1) for y, v in by_year.items()})
+    for name, by_year in scenario['resultAgainstBelieved'].items():
+        print('result against believed', name, {y: round(v, 1) for y, v in by_year.items()})
+    for y, e in evidence.items():
+        print('evidence', y, {k: round(100 * v, 1) for k, v in e.items()})
     for f in forecasts:
         print(f['forecast'], [(r['year'], round(r['meanErrorPercent'], 1)) for r in f['rows']])
 

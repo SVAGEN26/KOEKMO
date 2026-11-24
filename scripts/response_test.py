@@ -34,7 +34,8 @@ so a municipality's own wage drift is in the cost growth. The service volume use
 shares and care weights of 2025 for the whole period. Costs include pensions (5-8 % of the item), which the
 model does not scale with volume. The capacity starts at the need of 2009, so 2010-2011 are run-in and not
 scored. Years with a one-off that the annual report does not split out are left out (trendExclude). Not
-tested: the interest rate's pass-through, the tax rate, pension costs and the inflation scenario's pass-through.
+tested: the interest rate's pass-through, the tax rate and pension costs. The inflation scenario is compared with
+2022-2025 in scripts/explain_outcome.py.
 
 Writes data/response-test.json.
 """

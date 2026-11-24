@@ -54,8 +54,10 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
     (33,6 % av skatt och bidrag) mot 364 mnkr räknat ur delposterna som modellen använder. Skillnaden är inte
     utredd; avsättningen för Ostlänken 2022 (−3 281 mnkr) är en möjlig förklaring att kontrollera i
     årsredovisningen 2025. Kortet saknar en not om engångsposter.
-12. Förklaringskörningen 2022–2025: övriga kostnader följer inte SKR:s prisindex efter 2022. Inte prövat om
-    inflationsscenariots genomslag på priser bör vara lägre än 1 efter första året.
+12. Förklaringskörningen 2022–2025: övriga kostnader följer inte SKR:s prisindex efter 2022 (kommunernas
+    besparingar). Inflationsscenariot har kvar fullt genomslag på priserna; inget reglage för det.
+13. Inflationsscenariots andelar (0,4 / 8 / 0,5) är satta efter en enda period. I pensionstalet ligger 2023 års
+    pensionsavtal; det är inte separerat från inflationen.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 
@@ -1231,3 +1233,28 @@ arkivera data.
 - `scripts/hindcast_vintages.py`: utfallsinläsningen ligger i `outcomes()`; kommunkoden läses bara ur
   argument som är siffror (annars tog testkörningen fel argument). Bakåttestens siffror är oförändrade.
 - Tester 2026-11-24: 68 JavaScript, 76 Python, `check:units` och `validate:modelica` går igenom.
+
+## Inflationsscenariot omgjort efter 2022–2025 (2026-11-24)
+
+- Prövning: körningen "som man trodde" från bokslut 2021 plus enbart prisöverraskningen (7,8/2,5/0,6/0,3
+  procentenheter, SKR:s index för övrig förbrukning mot decembercirkuläret) som `inflationShockPath`. Med de
+  gamla andelarna (löner och skatteunderlag hela förra årets inflation, pension 1:1 samma år och kvar, ränta
+  samma år) blev skatten 6–7 % för hög från 2024, pensionskostnaden 18–28 % för låg 2023–2024, räntan 3,6
+  gånger utfallet 2022 och resultatet föll 5,2 % av skatt och bidrag direkt och låg kvar (median, 13 kommuner).
+  Bokslutens resultat mot det man trodde: −0,5/−4,3/−4,6/−1,2 %.
+- Ny regel i `Components.Scenario`: priserna samma år; löner, skatteunderlag, pensionskostnad och marknadsränta
+  följer den fördröjda inflationen `inflationDelayed` = medel av de två föregående årens. Andelar:
+  `inflationWagePassThrough` 0,4, `inflationPensionPassThrough` 8 (över banan, tillbaka när inflationen är
+  över), `inflationRateResponse` 0,5. Underlag (`data/outcome-explanation-summary.json`, `inflationScenario.evidence`):
+  arbetskraftsindex 5,0 och skatteunderlag 3,7 procentenheter över cirkuläret på fyra år mot 10,5 fördröjd
+  inflation; pensionskostnad 34/55/15 % över banan 2023–2025; betald ränta 1,8/2,1 procentenheter över 2021
+  åren 2023–2024.
+- Efter ändringen, median: skatt −2,9/−3,2/−0,1/+0,4 %, löner −2,1/−3,4/−3,0/−2,8 %, pension
+  +9,2/−2,0/−8,7/−2,3 %. Resultat mot det man trodde −3,5/−6,6/−7,5/−5,4 %, och med
+  `inflationGrantCompensation = 1` −3,5/−4,6/−4,8/−2,5 %. Det är en anpassning till perioden, inte ett
+  oberoende test. Första året är scenariot för dystert (skatteunderlaget steg redan 2022).
+- Sidan: två nya reglage under Ränte- och inflationschock (löner och skatteunderlag, pensionskostnad), nya
+  hjälptexter. Högre inflation för Motala från bokslut 2025: resultat 39 mnkr under grundbanan 2026, 117 under
+  2028 (då negativt), 109 under 2033 (tidigare 49 och 105). Läst från sidan i headless Chromium 2026-11-24.
+- Min bedömning, inte användarens beslut: jag ändrade standardvärdena utan att fråga först, eftersom de gamla
+  saknade underlag och motsades av den enda period som finns. Säg till om de ska tillbaka.

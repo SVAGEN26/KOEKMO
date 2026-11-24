@@ -106,16 +106,21 @@ as inputs.
 ### Higher inflation
 
 Extra inflation above the price path (`inflationShock`, `inflationPersistence`,
-or `inflationShockPath` year by year) reaches prices the same year, wages and the
-tax base the year after, pension cost the same year, and the market rate by
-`inflationRateResponse` points per point. General grants stay fixed in kronor
-unless `inflationGrantCompensation` is set. The pass-through shares are
-illustrative assumptions, not estimates. In 2022–2025 the price surprise reached
-other costs in full only the first year (see Accuracy).
+or `inflationShockPath` year by year) reaches the prices of other costs the same
+year. Wages, pension cost and the market rate follow later, with the mean extra
+inflation of the two years before: agreements, the price base amount and interest
+rates are set afterwards. Wages and the tax base take 0.4 of it
+(`inflationWagePassThrough`), pension cost rises 8 times it above its path and
+returns when inflation is over (`inflationPensionPassThrough`), and the market
+rate rises 0.5 points per point (`inflationRateResponse`). General grants stay
+fixed in kronor unless `inflationGrantCompensation` is set. The shares are set
+after 2022–2025 in the county's 13 municipalities, one period (see Accuracy);
+all four are controls on the page.
 
 **Högre inflation** (3 points the first year, half left each year after): for
-Motala from the 2025 accounts the result is 49 mnkr below the base path in 2026
-and 105 mnkr below in 2033.
+Motala from the 2025 accounts the result is 39 mnkr below the base path in 2026,
+117 mnkr below in 2028, when it is negative, and 109 mnkr below in 2033. Without
+compensation from the state the loss stays: prices are up 6 %, the tax base 2.4 %.
 
 These numbers are the site's, read from the page in headless Chromium on
 2026-11-24 with the continuous model. The rate and inflation controls are also
@@ -358,6 +363,42 @@ steps are cumulative in the order shown. Financial items other than interest sta
 at the base year's amount; they dominate in Linköping and Norrköping (Norrköping's
 2022 holds the Ostlänken provision). The site shows the tables for the chosen
 municipality under Källor & validering.
+
+**Does the inflation scenario give what happened?** The same script runs the
+believed forecast with one thing added: the price surprise of 2022–2025 (7.8, 2.5,
+0.6 and 0.3 points) as `inflationShockPath`. The scenario works out the rest.
+Medians for the municipalities, model minus accounts in percent of the line, and
+the result's change from the believed run in percent of tax and grants:
+
+| | 2022 | 2023 | 2024 | 2025 |
+| --- | --- | --- | --- | --- |
+| Tax | −2.9 | −3.2 | −0.1 | 0.4 |
+| Payroll | −2.1 | −3.4 | −3.0 | −2.8 |
+| Pension cost | 9.2 | −2.0 | −8.7 | −2.3 |
+| Other costs | 1.1 | 5.0 | 8.6 | 7.6 |
+| Interest | −19 | −6 | 10 | −52 |
+| Result: the scenario | −3.5 | −6.6 | −7.5 | −5.4 |
+| Result: the scenario, the state compensating the grants | −3.5 | −4.6 | −4.8 | −2.5 |
+| Result: the accounts | −0.5 | −4.3 | −4.6 | −1.2 |
+
+With the grants compensated the year after (`inflationGrantCompensation = 1`, a
+control on the page), the scenario follows the accounts in years two to four. The
+first year it is too gloomy: the tax base rose 2.3 points more than believed
+already in 2022. Other costs are too high from 2023, as above, and interest too
+low in 2025 because the run has no fixed-rate period.
+
+Until 2026-11-24 the scenario had other shares, set without an episode to compare
+with: wages and the tax base took all of the year before's inflation, pension cost
+rose one for one the same year and stayed up, and the rate rose the same year.
+Against 2022–2025 that gave tax 6 to 7 % too high from 2024, pension cost 18 to
+28 % too low in 2023–2024, interest 3.6 times the outcome in 2022, and a result
+that fell 5.2 % at once and stayed there. The shares now are what the period
+shows: SKR's labour-cost index rose 5.0 points more than believed over the four
+years and the tax base 3.7, against 10.5 points of delayed inflation (0.47 and
+0.35); pension cost was 34, 55 and 15 % above the believed path in 2023–2025
+(8.7 to 10.7 per point; the 2023 pension agreement is in that figure, so 8 is
+used); the rate the municipalities paid was 1.8 and 2.1 points above 2021 in
+2023–2024 (0.46 and 0.41 per point). One period.
 
 **SKR's own old forecasts.** They are no longer on SKR's site. Four workbooks were
 recovered from the Internet Archive (`data/skr-historical/`), and

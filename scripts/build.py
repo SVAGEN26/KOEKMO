@@ -85,6 +85,9 @@ def series_catalogue():
             'outcome': {'result': [e['outcome'][y]['result'] for y in years], 'source': e['outcome'][years[0]]['source']},
             'remaining': {k: [r[k] for r in e['remainingByLine']] for k in e['remainingByLine'][0] if k != 'year'},
             'inputs': e['inputs'],
+            'inflationScenario': {
+                'description': e['inflationScenario']['description'], 'priceSurprise': e['inflationScenario']['shock'],
+                **{name: [e['inflationScenario']['runs'][name][y]['result'] for y in years] for name in ('mechanism', 'compensated')}},
             'taxAndGrants': {'outcome': [e['outcome'][y]['tax'] + e['outcome'][y]['grants'] for y in years],
                              'believed': [e['runs']['believed'][y]['tax'] + e['runs']['believed'][y]['grants'] for y in years],
                              'skr': [{'circular': f['circular'], 'published': f['published'],

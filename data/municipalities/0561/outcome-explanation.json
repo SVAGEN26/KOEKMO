@@ -9,7 +9,7 @@
   2025
  ],
  "circular": "21:49",
- "method": "Explain what happened: run the model from a base year as things were believed, then set one cause at a time\nto what happened, and see how far each takes the result towards the accounts.\n\n    OMC=/path/to/omc python3 scripts/explain_outcome.py [code Package] [--origin 2021]\n    python3 scripts/explain_outcome.py --summary     # after all 13: data/outcome-explanation-summary.json\n\nThe closing accounts are the facts. The first run is a forecast with what was known in the spring after the\nbase year (the `skr` set of scripts/hindcast_vintages.py: SKR's December circular for the national tax base,\nwages and prices; grants 2 % a year). Each later run keeps the earlier changes and sets one more input to its\noutcome. Only inputs are changed, through the model's ordinary parameters; no equation is.\n\n  believed    SKR's December circular of the base year. Years beyond the circular's three keep its last rates.\n  wages       wageGrowthPath: SKR's labour-cost index as it turned out (PKV, October 2026).\n  prices      priceGrowthPath: SKR's price index for other costs as it turned out.\n  pensions    pensionExpensePath: the pension cost in the accounts.\n  taxBase     referenceTax: the national tax base as it turned out (SCB; 2025 is SKR's estimate).\n  grants      the state's general grants as booked, per component (as the hindsight set).\n  interest    interestRatePath: the year's interest expense over the mean of the debt at the start and the end of\n              the year, accounts.\n  investment  investmentPath: the year's investments in the accounts.\n\nWhat is left after the last outcome step is what these causes do not explain: the municipality's own decisions on\nvolume and savings, one-off items, financial items other than interest (constant in the model), the\nmunicipality's population (the model's projection throughout) and model error. The steps are cumulative in\nthis order; with another order a step's share can differ where causes interact (wages and volume, debt and rate).\n\nBeside the runs: SKR's own forecast of the municipality's tax and grants at the time, from the recovered\nworkbooks (data/skr-historical/forecasts.json), where one was read out.\n\nHINDCAST_MODEL=Annual runs the annual model; the default here is Continuous, the model the site runs.\nWrites data/outcome-explanation.json (Motala) or data/municipalities/<code>/outcome-explanation.json.",
+ "method": "Explain what happened: run the model from a base year as things were believed, then set one cause at a time\nto what happened, and see how far each takes the result towards the accounts.\n\n    OMC=/path/to/omc python3 scripts/explain_outcome.py [code Package] [--origin 2021]\n    python3 scripts/explain_outcome.py --summary     # after all 13: data/outcome-explanation-summary.json\n\nThe closing accounts are the facts. The first run is a forecast with what was known in the spring after the\nbase year (the `skr` set of scripts/hindcast_vintages.py: SKR's December circular for the national tax base,\nwages and prices; grants 2 % a year). Each later run keeps the earlier changes and sets one more input to its\noutcome. Only inputs are changed, through the model's ordinary parameters; no equation is.\n\n  believed    SKR's December circular of the base year. Years beyond the circular's three keep its last rates.\n  wages       wageGrowthPath: SKR's labour-cost index as it turned out (PKV, October 2026).\n  prices      priceGrowthPath: SKR's price index for other costs as it turned out.\n  pensions    pensionExpensePath: the pension cost in the accounts.\n  taxBase     referenceTax: the national tax base as it turned out (SCB; 2025 is SKR's estimate).\n  grants      the state's general grants as booked, per component (as the hindsight set).\n  interest    interestRatePath: the year's interest expense over the mean of the debt at the start and the end of\n              the year, accounts.\n  investment  investmentPath: the year's investments in the accounts.\n\nWhat is left after the last outcome step is what these causes do not explain: the municipality's own decisions on\nvolume and savings, one-off items, financial items other than interest (constant in the model), the\nmunicipality's population (the model's projection throughout) and model error. The steps are cumulative in\nthis order; with another order a step's share can differ where causes interact (wages and volume, debt and rate).\n\nTwo more runs test the model's inflation scenario: the believed run with inflationShockPath set to the price\nsurprise and nothing else, once with the default shares and once with the state compensating the grants. They\nshow whether the mechanism a user gets from the scenario button gives what the accounts show.\n\nBeside the runs: SKR's own forecast of the municipality's tax and grants at the time, from the recovered\nworkbooks (data/skr-historical/forecasts.json), where one was read out.\n\nHINDCAST_MODEL=Annual runs the annual model; the default here is Continuous, the model the site runs.\nWrites data/outcome-explanation.json (Motala) or data/municipalities/<code>/outcome-explanation.json.",
  "units": "mnkr; population in persons",
  "steps": [
   {
@@ -923,6 +923,157 @@
     "result": 62.23386870745594,
     "debt": 152.1360115288804,
     "population": 11442.63830860746
+   }
+  }
+ },
+ "inflationScenario": {
+  "description": "The believed run with the model's inflation scenario and nothing else: inflationShockPath is the price surprise (SKR's price index for other costs, outcome minus the circular). mechanism has the model's default shares; compensated also has inflationGrantCompensation = 1 (the state raises the grants by the year before's extra inflation).",
+  "shock": [
+   0.078,
+   0.02469999999999996,
+   0.006000000000000023,
+   0.0033963212165002594
+  ],
+  "delayed": [
+   0.0,
+   0.039,
+   0.05134999999999998,
+   0.015349999999999992
+  ],
+  "evidence": {
+   "2022": {
+    "labourIndexAboveBelieved": 0.01060080062266,
+    "taxBaseAboveBelieved": 0.023032623618975206,
+    "pensionOverBelievedPath": -0.036342010678689585,
+    "paidRateAboveBaseYear": -0.019900114679699016
+   },
+   "2023": {
+    "labourIndexAboveBelieved": 0.03182297392246672,
+    "taxBaseAboveBelieved": 0.010829328115907894,
+    "pensionOverBelievedPath": 0.4227080581564997,
+    "paidRateAboveBaseYear": 0.02337149627587568
+   },
+   "2024": {
+    "labourIndexAboveBelieved": 0.031191856538013946,
+    "taxBaseAboveBelieved": 0.0009559026599191001,
+    "pensionOverBelievedPath": 0.6408889474566626,
+    "paidRateAboveBaseYear": 0.0471478457542623
+   },
+   "2025": {
+    "labourIndexAboveBelieved": -0.023712992352954747,
+    "taxBaseAboveBelieved": 0.0016499999999999987,
+    "pensionOverBelievedPath": 0.1490062249085462,
+    "paidRateAboveBaseYear": -0.0059514104470317596
+   }
+  },
+  "runs": {
+   "mechanism": {
+    "2022": {
+     "tax": 572.8243138900426,
+     "grants": 192.3846099787008,
+     "payroll": 464.0010577805185,
+     "pension": 38.50639999999589,
+     "otherCosts": 347.7021539152813,
+     "operatingRevenue": 170.0055143984999,
+     "depreciation": 42.08045913712272,
+     "interest": 3.924992394609711,
+     "result": 39.09937503971514,
+     "debt": 115.6201658231574,
+     "population": 11458.06466632104
+    },
+    "2023": {
+     "tax": 599.1563395346219,
+     "grants": 196.301806483435,
+     "payroll": 486.9620224231259,
+     "pension": 52.23809029122188,
+     "otherCosts": 363.2077656076556,
+     "operatingRevenue": 173.3412864246125,
+     "depreciation": 42.2610960230963,
+     "interest": 5.216833139251107,
+     "result": 19.01362495831847,
+     "debt": 99.94544484176137,
+     "population": 11453.5047126273
+    },
+    "2024": {
+     "tax": 628.1209442242211,
+     "grants": 200.3031525197635,
+     "payroll": 507.0906975864941,
+     "pension": 57.35148264956201,
+     "otherCosts": 373.3040846431031,
+     "operatingRevenue": 176.7331200923116,
+     "depreciation": 42.43246154931952,
+     "interest": 5.002708168542223,
+     "result": 20.0757822392751,
+     "debt": 83.03720105314382,
+     "population": 11448.35369653165
+    },
+    "2025": {
+     "tax": 649.2837572107826,
+     "grants": 204.3629129416622,
+     "payroll": 520.7228819377951,
+     "pension": 46.60229930807034,
+     "otherCosts": 382.6887454788159,
+     "operatingRevenue": 180.1822038525395,
+     "depreciation": 42.59503212096055,
+     "interest": 2.404500999667273,
+     "result": 38.91541415967515,
+     "debt": 47.12675477250988,
+     "population": 11442.63830812713
+    }
+   },
+   "compensated": {
+    "2022": {
+     "tax": 572.8243138900426,
+     "grants": 192.3846099787008,
+     "payroll": 464.0010577805185,
+     "pension": 38.50639999999589,
+     "otherCosts": 347.7021539152813,
+     "operatingRevenue": 170.0055143984999,
+     "depreciation": 42.08045913712272,
+     "interest": 3.924992394609711,
+     "result": 39.09937503971514,
+     "debt": 115.6201658231574,
+     "population": 11458.06466632104
+    },
+    "2023": {
+     "tax": 599.1563395345208,
+     "grants": 211.5426620947424,
+     "payroll": 486.9620345775921,
+     "pension": 52.23809029121308,
+     "otherCosts": 363.2077674580174,
+     "operatingRevenue": 173.3412863535912,
+     "depreciation": 42.26109603440533,
+     "interest": 4.832611645402353,
+     "result": 34.63868797622411,
+     "debt": 84.32038181253985,
+     "population": 11453.50471259051
+    },
+    "2024": {
+     "tax": 628.1209442616807,
+     "grants": 221.0545309823658,
+     "payroll": 507.0907018168714,
+     "pension": 57.3514826495307,
+     "otherCosts": 373.3040851002461,
+     "operatingRevenue": 176.7331200675117,
+     "depreciation": 42.43246155204351,
+     "interest": 3.517124736829067,
+     "result": 42.31273945603743,
+     "debt": 45.17518080441079,
+     "population": 11448.35369649008
+    },
+    "2025": {
+     "tax": 649.2837572416694,
+     "grants": 226.762172079303,
+     "payroll": 520.7229495510372,
+     "pension": 46.60229930808529,
+     "otherCosts": 382.6887961746448,
+     "operatingRevenue": 180.1822176119424,
+     "depreciation": 42.59503006948962,
+     "interest": 0.5984080235293365,
+     "result": 63.1206638061285,
+     "debt": -1.3226756762606e-09,
+     "population": 11442.63831376076
+    }
    }
   }
  },

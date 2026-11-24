@@ -1161,6 +1161,101 @@
   "2024": 0.19327823749058204,
   "2025": 0.30403815014964736
  },
+ "inflationScenario": {
+  "description": "The model's inflation scenario from the base year, fed the price surprise only. lines: median of the model minus the accounts, per cent of the line. resultAgainstBelieved: median change of the result from the believed run, per cent of tax and grants (12 municipalities, without Norrköping). evidence: what the shares are set after.",
+  "lines": {
+   "tax": {
+    "2022": -2.8733353582829326,
+    "2023": -3.2321309091430597,
+    "2024": -0.11976834076295272,
+    "2025": 0.3652241377147634
+   },
+   "grants": {
+    "2022": 3.0862199966967534,
+    "2023": 0.2712601893668287,
+    "2024": -9.008744835215827,
+    "2025": -5.573715125361874
+   },
+   "payroll": {
+    "2022": -2.1280391770248346,
+    "2023": -3.372518586933712,
+    "2024": -3.0063495632353097,
+    "2025": -2.818009789499214
+   },
+   "pension": {
+    "2022": 9.219023005650909,
+    "2023": -2.007011350800753,
+    "2024": -8.74915897664046,
+    "2025": -2.2807731011315893
+   },
+   "otherCosts": {
+    "2022": 1.1046267866073345,
+    "2023": 5.02501559497144,
+    "2024": 8.600604784978355,
+    "2025": 7.573229596202974
+   },
+   "interest": {
+    "2022": -19.221707888694464,
+    "2023": -6.067432541610406,
+    "2024": 10.302933085267195,
+    "2025": -51.99000947959656
+   }
+  },
+  "resultAgainstBelieved": {
+   "mechanism": {
+    "2022": -3.478901378183419,
+    "2023": -6.589828378823578,
+    "2024": -7.5460531931579995,
+    "2025": -5.437852228110392
+   },
+   "compensated": {
+    "2022": -3.478901378183419,
+    "2023": -4.56224295544197,
+    "2024": -4.849897631448509,
+    "2025": -2.5117561983785786
+   },
+   "accounts": {
+    "2022": -0.5436450202250747,
+    "2023": -4.2941589500058654,
+    "2024": -4.579870270313116,
+    "2025": -1.1986308272897506
+   }
+  },
+  "evidence": {
+   "2022": {
+    "priceSurprise": 0.078,
+    "delayed": 0.0,
+    "labourIndexAboveBelieved": 0.01060080062266,
+    "taxBaseAboveBelieved": 0.023032623618975206,
+    "pensionOverBelievedPath": -0.08440858334048296,
+    "paidRateAboveBaseYear": 0.0028447706916855282
+   },
+   "2023": {
+    "priceSurprise": 0.02469999999999996,
+    "delayed": 0.039,
+    "labourIndexAboveBelieved": 0.03182297392246672,
+    "taxBaseAboveBelieved": 0.010829328115907894,
+    "pensionOverBelievedPath": 0.33887129894220047,
+    "paidRateAboveBaseYear": 0.018193396200924097
+   },
+   "2024": {
+    "priceSurprise": 0.006000000000000023,
+    "delayed": 0.05134999999999998,
+    "labourIndexAboveBelieved": 0.031191856538013946,
+    "taxBaseAboveBelieved": 0.0009559026599191001,
+    "pensionOverBelievedPath": 0.5460679421453876,
+    "paidRateAboveBaseYear": 0.02068240093240093
+   },
+   "2025": {
+    "priceSurprise": 0.0033963212165002594,
+    "delayed": 0.015349999999999992,
+    "labourIndexAboveBelieved": -0.023712992352954747,
+    "taxBaseAboveBelieved": 0.0016499999999999987,
+    "pensionOverBelievedPath": 0.1490062249085462,
+    "paidRateAboveBaseYear": 0.02069510995887717
+   }
+  }
+ },
  "taxAndGrantsForecasts": [
   {
    "forecast": "SKR 21:35",

@@ -483,9 +483,9 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real inflationShock = 0 "Extra inflation första prognosåret utöver prisbanan, andel (0,03 = tre procentenheter)";
     parameter Real inflationPersistence(min = 0, max = 1) = 0.5 "Andel av den extra inflationen som finns kvar året därpå";
     parameter Real inflationShockPath[horizon] = {inflationShock*inflationPersistence^(i - 1) for i in 1:horizon} "Extra inflation per år, andel";
-    parameter Real inflationWagePassThrough = 1 "Andel av förra årets extra inflation som når lönerna (avtalen följer efter)";
-    parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden (uppräkning av pensionsskulden)";
-    parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år (illustrativt)";
+    parameter Real inflationWagePassThrough = 0.4 "Andel av den fördröjda extra inflationen (medel av de två föregående åren) som når lönerna och skatteunderlaget; 2022-2025 cirka 0,35-0,45 (SKR:s arbetskraftsindex och rikets skatteunderlag mot decembercirkuläret 2021)";
+    parameter Real inflationPensionPassThrough = 8 "Pensionskostnadens ökning över banan per enhet fördröjd extra inflation (uppräkning av pensionsskulden med prisbasbeloppet); går tillbaka när inflationen gör det. 2023-2025 cirka 7-10 i länets kommuner, med 2023 års pensionsavtal oseparerat";
+    parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet fördröjd extra inflation (medel av de två föregående åren); den betalda räntan steg 2023-2024 cirka 0,4 per enhet i länets kommuner";
     parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i de generella bidragen; 0 = bidragen fasta i kronor";
     parameter Units.PersonsPerYear migrationDeltaPath[horizon] = fill(migrationDelta, horizon) "Förändrat flyttnetto per år, personer";
     parameter Real birthChangePath[horizon] = fill(birthChange, horizon) "Relativ förändring av födda per år, andel";
@@ -658,16 +658,18 @@ antalet år.</p></html>"));
       final parameter Real deferredAmount = investmentPath[1]*deferInvestmentShare;
       parameter Real interestRatePath[horizon] "Låneränta per år, andel";
       parameter Real inflationShockPath[horizon] = zeros(horizon) "Extra inflation per år utöver prisbanan, andel";
-      parameter Real inflationWagePassThrough = 1 "Andel av förra årets extra inflation som når lönerna";
-      parameter Real inflationPensionPassThrough = 1 "Andel av årets extra inflation som når pensionskostnaden";
-      parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet extra inflation samma år";
+      parameter Real inflationWagePassThrough = 0.4 "Andel av den fördröjda extra inflationen som når lönerna och skatteunderlaget";
+      parameter Real inflationPensionPassThrough = 8 "Pensionskostnadens ökning över banan per enhet fördröjd extra inflation";
+      parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet fördröjd extra inflation";
+      final parameter Real inflationDelayed[horizon] = {((if i > 1 then inflationShockPath[i - 1] else 0) + (if i > 2 then inflationShockPath[i - 2] else 0))/2 for i in 1:horizon}
+        "Fördröjd extra inflation: medel av de två föregående årens, andel. Den når löner, pensioner och ränta";
       parameter Real inflationGrantCompensation = 0 "Andel av förra årets extra inflation som staten kompenserar i bidragen";
       final parameter Real inflationGrantFactor[horizon] = {product({1 + (if j == 1 then 0 else inflationGrantCompensation*inflationShockPath[j - 1]) for j in 1:i}) for i in 1:horizon} "Bidragens faktor mot referensbanan";
-      final parameter Real inflationWage[horizon] = {if i == 1 then 0 else inflationWagePassThrough*inflationShockPath[i - 1] for i in 1:horizon} "Extra löneökning per år, andel";
+      final parameter Real inflationWage[horizon] = inflationWagePassThrough*inflationDelayed "Extra löneökning per år, andel";
       final parameter Real inflationTaxFactor[horizon] = {product({1 + inflationWage[j] for j in 1:i}) for i in 1:horizon} "Skatteunderlaget följer lönerna: faktor mot referensbanan";
       final parameter Real wageRate[horizon + 1] = Data.meanPreservingRates(wageGrowthPath + inflationWage) "Lönenivåns takt vid varje årsskifte i kontinuerlig tid, ln per år";
       final parameter Real priceRate[horizon + 1] = Data.meanPreservingRates(priceGrowthPath + inflationShockPath) "Prisnivåns takt vid varje årsskifte i kontinuerlig tid, ln per år";
-      final parameter Real inflationPensionFactor[horizon] = {product({1 + inflationPensionPassThrough*inflationShockPath[j] for j in 1:i}) for i in 1:horizon} "Pensionskostnadens faktor mot banan";
+      final parameter Real inflationPensionFactor[horizon] = {1 + inflationPensionPassThrough*inflationDelayed[i] for i in 1:horizon} "Pensionskostnadens faktor mot banan; tillbaka på 1 när inflationen är över";
       Interfaces.DemographyDriversOutput demography "Årets demografiska antaganden" annotation(
         Placement(transformation(origin = {-624, -43}, extent = {{-18, -18}, {18, 18}}, rotation = -90), iconTransformation(origin = {-260, -25}, extent = {{-9, -9}, {9, 9}}, rotation = -90)));
       Interfaces.CostDriversOutput operations "Årets löne-, pris- och pensionsantaganden" annotation(
@@ -696,16 +698,21 @@ antalet år.</p></html>"));
       revenue.nationalPopulation = nationalPopulationPath[calendar.pathIndex];
       investment = investmentPath[calendar.pathIndex] +
         (if calendar.pathIndex == 1 then projectPayment - deferredAmount elseif calendar.pathIndex == 2 then deferredAmount else 0);
-      interestRate = interestRatePath[calendar.pathIndex] + inflationRateResponse*inflationShockPath[calendar.pathIndex];
+      interestRate = interestRatePath[calendar.pathIndex] + inflationRateResponse*inflationDelayed[calendar.pathIndex];
       annotation(
         Icon(coordinateSystem(extent = {{-300, -25}, {300, 25}}), graphics = {Rectangle(extent = {{-300, -25}, {300, 25}}, lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-290, -20}, {290, 20}}, textString = "Scenario: årets antaganden", fontSize = 16, textColor = {35, 50, 65})}),
         Documentation(info = "<html><p>Plockar ut årets värden ur de årsvisa banorna. Beslutsparametrar (investeringar,
 skattesats) och yttre antaganden (löner, priser, ränta, SKR:s referens för skatt och bidrag, befolkningsbanan) kommer in i
 modellen här, så att varje komponent får dem genom en koppling.</p>
-<p>En extra inflation (<code>inflationShockPath</code>) når kommunen i olika takt: priserna samma år, lönerna året därpå
-(avtalen), pensionskostnaden samma år (uppräkningen av pensionsskulden), skatteunderlaget med lönerna och marknadsräntan
-med <code>inflationRateResponse</code> per procentenhet. De generella bidragen är fasta i kronor tills staten beslutar annat;
-<code>inflationGrantCompensation</code> anger hur stor del av förra årets extra inflation staten kompenserar. Med noll extra inflation är banorna oförändrade.</p></html>"));
+<p>En extra inflation (<code>inflationShockPath</code>) når kommunen i två steg. Priserna på övriga kostnader stiger samma
+år. Löner, pensionskostnad och marknadsränta följer den fördröjda inflationen, medelvärdet av de två föregående årens
+(<code>inflationDelayed</code>): avtal, prisbasbelopp och räntor sätts i efterhand. Lönerna och skatteunderlaget tar
+<code>inflationWagePassThrough</code> av den (0,4), pensionskostnaden stiger <code>inflationPensionPassThrough</code> gånger
+den över sin bana (8) och går tillbaka när inflationen är över, marknadsräntan stiger <code>inflationRateResponse</code> per
+procentenhet (0,5). De generella bidragen är fasta i kronor tills staten beslutar annat;
+<code>inflationGrantCompensation</code> anger hur stor del av förra årets extra inflation staten kompenserar. Talen är
+satta efter 2022–2025 i länets 13 kommuner (<code>scripts/explain_outcome.py</code>), en enda period. Med noll extra
+inflation är banorna oförändrade.</p></html>"));
     end Scenario;
 
     partial model DemographyBase "Det varje demografimodell ska ge: antaganden in, befolkning ut"

@@ -211,10 +211,15 @@ rate. `rateShock` raises the market rate from a date, counted for the rest of
 that year. The default rate is the base year's reported average rate when the
 annual report gives one, otherwise interest expense over opening debt.
 
-Extra inflation (`inflationShockPath`) reaches prices the same year, wages and
-the tax base the year after, pensions the same year and the market rate by
-`inflationRateResponse` per point; grants stay fixed in kronor unless
-`inflationGrantCompensation` is set. The shares are illustrative.
+Extra inflation s (`inflationShockPath`) reaches the prices of other costs the
+same year. Everything that is set afterwards follows the delayed inflation
+d[t] = (s[t−1] + s[t−2])/2: wage growth rises by `inflationWagePassThrough`·d
+(0.4) and the tax base with it, pension cost is its path times
+1 + `inflationPensionPassThrough`·d (8; back on the path when d is zero), and
+the market rate rises by `inflationRateResponse`·d (0.5). Grants stay fixed in
+kronor unless `inflationGrantCompensation` is set (the share of the year
+before's extra inflation the state adds). The shares are set after 2022–2025,
+see Validation.
 
 Key ratios: result as a share of tax and grants (`resultShare`, the usual
 financial target), interest as a share of tax and grants, and cumulative
@@ -448,8 +453,9 @@ from resampling municipalities with their years (cluster bootstrap). Results in
 
 The test's Python copy of the capacity rule is checked against `Finspang.Annual`
 (to 1e-9) and `Finspang.Continuous` (to 5e-5) in `tests/test_response.py`. Not
-tested: the interest rate's pass-through, the tax rate, pension costs and the
-inflation scenario's pass-through. The 2020 reform of the cost equalisation falls
+tested: the interest rate's pass-through, the tax rate and pension costs. The
+inflation scenario's shares are compared with 2022–2025 under "Explaining an
+outcome" below. The 2020 reform of the cost equalisation falls
 in the period and moved grants towards shrinking municipalities, so the low
 ten-year revenue slope is not evidence of a weaker response to population.
 `data/cost-residual.json` took the need a year late until 2026-11-24; it now
@@ -492,6 +498,22 @@ result's level is therefore not closer to the accounts with the outcomes set in
 revenue and too-low costs cancelled). Its change from the year before is closer in
 2023 and 2025 (1.7 and 1.3 % against 3.7 and 2.0 %), not in 2022 (3.4 against 1.5).
 One period, 13 municipalities.
+
+The inflation scenario is tested in the same script: the believed run with
+`inflationShockPath` set to the price surprise (SKR's index for other costs, outcome
+minus circular: 7.8, 2.5, 0.6, 0.3 points) and nothing else. Medians, model minus
+accounts: tax −2.9, −3.2, −0.1, 0.4 %; payroll −2.1, −3.4, −3.0, −2.8 %; pension cost
+9.2, −2.0, −8.7, −2.3 %; interest −19, −6, 10, −52 % (no fixed-rate period in the
+run). The result's change from the believed run, percent of tax and grants: −3.5,
+−6.6, −7.5, −5.4, and with `inflationGrantCompensation = 1` −3.5, −4.6, −4.8, −2.5,
+against −0.5, −4.3, −4.6, −1.2 in the accounts. The shares come from the same
+period, so this is a fit, not an independent test: labour-cost index 5.0 points and
+tax base 3.7 points above the circular over four years against 10.5 points of
+delayed inflation; pension cost 34, 55 and 15 % above its believed path in
+2023–2025 (the 2023 pension agreement not separated); the paid rate 1.8 and 2.1
+points above 2021 in 2023–2024. Before 2026-11-24 wages and the tax base took all
+of the year before's inflation, pension cost rose one for one the same year and
+stayed, and the rate rose the same year; that put the hit a year early and kept it.
 
 **SKR's old forecasts.** `scripts/read_skr_vintages.py` selects each municipality in
 a macro-free copy of the four recovered workbooks (21:35, 22:28, 23:56, 24:56),

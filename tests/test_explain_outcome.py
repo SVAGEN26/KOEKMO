@@ -100,6 +100,36 @@ class Explanations(unittest.TestCase):
                 last = d['runs']['investment'][str(r['year'])]['result']
                 self.assertAlmostEqual(r['result'], last - d['outcome'][str(r['year'])]['result'])
 
+    def test_the_inflation_scenario_runs_change_only_what_the_scenario_drives(self):
+        for code in CODES:
+            d = explanation(code)
+            s, believed = d['inflationScenario'], d['runs']['believed']
+            self.assertEqual(len(s['shock']), 4)
+            self.assertAlmostEqual(s['delayed'][1], s['shock'][0] / 2)
+            self.assertAlmostEqual(s['delayed'][3], (s['shock'][2] + s['shock'][1]) / 2)
+            first, later = s['runs']['mechanism']['2022'], s['runs']['mechanism']['2024']
+            # The first year only the prices of other costs move; wages, pensions and tax follow the years after.
+            self.assertGreater(first['otherCosts'], believed['2022']['otherCosts'] * 1.05)
+            for line in ('payroll', 'pension', 'tax'):
+                self.assertAlmostEqual(first[line], believed['2022'][line], delta=0.02, msg=f'{code} {line}')
+                self.assertGreater(later[line], believed['2024'][line], msg=f'{code} {line}')
+            self.assertAlmostEqual(later['pension'] / believed['2024']['pension'], 1 + 8 * s['delayed'][2], places=6)
+            # Compensation changes the grants from the second year and nothing on the cost side.
+            paid = s['runs']['compensated']
+            self.assertAlmostEqual(paid['2022']['grants'], first['grants'], delta=0.02)
+            self.assertGreater(paid['2024']['grants'], later['grants'])
+            self.assertAlmostEqual(paid['2024']['payroll'], later['payroll'], delta=0.02)
+
+    def test_the_scenarios_shares_are_what_the_summary_shows(self):
+        # The defaults in Kommunekonomi.mo (0.4, 8, 0.5) are set after these figures; if the data change, look again.
+        e = load('data/outcome-explanation-summary.json')['inflationScenario']['evidence']
+        delayed = sum(v['delayed'] for v in e.values())
+        self.assertAlmostEqual(sum(v['labourIndexAboveBelieved'] for v in e.values()) / delayed, 0.47, delta=0.03)
+        self.assertAlmostEqual(sum(v['taxBaseAboveBelieved'] for v in e.values()) / delayed, 0.35, delta=0.03)
+        ratios = [e[y]['pensionOverBelievedPath'] / e[y]['delayed'] for y in ('2023', '2024', '2025')]
+        self.assertTrue(all(7 < r < 11.5 for r in ratios), ratios)
+        self.assertTrue(all(0.35 < e[y]['paidRateAboveBaseYear'] / e[y]['delayed'] < 0.5 for y in ('2023', '2024')))
+
     def test_the_summary_is_the_files(self):
         summary = load('data/outcome-explanation-summary.json')
         self.assertEqual(sorted(m['municipality'] for m in summary['municipalities']), CODES)
