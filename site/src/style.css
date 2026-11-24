@@ -126,3 +126,7 @@ details.assumption-group .slider:last-child{border-bottom:0}
 @media(min-width:1100px){body.ai-open{padding-right:340px}}
 @media(max-width:720px){.ai-toggle{margin-left:auto}.ai-panel{left:0;width:auto;border-left:0}}
 @media print{.ai-toggle,.ai-panel{display:none}body.ai-open{padding-right:0}}
+/* Rate stress: one colour per path */
+#rate-stress .legend-line[style]:before{background:var(--line);height:1.5px}
+#rate-stress-table th small{display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px}
+#rate-stress-table th[scope=row]{white-space:normal;min-width:240px}

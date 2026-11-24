@@ -1,72 +1,79 @@
 [
-  {
-    "title": "Motala årsredovisning 2025",
-    "publisher": "Motala kommun",
-    "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
-    "status": "Extracted",
-    "use": "Historical cohorts, municipal finance and 2024–2025 operating account components; printed pages 6–7, 43, 47–49, 52–53 and 70. Page 43 reproduces budget/April/August forecasts; original release dates are not yet archived. Rounded mnkr values."
-  },
-  {
-    "title": "Mål och resursplan 2026, plan 2027–2028",
-    "publisher": "Motala kommun",
-    "url": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf",
-    "status": "Downloaded, reference only",
-    "use": "Original PDF downloaded 2026-11-06 and available in the dashboard. Future budget and investment amounts have not been numerically extracted or activated."
-  },
-  {
-    "title": "Ekonomi och budget",
-    "publisher": "Motala kommun",
-    "url": "https://www.motala.se/kommun-och-politik/kommunfakta/ekonomi-och-budget/",
-    "status": "Read",
-    "use": "Budget structure, 21.70% municipal tax rate and April/August/December reporting process."
-  },
-  {
-    "title": "Skatteunderlagsprognoser och modellverktyg",
-    "publisher": "SKR",
-    "url": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg.8271.html",
-    "status": "Read",
-    "use": "National tax-base forecast, municipality population assumptions, tax rate and equalisation. Latest listed workbook read on 2026-10-13: circular 26:28, 2026-10-06."
-  },
-  {
-    "title": "Prognosunderlag K 2026–2033, 26:28",
-    "publisher": "SKR",
-    "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d572/1791283712510/Prognosunderlag-K-2026-2033-26028.xlsm",
-    "status": "Motala revenue and national cost paths active",
-    "use": "Original preserved. Municipality 583 selected in a working copy, VBA removed before recalculation with LibreOffice 24.2.7.2. Blad 1 output rows 38 and 40 converted from tkr to mnkr; include tax settlements, equalisation, LSS and property fee. Population from Blad 2 C29:J29 is 1 November of the preceding year. All eight years reconcile to total row 36. Dashboard scenarios adjust reference revenue with approximate local equations."
-  },
-  {
-    "title": "Folkmängdssiffror och befolkningsprognoser",
-    "publisher": "SKR / SCB",
-    "url": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg/folkmangdssiffrorsomunderlagforbudgetplanering.9004.html",
-    "status": "Read, workbook not imported",
-    "use": "Age-group forecasts and population reference dates. SCB disclosure-control noise can prevent independently published groups from summing exactly."
-  },
-  {
-    "title": "Resursfördelning och analysstöd",
-    "publisher": "SKR",
-    "url": "https://skr.se/ekonomiochbudgetplanering/resursfordelningochanalysstod.8273.html",
-    "status": "Read",
-    "use": "Broader Excel budget model based on service prices and demographics. Access/use subject to an agreement with SKR; no licensed workbook copied."
-  },
-  {
-    "title": "OpenModelica Rust and wasm-jit source",
-    "publisher": "OpenModelica",
-    "url": "https://github.com/OpenModelica/OpenModelica/tree/master/OMCompiler/Compiler/OpenModelica.rs",
-    "status": "Local implementation inspected",
-    "use": "Native compiler found; browser wasm bundle absent. Optional worker adapter follows local omc_eval, omc_sim_time, omc_sim_series and omc_sim_column APIs. Adapter untested until compiler assets are installed."
-  },
-  {
-    "title": "Motala befolkningsprognos 2026–2035 och historik",
-    "publisher": "Linköpings kommun, Analys och Utredning / Motala kommun / SCB",
-    "url": "https://statistik.linkoping.se/PXWeb/pxweb/sv/Samlad_planering/Samlad_planering__LevaBo/bep6001.px/",
-    "status": "Active, anchored to 2025 accounts",
-    "use": "Downloaded 2026-11-06. Five-year ages split uniformly at model boundaries. Cohort growth anchored to the existing accounts; total follows source total growth. Annual residuals reproduce this adjusted path, not observed migration. 2025 source total 43132 versus accounts 43131."
-  },
-  {
-    "title": "Kolada: kostnader och verksamhetsvolymer, Motala",
-    "publisher": "RKA / Kolada",
-    "url": "https://api.kolada.se/v3/docs",
-    "status": "Active comparison data",
-    "use": "20 indicators, 384 rows within 2010–2025, downloaded 2026-11-06 with definitions and missing-value/status information. Latest total values shown in the dashboard. Not automatically used to estimate cost weights or policy responses."
-  }
+ {
+  "title": "Motala årsredovisning 2025",
+  "publisher": "Motala kommun",
+  "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+  "status": "Extracted",
+  "use": "Historical cohorts, municipal finance and 2024–2025 operating account components; printed pages 6–7, 43, 47–49, 52–53 and 70. Page 43 reproduces budget/April/August forecasts; original release dates are not yet archived. Rounded mnkr values."
+ },
+ {
+  "title": "Mål och resursplan 2026, plan 2027–2028",
+  "publisher": "Motala kommun",
+  "url": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf",
+  "status": "Downloaded, reference only",
+  "use": "Original PDF downloaded 2026-11-06 and available in the dashboard. Future budget and investment amounts have not been numerically extracted or activated."
+ },
+ {
+  "title": "Ekonomi och budget",
+  "publisher": "Motala kommun",
+  "url": "https://www.motala.se/kommun-och-politik/kommunfakta/ekonomi-och-budget/",
+  "status": "Read",
+  "use": "Budget structure, 21.70% municipal tax rate and April/August/December reporting process."
+ },
+ {
+  "title": "Skatteunderlagsprognoser och modellverktyg",
+  "publisher": "SKR",
+  "url": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg.8271.html",
+  "status": "Read",
+  "use": "National tax-base forecast, municipality population assumptions, tax rate and equalisation. Latest listed workbook read on 2026-10-13: circular 26:28, 2026-10-06."
+ },
+ {
+  "title": "Prognosunderlag K 2026–2033, 26:28",
+  "publisher": "SKR",
+  "url": "https://skr.se/download/18.22a5529f1a0fb7804e67d572/1791283712510/Prognosunderlag-K-2026-2033-26028.xlsm",
+  "status": "Motala revenue and national cost paths active",
+  "use": "Original preserved. Municipality 583 selected in a working copy, VBA removed before recalculation with LibreOffice 24.2.7.2. Blad 1 output rows 38 and 40 converted from tkr to mnkr; include tax settlements, equalisation, LSS and property fee. Population from Blad 2 C29:J29 is 1 November of the preceding year. All eight years reconcile to total row 36. Dashboard scenarios adjust reference revenue with approximate local equations."
+ },
+ {
+  "title": "Folkmängdssiffror och befolkningsprognoser",
+  "publisher": "SKR / SCB",
+  "url": "https://skr.se/ekonomiochbudgetplanering/skatteunderlagsprognoserochmodellverktyg/folkmangdssiffrorsomunderlagforbudgetplanering.9004.html",
+  "status": "Read, workbook not imported",
+  "use": "Age-group forecasts and population reference dates. SCB disclosure-control noise can prevent independently published groups from summing exactly."
+ },
+ {
+  "title": "Resursfördelning och analysstöd",
+  "publisher": "SKR",
+  "url": "https://skr.se/ekonomiochbudgetplanering/resursfordelningochanalysstod.8273.html",
+  "status": "Read",
+  "use": "Broader Excel budget model based on service prices and demographics. Access/use subject to an agreement with SKR; no licensed workbook copied."
+ },
+ {
+  "title": "OpenModelica Rust and wasm-jit source",
+  "publisher": "OpenModelica",
+  "url": "https://github.com/OpenModelica/OpenModelica/tree/master/OMCompiler/Compiler/OpenModelica.rs",
+  "status": "Local implementation inspected",
+  "use": "Native compiler found; browser wasm bundle absent. Optional worker adapter follows local omc_eval, omc_sim_time, omc_sim_series and omc_sim_column APIs. Adapter untested until compiler assets are installed."
+ },
+ {
+  "title": "Motala befolkningsprognos 2026–2035 och historik",
+  "publisher": "Linköpings kommun, Analys och Utredning / Motala kommun / SCB",
+  "url": "https://statistik.linkoping.se/PXWeb/pxweb/sv/Samlad_planering/Samlad_planering__LevaBo/bep6001.px/",
+  "status": "Active, anchored to 2025 accounts",
+  "use": "Downloaded 2026-11-06. Five-year ages split uniformly at model boundaries. Cohort growth anchored to the existing accounts; total follows source total growth. Annual residuals reproduce this adjusted path, not observed migration. 2025 source total 43132 versus accounts 43131."
+ },
+ {
+  "title": "Kolada: kostnader och verksamhetsvolymer, Motala",
+  "publisher": "RKA / Kolada",
+  "url": "https://api.kolada.se/v3/docs",
+  "status": "Active comparison data",
+  "use": "20 indicators, 384 rows within 2010–2025, downloaded 2026-11-06 with definitions and missing-value/status information. Latest total values shown in the dashboard. Not automatically used to estimate cost weights or policy responses."
+ },
+ {
+  "title": "Räntor och valutakurser: statsskuldväxel 3 månader, statsobligation 5 år, styrräntan",
+  "publisher": "Sveriges riksbank",
+  "url": "https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/",
+  "status": "Active stress paths",
+  "use": "Yearly averages 1983–2025 from the SWEA API, archived 2026-11-24 (scripts/fetch_riksbank_rates.py). The treasury bill's changes during four periods are the page's rate stress paths (data/rate-stress.json)."
+ }
 ]

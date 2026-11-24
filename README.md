@@ -106,6 +106,20 @@ and from 32 to 69 mnkr in 2029; as a share of the year's mean debt that is from
 2.2 % to 2.9 % in 2026 and 4.5 % in 2029. The hindcast does not use actual rates
 as inputs.
 
+**Rate stress.** Below the charts the page runs the scenario four more times,
+each with the market rate moving year by year as Sweden's 3-month treasury bill
+rate did in a past period: 2022–2025 (the inflation), 1989–1996 (the crisis of
+the nineties), 2006–2013 (around the financial crisis) and 2013–2020 (falling
+towards zero). Each path is the change from the year before the period, added to
+the scenario's own rate and kept at or above 0; the fixed-rate period carries it
+into the average rate. Riksbank's yearly averages (SWEA API) are archived by
+`scripts/fetch_riksbank_rates.py`; `scripts/prepare_rate_stress.py` writes
+`data/rate-stress.json`. For Motala from the 2025 accounts the 2022–2025 path
+raises the market rate to 6 % and the interest cost to 81 mnkr (35 in the
+scenario), and the result is at most 46 mnkr lower, in 2033. These are paths that
+happened, not forecasts and not probabilities. The four extra runs make a change
+on the page take about 1.7 s instead of 1.0.
+
 ### Higher inflation
 
 Extra inflation above the price path (`inflationShock`, `inflationPersistence`,
