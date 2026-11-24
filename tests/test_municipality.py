@@ -65,14 +65,37 @@ class OwnDebt(unittest.TestCase):
         # Norrköping's annual report 2025: the group's gross debt is 17 955, the municipality's 8 852.
         self.assertEqual(years('0581')['2025']['debt'] + years('0581')['2025']['onLending']['loans'], 17955)
 
+    def test_the_result_is_scbs_with_the_lent_part_taken_out(self):
+        """Taking the lent part's interest out of both cost and income leaves the result as SCB publishes it."""
+        for code in ('0562', '0563', '0580'):
+            for name, y in (('web.json', '2025'), ('web-2024.json', '2024')):
+                published = json.loads((ROOT / f'data/municipalities/{code}/{name}').read_text())['baseline']['publishedResult']
+                r = years(code)[y]
+                self.assertGreater(r['onLending']['interest'], 0, msg=f'{code} {y}')
+                net = r['payroll'] + r['pension'] + r['otherOperatingExpense'] - r['operatingRevenue'] + r['depreciation']
+                result = r['tax'] + r['grants'] - net + r['financialIncome'] - r['interestExpense'] - r['otherFinancialExpense']
+                self.assertAlmostEqual(result, published, delta=0.01, msg=f'{code} {y}')
+        for code in ('0562', '0563', '0580', '0581'):
+            for y, r in years(code).items():
+                self.assertGreaterEqual(r['debt'], 0, msg=f'{code} {y}')
+                self.assertGreaterEqual(r['interestExpense'], 0, msg=f'{code} {y}')
+                self.assertGreaterEqual(r['financialIncome'], 0, msg=f'{code} {y}')
+        # Linköping 2025: 361 mnkr of interest on 16.6 billion; 23 of it is on the municipality's own 1.1 billion,
+        # the rate it pays on all its borrowing.
+        lin = years('0580')['2025']
+        self.assertAlmostEqual(lin['interestExpense'] / ((lin['debt'] + lin['openingDebt']) / 2), 360.753 / ((16616 + 16583) / 2), places=6)
+
     def test_interest_on_the_lent_part_leaves_cost_and_income_alike(self):
-        """The result is SCB's: the same amount leaves interest expense and financial income. The rate on the
-        municipality's own debt is then the rate it pays on all its borrowing."""
+        """Against SCB's tables: the same amount leaves interest expense and financial income, and it is never more
+        than the interest income booked. The downloaded tables are not in git, so this runs where they are."""
         archive = lambda code: ROOT / json.loads((ROOT / f'data/municipalities/{code}/base-years.json').read_text())['archive']
+        codes = ('0562', '0563', '0580', '0581')
+        if not all((archive(code) / 'TAB6782.json').exists() for code in codes):
+            self.skipTest('SCB archives under data/downloads/ are not in this checkout')
         import sys
         sys.path.insert(0, str(ROOT / 'scripts'))
         from prepare_municipality import jsonstat
-        for code in ('0562', '0563', '0580', '0581'):
+        for code in codes:
             rr, tx = jsonstat(archive(code) / 'TAB6777.json'), jsonstat(archive(code) / 'TAB6782.json')
             supplement = self.inputs(code) if (ROOT / f'data/municipalities/{code}/annual-report-inputs.json').exists() else {}
             for y, r in years(code).items():
@@ -84,10 +107,6 @@ class OwnDebt(unittest.TestCase):
                 self.assertAlmostEqual(r['financialIncome'] + lent['interest'], rr['060'][int(y)], places=6, msg=f'{code} {y}')
                 self.assertGreaterEqual(lent['interest'], 0)
                 self.assertLessEqual(lent['interest'], max(tx['260'][int(y)], 0) + 1e-9, msg=f'{code} {y}: more than the interest income')
-                self.assertGreaterEqual(r['debt'], 0)
-        # Linköping 2025: 361 mnkr of interest on 16.6 billion; 23 of it is on the municipality's own 1.1 billion.
-        lin = years('0580')['2025']
-        self.assertAlmostEqual(lin['interestExpense'] / ((lin['debt'] + lin['openingDebt']) / 2), 360.753 / ((16616 + 16583) / 2), places=6)
 
     def test_a_municipality_without_such_loans_is_unchanged(self):
         for code in ('0586', '0582', '0509'):
