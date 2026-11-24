@@ -19,7 +19,7 @@ type Message = {jsonrpc?: string; id?: string | number | null; method?: string; 
 type Pending = {resolve: (value: Json) => void; reject: (error: Error) => void; timer: NodeJS.Timeout};
 
 const PROTOCOLS = ['2025-06-18', '2025-03-26', '2024-11-05'];
-const SERVER_INFO = {name: 'motala-ekonomilabb-bridge', title: 'Motala ekonomilabb (sidan)', version: '0.1.0'};
+const SERVER_INFO = {name: 'koekmo-bridge', title: 'KOEKMO (sidan)', version: '0.1.0'};
 const CALL_TIMEOUT_MS = 120_000;
 const MAX_BODY = 1_000_000;
 const DEFAULT_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000', 'https://svagen26.github.io'];
@@ -71,7 +71,7 @@ export function createBridge(options: ReturnType<typeof parseArgs>) {
   }
 
   function callPage(name: string, args: Json): Promise<Json> {
-    if (!page) return Promise.reject(Error('Ingen sida är kopplad. Öppna ekonomilabbet, välj "AI" uppe till höger och koppla med bryggans adress och token.'));
+    if (!page) return Promise.reject(Error('Ingen sida är kopplad. Öppna KOEKMO, välj "AI" uppe till höger och koppla med bryggans adress och token.'));
     const id = nextCall++;
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
@@ -114,7 +114,7 @@ export function createBridge(options: ReturnType<typeof parseArgs>) {
           if (params.name !== 'scenario_lab') throw Error('Okänd prompt');
           const question = params.arguments?.question ?? 'Hur påverkar skattesats, investeringar och ränta resultatet och skulden?';
           return reply({description: 'Scenariolabb', messages: [{role: 'user', content: {type: 'text', text:
-            `Du arbetar i ekonomilabbets sida via verktygen. Fråga: ${question}\n`
+            `Du arbetar i KOEKMO:s sida via verktygen. Fråga: ${question}\n`
             + 'Börja med get_state och list_assumptions och läs förklaringarna. Hämta utfall med get_series (accounts) om historiken behövs. '
             + 'Pröva alternativ med preview_scenario och jämför resultat, skuld och kassa. Visa det scenario du rekommenderar med set_assumptions '
             + 'och ett kort skäl. Säg vilka antaganden som avgör slutsatsen och att modellen inte är en prognos att lita på framför enklare: '

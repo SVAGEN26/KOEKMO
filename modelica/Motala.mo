@@ -1,4 +1,4 @@
-package Motala "Motala ekonomilabb: kommunens ekonomi år för år; belopp i mnkr, tid i kalenderår"
+package Motala "KOEKMO, Motala: kommunens ekonomi år för år; belopp i mnkr, tid i kalenderår"
   package Handledning "Handledning: ordlista och hur modellen läses"
     class Ordlista "Ordlista: ekonomiska begrepp i modellen"
       annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html>
@@ -732,7 +732,7 @@ ingående skuld (basårets räntekostnad delad med skulden vid årets början). 
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Polygon(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, points = {{-35, 55}, {55, 0}, {-35, -55}, {-35, 55}})}));
   end Examples;
   annotation(uses(Kommunekonomi(version = "0.1.0")), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-70, -70}, {-35, 0}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-17, -70}, {18, 30}}), Rectangle(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, extent = {{35, -70}, {70, 60}})}), Documentation(info = "<html>
-<p><b>Motala ekonomilabb</b> räknar Motala kommuns ekonomi år för år: befolkning, verksamhet, drift, skatt och bidrag,
+<p><b>KOEKMO</b> (kommunekonomisk modell) räknar här Motala kommuns ekonomi år för år: befolkning, verksamhet, drift, skatt och bidrag,
 investeringar, resultat och lån. Belopp i mnkr och löpande priser; tiden är kalenderår.</p>
 <ul>
 <li><a href=\"modelica://Motala.Handledning.Ordlista\">Ordlista</a>: de ekonomiska begreppen.</li>

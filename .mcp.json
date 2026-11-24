@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "motala-ekonomilabb": {
+    "koekmo": {
       "command": "python3",
       "args": ["scripts/mcp_server.py"]
     }
