@@ -103,6 +103,7 @@ export function validate(b,a) {
   for(const [k,low,high] of [['inflationPersistence',0,1],['inflationWagePassThrough',0,2],['inflationPensionPassThrough',0,30],['inflationRateResponse',0,3],['inflationGrantCompensation',0,100]])
     if(a[k]!=null&&(!Number.isFinite(a[k])||a[k]<low||a[k]>high)) throw Error(`${k} ska ligga mellan ${low} och ${high}.`);
   if(a.rateShock!=null&&(!Number.isFinite(a.rateShock)||a.rateShock<-5||a.rateShock>15)) throw Error('Räntehöjningen ska vara mellan -5 och 15 procentenheter.');
+  rateEpisode(b,a);
   if(a.rateShockMonth!=null&&(!Number.isInteger(a.rateShockMonth)||a.rateShockMonth<1||a.rateShockMonth>12)) throw Error('Räntehöjningens månad ska vara 1–12.');
   if(a.rateFixingYears!=null&&(!Number.isFinite(a.rateFixingYears)||a.rateFixingYears<0||a.rateFixingYears>15)) throw Error('Räntebindningen ska vara 0–15 år.');
   if(a.projectChoice&&a.projectChoice!=='none'&&(!b.project||b.project.openingStock>b.workInProgress)) throw Error('Projektunderlaget matchar inte valt basår.');
@@ -307,7 +308,10 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     fields.projectOpeningStep=p.openingYear-b.baseYear+(a.projectChoice==='delay'?1:0);
     fields.projectPlaces=p.places;
   }
-  fields.interestRatePath=inputs.map(()=>a.interestRate/100);
+  // A rate stress path (data/rate-stress.json): how the market rate once moved, added to the scenario's rate,
+  // never below 0. After the episode its last change stays.
+  const episode=rateEpisode(b,a);
+  fields.interestRatePath=inputs.map((_,i)=>Math.max(0,a.interestRate+(episode?episode.changes[Math.min(i,episode.changes.length-1)]:0))/100);
   // Med räntebindning är räntan ovan marknadsräntan för nya och omsatta lån; snitträntan startar där och följer efter.
   // Extra inflation år för år; modellen lägger den på priserna samma år och på löner, skatteunderlag, pensioner och ränta
   // åren efter (Components.Scenario).
@@ -342,4 +346,12 @@ export function workingCapitalDays(b) {
 export function baselineRow(b) {
   const o=b.operatingAccounts;
   return {year:b.baseYear,population:sum(b.population),cohorts:[...b.population],cost:b.cashCost,depreciation:b.depreciation,tax:b.tax,grants:b.grants,result:b.publishedResult,debt:b.debt,cash:b.cash,assets:b.assets,investment:b.investment,interest:b.interestExpense,otherFinancialExpense:b.otherFinancialExpense,payroll:o.payrollExcludingPensions,pensionExpense:o.pensionExpense,otherOperatingExpense:o.otherOperatingExpense,operatingRevenue:o.operatingRevenue,pensionCashPayments:null,operatingCash:null,educationIndex:1,careIndex:1,benchmarkRevenue:null,officialRevenue:null};
+}
+
+// The rate stress path the scenario names (assumption rateEpisode), or null for the scenario's own rate.
+export function rateEpisode(b,a) {
+  if(a.rateEpisode==null||a.rateEpisode==='none') return null;
+  const episode=b.rateEpisodes?.find(e=>e.id===a.rateEpisode);
+  if(!episode||!episode.changes?.length||!episode.changes.every(Number.isFinite)) throw Error('Okänd räntebana.');
+  return episode;
 }

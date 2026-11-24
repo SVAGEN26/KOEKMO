@@ -1,0 +1,37 @@
+{
+ "retrieved_at": "2026-11-24T22:23:59.992191+00:00",
+ "source": "Sveriges riksbank, räntor och valutakurser (SWEA API)",
+ "licence": "Öppna data från Riksbanken; ange källa",
+ "files": [
+  {
+   "file": "SETB3MBENCH.json",
+   "url": "https://api.riksbank.se/swea/v1/ObservationAggregates/SETB3MBENCH/Y/1983-01-01/2026-11-24",
+   "bytes": 6050,
+   "sha256": "442ad830590990432ed0c0a165995fbd2daec54a865ce62805bd3ed83ab8032a",
+   "years": [
+    1983,
+    2025
+   ]
+  },
+  {
+   "file": "SEGVB5YC.json",
+   "url": "https://api.riksbank.se/swea/v1/ObservationAggregates/SEGVB5YC/Y/1985-01-01/2026-11-24",
+   "bytes": 5813,
+   "sha256": "a718a9f447aa5e5af65fea33ba4f660f9b89e43498ce554eef1b46d4115bc736",
+   "years": [
+    1985,
+    2025
+   ]
+  },
+  {
+   "file": "SECBREPOEFF.json",
+   "url": "https://api.riksbank.se/swea/v1/ObservationAggregates/SECBREPOEFF/Y/1994-06-01/2026-11-24",
+   "bytes": 4195,
+   "sha256": "d66817533b324441f08685669178bd2f7a3c00baf4d0e9a8768183d56fc61d15",
+   "years": [
+    1995,
+    2025
+   ]
+  }
+ ]
+}

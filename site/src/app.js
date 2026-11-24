@@ -60,7 +60,7 @@ const explanations={
   equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
 };
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let rateFixingTable,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,rateStress,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
@@ -276,7 +276,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality,assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
+  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;
@@ -783,6 +783,28 @@ function renderBalanceFlag(deficits,belowTarget,target,rows){
   $('balance-flag').className='balance-flag'+(deficits.length?' warning':'');
   $('balance-flag').innerHTML=parts.join(' ');
 }
+// Rate stress: the scenario with the market rate moving as in an episode of Riksbank's statistics (data/rate-stress.json).
+const RATE_COLORS=['#a34840','#516e9c','#ad8053','#80a979'];
+function renderRateStress(a,results) {
+  const episodes=rateStress.episodes,rows=run.rows.slice(1);
+  const market=e=>rows.map((_,i)=>Math.max(0,a.interestRate+e.changes[Math.min(i,e.changes.length-1)]));
+  const runs=episodes.map((e,i)=>({e,color:RATE_COLORS[i%RATE_COLORS.length],run:results[i]?.run,error:results[i]?.error}));
+  chart('rate-stress-chart',[...runs.filter(r=>r.run).map(r=>({name:r.e.label,values:r.run.rows.map(x=>x.result),color:r.color,thin:true})),
+    {name:'Scenariot',values:run.rows.map(r=>r.result),color:'#17634e'}],{unit:'mnkr',height:230});
+  $('rate-stress-legend').innerHTML=`<span class="legend-line primary">Scenariot</span>`+runs.map(r=>`<span class="legend-line" style="--line:${r.color}">${safe(r.e.label)}</span>`).join('');
+  const summary=(label,description,rates,r)=>{
+    const changes=r.rows.slice(1).map((x,i)=>({year:x.year,delta:x.result-rows[i].result})),worst=changes.reduce((m,x)=>x.delta<m.delta?x:m);
+    const deficits=r.rows.slice(1).filter(x=>x.result<0).map(x=>x.year);
+    return `<tr><th scope="row">${safe(label)}${description?`<small>${safe(description)}</small>`:''}</th><td>${decimal(Math.max(...rates))} %</td>`+
+      `<td>${fmt(Math.max(...r.rows.slice(1).map(x=>x.interest)))}</td><td>${r===run?'–':worst.delta<-0.5?`${fmt(worst.delta)} (${worst.year})`:'Ingen'}</td>`+
+      `<td>${deficits.length?yearRanges(deficits):'Inga'}</td><td>${fmt(r.rows.at(-1).debt)}</td></tr>`;
+  };
+  const own=rows.map(()=>a.interestRate);
+  $('rate-stress-table').innerHTML=`<caption>Marknadsräntan för nya och omsatta lån. Kommunens snittränta följer efter med räntebindningen (${decimal(a.rateFixingYears??0)} år). Belopp i mnkr, ${rows[0].year}–${rows.at(-1).year}.</caption>`+
+    `<thead><tr><th scope="col">Räntebana</th><th scope="col">Högsta marknadsränta</th><th scope="col">Högsta räntekostnad</th><th scope="col">Största försämring av resultatet (år)</th><th scope="col">Underskott</th><th scope="col">Skuld ${rows.at(-1).year}</th></tr></thead><tbody>`+
+    summary('Scenariot','Räntan i antagandena',own,run)+
+    runs.map(r=>r.run?summary(r.e.label,r.e.description,market(r.e),r.run):`<tr><th scope="row">${safe(r.e.label)}</th><td colspan="5">${safe(r.error??'Beräkningen misslyckades')}</td></tr>`).join('')+'</tbody>';
+}
 async function drawOnce() {
   try {
     const a={...b.assumptions,...overrides},stressed=path?[]:[-1,1];
@@ -790,8 +812,9 @@ async function drawOnce() {
     const choices=comparisonSelectors.map(select=>select.value);
     const requests=[{overrides,revenuePath:path},{overrides:{},revenuePath:path},
       ...stressed.map(d=>({overrides:stressOverrides(a,d),revenuePath:path})),
-      ...sensitivityCases.map(([k,d])=>({overrides:{...overrides,[k]:a[k]+d},revenuePath:path}))];
-    const comparisonIndex=requests.length;
+      ...sensitivityCases.map(([k,d])=>({overrides:{...overrides,[k]:a[k]+d},revenuePath:path})),
+      ...rateStress.episodes.map(e=>({overrides:{...overrides,rateEpisode:e.id},revenuePath:path}))];
+    const comparisonIndex=requests.length,rateIndex=comparisonIndex-rateStress.episodes.length;
     const presetIndexes=new Map([['latest',0],['base',1]]);
     for(const choice of choices) {
       if(choice in presets&&!presetIndexes.has(choice)) {
@@ -811,7 +834,7 @@ async function drawOnce() {
     // The address always describes the scenario on screen, so a reload or a copied address gives the same view.
     if(!document.body.classList.contains('picking')) window.history.replaceState(null,'',shareUrl());
     run=results[0].run;base=results[1].run;latestSettings=snapshotSettings();version++;modelView?.update(run);$('error').hidden=true;$('engine').textContent=ENGINE;
-    const stressRuns=results.slice(2,2+stressed.length),sensitivityRuns=results.slice(2+stressed.length,comparisonIndex);
+    const stressRuns=results.slice(2,2+stressed.length),sensitivityRuns=results.slice(2+stressed.length,rateIndex);
     const end=run.rows.at(-1),initial=run.rows[0],margin=end.result/(end.tax+end.grants)*100;
     $('metrics').innerHTML=[['Resultat '+end.year,fmt(end.result),'mnkr',`${decimal(margin)} % av skatt och bidrag`],['Banklåneskuld '+end.year,fmt(end.debt),'mnkr',`${fmt(end.debt-initial.debt)} mnkr förändring från ${b.baseYear}`],['Invånare '+end.year,fmt(end.population),'pers.',`${fmt(end.population-initial.population)} personer från ${b.baseYear}`]].map(([label,value,unit,detail])=>`<div class="metric"><div class="metric-label">${label}</div><div class="metric-number">${value}<small>${unit}</small></div><div class="metric-detail">${detail}</div></div>`).join('');
     const stresses=stressRuns.map((r,i)=>r.run?{name:'Stress '+(stressed[i]<0?'svag':'stark'),values:r.run.rows.map(x=>x.result),color:'#b4c0ae',thin:true}:null).filter(Boolean);
@@ -827,6 +850,7 @@ async function drawOnce() {
     chart('debt-chart',[{name:'Grundbana',values:base.rows.map(r=>r.debt),color:'#ad8053',dash:true},{name:'Låneskuld',values:run.rows.map(r=>r.debt),color:'#17634e'}],{unit:'mnkr',height:205});
     const sensitivities=sensitivityCases.map(([,,label],i)=>({label,delta:sensitivityRuns[i].run?sensitivityRuns[i].run.rows.at(-1).result-end.result:NaN}));
     const max=Math.max(...sensitivities.filter(s=>Number.isFinite(s.delta)).map(s=>Math.abs(s.delta)),1);$('sensitivity').innerHTML=sensitivities.map(s=>`<div class="sensitivity-row"><div class="sensitivity-label"><span>${s.label}</span><strong>${Number.isFinite(s.delta)?`${s.delta>0?'+':''}${fmt(s.delta)} mnkr`:'—'}</strong></div><div class="sensitivity-track"><div class="sensitivity-fill ${s.delta>0?'positive':''}" style="width:${Number.isFinite(s.delta)?Math.abs(s.delta)/max*100:0}%"></div></div></div>`).join('');
+    renderRateStress(a,results.slice(rateIndex,comparisonIndex));
     const colors=['#17634e','#80a979','#c8d779','#ad8053','#516e9c'];chart('population-chart',b.ageGroups.map((name,i)=>({name,values:run.rows.map(r=>r.cohorts[i]),color:colors[i]})),{unit:'personer'});
     $('age-legend').innerHTML=b.ageGroups.map((x,i)=>`<span><span style="color:${colors[i]}">●</span> ${x}</span>`).join('');chart('demand-chart',[{name:'Utbildning',values:run.rows.map(r=>r.educationIndex*100),color:'#17634e'},{name:'Äldreomsorg',values:run.rows.map(r=>r.careIndex*100),color:'#ad8053'}],{unit:'index'});
     $('revenue-status').textContent=path?`SKR-referens för ${b.name} · ${path.vintage}`:(b.planningInputs?'Nationella SKR-antaganden · lokal intäktsbana enligt modellen':'Illustrativ intäktsbana · SKR ej importerad');$('clear-import').hidden=!path;
@@ -1068,7 +1092,7 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
@@ -1076,6 +1100,7 @@ async function boot(){try{
   ageIncome=files[8];
   regional=files[9];
   rateFixingTable=files[10];
+  rateStress=files[11];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));

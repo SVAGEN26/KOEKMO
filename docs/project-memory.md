@@ -1379,3 +1379,22 @@ arkivera data.
   https://github.com/SVAGEN26/KOEKMO/actions/runs/45482892507). Arbetsflödets standard är `master`.
 - Med `ida` går hela testsviten igenom mot kompilatorn från 2026-11-23:
   https://github.com/SVAGEN26/KOEKMO/actions/runs/45496480785 (grenen `solver-ida`, ingen publicering).
+
+## Räntestress efter Riksbankens historik (2026-11-24)
+
+- Användaren 2026-11-24, med ett diagram över svenska räntor 1856–2023: räntan som stressscenario, "slumpa är inte bra
+  snarare kanske att den rör sig i olika rimliga fasta banor". Byggt som en panel under graferna, inte som ett val
+  bland antagandena.
+- Underlag: Riksbankens SWEA API, årsmedelvärden för statsskuldväxel 3 månader (SETB3MBENCH, från 1983),
+  statsobligation 5 år (SEGVB5YC) och styrräntan (SECBREPOEFF, från 1994), arkiverade med
+  `scripts/fetch_riksbank_rates.py` (`data/downloads/20261124T222359Z-riksbank-rates`). Innevarande år ingår inte.
+  Diagrammet användaren visade har en äldre serie från 1856; den är inte hämtad.
+- Fyra banor (`scripts/prepare_rate_stress.py` → `data/rate-stress.json`): förändringen i statsskuldväxelns ränta från
+  året före perioden, lagd på scenariots egen ränta, aldrig under 0, sista förändringen kvar efter perioden.
+  2022–2025: +0,96/+3,77/+3,67/+2,32. 1989–1996: +1,40/+3,53/+1,46/+2,99/−1,77/−2,70/−1,37/−4,31.
+  2006–2013: +0,62/+1,84/+2,21/−1,32/−1,20/−0,06/−0,46/−0,78. 2013–2020: −0,32 till −1,95.
+- Valen är mina: statsskuldväxeln som marknadsränta (kortast bindning; kommunens marginal ligger i dess egen ränta),
+  additiva förändringar (90-talets rörelser från 10 % läggs på dagens cirka 2 %), golv 0, perioderna handplockade.
+- Motala från bokslut 2025: 2022–2025 ger marknadsräntan 6 %, räntekostnaden 81 mnkr (35 i scenariot), resultatet som
+  mest 46 mnkr lägre (2033). Norrköping: 8,3 %, 554 mnkr (400), som mest 200 mnkr lägre (2032). Inget underskott i
+  någon bana för de två. Ett scenariobyte tar 1,7 s mot 1,0 s med de fyra extra körningarna.

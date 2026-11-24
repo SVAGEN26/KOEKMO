@@ -1,0 +1,166 @@
+{
+ "source": "Sveriges riksbank, statsskuldväxel 3 månader (SETB3MBENCH), årsmedelvärde",
+ "sourceUrl": "https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/",
+ "archive": "data/downloads/20261124T222359Z-riksbank-rates",
+ "unit": "procent; changes i procentenheter från året före episoden",
+ "method": "python3 scripts/prepare_rate_stress.py [data/downloads/<timestamp>-riksbank-rates]",
+ "yearlyRates": {
+  "1983": 11.42,
+  "1984": 12.03,
+  "1985": 14.23,
+  "1986": 9.86,
+  "1987": 9.43,
+  "1988": 10.15,
+  "1989": 11.55,
+  "1990": 13.68,
+  "1991": 11.61,
+  "1992": 13.14,
+  "1993": 8.38,
+  "1994": 7.45,
+  "1995": 8.78,
+  "1996": 5.84,
+  "1997": 4.13,
+  "1998": 4.22,
+  "1999": 3.12,
+  "2000": 3.96,
+  "2001": 4.0,
+  "2002": 4.07,
+  "2003": 3.03,
+  "2004": 2.11,
+  "2005": 1.71,
+  "2006": 2.33,
+  "2007": 3.55,
+  "2008": 3.92,
+  "2009": 0.39,
+  "2010": 0.51,
+  "2011": 1.65,
+  "2012": 1.25,
+  "2013": 0.93,
+  "2014": 0.42,
+  "2015": -0.3,
+  "2016": -0.66,
+  "2017": -0.7,
+  "2018": -0.69,
+  "2019": -0.42,
+  "2020": -0.14,
+  "2021": -0.2,
+  "2022": 0.76,
+  "2023": 3.57,
+  "2024": 3.47,
+  "2025": 2.12
+ },
+ "episodes": [
+  {
+   "id": "rise2022",
+   "label": "Som 2022–2025",
+   "description": "Inflationen: räntan steg nästan 4 procentenheter på två år.",
+   "years": [
+    2022,
+    2025
+   ],
+   "startRate": -0.2,
+   "rates": [
+    0.76,
+    3.57,
+    3.47,
+    2.12
+   ],
+   "changes": [
+    0.96,
+    3.77,
+    3.67,
+    2.32
+   ]
+  },
+  {
+   "id": "crisis1990",
+   "label": "Som 1989–1996",
+   "description": "90-talskrisen: räntan steg 3–4 procentenheter och föll sedan kraftigt.",
+   "years": [
+    1989,
+    1996
+   ],
+   "startRate": 10.15,
+   "rates": [
+    11.55,
+    13.68,
+    11.61,
+    13.14,
+    8.38,
+    7.45,
+    8.78,
+    5.84
+   ],
+   "changes": [
+    1.4,
+    3.53,
+    1.46,
+    2.99,
+    -1.77,
+    -2.7,
+    -1.37,
+    -4.31
+   ]
+  },
+  {
+   "id": "finance2006",
+   "label": "Som 2006–2013",
+   "description": "Före och efter finanskrisen: en uppgång på 2 procentenheter, sedan fall.",
+   "years": [
+    2006,
+    2013
+   ],
+   "startRate": 1.71,
+   "rates": [
+    2.33,
+    3.55,
+    3.92,
+    0.39,
+    0.51,
+    1.65,
+    1.25,
+    0.93
+   ],
+   "changes": [
+    0.62,
+    1.84,
+    2.21,
+    -1.32,
+    -1.2,
+    -0.06,
+    -0.46,
+    -0.78
+   ]
+  },
+  {
+   "id": "low2013",
+   "label": "Som 2013–2020",
+   "description": "Allt lägre ränta, ned mot noll.",
+   "years": [
+    2013,
+    2020
+   ],
+   "startRate": 1.25,
+   "rates": [
+    0.93,
+    0.42,
+    -0.3,
+    -0.66,
+    -0.7,
+    -0.69,
+    -0.42,
+    -0.14
+   ],
+   "changes": [
+    -0.32,
+    -0.83,
+    -1.55,
+    -1.91,
+    -1.95,
+    -1.94,
+    -1.67,
+    -1.39
+   ]
+  }
+ ]
+}

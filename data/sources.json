@@ -68,5 +68,12 @@
     "url": "https://api.kolada.se/v3/docs",
     "status": "Active comparison data",
     "use": "20 indicators, 384 rows within 2010–2025, downloaded 2026-11-06 with definitions and missing-value/status information. Latest total values shown in the dashboard. Not automatically used to estimate cost weights or policy responses."
+  },
+  {
+    "title": "Räntor och valutakurser: statsskuldväxel 3 månader, statsobligation 5 år, styrräntan",
+    "publisher": "Sveriges riksbank",
+    "url": "https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/",
+    "status": "Active stress paths",
+    "use": "Yearly averages 1983–2025 from the SWEA API, archived 2026-11-24 (scripts/fetch_riksbank_rates.py). The treasury bill's changes during four periods are the page's rate stress paths (data/rate-stress.json)."
   }
 ]

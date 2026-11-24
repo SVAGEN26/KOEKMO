@@ -211,6 +211,18 @@ rate. `rateShock` raises the market rate from a date, counted for the rest of
 that year. The default rate is the base year's reported average rate when the
 annual report gives one, otherwise interest expense over opening debt.
 
+Rate stress paths (`rateEpisode` in the page's assumptions, `data/rate-stress.json`)
+replace the flat rate path: the market rate in forecast year i is the scenario's
+rate plus the change in the 3-month treasury bill rate (Riksbank, yearly average)
+from the year before an episode to its year i, never below 0, with the last
+change held after the episode. The treasury bill is the closest published rate to
+what a municipality pays on new and refixed loans with short fixing; the
+municipality's margin is in its own rate and is assumed to stay. The episodes are
+chosen by hand to cover a fast rise (2022–2025), a rise from a high level followed
+by a fall (1989–1996), a moderate rise and fall (2006–2013) and a long fall
+(2013–2020). Changes taken from a level of 10 % are applied at today's level of
+about 2 %, which is a choice, not an estimate of how rates move at low levels.
+
 Debt is the municipality's own. Some municipalities borrow for their companies
 through an internal bank; the companies are not in the model. The base year's debt
 is therefore the borrowing less the loans passed on to the municipality's own
