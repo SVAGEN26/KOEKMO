@@ -1311,6 +1311,17 @@ arkivera data.
   (`tests/jit-continuous.test.mjs`) kom med PR #2, så ingen tidigare körning har prövat dem mot en nyare kompilator.
   Likaså med 1c3a37775 (2026-11-20): https://github.com/SVAGEN26/Motala_Ekonomilab/actions/runs/45452400399.
 - Felet ligger alltså mellan OpenModelica 2026-09-22 och 2026-11-20. Inte utrett vilket steg i kompilatorn.
+- Orsak funnen 2026-11-24: lösaren `rungekutta` startar inte i den nyare webbkompilatorn, oavsett modell. Minsta
+  exempel: `model DiagOde Real x(start=1,fixed=true); equation der(x)=-x; end DiagOde;` med
+  `buildModel(DiagOde, method="rungekutta")` följt av `omc_sim_start` ger "CodegenWasmJit: in-wasm initialization
+  failed" i v1.28.0-dev.2088+gd3ca67ddd och går igenom i v1.28.0-dev.842+gcc09fe3f5b. Med `dassl` och `euler` startar
+  både exemplet och `Motala.Continuous` i den nyare kompilatorn. Sidan kör den kontinuerliga modellen med `rungekutta`,
+  tolv steg per år; därför föll just de testerna. Meddelandet kommer ur `openmodelica_wasm_jit/src/sim_runtime_wasmer.rs`
+  när `rt_sim_start` ger −2 eller fäller. Körning: https://github.com/SVAGEN26/KOEKMO/actions/runs/45490758918
+  (grenen `diag-wasm-init`, `tests/diag-continuous.test.mjs`). Inte utrett vilken ändring i OpenModelica som införde det.
+- Sidan publicerades 2026-11-24 från main 62591ad med kompilatorn låst till cc09fe3f5b (körning 45482892507). Låsningen
+  gällde den körningen; arbetsflödets standard är fortfarande `master`.
+
 
 ## Skulden netto efter vidareutlåning (2026-11-24)
 
