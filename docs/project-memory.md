@@ -56,13 +56,13 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
     årsredovisningen 2025. Kortet saknar en not om engångsposter.
 12. Förklaringskörningen 2022–2025: övriga kostnader följer inte SKR:s prisindex efter 2022 (kommunernas
     besparingar). Inflationsscenariot har kvar fullt genomslag på priserna; inget reglage för det.
+13. Inflationsscenariots andelar (0,4 / 8 / 0,5) är satta efter en enda period. I pensionstalet ligger 2023 års
+    pensionsavtal; det är inte separerat från inflationen.
 14. Linköpings låneskuld i basåren 2024 och 2025 är fel i SCB-posterna (14 382 och 10 424 mnkr mot 16 583 och 16 616
     mnkr i kommunens finansrapport), så räntan faller 361 → 263 mnkr 2026 i grundbanan. Inte åtgärdat; se avsnittet
     "Budgetar och finansrapporter" längst ned. Beslut som väntar: brutto som Finspång, eller netto efter vidareutlåning.
 15. Bygget på main föll 2026-11-24: den kontinuerliga modellen startar inte i webbkompilatorn byggd från dagens
     OpenModelica. Se samma avsnitt.
-13. Inflationsscenariots andelar (0,4 / 8 / 0,5) är satta efter en enda period. I pensionstalet ligger 2023 års
-    pensionsavtal; det är inte separerat från inflationen.
 
 ## Sparade scenarier, åldersviktad skatt och Bråta Hagar
 
