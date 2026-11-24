@@ -1,11 +1,13 @@
-# Motala ekonomilabb
+# KOEKMO
 
-A scenario lab for a Swedish municipality's finances, for the people who make
-the decisions. Pick a municipality and a start year, change tax rate,
-investments, wages, migration, interest or inflation, and see the result, cash
-and debt year by year. The model is written in Modelica and runs in the
-visitor's browser, by default in continuous time: money and people are stocks
-that change every day, and only what is decided once a year is a yearly step.
+KOEKMO (kommunekonomisk modell: a model of municipal finances) is a scenario lab
+for a Swedish municipality's finances, for the people who make the decisions.
+Pick a municipality and a start year, change tax rate, investments, wages,
+migration, interest or inflation, and see the result, cash and debt year by
+year. The model is written in Modelica and runs in the visitor's browser, by
+default in continuous time: money and people are stocks that change every day,
+and only what is decided once a year is a yearly step. Until November 2026 the
+project was called Motala ekonomilabb; the repository still has that name.
 Motala (0583) is the main case; all 13 municipalities in Östergötland run from
 their own accounts.
 
@@ -144,7 +146,7 @@ charts on a wide screen and lists the calls the assistant makes. The assistant c
 `http://127.0.0.1:8765/mcp` with `Authorization: Bearer <token>`, or starts the
 bridge with `--stdio` (give it a fixed `--token` so you can type it in the page).
 For Claude Code:
-`claude mcp add --transport http ekonomilabb http://127.0.0.1:8765/mcp --header "Authorization: Bearer <token>"`.
+`claude mcp add --transport http koekmo http://127.0.0.1:8765/mcp --header "Authorization: Bearer <token>"`.
 
 | Tool | What it does |
 | --- | --- |

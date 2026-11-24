@@ -311,7 +311,7 @@ function selectMunicipality(code,firstYear=null) {
   $('municipality-notice').textContent=motala
     ?'Bokslut, hämtad befolkningsprognos och omräknad SKR-referens för Motala. Intäktsmodellen och flera kostnadssamband är förenklade; bättre prognosprecision är inte visad.'
     :'Basår från SCB:s kommunräkenskaper och befolkningsstatistik. Kostnadsvikter från Kolada.';
-  document.title=`${name} ekonomilabb · Budgetens drivkrafter`;
+  document.title=`${name} · KOEKMO`;
   $('model-package').href=`${packageName}.mo`;
   $('model-package').textContent=`Hämta ${packageName}.mo ↓`;
   $('wasm-status').textContent=`OpenModelica kompilerar Kommunekonomi.mo och ${packageName}.mo i din webbläsare.`;
@@ -959,7 +959,7 @@ const aiAdapter={
 };
 function setupAiLink(){
   let link=null;
-  try{$('ai-address').value=localStorage.getItem('motala.ai-address')||$('ai-address').value;}catch{}
+  try{$('ai-address').value=localStorage.getItem('koekmo.ai-address')||$('ai-address').value;}catch{}
   const status=(state,text='')=>{
     const labels={connected:'Kopplad. Ett AI-program kan nu använda sidan via bryggan.',closed:'Frånkopplad.',error:'Fel: '};
     $('ai-status').textContent=(labels[state]??'')+(state==='error'?text:text&&state!=='connected'?` ${text}`:'');
@@ -973,14 +973,14 @@ function setupAiLink(){
     $('ai-panel').hidden=!open;
     $('ai-toggle').setAttribute('aria-expanded',String(open));
     document.body.classList.toggle('ai-open',open);
-    try{localStorage.setItem('motala.ai-panel',open?'open':'closed');}catch{}
+    try{localStorage.setItem('koekmo.ai-panel',open?'open':'closed');}catch{}
     if(focus)(open?$('ai-address'):$('ai-toggle')).focus();
   };
   $('ai-toggle').onclick=()=>show($('ai-panel').hidden,true);
   $('ai-close').onclick=()=>show(false,true);
   $('ai-panel').onkeydown=e=>{if(e.key==='Escape')show(false,true);};
   let remembered=null;
-  try{remembered=localStorage.getItem('motala.ai-panel');}catch{}
+  try{remembered=localStorage.getItem('koekmo.ai-panel');}catch{}
   if(remembered==='open')show(true);
   $('ai-address').oninput=()=>{$('ai-remote').hidden=isLoopback($('ai-address').value);};
   $('ai-connect').onclick=()=>{
@@ -989,7 +989,7 @@ function setupAiLink(){
     try{
       link=connectAi({address,token:$('ai-token').value.trim(),adapter:aiAdapter,onStatus:status,
         onCall:(call,answer)=>{if(!['set_assumptions','reset_assumptions','select_municipality'].includes(call.name))logAi(`${call.name}${answer.error?` (fel: ${answer.error})`:''}`);}});
-      try{localStorage.setItem('motala.ai-address',address);}catch{}
+      try{localStorage.setItem('koekmo.ai-address',address);}catch{}
       $('ai-status').textContent='Kopplar …';
     }catch(e){status('error',e.message);}
   };
@@ -1040,9 +1040,9 @@ function renderMunicipalityCards(){
 function showStart(){
   document.body.classList.add('picking');
   $('start-view').hidden=false;
-  $('municipality-brand').textContent='Östergötlands';
+  $('municipality-brand').textContent='Östergötland';
   $('municipality-code').textContent='13 kommuner';
-  document.title='Ekonomilabb · Östergötlands kommuner';
+  document.title='KOEKMO · Östergötlands kommuner';
   window.scrollTo(0,0);
 }
 function openMunicipality(code,firstYear=null){

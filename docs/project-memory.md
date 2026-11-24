@@ -1343,3 +1343,13 @@ arkivera data.
   (förut −0,3/−1,7/−1,5/−0,9/−11,7/−32,4). Resultatets fel ändras högst 0,15 procentenheter.
 - Sidan: skuldnoten säger hur mycket som är vidareutlånat (`baseline.onLending`); en återbetald skuld visas som 0,
   inte −0.
+
+## Namnbyte till KOEKMO (2026-11-24)
+
+- Användaren 2026-11-24: "rename the project to KOEKMO (Kommun ekonomisk modell)". Projektet heter KOEKMO på sidan, i
+  PDF-rapporten, i README, i `package.json` och i de två MCP-servrarna (`koekmo` och `koekmo-bridge`; `.mcp.json`).
+  I löpande text skrivs uttydningen "kommunekonomisk modell" (min rättning av särskrivningen; säg till om den ska skrivas isär).
+- Inte ändrat: Modelica-biblioteket heter `Kommunekonomi` och kommunpaketen `Motala`, `Finspang` osv. GitHub-repot
+  heter kvar `SVAGEN26/Motala_Ekonomilab` och det privata `ekonomilabb-kallor`; ett byte av reponamn ändrar adressen
+  till den publicerade sidan och är inte gjort. Äldre avsnitt i den här filen har kvar det gamla namnet.
+- Den som har kopplat en AI-klient mot servern `motala-ekonomilabb` behöver lägga till den igen under det nya namnet.
