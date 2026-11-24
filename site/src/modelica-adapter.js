@@ -12,9 +12,12 @@ export function modelicaSource(b,history,overrides={},path=null) {
   const base=year===2025?'':`base=${data}.${settings.packageName.toLowerCase()}${year},
     olderShares=${shares},
     `;
-  const ageModel=prepared.cohort?`redeclare Kommunekonomi.Components.CohortDemography demography(
+  const continuous=prepared.continuous;
+  const ageModel=prepared.cohort?`redeclare Kommunekonomi.${continuous?'Continuous':'Components'}.CohortDemography demography(
       ${cohortModifiers(settings.packageName,year)}${prepared.ageMigration?
         `, residualMigration=${literal(prepared.ageMigration['demography.residualMigration'])},
         observedDeltaShape=${literal(prepared.ageMigration['demography.observedDeltaShape'])}, useObservedDeltaShape=${prepared.ageMigration['demography.useObservedDeltaShape']}`:''}),\n    `:'';
-  return `within ;\nmodel Scenario\n  extends ${settings.packageName}.Annual(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=1));\nend Scenario;\n`;
+  // In continuous time the model takes its death rates as mortalityRates; a month between the points plotted.
+  if(continuous) delete fields.deathRates;
+  return `within ;\nmodel Scenario\n  extends ${settings.packageName}.${continuous?'Continuous':'Annual'}(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=${continuous?1/12:1}));\nend Scenario;\n`;
 }

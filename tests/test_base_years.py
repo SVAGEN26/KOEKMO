@@ -164,7 +164,7 @@ class NationalPopulation(unittest.TestCase):
         years = sorted(int(y) for y in national['population'])
         self.assertEqual(years, list(range(years[0], years[-1] + 1)), 'one value per year, no gaps')
         self.assertLessEqual(years[0], 2019)
-        self.assertGreaterEqual(years[-1], 2055, 'the browser needs 30 years after 2025')
+        self.assertGreaterEqual(years[-1], 2055, 'SCB projects to 2070; the browser extends the last growth after that')
 
 
 if __name__ == '__main__':

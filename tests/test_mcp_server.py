@@ -137,7 +137,15 @@ class Session(unittest.TestCase):
             self.assertGreater(h1['otherOperatingExpense'], b1['otherOperatingExpense'])
             self.assertAlmostEqual(h1['grants'], b1['grants'], places=6)  # fixed in kronor without compensation
             self.assertLess(h1['result'], b1['result'])
-            self.assertGreater(h1['annualInterestRate'], b1['annualInterestRate'])
+            # Wages and the market rate follow the mean extra inflation of the two years before: nothing the first year,
+            # then 0.4 of 1.5 points more wage growth (added to the year's growth, so the ratio is a little under 1.006).
+            self.assertAlmostEqual(h1['payroll'], b1['payroll'], places=6)
+            self.assertAlmostEqual(h1['annualInterestRate'], b1['annualInterestRate'], places=9)
+            self.assertAlmostEqual(h2['wageIndex'] / b2['wageIndex'], h2['payroll'] / b2['payroll'], places=6)
+            self.assertAlmostEqual(h2['payroll'] / b2['payroll'], 1 + 0.4 * 0.015, delta=0.0003)
+            self.assertAlmostEqual(h2['tax'] / b2['tax'], 1 + 0.4 * 0.015, delta=0.0003)
+            self.assertGreater(h2['annualInterestRate'], b2['annualInterestRate'])
+            self.assertLess(h2['result'] - b2['result'], h1['result'] - b1['result'])  # the second year is the worse one
         finally:
             server.close()
 

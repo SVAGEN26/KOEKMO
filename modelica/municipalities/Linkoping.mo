@@ -98,6 +98,54 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       careCostPerInhabitant = {17658, 143494})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.71289, 0.230777, 0.056333};
+    constant BaseYear linkoping2019 = BaseYear(
+      year = 2019,
+      cohorts = {{13233, 16087, 4934, 96715, 27551}, {13236, 16607, 5037, 98173, 27981}, {13172, 16949, 5168, 99409, 28353}},
+      reportedPopulation = {158520, 161034, 163051},
+      births = {1787, 1858}, deaths = 1175,
+      equalisationNextYear = {7314, -2950, 1024, -278},
+      relativeTaxCapacity = {0.9932, 0.9871},
+      tax = 7340.1, priorYearSettlement = 3.7, grants = 1228,
+      grantComponents = {1133, -311.4, 112.9, -33.2, 261.2},
+      payroll = 4850.9, pension = 358.4, otherOperatingExpense = 5469.1, operatingRevenue = 1922.7, netCostRoundingAdjustment = 0,
+      depreciation = 211, financialIncome = 410.1, interestExpense = 1.8, otherFinancialExpense = 25.7,
+      debt = 0, openingDebt = 0, cash = 1.3, assets = 3437.6, investment = 479.1, taxRate = 20.2,
+      sectorShares = {0.4748, 0.1525, 0.3727}, educationShares = {0.2855, 0.5532, 0.1613},
+      careCostPerInhabitant = {16768, 138841})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.714492, 0.227983, 0.057525};
+    constant BaseYear linkoping2018 = BaseYear(
+      year = 2018,
+      cohorts = {{13095, 15559, 4775, 95214, 27174}, {13233, 16087, 4934, 96715, 27551}, {13236, 16607, 5037, 98173, 27981}},
+      reportedPopulation = {155817, 158520, 161034},
+      births = {1771, 1787}, deaths = 1234,
+      equalisationNextYear = {7048, -1937, 702, -206},
+      relativeTaxCapacity = {0.9944, 0.9932},
+      tax = 7049.7, priorYearSettlement = -22.9, grants = 1116.5,
+      grantComponents = {1074.2, -314.3, 24.9, -17.9, 254.4},
+      payroll = 4649, pension = 345.5, otherOperatingExpense = 5347.6, operatingRevenue = 2044.3, netCostRoundingAdjustment = 0,
+      depreciation = 192.5, financialIncome = 589.3, interestExpense = 2.5, otherFinancialExpense = 52.1,
+      debt = 0, openingDebt = 0, cash = 62.2, assets = 3165.9, investment = 393.1, taxRate = 20.2,
+      sectorShares = {0.4693, 0.1499, 0.3808}, educationShares = {0.2975, 0.5464, 0.1561},
+      careCostPerInhabitant = {16608, 138519})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.718309, 0.225224, 0.056467};
+    constant BaseYear linkoping2017 = BaseYear(
+      year = 2017,
+      cohorts = {{12959, 15009, 4641, 93660, 26697}, {13095, 15559, 4775, 95214, 27174}, {13233, 16087, 4934, 96715, 27551}},
+      reportedPopulation = {152966, 155817, 158520},
+      births = {1832, 1771}, deaths = 1268,
+      equalisationNextYear = {6788, -1986, 157, -113},
+      relativeTaxCapacity = {0.9967, 0.9944},
+      tax = 6844, priorYearSettlement = 8.2, grants = 1072.2,
+      grantComponents = {1026.6, -297.7, -1.5, -14, 244.8},
+      payroll = 4343.2, pension = 358.3, otherOperatingExpense = 5180.5, operatingRevenue = 2048.1, netCostRoundingAdjustment = 0,
+      depreciation = 176.7, financialIncome = 311.8, interestExpense = 2.6, otherFinancialExpense = 14.2,
+      debt = 0, openingDebt = 0, cash = 56, assets = 2984.6, investment = 386.3, taxRate = 20.2,
+      sectorShares = {0.4788, 0.1548, 0.3664}, educationShares = {0.2963, 0.5456, 0.1581},
+      careCostPerInhabitant = {16145, 135695})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.719175, 0.223186, 0.057639};
 
     package SCB "Linköpings demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

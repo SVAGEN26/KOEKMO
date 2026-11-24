@@ -98,6 +98,54 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       careCostPerInhabitant = {14339, 156002})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.767423, 0.187196, 0.045381};
+    constant BaseYear valdemarsvik2019 = BaseYear(
+      year = 2019,
+      cohorts = {{518, 712, 245, 3998, 2447}, {534, 705, 243, 3980, 2494}, {535, 727, 216, 3919, 2476}},
+      reportedPopulation = {7920, 7956, 7873},
+      births = {72, 68}, deaths = 111,
+      equalisationNextYear = {14193, 542, 1024, 1734},
+      relativeTaxCapacity = {0.8292, 0.8132},
+      tax = 340.5, priorYearSettlement = 0.2, grants = 160,
+      grantComponents = {110, -2.6, 5.6, 16.8, 21.5},
+      payroll = 356.5, pension = 37.3, otherOperatingExpense = 245.9, operatingRevenue = 137, netCostRoundingAdjustment = 0,
+      depreciation = 16.2, financialIncome = 1.2, interestExpense = 1, otherFinancialExpense = 0.5,
+      debt = 192.8, openingDebt = 127.8, cash = 35.4, assets = 347.3, investment = 25.5, taxRate = 22.48,
+      sectorShares = {0.3829, 0.229, 0.3881}, educationShares = {0.2687, 0.5693, 0.162},
+      careCostPerInhabitant = {13352, 155470})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.76979, 0.184168, 0.046042};
+    constant BaseYear valdemarsvik2018 = BaseYear(
+      year = 2018,
+      cohorts = {{485, 669, 250, 4012, 2393}, {518, 712, 245, 3998, 2447}, {534, 705, 243, 3980, 2494}},
+      reportedPopulation = {7809, 7920, 7956},
+      births = {76, 72}, deaths = 106,
+      equalisationNextYear = {13831, -331, 702, 2110},
+      relativeTaxCapacity = {0.8447, 0.8292},
+      tax = 333.9, priorYearSettlement = -1.1, grants = 149.4,
+      grantComponents = {102.4, -4.5, 1.2, 15.1, 21.2},
+      payroll = 350.3, pension = 38, otherOperatingExpense = 248.3, operatingRevenue = 158.7, netCostRoundingAdjustment = 0,
+      depreciation = 15.5, financialIncome = 1.3, interestExpense = 0.9, otherFinancialExpense = 0.5,
+      debt = 127.8, openingDebt = 127.8, cash = 43.2, assets = 338.1, investment = 26.6, taxRate = 22.48,
+      sectorShares = {0.4051, 0.2176, 0.3772}, educationShares = {0.2718, 0.5605, 0.1677},
+      careCostPerInhabitant = {12983, 153084})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.781476, 0.173216, 0.045309};
+    constant BaseYear valdemarsvik2017 = BaseYear(
+      year = 2017,
+      cohorts = {{461, 667, 231, 4011, 2377}, {485, 669, 250, 4012, 2393}, {518, 712, 245, 3998, 2447}},
+      reportedPopulation = {7747, 7809, 7920},
+      births = {72, 76}, deaths = 98,
+      equalisationNextYear = {12963, -564, 157, 1910},
+      relativeTaxCapacity = {0.8408, 0.8447},
+      tax = 325.3, priorYearSettlement = 0.4, grants = 138,
+      grantComponents = {97.2, -3.9, -0.1, 12.5, 18.9},
+      payroll = 341, pension = 23.4, otherOperatingExpense = 241.4, operatingRevenue = 166.4, netCostRoundingAdjustment = 0,
+      depreciation = 14.7, financialIncome = 1.3, interestExpense = 0.9, otherFinancialExpense = 0.8,
+      debt = 127.8, openingDebt = 127.8, cash = 49.7, assets = 329.7, investment = 37.1, taxRate = 22.48,
+      sectorShares = {0.4289, 0.2263, 0.3447}, educationShares = {0.2377, 0.5908, 0.1715},
+      careCostPerInhabitant = {12555, 154243})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.783817, 0.168778, 0.047405};
 
     package SCB "Valdemarsviks demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

@@ -8,7 +8,7 @@ equalisation, operating costs, investment and population), and the municipality'
 weights and sector shares (fetch_care_data.py + prepare_care.py, fetch_sector_costs.py) under
 data/municipalities/<code>/, and the relative tax capacity from data/tax-capacity.json (fetch_tax_capacity.py).
 Writes data/municipalities/<code>/base-years.json and, with
---modelica, modelica/municipalities/<Package>.mo: Data (one BaseYear per year 2020-2025), Annual extending
+--modelica, modelica/municipalities/<Package>.mo: Data (one BaseYear per year 2017-2025), Annual extending
 Kommunekonomi.Annual with the latest base year, and a one-year test against the outcome.
 
 Definitions (SCB item codes):
@@ -30,11 +30,11 @@ from pathlib import Path
 from prepare_county_cohorts import modelica_cohorts
 
 ROOT = Path(__file__).resolve().parents[1]
-YEARS = range(2020, 2026)
+YEARS = range(2017, 2026)
 
 
-def jsonstat(path):
-    """{item: {year: value}} from a json-stat2 file with one item dimension."""
+def jsonstat(path, region=None):
+    """{item: {year: value}} from a json-stat2 file with one item dimension; `region` picks one of several."""
     st = json.loads(Path(path).read_text())
     ids, sizes = st['id'], st['size']
     labels = [list(st['dimension'][d]['category']['index']) for d in ids]
@@ -45,6 +45,8 @@ def jsonstat(path):
             index.append(rest % size)
             rest //= size
         key = dict(zip(ids, (labels[k][i] for k, i in enumerate(reversed(index)))))
+        if region and key.get('Region') != region:
+            continue
         item = [key[d] for d in ids if d not in ('Region', 'ContentsCode', 'Tid')][0]
         out.setdefault(item, {})[int(key['Tid'])] = (value or 0) / 1000  # tkr -> mnkr
     return out
@@ -69,13 +71,24 @@ def county_archive(code):
 
 def build(code, archive):
     rr, bs, tx, ct, inv = (jsonstat(archive / f'{t}.json') for t in ('TAB6777', 'TAB6779', 'TAB6782', 'TAB4202', 'TAB5179'))
+    # Years before 2017 (population two years back, births the year before, opening debt) from the county's history archive.
+    history = ROOT / json.loads((ROOT / 'data/municipalities/ostergotland-sources.json').read_text())['historyArchive']
+    for item, years in jsonstat(history / 'TAB6779.json', code).items():
+        bs.setdefault(item, {}).update({y: v for y, v in years.items() if y not in bs.get(item, {})})
     population = {}
+    for k, v in px(history / 'population.json'):
+        if k['Region'] == code:
+            age = k['Alder']
+            population.setdefault(int(k['Tid']), [0.0] * 101)[100 if age.startswith('100') else int(age)] += v
     for name in ('population-2017-2024', 'population-2025'):
         for k, v in px(archive / f'{name}.json'):
             age = k['Alder']
             a = 100 if age.startswith('100') else int(age)
             population.setdefault(int(k['Tid']), [0.0] * 101)[a] += v
     changes = {}
+    for k, v in px(history / 'changes.json'):
+        if k['Region'] == code:
+            changes.setdefault(int(k['Tid']), {})[{'115': 'births', '130': 'deaths'}[k['Forandringar']]] = v
     for name in ('changes-2017-2024', 'changes-2025'):
         for k, v in px(archive / f'{name}.json'):
             changes.setdefault(int(k['Tid']), {})[{'115': 'births', '130': 'deaths'}[k['Forandringar']]] = v
@@ -115,7 +128,8 @@ def build(code, archive):
         expense = -g(rr, '022', y)
         interest = supplement.get('bankInterest', {}).get(str(y), g(tx, '380', y))
         financial_cost = -g(rr, '072', y)
-        latest_care_year = max((int(key) for key in care if int(key) <= y), default=None)
+        # The latest care weights up to the base year; without any (Boxholm before 2019), the earliest there is.
+        latest_care_year = max((int(key) for key in care if int(key) <= y), default=min((int(key) for key in care), default=None))
         care_row = care[str(latest_care_year)] if latest_care_year else {
             'years': [], 'costPerInhabitant': {'65-79': 1, '80+': 1}}
         record = {
@@ -140,7 +154,7 @@ def build(code, archive):
             'careReferenceYears': care_row['years'],
         }
         care_from = max(care_row['years'], default=None)
-        if care_from is None or care_from < y - 2:
+        if care_from is None or not y - 2 <= care_from <= y:
             print(f"Warning: {code} {y}: elderly-care weights come from {care_from}, "
                   "more than two years before the base year", file=sys.stderr)
         sourced_rate = supplement.get('forecastInterestRate', {}).get(str(y))
@@ -154,9 +168,21 @@ def build(code, archive):
         # The accounts must add up: tax and grants minus net cost plus financial items is the result.
         net = record['payroll'] + record['pension'] + record['otherOperatingExpense'] - record['operatingRevenue'] + record['depreciation']
         result = record['tax'] + record['grants'] - net + record['financialIncome'] - financial_cost
-        if abs(net + g(rr, '030', y)) > 0.01 or abs(result - g(rr, '120', y)) > 0.01:
+        # Extraordinary items (6777:085, or 100 + 110; Vadstena 2019 +207, Norrköping 2019 -62, Motala 2017 +32) are one-offs: in the
+        # published result, not in the base the model grows.
+        extraordinary = g(rr, '085', y) or g(rr, '100', y) + g(rr, '110', y)  # net, or income and cost when only those are given
+        if extraordinary:
+            record['extraordinaryItems'] = extraordinary
+        if abs(net + g(rr, '030', y)) > 0.01 or abs(result + extraordinary - g(rr, '120', y)) > 0.01:
             raise SystemExit(f'{code} {y}: accounts do not reconcile (net {net:.1f} vs {-g(rr, "030", y):.1f}, '
                              f'result {result:.1f} vs {g(rr, "120", y):.1f})')
+        # Items the annual report marks as jämförelsestörande (one-off) are taken out of the base year, so the
+        # forecast starts from the recurring level. The published result stays in SCB's accounts.
+        one_off = supplement.get('nonRecurring', {}).get(str(y))
+        if one_off:
+            record['nonRecurring'] = one_off
+            record['otherOperatingExpense'] += one_off.get('operating', 0.0)
+            record['otherFinancialExpense'] += one_off.get('financial', 0.0)
         if abs(sum(record['reportedPopulation'][-1:]) - sum(record['cohorts'][-1])) > 0.5:
             raise SystemExit(f'{code} {y}: population groups do not add up')
         years[y] = record

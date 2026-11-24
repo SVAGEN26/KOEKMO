@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LINES = ('result', 'tax', 'grants', 'netCost', 'payroll', 'pension', 'otherCosts', 'operatingRevenue',
-         'depreciation', 'interest', 'debt', 'cash')
+         'depreciation', 'interest', 'debt', 'cash', 'population')
 
 
 def load(code, suffix):

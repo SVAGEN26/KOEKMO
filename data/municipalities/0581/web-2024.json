@@ -44,7 +44,7 @@
       "extrapolateAfter": 2027,
       "source": "https://extra.skr.se/download/18.72fac55919386070c95830a7/1733995400288/Cirkul%C3%A4r%2024056.pdf"
     },
-    "cashCost": 9380.112000000001,
+    "cashCost": 9610.112000000001,
     "publishedResult": 423.923,
     "births": 1383.0,
     "assumptions": {
@@ -63,9 +63,9 @@
       "equalisationOffset": 0.95,
       "fixedShare": 0.25,
       "sectorCosts": [
-        4061.5884960000003,
-        1597.4330736000002,
-        3721.0904304000005
+        4161.178496,
+        1636.6020736000003,
+        3812.3314304000005
       ],
       "migrationWeights": [
         0.15,
@@ -94,14 +94,14 @@
     "deaths": 1297.0,
     "depreciation": 689.719,
     "financialIncome": 1425.843,
-    "otherFinancialExpense": 388.659,
+    "otherFinancialExpense": 287.659,
     "interestExpense": 975.581,
     "priorYearSettlement": -36.963,
     "taxRate": 21.75,
     "operatingAccounts": {
       "payrollExcludingPensions": 6169.247,
       "pensionExpense": 709.098,
-      "otherOperatingExpense": 4537.898,
+      "otherOperatingExpense": 4767.898,
       "operatingRevenue": 2036.131,
       "netCostRoundingAdjustment": 0
     },
@@ -624,6 +624,8 @@
   "skrRevenue": null,
   "budgetResult": null,
   "sources": {
+    "annual2024": "https://norrkoping.se/download/18.8f5aac4196f138bba110e5d/1748936883175/Norrk%C3%B6pings-kommun-%C3%85rsredovisning2024-del1.pdf",
+    "annual2025": "https://norrkoping.se/download/18.3a8c6b3019eafce305b3e1/1781159178882/%C3%85rsredovisning%202025%20-%20del%201.pdf",
     "statistics": "Källa: SCB, Statistikdatabasen (CC BY 4.0); Kolada (RKA)",
     "archive": "data/downloads/20261119T090421Z",
     "accounts": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6777",

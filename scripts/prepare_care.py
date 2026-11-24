@@ -62,7 +62,7 @@ def main():
                for g, (h, r, p) in groups.items()}}
 
     bases = {}
-    for base in range(2020, 2026):
+    for base in range(2017, 2026):
         years = [y for y in (base - 2, base - 1, base) if y in yearly]
         if not years:
             continue

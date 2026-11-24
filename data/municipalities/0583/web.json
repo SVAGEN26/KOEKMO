@@ -622,7 +622,66 @@
       "deaths": 468.0
     }
   ],
-  "planning": null,
+  "planning": {
+    "municipality": "0583",
+    "baseYear": 2025,
+    "demography": "calibrated",
+    "sources": {
+      "workbook": "Prognosunderlag-K-2026-2033-26028.xlsm",
+      "skrCircular": "26:28",
+      "skrSheet": "Blad 2 Indata"
+    },
+    "rows": [
+      {
+        "year": 2026,
+        "taxBaseGrowth": 3.6761994372424223,
+        "labourCostGrowth": 3.1240424726040494,
+        "otherPriceGrowth": 2.8000000000000025
+      },
+      {
+        "year": 2027,
+        "taxBaseGrowth": 4.984337937891414,
+        "labourCostGrowth": 2.6962148822070597,
+        "otherPriceGrowth": 2.7928918631001665
+      },
+      {
+        "year": 2028,
+        "taxBaseGrowth": 4.2030409896068655,
+        "labourCostGrowth": 4.0884525973644115,
+        "otherPriceGrowth": 2.4799999999999933
+      },
+      {
+        "year": 2029,
+        "taxBaseGrowth": 4.015124448531182,
+        "labourCostGrowth": 3.930867628871293,
+        "otherPriceGrowth": 2.6000000000000023
+      },
+      {
+        "year": 2030,
+        "taxBaseGrowth": 3.920545740454129,
+        "labourCostGrowth": 3.2766930995321353,
+        "otherPriceGrowth": 2.6000000000000023
+      },
+      {
+        "year": 2031,
+        "taxBaseGrowth": 3.849185001300093,
+        "labourCostGrowth": 3.2766930995321353,
+        "otherPriceGrowth": 2.6000000000000023
+      },
+      {
+        "year": 2032,
+        "taxBaseGrowth": 3.8606095159464004,
+        "labourCostGrowth": 3.2766930995321353,
+        "otherPriceGrowth": 2.6000000000000023
+      },
+      {
+        "year": 2033,
+        "taxBaseGrowth": 3.8874167871102205,
+        "labourCostGrowth": 3.2766930995321353,
+        "otherPriceGrowth": 2.6000000000000023
+      }
+    ]
+  },
   "novemberPopulation": {
     "source": "https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB6725",
     "rows": [

@@ -1,0 +1,919 @@
+{
+ "source": "SCB TAB6777 and BefolkningNy (CC BY 4.0), SKR PKV, Kolada sector shares and care weights; data/municipalities/<code>/base-years.json and the history archive",
+ "method": "python3 scripts/response_test.py\n\nThe hindcasts (hindcast_vintages.py, hindcast_long.py) score levels: was the result right. The site is used\nfor something else: to see how much the result moves when the population, the investments or the prices move.\nThis script tests those responses. For each one it computes the change the model's own rule gives from the\nobserved driver, and compares it with the observed change in the accounts:\n\n  costs        real growth of gross operating cost (SCB TAB6777 item 022, deflated with SKR's PKV) against the\n               growth of the model's service volume from the observed population, 2012-2025.\n  revenue      growth of tax and general grants (items 040 and 050) against the growth of the population the\n               year before, 2011-2025. The model scales both with the population (elasticity 1).\n  financing    where a financing need (investment less the result and depreciation) shows up in the balance\n               sheet (SCB TAB6779), 2018-2025, over one to eight years. The model borrows exactly what the cash\n               flow does not cover.\n  depreciation depreciation against the model's rule (assets in use over a fixed life) with the observed\n               investments, 2017-2025.\n  prices       nominal cost growth beyond the service volume against PKV, year by year (13 municipalities' mean).\n\nA response is right when the slope is 1: the observed change is, on average, the change the model gives.\nA slope of 0.5 means history moved half as much as the model says. The slope is a regression of the observed\nchange on the model's, with a common effect per year removed (what happened to all 13 municipalities that\nyear: the pandemic, a national wage round, a reform of the grants). It is therefore identified from\ndifferences between municipalities, not from the national trend. The 95 % interval resamples municipalities\n(cluster bootstrap), since one municipality's years are not independent.\n\nEverything here uses outcomes for the drivers, on purpose: the question is what follows from a given\npopulation or investment, not whether the population was foreseen. Nothing here is a forecast.\n\nLimits. Thirteen municipalities in one county are few; the intervals are wide and say so. PKV is national,\nso a municipality's own wage drift is in the cost growth. The service volume uses each municipality's sector\nshares and care weights of 2025 for the whole period. Costs include pensions (5-8 % of the item), which the\nmodel does not scale with volume. The capacity starts at the need of 2009, so 2010-2011 are run-in and not\nscored. Years with a one-off that the annual report does not split out are left out (trendExclude). Not\ntested: the interest rate's pass-through, the tax rate and pension costs. The inflation scenario is compared with\n2022-2025 in scripts/explain_outcome.py.\n\nWrites data/response-test.json.",
+ "reading": "slope 1 = history moved as the model says; low and high are a 95 % interval from resampling municipalities",
+ "costs": {
+  "annual": {
+   "rule": "Kommunekonomi.Annual: adjustment 0.5, fixed share 0.25, need at the end of the year",
+   "byHorizon": {
+    "1": {
+     "slope": 0.817512235154674,
+     "low": 0.30131894612876153,
+     "high": 1.3044489189678752,
+     "r2": 0.02099047263168661,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.003882996977854814,
+     "spreadOfObservedChange": 0.02191039489345981
+    },
+    "3": {
+     "slope": 1.065488143640493,
+     "low": 0.5586079787186429,
+     "high": 1.7040255365911516,
+     "r2": 0.12130303779906706,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.00986472217811412,
+     "spreadOfObservedChange": 0.03017849943261218
+    },
+    "5": {
+     "slope": 1.0317679607164159,
+     "low": 0.5366338034445204,
+     "high": 1.6352104886280108,
+     "r2": 0.16717206408237695,
+     "cases": 126,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.014951114890756572,
+     "spreadOfObservedChange": 0.037728867052745266
+    },
+    "10": {
+     "slope": 0.8003504832975813,
+     "low": 0.24246353905035928,
+     "high": 1.199009498261609,
+     "r2": 0.2258407320658313,
+     "cases": 61,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.024981917018292082,
+     "spreadOfObservedChange": 0.04207313138255204
+    }
+   },
+   "withMunicipalityEffects": {
+    "1": {
+     "slope": 0.8697582139010158,
+     "low": 0.2018442451698404,
+     "high": 1.720239789166363,
+     "r2": 0.015753750726795593,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.0031161577257077036,
+     "spreadOfObservedChange": 0.02159364641695973
+    },
+    "3": {
+     "slope": 1.6344241771480754,
+     "low": 0.5595716611464941,
+     "high": 2.7256926656245253,
+     "r2": 0.13442948701918686,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.006394276094906728,
+     "spreadOfObservedChange": 0.028504202309168853
+    }
+   }
+  },
+  "continuous": {
+   "rule": "Kommunekonomi.Continuous.Economy (the site's default): the same parameters, capacity adjusts continuously and the cost is the year's mean",
+   "byHorizon": {
+    "1": {
+     "slope": 0.7118712877816701,
+     "low": 0.08587585725355892,
+     "high": 1.3105738919482965,
+     "r2": 0.01264245908745859,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.0034607044126374253,
+     "spreadOfObservedChange": 0.02191039489345981
+    },
+    "3": {
+     "slope": 0.8791353882755255,
+     "low": 0.37695540713501485,
+     "high": 1.5116889942681164,
+     "r2": 0.08142599709139328,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.009795428116928828,
+     "spreadOfObservedChange": 0.03017849943261218
+    },
+    "5": {
+     "slope": 0.9274436768918858,
+     "low": 0.4191103729602077,
+     "high": 1.5389481717184827,
+     "r2": 0.13646412278955625,
+     "cases": 126,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.01502780196711352,
+     "spreadOfObservedChange": 0.037728867052745266
+    },
+    "10": {
+     "slope": 0.7725463646000941,
+     "low": 0.24670312805252081,
+     "high": 1.1722173793733344,
+     "r2": 0.22544264262184188,
+     "cases": 61,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.025858201573353067,
+     "spreadOfObservedChange": 0.04207313138255204
+    }
+   },
+   "withMunicipalityEffects": {
+    "1": {
+     "slope": 0.7052837704858042,
+     "low": -0.13521645471008203,
+     "high": 1.6448313233973486,
+     "r2": 0.006302259092317802,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.002430581691675709,
+     "spreadOfObservedChange": 0.02159364641695973
+    },
+    "3": {
+     "slope": 1.421800888107775,
+     "low": 0.31557219366913025,
+     "high": 2.488979701151785,
+     "r2": 0.07888009133591328,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.005630588811454852,
+     "spreadOfObservedChange": 0.028504202309168853
+    }
+   }
+  },
+  "annualLagged": {
+   "rule": "as annual with the need at the end of the year before (the timing data/cost-residual.json used)",
+   "byHorizon": {
+    "1": {
+     "slope": 0.46961528085810234,
+     "low": -0.2519837843949096,
+     "high": 1.1108832944403344,
+     "r2": 0.0066984722603301,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.0038185270070377445,
+     "spreadOfObservedChange": 0.02191039489345981
+    },
+    "3": {
+     "slope": 0.8423191564013992,
+     "low": 0.35469467278182576,
+     "high": 1.428515142710264,
+     "r2": 0.0799827465679421,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.01013255851750091,
+     "spreadOfObservedChange": 0.03017849943261218
+    },
+    "5": {
+     "slope": 0.9050917283180117,
+     "low": 0.393725949517364,
+     "high": 1.4880194581925306,
+     "r2": 0.13466866592022542,
+     "cases": 126,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.01529728814098634,
+     "spreadOfObservedChange": 0.037728867052745266
+    },
+    "10": {
+     "slope": 0.7629231187812613,
+     "low": 0.23975155639224027,
+     "high": 1.1581492952533698,
+     "r2": 0.2238770954230308,
+     "cases": 61,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.026093293116943635,
+     "spreadOfObservedChange": 0.04207313138255204
+    }
+   },
+   "withMunicipalityEffects": {
+    "1": {
+     "slope": 0.28304501052992775,
+     "low": -0.5907271630747348,
+     "high": 1.1767365907247584,
+     "r2": 0.0014397689905193028,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.0028947888419201514,
+     "spreadOfObservedChange": 0.02159364641695973
+    },
+    "3": {
+     "slope": 1.2604357499112762,
+     "low": 0.27669060207428264,
+     "high": 2.214900018938392,
+     "r2": 0.07205078248362343,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.006070263311285896,
+     "spreadOfObservedChange": 0.028504202309168853
+    }
+   }
+  },
+  "need": {
+   "rule": "the need itself at the end of the year: no fixed share, no delay",
+   "byHorizon": {
+    "1": {
+     "slope": 0.3723195308699221,
+     "low": 0.09053265094564317,
+     "high": 0.7310759234097174,
+     "r2": 0.018222673286852915,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.00794402186158126,
+     "spreadOfObservedChange": 0.02191039489345981
+    },
+    "3": {
+     "slope": 0.7077943881983709,
+     "low": 0.358580136814841,
+     "high": 1.0549886759732776,
+     "r2": 0.12352778915244929,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.014985555997842386,
+     "spreadOfObservedChange": 0.03017849943261218
+    },
+    "5": {
+     "slope": 0.7443055293770912,
+     "low": 0.425241587323141,
+     "high": 1.0707962459999658,
+     "r2": 0.1705209241180139,
+     "cases": 126,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.02093203043715048,
+     "spreadOfObservedChange": 0.037728867052745266
+    },
+    "10": {
+     "slope": 0.613661569476186,
+     "low": 0.1983656600750116,
+     "high": 0.9192661037263731,
+     "r2": 0.21633624733409207,
+     "cases": 61,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.03188897470571472,
+     "spreadOfObservedChange": 0.04207313138255204
+    }
+   },
+   "withMunicipalityEffects": {
+    "1": {
+     "slope": 0.3507125050068305,
+     "low": 0.02414840300122902,
+     "high": 0.8017717062858302,
+     "r2": 0.014474518684674231,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.007407587668309581,
+     "spreadOfObservedChange": 0.02159364641695973
+    },
+    "3": {
+     "slope": 0.8055468076370011,
+     "low": 0.2529511043344948,
+     "high": 1.3595833862908882,
+     "r2": 0.11415744899495434,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.011955568676818967,
+     "spreadOfObservedChange": 0.028504202309168853
+    }
+   }
+  },
+  "population": {
+   "rule": "the total population at the end of the year",
+   "byHorizon": {
+    "1": {
+     "slope": 0.39292628745606595,
+     "low": -0.24644812856898632,
+     "high": 0.9626208534280785,
+     "r2": 0.01163774104571027,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.006015524013583475,
+     "spreadOfObservedChange": 0.02191039489345981
+    },
+    "3": {
+     "slope": 0.7408283622188537,
+     "low": 0.1939460396802489,
+     "high": 1.1601376793680922,
+     "r2": 0.10534473559139525,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.013221674448420878,
+     "spreadOfObservedChange": 0.03017849943261218
+    },
+    "5": {
+     "slope": 0.7371094732121652,
+     "low": 0.20996238742910717,
+     "high": 1.1539610083632672,
+     "r2": 0.16154248193380957,
+     "cases": 126,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.020572408857782266,
+     "spreadOfObservedChange": 0.037728867052745266
+    },
+    "10": {
+     "slope": 0.5573062091701427,
+     "low": 0.03197376109348455,
+     "high": 1.155107434032885,
+     "r2": 0.20098789566322656,
+     "cases": 61,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.03384510816314125,
+     "spreadOfObservedChange": 0.04207313138255204
+    }
+   },
+   "withMunicipalityEffects": {
+    "1": {
+     "slope": 0.34422178309004847,
+     "low": -0.37569790422307425,
+     "high": 1.1353549102060396,
+     "r2": 0.0065089954545308505,
+     "cases": 180,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.005061096521916377,
+     "spreadOfObservedChange": 0.02159364641695973
+    },
+    "3": {
+     "slope": 1.1345388288848781,
+     "low": 0.27937695756886066,
+     "high": 1.7841642362483274,
+     "r2": 0.12009147361662947,
+     "cases": 152,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.008706540304979044,
+     "spreadOfObservedChange": 0.028504202309168853
+    }
+   }
+  }
+ },
+ "costParameters": {
+  "horizon": 5,
+  "model": "continuous",
+  "adjustment": 1.0,
+  "fixedShare": 0.25,
+  "adjustmentInterval": [
+   0.2,
+   1.0
+  ],
+  "fixedShareInterval": [
+   0.0,
+   0.6
+  ],
+  "squaredErrorAtBest": 0.14705688519531177,
+  "squaredErrorAtDefault": 0.1550309124665527,
+  "squaredErrorWithoutVolume": 0.17935689354454964,
+  "note": "Least squares over a grid (adjustment 0.1-1.0, fixed share 0-0.9), slope held at 1, year effects removed; intervals from 300 resamples of municipalities. A diagnostic, not an estimate to rely on."
+ },
+ "revenue": {
+  "lagged": {
+   "1": {
+    "slope": 0.7795277739471539,
+    "low": 0.48722948080090467,
+    "high": 1.0954098180110778,
+    "r2": 0.13786168212127062,
+    "cases": 189,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.006080321382166887,
+    "spreadOfObservedChange": 0.012765456256190641
+   },
+   "3": {
+    "slope": 0.6912812610765278,
+    "low": 0.36256288113385093,
+    "high": 1.037159187944822,
+    "r2": 0.2017417945705394,
+    "cases": 159,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.014078247610604111,
+    "spreadOfObservedChange": 0.021667332299885246
+   },
+   "5": {
+    "slope": 0.6466641343282049,
+    "low": 0.31150096099913394,
+    "high": 1.0717527323333351,
+    "r2": 0.23370438439481753,
+    "cases": 133,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.021022981550753897,
+    "spreadOfObservedChange": 0.028121575855025262
+   },
+   "10": {
+    "slope": 0.4433973750518283,
+    "low": 0.09962113119503886,
+    "high": 0.900271103834568,
+    "r2": 0.2385153529732035,
+    "cases": 74,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.03452648551271409,
+    "spreadOfObservedChange": 0.03134637475218052
+   }
+  },
+  "sameYear": {
+   "1": {
+    "slope": 0.11683636230533788,
+    "low": -0.244476123924241,
+    "high": 0.4662312389124768,
+    "r2": 0.0029660946226679587,
+    "cases": 202,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.006016477016723274,
+    "spreadOfObservedChange": 0.012907073644017143
+   },
+   "3": {
+    "slope": 0.5092436557407112,
+    "low": 0.22525710055387063,
+    "high": 0.762393447231213,
+    "r2": 0.10698258064495911,
+    "cases": 172,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.013816807273611165,
+    "spreadOfObservedChange": 0.021511802010005368
+   },
+   "5": {
+    "slope": 0.5690435250168828,
+    "low": 0.2181214151685352,
+    "high": 0.9491510828767217,
+    "r2": 0.17689303340095688,
+    "cases": 146,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.02072575681877081,
+    "spreadOfObservedChange": 0.02804145339446275
+   },
+   "10": {
+    "slope": 0.4974817825927705,
+    "low": 0.15190570178367804,
+    "high": 0.9647196730930195,
+    "r2": 0.26368432364772554,
+    "cases": 86,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.0351023556563402,
+    "spreadOfObservedChange": 0.0340072323275429
+   }
+  },
+  "modelSaysPerComponent": 0.9395041750269973
+ },
+ "netDebt": {
+  "sources": {
+   "bankDebt": {
+    "what": "bank loans and bonds, with the short-term part (081, 082, 136, 134): the model's debt",
+    "slope": 0.4194008899768301,
+    "low": -0.3574202843104368,
+    "high": 0.8642889328190284,
+    "r2": 0.03319341919571264,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 1.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.14274608628950264
+   },
+   "lending": {
+    "what": "less long-term lending, mostly to the municipality's own companies (033)",
+    "slope": 0.244509548071661,
+    "low": -0.0038684904333384637,
+    "high": 0.7108069391454871,
+    "r2": 0.01888689295793751,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.11032563123617997
+   },
+   "cash": {
+    "what": "less cash and bank (065): the model's cash",
+    "slope": 0.043107133889557975,
+    "low": -0.10080947224855184,
+    "high": 0.16183332313153645,
+    "r2": 0.005897719407501395,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.034807108951174504
+   },
+   "placements": {
+    "what": "less short-term investments and long-term securities (060, 036, 037, 032)",
+    "slope": -0.24201711305549975,
+    "low": -0.5123010808144648,
+    "high": 0.17711297981858407,
+    "r2": 0.10315117381466385,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.04672720951978188
+   },
+   "otherLongTerm": {
+    "what": "other long-term liabilities: investment grants and connection fees, group loans, leasing (089 less loans)",
+    "slope": 0.11099632517625425,
+    "low": -0.22170318411133114,
+    "high": 0.5186508964392684,
+    "r2": 0.013900779303579048,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.05837809029339438
+   },
+   "provisions": {
+    "what": "provisions, mostly pensions (079)",
+    "slope": 0.041103802096863665,
+    "low": -0.03082043924950497,
+    "high": 0.12420113885550679,
+    "r2": 0.006074837414531598,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.032702091088620724
+   },
+   "shortTerm": {
+    "what": "short-term liabilities without the short-term part of loans (098 less 134)",
+    "slope": 0.02656980402426938,
+    "low": -0.11613920856679943,
+    "high": 0.22371300772823563,
+    "r2": 0.0005683068658499924,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.06911268368134572
+   },
+   "receivables": {
+    "what": "less receivables and stock (069 less 065 and 060)",
+    "slope": 0.04595639488825936,
+    "low": -0.061664778902791706,
+    "high": 0.24951438351577607,
+    "r2": 0.003067972427719301,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.05144949116146234
+   },
+   "remainder": {
+    "what": "disposals, revaluations, adjustments of equity and differences of definition",
+    "slope": 0.3103732149318041,
+    "low": -0.16691805944010799,
+    "high": 0.5953583356196379,
+    "r2": 0.06818185025735124,
+    "cases": 99,
+    "municipalities": 13,
+    "modelSays": 0.0,
+    "spreadOfModelChange": 0.06200987523001038,
+    "spreadOfObservedChange": 0.07370733366053898
+   }
+  },
+  "netBankDebt": {
+   "what": "bank debt less lending and cash: what the model's debt stands for when the companies' loans are set aside",
+   "slope": 0.707017571938049,
+   "low": 0.19807727919888346,
+   "high": 1.0220389065746582,
+   "r2": 0.26677632397808354,
+   "cases": 99,
+   "municipalities": 13,
+   "modelSays": 1.0,
+   "spreadOfModelChange": 0.06200987523001038,
+   "spreadOfObservedChange": 0.08488235558734128
+  },
+  "netBankDebtOnBalanceSheetNeed": {
+   "what": "as netBankDebt, with the need computed from the balance sheet's own change of fixed assets instead of SCB's investment survey",
+   "slope": 0.5301058731951659,
+   "low": 0.16693808341939276,
+   "high": 0.9493089440962651,
+   "r2": 0.2334858412215512,
+   "cases": 99,
+   "municipalities": 13,
+   "modelSays": 1.0,
+   "spreadOfModelChange": 0.07737222430584983,
+   "spreadOfObservedChange": 0.08488235558734128
+  },
+  "netBankDebtOnInvestment": {
+   "slope": 0.7607047935133564,
+   "low": 0.2787241124673263,
+   "high": 1.1110534751177212,
+   "modelSays": 1.0
+  },
+  "netBankDebtOnSelfFinancing": {
+   "slope": -0.2706375423563578,
+   "low": -1.0042093486762935,
+   "high": 0.45112796902078495,
+   "modelSays": -1.0
+  },
+  "netBankDebtByHorizon": {
+   "1": {
+    "need": {
+     "slope": 0.707017571938049,
+     "low": 0.19807727919888346,
+     "high": 1.0220389065746582,
+     "r2": 0.26677632397808354,
+     "cases": 99,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.06200987523001038,
+     "spreadOfObservedChange": 0.08488235558734128
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.5301058731951659,
+     "low": 0.16693808341939276,
+     "high": 0.9493089440962651,
+     "r2": 0.2334858412215512,
+     "cases": 99,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.07737222430584983,
+     "spreadOfObservedChange": 0.08488235558734128
+    }
+   },
+   "2": {
+    "need": {
+     "slope": 0.8277050516263029,
+     "low": 0.37215969431024537,
+     "high": 1.0819898680539346,
+     "r2": 0.45074258659396893,
+     "cases": 85,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.10216119871575378,
+     "spreadOfObservedChange": 0.12594974414482435
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.6392566601512043,
+     "low": 0.2350302262081971,
+     "high": 1.0145672638397674,
+     "r2": 0.3715980712942043,
+     "cases": 85,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.12010435458216052,
+     "spreadOfObservedChange": 0.12594974414482435
+    }
+   },
+   "3": {
+    "need": {
+     "slope": 0.8545826182945903,
+     "low": 0.5214653923089088,
+     "high": 1.0796690419460344,
+     "r2": 0.6585827312515079,
+     "cases": 71,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.1338380498208271,
+     "spreadOfObservedChange": 0.14093812376446718
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.643119950813083,
+     "low": 0.2364385996196558,
+     "high": 0.9964792515816069,
+     "r2": 0.4655310189431433,
+     "cases": 71,
+     "municipalities": 13,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.14952396852898345,
+     "spreadOfObservedChange": 0.14093812376446718
+    }
+   },
+   "5": {
+    "need": {
+     "slope": 0.854909820531583,
+     "low": 0.5796161964261981,
+     "high": 1.085252536444075,
+     "r2": 0.7598509782183335,
+     "cases": 45,
+     "municipalities": 12,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.20744559368337018,
+     "spreadOfObservedChange": 0.20345122399265017
+    },
+    "needFromBalanceSheet": {
+     "slope": 0.7805499283748534,
+     "low": 0.29307617610675335,
+     "high": 1.0876744264740892,
+     "r2": 0.562384875739019,
+     "cases": 45,
+     "municipalities": 12,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.19546834464761811,
+     "spreadOfObservedChange": 0.20345122399265017
+    }
+   },
+   "8": {
+    "need": {
+     "slope": 0.8752036329789773,
+     "low": 0.4536805945880452,
+     "high": 1.186006234878058,
+     "r2": 0.7867229970333667,
+     "cases": 11,
+     "municipalities": 11,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.3255129724970911,
+     "spreadOfObservedChange": 0.3211933092956289
+    },
+    "needFromBalanceSheet": {
+     "slope": 1.022845635563405,
+     "low": 0.542514109261553,
+     "high": 1.3670812467963585,
+     "r2": 0.7705101072451999,
+     "cases": 11,
+     "municipalities": 11,
+     "modelSays": 1.0,
+     "spreadOfModelChange": 0.275642108669506,
+     "spreadOfObservedChange": 0.3211933092956289
+    }
+   }
+  },
+  "meanNeed": 0.03835611360992788,
+  "meanBySource": {
+   "bankDebt": 0.04794473811495114,
+   "lending": -0.014227398695613071,
+   "cash": 0.0007523777385466336,
+   "placements": -0.008362759150910613,
+   "otherLongTerm": 0.0156177788376538,
+   "provisions": 0.0016502448890513954,
+   "shortTerm": 0.010207565519942063,
+   "receivables": -0.01458208533189573,
+   "remainder": -0.0006443483117977346
+  },
+  "investmentIncomeShare": {
+   "source": "SCB TAB4201 items 210 and 560, TAB5179 item 950; data/downloads/20261124T114939Z-investment-income",
+   "period": "2018-2025",
+   "byMunicipality": {
+    "Ödeshög": 0.015687075554924008,
+    "Ydre": 0.017305517325956914,
+    "Kinda": 0.03433242409719265,
+    "Boxholm": 0.01628928048736956,
+    "Åtvidaberg": 0.034034118589995443,
+    "Finspång": 0.012494400881442849,
+    "Valdemarsvik": 0.04454006688168209,
+    "Linköping": 0.018088562219520033,
+    "Norrköping": 0.0020415473837215436,
+    "Söderköping": 0.013725918074692934,
+    "Motala": 0.011509094487770976,
+    "Vadstena": 0.0032198503072487406,
+    "Mjölby": 0.016052168580239983
+   },
+   "lowest": 0.0020415473837215436,
+   "highest": 0.04454006688168209,
+   "median": 0.016052168580239983
+  }
+ },
+ "depreciation": {
+  "1": {
+   "slope": 1.0731852132439177,
+   "low": -0.40355356446401813,
+   "high": 1.4718432875196525,
+   "r2": 0.13844901993908537,
+   "cases": 101,
+   "municipalities": 13,
+   "modelSays": 1.0,
+   "spreadOfModelChange": 0.04992292146332598,
+   "spreadOfObservedChange": 0.14398913720193346
+  },
+  "3": {
+   "slope": 0.8945682262310246,
+   "low": 0.38768605926154753,
+   "high": 1.5575141336806682,
+   "r2": 0.2486761411451029,
+   "cases": 75,
+   "municipalities": 13,
+   "modelSays": 1.0,
+   "spreadOfModelChange": 0.12718799486481844,
+   "spreadOfObservedChange": 0.2281615872811267
+  },
+  "5": {
+   "slope": 0.8656065193749976,
+   "low": 0.18016552076080306,
+   "high": 1.7289441604701667,
+   "r2": 0.33575400272097256,
+   "cases": 49,
+   "municipalities": 13,
+   "modelSays": 1.0,
+   "spreadOfModelChange": 0.1745404432929787,
+   "spreadOfObservedChange": 0.26073899900618613
+  }
+ },
+ "prices": {
+  "slope": 0.8351094031497897,
+  "low": -0.10133775704661573,
+  "high": 1.3385289440746637,
+  "modelSays": 1.0,
+  "years": 14,
+  "meanDifference": 0.0021016369708255593,
+  "rows": [
+   {
+    "year": 2012,
+    "pkv": 0.0202,
+    "costBeyondVolume": 0.019239526992031755,
+    "municipalities": 13
+   },
+   {
+    "year": 2013,
+    "pkv": 0.0261,
+    "costBeyondVolume": 0.03920794381663812,
+    "municipalities": 13
+   },
+   {
+    "year": 2014,
+    "pkv": 0.0236,
+    "costBeyondVolume": 0.04141486832527378,
+    "municipalities": 13
+   },
+   {
+    "year": 2015,
+    "pkv": 0.0262,
+    "costBeyondVolume": 0.04053484190203279,
+    "municipalities": 13
+   },
+   {
+    "year": 2016,
+    "pkv": 0.027309999999999997,
+    "costBeyondVolume": 0.1010116103400156,
+    "municipalities": 13
+   },
+   {
+    "year": 2017,
+    "pkv": 0.03655,
+    "costBeyondVolume": 0.019112571195419033,
+    "municipalities": 13
+   },
+   {
+    "year": 2018,
+    "pkv": 0.0324,
+    "costBeyondVolume": 0.01377389622373432,
+    "municipalities": 13
+   },
+   {
+    "year": 2019,
+    "pkv": 0.026835900002466495,
+    "costBeyondVolume": 0.01580876899662864,
+    "municipalities": 13
+   },
+   {
+    "year": 2020,
+    "pkv": 0.019186394962074527,
+    "costBeyondVolume": -0.00029264538760823773,
+    "municipalities": 13
+   },
+   {
+    "year": 2021,
+    "pkv": 0.026321041904701303,
+    "costBeyondVolume": 0.027224015475241406,
+    "municipalities": 13
+   },
+   {
+    "year": 2022,
+    "pkv": 0.048789300485049994,
+    "costBeyondVolume": 0.04350729876869184,
+    "municipalities": 12
+   },
+   {
+    "year": 2023,
+    "pkv": 0.059181913279810816,
+    "costBeyondVolume": 0.06405232210933598,
+    "municipalities": 12
+   },
+   {
+    "year": 2024,
+    "pkv": 0.04458593954369805,
+    "costBeyondVolume": 0.028071350932163338,
+    "municipalities": 13
+   },
+   {
+    "year": 2025,
+    "pkv": 0.006124572694627295,
+    "costBeyondVolume": 0.00014161077438797824,
+    "municipalities": 13
+   }
+  ],
+  "note": "One point per year, the mean of the municipalities; the interval resamples years. meanDifference is the mean cost growth beyond volume and PKV, per year."
+ }
+}

@@ -98,6 +98,54 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {18691, 174633})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.735029, 0.2178, 0.047172};
+    constant BaseYear finspang2019 = BaseYear(
+      year = 2019,
+      cohorts = {{1745, 2065, 708, 11734, 5325}, {1730, 2168, 725, 11770, 5365}, {1713, 2211, 733, 11844, 5411}},
+      reportedPopulation = {21577, 21758, 21912},
+      births = {227, 212}, deaths = 222,
+      equalisationNextYear = {9903, 438, 1024, 670},
+      relativeTaxCapacity = {0.9269, 0.9223},
+      tax = 1022.7, priorYearSettlement = 0.5, grants = 303.9,
+      grantComponents = {208.5, 7.3, 15.2, 11.7, 47.2},
+      payroll = 975.1, pension = 68.3, otherOperatingExpense = 488.5, operatingRevenue = 268.7, netCostRoundingAdjustment = 0,
+      depreciation = 52.6, financialIncome = 27, interestExpense = 22, otherFinancialExpense = 2.7,
+      debt = 1178.4, openingDebt = 1168.3, cash = 93.2, assets = 896.5, investment = 52, taxRate = 22.15,
+      sectorShares = {0.4503, 0.2362, 0.3135}, educationShares = {0.2838, 0.5249, 0.1913},
+      careCostPerInhabitant = {18071, 171278})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.736832, 0.216226, 0.046941};
+    constant BaseYear finspang2018 = BaseYear(
+      year = 2018,
+      cohorts = {{1748, 2063, 692, 11759, 5264}, {1745, 2065, 708, 11734, 5325}, {1730, 2168, 725, 11770, 5365}},
+      reportedPopulation = {21526, 21577, 21758},
+      births = {210, 227}, deaths = 258,
+      equalisationNextYear = {9606, 337, 702, 537},
+      relativeTaxCapacity = {0.9211, 0.9269},
+      tax = 989.3, priorYearSettlement = -3.2, grants = 295.1,
+      grantComponents = {199.1, 17.6, 3.4, 4.3, 45.7},
+      payroll = 947.6, pension = 70.5, otherOperatingExpense = 499.1, operatingRevenue = 305.4, netCostRoundingAdjustment = 0,
+      depreciation = 57.7, financialIncome = 32.7, interestExpense = 23, otherFinancialExpense = 2.3,
+      debt = 1168.3, openingDebt = 1177.2, cash = 114, assets = 900.6, investment = 47.4, taxRate = 22.15,
+      sectorShares = {0.4515, 0.2315, 0.317}, educationShares = {0.2923, 0.5176, 0.1901},
+      careCostPerInhabitant = {17404, 165681})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.734576, 0.220503, 0.044921};
+    constant BaseYear finspang2017 = BaseYear(
+      year = 2017,
+      cohorts = {{1690, 2000, 632, 11655, 5222}, {1748, 2063, 692, 11759, 5264}, {1745, 2065, 708, 11734, 5325}},
+      reportedPopulation = {21199, 21526, 21577},
+      births = {217, 210}, deaths = 249,
+      equalisationNextYear = {9253, 817, 157, 200},
+      relativeTaxCapacity = {0.9315, 0.9211},
+      tax = 972.1, priorYearSettlement = 1.1, grants = 278.3,
+      grantComponents = {193.3, 6, -0.2, 12.8, 39},
+      payroll = 914.2, pension = 66, otherOperatingExpense = 501.6, operatingRevenue = 304.6, netCostRoundingAdjustment = 0,
+      depreciation = 47.4, financialIncome = 26.8, interestExpense = 11.5, otherFinancialExpense = 18.3,
+      debt = 1177.2, openingDebt = 1196.1, cash = 115.8, assets = 914, investment = 76.3, taxRate = 22.15,
+      sectorShares = {0.4395, 0.2308, 0.3297}, educationShares = {0.2953, 0.5156, 0.1892},
+      careCostPerInhabitant = {16734, 160972})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.739531, 0.216338, 0.044131};
 
     package SCB "Finspångs demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

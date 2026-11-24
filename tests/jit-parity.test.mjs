@@ -5,30 +5,20 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {simulate as reference} from '../site/src/engine.js';
-import {createSession} from '../site/src/omc-session.js';
+import {boot,staged,skip} from './support/omc-node.mjs';
 import {createDirectSimulator,prepareJob} from '../site/src/jit-engine.js';
 import {extendPlanning} from '../site/src/scenario-inputs.js';
 import {modelicaSource} from '../site/src/modelica-adapter.js';
-import {DEFAULT_MUNICIPALITY,municipalities} from '../site/src/municipalities.js';
+import {municipalities} from '../site/src/municipalities.js';
 
 const url=path=>new URL(path,import.meta.url);
 const read=path=>JSON.parse(fs.readFileSync(url(path)));
-const staged=fs.existsSync(url('../site/omc-web/omc/OpenModelicaCompiler_bg.wasm'));
 
 let session,simulate;
 if(staged) {
-  globalThis.__omcWasmBlob=file=>{try{return new Uint8Array(fs.readFileSync(url(`../site/omc-web/wasm-blobs/${file}`)));}catch{return null;}};
-  const omc=await import('../site/omc-web/omc/OpenModelicaCompiler.js');
-  await omc.default({module_or_path:fs.readFileSync(url('../site/omc-web/omc/OpenModelicaCompiler_bg.wasm'))});
-  omc.omc_set_env('OPENMODELICAHOME','/usr');
-  assert.ok(omc.omc_init());
-  omc.omc_enable_wasm_blobs?.();
-  const names=['Kommunekonomi.mo','Motala.mo','MotalaBrowser.mo',...Object.entries(municipalities)
-    .filter(([code])=>code!==DEFAULT_MUNICIPALITY).map(([,item])=>`municipalities/${item.packageName}.mo`)];
-  session=createSession(omc,names.map(name=>({name,text:fs.readFileSync(url(`../modelica/${name}`),'utf8')})));
+  ({session}=await boot());
   simulate=createDirectSimulator(session);
 }
-const skip=!staged&&'OpenModelica web compiler not staged (scripts/stage_omc.py)';
 
 const b=read('../data/baseline.json'),{rows:history}=read('../data/history.json'),planning=read('../data/planning-inputs.json');
 const keys=['population','births','deaths','migration','cost','payroll','pensionExpense','pensionCashPayments',
@@ -40,6 +30,8 @@ const scenarios=[{},
   {investment:0,interestRate:0},
   {birthChange:-30,migrationDelta:-400,adjustment:1,equalisationOffset:1},
   {years:3},
+  {costDrift:0.8,grantIncrease:4},
+  {costDrift:-0.5,grantIncrease:-2,years:5},
   {pensionExpensePath:[275,250,220,190,190,190,190,190],pensionCashPaymentsPath:[190,195,200,200,200,200,200,200]}];
 
 for(const sourced of [true,false]) for(const overrides of scenarios) {

@@ -675,11 +675,12 @@ sjunka i den historiska takten (sätt <code>improvement = Data.SCB.mortalityImpr
 
     model ContinuousCohort "Continuous med ettårsåldrar per kön (SCB-data)"
       extends Continuous(revenuePopulation0 = Data.SCB.groups(Data.SCB.populationForYear(base.year - 1)),
-        redeclare Kommunekonomi.Components.CohortDemography demography(data = Data.SCB.forYear(base.year), reportedTotal = sum(p0),
+        redeclare Kommunekonomi.Continuous.CohortDemography demography(data = Data.SCB.forYear(base.year), reportedTotal = sum(p0),
         migrationWeights = migrationWeights));
       annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
         Documentation(info = "<html><p>Som <a href=\"modelica://Motala.Examples.AnnualCohort\">AnnualCohort</a>, men med kontinuerlig tid
-inom året. Demografin flyttar ettårsåldrarna en gång per år och räknar fram årets slut när året börjar.</p></html>"));
+inom året. Födelseårsgrupperna är lager; födda, döda och flyttningar är flöden, och åldern byter etikett vid årsskiftet
+(<a href=\"modelica://Kommunekonomi.Continuous.CohortDemography\">Kommunekonomi.Continuous.CohortDemography</a>).</p></html>"));
     end ContinuousCohort;
 
     model Budget2026 "Kommunens budget 2026-2028: budgetens investeringar, skatt och bidrag; modellens kostnader, räntor och lån"

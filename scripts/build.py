@@ -26,6 +26,91 @@ def sha(path):
     return digest.hexdigest()
 
 
+def series_catalogue():
+    """Outcomes and history the AI tools read (site/src/ai-tools.js, get_series): one file, with sources."""
+    load = lambda path: json.loads((ROOT / path).read_text())
+    residual = load('data/cost-residual.json')
+    long = load('data/long-hindcast.json')
+    long_continuous = load('data/long-hindcast-continuous.json')
+    responses = load('data/response-test.json')
+    responses['prices'] = {k: v for k, v in responses['prices'].items() if k != 'rows'}
+    national = load('data/national-population.json')
+    explained = load('data/outcome-explanation-summary.json')
+    out = {'municipalities': {}, 'national': {
+        'explanationSummary': {'source': 'scripts/explain_outcome.py --summary, data/outcome-explanation-summary.json',
+                               'description': 'The explanation runs for all 13 municipalities side by side: median gaps to the accounts '
+                                              'as believed and with the outcomes set in, and SKR\'s old forecasts of tax and grants '
+                                              'against the outcomes', **{k: v for k, v in explained.items() if k != 'municipalities'}},
+        'pkv': {'unit': 'share per year', 'source': residual['source'],
+                'description': "SKR's price index for municipal activities, outcomes: pkv (total), labour, other",
+                'rows': [{'year': int(y), **v} for y, v in sorted(residual['pkv'].items())]},
+        'population': {'unit': 'persons, 31 December', 'source': national.get('source'), 'note': national.get('note'),
+                       'rows': [{'year': int(y), 'population': v} for y, v in sorted(national['population'].items())]},
+        'hindcast': {'source': 'scripts/hindcast_long.py, data/long-hindcast.json and data/long-hindcast-continuous.json', 'units': long['units'],
+                     'description': 'Model against outcomes 2017-2019 to 2025, 13 municipalities: mean error and mean absolute '
+                                    'error per horizon, and the benchmark persistence (the base year\'s result share kept)',
+                     'models': 'summaryByHorizon is the yearly model (Kommunekonomi.Annual); summaryByHorizonContinuous is the '
+                               'continuous model, which the site runs by default. Persistence is the same for both.',
+                     'summaryByHorizon': long['summaryByHorizon'],
+                     'summaryByHorizonContinuous': {k: v for k, v in long_continuous['summaryByHorizon'].items() if k != 'persistence'}},
+        'responses': {'source': 'scripts/response_test.py, data/response-test.json',
+                      'description': 'The model\'s rules against the accounts of 13 municipalities: slope of the observed change on the '
+                                     'model\'s (1 = history moved as the model says), with a 95 % interval', **responses}}}
+    for folder in sorted((ROOT / 'data/municipalities').glob('[0-9]*')):
+        if not (folder / 'base-years.json').is_file():
+            continue
+        code = folder.name
+        records = json.loads((folder / 'base-years.json').read_text())
+        rows = []
+        for y, r in sorted(records['years'].items()):
+            net = r['payroll'] + r['pension'] + r['otherOperatingExpense'] - r['operatingRevenue'] + r['depreciation']
+            rows.append({'year': int(y), 'population': r['reportedPopulation'][-1], 'births': r['births'], 'deaths': r['deaths'],
+                         'taxRate': r['taxRate'], 'tax': r['tax'], 'grants': r['grants'], 'netCost': net,
+                         'result': r['tax'] + r['grants'] - net + r['financialIncome'] - r['interestExpense'] - r['otherFinancialExpense'],
+                         'payroll': r['payroll'], 'pension': r['pension'], 'otherOperatingExpense': r['otherOperatingExpense'],
+                         'operatingRevenue': r['operatingRevenue'], 'depreciation': r['depreciation'],
+                         'interestExpense': r['interestExpense'], 'debt': r['debt'], 'cash': r['cash'], 'assets': r['assets'],
+                         'investment': r['investment'], 'grantComponents': r['grantComponents']})
+        drift = residual['municipalities'].get(code, {})
+        e = load('data/outcome-explanation.json' if code == '0583' else f'data/municipalities/{code}/outcome-explanation.json')
+        years = [str(y) for y in e['years']]
+        explanation = {
+            'source': 'scripts/explain_outcome.py', 'unit': 'mnkr', 'model': e['model'], 'baseYear': e['origin'], 'years': e['years'],
+            'description': 'Why the result did not become what was believed: the model from the base year\'s accounts as things '
+                           'were believed then, and with one cause at a time set to what happened (cumulative, in this order). '
+                           'remaining is the model with every outcome set in, minus the accounts, per line. Only inputs are '
+                           'changed, no equation.',
+            'baseYearResult': e['baseYear']['result'],
+            'steps': [{'step': s['step'], 'label': s['label'], 'result': [e['runs'][s['step']][y]['result'] for y in years]} for s in e['steps']],
+            'outcome': {'result': [e['outcome'][y]['result'] for y in years], 'source': e['outcome'][years[0]]['source']},
+            'remaining': {k: [r[k] for r in e['remainingByLine']] for k in e['remainingByLine'][0] if k != 'year'},
+            'inputs': e['inputs'],
+            'inflationScenario': {
+                'description': e['inflationScenario']['description'], 'priceSurprise': e['inflationScenario']['shock'],
+                **{name: [e['inflationScenario']['runs'][name][y]['result'] for y in years] for name in ('mechanism', 'compensated')}},
+            'taxAndGrants': {'outcome': [e['outcome'][y]['tax'] + e['outcome'][y]['grants'] for y in years],
+                             'believed': [e['runs']['believed'][y]['tax'] + e['runs']['believed'][y]['grants'] for y in years],
+                             'skr': [{'circular': f['circular'], 'published': f['published'],
+                                      'rows': [{'year': r['year'], 'forecast': r['tax'] + r['grants']} for r in f['rows']]}
+                                     for f in e['skrForecasts']],
+                             'skrSource': 'SKR, Prognosunderlag K; data/skr-historical/forecasts.json'}}
+        out['municipalities'][code] = {
+            'name': records['name'],
+            'accounts': {'unit': 'mnkr; population in persons; taxRate in percent', 'source': records['source'],
+                         'archive': records['archive'], 'definitions': ' '.join(records['definitions'].split()),
+                         'note': 'Kommunen, not the group. The result leaves out extraordinary items and the one-offs the annual '
+                                 'reports mark as jämförelsestörande (annual-report-inputs.json). grantComponents: income, cost, '
+                                 'regulation and LSS equalisation and the property fee.',
+                         'rows': rows},
+            'explanation': explanation,
+            'costGrowth': {'unit': 'share per year', 'source': residual['source'],
+                           'description': 'Cost growth beyond prices and the service volume, measured as the model uses costDrift '
+                                          '(scripts/cost_residual.py)', 'excludedYears': drift.get('excludedYears', []),
+                           'rows': [{'year': int(y), 'residual': v['residual'], 'volumeGrowth': v['volumeGrowth'], 'pkv': v['pkv']}
+                                    for y, v in sorted(drift.get('years', {}).items())]}}
+    return out
+
+
 def main():
     manifest_file = OMC / 'manifest.json'
     if not manifest_file.is_file():
@@ -64,6 +149,7 @@ def main():
             target.mkdir(parents=True)
             shutil.copy2(reference, target / reference.name)
     (DIST / 'municipalities-data.json').write_text(json.dumps(municipal_data, ensure_ascii=False))
+    (DIST / 'series.json').write_text(json.dumps(series_catalogue(), ensure_ascii=False))
     # Preserve the Finspång URLs used before the shared municipality picker.
     shutil.copy2(ROOT / 'data/municipalities/0562/web.json', DIST / 'finspang.json')
     shutil.copy2(ROOT / 'data/municipalities/0562/skr-revenue-path.json', DIST / 'finspang-skr-revenue-path.json')

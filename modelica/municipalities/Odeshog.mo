@@ -98,6 +98,54 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       careCostPerInhabitant = {13811, 133164})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.747626, 0.201493, 0.050882};
+    constant BaseYear odeshog2019 = BaseYear(
+      year = 2019,
+      cohorts = {{394, 536, 188, 2774, 1451}, {413, 517, 167, 2767, 1459}, {426, 515, 161, 2780, 1455}},
+      reportedPopulation = {5343, 5323, 5337},
+      births = {52, 61}, deaths = 72,
+      equalisationNextYear = {13668, 1931, 1024, -624},
+      relativeTaxCapacity = {0.834, 0.8361},
+      tax = 222, priorYearSettlement = 0.1, grants = 89.6,
+      grantComponents = {69.6, 4.7, 3.7, -3.8, 11.5},
+      payroll = 202.7, pension = 14.7, otherOperatingExpense = 160.1, operatingRevenue = 88.3, netCostRoundingAdjustment = 0,
+      depreciation = 16.8, financialIncome = 1.7, interestExpense = 2.7, otherFinancialExpense = 0.4,
+      debt = 168.6, openingDebt = 150.6, cash = 8.7, assets = 321.9, investment = 35.6, taxRate = 21.6,
+      sectorShares = {0.4297, 0.2046, 0.3656}, educationShares = {0.254, 0.5587, 0.1873},
+      careCostPerInhabitant = {13646, 130134})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.749141, 0.204124, 0.046735};
+    constant BaseYear odeshog2018 = BaseYear(
+      year = 2018,
+      cohorts = {{394, 519, 193, 2783, 1446}, {394, 536, 188, 2774, 1451}, {413, 517, 167, 2767, 1459}},
+      reportedPopulation = {5335, 5343, 5323},
+      births = {54, 52}, deaths = 54,
+      equalisationNextYear = {13136, 888, 702, -722},
+      relativeTaxCapacity = {0.8283, 0.834},
+      tax = 214.9, priorYearSettlement = -0.8, grants = 90,
+      grantComponents = {72.2, 7.1, 0.8, -6.9, 11.6},
+      payroll = 196.1, pension = 19.7, otherOperatingExpense = 163.4, operatingRevenue = 98, netCostRoundingAdjustment = 0,
+      depreciation = 13.5, financialIncome = 1.7, interestExpense = 3.1, otherFinancialExpense = 0,
+      debt = 150.6, openingDebt = 172.9, cash = 5, assets = 304.8, investment = 32.7, taxRate = 21.6,
+      sectorShares = {0.4495, 0.2154, 0.3352}, educationShares = {0.2468, 0.5816, 0.1716},
+      careCostPerInhabitant = {12829, 131517})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.749143, 0.202879, 0.047978};
+    constant BaseYear odeshog2017 = BaseYear(
+      year = 2017,
+      cohorts = {{344, 506, 187, 2773, 1426}, {394, 519, 193, 2783, 1446}, {394, 536, 188, 2774, 1451}},
+      reportedPopulation = {5236, 5335, 5343},
+      births = {67, 54}, deaths = 63,
+      equalisationNextYear = {13453, 1314, 157, -1287},
+      relativeTaxCapacity = {0.8333, 0.8283},
+      tax = 209.4, priorYearSettlement = 0.3, grants = 91.3,
+      grantComponents = {70.4, 8.4, -0.1, -5.6, 9.5},
+      payroll = 193.1, pension = 15.1, otherOperatingExpense = 171.7, operatingRevenue = 126, netCostRoundingAdjustment = 0,
+      depreciation = 26.4, financialIncome = 1.2, interestExpense = 3.5, otherFinancialExpense = 0.1,
+      debt = 172.9, openingDebt = 186.4, cash = 33.8, assets = 285.8, investment = 19.4, taxRate = 21.6,
+      sectorShares = {0.4578, 0.2104, 0.3317}, educationShares = {0.2416, 0.5565, 0.2018},
+      careCostPerInhabitant = {12073, 129624})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.753963, 0.195727, 0.05031};
 
     package SCB "Ödeshögs demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

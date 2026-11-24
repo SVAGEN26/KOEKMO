@@ -25,7 +25,8 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
   const populationSource=a.demographyMode?.includes('observed')
     ?'<a href="https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB1212">SCB:s in- och utflyttningar efter ålder och kön</a>.'
     :planning?.sources.population&&!run.cohort?`Befolkningskälla: <a href="${escape(planning.sources.population)}">regional statistikdatabas</a>.`:'';
-  const common=[['Basår / horisont',`${first} / ${first+1}–${last}`],['Intäktsunderlag',revenueLabel],['Befolkningsunderlag',populationLabel],
+  const flow=a.timeModel==='continuous';
+  const common=[['Basår / horisont',`${first} / ${first+1}–${last}`],['Tid i modellen',flow?'Kontinuerlig tid: flöden under året':'Årssteg: ett steg per år'],['Intäktsunderlag',revenueLabel],['Befolkningsunderlag',populationLabel],
     ...(revenueMode?[['Intäktsmodell',revenueMode]]:[]),
     ...(a.splitPayroll?[['Personalkostnader','Löner, sociala avgifter och pensioner i separata banor']]:[])];
   const pages=[];
@@ -35,7 +36,7 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
     ...common,['Kommunal skattesats',percent(a.taxRate)],['Produktivitet / verksamhetsintäkter, årlig ökning',`${percent(a.productivity)} / ${percent(a.operatingRevenueGrowth)}`],['Utjämningskänslighet',percent(a.equalisationOffset*100)],['Låneränta / investeringar',`${percent(a.interestRate)} / ${number(a.investment)} mnkr per år`],['Skattetrend / bidragstillväxt utan import',revenuePath?'Ersatta av importerade årsbelopp':`${vector(run.inputs.map(r=>r.taxGrowth),'%')} / ${percent(a.grantGrowth)}`]
   ])+table(['År',a.splitPayroll?'Lön %':'Arbetskraft %','Övriga priser %','Pensionskostnad','Skatt, scenario','Bidrag, scenario','Nettodrift','Avskrivning','Resultat'],future.map((r,i)=>[r.year,number(run.inputs[i].wageGrowth),number(run.inputs[i].priceGrowth),number(r.pensionExpense),number(r.tax),number(r.grants),number(r.cost),number(r.depreciation),number(r.result)]),'Effektiva årsvisa antaganden och scenariobelopp. Pengar i mnkr, löpande priser.')+`<p>Resultat = skatt + bidrag − nettodrift − avskrivning + finansiella intäkter − ränta − övrig finansiell kostnad. Finansiella intäkter: ${escape(number(b.financialIncome))} mnkr; övrig finansiell kostnad: ${escape(number(b.otherFinancialExpense))} mnkr. Basår ${first}: observerat resultat ${escape(number(rows[0].result))} mnkr. Låneränta och investeringar redovisas vid skuldgrafen.</p>`);
   page('Banklåneskuld',graph('debt-chart','Grön linje: ditt scenario. Brun streckad linje: grundbana med samma aktiva underlag.')+parameters([
-    ['Ingående skuld / kassa',`${number(b.debt)} / ${number(b.cash)} mnkr`],['Låneränta på ingående skuld',percent(a.interestRate)],['Investeringar per år',`${number(a.investment)} mnkr`],['Ingående avskrivningsbara tillgångar',`${number(b.assets)} mnkr`],['Härledd tillgångslivslängd',`${number(b.assets/b.depreciation)} år`],['Finansiering','Underskott lånas; överskott amorterar skuld, därefter ökar kassan.']
+    ['Ingående skuld / kassa',`${number(b.debt)} / ${number(b.cash)} mnkr`],[flow?'Låneränta på aktuell skuld':'Låneränta på ingående skuld',percent(a.interestRate)],['Investeringar per år',`${number(a.investment)} mnkr`],['Ingående avskrivningsbara tillgångar',`${number(b.assets)} mnkr`],['Härledd tillgångslivslängd',`${number(b.assets/b.depreciation)} år`],['Finansiering','Underskott lånas; överskott amorterar skuld, därefter ökar kassan.']
   ])+table(['År','Investering','Operativt kassaflöde','Pensionskostnad','Pensionsbetalning','Ränta','Nyupplåning','Amortering','Skuld','Kassa'],future.map(r=>[r.year,...['investment','operatingCash','pensionExpense','pensionCashPayments','interest','borrowing','repayment','debt','cash'].map(k=>number(r[k]))]),'Mnkr. I driftkassan återläggs avskrivning och skillnaden mellan pensionskostnad och pensionsbetalning. Modellerat rörelsekapital påverkar kassaflödet när det är aktivt.')+'<p>Resultatets intäkts-, kostnads- och befolkningsantaganden påverkar också finansieringsbehovet och finns vid övriga grafer. Kassaflödet saknar bland annat fullständig rörelsekapitalmodell.</p>');
   if(a.workingCapitalEnabled) {
     page('Rörelsekapital',table(['År','Kundfordringar','Leverantörsskulder','Förutbetalda bidrag','Kassaflödeseffekt','Driftkassa'],
@@ -49,7 +50,7 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
       ['Förfinansierad del av uppskjuten betalning',percent(100*(a.prefinanceShare??0))]
     ])+table(['År','Investering betald','Kvar att betala','Nya lån','Varav förfinansiering','Amortering','Kassa','Skuld'],
       rows.map(r=>[r.year,...['investment','outstandingDeferredInvestment','borrowing','prefinancing','repayment','cash','debt'].map(key=>number(r[key]))]),
-      'Mnkr. Ränta beräknas på ingående skuld.'));
+      flow?'Mnkr. Ränta beräknas på den skuld som finns under året.':'Mnkr. Ränta beräknas på ingående skuld.'));
   }
   if(['planned','delay'].includes(a.projectChoice)&&b.project) {
     page(b.project.name,table(['År','Projektutbetalning','Pågående projekt','Driftsatt värde','Platser i bruk','Nya lån i kommunen'],

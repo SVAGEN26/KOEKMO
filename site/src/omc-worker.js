@@ -58,7 +58,7 @@ self.onmessage=async({data})=>{
   }
   if(data.type==='run') {
     const results=data.jobs.map(job=>{
-      try {return {rows:session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality)};}
+      try {return {rows:session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.continuous)};}
       catch(e) {return {error:e.message};}
     });
     self.postMessage({type:'result',id:data.id,results});

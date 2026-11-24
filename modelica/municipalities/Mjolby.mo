@@ -98,6 +98,54 @@ package Mjolby "Mjölby: kommunens ekonomi år för år med biblioteket Kommunek
       careCostPerInhabitant = {21976, 164396})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.732515, 0.216375, 0.05111};
+    constant BaseYear mjolby2019 = BaseYear(
+      year = 2019,
+      cohorts = {{2254, 2921, 895, 15116, 5833}, {2290, 2984, 897, 15301, 5901}, {2362, 3006, 904, 15561, 5925}},
+      reportedPopulation = {27019, 27373, 27758},
+      births = {280, 302}, deaths = 296,
+      equalisationNextYear = {10154, -194, 1024, 188},
+      relativeTaxCapacity = {0.9321, 0.923},
+      tax = 1273.1, priorYearSettlement = 0.6, grants = 332.8,
+      grantComponents = {260.2, -12.7, 19.2, 4.5, 54.1},
+      payroll = 1161.2, pension = 91.6, otherOperatingExpense = 668.7, operatingRevenue = 398.7, netCostRoundingAdjustment = 0,
+      depreciation = 79.8, financialIncome = 11.8, interestExpense = 3.4, otherFinancialExpense = 5.6,
+      debt = 630, openingDebt = 435, cash = 34.3, assets = 1797.8, investment = 302.8, taxRate = 21.9,
+      sectorShares = {0.4664, 0.2055, 0.3282}, educationShares = {0.2967, 0.5264, 0.1768},
+      careCostPerInhabitant = {21105, 162656})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2019[3] = {0.740422, 0.211308, 0.04827};
+    constant BaseYear mjolby2018 = BaseYear(
+      year = 2018,
+      cohorts = {{2199, 2794, 873, 15025, 5817}, {2254, 2921, 895, 15116, 5833}, {2290, 2984, 897, 15301, 5901}},
+      reportedPopulation = {26708, 27019, 27373},
+      births = {297, 280}, deaths = 268,
+      equalisationNextYear = {9536, -464, 702, 166},
+      relativeTaxCapacity = {0.933, 0.9321},
+      tax = 1229.3, priorYearSettlement = -3.9, grants = 311.2,
+      grantComponents = {249, -11.2, 4.2, 1.3, 53.4},
+      payroll = 1123.5, pension = 88.9, otherOperatingExpense = 636.4, operatingRevenue = 392.1, netCostRoundingAdjustment = 0,
+      depreciation = 71.4, financialIncome = 6.5, interestExpense = 3.4, otherFinancialExpense = 4.2,
+      debt = 435, openingDebt = 355, cash = 49.8, assets = 1598.6, investment = 238.7, taxRate = 21.9,
+      sectorShares = {0.4599, 0.1957, 0.3444}, educationShares = {0.2942, 0.5252, 0.1806},
+      careCostPerInhabitant = {19893, 161331})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2018[3] = {0.7414, 0.208609, 0.049992};
+    constant BaseYear mjolby2017 = BaseYear(
+      year = 2017,
+      cohorts = {{2166, 2733, 852, 15035, 5816}, {2199, 2794, 873, 15025, 5817}, {2254, 2921, 895, 15116, 5833}},
+      reportedPopulation = {26602, 26708, 27019},
+      births = {286, 297}, deaths = 301,
+      equalisationNextYear = {9217, -414, 157, 49},
+      relativeTaxCapacity = {0.923, 0.933},
+      tax = 1195, priorYearSettlement = 1.4, grants = 305.9,
+      grantComponents = {242.1, -6.2, -0.3, 8.4, 48},
+      payroll = 1069.4, pension = 85.7, otherOperatingExpense = 607, operatingRevenue = 384, netCostRoundingAdjustment = 0,
+      depreciation = 69.3, financialIncome = 24.5, interestExpense = 5.4, otherFinancialExpense = 3.3,
+      debt = 355, openingDebt = 355, cash = 55.4, assets = 1408.9, investment = 157.4, taxRate = 21.9,
+      sectorShares = {0.4627, 0.2049, 0.3323}, educationShares = {0.2885, 0.5284, 0.183},
+      careCostPerInhabitant = {17366, 159996})
+      "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
+    constant Real olderShares2017[3] = {0.740614, 0.209669, 0.049717};
 
     package SCB "Mjölbys demografi per ettårsålder och kön"
       extends Kommunekonomi.Data.SCB;

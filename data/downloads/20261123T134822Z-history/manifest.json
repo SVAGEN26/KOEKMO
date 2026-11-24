@@ -1,0 +1,312 @@
+{
+  "retrieved_at": "2026-11-23T13:48:22.282908+00:00",
+  "municipalities": [
+    "0509",
+    "0512",
+    "0513",
+    "0560",
+    "0561",
+    "0562",
+    "0563",
+    "0580",
+    "0581",
+    "0582",
+    "0583",
+    "0584",
+    "0586"
+  ],
+  "source": "Statistics Sweden (SCB), Statistikdatabasen, CC BY 4.0",
+  "files": [
+    {
+      "file": "TAB6777.json",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6777/data?lang=sv&outputFormat=json-stat2&valueCodes[Region]=0509&valueCodes[Region]=0512&valueCodes[Region]=0513&valueCodes[Region]=0560&valueCodes[Region]=0561&valueCodes[Region]=0562&valueCodes[Region]=0563&valueCodes[Region]=0580&valueCodes[Region]=0581&valueCodes[Region]=0582&valueCodes[Region]=0583&valueCodes[Region]=0584&valueCodes[Region]=0586&valueCodes[Resultatraknposter]=*&valueCodes[ContentsCode]=*&valueCodes[Tid]=2009&valueCodes[Tid]=2010&valueCodes[Tid]=2011&valueCodes[Tid]=2012&valueCodes[Tid]=2013&valueCodes[Tid]=2014&valueCodes[Tid]=2015&valueCodes[Tid]=2016",
+      "query": null,
+      "bytes": 20150,
+      "sha256": "7b117927a4557d00b35046668dfc004d68c538f81853a0c2d00a23bf9582d27d"
+    },
+    {
+      "file": "TAB6779.json",
+      "url": "https://statistikdatabasen.scb.se/api/v2/tables/TAB6779/data?lang=sv&outputFormat=json-stat2&valueCodes[Region]=0509&valueCodes[Region]=0512&valueCodes[Region]=0513&valueCodes[Region]=0560&valueCodes[Region]=0561&valueCodes[Region]=0562&valueCodes[Region]=0563&valueCodes[Region]=0580&valueCodes[Region]=0581&valueCodes[Region]=0582&valueCodes[Region]=0583&valueCodes[Region]=0584&valueCodes[Region]=0586&valueCodes[Balansraknposter]=*&valueCodes[ContentsCode]=*&valueCodes[Tid]=2009&valueCodes[Tid]=2010&valueCodes[Tid]=2011&valueCodes[Tid]=2012&valueCodes[Tid]=2013&valueCodes[Tid]=2014&valueCodes[Tid]=2015&valueCodes[Tid]=2016",
+      "query": null,
+      "bytes": 74503,
+      "sha256": "971d4baaf576863967fd67847c3a4db6a5cfc253625fc7a2e3a08b9bfefdff89"
+    },
+    {
+      "file": "population.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0583",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Civilstand",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "OG",
+                "G",
+                "SK",
+                "ÄNKL"
+              ]
+            }
+          },
+          {
+            "code": "Alder",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29",
+                "30",
+                "31",
+                "32",
+                "33",
+                "34",
+                "35",
+                "36",
+                "37",
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43",
+                "44",
+                "45",
+                "46",
+                "47",
+                "48",
+                "49",
+                "50",
+                "51",
+                "52",
+                "53",
+                "54",
+                "55",
+                "56",
+                "57",
+                "58",
+                "59",
+                "60",
+                "61",
+                "62",
+                "63",
+                "64",
+                "65",
+                "66",
+                "67",
+                "68",
+                "69",
+                "70",
+                "71",
+                "72",
+                "73",
+                "74",
+                "75",
+                "76",
+                "77",
+                "78",
+                "79",
+                "80",
+                "81",
+                "82",
+                "83",
+                "84",
+                "85",
+                "86",
+                "87",
+                "88",
+                "89",
+                "90",
+                "91",
+                "92",
+                "93",
+                "94",
+                "95",
+                "96",
+                "97",
+                "98",
+                "99",
+                "100+"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1",
+                "2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "BE0101N1"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 4533098,
+      "sha256": "e05c5c0039499443b5667e83704b8d379ea5b5fbabf147df7487438859a5c730"
+    },
+    {
+      "file": "changes.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101G/BefforandrKvRLK",
+      "query": {
+        "query": [
+          {
+            "code": "Region",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "0509",
+                "0512",
+                "0513",
+                "0560",
+                "0561",
+                "0562",
+                "0563",
+                "0580",
+                "0581",
+                "0582",
+                "0583",
+                "0584",
+                "0586"
+              ]
+            }
+          },
+          {
+            "code": "Forandringar",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "115",
+                "130"
+              ]
+            }
+          },
+          {
+            "code": "Period",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "hel"
+              ]
+            }
+          },
+          {
+            "code": "Kon",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "1+2"
+              ]
+            }
+          },
+          {
+            "code": "ContentsCode",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "000002Z9"
+              ]
+            }
+          },
+          {
+            "code": "Tid",
+            "selection": {
+              "filter": "item",
+              "values": [
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016"
+              ]
+            }
+          }
+        ],
+        "response": {
+          "format": "json"
+        }
+      },
+      "bytes": 13019,
+      "sha256": "8a5450e18d9d9cf22f41096076d9dffbc435a6f575e2530cd9c0a8abdfb9f93a"
+    }
+  ]
+}

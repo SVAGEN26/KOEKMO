@@ -49,15 +49,17 @@ CORE_DECISIONS = ('taxRatePath', 'investmentPath', 'interestRatePath', 'wageGrow
                   'productivityGrowth', 'migrationDeltaPath', 'serviceAdjustment', 'liquidityPolicy', 'cashReserve',
                   'constructionYears', 'constructionShare', 'workingCapitalEnabled', 'collectionDays', 'paymentDays',
                   'rateShock', 'rateShockTime', 'rateFixingYears', 'inflationShock', 'inflationPersistence',
-                  'inflationRateResponse', 'inflationGrantCompensation')
+                  'inflationWagePassThrough', 'inflationPensionPassThrough', 'inflationRateResponse', 'inflationGrantCompensation')
 RATE_FIXING = json.loads((ROOT / 'data' / 'rate-fixing.json').read_text())
 SCENARIOS = {
     'base': 'The model\'s default assumptions.',
     'higherInterest': 'The market rate for new and refixed loans 3 percentage points higher from 1 January of the first forecast year. '
                       'It reaches the average rate at the pace of the average fixed-rate period (from the annual report where known, else 3 years).',
     'higherInflation': 'Inflation 3 percentage points above the price path in the first forecast year, half of it left each year after. '
-                       'Prices follow at once, wages and the tax base a year later, pensions at once, the market rate by 0.5 per point; '
-                       'general grants stay fixed in kronor unless inflationGrantCompensation is set.',
+                       'Prices of other costs follow at once. Wages and the tax base (0.4 of it), pension cost (8 times it, above '
+                       'its path, and back when inflation is over) and the market rate (0.5 per point) follow the mean extra '
+                       'inflation of the two years before. General grants stay fixed in kronor unless '
+                       'inflationGrantCompensation is set. The shares are set after 2022-2025 in the county\'s municipalities.',
 }
 
 
@@ -119,7 +121,7 @@ def parameter_catalogue():
     start = text.index('partial model Assumptions "')
     block = text[start:text.index('initial equation', start)]
     catalogue = {}
-    for m in re.finditer(r'(?m)^\s*(final\s+)?parameter\s+(Real|Integer|Boolean)\s+(\w+)', block):
+    for m in re.finditer(r'(?m)^\s*(final\s+)?parameter\s+(Real|Integer|Boolean|Units\.\w+)\s+(\w+)', block):
         final, kind, name = m.group(1), m.group(2), m.group(3)
         i = m.end()
         dims = None
@@ -166,7 +168,9 @@ def parameter_catalogue():
             continue
         if name in ('horizon',):
             continue
-        catalogue[name] = {'name': name, 'type': kind, 'shape': shape, 'size': size, 'description': ' '.join(description.split())}
+        # Units.Money and the other unit types are Real with a unit (Kommunekonomi.Units).
+        unit = {'type': 'Real', 'unitType': kind.split('.', 1)[1]} if kind.startswith('Units.') else {'type': kind}
+        catalogue[name] = {'name': name, **unit, 'shape': shape, 'size': size, 'description': ' '.join(description.split())}
     return catalogue
 
 

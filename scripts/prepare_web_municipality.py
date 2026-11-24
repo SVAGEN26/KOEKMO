@@ -39,6 +39,23 @@ def historical_inputs(code, common):
     )
 
 
+def current_inputs(code, skr_file):
+    """SKR 26:28's national paths for the tax base, labour cost and other prices, as Motala's lab uses them,
+    with the municipality's own SKR revenue path when it has one. The rates are national: Blad 2 Indata
+    in SKR's workbook, read once into data/planning-inputs.json."""
+    motala = read(Path('data/planning-inputs.json'))
+    planning = {'municipality': code, 'baseYear': 2025, 'demography': 'calibrated',
+                'sources': {'workbook': motala['sources']['workbook'], 'skrCircular': motala['sources']['skrCircular'],
+                            'skrSheet': motala['sources']['skrSheet']},
+                'rows': [{key: row[key] for key in ('year', 'taxBaseGrowth', 'labourCostGrowth', 'otherPriceGrowth')}
+                         for row in motala['rows']]}
+    if skr_file.exists():
+        planning['revenuePath'] = read(skr_file.relative_to(ROOT))
+        # The same rule as Motala's: the regulation grant per inhabitant is held after the decided year.
+        planning['regulationRule'] = motala['regulationRule']
+    return planning
+
+
 def prepare(code, year, source):
     records = read(Path(f'data/municipalities/{code}/base-years.json'))
     archive = Path(records['archive'])
@@ -55,7 +72,8 @@ def prepare(code, year, source):
                for y, p, population, births in zip(range(year-2, year+1), book['cohorts'],
                                                   book['reportedPopulation'], [None, *book['births']])]
     common = read(Path('data/baseline.json'))
-    national, planning = historical_inputs(code, common) if year == 2024 else (common['nationalPopulation'], None)
+    national, planning = historical_inputs(code, common) if year == 2024 else (
+        common['nationalPopulation'], current_inputs(code, folder/'skr-revenue-path.json'))
     net = book['payroll']+book['pension']+book['otherOperatingExpense']-book['operatingRevenue']
     inferred_rate = 100*book['interestExpense']/book['openingDebt'] if book['openingDebt'] else 0
     forecast_rate = supplement.get('forecastInterestRate', {}).get(str(year), inferred_rate)

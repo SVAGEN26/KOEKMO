@@ -1,0 +1,4525 @@
+{
+ "source": {
+  "publisher": "Sveriges Kommuner och Regioner (SKR)",
+  "title": "Prognosunderlag K (kommuner)",
+  "retrievedFrom": "Internet Archive; addresses and checksums in manifest.json",
+  "terms": "Selected figures quoted from SKR with reference, for research and comparison. The workbooks are SKR material and are not redistributed."
+ },
+ "definition": "SKR's forecast at the time. tax: Blad 1 Totala intäkter row 38, tax revenue with the settlements. grants: row 40, general grants and equalisation with LSS equalisation and the property fee. Workbook unit tkr; here mnkr. novemberPopulation: Blad 2 Indata row 29, the municipality's inhabitants 1 November of the year before, as the workbook assumed.",
+ "method": "Municipality selected in Prognosunderlag!B1 of a macro-free copy, cached values emptied, recalculated in LibreOffice 24.2.7.2 420(Build:2) with macro execution disabled. Name, circular, years and sums checked (scripts/read_skr_vintages.py).",
+ "sheet": "Blad 1 Totala intäkter",
+ "vintages": [
+  {
+   "circular": "21:35",
+   "published": "2021-09-30",
+   "file": "Prognosunderlag-K-2021-2028-21035.xls",
+   "sha256": "0388496592df9d7500fe42383429d93c245e3c1e4740e0e2c142820e22905007",
+   "originalUrl": "https://skr.se/download/18.1505479e17c0251fcab52c9f/1632929688334/Prognosunderlag-K-2021-2028-21035.xls",
+   "archiveUrl": "https://web.archive.org/web/20211011094616id_/https://skr.se/download/18.1505479e17c0251fcab52c9f/1632929688334/Prognosunderlag-K-2021-2028-21035.xls",
+   "municipalities": {
+    "0509": {
+     "name": "Ödeshög",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 242.879,
+       "grants": 112.485,
+       "novemberPopulation": 5324,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 251.543,
+       "grants": 111.521,
+       "novemberPopulation": 5349,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 260.872,
+       "grants": 110.883,
+       "novemberPopulation": 5374,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 269.511,
+       "grants": 113.508,
+       "novemberPopulation": 5398,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 279.619,
+       "grants": 115.085,
+       "novemberPopulation": 5422,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 289.881,
+       "grants": 116.667,
+       "novemberPopulation": 5445,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 300.52,
+       "grants": 118.403,
+       "novemberPopulation": 5469,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 311.549,
+       "grants": 120.076,
+       "novemberPopulation": 5493,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "af7f8de62ca9fac18b299956bf7db623e54d89e609ee0bf3c513fb681d3f1269"
+    },
+    "0512": {
+     "name": "Ydre",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 176.045,
+       "grants": 74.473,
+       "novemberPopulation": 3732,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 184.729,
+       "grants": 74.126,
+       "novemberPopulation": 3750,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 191.615,
+       "grants": 73.41,
+       "novemberPopulation": 3768,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 197.961,
+       "grants": 75.013,
+       "novemberPopulation": 3785,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 205.386,
+       "grants": 75.839,
+       "novemberPopulation": 3802,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 212.923,
+       "grants": 76.646,
+       "novemberPopulation": 3818,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 220.737,
+       "grants": 77.507,
+       "novemberPopulation": 3834,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 228.839,
+       "grants": 78.302,
+       "novemberPopulation": 3850,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "7b6c6ba7976c8651a51bb207d2748e28105ea76aee0cdd7e03f9a4fdba4bcc8d"
+    },
+    "0513": {
+     "name": "Kinda",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 456.956,
+       "grants": 203.277,
+       "novemberPopulation": 9999,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 468.372,
+       "grants": 213.62,
+       "novemberPopulation": 10046,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 485.726,
+       "grants": 211.782,
+       "novemberPopulation": 10093,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 501.81,
+       "grants": 216.186,
+       "novemberPopulation": 10138,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 520.631,
+       "grants": 218.437,
+       "novemberPopulation": 10182,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 539.738,
+       "grants": 220.808,
+       "novemberPopulation": 10226,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 559.547,
+       "grants": 223.404,
+       "novemberPopulation": 10271,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 580.082,
+       "grants": 225.835,
+       "novemberPopulation": 10316,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "6c582c78499a1107ed83a856affbef12ab044319a68176cff8e6f3aba3e8b0d4"
+    },
+    "0560": {
+     "name": "Boxholm",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 256.126,
+       "grants": 91.638,
+       "novemberPopulation": 5443,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 264.019,
+       "grants": 86.607,
+       "novemberPopulation": 5469,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 273.839,
+       "grants": 85.34,
+       "novemberPopulation": 5495,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 282.907,
+       "grants": 87.5,
+       "novemberPopulation": 5520,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 293.518,
+       "grants": 88.456,
+       "novemberPopulation": 5544,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 304.29,
+       "grants": 89.466,
+       "novemberPopulation": 5568,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 315.458,
+       "grants": 90.553,
+       "novemberPopulation": 5592,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 327.035,
+       "grants": 91.548,
+       "novemberPopulation": 5616,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "22e5b31ea74a047e77122e556940eb3e13131b99d73cc7aebb9fd7fa0a740837"
+    },
+    "0561": {
+     "name": "Åtvidaberg",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 556.416,
+       "grants": 182.337,
+       "novemberPopulation": 11414,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 569.173,
+       "grants": 197.153,
+       "novemberPopulation": 11468,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 590.407,
+       "grants": 194.538,
+       "novemberPopulation": 11522,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 609.959,
+       "grants": 199.137,
+       "novemberPopulation": 11574,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 632.836,
+       "grants": 201.249,
+       "novemberPopulation": 11625,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 656.061,
+       "grants": 203.483,
+       "novemberPopulation": 11676,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 680.138,
+       "grants": 205.88,
+       "novemberPopulation": 11727,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 705.099,
+       "grants": 208.087,
+       "novemberPopulation": 11778,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "d0783b98c20e9afade0b5b513816990b848e1ebd57bb7b4c2cc02be28da9b512"
+    },
+    "0562": {
+     "name": "Finspång",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 1069.993,
+       "grants": 366.362,
+       "novemberPopulation": 21794,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 1103.348,
+       "grants": 376.758,
+       "novemberPopulation": 21897,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 1144.577,
+       "grants": 370.884,
+       "novemberPopulation": 22000,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 1182.479,
+       "grants": 378.872,
+       "novemberPopulation": 22098,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1226.83,
+       "grants": 382.005,
+       "novemberPopulation": 22195,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1271.854,
+       "grants": 385.364,
+       "novemberPopulation": 22292,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1318.531,
+       "grants": 389.063,
+       "novemberPopulation": 22390,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1366.922,
+       "grants": 392.428,
+       "novemberPopulation": 22489,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "383d23647d4e8dd9d563256588ad8693ee499fc26c63e9b0fef5f0c04317dbed"
+    },
+    "0563": {
+     "name": "Valdemarsvik",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 349.39,
+       "grants": 183.199,
+       "novemberPopulation": 7737,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 356.932,
+       "grants": 185.084,
+       "novemberPopulation": 7774,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 370.134,
+       "grants": 184.425,
+       "novemberPopulation": 7810,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 382.391,
+       "grants": 188.5,
+       "novemberPopulation": 7845,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 396.733,
+       "grants": 191.01,
+       "novemberPopulation": 7879,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 411.293,
+       "grants": 193.626,
+       "novemberPopulation": 7913,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 426.387,
+       "grants": 196.454,
+       "novemberPopulation": 7948,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 442.036,
+       "grants": 199.185,
+       "novemberPopulation": 7983,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "9db10488fab44f7fb3ed19f68a61993223fcd1ae1b45143a36c8735b65654a2e"
+    },
+    "0580": {
+     "name": "Linköping",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 7873.418,
+       "grants": 1448.072,
+       "novemberPopulation": 164750,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 8206.628,
+       "grants": 1361.264,
+       "novemberPopulation": 165528,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 8512.76,
+       "grants": 1287.032,
+       "novemberPopulation": 166303,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 8794.658,
+       "grants": 1324.566,
+       "novemberPopulation": 167046,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 9124.513,
+       "grants": 1322.099,
+       "novemberPopulation": 167776,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 9459.383,
+       "grants": 1321.396,
+       "novemberPopulation": 168516,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 9806.542,
+       "grants": 1322.337,
+       "novemberPopulation": 169262,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 10166.443,
+       "grants": 1319.63,
+       "novemberPopulation": 170011,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "d1f0fa41ea01f5d69944260af9754da1a4514729d2abc6af0e317fdf0abd0661"
+    },
+    "0581": {
+     "name": "Norrköping",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 6897.854,
+       "grants": 2258.259,
+       "novemberPopulation": 143504,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 7155.977,
+       "grants": 2230.898,
+       "novemberPopulation": 144182,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 7422.948,
+       "grants": 2190.588,
+       "novemberPopulation": 144857,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 7668.757,
+       "grants": 2241.946,
+       "novemberPopulation": 145505,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 7956.384,
+       "grants": 2261.122,
+       "novemberPopulation": 146141,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 8248.383,
+       "grants": 2282.343,
+       "novemberPopulation": 146786,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 8551.099,
+       "grants": 2305.625,
+       "novemberPopulation": 147436,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 8864.924,
+       "grants": 2326.502,
+       "novemberPopulation": 148089,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "aba39b218d88170476d7780b3b9fe47e51b685f588a9904cc982b5894becc9c3"
+    },
+    "0582": {
+     "name": "Söderköping",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 708.758,
+       "grants": 221.873,
+       "novemberPopulation": 14614,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 726.443,
+       "grants": 237.985,
+       "novemberPopulation": 14683,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 753.536,
+       "grants": 233.333,
+       "novemberPopulation": 14752,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 778.489,
+       "grants": 238.099,
+       "novemberPopulation": 14818,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 807.687,
+       "grants": 239.512,
+       "novemberPopulation": 14883,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 837.329,
+       "grants": 241.056,
+       "novemberPopulation": 14948,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 868.059,
+       "grants": 242.826,
+       "novemberPopulation": 15014,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 899.917,
+       "grants": 244.312,
+       "novemberPopulation": 15080,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "da356b6c820d76476f2432b4138d7fc254c33fcc671b7d18aee68c0737142246"
+    },
+    "0583": {
+     "name": "Motala",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 2028.788,
+       "grants": 757.535,
+       "novemberPopulation": 43636,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 2081.055,
+       "grants": 787.87,
+       "novemberPopulation": 43842,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 2158.317,
+       "grants": 778.906,
+       "novemberPopulation": 44047,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 2229.789,
+       "grants": 797.296,
+       "novemberPopulation": 44244,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 2313.421,
+       "grants": 806.351,
+       "novemberPopulation": 44437,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 2398.323,
+       "grants": 816.019,
+       "novemberPopulation": 44633,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 2486.342,
+       "grants": 826.467,
+       "novemberPopulation": 44830,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 2577.59,
+       "grants": 836.259,
+       "novemberPopulation": 45028,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "d6b134d9f5ddb17993707b57e908e6747866dc0ac25bab93465830facfbf5f29"
+    },
+    "0584": {
+     "name": "Vadstena",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 382.841,
+       "grants": 104.087,
+       "novemberPopulation": 7440,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 396.117,
+       "grants": 104.599,
+       "novemberPopulation": 7475,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 410.995,
+       "grants": 102.22,
+       "novemberPopulation": 7510,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 424.605,
+       "grants": 104.659,
+       "novemberPopulation": 7544,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 440.53,
+       "grants": 105.372,
+       "novemberPopulation": 7577,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 456.697,
+       "grants": 106.153,
+       "novemberPopulation": 7610,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 473.458,
+       "grants": 107.019,
+       "novemberPopulation": 7643,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 490.834,
+       "grants": 107.733,
+       "novemberPopulation": 7676,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "5a1f253b2eee3ca1858f4cbe8b8084ea1818b29a84c2bb4c168eaee694e5e690"
+    },
+    "0586": {
+     "name": "Mjölby",
+     "rows": [
+      {
+       "year": 2021,
+       "tax": 1344.951,
+       "grants": 419.446,
+       "novemberPopulation": 27889,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2022,
+       "tax": 1397.447,
+       "grants": 419.796,
+       "novemberPopulation": 28021,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 1449.608,
+       "grants": 411.938,
+       "novemberPopulation": 28152,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 1497.612,
+       "grants": 421.902,
+       "novemberPopulation": 28278,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1553.782,
+       "grants": 425.648,
+       "novemberPopulation": 28402,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1610.806,
+       "grants": 429.724,
+       "novemberPopulation": 28527,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1669.922,
+       "grants": 434.23,
+       "novemberPopulation": 28653,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1731.208,
+       "grants": 438.203,
+       "novemberPopulation": 28779,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "39fa228ea33ee0a254c3de1d493fb883e7835a70c4e70c6e909399bd2811db2e"
+    }
+   }
+  },
+  {
+   "circular": "22:28",
+   "published": "2022-08-25",
+   "file": "Prognosunderlag-K-2022-2029-22028.xlsm",
+   "sha256": "d409162a3866990af78ae918389b934920fa2b0952a4d0e3d513ea64a6e0b2fd",
+   "originalUrl": "https://skr.se/download/18.3062814f18270b3d729cef7e/1661347730361/Prognosunderlag-K-2022-2029-22028.xlsm",
+   "archiveUrl": "https://web.archive.org/web/20221006181353id_/https://skr.se/download/18.3062814f18270b3d729cef7e/1661347730361/Prognosunderlag-K-2022-2029-22028.xlsm",
+   "municipalities": {
+    "0509": {
+     "name": "Ödeshög",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 258.016,
+       "grants": 111.099,
+       "novemberPopulation": 5326,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 265.026,
+       "grants": 119.087,
+       "novemberPopulation": 5357,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 276.683,
+       "grants": 122.561,
+       "novemberPopulation": 5386,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 289.089,
+       "grants": 124.548,
+       "novemberPopulation": 5414,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 299.699,
+       "grants": 126.307,
+       "novemberPopulation": 5440,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 310.698,
+       "grants": 128.158,
+       "novemberPopulation": 5465,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 322.101,
+       "grants": 129.959,
+       "novemberPopulation": 5489,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 333.922,
+       "grants": 131.819,
+       "novemberPopulation": 5513,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "12ece68952aafcaff8fd52cd6d2b0f2fb92cbefe719788e8360b5a19d2451cec"
+    },
+    "0512": {
+     "name": "Ydre",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 189.48,
+       "grants": 71.878,
+       "novemberPopulation": 3699,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 189.766,
+       "grants": 78.133,
+       "novemberPopulation": 3720,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 198.113,
+       "grants": 80.304,
+       "novemberPopulation": 3740,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 206.996,
+       "grants": 81.406,
+       "novemberPopulation": 3759,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 214.593,
+       "grants": 82.405,
+       "novemberPopulation": 3777,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 222.469,
+       "grants": 83.444,
+       "novemberPopulation": 3794,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 230.633,
+       "grants": 84.419,
+       "novemberPopulation": 3810,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 239.097,
+       "grants": 85.421,
+       "novemberPopulation": 3826,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "8f78e45f359cbe5d545524a3eb568bb54d737778331527300c34a92667d9f176"
+    },
+    "0513": {
+     "name": "Kinda",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 480.824,
+       "grants": 218.008,
+       "novemberPopulation": 10069,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 498.332,
+       "grants": 225.024,
+       "novemberPopulation": 10127,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 520.251,
+       "grants": 230.86,
+       "novemberPopulation": 10183,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 543.579,
+       "grants": 233.746,
+       "novemberPopulation": 10236,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 563.528,
+       "grants": 236.312,
+       "novemberPopulation": 10285,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 584.21,
+       "grants": 239.017,
+       "novemberPopulation": 10332,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 605.65,
+       "grants": 241.589,
+       "novemberPopulation": 10377,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 627.878,
+       "grants": 244.234,
+       "novemberPopulation": 10422,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "3a7b69ec62e3bf17606b6bb29a144d30462ea9f66802e08e6cbaad01b94efa2b"
+    },
+    "0560": {
+     "name": "Boxholm",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 270.867,
+       "grants": 89.073,
+       "novemberPopulation": 5489,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 277.752,
+       "grants": 87.733,
+       "novemberPopulation": 5521,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 289.969,
+       "grants": 90.638,
+       "novemberPopulation": 5551,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 302.971,
+       "grants": 91.98,
+       "novemberPopulation": 5580,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 314.09,
+       "grants": 93.18,
+       "novemberPopulation": 5607,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 325.617,
+       "grants": 94.47,
+       "novemberPopulation": 5633,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 337.567,
+       "grants": 95.632,
+       "novemberPopulation": 5657,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 349.956,
+       "grants": 96.896,
+       "novemberPopulation": 5682,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "3c3866ddac2e579916025fa20bc416fbc1b88c4344a4e1b519aa25b22200e483"
+    },
+    "0561": {
+     "name": "Åtvidaberg",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 583.577,
+       "grants": 197.618,
+       "novemberPopulation": 11447,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 593.965,
+       "grants": 190.166,
+       "novemberPopulation": 11513,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 620.091,
+       "grants": 196.361,
+       "novemberPopulation": 11576,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 647.895,
+       "grants": 199.234,
+       "novemberPopulation": 11636,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 671.673,
+       "grants": 201.809,
+       "novemberPopulation": 11692,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 696.324,
+       "grants": 204.58,
+       "novemberPopulation": 11746,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 721.879,
+       "grants": 207.165,
+       "novemberPopulation": 11797,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 748.372,
+       "grants": 209.882,
+       "novemberPopulation": 11849,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "e6291e2a84530339c7c680227231676b7803599a3dc46c4dce32dc7d3ead89d2"
+    },
+    "0562": {
+     "name": "Finspång",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 1130.086,
+       "grants": 380.087,
+       "novemberPopulation": 21876,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 1156.801,
+       "grants": 392.527,
+       "novemberPopulation": 22003,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 1207.683,
+       "grants": 403.426,
+       "novemberPopulation": 22124,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1261.835,
+       "grants": 407.887,
+       "novemberPopulation": 22239,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1308.144,
+       "grants": 411.952,
+       "novemberPopulation": 22346,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1356.153,
+       "grants": 416.307,
+       "novemberPopulation": 22449,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1405.924,
+       "grants": 420.342,
+       "novemberPopulation": 22548,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1457.522,
+       "grants": 424.478,
+       "novemberPopulation": 22647,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "e8ff0210a3f290bd86fcdb52890e470043174f1a033566af5868342b91362e1e"
+    },
+    "0563": {
+     "name": "Valdemarsvik",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 367.023,
+       "grants": 180.107,
+       "novemberPopulation": 7657,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 371.939,
+       "grants": 182.3,
+       "novemberPopulation": 7701,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 388.299,
+       "grants": 187.57,
+       "novemberPopulation": 7743,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 405.71,
+       "grants": 190.676,
+       "novemberPopulation": 7783,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 420.6,
+       "grants": 193.465,
+       "novemberPopulation": 7821,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 436.036,
+       "grants": 196.377,
+       "novemberPopulation": 7857,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 452.038,
+       "grants": 199.174,
+       "novemberPopulation": 7891,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 468.628,
+       "grants": 202.065,
+       "novemberPopulation": 7925,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "bc64756931eb75659fbbd1f6141361a168a19b2d78614a2387307067a2dcb330"
+    },
+    "0580": {
+     "name": "Linköping",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 8406.565,
+       "grants": 1391.338,
+       "novemberPopulation": 165547,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 8673.751,
+       "grants": 1287.266,
+       "novemberPopulation": 166505,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 9055.267,
+       "grants": 1336.271,
+       "novemberPopulation": 167420,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 9461.302,
+       "grants": 1334.86,
+       "novemberPopulation": 168287,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 9808.532,
+       "grants": 1335.364,
+       "novemberPopulation": 169099,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 10168.505,
+       "grants": 1337.666,
+       "novemberPopulation": 169885,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 10541.689,
+       "grants": 1336.398,
+       "novemberPopulation": 170635,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 10928.569,
+       "grants": 1335.202,
+       "novemberPopulation": 171389,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "39d8b756ea7ae6dbb8496e768c4b05e6808735fcb0b82d42d741506d086147ce"
+    },
+    "0581": {
+     "name": "Norrköping",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 7330.397,
+       "grants": 2272.718,
+       "novemberPopulation": 144328,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 7587.029,
+       "grants": 2254.437,
+       "novemberPopulation": 145163,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 7920.746,
+       "grants": 2322.065,
+       "novemberPopulation": 145961,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 8275.909,
+       "grants": 2346.64,
+       "novemberPopulation": 146717,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 8579.635,
+       "grants": 2369.462,
+       "novemberPopulation": 147425,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 8894.508,
+       "grants": 2394.417,
+       "novemberPopulation": 148110,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 9220.936,
+       "grants": 2416.913,
+       "novemberPopulation": 148764,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 9559.345,
+       "grants": 2440.266,
+       "novemberPopulation": 149422,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "8253da2f0de0a8791e7db2ae7a40babe940df57e855a1bfb27574bfd6b0b26e4"
+    },
+    "0582": {
+     "name": "Söderköping",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 744.687,
+       "grants": 240.084,
+       "novemberPopulation": 14657,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 763.674,
+       "grants": 250.34,
+       "novemberPopulation": 14742,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 797.264,
+       "grants": 256.762,
+       "novemberPopulation": 14823,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 833.013,
+       "grants": 258.809,
+       "novemberPopulation": 14900,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 863.585,
+       "grants": 260.745,
+       "novemberPopulation": 14972,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 895.279,
+       "grants": 262.823,
+       "novemberPopulation": 15041,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 928.135,
+       "grants": 264.649,
+       "novemberPopulation": 15107,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 962.198,
+       "grants": 266.491,
+       "novemberPopulation": 15173,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "4ef32e9aea6f201c77f166e74d67813d9f96b750a565a2212695bc97fd8b1d8d"
+    },
+    "0583": {
+     "name": "Motala",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 2133.509,
+       "grants": 788.059,
+       "novemberPopulation": 43647,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 2181.34,
+       "grants": 829.033,
+       "novemberPopulation": 43900,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 2277.287,
+       "grants": 853.771,
+       "novemberPopulation": 44141,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 2379.4,
+       "grants": 865.855,
+       "novemberPopulation": 44370,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 2466.724,
+       "grants": 876.682,
+       "novemberPopulation": 44584,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 2557.252,
+       "grants": 888.295,
+       "novemberPopulation": 44791,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 2651.104,
+       "grants": 899.244,
+       "novemberPopulation": 44988,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 2748.399,
+       "grants": 910.681,
+       "novemberPopulation": 45187,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "23d1f070c5f37817cf1c71e3d9323bfaf82ff6a6a8f05ab4769a99a266810a51"
+    },
+    "0584": {
+     "name": "Vadstena",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 405.562,
+       "grants": 106.736,
+       "novemberPopulation": 7491,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 422.186,
+       "grants": 100.712,
+       "novemberPopulation": 7534,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 440.756,
+       "grants": 103.772,
+       "novemberPopulation": 7575,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 460.519,
+       "grants": 104.609,
+       "novemberPopulation": 7614,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 477.42,
+       "grants": 105.433,
+       "novemberPopulation": 7651,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 494.941,
+       "grants": 106.306,
+       "novemberPopulation": 7686,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 513.106,
+       "grants": 107.018,
+       "novemberPopulation": 7719,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 531.937,
+       "grants": 107.811,
+       "novemberPopulation": 7753,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "2cfdd2a9d51d878270fe03ba1507c68ebe373fe2174b98e7e8409f4a1b78eec8"
+    },
+    "0586": {
+     "name": "Mjölby",
+     "rows": [
+      {
+       "year": 2022,
+       "tax": 1431.429,
+       "grants": 437.415,
+       "novemberPopulation": 28212,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2023,
+       "tax": 1487.189,
+       "grants": 421.54,
+       "novemberPopulation": 28375,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 1552.603,
+       "grants": 434.779,
+       "novemberPopulation": 28531,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1622.221,
+       "grants": 439.672,
+       "novemberPopulation": 28679,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1681.757,
+       "grants": 444.167,
+       "novemberPopulation": 28817,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1743.477,
+       "grants": 449.121,
+       "novemberPopulation": 28951,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1807.463,
+       "grants": 453.532,
+       "novemberPopulation": 29078,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1873.797,
+       "grants": 458.142,
+       "novemberPopulation": 29206,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "1b7373986aeab3bb2ac217cf239bfc594cb72ef065fb27b6052d2ce5bc571c6d"
+    }
+   }
+  },
+  {
+   "circular": "23:56",
+   "published": "2023-12-14",
+   "file": "Prognosunderlag-K-2023-2030-23056.xlsm",
+   "sha256": "765ced84a00d87d2d1dfe5f4f7f7e0a411fe8e2bab43fcd19e00928499cb4c95",
+   "originalUrl": "https://skr.se/download/18.628164c918c629daa17d60c/1702563410391/Prognosunderlag-K-2023-2030-23056.xlsm",
+   "archiveUrl": "https://web.archive.org/web/20240218141006id_/https://skr.se/download/18.628164c918c629daa17d60c/1702563410391/Prognosunderlag-K-2023-2030-23056.xlsm",
+   "municipalities": {
+    "0509": {
+     "name": "Ödeshög",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 270.441,
+       "grants": 120.113,
+       "novemberPopulation": 5303,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 275.891,
+       "grants": 116.081,
+       "novemberPopulation": 5267,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 288.934,
+       "grants": 116.479,
+       "novemberPopulation": 5296,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 300.698,
+       "grants": 118.343,
+       "novemberPopulation": 5323,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 312.811,
+       "grants": 120.021,
+       "novemberPopulation": 5349,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 324.482,
+       "grants": 121.569,
+       "novemberPopulation": 5372,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 336.356,
+       "grants": 123.133,
+       "novemberPopulation": 5395,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 348.701,
+       "grants": 124.751,
+       "novemberPopulation": 5418,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "af25666a9612fd1ba968485294954e640ff221d5c01e283c23c7377009699d1e"
+    },
+    "0512": {
+     "name": "Ydre",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 193.935,
+       "grants": 78.861,
+       "novemberPopulation": 3689,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 193.686,
+       "grants": 89.356,
+       "novemberPopulation": 3659,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 202.842,
+       "grants": 89.573,
+       "novemberPopulation": 3679,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 211.1,
+       "grants": 90.844,
+       "novemberPopulation": 3698,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 219.605,
+       "grants": 91.954,
+       "novemberPopulation": 3716,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 227.798,
+       "grants": 92.983,
+       "novemberPopulation": 3732,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 236.134,
+       "grants": 94.022,
+       "novemberPopulation": 3748,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 244.801,
+       "grants": 95.095,
+       "novemberPopulation": 3764,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "59ba37e47ab2210b34962d13c8f461704040610e70d8ab931517e67ae669ee00"
+    },
+    "0513": {
+     "name": "Kinda",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 508.829,
+       "grants": 230.474,
+       "novemberPopulation": 10078,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 517.657,
+       "grants": 235.121,
+       "novemberPopulation": 10001,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 542.131,
+       "grants": 235.094,
+       "novemberPopulation": 10055,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 564.203,
+       "grants": 238.05,
+       "novemberPopulation": 10107,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 586.932,
+       "grants": 240.54,
+       "novemberPopulation": 10156,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 608.829,
+       "grants": 242.859,
+       "novemberPopulation": 10200,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 631.109,
+       "grants": 245.183,
+       "novemberPopulation": 10244,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 654.272,
+       "grants": 247.593,
+       "novemberPopulation": 10288,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "388edbfe352ade3fcaa023f5db07822212572baa40cc6978a0399c7f80eb9560"
+    },
+    "0560": {
+     "name": "Boxholm",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 284.095,
+       "grants": 93.043,
+       "novemberPopulation": 5505,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 289.149,
+       "grants": 109.46,
+       "novemberPopulation": 5509,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 302.82,
+       "grants": 109.386,
+       "novemberPopulation": 5539,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 315.148,
+       "grants": 110.896,
+       "novemberPopulation": 5567,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 327.844,
+       "grants": 112.194,
+       "novemberPopulation": 5594,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 340.075,
+       "grants": 113.392,
+       "novemberPopulation": 5618,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 352.521,
+       "grants": 114.594,
+       "novemberPopulation": 5642,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 365.459,
+       "grants": 115.843,
+       "novemberPopulation": 5666,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "db4bc7a61137188d21eb56f898f60e90daa16267cdd20275a61ba8b8b79c4faa"
+    },
+    "0561": {
+     "name": "Åtvidaberg",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 606.124,
+       "grants": 193.974,
+       "novemberPopulation": 11473,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 612.486,
+       "grants": 218.316,
+       "novemberPopulation": 11447,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 641.441,
+       "grants": 218.273,
+       "novemberPopulation": 11509,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 667.555,
+       "grants": 221.596,
+       "novemberPopulation": 11568,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 694.449,
+       "grants": 224.42,
+       "novemberPopulation": 11624,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 720.357,
+       "grants": 227.044,
+       "novemberPopulation": 11674,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 746.719,
+       "grants": 229.685,
+       "novemberPopulation": 11724,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 774.124,
+       "grants": 232.503,
+       "novemberPopulation": 11775,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "dcea50e4605f12ff951e54c055066cf49b7070a8da4d196a7d5204c727daabcc"
+    },
+    "0562": {
+     "name": "Finspång",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 1179.271,
+       "grants": 401.994,
+       "novemberPopulation": 21890,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 1196.625,
+       "grants": 429.833,
+       "novemberPopulation": 21783,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1253.191,
+       "grants": 428.268,
+       "novemberPopulation": 21901,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1304.212,
+       "grants": 433.301,
+       "novemberPopulation": 22014,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1356.753,
+       "grants": 437.319,
+       "novemberPopulation": 22121,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1407.371,
+       "grants": 441.033,
+       "novemberPopulation": 22217,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1458.874,
+       "grants": 444.748,
+       "novemberPopulation": 22313,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 1512.416,
+       "grants": 448.659,
+       "novemberPopulation": 22410,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "b106505c756a127a67818e184c474e4ba3f7ba678163aee0c3edd2f7db56f8d6"
+    },
+    "0563": {
+     "name": "Valdemarsvik",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 379.919,
+       "grants": 183.288,
+       "novemberPopulation": 7630,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 380.094,
+       "grants": 193.74,
+       "novemberPopulation": 7557,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 398.067,
+       "grants": 194.861,
+       "novemberPopulation": 7598,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 414.273,
+       "grants": 198.088,
+       "novemberPopulation": 7637,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 430.962,
+       "grants": 201.013,
+       "novemberPopulation": 7674,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 447.041,
+       "grants": 203.757,
+       "novemberPopulation": 7707,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 463.4,
+       "grants": 206.529,
+       "novemberPopulation": 7740,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 480.408,
+       "grants": 209.404,
+       "novemberPopulation": 7773,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "90fe2b5342999bb37f95d1878119c4acdbf0b8e10c553c53efa4a686c25f1d78"
+    },
+    "0580": {
+     "name": "Linköping",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 8852.936,
+       "grants": 1386.67,
+       "novemberPopulation": 166542,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 8955.676,
+       "grants": 1660.432,
+       "novemberPopulation": 167578,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 9379.051,
+       "grants": 1618.524,
+       "novemberPopulation": 168486,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 9760.898,
+       "grants": 1629.495,
+       "novemberPopulation": 169352,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 10154.127,
+       "grants": 1632.563,
+       "novemberPopulation": 170174,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 10532.955,
+       "grants": 1634.597,
+       "novemberPopulation": 170914,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 10918.409,
+       "grants": 1636.69,
+       "novemberPopulation": 171660,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 11319.131,
+       "grants": 1639.131,
+       "novemberPopulation": 172407,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "6a16142dd4ca4f78bf9a60678085c7ea016963aedb2faead95bda34a883dfebd"
+    },
+    "0581": {
+     "name": "Norrköping",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 7735.668,
+       "grants": 2367.446,
+       "novemberPopulation": 145163,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 7885.874,
+       "grants": 2532.36,
+       "novemberPopulation": 145222,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 8258.658,
+       "grants": 2518.772,
+       "novemberPopulation": 146009,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 8594.89,
+       "grants": 2549.292,
+       "novemberPopulation": 146759,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 8941.146,
+       "grants": 2572.977,
+       "novemberPopulation": 147471,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 9274.72,
+       "grants": 2595.067,
+       "novemberPopulation": 148112,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 9614.129,
+       "grants": 2617.529,
+       "novemberPopulation": 148758,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 9966.982,
+       "grants": 2640.751,
+       "novemberPopulation": 149406,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "0376c88923439e0a983d4fc2b64e2054f460d80b570375ed453a8ddac11375e5"
+    },
+    "0582": {
+     "name": "Söderköping",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 779.558,
+       "grants": 265.904,
+       "novemberPopulation": 14844,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 815.639,
+       "grants": 294.673,
+       "novemberPopulation": 14860,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 854.195,
+       "grants": 293.35,
+       "novemberPopulation": 14940,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 888.972,
+       "grants": 296.577,
+       "novemberPopulation": 15017,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 924.785,
+       "grants": 299.114,
+       "novemberPopulation": 15090,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 959.287,
+       "grants": 301.405,
+       "novemberPopulation": 15155,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 994.392,
+       "grants": 303.758,
+       "novemberPopulation": 15221,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 1030.888,
+       "grants": 306.201,
+       "novemberPopulation": 15287,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "9ff9fd1b40314c947563762a745ab8f52bba4c1aeae831d2390b4b53c74d8a5a"
+    },
+    "0583": {
+     "name": "Motala",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 2226.998,
+       "grants": 856.078,
+       "novemberPopulation": 43733,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 2253.821,
+       "grants": 924.34,
+       "novemberPopulation": 43776,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 2360.381,
+       "grants": 925.327,
+       "novemberPopulation": 44013,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 2456.479,
+       "grants": 939.089,
+       "novemberPopulation": 44239,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 2555.441,
+       "grants": 950.976,
+       "novemberPopulation": 44454,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 2650.779,
+       "grants": 962.109,
+       "novemberPopulation": 44647,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 2747.784,
+       "grants": 973.427,
+       "novemberPopulation": 44841,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 2848.632,
+       "grants": 985.198,
+       "novemberPopulation": 45036,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "af323520e0b584c36390a63b8cb4ecfe95d2d847303f63e106aed3516ee3d389"
+    },
+    "0584": {
+     "name": "Vadstena",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 430.499,
+       "grants": 103.301,
+       "novemberPopulation": 7508,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 441.142,
+       "grants": 110.21,
+       "novemberPopulation": 7431,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 461.99,
+       "grants": 108.747,
+       "novemberPopulation": 7471,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 480.799,
+       "grants": 109.592,
+       "novemberPopulation": 7509,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 500.169,
+       "grants": 110.072,
+       "novemberPopulation": 7545,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 518.829,
+       "grants": 110.466,
+       "novemberPopulation": 7577,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 537.816,
+       "grants": 110.919,
+       "novemberPopulation": 7610,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 557.554,
+       "grants": 111.382,
+       "novemberPopulation": 7643,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "61843bb98904ba00a9aa19b832748c0bbabc2b0c6d8f6a63177c56fe845bd229"
+    },
+    "0586": {
+     "name": "Mjölby",
+     "rows": [
+      {
+       "year": 2023,
+       "tax": 1517.124,
+       "grants": 451.538,
+       "novemberPopulation": 28439,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2024,
+       "tax": 1562.841,
+       "grants": 488.73,
+       "novemberPopulation": 28570,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1636.718,
+       "grants": 485.962,
+       "novemberPopulation": 28725,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1703.354,
+       "grants": 491.851,
+       "novemberPopulation": 28873,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1771.975,
+       "grants": 496.421,
+       "novemberPopulation": 29013,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1838.084,
+       "grants": 500.628,
+       "novemberPopulation": 29139,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1905.348,
+       "grants": 504.936,
+       "novemberPopulation": 29266,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 1975.278,
+       "grants": 509.387,
+       "novemberPopulation": 29393,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "4171a6440723467bf8b2dcdb5bdffba4f17342cd5ea108ca1ab1f21f769b41fb"
+    }
+   }
+  },
+  {
+   "circular": "24:56",
+   "published": "2024-12-12",
+   "file": "Prognosunderlag-K-2024-2031-24056.xlsm",
+   "sha256": "f66115cbb8e3d8fad3a5a9051170e963d949b9113388df9227ca95e837a5fa88",
+   "originalUrl": "https://skr.se/download/18.72fac55919386070c9583a51/1733999358768/Prognosunderlag-K-2024-2031-24056.xlsm",
+   "archiveUrl": "https://web.archive.org/web/20250114160336id_/https://skr.se/download/18.72fac55919386070c9583a51/1733999358768/Prognosunderlag-K-2024-2031-24056.xlsm",
+   "municipalities": {
+    "0509": {
+     "name": "Ödeshög",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 275.56,
+       "grants": 119.705,
+       "novemberPopulation": 5267,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 289.801,
+       "grants": 124.14,
+       "novemberPopulation": 5253,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 303.554,
+       "grants": 126.316,
+       "novemberPopulation": 5265,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 317.587,
+       "grants": 127.186,
+       "novemberPopulation": 5277,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 330.722,
+       "grants": 128.834,
+       "novemberPopulation": 5288,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 343.667,
+       "grants": 130.439,
+       "novemberPopulation": 5299,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 357.118,
+       "grants": 132.082,
+       "novemberPopulation": 5310,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 370.609,
+       "grants": 133.783,
+       "novemberPopulation": 5322,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "1fc4ae7215df0359d6bd1a0c98485de0e0298b12a5d78dcd052e9800aa853e16"
+    },
+    "0512": {
+     "name": "Ydre",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 193.454,
+       "grants": 93.501,
+       "novemberPopulation": 3659,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 199.344,
+       "grants": 91.293,
+       "novemberPopulation": 3627,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 208.801,
+       "grants": 92.792,
+       "novemberPopulation": 3635,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 218.454,
+       "grants": 93.387,
+       "novemberPopulation": 3643,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 227.489,
+       "grants": 94.569,
+       "novemberPopulation": 3651,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 236.393,
+       "grants": 95.645,
+       "novemberPopulation": 3658,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 245.646,
+       "grants": 96.825,
+       "novemberPopulation": 3666,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 254.926,
+       "grants": 97.989,
+       "novemberPopulation": 3674,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "64ae5472380b14be4611ed6cb0a21b7ff8f9d7a7474a8e6e2775508cb1296290"
+    },
+    "0513": {
+     "name": "Kinda",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 517.025,
+       "grants": 241.0,
+       "novemberPopulation": 10001,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 540.418,
+       "grants": 243.136,
+       "novemberPopulation": 9969,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 566.034,
+       "grants": 246.502,
+       "novemberPopulation": 9992,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 592.201,
+       "grants": 247.346,
+       "novemberPopulation": 10014,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 616.694,
+       "grants": 249.792,
+       "novemberPopulation": 10035,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 640.832,
+       "grants": 252.154,
+       "novemberPopulation": 10056,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 665.914,
+       "grants": 254.647,
+       "novemberPopulation": 10078,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 691.071,
+       "grants": 257.094,
+       "novemberPopulation": 10100,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "f1a4a28ea7c931e582f29fc67a9c0f35371139ec53d1f6ab4ae3f044d4eec17d"
+    },
+    "0560": {
+     "name": "Boxholm",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 288.814,
+       "grants": 112.837,
+       "novemberPopulation": 5509,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 301.468,
+       "grants": 118.825,
+       "novemberPopulation": 5514,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 315.765,
+       "grants": 120.775,
+       "novemberPopulation": 5527,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 330.362,
+       "grants": 121.303,
+       "novemberPopulation": 5539,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 344.026,
+       "grants": 122.739,
+       "novemberPopulation": 5551,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 357.491,
+       "grants": 124.135,
+       "novemberPopulation": 5563,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 371.484,
+       "grants": 125.565,
+       "novemberPopulation": 5575,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 385.518,
+       "grants": 126.975,
+       "novemberPopulation": 5587,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "b4b0fe668ca701ec3e2d91cdac5a06e6b32756631c0be04c456569d62cd5903e"
+    },
+    "0561": {
+     "name": "Åtvidaberg",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 611.779,
+       "grants": 222.122,
+       "novemberPopulation": 11447,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 639.314,
+       "grants": 234.323,
+       "novemberPopulation": 11451,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 669.676,
+       "grants": 238.5,
+       "novemberPopulation": 11478,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 700.634,
+       "grants": 239.776,
+       "novemberPopulation": 11504,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 729.612,
+       "grants": 242.812,
+       "novemberPopulation": 11528,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 758.169,
+       "grants": 245.753,
+       "novemberPopulation": 11552,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 787.844,
+       "grants": 248.852,
+       "novemberPopulation": 11577,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 817.607,
+       "grants": 251.964,
+       "novemberPopulation": 11603,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "e8db1715734bebbc484f9d2045dfec21880da88d91d4ff006a4e428ea80de876"
+    },
+    "0562": {
+     "name": "Finspång",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 1195.266,
+       "grants": 436.731,
+       "novemberPopulation": 21783,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1262.647,
+       "grants": 450.564,
+       "novemberPopulation": 21647,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1322.779,
+       "grants": 455.637,
+       "novemberPopulation": 21697,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1383.928,
+       "grants": 455.426,
+       "novemberPopulation": 21746,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1441.168,
+       "grants": 458.74,
+       "novemberPopulation": 21792,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1497.576,
+       "grants": 461.992,
+       "novemberPopulation": 21839,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 1556.191,
+       "grants": 465.384,
+       "novemberPopulation": 21887,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 1614.981,
+       "grants": 468.732,
+       "novemberPopulation": 21936,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "37f5572ca5808f42beb1e7e5b3af46454b3775e881a4fb17caacd5d7a4519c08"
+    },
+    "0563": {
+     "name": "Valdemarsvik",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 379.614,
+       "grants": 201.206,
+       "novemberPopulation": 7557,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 390.391,
+       "grants": 203.316,
+       "novemberPopulation": 7546,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 408.837,
+       "grants": 207.491,
+       "novemberPopulation": 7564,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 427.736,
+       "grants": 209.68,
+       "novemberPopulation": 7581,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 445.428,
+       "grants": 212.96,
+       "novemberPopulation": 7597,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 462.862,
+       "grants": 216.167,
+       "novemberPopulation": 7613,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 480.978,
+       "grants": 219.464,
+       "novemberPopulation": 7629,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 499.149,
+       "grants": 222.809,
+       "novemberPopulation": 7646,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "9e6c19a66d0447bd5291fc222d1787332dcb62029818b8d5daba466c70528546"
+    },
+    "0580": {
+     "name": "Linköping",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 8945.69,
+       "grants": 1663.196,
+       "novemberPopulation": 167578,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 9445.185,
+       "grants": 1672.084,
+       "novemberPopulation": 168135,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 9893.937,
+       "grants": 1685.306,
+       "novemberPopulation": 168526,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 10351.31,
+       "grants": 1658.087,
+       "novemberPopulation": 168903,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 10779.446,
+       "grants": 1660.104,
+       "novemberPopulation": 169260,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 11201.353,
+       "grants": 1661.823,
+       "novemberPopulation": 169626,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 11639.774,
+       "grants": 1663.789,
+       "novemberPopulation": 170000,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 12079.505,
+       "grants": 1665.779,
+       "novemberPopulation": 170386,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "a93d0e96bcbd1f59fdd26e99e9d38bae0de20c25145bb84ba70171c98a180143"
+    },
+    "0581": {
+     "name": "Norrköping",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 7877.007,
+       "grants": 2543.967,
+       "novemberPopulation": 145222,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 8230.904,
+       "grants": 2529.317,
+       "novemberPopulation": 145031,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 8622.219,
+       "grants": 2565.855,
+       "novemberPopulation": 145368,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 9020.803,
+       "grants": 2566.358,
+       "novemberPopulation": 145693,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 9393.909,
+       "grants": 2590.732,
+       "novemberPopulation": 146001,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 9761.586,
+       "grants": 2614.707,
+       "novemberPopulation": 146317,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 10143.655,
+       "grants": 2639.625,
+       "novemberPopulation": 146640,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 10526.865,
+       "grants": 2664.586,
+       "novemberPopulation": 146973,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "056cbfb0b3095125e00aa65a4c35da3fff5c4a71d16f4b7b244861f2098ed84d"
+    },
+    "0582": {
+     "name": "Söderköping",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 814.734,
+       "grants": 297.469,
+       "novemberPopulation": 14860,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 858.32,
+       "grants": 308.066,
+       "novemberPopulation": 14809,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 899.18,
+       "grants": 311.461,
+       "novemberPopulation": 14843,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 940.747,
+       "grants": 311.22,
+       "novemberPopulation": 14876,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 979.657,
+       "grants": 313.407,
+       "novemberPopulation": 14907,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1018.001,
+       "grants": 315.556,
+       "novemberPopulation": 14939,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 1057.845,
+       "grants": 317.822,
+       "novemberPopulation": 14972,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 1097.809,
+       "grants": 320.107,
+       "novemberPopulation": 15006,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "9f4326b688c1eb889bf206abe06d49c24ee5733d1d2127ba1be49153ab02a1c3"
+    },
+    "0583": {
+     "name": "Motala",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 2251.155,
+       "grants": 930.878,
+       "novemberPopulation": 43776,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 2351.546,
+       "grants": 934.193,
+       "novemberPopulation": 43572,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 2462.977,
+       "grants": 950.368,
+       "novemberPopulation": 43673,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 2576.834,
+       "grants": 955.562,
+       "novemberPopulation": 43771,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 2683.414,
+       "grants": 967.624,
+       "novemberPopulation": 43864,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 2788.442,
+       "grants": 979.455,
+       "novemberPopulation": 43959,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 2897.582,
+       "grants": 991.726,
+       "novemberPopulation": 44056,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 3007.048,
+       "grants": 1004.042,
+       "novemberPopulation": 44156,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "3c9cd5f26d00d628ae944351dccaba4f4ba50f105057a59d443a11fc6a4c4141"
+    },
+    "0584": {
+     "name": "Vadstena",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 440.667,
+       "grants": 112.514,
+       "novemberPopulation": 7431,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 451.641,
+       "grants": 127.127,
+       "novemberPopulation": 7483,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 473.195,
+       "grants": 128.699,
+       "novemberPopulation": 7500,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 495.069,
+       "grants": 128.473,
+       "novemberPopulation": 7517,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 515.546,
+       "grants": 129.478,
+       "novemberPopulation": 7533,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 535.724,
+       "grants": 130.446,
+       "novemberPopulation": 7549,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 556.692,
+       "grants": 131.419,
+       "novemberPopulation": 7565,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 577.723,
+       "grants": 132.429,
+       "novemberPopulation": 7582,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "f0a115219d99db607b170cca577de810b0754056dfa3c9b72a9730fe10098a9b"
+    },
+    "0586": {
+     "name": "Mjölby",
+     "rows": [
+      {
+       "year": 2024,
+       "tax": 1561.127,
+       "grants": 493.064,
+       "novemberPopulation": 28570,
+       "cells": [
+        "B38",
+        "B40"
+       ]
+      },
+      {
+       "year": 2025,
+       "tax": 1625.769,
+       "grants": 518.282,
+       "novemberPopulation": 28686,
+       "cells": [
+        "C38",
+        "C40"
+       ]
+      },
+      {
+       "year": 2026,
+       "tax": 1703.055,
+       "grants": 526.106,
+       "novemberPopulation": 28753,
+       "cells": [
+        "D38",
+        "D40"
+       ]
+      },
+      {
+       "year": 2027,
+       "tax": 1781.783,
+       "grants": 526.737,
+       "novemberPopulation": 28817,
+       "cells": [
+        "E38",
+        "E40"
+       ]
+      },
+      {
+       "year": 2028,
+       "tax": 1855.478,
+       "grants": 532.097,
+       "novemberPopulation": 28878,
+       "cells": [
+        "F38",
+        "F40"
+       ]
+      },
+      {
+       "year": 2029,
+       "tax": 1928.102,
+       "grants": 537.284,
+       "novemberPopulation": 28940,
+       "cells": [
+        "G38",
+        "G40"
+       ]
+      },
+      {
+       "year": 2030,
+       "tax": 2003.568,
+       "grants": 542.684,
+       "novemberPopulation": 29003,
+       "cells": [
+        "H38",
+        "H40"
+       ]
+      },
+      {
+       "year": 2031,
+       "tax": 2079.259,
+       "grants": 548.094,
+       "novemberPopulation": 29068,
+       "cells": [
+        "I38",
+        "I40"
+       ]
+      }
+     ],
+     "recalculatedSha256": "61c74d74447586946a8c920d0709009b5a38ed38ec2033a67662123eda11dbd1"
+    }
+   }
+  }
+ ]
+}

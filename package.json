@@ -10,6 +10,9 @@
     "backtest": "node scripts/backtest.mjs",
     "prestart": "python3 scripts/build.py",
     "start": "python3 scripts/serve.py",
-    "stage:omc": "python3 scripts/stage_omc.py"
+    "stage:omc": "python3 scripts/stage_omc.py",
+    "check:units": "python3 scripts/check_units.py",
+    "test:responses": "python3 scripts/response_test.py",
+    "bridge": "node mcp/bridge.ts"
   }
 }

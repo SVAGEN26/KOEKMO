@@ -4,5 +4,7 @@
   "novemberLocator": "SCB TAB6725 och föregående tabell FolkmangdNov",
   "cohortArchive": "data/downloads/20261120T104926Z-cohorts",
   "migrationArchive": "data/downloads/20261120T105146Z-migration",
-  "ageBacktestArchive": "data/downloads/20261120T121135Z-age-backtest"
+  "ageBacktestArchive": "data/downloads/20261120T121135Z-age-backtest",
+  "historyArchive": "data/downloads/20261123T134822Z-history",
+  "investmentIncomeArchive": "data/downloads/20261124T114939Z-investment-income"
 }
