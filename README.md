@@ -138,8 +138,9 @@ node mcp/bridge.ts            # prints the page address, a token and http://127.
 node mcp/bridge.ts --stdio    # MCP over stdin/stdout, for clients that start the bridge
 ```
 
-In the page, open "Koppla till AI (lokalt)" under the assumptions, give the
-address and token, and press Koppla. The assistant connects to
+In the page, press "AI" at the top right. A panel opens on the right; give the
+address and token there and press Koppla. The panel stays open beside the
+charts on a wide screen and lists the calls the assistant makes. The assistant connects to
 `http://127.0.0.1:8765/mcp` with `Authorization: Bearer <token>`, or starts the
 bridge with `--stdio` (give it a fixed `--token` so you can type it in the page).
 For Claude Code:
