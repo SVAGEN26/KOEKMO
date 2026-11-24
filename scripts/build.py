@@ -32,6 +32,8 @@ def series_catalogue():
     residual = load('data/cost-residual.json')
     long = load('data/long-hindcast.json')
     long_continuous = load('data/long-hindcast-continuous.json')
+    responses = load('data/response-test.json')
+    responses['prices'] = {k: v for k, v in responses['prices'].items() if k != 'rows'}
     national = load('data/national-population.json')
     out = {'municipalities': {}, 'national': {
         'pkv': {'unit': 'share per year', 'source': residual['source'],
@@ -45,7 +47,10 @@ def series_catalogue():
                      'models': 'summaryByHorizon is the yearly model (Kommunekonomi.Annual); summaryByHorizonContinuous is the '
                                'continuous model, which the site runs by default. Persistence is the same for both.',
                      'summaryByHorizon': long['summaryByHorizon'],
-                     'summaryByHorizonContinuous': {k: v for k, v in long_continuous['summaryByHorizon'].items() if k != 'persistence'}}}}
+                     'summaryByHorizonContinuous': {k: v for k, v in long_continuous['summaryByHorizon'].items() if k != 'persistence'}},
+        'responses': {'source': 'scripts/response_test.py, data/response-test.json',
+                      'description': 'The model\'s rules against the accounts of 13 municipalities: slope of the observed change on the '
+                                     'model\'s (1 = history moved as the model says), with a 95 % interval', **responses}}}
     for folder in sorted((ROOT / 'data/municipalities').glob('[0-9]*')):
         if not (folder / 'base-years.json').is_file():
             continue

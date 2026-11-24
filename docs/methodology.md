@@ -104,8 +104,8 @@ to: the drift on gross payroll and other costs that makes the model's net cost g
 as SCB's did (TAB6777, without depreciation), with SKR's price index for municipal
 activities (PKV outcomes), the model's service volume (fixed share 0.25, half the
 gap closed each year) and operating revenue following prices and population.
-Over 2011–2025 the mean lies between −0.2 and 0.5 % a year in the 13
-municipalities (Linköping 0.32, Motala 0.22), with single years off by 2–3 % (the
+Over 2011–2025 the mean lies between −0.3 and 0.4 % a year in the 13
+municipalities (Linköping 0.31, Motala 0.20), with single years off by 2–3 % (the
 standard deviation). Norrköping's 2022 and 2023 are left out: the Ostlänken
 provision is not split between operating and financial items. The mean known in
 each base year (`knownBy`) uses the weights known then. Used as a forecast it made
@@ -392,11 +392,60 @@ of hindsight the model loses to the benchmark at every horizon. The population i
 6 % too high after eight years (migration calibrated on 2015–2017), which raises
 costs and grants together, and debt is a third too low because investment is held
 at the base year's level. The historical cost residual known in the base year, as
-`costDrift`, makes it worse (net cost +12.9 % after eight years), so its default
+`costDrift`, makes it worse (net cost +11.5 % after eight years), so its default
 is 0. Results in `data/long-hindcast.json`. Base years 2017–2019 use SCB's older
 series (`scripts/fetch_history.py`); Linköping and Vadstena get a 2 % interest
 rate there, since SCB's debt gives none. Boxholm's care weights for 2017 and 2018
 are the 2019 ones.
+
+**Responses.** `scripts/response_test.py` tests the model's rules one at a time
+against the accounts of the 13 municipalities, with outcomes for the drivers on
+purpose: the question is what follows from a given population or investment. For
+each rule the observed change is regressed on the change the rule gives, with a
+common effect per year removed, so the slope is identified from differences
+between municipalities. A slope of 1 is the model's response. Intervals are 95 %
+from resampling municipalities with their years (cluster bootstrap). Results in
+`data/response-test.json`.
+
+- *Costs.* Real gross operating cost (TAB6777 item 022, deflated with PKV)
+  against the service volume from the observed population, 2012–2025. `Annual`:
+  0.82, 1.07, 1.03 and 0.80 over 1, 3, 5 and 10 years (five years: 0.54 to 1.64).
+  `Continuous.Economy`: 0.71, 0.88, 0.93 and 0.77. With the need taken a year
+  late the one-year slope is 0.47 (−0.25 to 1.11). The need itself, without fixed
+  share or delay, gives 0.74 over five years, which is what a fixed share of
+  about a quarter implies. A least-squares fit of the two parameters gives
+  adjustment 1.0 (0.2 to 1.0) and fixed share 0.25 (0 to 0.6); the squared error
+  is 0.147 against 0.155 at the defaults and 0.179 with no volume at all. The
+  defaults are not rejected and not confirmed.
+- *Revenue.* Tax and general grants (items 040 and 050) against the population
+  the year before: 0.78, 0.69, 0.65 and 0.44 over 1, 3, 5 and 10 years (one year:
+  0.49 to 1.10; ten: 0.10 to 0.90). The site's default scales 0.94 of tax and
+  grants with the population, the proportional mode all of it. Against the same
+  year's population the one-year slope is 0.12, so the model's lag is right.
+- *Financing.* The change of each group of balance sheet items (TAB6779) against
+  the financing need, 2018–2025, in shares of tax and grants. Bank loans 0.42,
+  less lending 0.24, less cash 0.04, other long-term liabilities 0.11, provisions
+  0.04, short-term liabilities 0.03, receivables 0.05, securities −0.24, and 0.31
+  not found in these items (disposals, revaluations, and differences between
+  SCB's investment survey and the balance sheet). Bank debt less lending and
+  cash: 0.71 (0.20 to 1.02); with the need computed from the balance sheet's own
+  change of fixed assets, 0.53 (0.17 to 0.95). On investment alone 0.76 (0.28 to
+  1.11); on the result and depreciation alone −0.27 (−1.00 to 0.45) where the
+  model has −1.
+- *Depreciation.* The model's rule with observed investments: 1.07, 0.89 and
+  0.87 over 1, 3 and 5 years (three years: 0.39 to 1.56).
+- *Prices.* Nominal cost growth beyond the service volume against PKV, one point
+  per year 2012–2025: 0.84 (−0.10 to 1.34), and 0.21 % a year more than PKV on
+  average.
+
+The test's Python copy of the capacity rule is checked against `Finspang.Annual`
+(to 1e-9) and `Finspang.Continuous` (to 5e-5) in `tests/test_response.py`. Not
+tested: the interest rate's pass-through, the tax rate, pension costs and the
+inflation scenario's pass-through. The 2020 reform of the cost equalisation falls
+in the period and moved grants towards shrinking municipalities, so the low
+ten-year revenue slope is not evidence of a weaker response to population.
+`data/cost-residual.json` took the need a year late until 2026-11-24; it now
+follows the model's timing.
 
 **Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025; results in

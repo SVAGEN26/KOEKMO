@@ -7,8 +7,8 @@ The residual is measured on the basis the model applies costDrift to. The model 
 other operating expenses (gross, before operating revenue) by the cost standard; their volume follows the
 service volume: per sector, capacity closes half the gap to 0.25 + 0.75 x demand each year (the model's
 defaults adjustment 0.5 and fixedShare 0.25), and demand in year y is the need from the population at the
-end of year y-1. Operating revenue follows prices and the population, not the standard. The residual of a
-year is the costDrift that makes the model's net cost grow as the outcome did:
+end of year y, as in Kommunekonomi.Annual. Operating revenue follows prices and the same population, not
+the standard. The residual of a year is the costDrift that makes the model's net cost grow as the outcome did:
 
   net_y / (1 + PKV_y) = gross_{y-1} x volume growth x (1 + residual) - revenue_{y-1} x population growth
 
@@ -28,8 +28,12 @@ for comparison. The model's default is 0: scripts/hindcast_long.py tests `knownB
 
 Years 2009-2016 come from data/downloads/*-history (scripts/fetch_history.py), 2017-2025 from each
 municipality's archive (data/municipalities/<code>/base-years.json); Motala's accounts from the PKV
-archive (1998-2025) and its population 2015-2025 from data/demography-inputs.json. The residual
-needs the population two years back, so it starts in 2011.
+archive (1998-2025) and its population 2015-2025 from data/demography-inputs.json. The capacity starts
+at the need of 2009 and the residual is reported from 2011.
+
+Until 2026-11-24 this script took the need and the population of the year before (end of y-1 for year y),
+a year behind the model. scripts/response_test.py showed that the model's timing fits the accounts
+better, and the script now follows the model.
 
 SKR's workbook is not redistributed (.gitignore). Download PKV-2610.xlsx into the archive folder from
 the URL in its manifest.json and check its SHA-256; data/cost-residual.json keeps the index values.
@@ -120,14 +124,14 @@ def series(pop, net, gross, prices, care, shares):
     share = (shares['education'], shares['elderly'], shares['other'])
     first = need(FIRST - 1)
     capacity = [FIXED_SHARE + (1 - FIXED_SHARE) * 1.0] * 3  # steady state with the population at the end of FIRST - 1
-    volume = {FIRST: sum(s * c for s, c in zip(share, capacity))}
-    for y in range(FIRST + 1, 2026):
-        demand = [n / f for n, f in zip(need(y - 1), first)]
+    volume = {}
+    for y in range(FIRST, 2026):
+        demand = [n / f for n, f in zip(need(y), first)]  # the need at the end of the year, as in Kommunekonomi.Annual
         capacity = [c + ADJUSTMENT * (FIXED_SHARE + (1 - FIXED_SHARE) * d - c) for c, d in zip(capacity, demand)]
         volume[y] = sum(s * c for s, c in zip(share, capacity))
     rows = {}
     for y in range(FIRST + 1, 2026):
-        v, q = volume[y] / volume[y - 1], sum(pop[y - 1]) / sum(pop[y - 2])
+        v, q = volume[y] / volume[y - 1], sum(pop[y]) / sum(pop[y - 1])
         revenue = gross[y - 1] - net[y - 1]
         # The model: net cost = gross x prices x volume x (1 + costDrift) - revenue x prices x population growth.
         # The drift that gives this year's net cost in real terms:

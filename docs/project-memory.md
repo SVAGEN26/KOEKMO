@@ -1126,3 +1126,44 @@ Oberoende granskning av koden (underagent); kontrollerad genom omkörning av `co
 - Inte gjort: månadsvärden i diagrammen (flödena är jämna, så kurvan mellan årsskiftena är nästan rak);
   säsong i flyttningar, läsår och löneavtalens datum finns inte i modellen.
 
+## Prövning av modellens samband (2026-11-24)
+
+- Användaren bad om punkt 1 i min lista över förbättringar: pröva utslagen, inte bara nivåerna.
+  `scripts/response_test.py` prövar modellens regler en i taget mot de 13 kommunernas bokslut, med utfall för
+  drivkrafterna (avsiktligt facit: frågan är vad som följer av en given befolkning eller investering). Observerad
+  ändring regresseras på den ändring regeln ger; årseffekter tas bort, så lutningen bestäms av skillnader mellan
+  kommuner. Lutning 1 = som modellen. 95 % intervall genom att dra om kommuner (klusterbootstrap). Resultat i
+  `data/response-test.json`; körtid cirka 5 minuter. Kräver de lokala arkiven i `data/downloads/`.
+- Kostnader (real bruttokostnad, TAB6777 post 022, mot tjänstevolymen från observerad befolkning, 2012–2025):
+  Annual 0,82/1,07/1,03/0,80 på 1/3/5/10 år (5 år: 0,54–1,64), Continuous 0,71/0,88/0,93/0,77. Behovet utan fast
+  andel och fördröjning ger 0,74, vilket är vad en fast andel på en fjärdedel innebär. Bästa anpassning:
+  `adjustment` 1,0 (0,2–1,0), fast andel 0,25 (0–0,6); kvadratfel 0,147 mot 0,155 med standardvärdena och 0,179 utan
+  volym. Data skiljer inte årsmodellen från den kontinuerliga och avgör inte anpassningstakten.
+- Skatt och bidrag mot befolkningen året före: 0,78/0,69/0,65/0,44 (1 år: 0,49–1,10; 10 år: 0,10–0,90). Sidans
+  standard (per delpost) skalar 0,94. Mot samma års befolkning 0,12 på ett år: modellens eftersläpning stämmer.
+  Kostnadsutjämningens omläggning 2020 flyttade bidrag till krympande kommuner och ligger i perioden, så en svagare
+  befolkningsrespons är inte visad.
+- Finansiering (balansräkningens poster, TAB6779, mot investering minus resultat och avskrivning, 2018–2025):
+  banklån 0,42, minskad utlåning 0,24 (mest till egna bolag), kassa 0,04, övriga långfristiga skulder 0,11,
+  avsättningar 0,04, kortfristiga skulder 0,03, fordringar 0,05, placeringar −0,24, ej återfunnet 0,31. Banklån
+  minus utlåning och kassa: 0,71 (0,20–1,02); med behovet räknat ur balansräkningens egen förändring av
+  anläggningstillgångar 0,53 (0,17–0,95). På investering ensam 0,76 (0,28–1,11); på resultat och avskrivning ensam
+  −0,27 (−1,00–0,45) mot modellens −1. Modellen lånar hela behovet och överskattar därför troligen hur mycket en
+  investering höjer skulden. Posten "ej återfunnet" är inte förklarad.
+- Avskrivning mot modellens regel med observerade investeringar: 1,07/0,89/0,87 på 1/3/5 år. Priser (PKV, en punkt
+  per år, 14 år): 0,84 (−0,10–1,34); kostnaderna växte i snitt 0,21 % per år mer än PKV och volym.
+- Inte prövat: räntans genomslag (kräver marknadsräntor), skattesatsen, pensionskostnaden och inflationsscenariots
+  genomslagsandelar.
+- Skriptets Python-kopia av kapacitetsregeln är kontrollerad mot `Finspang.Annual` (1e-9) och `Finspang.Continuous`
+  (5e-5) i `tests/test_response.py`.
+- Fel som hittades: `scripts/cost_residual.py` tog behovet och befolkningen från året före (slutet av år y−1 för år
+  y), ett år efter modellen (`Components.Services` använder årets befolkning). Med ett års eftersläpning blir
+  ettårslutningen 0,47 mot 0,82. Rättat. Kostnadsresten 2011–2025 är nu −0,3 till 0,4 %/år (var −0,2 till 0,5;
+  Linköping 0,31, Motala 0,20). Åttaårstestets variant drift: nettokostnad +11,5 % och resultat −6,9 % efter åtta år
+  (var +12,9 och −8,3). Slutsatsen står kvar: resten som prognos gör det sämre. Övriga varianter är oförändrade.
+- Sidan: en rad om sambanden under "Vad är belagt?", AI-serien `responses` (`get_series`), reglagets hjälptext
+  för kostnadsökning uppdaterad.
+- Uppföljning som resultaten pekar på: (a) låt bara en del av finansieringsbehovet bli banklån, eller lägg in
+  investeringsbidrag och avgifter; (b) samma prövning på alla 290 kommuner skulle ge mycket smalare intervall och
+  kunna avgöra anpassningstakt och fast andel; (c) räntans genomslag 2022–2024 mot räntebindningen.
+

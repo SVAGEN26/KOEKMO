@@ -24,7 +24,10 @@ municipality's own budget was off by 24. Run eight years from the 2017–2019 ac
 of all 13 municipalities, even with what actually happened to prices, the tax base
 and the state's grants, the model beats "the base year's result share kept" only in
 the first three years. Its use is to show how a decision moves the result, cash and
-debt, not to say what the result will be. See [Accuracy](#accuracy).
+debt, not to say what the result will be. Those responses are tested against the 13
+municipalities' accounts: costs and depreciation have moved about as the model's
+rules say, tax and grants somewhat less, and debt by half to three quarters of what
+the model says, all with wide margins. See [Accuracy](#accuracy).
 
 ## Run it
 
@@ -57,7 +60,7 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   each showing how many values are changed and with its own reset. A `?` next to
   each control explains it and where the default comes from. Two controls set
   what the model otherwise leaves out: cost growth beyond demography and prices
-  (default 0; history −0.2 to 0.5 % a year) and the state's further increase of
+  (default 0; history −0.3 to 0.4 % a year) and the state's further increase of
   the general grants beyond SKR's path, in billion kronor nationally per year
   (`grantIncrease` in the Modelica model, so the MCP server has it too). Further options:
   a dated building project, working capital, a cash policy, SKR's revenue path
@@ -340,10 +343,54 @@ of hindsight it is worse than persistence at every horizon. The result is too lo
 together, so part of the result error cancels. Debt comes out too low because
 investment stays at the base year's amount. With costs growing by each
 municipality's historical residual up to the base year (set "drift",
-`data/cost-residual.json`, measured on the model's basis), net cost is 12.9 % too
-high and the result 8.3 % too low after eight years, so cost growth is 0 by default
+`data/cost-residual.json`, measured on the model's basis), net cost is 11.5 % too
+high and the result 6.9 % too low after eight years, so cost growth is 0 by default
 and a scenario control on the site. The test covers one period, 2017–2025, and its
 runs overlap, so the 39 cases are not independent.
+
+**Does history move as the model says?** The tests above score levels. The site
+is used to see how much the result moves when something changes, so
+`scripts/response_test.py` tests the model's rules one at a time against the 13
+municipalities' accounts. For each rule it takes the observed driver, computes
+the change the rule gives, and regresses the observed change on it, with what was
+common to all municipalities in a year removed. A slope of 1 means history moved
+as the model says; 0.5 means half as much. The interval is 95 %, from resampling
+municipalities. From `data/response-test.json`:
+
+| Rule | Model | History: slope (interval) | Cases |
+| --- | --- | --- | --- |
+| Need from the population → real operating cost, 5 years | 1 | 1.03 (0.54 to 1.64) yearly model; 0.93 (0.42 to 1.54) continuous | 126 |
+| The same, 1 year | 1 | 0.82 (0.30 to 1.30); 0.71 (0.09 to 1.31) | 180 |
+| Population the year before → tax and grants, 1 year | 0.94 | 0.78 (0.49 to 1.10) | 189 |
+| The same, 10 years | 0.94 | 0.44 (0.10 to 0.90) | 74 |
+| Financing need → bank debt less lending and cash | 1 | 0.71 (0.20 to 1.02); 0.53 (0.17 to 0.95) with the need from the balance sheet | 99 |
+| Investment → depreciation, 3 years | 1 | 0.89 (0.39 to 1.56) | 75 |
+| SKR's price index → cost beyond volume | 1 | 0.84 (−0.10 to 1.34) | 14 years |
+
+- **Costs** have followed the need from the population about as the model says,
+  2012–2025. The data cannot tell the yearly and the continuous model apart, nor
+  pin down the adjustment speed (best fit 1.0, interval 0.2 to 1.0) or the fixed
+  share (0.25, interval 0 to 0.6). Demography explains little of the differences
+  between municipalities (R² 0.17 over five years).
+- **Tax and grants** follow the population a year later, as in the model: against
+  the same year's population the one-year slope is 0.12. The size is somewhat
+  below the model's 0.94 and clearly below over ten years. The 2020 reform of the
+  cost equalisation moved grants towards municipalities that shrink, in the same
+  period, so a weaker response to population is not shown.
+- **Debt.** Of a krona of financing need (investment less the result and
+  depreciation), 0.42 became bank debt and 0.24 came back from lending, mostly to
+  the municipality's own companies. Net of lending and cash it is 0.5 to 0.7,
+  depending on how the need is measured, and 1 is at or beyond the edge of the
+  interval. The rest came from investment grants and fees, other liabilities and
+  items the test does not identify. The model borrows all of it, so it probably
+  overstates how much an investment adds to the debt.
+- **Depreciation** follows the model's rule within the margins.
+- **Not tested:** the interest rate's pass-through, the tax rate, pension costs
+  and the inflation scenario's pass-through shares.
+
+Thirteen municipalities in one county are few; every interval is wide.
+`tests/test_response.py` checks that the test's copy of the capacity rule is the
+Modelica model's.
 
 Population: `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025 (78 cases per variant). One year ahead,
@@ -414,7 +461,7 @@ deploy job runs only in a public repository. By hand,
 
 - `modelica/`: the models the site runs. See [modelica/README.md](modelica/README.md).
 - `site/src/`: the web app. `omc-worker.js`, `omc-session.js`, `jit-engine.js` are the engine; `pdf-report.js` the report.
-- `scripts/`: data fetching and preparation, hindcasts, build, MCP server.
+- `scripts/`: data fetching and preparation, hindcasts, the response test, build, MCP server.
 - `data/`: prepared inputs, hindcast results, per-municipality data in `data/municipalities/CODE/`, archive manifests in `data/downloads/`.
 - `tests/`: `npm test` (JavaScript and Python).
 - `docs/methodology.md`: equations and limits. `docs/project-memory.md`: dated project log and open items (Swedish).
