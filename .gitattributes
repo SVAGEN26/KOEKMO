@@ -7,3 +7,19 @@ research/reference/** -text
 # Downloaded sources are hashed in their manifests; keep their bytes (CRLF) as fetched.
 data/downloads/** -text
 *.csv -text
+
+# Results and prepared inputs written by scripts/ and checked in so the site and the tests have fixed numbers.
+# Marked as generated so GitHub collapses them in diffs and leaves them out of the language statistics.
+# Hand-entered files (annual-report-inputs.json, municipal-budgets.json, sources.json, the CSVs) stay visible.
+data/long-hindcast*.json linguist-generated
+data/vintage-hindcast*.json linguist-generated
+data/outcome-explanation*.json linguist-generated
+data/cost-residual.json linguist-generated
+data/response-test.json linguist-generated
+data/demography-hindcast.json linguist-generated
+data/equalisation.json linguist-generated
+data/tax-capacity.json linguist-generated
+data/skr-historical/forecasts.json linguist-generated
+data/municipalities/*/*.json linguist-generated
+data/municipalities/*/annual-report-inputs.json -linguist-generated
+data/downloads/**/manifest.json linguist-generated
