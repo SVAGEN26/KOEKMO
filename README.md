@@ -588,7 +588,7 @@ compilers.
 
 ## Licence
 
-The project's own work, including the Modelica models, is MIT-licensed; see
-`LICENSE`. The published site bundles OpenModelica's web compiler under OSMC-PL
+The project's own work, including the Modelica models, is MIT-licensed,
+copyright John Tinnerholm; see `LICENSE`. The published site bundles OpenModelica's web compiler under OSMC-PL
 1.8 or GNU AGPL 3, with the licence text and source revision in `omc-web/`.
 Source documents and data keep their publishers' terms.
