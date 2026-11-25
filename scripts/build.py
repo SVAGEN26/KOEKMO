@@ -11,8 +11,7 @@ import shutil
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / 'site/dist'
 OMC = ROOT / 'site/omc-web'
-# engine.js is the independent JavaScript reference for the tests; the site never runs it.
-NOT_SHIPPED = {'engine.js'}
+NOT_SHIPPED = set()
 DATA = ['baseline.json', 'history.json', 'sources.json', 'backtest.json', 'municipal-benchmarks.json',
         'operating-accounts-history.json', 'planning-inputs.json', 'skr-revenue-path.json', 'replay-2022.json',
         'model-experiments.json', 'age-income.json', 'rate-fixing.json', 'rate-stress.json', 'investment-plans.json', 'liquidity.json']
@@ -30,8 +29,7 @@ def series_catalogue():
     """Outcomes and history the AI tools read (site/src/ai-tools.js, get_series): one file, with sources."""
     load = lambda path: json.loads((ROOT / path).read_text())
     residual = load('data/cost-residual.json')
-    long = load('data/long-hindcast.json')
-    long_continuous = load('data/long-hindcast-continuous.json')
+    long = load('data/long-hindcast-continuous.json')
     responses = load('data/response-test.json')
     responses['prices'] = {k: v for k, v in responses['prices'].items() if k != 'rows'}
     national = load('data/national-population.json')
@@ -46,13 +44,11 @@ def series_catalogue():
                 'rows': [{'year': int(y), **v} for y, v in sorted(residual['pkv'].items())]},
         'population': {'unit': 'persons, 31 December', 'source': national.get('source'), 'note': national.get('note'),
                        'rows': [{'year': int(y), 'population': v} for y, v in sorted(national['population'].items())]},
-        'hindcast': {'source': 'scripts/hindcast_long.py, data/long-hindcast.json and data/long-hindcast-continuous.json', 'units': long['units'],
+        'hindcast': {'source': 'scripts/hindcast_long.py, data/long-hindcast-continuous.json', 'units': long['units'],
                      'description': 'Model against outcomes 2017-2019 to 2025, 13 municipalities: mean error and mean absolute '
                                     'error per horizon, and the benchmark persistence (the base year\'s result share kept)',
-                     'models': 'summaryByHorizon is the yearly model (Kommunekonomi.Annual); summaryByHorizonContinuous is the '
-                               'continuous model, which the site runs by default. Persistence is the same for both.',
-                     'summaryByHorizon': long['summaryByHorizon'],
-                     'summaryByHorizonContinuous': {k: v for k, v in long_continuous['summaryByHorizon'].items() if k != 'persistence'}},
+                     'models': 'The continuous model (Kommunekonomi.Continuous.Economy), which the site runs.',
+                     'summaryByHorizon': long['summaryByHorizon']},
         'responses': {'source': 'scripts/response_test.py, data/response-test.json',
                       'description': 'The model\'s rules against the accounts of 13 municipalities: slope of the observed change on the '
                                      'model\'s (1 = history moved as the model says), with a 95 % interval', **responses}}}
@@ -153,7 +149,7 @@ def main():
     # Preserve the Finspång URLs used before the shared municipality picker.
     shutil.copy2(ROOT / 'data/municipalities/0562/web.json', DIST / 'finspang.json')
     shutil.copy2(ROOT / 'data/municipalities/0562/skr-revenue-path.json', DIST / 'finspang-skr-revenue-path.json')
-    shutil.copy2(ROOT / 'data/municipalities/0562/vintage-hindcast.json', DIST / 'finspang-vintage-hindcast.json')
+    shutil.copy2(ROOT / 'data/municipalities/0562/vintage-hindcast-continuous.json', DIST / 'finspang-vintage-hindcast.json')
     shutil.copy2(ROOT / 'modelica/MotalaBrowser.mo', DIST / 'MotalaBrowser.mo')
     shutil.copytree(OMC, DIST / 'omc-web')
     shutil.copy2(ROOT / 'docs/methodology.md', DIST / 'methodology.md')

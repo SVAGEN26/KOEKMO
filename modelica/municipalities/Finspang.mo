@@ -273,30 +273,21 @@ kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och ränt
 räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
-  model Annual "Finspångs ekonomi år för år från bokslutet 2025"
-    // Finspång: betalningsberedskap 30 dagar, (likvida medel + kreditlöften)/(utbetalningar/365) (Finansiella
-    // riktlinjer, KS 2025-04-09 § 102, avsnitt 6.1.2). Kredit okänd; noll antas. Källa:
-    // https://finspang.se/download/18.561020fb18529b3aa4a7d431/1747822317036/Finansiella%20riktlinjer.pdf
-    extends Kommunekonomi.Annual(base = Data.finspang2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
-    annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
-      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
-Starta från ett annat år med <code>Annual(base = Data.finspang2024)</code>.</p></html>"));
-  end Annual;
-
   model Continuous "Finspångs ekonomi med kontinuerlig tid inom året: lager och flöden"
     // Finspång: betalningsberedskap 30 dagar, (likvida medel + kreditlöften)/(utbetalningar/365) (Finansiella
     // riktlinjer, KS 2025-04-09 § 102, avsnitt 6.1.2). Kredit okänd; noll antas. Källa:
     // https://finspang.se/download/18.561020fb18529b3aa4a7d431/1747822317036/Finansiella%20riktlinjer.pdf
     extends Kommunekonomi.Continuous.Economy(base = Data.finspang2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
-      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
-är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));
+      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
+Pengar och invånare är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy). Starta från
+ett annat år med <code>Continuous(base = Data.finspang2024)</code>.</p></html>"));
   end Continuous;
 
   package Examples "Färdiga modeller att simulera"
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet i Data.finspang2025"
-      extends Annual(base = Data.finspang2024, olderShares = Data.olderShares2024, horizon = 1);
-      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1));
+      extends Continuous(base = Data.finspang2024, olderShares = Data.olderShares2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333));
     end Hindcast2025;
   end Examples;
   annotation(uses(Kommunekonomi(version = "0.1.0")), Documentation(info = "<html><p>Finspång (kommunkod 0562) med biblioteket

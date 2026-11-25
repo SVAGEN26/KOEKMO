@@ -25,8 +25,8 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
   const populationSource=a.demographyMode?.includes('observed')
     ?'<a href="https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB1212">SCB:s in- och utflyttningar efter ålder och kön</a>.'
     :planning?.sources.population&&!run.cohort?`Befolkningskälla: <a href="${escape(planning.sources.population)}">regional statistikdatabas</a>.`:'';
-  const flow=a.timeModel==='continuous';
-  const common=[['Basår / horisont',`${first} / ${first+1}–${last}`],['Tid i modellen',flow?'Kontinuerlig tid: flöden under året':'Årssteg: ett steg per år'],['Intäktsunderlag',revenueLabel],['Befolkningsunderlag',populationLabel],
+  const flow=true;
+  const common=[['Basår / horisont',`${first} / ${first+1}–${last}`],['Tid i modellen','Kontinuerlig tid: flöden under året'],['Intäktsunderlag',revenueLabel],['Befolkningsunderlag',populationLabel],
     ...(revenueMode?[['Intäktsmodell',revenueMode]]:[]),
     ...(a.splitPayroll?[['Personalkostnader','Löner, sociala avgifter och pensioner i separata banor']]:[])];
   const pages=[];

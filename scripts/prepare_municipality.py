@@ -8,8 +8,8 @@ equalisation, operating costs, investment and population), and the municipality'
 weights and sector shares (fetch_care_data.py + prepare_care.py, fetch_sector_costs.py) under
 data/municipalities/<code>/, and the relative tax capacity from data/tax-capacity.json (fetch_tax_capacity.py).
 Writes data/municipalities/<code>/base-years.json and, with
---modelica, modelica/municipalities/<Package>.mo: Data (one BaseYear per year 2017-2025), Annual extending
-Kommunekonomi.Annual with the latest base year, and a one-year test against the outcome.
+--modelica, modelica/municipalities/<Package>.mo: Data (one BaseYear per year 2017-2025), Continuous extending
+Kommunekonomi.Continuous.Economy with the latest base year, and a one-year test against the outcome.
 
 Definitions (SCB item codes):
   tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income
@@ -280,24 +280,18 @@ kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och ränt
 räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
-  model Annual "{name}s ekonomi år för år från bokslutet {last}"
-{liquidity_comment}    extends Kommunekonomi.Annual(base = Data.{package.lower()}{last}, olderShares = Data.olderShares{liquidity});
-    annotation(experiment(StartTime = {last}, StopTime = {last + 8}, Interval = 1),
-      Documentation(info = "<html><p><b>Tid: start {last}, slut {last + 8}.</b> Med standardantagandena (illustrativ tillväxt).
-Starta från ett annat år med <code>Annual(base = Data.{package.lower()}{last - 1})</code>.</p></html>"));
-  end Annual;
-
   model Continuous "{name}s ekonomi med kontinuerlig tid inom året: lager och flöden"
 {liquidity_comment}    extends Kommunekonomi.Continuous.Economy(base = Data.{package.lower()}{last}, olderShares = Data.olderShares{liquidity});
     annotation(experiment(StartTime = {last}, StopTime = {last + 8}, Interval = 0.0833333333333333),
-      Documentation(info = "<html><p><b>Tid: start {last}, slut {last + 8}.</b> Samma antaganden och utdata som Annual, men pengarna
-är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));
+      Documentation(info = "<html><p><b>Tid: start {last}, slut {last + 8}.</b> Med standardantagandena (illustrativ tillväxt).
+Pengar och invånare är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy). Starta från
+ett annat år med <code>Continuous(base = Data.{package.lower()}{last - 1})</code>.</p></html>"));
   end Continuous;
 
   package Examples "Färdiga modeller att simulera"
     model Hindcast{last} "Starta i bokslutet {last - 1} och räkna fram {last}; jämför med utfallet i Data.{package.lower()}{last}"
-      extends Annual(base = Data.{package.lower()}{last - 1}, olderShares = Data.olderShares{last - 1}, horizon = 1);
-      annotation(experiment(StartTime = {last - 1}, StopTime = {last}, Interval = 1));
+      extends Continuous(base = Data.{package.lower()}{last - 1}, olderShares = Data.olderShares{last - 1}, horizon = 1);
+      annotation(experiment(StartTime = {last - 1}, StopTime = {last}, Interval = 0.0833333333333333));
     end Hindcast{last};
   end Examples;
   annotation(uses(Kommunekonomi(version = "0.1.0")), Documentation(info = "<html><p>{name} (kommunkod {code}) med biblioteket

@@ -13,7 +13,7 @@ This script repeats the demography in Python, from every base year 2012-2024 to 
 3, 5 and 8 years, and compares the total population and the five groups with SCB. Only data up to the base
 year are used. The rule is the model's: death rates from the base year (four fixed, 65+ from the year's
 deaths), births in proportion to the 19-64 group, ageing by the groups' widths. Its two-year window is
-checked against the model's own population in data/long-hindcast.json.
+checked against the model's own population in data/long-hindcast-continuous.json.
 
 The births are the model's (births per adult kept from the base year); a second set uses SCB's births, to
 separate the error from falling fertility. data/migration-hindcast.json has the mean error and mean absolute

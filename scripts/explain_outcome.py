@@ -32,7 +32,7 @@ show whether the mechanism a user gets from the scenario button gives what the a
 Beside the runs: SKR's own forecast of the municipality's tax and grants at the time, from the recovered
 workbooks (data/skr-historical/forecasts.json), where one was read out.
 
-HINDCAST_MODEL=Annual runs the annual model; the default here is Continuous, the model the site runs.
+The model is the package's Continuous model, the one the site runs.
 Writes data/outcome-explanation.json (Motala) or data/municipalities/<code>/outcome-explanation.json.
 """
 import json
@@ -48,7 +48,7 @@ if '--origin' in sys.argv:
     del sys.argv[i:i + 2]
 import hindcast_vintages as hv  # noqa: E402  (reads the municipality from sys.argv)
 
-MODEL = os.environ.get('HINDCAST_MODEL', 'Continuous')
+MODEL = 'Continuous'
 
 ROOT = hv.ROOT
 STANDARD = {'taxBase': 0.035, 'wages': 0.03, 'prices': 0.02}  # Kommunekonomi.Assumptions: taxGrowth, wageGrowth, priceGrowth
@@ -215,7 +215,7 @@ def main():
                             for y in years},
                'runs': {name: {str(y): r for y, r in rows.items()} for name, rows in scenario.items()}},
            'skrForecasts': skr_forecasts(years)}
-    suffix = '' if MODEL == 'Continuous' else '-annual'
+    suffix = ''
     target = ROOT / (f'data/outcome-explanation{suffix}.json' if hv.CODE == '0583' else f'data/municipalities/{hv.CODE}/outcome-explanation{suffix}.json')
     target.write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     print(f'{hv.PACKAGE} from {ORIGIN}: result, mnkr')

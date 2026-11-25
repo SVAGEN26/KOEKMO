@@ -1,7 +1,7 @@
 """The response test's own arithmetic, and its copy of the model's capacity rule against the Modelica model.
 
 scripts/response_test.py computes the model's service volume in Python from the observed population. That copy
-must be the model's rule, or the test says nothing about the model. The last two tests run Finspang.Annual and
+must be the model's rule, or the test says nothing about the model. The model tests run
 Finspang.Continuous in OpenModelica and compare; they are skipped without OMC or omc on PATH.
 """
 import csv
@@ -137,7 +137,6 @@ class AgainstTheModel(unittest.TestCase):
         c65, c80 = record['careCostPerInhabitant']
         cls.care = [c65, c80, c80]
         cls.older = record['olderShares']
-        cls.annual = simulate('Finspang.Annual', 8)
         cls.continuous = simulate('Finspang.Continuous', 96)
 
     def needs(self, rows):
@@ -148,15 +147,10 @@ class AgainstTheModel(unittest.TestCase):
         return [rt.need(group(rows[y]), base, self.education, self.care) for y in range(2025, 2034)]
 
     def test_need_is_the_models(self):
-        for k, n in enumerate(self.needs(self.annual)):
-            row = self.annual[2025 + k]
+        for k, n in enumerate(self.needs(self.continuous)):
+            row = self.continuous[2025 + k]
             self.assertAlmostEqual(n[0], row['educationIndex'], places=9)
             self.assertAlmostEqual(n[1], row['careIndex'], places=9)
-
-    def test_annual_volume_is_the_models(self):
-        volume = rt.annual_volume(self.needs(self.annual), self.shares)
-        for k, v in enumerate(volume):
-            self.assertAlmostEqual(v, self.annual[2025 + k]['serviceVolume'], places=9, msg=str(2025 + k))
 
     def test_continuous_capacity_is_the_models(self):
         # The model's need follows its population through the year; the Python rule joins the year ends with straight

@@ -26,14 +26,17 @@ class Stored(unittest.TestCase):
 @unittest.skipUnless(ARCHIVES, 'SCB archives under data/downloads/ are not in this checkout')
 class AgainstTheModel(unittest.TestCase):
     def test_two_years_give_the_models_population(self):
-        """The model's own population in the eight-year hindcast (hindsight set, two-year calibration)."""
-        runs = [r for r in json.loads((ROOT / 'data/long-hindcast.json').read_text())['runs'] if r['assumptions'] == 'hindsight']
+        """The model's own population in the eight-year hindcast (hindsight set, two-year calibration).
+
+        The script steps once a year; the model's flows run during the year. They agree within 0.1 per cent
+        (largest: Linköping 2025 from 2017, 0.05 %)."""
+        runs = [r for r in json.loads((ROOT / 'data/long-hindcast-continuous.json').read_text())['runs'] if r['assumptions'] == 'hindsight']
         cache = {}
         for r in runs:
             code = r['municipality']
             cache.setdefault(code, hm.series(code))
             projected, _ = hm.project(*cache[code], r['origin'], 2)
-            self.assertAlmostEqual(sum(projected[r['year']]), r['model']['population'], delta=0.5, msg=f"{code} {r['origin']} {r['year']}")
+            self.assertAlmostEqual(sum(projected[r['year']]) / r['model']['population'], 1, delta=1e-3, msg=f"{code} {r['origin']} {r['year']}")
 
 
 if __name__ == '__main__':

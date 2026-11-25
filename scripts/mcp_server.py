@@ -39,7 +39,7 @@ LIBRARY = ROOT / 'modelica' / 'Kommunekonomi.mo'
 OMC = os.environ.get('OMC') or shutil.which('omc')
 PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
 SERVER_INFO = {'name': 'koekmo', 'title': 'KOEKMO', 'version': '0.1.0'}
-MODELS = ('Annual', 'Continuous')
+MODELS = ('Continuous',)
 MAX_HORIZON = 15
 REPORTED = ('population', 'tax', 'grants', 'cost', 'payroll', 'otherOperatingExpense', 'operatingRevenue',
             'depreciation', 'interest', 'result', 'resultShare', 'annualInvestment', 'operatingCash',
@@ -241,7 +241,7 @@ def simulate(m, model, base_year, horizon, years, overrides):
     if not OMC:
         raise RuntimeError('OpenModelica (omc) not found; set OMC to the omc executable')
     source = run_source(m, model, base_year, horizon, overrides)
-    intervals = years * (12 if model == 'Continuous' else 1)
+    intervals = years * 12
     digest = hashlib.sha256((source + str(years) + LIBRARY.read_text() + m['file'].read_text()).encode()).hexdigest()[:20]
     directory = WORK / 'runs' / digest
     result = directory / 'Run_res.mat'
@@ -379,8 +379,7 @@ def check_value(name, value, horizon, per_year):
 def tool_list_municipalities(_):
     return {'municipalities': [{'code': m['code'], 'name': m['name'], 'package': m['package'], 'baseYears': m['baseYears'],
                                 'skrReference': m['skr'] is not None} for m in MUNICIPALITIES.values()],
-            'models': {'Annual': 'One step per year, as the site runs it.',
-                       'Continuous': 'Stocks and flows with continuous time within the year (Kommunekonomi.Continuous).'}}
+            'models': {'Continuous': 'Stocks and flows in continuous time, as the site runs it (Kommunekonomi.Continuous).'}}
 
 
 def tool_list_parameters(args):
@@ -402,7 +401,7 @@ def tool_start_session(args):
     base_year = int(args.get('baseYear', max(m['baseYears'])))
     if base_year not in m['baseYears']:
         raise ValueError(f'{m["name"]} has base years {m["baseYears"]}')
-    model = args.get('model', 'Annual')
+    model = args.get('model', 'Continuous')
     if model not in MODELS:
         raise ValueError(f'model is one of {MODELS}')
     horizon = int(args.get('horizon', 8))
@@ -486,7 +485,7 @@ def tool_advance(args):
         if ref:
             row['skr'] = ref
     out = {**s.describe(), 'years': new}
-    if s.model == 'Continuous' and args.get('monthly'):
+    if args.get('monthly'):
         times = series['time']
         out['monthly'] = [{'time': round(t, 4), 'cash': round(series['finance.cash.level'][i], 3),
                            'debt': round(-series['finance.debt.level'][i], 3)}
@@ -512,7 +511,7 @@ def tool_run_scenario(args):
     base_year = int(args.get('baseYear', max(m['baseYears'])))
     if base_year not in m['baseYears']:
         raise ValueError(f'{m["name"]} has base years {m["baseYears"]}')
-    model = args.get('model', 'Annual')
+    model = args.get('model', 'Continuous')
     if model not in MODELS:
         raise ValueError(f'model is one of {MODELS}')
     horizon = int(args.get('horizon', 8))
@@ -570,7 +569,7 @@ TOOLS = {
     'start_session': (tool_start_session, 'Start a run for a municipality from the closing accounts of a base year. Returns the base-year accounts and the default decisions.',
                       {'municipality': {'type': 'string', 'description': 'Municipality code, for example 0583 (Motala)'},
                        'baseYear': {'type': 'integer', 'description': 'Base year with closing accounts (2020-2025); default the latest'},
-                       'model': {'type': 'string', 'enum': list(MODELS), 'description': 'Annual (default) or Continuous'},
+                       'model': {'type': 'string', 'enum': list(MODELS), 'description': 'Continuous, the only model'},
                        'horizon': {'type': 'integer', 'description': f'Years to plan, 1-{MAX_HORIZON}; default 8'},
                        'scenario': {'type': 'string', 'enum': list(SCENARIOS), 'description': 'Starting scenario; higherInterest raises the market rate 3 percentage points'}}),
     'set_decisions': (tool_set_decisions, 'Set decisions before advancing. With year, per-year parameters (investmentPath, interestRatePath, wageGrowthPath ...) change from that year on (carryForward=false for that year only). Without year, set a whole parameter before the first advance. Give a reason; it is kept in the session log.',
