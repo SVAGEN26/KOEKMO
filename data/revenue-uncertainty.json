@@ -1,0 +1,56 @@
+{
+  "source": "scripts/prepare_revenue_uncertainty.py from data/outcome-explanation-summary.json",
+  "description": "SKR's forecast of tax and general grants against SCB's outcome, 13 municipalities of Östergötland: mean error (forecast minus outcome) and mean absolute error in per cent, by years ahead (0 = the year the forecast was published).",
+  "forecasts": [
+    {
+      "forecast": "SKR 21:35",
+      "published": "2021-09-30"
+    },
+    {
+      "forecast": "SKR 22:28",
+      "published": "2022-08-25"
+    },
+    {
+      "forecast": "SKR 23:56",
+      "published": "2023-12-14"
+    },
+    {
+      "forecast": "SKR 24:56",
+      "published": "2024-12-12"
+    }
+  ],
+  "outcomes": "2021-2025",
+  "byYearsAhead": [
+    {
+      "yearsAhead": 0,
+      "forecasts": 4,
+      "meanErrorPercent": -0.8,
+      "meanAbsErrorPercent": 0.8
+    },
+    {
+      "yearsAhead": 1,
+      "forecasts": 4,
+      "meanErrorPercent": -1.63,
+      "meanAbsErrorPercent": 1.89
+    },
+    {
+      "yearsAhead": 2,
+      "forecasts": 3,
+      "meanErrorPercent": -2.73,
+      "meanAbsErrorPercent": 2.86
+    },
+    {
+      "yearsAhead": 3,
+      "forecasts": 2,
+      "meanErrorPercent": -3.75,
+      "meanAbsErrorPercent": 3.92
+    },
+    {
+      "yearsAhead": 4,
+      "forecasts": 1,
+      "meanErrorPercent": -5.29,
+      "meanAbsErrorPercent": 5.29
+    }
+  ],
+  "note": "Four forecasts from one period with high inflation; the errors are mostly negative (the forecast too low). The longest horizon rests on one forecast. Not a probability."
+}
