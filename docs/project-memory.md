@@ -44,8 +44,10 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
    både `municipalities.js` och `base-years.json`; Finspångs novemberbefolkning läses ur två arkiv.
 7. Underlag: delårsrapport 2026 ej funnen i diariet; historiska SKR- och budgetversioner med datum bara
    delvis insamlade; Linköpings ränta saknar källa för 2020, 2021 och 2023.
-8. Folkmängden växer för fort i åttaårstestet (+6 % efter åtta år från 2017): flyttningarna kalibreras
-   på 2015–2017, åren med stor flyktinginvandring. Pröva kortare eller längre kalibreringsfönster.
+8. Prövat 2026-11-25 (`scripts/hindcast_migration.py`): de 6 % efter åtta år kommer av att flyttningarna kalibrerades
+   på 2016–2017. Från basår 2020–2024 ger tvåårsfönstret nästan ingen skevhet; tre år är något bättre (genomsnittligt
+   absolut fel 2,0 mot 2,1 % efter fem år), åtta år sämre på kort sikt. Fönstret är inte ändrat. Större fel: födslarna
+   (0–6 år 11 % för många efter fem år, fallande fruktsamhet). Se avsnittet "Flyttfönster" längst ned.
 9. Investeringarna hålls på basårets nivå; skulden blir 20 % av skatt och bidrag för låg efter åtta år
    (24 % i den kontinuerliga modellen; 32 och 36 % före 2026-11-24, då bolagens lån räknades in).
 10. Linköpings resultat stiger med SKR 26:28 (422 → 1 278 mnkr 2026–2033 utan kostnadsökning utöver
@@ -1417,3 +1419,20 @@ arkivera data.
 - Effekt från bokslut 2025: Motala resultat 2033 97 mnkr (151 utan plan), skuld 2 418 (1 576). Linköping nästan som
   förut. Finspång behåller egna lån kring 250–290 mnkr i stället för att betala av till 2029.
 - README och metod säger att äldre siffror i README gäller basårets nivå. Övriga tio kommuner saknar insamlade budgetar.
+
+## Flyttfönster: hur många år kalibreringen ska titta bakåt (2026-11-25)
+
+- Användaren 2026-11-25 om befolkningen som växer för fort: "Ja det är ju en sanning vi känner till".
+- `scripts/hindcast_migration.py` upprepar femgruppsdemografin i Python (samma regel som modellen; ger modellens
+  befolkning exakt i alla 273 körningar i åttaårstestet) från varje basår 2012–2024 till 2025, med fönster 1, 2, 3,
+  5 och 8 år, för alla 13 kommuner. Befolkning per ålder 2009–2025 ur historikarkivet och kommunarkiven.
+- Genomsnittligt fel / genomsnittligt absolut fel, procent, basår 2020–2024, år 1–5 framåt:
+  2 år −0,0/0,5, +0,1/0,9, +0,5/1,3, +0,2/1,8, −0,1/2,1; 3 år +0,0/0,5, +0,2/0,8, +0,5/1,1, +0,6/1,6, +0,5/2,0;
+  8 år +0,2/0,5 … +1,8/2,2. Basår 2017–2024 efter åtta år: 2 år +5,9, 3 år +4,6, 8 år +1,6.
+- Med SCB:s faktiska födslar (diagnostik) minskar felet år 3–5 med 0,2–0,4 procentenheter. 0–6 år blir 5 % för
+  många efter tre år och 11 % efter fem (basår 2017–2024), eftersom modellen håller basårets födslar per vuxen.
+- Restflödet per år från bokslut 2025 skiljer mycket mellan fönstren: Norrköping −273 (2 år) mot +184 (8 år),
+  Linköping 345 mot 772, Motala −180 mot −4.
+- Min bedömning: tre år är något bättre än två i båda perioderna men vinsten är liten (0,1–0,2 procentenheter), och
+  bytet kräver fyra års åldersgrupper i varje basårspost (`BaseYear.cohorts[3, 5]`), i `history` på sidan och i
+  `calibrateContinuous`. Inte gjort; att fråga användaren.

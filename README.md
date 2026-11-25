@@ -527,7 +527,17 @@ of hindsight it is worse than persistence at every horizon. The result is too lo
 0.7–0.8 % of tax and grants in years 3–6, about a third of a usual result target of
 2 %. The population grows too fast (6 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
-together, so part of the result error cancels. Debt, the municipality's own
+together, so part of the result error cancels. A population-only test (`scripts/hindcast_migration.py`,
+`data/migration-hindcast.json`; its copy of the five-group demography gives the
+model's population in all 273 runs) tries calibration windows of 1–8 years from
+every base year to 2025. From base years 2020–2024 the two-year window has
+almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.5,
+0.9, 1.3, 1.8 and 2.1 %; three years give 0.5, 0.8, 1.1, 1.6 and 2.0 %, eight years
+1.0 to 2.2 % with a bias of +0.7 to +1.8 %. The 6 % comes from calibrating on
+2016–2017; it does not carry over to a base year without such years. The larger
+error at medium horizons is births: the model keeps the base year's births per
+adult while fertility fell, so the 0–6 group is 5 % too large after three years
+and 11 % after five (base years 2017–2024). Debt, the municipality's own
 without loans passed on to its companies, comes out too low (20 % of tax and
 grants after eight years) because investment stays at the base year's amount. With costs growing by each
 municipality's historical residual up to the base year (set "drift",
