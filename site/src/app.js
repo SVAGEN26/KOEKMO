@@ -89,7 +89,7 @@ const skrSources={
 };
 const comparisonSelectors=[$('comparison-scenario'),$('comparison-preset')];
 const scenarioStorageKey='motala.saved-scenarios.v1';
-const savedControlIds=['planning-enabled','regulation-held','investment-plan','result-series','model-variable','time-model','revenue-mode','demography-mode','split-payroll',
+const savedControlIds=['planning-enabled','regulation-held','investment-plan','result-series','model-variable','as-shares','time-model','revenue-mode','demography-mode','split-payroll',
   'employer-rate','construction-years','construction-share','liquidity-policy','cash-reserve','defer-investment-share',
   'prefinance-share','working-capital-enabled','collection-days','payment-days','grant-advance',
   'migration-profile','age-tax','project-choice'];
@@ -426,7 +426,8 @@ function chart(id,series,options={}) {
   // Shaded columns for flagged years, for example years with a deficit.
   const half=(width-left-right)/(run.rows.length-1)/2;
   const shaded=bands.map(i=>`<rect class="band" x="${(x(i)-half).toFixed(2)}" y="${top}" width="${(2*half).toFixed(2)}" height="${height-top-bottom}" fill="#f6dcd6"><title>Underskott ${run.rows[i].year}</title></rect>`).join('');
-  const paths=series.map(s=>`<path d="${s.values.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.plain||(s.thin&&!s.marker)?'':s.values.map((v,i)=>v<low||v>high?'':marker(s.marker??'circle',x(i),y(v),s.marker?3.6:3,s.color,`${s.name} ${run.rows[i].year}: ${fmt(v)} ${unit}`)).join('')}`).join('');
+  const line=values=>{let pen='M';return values.map((v,i)=>{if(!Number.isFinite(v)){pen='M';return '';}const s=`${pen}${x(i).toFixed(2)},${y(v).toFixed(2)}`;pen='L';return s;}).filter(Boolean).join(' ');};
+  const paths=series.map(s=>`<path d="${line(s.values)}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.plain||(s.thin&&!s.marker)?'':s.values.map((v,i)=>!Number.isFinite(v)||v<low||v>high?'':marker(s.marker??'circle',x(i),y(v),s.marker?3.6:3,s.color,`${s.name} ${run.rows[i].year}: ${fmt(v)} ${unit}`)).join('')}`).join('');
   const labelStep=Math.ceil((run.rows.length-1)/8);
   const labels=run.rows.map((r,i)=>i%labelStep===0||i===run.rows.length-1?`<text x="${x(i)}" y="${height-10}" text-anchor="middle" fill="#78837d" font-size="11">${r.year}</text>`:'').join('');
   $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${shaded}${lines}${zero}<g clip-path="url(#${clip})">${paths}</g>${labels}</svg>`;
@@ -801,6 +802,7 @@ const RESULT_VIEWS=[
   ['revenues','Intäkter: skatt, bidrag, verksamhet','mnkr',rows=>[
     {name:'Skatteintäkter',values:rows.map(r=>r.tax),color:'#17634e'},{name:'Generella bidrag och utjämning',values:rows.map(r=>r.grants),color:'#516e9c'},
     {name:'Verksamhetens intäkter',values:rows.map(r=>r.operatingRevenue),color:'#ad8053'}]]];
+const SHARE_VIEWS=new Set(['ages','costs','revenues']);
 const SERIES_GROUPS=[['Resultat och ekonomi',['result','resultShare','taxGrants','tax','grants','cost','payroll','pensionExpense','otherOperatingExpense','operatingRevenue','depreciation','interest','investment','debt','cash','assets','costs','revenues']],
   ['Demografi och behov',['ages','demand','population','migration','births','deaths']],
   ['Modellen',['model']]];
@@ -854,12 +856,34 @@ async function renderModelVariable() {
     $('result-chart-unit').textContent=info.unit;
   } catch(e) {if(token===modelVariableToken)message(`Kunde inte visa variabeln: ${e.message}`);}
 }
+// A view whose lines add up to a total, as shares of one year: a ring with the parts and the total in the middle.
+function renderShares([,label,unit,lines]) {
+  const years=run.rows.map(r=>r.year),select=$('share-year');
+  if(select.options.length!==years.length||Number(select.options[0]?.value)!==years[0])
+    select.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join(''),select.value=String(years.at(-1));
+  select.hidden=false;
+  const i=Math.max(0,years.indexOf(Number(select.value))),parts=lines(run.rows).map(s=>({...s,value:s.values[i]})).filter(p=>Number.isFinite(p.value)&&p.value>0);
+  const total=parts.reduce((s,p)=>s+p.value,0),cx=150,cy=130,r=105,inner=62;
+  let angle=-Math.PI/2;
+  const arc=p=>{
+    const a0=angle,a1=angle+2*Math.PI*p.value/total;angle=a1;
+    const big=a1-a0>Math.PI?1:0,pt=(rad,a)=>`${(cx+rad*Math.cos(a)).toFixed(2)},${(cy+rad*Math.sin(a)).toFixed(2)}`;
+    return `<path d="M${pt(r,a0)} A${r},${r} 0 ${big} 1 ${pt(r,a1)} L${pt(inner,a1)} A${inner},${inner} 0 ${big} 0 ${pt(inner,a0)} Z" fill="${p.color}"><title>${safe(p.name)}: ${fmt(p.value)} ${unit}, ${decimal(100*p.value/total)} %</title></path>`;
+  };
+  const rows=parts.map(p=>`<tr><th scope="row"><span class="legend-item">${legendSymbol(p.color)}${safe(p.name)}</span></th><td>${fmt(p.value)} ${unit}</td><td>${decimal(100*p.value/total)} %</td></tr>`).join('');
+  $('result-chart').innerHTML=`<div class="share-view"><svg viewBox="0 0 300 260" role="img" aria-label="${safe(label)} ${years[i]}, andelar"><title>${safe(label)} ${years[i]}</title>${parts.map(arc).join('')}<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="20" font-weight="600" fill="#193835">${fmt(total)}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="11" fill="#78837d">${safe(unit)} ${years[i]}</text></svg><table class="share-table"><tbody>${rows}</tbody></table></div>`;
+  $('result-chart-title').textContent=`${label}, ${years[i]}`;
+  $('result-chart-unit').textContent='andelar';
+  $('result-legend').innerHTML='<span class="legend-note">Scenariot. Välj år bredvid väljaren.</span>';
+}
 function renderResultChart() {
   if(!resultChartInputs) return;
   const {stresses,target,path}=resultChartInputs;
   const view=RESULT_VIEWS.find(v=>v[0]===$('result-series').value);
   $('model-variable').hidden=view?.[0]!=='model';
   if(view?.[0]==='model') {renderModelVariable();return;}
+  $('share-controls').hidden=!view||!SHARE_VIEWS.has(view[0]);
+  if(view&&SHARE_VIEWS.has(view[0])&&$('as-shares').checked) {renderShares(view);return;}
   if(view) {
     const [,label,unit,lines]=view;
     const series=lines(run.rows);
@@ -1384,6 +1408,8 @@ async function boot(){try{
   $('result-series').innerHTML=SERIES_GROUPS.map(([group,keys])=>`<optgroup label="${group}">${keys.map(k=>`<option value="${k}">${seriesLabel(k)}</option>`).join('')}</optgroup>`).join('');
   $('result-series').onchange=()=>renderResultChart();
   $('model-variable').onchange=()=>renderResultChart();
+  $('as-shares').onchange=()=>{$('share-year').hidden=!$('as-shares').checked;renderResultChart();};
+  $('share-year').onchange=()=>renderResultChart();
   $('target-solve').onclick=event=>{
     const button=event.target.closest('[data-apply]');
     if(!button) return;

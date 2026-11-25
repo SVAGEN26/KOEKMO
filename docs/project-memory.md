@@ -1494,6 +1494,12 @@ arkivera data.
   lagrar då alla variabler (1 474 serier mot de lagrade utdatan). `omc-session.js` `run(..., inspect)` ger listan
   (545 variabler som inte är konstanter, med `comment` och `unit`) och de valda per år från basåret.
   `finance.debt.level` har negativt tecken (lager och flöden); `debt` är skulden. Test: `tests/inspect.test.mjs`.
+- Andelsvy: åldersgrupper, kostnader och intäkter kan visas som ring för ett valt år ("Som andelar").
+- Kassan (2026-11-25, kört med omc och mos-skript): utan kassapolicy (`liquidityPolicy=false`) hålls kassan på
+  basårets nivå så länge kommunen har skuld; underskott lånas, överskott amorterar. Först när skulden är noll växer
+  kassan (Finspång från 2030). Utfall, SCB TAB6779 post 065 Kassa och bank, mnkr: Motala 2017–2025 120, 184, 263, 168,
+  338, 86, 115, 229, 81; Finspång 116, 114, 93, 112, 97, 86, 27, 74, 148. Ingen trend, stora svängningar; basåret 2025
+  är Motalas lägsta på nio år.
 - Omvänd beräkning: med resultatmål görs två extra körningar (skattesats +1 kr, kostnadsökning −0,5 procentenheter);
   ändringen som når målet löses per år linjärt, med hänsyn till att målet i kronor växer med skatten. Kontroll i
   webbläsare: Motala 21,76 kr ger 2,00 % 2026 och mer övriga år; Finspång 21,33 kr ger 2,00 % 2026.

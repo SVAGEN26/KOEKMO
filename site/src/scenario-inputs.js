@@ -346,7 +346,7 @@ export function workingCapitalDays(b) {
 }
 export function baselineRow(b) {
   const o=b.operatingAccounts;
-  return {year:b.baseYear,population:sum(b.population),cohorts:[...b.population],cost:b.cashCost,depreciation:b.depreciation,tax:b.tax,grants:b.grants,result:b.publishedResult,debt:b.debt,cash:b.cash,assets:b.assets,investment:b.investment,interest:b.interestExpense,otherFinancialExpense:b.otherFinancialExpense,payroll:o.payrollExcludingPensions,pensionExpense:o.pensionExpense,otherOperatingExpense:o.otherOperatingExpense,operatingRevenue:o.operatingRevenue,pensionCashPayments:null,operatingCash:null,educationIndex:1,careIndex:1,benchmarkRevenue:null,officialRevenue:null};
+  return {year:b.baseYear,population:sum(b.population),cohorts:[...b.population],births:b.births??null,deaths:b.deaths??null,cost:b.cashCost,depreciation:b.depreciation,tax:b.tax,grants:b.grants,result:b.publishedResult,debt:b.debt,cash:b.cash,assets:b.assets,investment:b.investment,interest:b.interestExpense,otherFinancialExpense:b.otherFinancialExpense,payroll:o.payrollExcludingPensions,pensionExpense:o.pensionExpense,otherOperatingExpense:o.otherOperatingExpense,operatingRevenue:o.operatingRevenue,pensionCashPayments:null,operatingCash:null,educationIndex:1,careIndex:1,benchmarkRevenue:null,officialRevenue:null};
 }
 
 // The rate stress path the scenario names (assumption rateEpisode), or null for the scenario's own rate.
