@@ -15,7 +15,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 28.4, financialIncome = 1.3, interestExpense = 8.7, otherFinancialExpense = 0.8,
       debt = 309.9, openingDebt = 309.9, cash = 27.4, assets = 543.9, investment = 36.4, taxRate = 22.48,
       sectorShares = {0.3646, 0.2667, 0.3687}, educationShares = {0.2467, 0.5704, 0.1829},
-      careCostPerInhabitant = {21484, 181384})
+      careCostPerInhabitant = {21484, 181384},
+      infrastructureShare = 0.1001,
+      ages = {58.8, 55.9, 57.8, 56.8, 67.8, 66.8, 60.8, 81.8, 85.8, 70.8, 75.8, 68.8, 63.8, 64.8, 73.8, 65.8, 77.8, 73.8, 81.8, 75.8, 70.8, 73.8, 37.9, 54.9, 43.9, 55.9, 66.8, 55.9, 44.9, 50.9, 57.8, 79.8, 81.8, 86.8, 93.8, 96.7, 79.8, 82.8, 69.8, 89.8, 94.7, 64.8, 61.8, 80.8, 68.8, 75.8, 67.8, 75.8, 70.8, 77.8, 79.8, 100.7, 92.8, 78.8, 90.8, 98.7, 80.8, 101.7, 107.7, 107.7, 119.7, 126.7, 123.7, 94.7, 96.7, 126.7, 118.7, 107.7, 106.7, 103.7, 104.7, 117.7, 124.7, 117.7, 108.7, 129.7, 125.7, 112.7, 128.7, 119.7, 130.7, 109.7, 75.8, 73.8, 68.8, 44.9, 48.9, 46.9, 33.9, 28.9, 23.9, 13, 18, 19.9, 15, 6, 0, 0, 8, 4, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.694039, 0.26214, 0.043822};
     constant BaseYear valdemarsvik2024 = BaseYear(
@@ -31,7 +33,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 28.3, financialIncome = 1.4, interestExpense = 7.8, otherFinancialExpense = 1.5,
       debt = 309.9, openingDebt = 269.9, cash = 42, assets = 531.7, investment = 47.4, taxRate = 22.48,
       sectorShares = {0.3511, 0.2865, 0.3623}, educationShares = {0.2485, 0.5694, 0.1821},
-      careCostPerInhabitant = {21523, 191457})
+      careCostPerInhabitant = {21523, 191457},
+      infrastructureShare = 0.0962,
+      ages = {55, 59, 53, 70, 67, 64, 81, 88, 71, 76, 75, 64, 66, 70, 71, 70, 76, 81, 78, 80, 73, 38, 57, 43, 53, 57, 52, 46, 52, 55, 80, 82, 92, 91, 95, 74, 79, 68, 91, 85, 64, 63, 81, 67, 78, 63, 72, 65, 83, 79, 99, 95, 81, 97, 97, 82, 100, 104, 104, 120, 129, 122, 90, 93, 125, 117, 113, 107, 105, 104, 117, 122, 122, 110, 139, 131, 111, 133, 119, 136, 117, 87, 82, 74, 49, 58, 49, 35, 29, 24, 18, 18, 22, 16, 5, 5, 4, 6, 7, 0, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.716119, 0.242181, 0.0417};
     constant BaseYear valdemarsvik2023 = BaseYear(
@@ -47,7 +51,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 21.5, financialIncome = 1, interestExpense = 3.8, otherFinancialExpense = 1.2,
       debt = 269.9, openingDebt = 189.4, cash = 24.9, assets = 504.9, investment = 87.2, taxRate = 22.48,
       sectorShares = {0.3608, 0.2726, 0.3666}, educationShares = {0.2507, 0.5612, 0.1882},
-      careCostPerInhabitant = {20225, 188828})
+      careCostPerInhabitant = {20225, 188828},
+      infrastructureShare = 0.1018,
+      ages = {60, 57, 64, 64, 70, 76, 86, 72, 73, 72, 64, 68, 69, 68, 75, 79, 84, 72, 85, 86, 42, 60, 43, 54, 52, 48, 45, 53, 51, 78, 79, 94, 87, 93, 80, 81, 66, 87, 85, 61, 64, 79, 67, 81, 68, 69, 63, 79, 79, 96, 89, 78, 95, 98, 86, 97, 102, 108, 119, 125, 120, 91, 92, 114, 113, 114, 105, 103, 110, 119, 123, 122, 112, 142, 132, 117, 137, 126, 140, 123, 89, 86, 86, 55, 63, 53, 39, 34, 28, 23, 22, 23, 19, 8, 8, 5, 5, 9, 0, 3, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.734111, 0.223652, 0.042237};
     constant BaseYear valdemarsvik2022 = BaseYear(
@@ -63,7 +69,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 20.6, financialIncome = 0.8, interestExpense = 1.2, otherFinancialExpense = 0.5,
       debt = 189.4, openingDebt = 203.9, cash = 22.4, assets = 434.1, investment = 48.2, taxRate = 22.48,
       sectorShares = {0.3744, 0.2646, 0.361}, educationShares = {0.2515, 0.5583, 0.1902},
-      careCostPerInhabitant = {14339, 156002})
+      careCostPerInhabitant = {14339, 156002},
+      infrastructureShare = 0.0941,
+      ages = {52, 64, 64, 69, 76, 87, 73, 70, 74, 61, 70, 69, 66, 74, 78, 88, 74, 89, 85, 53, 70, 43, 57, 57, 52, 46, 49, 50, 70, 77, 93, 85, 92, 82, 82, 68, 84, 86, 63, 63, 78, 69, 80, 71, 65, 63, 78, 79, 97, 90, 77, 94, 98, 87, 95, 105, 114, 117, 125, 123, 91, 91, 115, 110, 113, 109, 107, 110, 119, 126, 124, 113, 147, 136, 120, 145, 130, 149, 131, 95, 88, 86, 63, 67, 56, 42, 34, 31, 27, 29, 24, 23, 15, 13, 10, 10, 12, 1, 3, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.7444, 0.2092, 0.0464};
     constant BaseYear valdemarsvik2021 = BaseYear(
@@ -79,7 +87,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 18.6, financialIncome = 0.3, interestExpense = 0.9, otherFinancialExpense = 0.3,
       debt = 203.9, openingDebt = 188.9, cash = 55.3, assets = 408.3, investment = 34.9, taxRate = 22.48,
       sectorShares = {0.3931, 0.2277, 0.3792}, educationShares = {0.2563, 0.5684, 0.1753},
-      careCostPerInhabitant = {14339, 156002})
+      careCostPerInhabitant = {14339, 156002},
+      infrastructureShare = 0.0984,
+      ages = {62, 68, 70, 74, 83, 74, 72, 74, 62, 73, 70, 68, 74, 79, 89, 75, 89, 85, 64, 75, 49, 62, 55, 47, 44, 54, 56, 70, 75, 87, 84, 92, 85, 81, 65, 79, 82, 58, 66, 81, 63, 80, 68, 66, 64, 77, 76, 92, 89, 74, 92, 97, 88, 92, 105, 116, 118, 125, 125, 90, 89, 116, 111, 111, 105, 107, 111, 118, 123, 124, 115, 151, 142, 122, 151, 130, 155, 135, 100, 90, 86, 68, 71, 60, 44, 40, 31, 29, 32, 29, 26, 17, 15, 12, 10, 15, 3, 6, 7, 3, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.75595, 0.19766, 0.04639};
     constant BaseYear valdemarsvik2020 = BaseYear(
@@ -95,7 +105,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 18.1, financialIncome = 0.5, interestExpense = 1, otherFinancialExpense = 0.3,
       debt = 188.9, openingDebt = 156.1, cash = 38.9, assets = 392, investment = 64, taxRate = 22.48,
       sectorShares = {0.3835, 0.2203, 0.3962}, educationShares = {0.2629, 0.5696, 0.1675},
-      careCostPerInhabitant = {14339, 156002})
+      careCostPerInhabitant = {14339, 156002},
+      infrastructureShare = 0.0738,
+      ages = {67, 72, 74, 82, 75, 79, 75, 65, 76, 76, 67, 71, 83, 85, 74, 86, 82, 65, 85, 53, 68, 59, 44, 51, 51, 62, 71, 76, 87, 80, 99, 84, 78, 68, 79, 83, 60, 68, 75, 67, 78, 71, 65, 68, 78, 74, 91, 91, 74, 90, 97, 88, 93, 102, 113, 117, 122, 129, 95, 89, 113, 108, 111, 106, 104, 107, 118, 122, 127, 116, 162, 146, 123, 152, 134, 160, 143, 101, 95, 88, 71, 73, 65, 47, 42, 37, 32, 35, 30, 30, 17, 17, 16, 14, 19, 7, 7, 8, 4, 2, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.767423, 0.187196, 0.045381};
     constant BaseYear valdemarsvik2019 = BaseYear(
@@ -111,7 +123,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 16.2, financialIncome = 1, interestExpense = 0.8, otherFinancialExpense = 0.5,
       debt = 156.1, openingDebt = 90.8, cash = 35.4, assets = 347.3, investment = 25.5, taxRate = 22.48,
       sectorShares = {0.3829, 0.229, 0.3881}, educationShares = {0.2687, 0.5693, 0.162},
-      careCostPerInhabitant = {13352, 155470})
+      careCostPerInhabitant = {13352, 155470},
+      infrastructureShare = 0.0425,
+      ages = {69, 76, 81, 77, 81, 79, 72, 78, 80, 72, 76, 85, 84, 80, 89, 83, 65, 89, 62, 72, 83, 54, 56, 56, 65, 77, 75, 84, 75, 91, 75, 74, 69, 80, 80, 66, 72, 72, 70, 82, 68, 73, 66, 78, 76, 93, 92, 73, 89, 103, 86, 96, 101, 108, 123, 119, 127, 98, 87, 106, 107, 107, 107, 103, 105, 112, 126, 130, 120, 163, 152, 125, 154, 138, 164, 146, 103, 103, 94, 76, 83, 66, 54, 43, 41, 35, 42, 34, 36, 22, 23, 19, 16, 20, 10, 8, 9, 5, 2, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.76979, 0.184168, 0.046042};
     constant BaseYear valdemarsvik2018 = BaseYear(
@@ -127,7 +141,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 15.5, financialIncome = 1, interestExpense = 0.6, otherFinancialExpense = 0.5,
       debt = 90.8, openingDebt = 90.5, cash = 43.2, assets = 338.1, investment = 26.6, taxRate = 22.48,
       sectorShares = {0.4051, 0.2176, 0.3772}, educationShares = {0.2718, 0.5605, 0.1677},
-      careCostPerInhabitant = {12983, 153084})
+      careCostPerInhabitant = {12983, 153084},
+      infrastructureShare = 0.043,
+      ages = {74, 82, 82, 74, 77, 68, 77, 76, 72, 78, 85, 84, 75, 86, 87, 62, 94, 66, 83, 88, 64, 54, 63, 74, 79, 78, 82, 72, 94, 77, 74, 71, 82, 78, 62, 71, 72, 70, 81, 66, 74, 63, 78, 78, 89, 92, 73, 87, 103, 90, 91, 106, 111, 116, 119, 122, 98, 90, 106, 107, 103, 107, 103, 107, 115, 125, 130, 127, 171, 155, 133, 157, 144, 166, 156, 110, 104, 101, 79, 91, 71, 58, 46, 43, 37, 44, 42, 38, 24, 29, 22, 22, 23, 15, 9, 10, 6, 3, 1, 2, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.781476, 0.173216, 0.045309};
     constant BaseYear valdemarsvik2017 = BaseYear(
@@ -143,7 +159,9 @@ package Valdemarsvik "Valdemarsvik: kommunens ekonomi år för år med bibliotek
       depreciation = 14.7, financialIncome = 1, interestExpense = 0.6, otherFinancialExpense = 0.8,
       debt = 90.5, openingDebt = 90.5, cash = 49.7, assets = 329.7, investment = 37.1, taxRate = 22.48,
       sectorShares = {0.4289, 0.2263, 0.3447}, educationShares = {0.2377, 0.5908, 0.1715},
-      careCostPerInhabitant = {12555, 154243})
+      careCostPerInhabitant = {12555, 154243},
+      infrastructureShare = 0.0356,
+      ages = {79, 74, 73, 78, 66, 74, 74, 73, 73, 80, 87, 74, 86, 85, 65, 89, 68, 83, 94, 70, 62, 69, 72, 76, 77, 78, 70, 90, 78, 74, 66, 84, 75, 64, 72, 67, 69, 77, 65, 74, 63, 78, 74, 89, 90, 73, 90, 103, 85, 91, 101, 109, 118, 126, 122, 97, 88, 106, 111, 100, 108, 106, 107, 116, 118, 132, 126, 172, 151, 135, 158, 148, 167, 158, 114, 105, 103, 81, 94, 74, 66, 47, 44, 38, 49, 42, 41, 29, 31, 26, 28, 28, 17, 12, 11, 10, 4, 2, 2, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.783817, 0.168778, 0.047405};
 

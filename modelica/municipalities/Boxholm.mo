@@ -15,7 +15,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 20.8, financialIncome = 2.3, interestExpense = 1, otherFinancialExpense = 0.2,
       debt = 57.3, openingDebt = 44, cash = 3.3, assets = 254.5, investment = 25.6, taxRate = 21.82,
       sectorShares = {0.4406, 0.2385, 0.3209}, educationShares = {0.27, 0.5851, 0.1449},
-      careCostPerInhabitant = {21706, 175515})
+      careCostPerInhabitant = {21706, 175515},
+      infrastructureShare = 0.035,
+      ages = {49.1, 45, 47.1, 68.1, 62.1, 52.1, 52.1, 57.1, 66.1, 63.1, 62.1, 77.1, 60.1, 61.1, 58.1, 56.1, 55.1, 61.1, 51.1, 44, 46.1, 46.1, 32, 34, 45, 35, 34, 42, 61.1, 50.1, 52.1, 57.1, 75.1, 74.1, 58.1, 80.1, 78.1, 66.1, 59.1, 67.1, 71.1, 74.1, 48.1, 68.1, 48.1, 59.1, 52.1, 55.1, 40, 60.1, 59.1, 56.1, 67.1, 76.1, 80.1, 68.1, 83.1, 77.1, 84.1, 88.1, 89.1, 90.1, 70.1, 86.1, 76.1, 64.1, 82.1, 66.1, 72.1, 79.1, 75.1, 66.1, 76.1, 67.1, 71.1, 70.1, 66.1, 89.1, 68.1, 57.1, 61.1, 56.1, 62.1, 51.1, 37, 34, 27, 14, 19, 14, 3, 10, 5, 9, 3, 4, 4, 0, 0, 3, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.719677, 0.252695, 0.027628};
     constant BaseYear boxholm2024 = BaseYear(
@@ -31,7 +33,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 20.7, financialIncome = 2.3, interestExpense = 1.1, otherFinancialExpense = 0.2,
       debt = 44, openingDebt = 34, cash = 18.4, assets = 246.1, investment = 138.3, taxRate = 21.82,
       sectorShares = {0.4332, 0.2485, 0.3182}, educationShares = {0.2687, 0.5799, 0.1514},
-      careCostPerInhabitant = {19119, 173053})
+      careCostPerInhabitant = {19119, 173053},
+      infrastructureShare = 0.0746,
+      ages = {41, 48, 65, 64, 47, 50, 60, 64, 65, 65, 74, 62, 65, 59, 62, 57, 55, 54, 54, 52, 51, 33, 32, 46, 36, 39, 42, 67, 56, 47, 54, 71, 75, 59, 78, 76, 71, 56, 70, 75, 75, 50, 66, 51, 59, 51, 59, 41, 62, 63, 57, 67, 74, 80, 67, 86, 77, 84, 89, 89, 90, 69, 85, 73, 65, 74, 68, 74, 75, 73, 69, 75, 70, 71, 72, 66, 89, 72, 59, 65, 63, 64, 57, 38, 39, 27, 23, 22, 19, 11, 10, 8, 15, 6, 4, 4, 2, 2, 3, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.718981, 0.243461, 0.037559};
     constant BaseYear boxholm2023 = BaseYear(
@@ -47,7 +51,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 9.5, financialIncome = 2, interestExpense = 0.9, otherFinancialExpense = 0.1,
       debt = 34, openingDebt = 34, cash = 22.1, assets = 127, investment = 9.4, taxRate = 21.82,
       sectorShares = {0.4278, 0.2314, 0.3408}, educationShares = {0.2596, 0.5709, 0.1695},
-      careCostPerInhabitant = {16040, 162063})
+      careCostPerInhabitant = {16040, 162063},
+      infrastructureShare = 0.0728,
+      ages = {44, 64, 62, 46, 51, 62, 61, 64, 67, 74, 60, 63, 59, 65, 59, 55, 53, 56, 58, 49, 41, 35, 47, 34, 38, 44, 57, 55, 49, 53, 66, 74, 57, 77, 76, 65, 56, 73, 73, 71, 51, 58, 52, 55, 51, 61, 44, 59, 63, 59, 64, 71, 82, 66, 84, 78, 82, 87, 89, 92, 67, 88, 74, 64, 74, 72, 72, 76, 72, 70, 79, 73, 71, 73, 69, 93, 75, 61, 67, 67, 70, 58, 40, 42, 28, 24, 26, 24, 15, 16, 11, 15, 8, 4, 4, 5, 4, 5, 3, 1, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.729097, 0.229431, 0.041472};
     constant BaseYear boxholm2022 = BaseYear(
@@ -63,7 +69,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 8.9, financialIncome = 1.6, interestExpense = 0.3, otherFinancialExpense = 0.2,
       debt = 34, openingDebt = 44, cash = 8.8, assets = 130.1, investment = 17.7, taxRate = 21.82,
       sectorShares = {0.4253, 0.2213, 0.3535}, educationShares = {0.2522, 0.5846, 0.1632},
-      careCostPerInhabitant = {14320, 157687})
+      careCostPerInhabitant = {14320, 157687},
+      infrastructureShare = 0.0618,
+      ages = {61, 62, 46, 49, 61, 60, 65, 66, 71, 61, 61, 57, 64, 58, 54, 53, 55, 56, 53, 49, 46, 55, 38, 37, 51, 47, 53, 46, 56, 60, 73, 53, 72, 75, 65, 53, 70, 69, 69, 49, 57, 52, 54, 50, 57, 42, 60, 63, 58, 66, 70, 82, 64, 83, 77, 82, 88, 90, 93, 68, 86, 73, 61, 71, 73, 73, 77, 72, 68, 80, 74, 73, 74, 71, 96, 75, 63, 69, 67, 70, 61, 43, 44, 32, 25, 28, 26, 19, 16, 12, 18, 15, 7, 5, 7, 7, 6, 3, 1, 2, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.745098, 0.206897, 0.048005};
     constant BaseYear boxholm2021 = BaseYear(
@@ -79,7 +87,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 7.5, financialIncome = 2.9, interestExpense = 0.3, otherFinancialExpense = 1,
       debt = 44, openingDebt = 44, cash = 15.9, assets = 128.5, investment = 17.2, taxRate = 21.82,
       sectorShares = {0.4589, 0.2204, 0.3206}, educationShares = {0.2775, 0.5626, 0.1598},
-      careCostPerInhabitant = {15871, 168068})
+      careCostPerInhabitant = {15871, 168068},
+      infrastructureShare = 0.0666,
+      ages = {60, 46, 48, 60, 54, 67, 62, 72, 63, 60, 60, 65, 57, 53, 50, 53, 55, 51, 57, 54, 61, 37, 42, 55, 51, 51, 42, 55, 55, 70, 57, 76, 74, 66, 50, 67, 64, 69, 42, 58, 53, 54, 47, 57, 40, 60, 59, 57, 67, 69, 82, 65, 86, 74, 82, 88, 90, 96, 70, 84, 73, 62, 71, 72, 76, 78, 74, 68, 83, 76, 76, 76, 73, 102, 79, 66, 72, 69, 71, 66, 44, 49, 32, 29, 31, 31, 21, 18, 15, 21, 17, 10, 6, 8, 13, 6, 4, 3, 2, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.758227, 0.195433, 0.04634};
     constant BaseYear boxholm2020 = BaseYear(
@@ -95,7 +105,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 7.1, financialIncome = 1.4, interestExpense = 0.3, otherFinancialExpense = 0.1,
       debt = 44, openingDebt = 24, cash = 24.5, assets = 118.8, investment = 26.7, taxRate = 21.82,
       sectorShares = {0.4565, 0.2248, 0.3187}, educationShares = {0.2532, 0.5734, 0.1734},
-      careCostPerInhabitant = {19049, 182509})
+      careCostPerInhabitant = {19049, 182509},
+      infrastructureShare = 0.0758,
+      ages = {41, 47, 58, 54, 66, 61, 71, 61, 56, 60, 67, 54, 51, 52, 52, 57, 54, 52, 60, 63, 39, 46, 53, 52, 45, 39, 49, 57, 65, 51, 78, 72, 63, 49, 59, 61, 69, 41, 60, 49, 53, 45, 59, 37, 58, 57, 55, 67, 72, 82, 55, 83, 73, 80, 87, 85, 95, 70, 83, 75, 63, 71, 72, 81, 81, 77, 70, 85, 78, 75, 79, 73, 96, 82, 69, 74, 74, 74, 68, 46, 51, 33, 32, 35, 34, 22, 21, 16, 22, 18, 12, 7, 8, 16, 8, 7, 4, 2, 0, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.762943, 0.19346, 0.043597};
     constant BaseYear boxholm2019 = BaseYear(
@@ -111,7 +123,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 6.6, financialIncome = 2.7, interestExpense = 0.2, otherFinancialExpense = 0.1,
       debt = 24, openingDebt = 31.5, cash = 12, assets = 99.1, investment = 13.3, taxRate = 21.82,
       sectorShares = {0.4502, 0.2412, 0.3086}, educationShares = {0.2992, 0.515, 0.1858},
-      careCostPerInhabitant = {19049, 182509})
+      careCostPerInhabitant = {19049, 182509},
+      infrastructureShare = 0.0675,
+      ages = {50, 55, 52, 67, 62, 71, 62, 56, 61, 70, 54, 54, 54, 55, 54, 52, 51, 60, 66, 57, 54, 60, 61, 50, 41, 52, 53, 58, 57, 70, 72, 68, 52, 56, 60, 69, 41, 58, 49, 58, 46, 56, 42, 57, 58, 53, 68, 69, 81, 55, 80, 72, 78, 90, 82, 92, 71, 75, 77, 60, 70, 70, 79, 82, 76, 67, 83, 79, 75, 80, 71, 96, 85, 72, 76, 77, 76, 68, 48, 51, 34, 35, 38, 33, 23, 22, 18, 25, 19, 14, 8, 8, 22, 9, 8, 6, 4, 2, 2, 0, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.769338, 0.181882, 0.04878};
     constant BaseYear boxholm2018 = BaseYear(
@@ -127,7 +141,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 6.5, financialIncome = 2.8, interestExpense = 0.1, otherFinancialExpense = 0.1,
       debt = 31.5, openingDebt = 41.5, cash = 32.2, assets = 89.9, investment = 4, taxRate = 21.82,
       sectorShares = {0.4627, 0.2397, 0.2976}, educationShares = {0.306, 0.4998, 0.1942},
-      careCostPerInhabitant = {19049, 182509})
+      careCostPerInhabitant = {19049, 182509},
+      infrastructureShare = 0.093,
+      ages = {55, 51, 68, 63, 67, 63, 55, 60, 69, 53, 53, 53, 53, 53, 53, 50, 60, 65, 59, 69, 64, 58, 55, 44, 49, 53, 56, 53, 71, 66, 65, 50, 59, 61, 64, 41, 55, 48, 57, 46, 58, 41, 57, 62, 54, 67, 67, 77, 55, 79, 71, 78, 85, 82, 91, 71, 68, 76, 63, 72, 66, 79, 79, 80, 71, 81, 79, 73, 83, 71, 97, 85, 71, 78, 80, 76, 68, 46, 53, 36, 39, 41, 38, 24, 23, 20, 28, 19, 17, 8, 10, 26, 13, 11, 7, 4, 2, 4, 0, 2, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.762208, 0.181883, 0.055909};
     constant BaseYear boxholm2017 = BaseYear(
@@ -143,7 +159,9 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       depreciation = 6.5, financialIncome = 1.6, interestExpense = 0.4, otherFinancialExpense = 0.1,
       debt = 41.5, openingDebt = 42.1, cash = 37.8, assets = 98.8, investment = 10.5, taxRate = 21.82,
       sectorShares = {0.4992, 0.2482, 0.2527}, educationShares = {0.2812, 0.5344, 0.1844},
-      careCostPerInhabitant = {19049, 182509})
+      careCostPerInhabitant = {19049, 182509},
+      infrastructureShare = 0.0992,
+      ages = {49, 68, 62, 74, 62, 54, 61, 71, 51, 55, 51, 57, 52, 51, 50, 58, 62, 55, 68, 66, 59, 50, 43, 60, 53, 59, 53, 71, 63, 69, 47, 58, 56, 63, 41, 53, 50, 56, 44, 58, 42, 61, 63, 56, 70, 63, 76, 58, 79, 73, 81, 81, 79, 88, 71, 65, 75, 61, 72, 65, 79, 79, 79, 75, 83, 79, 75, 83, 71, 98, 90, 70, 79, 80, 76, 69, 48, 54, 37, 40, 46, 41, 25, 24, 23, 30, 24, 21, 9, 13, 31, 16, 14, 9, 7, 4, 4, 2, 2, 0, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.751433, 0.183381, 0.065186};
 

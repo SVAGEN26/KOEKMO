@@ -65,11 +65,19 @@ def groups(ages):
             'older': [sum(ages[65:80]), sum(ages[80:90]), sum(ages[90:])], 'total': sum(ages)}
 
 
-def need(now, base, education_weights, care_weights):
-    """Kommunekonomi.Components.Services: education, elderly care and other need, index (base = 1)."""
+def need(now, base, education_weights, care_weights, roads=0.0):
+    """Kommunekonomi.Continuous.Services: education, elderly care and other need, index (base = 1). The share `roads`
+    of the other sector follows the road network, which stays as it is, and the rest the population."""
     care = lambda g: sum(w * x for w, x in zip(care_weights, g['older']))
     return [sum(w * x / x0 for w, x, x0 in zip(education_weights, now['education'], base['education'])),
-            care(now) / care(base), now['total'] / base['total']]
+            care(now) / care(base), roads + (1 - roads) * now['total'] / base['total']]
+
+
+def road_share(code, split):
+    """Roads as a share of the sector "other" in the last year: Kolada N07024 over the sector's net cost (data/roads.json)."""
+    road = json.loads((ROOT / 'data/roads.json').read_text())['municipalities'][code].get(str(LAST), {}).get('netCostPerInhabitant')
+    sector = split.get(str(LAST))
+    return road / (sector['krPerInhabitant']['N03067'] * sector['shares']['other']) if road is not None and sector else 0.0
 
 
 def annual_volume(needs, shares, adjustment=ADJUSTMENT, fixed_share=FIXED_SHARE, lag=0):
@@ -206,6 +214,7 @@ def load(code):
             'shares': [sectors['education'], sectors['elderly'], sectors['other']],
             'educationWeights': [w / sum(education) for w in education],
             'careWeights': [care['65-79'], care['80+'], care['80+']],
+            'roads': road_share(code, split),
             'records': {int(y): r for y, r in records['years'].items()},
             'balance': jsonstat(ROOT / records['archive'] / 'TAB6779.json')}
 
@@ -224,7 +233,7 @@ def cost_cases(data, prices):
     for code, d in data.items():
         years = list(range(FIRST, LAST + 1))
         base = groups(d['population'][FIRST])
-        needs = [need(groups(d['population'][y]), base, d['educationWeights'], d['careWeights']) for y in years]
+        needs = [need(groups(d['population'][y]), base, d['educationWeights'], d['careWeights'], d['roads']) for y in years]
         real, level = {FIRST: 1.0}, 1.0
         for y in years[1:]:
             level *= d['gross'][y] / d['gross'][y - 1] / (1 + prices[str(y)]['pkv'])
@@ -237,7 +246,7 @@ def cost_cases(data, prices):
                 yearly[code] = {y: {'nominal': d['gross'][y] / d['gross'][y - 1] - 1, 'volume': volume[y] / volume[y - 1] - 1}
                                 for y in years[RUN_IN + 1:] if y not in d['excluded']}
     return cases, yearly, {code: [need(groups(d['population'][y]), groups(d['population'][FIRST]), d['educationWeights'],
-                                       d['careWeights']) for y in range(FIRST, LAST + 1)] for code, d in data.items()}
+                                       d['careWeights'], d['roads']) for y in range(FIRST, LAST + 1)] for code, d in data.items()}
 
 
 def best_parameters(data, needs, prices, horizon=5):

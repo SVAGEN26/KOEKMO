@@ -21,7 +21,7 @@ outcome. Only inputs are changed, through the model's ordinary parameters; no eq
   investment  investmentPath: the year's investments in the accounts.
 
 What is left after the last outcome step is what these causes do not explain: the municipality's own decisions on
-volume and savings, one-off items, financial items other than interest (constant in the model), the
+volume and savings, one-off items, financial items other than interest (constant in the model but for interest on cash), the
 municipality's population (the model's projection throughout) and model error. The steps are cumulative in
 this order; with another order a step's share can differ where causes interact (wages and volume, debt and rate).
 
@@ -103,6 +103,7 @@ def model_source(origin, horizon, v, done, ledgers, older_shares=None, extra=())
              f'referenceTax = {hv.modelica_array(tax)}*recurringTax0',
              f'wageGrowthPath = {hv.modelica_array([labour[y] for y in years])}',
              f'priceGrowthPath = {hv.modelica_array([other[y] for y in years])}',
+             'pensionFollowsPayroll = false',  # the path is given: believed (the labour index) or the accounts
              'pensionExpensePath = ' + (hv.modelica_array([ledgers[y]['pension'] for y in years]) if 'pensions' in done
                                         else f'{hv.modelica_array(pension)}*pension0')]
     if older_shares:
@@ -156,7 +157,7 @@ def main():
             return {y: {'tax': m['tax'], 'grants': m['grants'], 'payroll': m['payroll'], 'pension': m['pensionExpense'],
                         'otherCosts': m['otherOperatingExpense'], 'operatingRevenue': m['operatingRevenue'],
                         'depreciation': m['depreciation'], 'interest': m['interest'], 'result': m['result'],
-                        'debt': m['debt'], 'population': m['population']} for y, m in result.items()}
+                        'debt': m['debt'], 'population': m['population'], 'financialIncome': m['annualFinancialIncome']} for y, m in result.items()}
         for k, step in enumerate(STEPS):
             runs[step] = run(step, STEPS[:k + 1])
         # The model's inflation scenario, fed only the price surprise: does its mechanism give what happened?
@@ -188,8 +189,9 @@ def main():
     o0 = ledgers[ORIGIN]
     other_net = lambda o: o['financialIncome'] - (o['financialExpense'] - o['interest'])
     remaining = [{'year': y, **{k: runs[last][y][k] - outcome[y][k] for k in LINES if outcome[y][k] is not None},
-                  # the model keeps the base year's financial income and other financial expense
-                  'otherFinancialNet': other_net(o0) - other_net(ledgers[y])} for y in years]
+                  # the model keeps the base year's other financial expense, and its financial income plus the interest on
+                  # cash above the base year's
+                  'otherFinancialNet': other_net(o0) + runs[last][y]['financialIncome'] - o0['financialIncome'] - other_net(ledgers[y])} for y in years]
     out = {'municipality': hv.CODE, 'model': f'{hv.PACKAGE}.{MODEL}', 'origin': ORIGIN, 'years': years,
            'circular': v['circular'], 'method': __doc__.strip(), 'units': 'mnkr; population in persons',
            'steps': [{'step': s, 'label': LABELS[s]} for s in STEPS],

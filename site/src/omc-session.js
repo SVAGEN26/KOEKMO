@@ -7,7 +7,7 @@ import {DEFAULT_MUNICIPALITY,municipalities,cohortModifiers} from './municipalit
 export const OUTPUTS=['population','population80Plus','births','deaths','migration','cost','payroll','wages','employerContributions','pensionExpense',
   'pensionCashPayments','otherOperatingExpense','operatingRevenue','operatingCash','tradeReceivables','tradePayables','deferredGrants','workingCapitalCash',
   'depreciation','tax','grants','recurringTaxAdjustment','incomeEqualisationAdjustment','regulationPopulationAdjustment','result','debt','cash','assets','commissioned','workInProgress','interest','borrowing',
-  'repayment','prefinancing','outstandingDeferredInvestment','projectPaid','projectCommissioned','projectWorkInProgress',
+  'repayment','prefinancing','outstandingDeferredInvestment','annualFinancialIncome','projectPaid','projectCommissioned','projectWorkInProgress',
   'projectPlacesInUse','missingProjectPlaces','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
 // The wrapper around Motala.Continuous: stocks and flows in continuous time.
 export const MODEL='MotalaBrowserContinuous';

@@ -48,7 +48,9 @@ dimensionslösa. Antagna flyttflöden är personer per år (<code>PersonsPerYear
       Real sectorShares[3] "Utbildning (0-18 år), äldreomsorg och övrig verksamhet, andel av nettokostnaden; Kolada (SCB:s räkenskapssammandrag)";
       Real educationShares[3] "Utbildningens fördelning på 0-6, 7-15 och 16-18 år, andel; Kolada";
       Units.MoneyPerPerson careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
-      Real interestRate = -1 "Genomsnittlig ränta på upplåningen enligt årsredovisningen, andel; -1 när den saknas och räntan härleds ur räntekostnaden och den ingående skulden";
+      Real infrastructureShare = 0 "Gator och vägar som andel av övrig verksamhet: nettokostnaden för väg- och järnvägsnät samt parkering (Kolada N07024) delad med övrig verksamhets nettokostnad; 0 när uppgiften saknas";
+      Units.Persons ages[101] = zeros(101) "Invånare per ettårsålder 0-100+ vid basårets slut, båda könen (SCB); nollor när uppgiften saknas";
+      Real interestRate = -1 "Genomsnittlig ränta på upplåningen enligt årsredovisningen, andel; -1 när den saknas och räntan härleds ur räntekostnaden och årets medelskuld";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
     end BaseYear;
 
@@ -138,66 +140,115 @@ dimensionslösa. Antagna flyttflöden är personer per år (<code>PersonsPerYear
 illustrativa tal som <code>mortality</code>; de är så små att risk och dödstal är samma sak.</p></html>"));
     end deathRatesPerYear;
 
-    function continuousYear "Ett år i kontinuerlig tid för fem åldersgrupper med dödstal och åldrande som flöden"
-      input Real rates[5] "Dödstal per åldersgrupp, per år";
-      output Real Phi[5, 5] "Invånare vid årets slut per invånare vid årets början";
-      output Real Psi[5, 5] "Invånare vid årets slut per person och år i jämnt inflöde under året";
+    function ageProfile "Åldrande och dödlighet år för år ur basårets ettårsåldrar: vad som gör lagren till en åldringskedja"
+      input Real ages[101] "Invånare per ettårsålder 0-100+ vid basårets slut, båda könen; bara nollor när uppgiften saknas";
+      input Real births0 "Födda under basåret";
+      input Integer horizon "Antal prognosår";
+      input Real olderShares[3] "Uppdelning av 65+ vid basårets slut; används när ages saknas";
+      output Real profile[horizon + 2, 12] "Rad 1-2: året före basåret och basåret; rad 2 + t: prognosår t. Kolumn 1-6: andel per år som åldras ur 0-6, 7-15, 16-18, 19-64, 65-79 och 80-89; 7-9: dödstal för 65-79, 80-89 och 90+ i förhållande till 65+ under basåret; 10-12: uppdelningen av 65+ vid årets början";
     protected
-      Real A[5, 5] "der(p) = A*p utan inflöden";
-      Real term[5, 5];
-      constant Real width[4] = {7, 9, 3, 46} "Åldersgruppernas bredd, år";
+      constant Integer first[7] = {1, 8, 17, 20, 66, 81, 91} "Första index (ålder + 1) i varje lager";
+      constant Integer last[7] = {7, 16, 19, 65, 80, 90, 101} "Sista index i varje lager";
+      constant Real stationary[6] = {1/7, 1/9, 1/3, 1/46, 0.056, 0.060} "Utan ettårsåldrar: jämn åldersfördelning, och rikets livslängdstabell för en stationär befolkning i 65+";
+      constant Real stationaryMortality[3] = {1, 3.84, 12.98} "Utan ettårsåldrar: dödstal i förhållande till 65-79 (rikets tabell 2025)";
+      Real risk[2, 101] = SCB.combinedDeathRisk() "Dödsrisk och dess årliga minskning, båda könen";
+      Real q[101] "Årets dödsrisk per ålder";
+      Real start[101] "Invånare per ålder vid årets början";
+      Real finish[101] "Invånare per ålder vid årets slut";
+      Real before[7];
+      Real after[7];
+      Real mean[7] "Lagrens medelfolkmängd under året";
+      Real deaths;
+      Real level "65+:s dödstal under basåret i tabellen; dödstalen anges i förhållande till det";
     algorithm
-      A := zeros(5, 5);
-      for i in 1:5 loop
-        A[i, i] := -rates[i] - (if i < 5 then 1/width[i] else 0);
-        if i > 1 then
-          A[i, i - 1] := 1/width[i - 1];
+      if sum(ages) <= 0 then
+        for y in 1:horizon + 2 loop
+          profile[y, 1:6] := stationary;
+          profile[y, 7:9] := stationaryMortality/(stationaryMortality*olderShares);
+          profile[y, 10:12] := olderShares;
+        end for;
+        return;
+      end if;
+      // Två år bakåt: de som i dag är a + 1 år var a år för ett år sedan, och fler, eftersom några har dött.
+      finish := ages;
+      for y in 0:-1:-1 loop
+        q := {min(0.99, risk[1, a]*(1 - risk[2, a])^y) for a in 1:101};
+        start[1:99] := {finish[a + 1]/(1 - q[a]) for a in 1:99};
+        start[100] := 0.5*finish[101]/(1 - q[100]);
+        start[101] := 0.5*finish[101]/(1 - q[101]);
+        finish := start;
+      end for;
+      level := 1;
+      for y in -1:horizon loop
+        q := {min(0.99, risk[1, a]*(1 - risk[2, a])^y) for a in 1:101};
+        if y <= 0 then
+          // Historiken är känd: basårets åldrar, ett eller noll år bakåt.
+          finish := ages;
+          for k in 0:-1:y + 1 loop
+            finish := cat(1, {finish[a + 1]/(1 - min(0.99, risk[1, a]*(1 - risk[2, a])^k)) for a in 1:99},
+              {0.5*finish[101]/(1 - min(0.99, risk[1, 100]*(1 - risk[2, 100])^k)), 0.5*finish[101]/(1 - min(0.99, risk[1, 101]*(1 - risk[2, 101])^k))});
+          end for;
+        else
+          // Framåt: alla blir ett år äldre, årets födda är basårets, och dödsrisken sjunker med rikets trend.
+          finish[1] := births0;
+          finish[2:100] := {start[a]*(1 - q[a]) for a in 1:99};
+          finish[101] := start[100]*(1 - q[100]) + start[101]*(1 - q[101]);
         end if;
+        for g in 1:7 loop
+          before[g] := sum(start[first[g]:last[g]]);
+          after[g] := sum(finish[first[g]:last[g]]);
+          mean[g] := max(1e-9, (before[g] + after[g])/2);
+        end for;
+        for g in 1:6 loop
+          // De som fyller år över gränsen under året: de äldsta i lagret vid årets början som lever till födelsedagen.
+          profile[y + 2, g] := start[last[g]]*(1 - q[last[g]]/2)/mean[g];
+        end for;
+        for j in 1:3 loop
+          deaths := sum(start[a]*q[a] for a in first[4 + j]:last[4 + j]);
+          profile[y + 2, 6 + j] := deaths/mean[4 + j];
+          profile[y + 2, 9 + j] := before[4 + j]/max(1e-9, sum(before[5:7]));
+        end for;
+        if y == 0 then
+          level := max(1e-9, sum(profile[2, 6 + j]*mean[4 + j] for j in 1:3)/sum(mean[5:7]));
+        end if;
+        start := finish;
       end for;
-      // Phi = exp(A), Psi = A^-1 (exp(A) - I) som serier; normen av A är under 0,5.
-      Phi := identity(5);
-      Psi := identity(5);
-      term := identity(5);
-      for k in 1:30 loop
-        term := term*A/k;
-        Phi := Phi + term;
-        Psi := Psi + term/(k + 1);
-      end for;
-    end continuousYear;
+      profile[:, 7:9] := profile[:, 7:9]/level;
+      annotation(Documentation(info = "<html><p>De sju lagren (0-6, 7-15, 16-18, 19-64, 65-79, 80-89, 90+) är breda, men vilka som
+fyller år över en gräns ett visst år är känt ur basårets ettårsåldrar: de som fyller 65 år under första prognosåret är
+basårets 64-åringar, året därpå 63-åringarna. Funktionen låter basårets befolkning åldras ett år i taget, med rikets
+dödsrisker som sjunker med rikets trend och med basårets födda, och läser av för varje år</p>
+<ul><li>andelen av varje lager som fyller år över gränsen (kolumn 1-6): årets flöde ur lagret är andelen gånger lagret;</li>
+<li>dödstalen i 65-79, 80-89 och 90+ i förhållande till 65+:s dödstal under basåret (kolumn 7-9): modellen multiplicerar dem
+med kommunens kalibrerade dödstal för 65+;</li>
+<li>uppdelningen av 65+ vid årets början (kolumn 10-12).</li></ul>
+<p>Flyttningar ingår inte här; de är restflödet. De två första raderna gäller året före basåret och basåret och används när
+restflödet kalibreras. Saknas ettårsåldrarna (bara nollor) antas jämn åldersfördelning och en stationär befolkning i 65+.</p></html>"));
+    end ageProfile;
 
-    function chainYear "Ett år i kontinuerlig tid för 0-6, 7-15, 16-18, 19-64 och åldringskedjan 65-79, 80-89, 90+"
-      input Real rates[5] "Dödstal per åldersgrupp, per år; för 65+ gruppens dödstal vid basårets uppdelning";
-      input Real olderMortalityRatios[3] "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65-79";
-      input Real olderAgeingRates[2] "Andel per år som går från 65-79 till 80-89 och från 80-89 till 90+";
-      input Real olderShares[3] "Uppdelning av 65+ vid basårets slut";
+    function chainYear "Ett år i kontinuerlig tid för lagren 0-6, 7-15, 16-18, 19-64 och åldringskedjan 65-79, 80-89, 90+"
+      input Real rates[5] "Dödstal per åldersgrupp, per år; 65+:s dödstal under basåret";
+      input Real ageing[6] "Andel per år som åldras ur 0-6, 7-15, 16-18, 19-64, 65-79 och 80-89";
+      input Real olderMortality[3] "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65+:s";
       input Real birthsPerAdult = 0 "Födda per invånare 19-64 och år; 0 = födda räknas som ett inflöde utanför";
       output Real Phi[7, 7] "Invånare vid årets slut per invånare vid årets början";
       output Real Psi[7, 7] "Invånare vid årets slut per person och år i jämnt inflöde under året";
     protected
       Real A[7, 7] "der(x) = A*x utan inflöden";
       Real term[7, 7];
-      Real d[3] = olderDeathRates(rates[5], olderMortalityRatios, olderShares);
-      constant Real width[4] = {7, 9, 3, 46} "Åldersgruppernas bredd, år";
     algorithm
       A := zeros(7, 7);
-      for i in 1:4 loop
-        A[i, i] := -rates[i] - 1/width[i];
-        if i > 1 then
-          A[i, i - 1] := 1/width[i - 1];
-        end if;
+      for i in 1:6 loop
+        A[i, i] := -ageing[i] - (if i < 5 then rates[i] else rates[5]*olderMortality[i - 4]);
+        A[i + 1, i] := ageing[i];
       end for;
-      A[5, 4] := 1/width[4];
-      A[5, 5] := -d[1] - olderAgeingRates[1];
-      A[6, 5] := olderAgeingRates[1];
-      A[6, 6] := -d[2] - olderAgeingRates[2];
-      A[7, 6] := olderAgeingRates[2];
-      A[7, 7] := -d[3];
+      A[7, 7] := -rates[5]*olderMortality[3];
       A[1, 4] := birthsPerAdult;
-      // Phi = exp(A), Psi = A^-1 (exp(A) - I) som serier; normen av A är under 0,5.
+      // Phi = exp(A), Psi = A^-1 (exp(A) - I) som serier; normen av A är under 1.
       Phi := identity(7);
       Psi := identity(7);
       term := identity(7);
-      for k in 1:30 loop
+      for k in 1:40 loop
         term := term*A/k;
         Phi := Phi + term;
         Psi := Psi + term/(k + 1);
@@ -241,41 +292,43 @@ illustrativa tal som <code>mortality</code>; de är så små att risk och dödst
       end for;
     end solve;
 
-    function projectionResiduals "Restflöde per år som tar de fem grupperna till en befolkningsprojektion vid varje årsskifte"
-      input Real p0[5] "Invånare per åldersgrupp vid basårets slut";
-      input Real projected[:, 5] "Projektionens invånare per åldersgrupp vid varje årsskifte";
-      input Boolean useProjection[size(projected, 1)] "Året följer projektionen; annars gäller fallback";
-      input Real births0 "Födda under basåret";
-      input Real rates[5] "Dödstal per åldersgrupp, per år";
-      input Real olderMortalityRatios[3];
-      input Real olderAgeingRates[2];
-      input Real olderShares[3];
-      input Real fallback[5] "Restflöde de år projektionen inte gäller, personer per år";
-      output Real residual[size(projected, 1), 5] "Restflöde per år och åldersgrupp, personer per år";
-    protected
-      Real Phi[7, 7];
-      Real Psi[7, 7];
-      Real B[5, 5];
-      Real x[7] "Lagren vid årets början: fyra grupper och åldringskedjan i 65+";
-      Real y[7];
-      Real gap[5];
-      Real r[5];
+    function groupResponse "Fem gruppers folkmängd vid årets slut per person och år i jämnt restflöde per grupp; restflödet till 65+ fördelas på kedjan"
+      input Real Psi[7, 7];
+      input Real olderShares[3] "Fördelning av restflödet till 65+ på 65-79, 80-89 och 90+";
+      output Real B[5, 5];
     algorithm
-      // Födda följer 19-64 som i modellen (births0/p0[4] per person och år).
-      (Phi, Psi) := chainYear(rates, olderMortalityRatios, olderAgeingRates, olderShares, births0/p0[4]);
       for i in 1:5 loop
         for j in 1:5 loop
           B[i, j] := if i < 5 and j < 5 then Psi[i, j] elseif i < 5 then sum(Psi[i, 4 + l]*olderShares[l] for l in 1:3)
             elseif j < 5 then sum(Psi[4 + m, j] for m in 1:3) else sum(Psi[4 + m, 4 + l]*olderShares[l] for m in 1:3, l in 1:3);
         end for;
       end for;
+    end groupResponse;
+
+    function projectionResiduals "Restflöde per år som tar de fem grupperna till en befolkningsprojektion vid varje årsskifte"
+      input Real p0[5] "Invånare per åldersgrupp vid basårets slut";
+      input Real projected[:, 5] "Projektionens invånare per åldersgrupp vid varje årsskifte";
+      input Boolean useProjection[size(projected, 1)] "Året följer projektionen; annars gäller fallback";
+      input Real births0 "Födda under basåret";
+      input Real rates[5] "Dödstal per åldersgrupp, per år";
+      input Real profile[size(projected, 1), 12] "Prognosårens rader ur ageProfile";
+      input Real olderShares[3] "Uppdelning av 65+ vid basårets slut";
+      input Real fallback[5] "Restflöde de år projektionen inte gäller, personer per år";
+      output Real residual[size(projected, 1), 5] "Restflöde per år och åldersgrupp, personer per år";
+    protected
+      Real Phi[7, 7];
+      Real Psi[7, 7];
+      Real x[7] "Lagren vid årets början: fyra grupper och åldringskedjan i 65+";
+      Real y[7];
+      Real r[5];
+    algorithm
       x := cat(1, p0[1:4], p0[5]*olderShares);
       for t in 1:size(projected, 1) loop
+        // Födda följer 19-64 som i modellen (births0/p0[4] per person och år).
+        (Phi, Psi) := chainYear(rates, profile[t, 1:6], profile[t, 7:9], births0/p0[4]);
         y := Phi*x;
         if useProjection[t] then
-          gap := projected[t, :] - cat(1, y[1:4], {sum(y[5:7])});
-          // B är inte undertriangulär när födda ingår (19-64 föder 0-6): Gausselimination via Modelicas solve.
-          r := solve(B, gap);
+          r := solve(groupResponse(Psi, olderShares), projected[t, :] - cat(1, y[1:4], {sum(y[5:7])}));
         else
           r := fallback;
         end if;
@@ -283,66 +336,40 @@ illustrativa tal som <code>mortality</code>; de är så små att risk och dödst
         // Kedjan går vidare med årets restflöde, så uppdelningen av 65+ följer åldrandet.
         x := y + Psi*cat(1, r[1:4], r[5]*olderShares);
       end for;
-      annotation(Documentation(info = "<html><p>Som sidans kalibrering mot SCB:s projektion: restflödet år för år är det
-jämna inflöde som, med modellens födda, döda och åldrande (<code>chainYear</code>), tar de fem grupperna från förra
-årsskiftet till projektionens grupper vid årets slut. Restflödet till 65+ fördelas på kedjan efter basårets andelar.</p></html>"));
+      annotation(Documentation(info = "<html><p>Restflödet år för år är det jämna inflöde som, med modellens födda, döda och
+åldrande (<code>chainYear</code> med årets rad ur <code>ageProfile</code>), tar de fem grupperna från förra årsskiftet till
+projektionens grupper vid årets slut. Restflödet till 65+ fördelas på kedjan efter basårets andelar.</p></html>"));
     end projectionResiduals;
-
-    function olderDeathRates "Dödstal för 65-79, 80-89 och 90+, skalade så att de vid basårets uppdelning ger 65+:s dödstal"
-      input Real rate65 "65+:s dödstal per år vid basåret";
-      input Real olderMortalityRatios[3] "Dödstal i förhållande till 65-79";
-      input Real olderShares[3] "Uppdelning av 65+ vid basårets slut";
-      output Real rates[3] "Dödstal per år för 65-79, 80-89 och 90+";
-    algorithm
-      rates := rate65*olderMortalityRatios/(olderMortalityRatios*olderShares);
-    end olderDeathRates;
 
     function calibratedMigrationRates "Restflöde per åldersgrupp och år som i kontinuerlig tid ger de två senaste årens förändring"
       input Real cohorts[3, 5] "Redovisade invånare per åldersgrupp, tre år i följd";
       input Real totals[3] "Redovisad folkmängd samma tre år";
       input Real births[2] "Födda de två senare åren";
       input Real rates[5] "Dödstal per åldersgrupp, per år";
-      input Real olderMortalityRatios[3] = {1, 1, 1} "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65-79";
-      input Real olderAgeingRates[2] = {0.056, 0.060} "Andel per år som går upp till 80-89 och till 90+";
-      input Real olderShares[3] = {0.68, 0.27, 0.05} "Uppdelning av 65+ vid basårets slut";
+      input Real profile[2, 12] "Raderna för året före basåret och basåret ur ageProfile";
+      input Real olderShares[3] "Uppdelning av 65+ vid basårets slut";
       output Real residual[5] "Genomsnittligt restflöde per åldersgrupp, personer per år";
     protected
       Real Phi[7, 7];
       Real Psi[7, 7];
-      Real B[5, 5] "Årets slut i fem grupper per person och år i jämnt restflöde per grupp";
-      Real gap[5];
-      Real inflow[5];
       Real from[5];
-      Real to[5];
       Real x[7];
+      Real inflow[5];
     algorithm
-      (Phi, Psi) := chainYear(rates, olderMortalityRatios, olderAgeingRates, olderShares);
-      // Restflödet till 65+ fördelas på kedjan efter basårets andelar; utfallet jämförs som fem grupper.
-      for i in 1:5 loop
-        for j in 1:5 loop
-          B[i, j] := if i < 5 and j < 5 then Psi[i, j] elseif i < 5 then sum(Psi[i, 4 + l]*olderShares[l] for l in 1:3)
-            elseif j < 5 then sum(Psi[4 + m, j] for m in 1:3) else sum(Psi[4 + m, 4 + l]*olderShares[l] for m in 1:3, l in 1:3);
-        end for;
-      end for;
       residual := zeros(5);
       for k in 1:2 loop
+        (Phi, Psi) := chainYear(rates, profile[k, 1:6], profile[k, 7:9]);
         from := reconcile(cohorts[k, :], totals[k]);
-        to := reconcile(cohorts[k + 1, :], totals[k + 1]);
-        // De tidigare årens uppdelning av 65+ antas vara basårets.
-        x := Phi*cat(1, from[1:4], from[5]*olderShares);
-        gap := to - cat(1, x[1:4], {sum(x[5:7])});
-        // B är undertriangulär (åldrandet går bara uppåt): framåtsubstitution.
-        for i in 1:5 loop
-          inflow[i] := (gap[i] - sum(B[i, j]*inflow[j] for j in 1:i - 1))/B[i, i];
-        end for;
+        // 65+ delas vid årets början som åldrarna ger (kolumn 10-12).
+        x := Phi*cat(1, from[1:4], from[5]*profile[k, 10:12]);
+        inflow := solve(groupResponse(Psi, olderShares), reconcile(cohorts[k + 1, :], totals[k + 1]) - cat(1, x[1:4], {sum(x[5:7])}));
         inflow[1] := inflow[1] - births[k];
         residual := residual + inflow/2;
       end for;
-      annotation(Documentation(info = "<html><p>Som <code>calibratedMigration</code>, men för demografin i kontinuerlig tid
-(<code>Continuous.Demography</code>) med åldringskedjan 65-79, 80-89 och 90+ (<code>chainYear</code>): födda, döda,
-åldrande och restflöde är flöden under året; restflödet till 65+ fördelas på kedjan efter basårets andelar, och de
-tidigare årens uppdelning av 65+ antas vara basårets. Restflödet är det jämna
-inflöde per år som tar varje åldersgrupp från ett årsskifte till nästa, med årets födda som ett jämnt flöde in i 0-6 år.</p></html>"));
+      annotation(Documentation(info = "<html><p>Restflödet är det jämna inflöde per år som, med de två årens åldrande och dödlighet
+(<code>chainYear</code> med raderna ur <code>ageProfile</code>), tar varje åldersgrupp från ett årsskifte till nästa, med
+årets födda som ett jämnt flöde in i 0-6 år. Eftersom åldrandet följer de faktiska årskullarna är restflödet i huvudsak
+flyttningar, inte skillnaden mellan en jämn åldersfördelning och den verkliga.</p></html>"));
     end calibratedMigrationRates;
 
     function meanPreservingRates "Takt vid varje årsskifte så att årsmedlens ökning blir banans"
@@ -461,6 +488,65 @@ linjärt mellan dem, får just banans ökning mellan årsmedlen. Med samma ökni
           0.01503, 0.01484, 0.01465, 0.01447, 0.01461, 0.01473, 0.01438, 0.01462, 0.01438, 0.01436, 0.01424, 0.01407, 0.01398, 0.01367, 0.01349, 0.0133, 0.01297,
           0.01268, 0.01212, 0.01164, 0.01102, 0.01031, 0.00961, 0.008822, 0.008016, 0.007261, 0.006533, 0.005831, 0.004935, 0.004223, 0.003529, 0.002624, 0.0002209}}
         "Årlig minskning av dödsrisken per ålder och kön i SCB:s framskrivning 2026-2035; ett alternativ till basårets historiska trend";
+      constant Real deathRisk[2, 101] = {{0.00207355, 0.000158727, 0.000108964, 0.000118402, 0.00012408, 5.43765e-05, 7.7932e-05, 5.59708e-05, 6.59338e-05, 7.129e-05, 4.48773e-05, 6.58185e-05, 6.2138e-05, 0.000108373, 0.000122362, 0.000185461, 0.000188406,
+          0.000227493, 0.000304839, 0.000427119, 0.000416501, 0.000493011, 0.00053261, 0.000498113, 0.000468582, 0.000545598, 0.000526701, 0.000567414, 0.000632076, 0.000592982, 0.000567652, 0.000579602, 0.000589389, 0.000546025,
+          0.000663152, 0.00067511, 0.000668891, 0.000653403, 0.00075867, 0.00079572, 0.000785959, 0.000882537, 0.000875566, 0.00099299, 0.00104689, 0.00115536, 0.001111, 0.00142655, 0.0013828, 0.00157736, 0.00172928,
+          0.00199536, 0.00210802, 0.00215384, 0.00270772, 0.00296911, 0.00337198, 0.00355233, 0.00395854, 0.00444667, 0.00501413, 0.00542901, 0.00614793, 0.00694098, 0.00785558, 0.00880495, 0.0100161, 0.010752,
+          0.012036, 0.0135399, 0.0146184, 0.0167047, 0.0179765, 0.0203771, 0.0224516, 0.0247097, 0.027234, 0.0310273, 0.0347532, 0.0383324, 0.0439892, 0.048778, 0.0545883, 0.0635745, 0.0716966,
+          0.0833656, 0.0927464, 0.106106, 0.122933, 0.137902, 0.157393, 0.180744, 0.202134, 0.220083, 0.247034, 0.267403, 0.293084, 0.320441, 0.34945, 0.380056, 0.582038},
+         {0.00171741, 0.000143013, 6.60244e-05, 8.71519e-05, 8.436e-05, 4.20045e-05, 7.05117e-05, 6.49583e-05, 4.81474e-05, 5.5313e-05, 6.72007e-05, 5.06738e-05, 6.47643e-05, 7.39224e-05, 0.000123183, 0.000115117, 8.99284e-05,
+          0.000149104, 0.000161903, 0.000167761, 0.000221909, 0.000199453, 0.000268263, 0.000201955, 0.000188138, 0.000210645, 0.000195011, 0.000237797, 0.00018817, 0.000207599, 0.000286413, 0.000275227, 0.000325953, 0.00034484,
+          0.000337756, 0.000395537, 0.000324316, 0.000393121, 0.00046955, 0.000508857, 0.000505913, 0.000586013, 0.000563506, 0.000572138, 0.000539368, 0.000724709, 0.000788537, 0.000857731, 0.000943543, 0.00118621, 0.0012976,
+          0.00142095, 0.00149376, 0.0016292, 0.00169925, 0.00180679, 0.00226239, 0.00242411, 0.00273344, 0.00307284, 0.00332311, 0.00370312, 0.00401364, 0.00469699, 0.00503341, 0.00591905, 0.00624811, 0.00750551,
+          0.00816209, 0.00916428, 0.0100345, 0.0111186, 0.0124575, 0.0136372, 0.0153954, 0.0171792, 0.019109, 0.0219212, 0.0251317, 0.0288019, 0.0313392, 0.0360721, 0.0409338, 0.046851, 0.0531295,
+          0.0608351, 0.0690991, 0.0811102, 0.0920682, 0.104318, 0.123329, 0.138694, 0.15742, 0.178304, 0.195214, 0.215042, 0.237162, 0.261003, 0.28658, 0.313899, 0.480401}}
+        "Rikets dödsrisk per ålder och kön 2025: fem livslängdstabeller flyttade längs trenden och medelvärdesbildade";
+      constant Integer fertilityFirstYear = 2000 "Första året i tabellen över rikets summerade fruktsamhet";
+      constant Real totalFertility[26] = {1.54, 1.57, 1.65, 1.71, 1.75, 1.77, 1.85, 1.88, 1.91, 1.93, 1.98, 1.9, 1.9,
+          1.89, 1.88, 1.85, 1.85, 1.78, 1.75, 1.7, 1.66, 1.67, 1.52, 1.45, 1.43, 1.42}
+        "Rikets summerade fruktsamhet 2000-2025 (SCB)";
+
+      function totalFertilityAt "Rikets summerade fruktsamhet ett år; det senaste kända året om året ligger efter tabellen"
+        input Integer year "Kalenderår";
+        output Real level "Barn per kvinna";
+      algorithm
+        level := totalFertility[min(max(year, fertilityFirstYear), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1];
+      end totalFertilityAt;
+
+      function totalFertilityMean5 "Rikets genomsnittliga summerade fruktsamhet de fem åren fram till ett år"
+        input Integer year "Sista året";
+        output Real mean "Medel av fem år";
+      protected
+        Integer last = min(max(year, fertilityFirstYear + 4), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1;
+      algorithm
+        // En slinga: OpenModelicas kodgenerering klarar inte ett snitt med dynamiska index ur en konstant tabell.
+        mean := 0;
+        for i in 0:4 loop
+          mean := mean + totalFertility[last - i]/5;
+        end for;
+      end totalFertilityMean5;
+
+      function combinedDeathRisk "Dödsrisk (rad 1) och dess årliga minskning (rad 2) per ålder för båda könen tillsammans"
+        output Real combined[2, 101];
+      protected
+        Real alive[2] "Kvar i livet av lika många födda pojkar och flickor";
+        Real weight "Männens andel vid åldern";
+      algorithm
+        alive := {1, 1};
+        for a in 1:101 loop
+          weight := alive[1]/(alive[1] + alive[2]);
+          combined[1, a] := weight*deathRisk[1, a] + (1 - weight)*deathRisk[2, a];
+          combined[2, a] := (weight*deathRisk[1, a]*mortalityImprovement[1, a] + (1 - weight)*deathRisk[2, a]*mortalityImprovement[2, a])/max(1e-12, combined[1, a]);
+          alive := {alive[1]*(1 - deathRisk[1, a]), alive[2]*(1 - deathRisk[2, a])};
+        end for;
+      end combinedDeathRisk;
+
+      function ages "Invånare per ettårsålder, båda könen"
+        input Real population[2, 101] "Befolkning per ettårsålder och kön";
+        output Real total[101];
+      algorithm
+        total := population[1, :] + population[2, :];
+      end ages;
 
       function groups "Ettårsåldrar summerade till 0-6, 7-15, 16-18, 19-64 och 65+, båda könen"
         input Real population[2, 101] "Befolkning per ettårsålder och kön";
@@ -480,12 +566,23 @@ linjärt mellan dem, får just banans ökning mellan årsmedlen. Med samma ökni
           11698073, 11722553, 11747835, 11773818, 11800473}
         "Rikets folkmängd 31 december 2010-2070: utfall till 2025, sedan SCB:s framskrivning (data/downloads/20261108T145741Z)";
 
-      function nationalPopulationAt "Rikets folkmängd 31 december ett visst år"
+      constant Integer nationalLastOutcome = 2025 "Sista året med utfall i tabellen över rikets folkmängd";
+
+      function nationalPopulationAt "Rikets folkmängd 31 december ett visst år, som den var känd ett givet år"
         input Integer year "Kalenderår";
+        input Integer knownAt = nationalLastOutcome "Året då uppgiften ska vara känd: ett basår före sista utfallsåret ser inte senare utfall";
         output Real population "Folkmängd";
+      protected
+        Integer known = min(max(knownAt, nationalFirstYear + 1), nationalLastOutcome);
       algorithm
         assert(year >= nationalFirstYear and year < nationalFirstYear + size(nationalPopulation, 1), "Data.SCB.nationalPopulation saknar år " + String(year));
-        population := nationalPopulation[year - nationalFirstYear + 1];
+        if year <= known or known >= nationalLastOutcome then
+          population := nationalPopulation[year - nationalFirstYear + 1];
+        else
+          // Efter det kända året: folkmängden fortsätter växa som det senast kända året. Senare utfall och den senaste
+          // framskrivningen fanns inte då.
+          population := nationalPopulation[known - nationalFirstYear + 1]*(nationalPopulation[known - nationalFirstYear + 1]/nationalPopulation[known - nationalFirstYear])^(year - known);
+        end if;
       end nationalPopulationAt;
 
       function olderShares "Andelar av 65+ som är 65-79, 80-89 och 90+"
@@ -516,8 +613,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real deathRates[5] = Data.mortality(p0, base.deaths) "Dödsrisk per åldersgrupp och år; 65+ ger basårets observerade antal döda";
     parameter Units.PersonsPerYear residualMigration[5] = Data.calibratedMigration(base.cohorts, base.reportedPopulation, base.births, deathRates) "Kalibrerat restflöde per åldersgrupp, personer per år (flyttningar och statistiska justeringar)";
     parameter Real olderShares[3] "Uppdelning av 65+ i 65-79, 80-89 och 90+ vid basårets slut för femgruppsdemografin; kommunens paket ger den ur SCB-data";
-    parameter Real olderMortalityRatios[3] = {1, 3.84, 12.98} "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65-79: rikets livslängdstabell vid basåret 2025 (Motala.Data.SCB.motala2025.deathRisk), vägd med Motalas befolkning per ettårsålder 2025";
-    parameter Units.Rate olderAgeingRates[2] = {0.056, 0.060} "Andel per år som går från 65-79 till 80-89 och från 80-89 till 90+: rikets livslängdstabell 2025 för en stationär befolkning (Motala 2025: 0,060 och 0,048)";
+    parameter Real ageProfile[horizon + 2, 12] = Data.ageProfile(base.ages, births0, horizon, olderShares) "Åldrande och dödlighet år för år ur basårets ettårsåldrar (Data.ageProfile): rad 1-2 året före basåret och basåret, sedan prognosåren; kolumn 1-6 andel per år som åldras ur varje lager, 7-9 dödstal i 65-79, 80-89 och 90+ i förhållande till 65+:s, 10-12 uppdelningen av 65+ vid årets början";
     parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på åldersgrupperna; summerar till 1";
     parameter Units.Persons births0 = base.births[2] "Födda under basåret";
     parameter Units.PersonsPerYear migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer per år";
@@ -557,14 +653,15 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real productivityGrowth = 0 "Årlig produktivitetsökning, andel; minskar lönekostnaden för samma volym";
     parameter Real costDrift = 0 "Kostnadsökning utöver demografi och pris, andel per år: höjd standard, nya uppgifter; 2010-2025 i medel -0,1 till 0,6 procent i länets kommuner (data/cost-residual.json), men standard 0: historikens medel gav för höga kostnader åtta år fram (data/long-hindcast.json)";
     parameter Real grantIncrease = 0 "Statens höjning av de generella bidragen utöver referensbanan, miljarder kronor i riket per år och år: från andra prognosåret, lika per invånare (riket 2021-2025 cirka 3,8)";
-    parameter Real pensionGrowth = 0.02 "Pensionskostnadens årliga ökning, andel";
+    parameter Boolean pensionFollowsPayroll = true "Pensionskostnaden följer lönesumman (löner, volym och produktivitet); false när pensionExpensePath anger kostnaden i mnkr";
+    parameter Real pensionGrowth = 0 "Pensionskostnadens årliga ökning utöver lönesumman, andel; utan pensionFollowsPayroll dess årliga ökning";
     parameter Real operatingRevenueGrowth = 0.02 "Verksamhetsintäkternas årliga ökning, andel";
     parameter Real taxRate = base.taxRate "Kommunal skattesats i scenariot, procent";
     parameter Real taxRatePath[horizon] = fill(taxRate, horizon) "Kommunal skattesats per år, procent; standard taxRate varje år";
     parameter Real baseTaxRate = base.taxRate "Kommunal skattesats i basåret, procent";
     parameter Real equalisationOffset = 0.95 "Andel av en lokal avvikelse i skatteunderlaget som utjämningen tar tillbaka (förenklad)";
     parameter Real populationRevenueElasticity = 1 "Hur starkt skatt och bidrag följer kommunens folkmängd i förhållande till rikets (1 = proportionellt: en invånare färre ger cirka 77 000 kr mindre per år, 2025 års nivå)";
-    parameter Real interestRate = if base.interestRate >= 0 then base.interestRate else base.interestExpense/max(base.openingDebt, 1e-9)
+    parameter Real interestRate = if base.interestRate >= 0 then base.interestRate else base.interestExpense/max((base.openingDebt + base.debt)/2, 1e-9)
       "Genomsnittlig låneränta på ingående skuld, andel; årsredovisningens ränta när basåret har den (base.interestRate), annars basårets räntekostnad delad med skulden vid basårets början";
     parameter Units.Money investment = base.investment "Årliga investeringar, mnkr";
     // Årsvisa banor; första värdet gäller år 1
@@ -579,7 +676,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Units.Money referenceGrants[horizon] = {grants0*(1 + grantGrowth)^i for i in 1:horizon} "Referensbana för generella bidrag, mnkr; växer i rikets takt och skalas i Intäkter med kommunens folkmängd i förhållande till rikets (en importerad SKR-bana är redan kommunens egen)";
     parameter Units.Persons referencePopulation[horizon] = fill(sum(p0), horizon) "Folkmängd som referensbanan bygger på, personer";
     parameter Units.Persons nationalPopulation0 = Data.SCB.nationalPopulationAt(base.year - 1) "Rikets folkmängd vid slutet av året före basåret, personer (SCB)";
-    parameter Real nationalPopulationPath[horizon] = {Data.SCB.nationalPopulationAt(base.year + i - 1) for i in 1:horizon}
+    parameter Real nationalPopulationPath[horizon] = {Data.SCB.nationalPopulationAt(base.year + i - 1, base.year) for i in 1:horizon}
       "Rikets folkmängd vid slutet av året före varje prognosår, personer (SCB: utfall, sedan framskrivning)";
     parameter Boolean importedRevenue = false "Sant när referensbanan är importerad från SKR";
     parameter Real ageIncomeWeights[5] = ones(5) "Relativ beskattningsbar inkomst per invånare i modellens åldersgrupper";
@@ -638,6 +735,10 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real inflationShock = 0 "Extra inflation första prognosåret utöver prisbanan, andel (0,03 = tre procentenheter)";
     parameter Real inflationPersistence(min = 0, max = 1) = 0.5 "Andel av den extra inflationen som finns kvar året därpå";
     parameter Real inflationShockPath[horizon] = {inflationShock*inflationPersistence^(i - 1) for i in 1:horizon} "Extra inflation per år, andel";
+    parameter Real inflationRevenuePassThrough = 0.3 "Andel av årets extra inflation som når verksamhetens intäkter (taxor, avgifter, riktade bidrag); 2022-2025 var medianen i länets 13 kommuner 0,05-0,5 med stor spridning (data/outcome-explanation*.json), ett antagande";
+    parameter Real depositSpread(min = 0) = 0.005 "Skillnad mellan låneräntan och räntan på kassan, andel; ett antagande, ingen kommuns uppgift";
+    parameter Real infrastructureShare(min = 0, max = 1) = base.infrastructureShare "Andel av övrig verksamhet som följer vägnätet och inte befolkningen (gator och vägar)";
+    parameter Real networkGrowth = 0 "Vägnätets årliga tillväxt, andel; 0 = nätet är som i basåret";
     parameter Real inflationWagePassThrough = 0.4 "Andel av den fördröjda extra inflationen (medel av de två föregående åren) som når lönerna och skatteunderlaget; 2022-2025 cirka 0,35-0,45 (SKR:s arbetskraftsindex och rikets skatteunderlag mot decembercirkuläret 2021)";
     parameter Real inflationPensionPassThrough = 8 "Pensionskostnadens ökning över banan per enhet fördröjd extra inflation (uppräkning av pensionsskulden med prisbasbeloppet); går tillbaka när inflationen gör det. 2023-2025 cirka 7-10 i länets kommuner, med 2023 års pensionsavtal oseparerat";
     parameter Real inflationRateResponse = 0.5 "Höjning av marknadsräntan per procentenhet fördröjd extra inflation (medel av de två föregående åren); den betalda räntan steg 2023-2024 cirka 0,4 per enhet i länets kommuner";
@@ -669,7 +770,7 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
 // Årsbanorna ersätter skalärerna ovan och behöver samma gränser.
 // Utan dem nollställer wageGrowthPath[k] = -1 lönerna och en negativ ränta bokförs som intäkt.
     assert(min(wageGrowthPath) > -1 and min(priceGrowthPath) > -1, "wageGrowthPath och priceGrowthPath måste vara större än -1 varje år (andelar, inte procent)");
-    assert(base.interestRate >= 0 or base.openingDebt > 0 or interestRate <= 0.3, "Basåret saknar ingående låneskuld, så räntan kan inte härledas; ange base.interestRate ur årsredovisningen eller interestRate");
+    assert(base.interestRate >= 0 or base.openingDebt + base.debt > 0 or interestRate <= 0.3, "Basåret saknar låneskuld, så räntan kan inte härledas; ange base.interestRate ur årsredovisningen eller interestRate");
     assert(min(interestRatePath) >= 0 and max(interestRatePath) <= 0.3, "interestRatePath måste ligga mellan 0 och 0,3 varje år (andelar, inte procent)");
     assert(min(referenceTax) > 0 and min(referenceGrants) > 0, "referenceTax och referenceGrants måste vara positiva varje år");
     assert(equalisationOffset >= 0 and equalisationOffset <= 1, "equalisationOffset måste ligga mellan 0 och 1");
@@ -708,6 +809,7 @@ ett värde per prognosår. Tillväxt anges som andel (0,03 = tre procent), belop
       Real priceRateNext "Prisnivåns takt vid årets slut, ln per år";
       Units.Money pensionExpense "Pensionskostnad, mnkr";
       Units.Money pensionCashPayments "Pensionsutbetalningar, mnkr";
+      Real extraInflation "Årets extra inflation utöver prisbanan, andel";
       annotation(
         Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {90, 110, 130}, fillColor = {90, 110, 130}, fillPattern = FillPattern.Solid)}));
     end CostDrivers;
@@ -836,6 +938,7 @@ antalet år.</p></html>"));
       operations.priceRateNext = priceRate[calendar.pathIndex + 1];
       operations.pensionExpense = pensionExpensePath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
       operations.pensionCashPayments = pensionCashPaymentsPath[calendar.pathIndex]*inflationPensionFactor[calendar.pathIndex];
+      operations.extraInflation = inflationShockPath[calendar.pathIndex];
       revenue.tax = referenceTax[calendar.pathIndex]*inflationTaxFactor[calendar.pathIndex];
       revenue.grants = referenceGrants[calendar.pathIndex]*inflationGrantFactor[calendar.pathIndex];
       revenue.population = referencePopulation[calendar.pathIndex];
@@ -891,9 +994,9 @@ inflation är banorna oförändrade.</p></html>"));
 början och till hälften i nästa. CohortDemography delar upp de födda i pojkar och flickor.</p></html>"));
       end Partial;
 
-      model Constant "Konstant summerad fruktsamhet; standard 1,41 barn per kvinna"
+      model Constant "Konstant summerad fruktsamhet; demografin sätter rikets nivå basåret gånger kommunens förhållande till riket"
         extends Partial;
-        parameter Real totalFertility = 1.41 "Summerad fruktsamhet: barn per kvinna under ett liv med årets fruktsamhet";
+        parameter Real totalFertility = 1.42 "Summerad fruktsamhet: barn per kvinna under ett liv med årets fruktsamhet; rikets 2025 om inget annat anges";
         parameter Real profile[101] = Data.SCB.fertilityProfile "Andel av de födda vid varje ålder hos modern";
       equation
         births = totalFertility*profile*exposure;
@@ -937,7 +1040,7 @@ Alla utom Legacy använder SCB:s åldersprofil för fruktsamheten. Prövning mot
       parameter Real observedDeltaShape[2,101] = zeros(2,101) "Andelar efter ålder och kön för ändrad inflyttning";
       parameter Boolean useObservedDeltaShape = false;
       parameter Real shareBoys = data.shareBoys "Andel pojkar bland de födda";
-      replaceable Fertility.Constant fertility constrainedby Fertility.Partial(births0 = data.births, population0 = population0)
+      replaceable Fertility.Constant fertility(totalFertility = Data.SCB.totalFertilityAt(data.year)*data.totalFertilityMean5/Data.SCB.totalFertilityMean5(data.year)) constrainedby Fertility.Partial(births0 = data.births, population0 = population0)
         "Födelsemodell" annotation(choicesAllMatching = true);
       discrete output Units.Persons p[2, 101](start = population0, each fixed = true) "Befolkning vid årets slut, ettårsåldrar per kön";
       discrete output Real older[3](start = {sum(population0[:, 66:80]), sum(population0[:, 81:90]), sum(population0[:, 91:101])}, each fixed = true)
@@ -1233,6 +1336,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     Units.Money cashBalance "Kontroll av kassabalansen, mnkr";
     Units.Money debtBalance "Kontroll av skuldbalansen, mnkr";
     Units.Money annualInvestment "Årets investeringsutbetalningar, mnkr";
+    Units.Money annualFinancialIncome "Årets finansiella intäkter, mnkr: basårets belopp och räntan på kassa utöver basårets";
     Units.Money outstandingDeferredInvestment "Uppskjuten betalning som återstår vid årets slut, mnkr";
     Units.Money prefinancing "Förfinansiering genom lån under året, mnkr";
     Real annualInterestRate "Årets låneränta, andel";
@@ -1387,9 +1491,9 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       parameter Real migrationWeights[5] "Fördelning av ett förändrat flyttnetto på åldersgrupperna";
       parameter Units.Persons births0 "Födda under basåret";
       parameter Real olderShares[3] "Uppdelning av 65+ i 65-79, 80-89 och 90+ vid basårets slut (SCB)";
-      parameter Real olderMortalityRatios[3] = {1, 3.84, 12.98} "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65-79";
-      parameter Units.Rate olderAgeingRates[2] = {0.056, 0.060} "Andel per år som går från 65-79 till 80-89 och från 80-89 till 90+";
-      parameter Units.Duration width[4] = {7, 9, 3, 46} "Bredden på åldersgrupperna 0-6, 7-15, 16-18 och 19-64, år";
+      parameter Integer horizon "Antal år i banorna";
+      parameter Units.Rate ageingRatePath[horizon, 6] "Andel per år som åldras ur 0-6, 7-15, 16-18, 19-64, 65-79 och 80-89, år för år (Data.ageProfile)";
+      parameter Real olderMortalityPath[horizon, 3] "Dödstal i 65-79, 80-89 och 90+ i förhållande till deathRates[5], år för år (Data.ageProfile)";
       extends DemographyBase(births0Shown = births0);
       Units.Persons p[5] "Invånare per åldersgrupp; 65+ är summan av åldringskedjan";
       Units.Persons young[4](start = p0[1:4], each fixed = true) "Lager: 0-6, 7-15, 16-18 och 19-64 år";
@@ -1401,9 +1505,10 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       Units.PersonsPerYear olderAgeing[2] "Går från 65-79 till 80-89 och från 80-89 till 90+, personer per år";
       Units.PersonsPerYear olderDied[3] "Döda per år i 65-79, 80-89 och 90+";
       Units.PersonsPerYear olderMoved[3] "Flyttnetto och restflöde per år i 65-79, 80-89 och 90+";
+      Units.Rate ageingRate[6] "Årets andel som åldras ur 0-6, 7-15, 16-18, 19-64, 65-79 och 80-89";
+      Units.Rate olderRate[3] "Årets dödstal i 65-79, 80-89 och 90+";
     protected
       Units.PersonsPerYear trend "Födda per år utan scenariots förändring";
-      parameter Units.Rate olderRates[3] = Data.olderDeathRates(deathRates[5], olderMortalityRatios, olderShares) "Dödstal för 65-79, 80-89 och 90+; vid basårets uppdelning ger de 65+:s dödstal";
     equation
       // Skalära ekvationer, så att enhetskontrollen (scripts/check_units.py) prövar dem; vektorekvationer prövas inte.
       trend = births0/Units.year*p[4]/p0[4];
@@ -1414,19 +1519,24 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       for i in 1:4 loop
         p[i] = young[i];
         died[i] = deathRates[i]*young[i];
-        ageing[i] = young[i]/width[i];
+        ageing[i] = ageingRate[i]*young[i];
       end for;
       der(young[1]) = born - ageing[1] - died[1] + moved[1];
       for i in 2:4 loop
         der(young[i]) = ageing[i - 1] - ageing[i] - died[i] + moved[i];
       end for;
-      // 65+ är en åldringskedja: in från 19-64, upp med olderAgeingRates och ut genom död med dödstal som stiger med
-      // åldern. Flyttningarna till 65+ fördelas efter basårets andelar. Gruppens döda är kedjans, så fler äldre ger fler döda.
+      // Vilka som fyller år över en gräns följer årskullarna: årets andel ur basårets ettårsåldrar (Data.ageProfile).
+      for i in 1:6 loop
+        ageingRate[i] = ageingRatePath[calendar.pathIndex, i];
+      end for;
+      // 65+ är en åldringskedja: in från 19-64, uppåt med årets andelar och ut genom död med dödstal som stiger med åldern
+      // och sjunker med rikets trend. Flyttningarna till 65+ fördelas efter basårets andelar. Gruppens döda är kedjans.
       for j in 1:2 loop
-        olderAgeing[j] = olderAgeingRates[j]*older[j];
+        olderAgeing[j] = ageingRate[4 + j]*older[j];
       end for;
       for j in 1:3 loop
-        olderDied[j] = olderRates[j]*older[j];
+        olderRate[j] = deathRates[5]*olderMortalityPath[calendar.pathIndex, j];
+        olderDied[j] = olderRate[j]*older[j];
         olderMoved[j] = moved[5]*olderShares[j];
       end for;
       der(older[1]) = ageing[4] - olderAgeing[1] - olderDied[1] + olderMoved[1];
@@ -1445,13 +1555,13 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
         Documentation(info = "<html><p>Fem åldersgrupper som lager. Under året:</p>
 <ul><li>födda = födda<sub>0</sub> · (19-64)/(19-64)<sub>0</sub> · (1 + förändring), in i 0-6 år;</li>
 <li>döda = dödstal · invånare i gruppen; dödstalet är döda per person och år (<code>Data.deathRatesPerYear</code>);</li>
-<li>åldrande = invånare / gruppens bredd i år: med jämn åldersfördelning fyller så många år över gruppens gräns;</li>
+<li>åldrande = årets andel · invånare i lagret; andelen kommer ur basårets ettårsåldrar (<code>Data.ageProfile</code>): de som
+fyller 65 år första prognosåret är basårets 64-åringar, och så vidare;</li>
 <li>flyttnetto = kalibrerat restflöde plus scenariots ändring, jämnt under året.</li></ul>
 <p>65+ är en åldringskedja av tre lager, 65-79 → 80-89 → 90+ (<code>older</code>), och <code>p[5]</code> är deras summa.
-In kommer de som fyller 65 och flyttningar i basårets proportioner; uppåt går <code>olderAgeingRates</code> per år, och
-dödstalen stiger med åldern (<code>olderMortalityRatios</code>, skalade så att de vid basårets uppdelning ger 65+:s
-dödstal). Gruppens döda är kedjans: när 80+ växer dör fler, vilket bromsar tillväxten. Kalibreringen räknar med samma
-kedja (<code>Data.chainYear</code>). Tidigare var 65+ ett lager med fast dödstal och fast uppdelning.</p>
+In kommer de som fyller 65 och flyttningar i basårets proportioner. Dödstalen stiger med åldern och sjunker med rikets
+trend (<code>olderMortalityPath</code> gånger kommunens kalibrerade dödstal för 65+). Gruppens döda är kedjans: när 80+ växer
+dör fler. Kalibreringen räknar med samma kedja (<code>Data.chainYear</code>).</p>
 <p>Årsmodellen flyttar 1/bredd av de överlevande en gång per år; här sker det jämnt. Restflödet är kalibrerat för de
 kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att basårens förändring återskapas.</p></html>"));
     end Demography;
@@ -1470,7 +1580,7 @@ kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att bas
       parameter Boolean useObservedDeltaShape = false;
       parameter Real shareBoys = data.shareBoys "Andel pojkar bland de födda";
       parameter Units.Persons outflowFloor = 1 "Under så många personer i en ålder minskar utflyttningen i proportion, så att lagret inte blir negativt";
-      replaceable Components.Fertility.Constant fertility constrainedby Components.Fertility.Partial(births0 = data.births, population0 = population0)
+      replaceable Components.Fertility.Constant fertility(totalFertility = Data.SCB.totalFertilityAt(data.year)*data.totalFertilityMean5/Data.SCB.totalFertilityMean5(data.year)) constrainedby Components.Fertility.Partial(births0 = data.births, population0 = population0)
         "Födelsemodell" annotation(choicesAllMatching = true);
       Units.Persons p[2, 101](start = population0, each fixed = true) "Invånare efter ålder vid årets slut (födelseår) och kön";
       Units.Rate mortality[2, 101] "Dödstal per år för varje födelseårsgrupp";
@@ -1483,6 +1593,7 @@ kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att bas
       parameter Integer group[101] = {if a <= 7 then 1 elseif a <= 16 then 2 elseif a <= 19 then 3 elseif a <= 65 then 4 else 5 for a in 1:101};
       parameter Real deltaShape[2, 101] = {{0.5*migrationWeights[group[a]]/width[group[a]] for a in 1:101} for s in 1:2};
       discrete Units.Duration labelYearEnd(fixed = false) "Det årsslut som åldrarna i p avser";
+      discrete Real oldest[2](each start = 0.5, each fixed = true) "Andel av den äldsta gruppen som var 100 år eller äldre vid årsskiftet; resten var 99 år";
       Units.PersonsPerYear wanted[2, 101] "Restflöde och scenariots ändring innan gränsen för tomma åldrar";
     initial equation
       labelYearEnd = time;
@@ -1496,11 +1607,14 @@ kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att bas
             reinit(p[s, a], pre(p[s, a - 1]));
           end for;
           reinit(p[s, 101], pre(p[s, 100]) + pre(p[s, 101]));
+          oldest[s] = pre(p[s, 101])/max(1e-9, pre(p[s, 100]) + pre(p[s, 101]));
         end for;
       end when;
       share = 1 - (labelYearEnd - time)/Units.year;
-      // Dödsrisken gäller åldern vid förra årsskiftet; de födda under året har ingen.
-      mortality = {cat(1, {0}, {-log(max(1e-6, 1 - min(1, data.deathRisk[s, a]*mortalityRatio[s]*exp(-improvement[s, a]*calendar.yearIndex)))) for a in 1:100}) for s in 1:2}/Units.year;
+      // Dödsrisken gäller åldern vid förra årsskiftet; de födda under året har ingen. Den äldsta gruppen består av dem som
+      // var 99 år och dem som redan var 100 år eller äldre, med var sin risk.
+      mortality = {cat(1, {0}, {-log(max(1e-6, 1 - min(1, data.deathRisk[s, a]*mortalityRatio[s]*exp(-improvement[s, a]*calendar.yearIndex)))) for a in 1:99},
+        {-log(max(1e-6, 1 - min(1, mortalityRatio[s]*((1 - oldest[s])*data.deathRisk[s, 100]*exp(-improvement[s, 100]*calendar.yearIndex) + oldest[s]*data.deathRisk[s, 101]*exp(-improvement[s, 101]*calendar.yearIndex)))))}) for s in 1:2}/Units.year;
       wanted = residualMigration + drivers.migrationDelta*(if useObservedDeltaShape then observedDeltaShape else deltaShape);
       // Fruktsamheten läser åldern vid årets början: födelseårsgruppen a + 1 var a år då.
       fertility.population = cat(2, p[:, 2:101], zeros(2, 1));
@@ -1538,6 +1652,8 @@ fyllt år. Åldersgrupperna till verksamheten och intäkterna går därför jäm
       parameter Real fixedShare[3] "Fast andel av kapaciteten per sektor";
       parameter Real careWeights[3] = {1, 1, 1} "Äldreomsorgens kostnad per invånare 65-79, 80-89 och 90+";
       parameter Real plannedProjectPlaces = 0;
+      parameter Real infrastructureShare = 0 "Andel av övrig verksamhet som följer vägnätet och inte befolkningen";
+      parameter Real networkGrowth = 0 "Vägnätets årliga tillväxt, andel";
       final parameter Real adjustmentRate[3] = {-log(max(1e-6, 1 - adjustment[i])) for i in 1:3} "Anpassningstakt per år; stänger samma andel av ett konstant glapp på ett år som adjustment";
       outer Clock clock;
       input Real projectPlacesInUse;
@@ -1548,6 +1664,7 @@ fyllt år. Åldersgrupperna till verksamheten och intäkterna går därför jäm
       Real demand[3] "Behov för utbildning, äldreomsorg och övrigt, index (basår = 1)";
       Real educationIndex "Utbildningsbehov, index (basår = 1)";
       Real careIndex "Äldreomsorgsbehov viktat efter ålder, index (basår = 1)";
+      Real network(start = 1, fixed = true) "Vägnätet: lager, index (basår = 1); växer bara med networkGrowth";
       Interfaces.SignalOutput serviceVolume "Verksamhetens volym: kostnadsviktad kapacitet, index (basår = 1)" annotation(
         Placement(transformation(extent = {{80, -20}, {120, 20}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
     protected
@@ -1559,7 +1676,9 @@ fyllt år. Åldersgrupperna till verksamheten och intäkterna går därför jäm
     equation
       educationIndex = sum({educationWeights[i]*cohorts.p[i]/cohorts0[i] for i in 1:3});
       careIndex = careWeights*cohorts.older/careBase;
-      demand = {educationIndex, careIndex, sum(cohorts.p)/sum(cohorts0)};
+      // Gator och vägar ligger kvar när invånarna blir färre: den delen av övrig verksamhet följer vägnätet.
+      der(network) = log(1 + networkGrowth)*network;
+      demand = {educationIndex, careIndex, infrastructureShare*network + (1 - infrastructureShare)*sum(cohorts.p)/sum(cohorts0)};
       der(capacity) = adjustmentRate .* (fixedShare + (ones(3) - fixedShare) .* demand - capacity);
       serviceVolume = sum(sectorCosts .* capacity)/sum(sectorCosts);
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {35, 115, 85}, fillColor = {230, 245, 238}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Verksamhet")}),
@@ -1579,6 +1698,8 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       parameter Units.Money operatingRevenue0 "Verksamhetens intäkter i basåret, mnkr";
       parameter Units.Money netCostRoundingAdjustment "Avrundningsjustering, mnkr";
       parameter Real operatingRevenueGrowth "Verksamhetsintäkternas årliga ökning, andel";
+      parameter Real inflationRevenuePassThrough = 0 "Andel av årets extra inflation som når verksamhetens intäkter";
+      parameter Boolean pensionFollowsPayroll = false "Pensionskostnaden följer lönesumman; banan anger då kostnaden vid basårets lönesumma";
       parameter Real productivityGrowth "Årlig produktivitetsökning, andel";
       parameter Real costDrift = 0 "Kostnadsökning utöver demografi och pris, andel per år";
       outer Components.Calendar calendar;
@@ -1597,6 +1718,7 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       output Units.MoneyRate operatingRevenueRate "Verksamhetens intäkter, mnkr per år";
       Real level[5](each fixed = false) "Löne-, pris-, taxe-, produktivitets- och standardnivå just nu, index (basårets medel = 1)";
       Units.Rate growth[5] "Nivåernas tillväxttakt just nu";
+      Real payrollIndex "Lönesumman just nu i förhållande till basårets, när pensionskostnaden följer den; annars 1";
       Real share "Andel av året som gått";
       discrete output Real wageIndex(start = 1, fixed = true) "Lönenivå, årets medel, index (basår = 1)";
       discrete output Real priceIndex(start = 1, fixed = true) "Prisnivå för övriga kostnader, årets medel, index (basår = 1)";
@@ -1617,18 +1739,23 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       Units.Rate rateNow[5] "Takten för det pågående årets ökning";
       Units.Rate rateNext[5] "Takten för nästa års ökning";
     initial equation
-      level = {Data.startLevel(rateNow[i]*Units.year) for i in 1:5};
+      // Taxenivån växte under basåret med sin egen ökning; årets extra inflation hör inte till basåret.
+      level = {Data.startLevel(if i == 3 then log(1 + operatingRevenueGrowth) else rateNow[i]*Units.year) for i in 1:5};
     equation
       share = (time - (calendar.baseYear + calendar.pathIndex)*Units.year)/Units.year;
-      rateNow = {drivers.wageRate, drivers.priceRate, log(1 + operatingRevenueGrowth), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
-      rateNext = {drivers.wageRateNext, drivers.priceRateNext, log(1 + operatingRevenueGrowth), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
+      // Taxor och avgifter följer sin egen ökning och en del av årets extra inflation.
+      rateNow = {drivers.wageRate, drivers.priceRate, log(1 + operatingRevenueGrowth + inflationRevenuePassThrough*drivers.extraInflation), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
+      rateNext = {drivers.wageRateNext, drivers.priceRateNext, log(1 + operatingRevenueGrowth + inflationRevenuePassThrough*drivers.extraInflation), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
       // Banans ökning gäller årsmedlet. Takterna vid årsskiftena är valda så att årsmedlen får den ökningen (Data.meanPreservingRates).
       growth = rateNow + (rateNext - rateNow)*share;
       der(level) = growth .* level;
       wagesRate = (payroll0 - employerContributions0)/Units.year*level[1]*serviceVolume*level[5]/level[4];
       employerContributionsRate = if employerContributionRatePath[calendar.pathIndex] < 0 then employerContributions0/Units.year*level[1]*serviceVolume*level[5]/level[4] else wagesRate*employerContributionRatePath[calendar.pathIndex];
-      pensionExpenseRate = drivers.pensionExpense/Units.year;
-      pensionCashPaymentsRate = drivers.pensionCashPayments/Units.year;
+      // Pensionskostnaden är en andel av lönesumman: följer lönerna, volymen och produktiviteten. Med en given bana i mnkr
+      // (pensionFollowsPayroll = false) gäller banan.
+      payrollIndex = if pensionFollowsPayroll then (wagesRate + employerContributionsRate)*Units.year/payroll0 else 1;
+      pensionExpenseRate = drivers.pensionExpense/Units.year*payrollIndex;
+      pensionCashPaymentsRate = drivers.pensionCashPayments/Units.year*payrollIndex;
       otherOperatingExpenseRate = otherOperatingExpense0/Units.year*level[2]*serviceVolume*level[5];
       operatingRevenueRate = operatingRevenue0/Units.year*level[3]*cohorts.population/population0;
       der(accumulated[1]) = wagesRate;
@@ -1840,8 +1967,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       parameter Units.Money interest0 "Räntekostnader i basåret, mnkr";
       parameter Units.Money tax0 = 0 "Skatteintäkter i basåret, mnkr";
       parameter Units.Money grants0 = 0 "Generella bidrag i basåret, mnkr";
-      parameter Units.Money financialIncome "Finansiella intäkter per år, mnkr";
+      parameter Units.Money financialIncome "Finansiella intäkter per år vid basårets kassa, mnkr";
       parameter Units.Money otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
+      parameter Real depositSpread = 0 "Skillnad mellan låneräntan och räntan på kassan, andel";
       parameter Boolean liquidityPolicy = false "Styr kassan mot likviditetsreserven";
       parameter Real reserveDays = 0 "Likviditetsreserv i dagar av utbetalningarna";
       parameter Units.Duration reserveAdjustmentTime = 0 "Tidskonstant från bokslutets dagar till reserveDays, år; 0 = reserveDays från start";
@@ -1876,6 +2004,7 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       Transfer repayment "Amortering" annotation(Placement(transformation(origin = {50, -30}, extent = {{-10, -10}, {10, 10}})));
       Units.MoneyRate net "Kassaflöde före finansiering, mnkr per år";
       Real marketRate "Marknadsränta för nya och omsatta lån just nu, andel";
+      Real depositRate "Ränta på kassan just nu, andel";
       Units.MoneyRate fixedInterest(start = averageRate0*debt0, fixed = true) "Årlig räntekostnad på lånen med deras bundna räntor, mnkr per år";
       Real averageRate "Snittränta på skulden just nu, andel";
       input Units.MoneyRate operatingPayments "Driftens utbetalningar: löner med sociala avgifter, pensionsutbetalningar och övriga kostnader, mnkr per år";
@@ -1893,7 +2022,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
     equation
       tax.rate = taxAndGrants.tax/Units.year;
       grants.rate = taxAndGrants.grants/Units.year;
-      financial.rate = financialIncome/Units.year;
+      // Kassan utöver basårets ger ränta: marknadsräntan minus depositSpread. Basårets finansiella intäkter gäller basårets kassa.
+      depositRate = max(0, marketRate - depositSpread);
+      financial.rate = financialIncome/Units.year + depositRate*(cash.level - cash0)/Units.year;
       marketRate = interestRate + (if time >= rateShockTime - 1 then rateShock else 0) "Tiden t är den 31 december år t; datumet rateShockTime är tiden rateShockTime - 1";
       // Lånen omsätts med takten 1/rateFixingYears; nya lån och omsatta lån får marknadsräntan, amortering tar bort snitträntan.
       der(fixedInterest) = if rateFixingYears > 0 then marketRate*(borrowing.rate + prefinancing.rate) - averageRate*repayment.rate
@@ -1908,7 +2039,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       // reserveAdjustmentTime, så att kommunen inte lånar upp eller amorterar skillnaden i januari första året.
       reserveDaysNow = if reserveAdjustmentTime > 0 then reserveDays + (reserveDays0 - reserveDays)*exp(-(time - startTime0)/reserveAdjustmentTime) else reserveDays;
       cashReserve = if liquidityPolicy then max(0, reserveDaysNow/365*(operatingPayments - investments.rate + interest.rate) - creditLine) else 0;
-      reserve = cashReserve + (if calendar.pathIndex == 1 then prefinancing.accumulated else 0);
+      // Det som lånats i förväg hålls i kassan tills den uppskjutna investeringen betalas, jämnt under år två.
+      reserve = cashReserve + (if calendar.pathIndex == 1 then prefinancing.accumulated
+        elseif calendar.pathIndex == 2 and liquidityPolicy then plannedPrefinancing*max(0, 1 - (time - (calendar.baseYear + 2)*Units.year)/Units.year) else 0);
       // Med kassapolicy styrs kassan mot reserven: behovet är underskottet plus avvikelsen från reserven delad med
       // reserveRestoreTime. Det är kontinuerligt i kassan, så lån och amortering växlar inte fram och tillbaka vid reserven.
       // Ett negativt behov amorterar, dock högst så att skulden går mot noll; finns ingen skuld stannar överskottet i kassan.
@@ -1960,7 +2093,7 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
     end Finance;
 
     partial model Economy "Kommunens ekonomi i kontinuerlig tid: lager och flöden"
-      extends Assumptions(residualMigration = Data.calibratedMigrationRates(base.cohorts, base.reportedPopulation, base.births, mortalityRates, olderMortalityRatios, olderAgeingRates, olderShares));
+      extends Assumptions(residualMigration = Data.calibratedMigrationRates(base.cohorts, base.reportedPopulation, base.births, mortalityRates, ageProfile[1:2, :], olderShares));
       extends Report;
       parameter Units.Rate mortalityRates[5] = Data.deathRatesPerYear(base.cohorts, base.reportedPopulation, base.deaths)
         "Dödstal per åldersgrupp och år för demografin i kontinuerlig tid; 65+ ger basårets döda delat med medelfolkmängden";
@@ -1972,17 +2105,17 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
         Placement(transformation(origin = {-170, 140}, extent = {{-10, -10}, {10, 10}})));
       Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
         Placement(transformation(origin = {-200, 60}, extent = {{-20, -40}, {20, 40}})));
-      replaceable Demography demography(p0 = p0, olderShares = olderShares, olderMortalityRatios = olderMortalityRatios, olderAgeingRates = olderAgeingRates, deathRates = mortalityRates, migrationWeights = migrationWeights, births0 = births0) constrainedby DemographyBase "Demografi: lager med födda, döda, åldrande och flyttningar som flöden" annotation(
+      replaceable Demography demography(p0 = p0, olderShares = olderShares, horizon = horizon, ageingRatePath = ageProfile[3:horizon + 2, 1:6], olderMortalityPath = ageProfile[3:horizon + 2, 7:9], deaths0Shown = base.deaths, deathRates = mortalityRates, migrationWeights = migrationWeights, births0 = births0) constrainedby DemographyBase "Demografi: lager med födda, döda, åldrande och flyttningar som flöden" annotation(
         Placement(transformation(origin = {-90, 100}, extent = {{-20, -15}, {20, 15}})));
-      Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces) "Verksamhet" annotation(
+      Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces, infrastructureShare = infrastructureShare, networkGrowth = networkGrowth) "Verksamhet" annotation(
         Placement(transformation(origin = {0, 100}, extent = {{-20, -15}, {20, 15}})));
-      OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
+      OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, inflationRevenuePassThrough = inflationRevenuePassThrough, pensionFollowsPayroll = pensionFollowsPayroll, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
         Placement(transformation(origin = {60, 100}, extent = {{-20, -15}, {20, 15}})));
       Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, taxRatePath = taxRatePath, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, importedRevenueMode = importedRevenueMode, novemberPopulation0 = novemberPopulation0, openingCohorts = p0, ageIncomeWeights = ageIncomeWeights, equalisationCountyRate = equalisationCountyRate, importedComponents = importedComponents, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0, grantsByComponent = grantsByComponent, horizon = horizon, grantComponents0 = grantComponents0, incomeEqualisationPerCapita = incomeEqualisationPerCapitaPath, equalisationGuarantee = equalisationGuarantee, relativeTaxCapacity0 = incomeEqualisationCapacity, incomeEqualisationComposition = incomeEqualisationComposition, relativeTaxCapacity = relativeTaxCapacityPath, costEqualisationPerCapita = costEqualisationPerCapitaPath, regulationPerCapita = regulationPerCapitaPath, lssEqualisationPerCapita = lssEqualisationPerCapitaPath, propertyFee = propertyFeePath, otherGeneralGrants = otherGeneralGrantsPath, grantIncrease = grantIncrease, novemberObserved = true, novemberCohortsObserved = novemberCohorts, novemberPopulationObserved = novemberPopulation) "Intäkter: årets belopp beslutas när året börjar och betalas jämnt under året" annotation(
         Placement(transformation(origin = {-120, 20}, extent = {{-20, -15}, {20, 15}})));
       Payments payments(active = workingCapitalEnabled, receivables0 = receivables0, payables0 = payables0, grantAdvances0 = grantAdvances0, collectionDays = collectionDays, paymentDays = paymentDays, firstYearGrantAdvance = firstYearGrantAdvance, netCostRoundingAdjustment = netCostRoundingAdjustment) "Driftens betalningar" annotation(
         Placement(transformation(origin = {60, 40}, extent = {{-20, -15}, {20, 15}})));
-      Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, liquidityPolicy = liquidityPolicy, reserveDays = reserveDays, reserveAdjustmentTime = reserveAdjustmentTime, creditLine = creditLine, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
+      Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, depositSpread = depositSpread, liquidityPolicy = liquidityPolicy, reserveDays = reserveDays, reserveAdjustmentTime = reserveAdjustmentTime, creditLine = creditLine, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
         averageRate0 = interestRate, rateFixingYears = rateFixingYears, rateShock = rateShock, rateShockTime = rateShockTime) "Kassa och lån" annotation(
         Placement(transformation(origin = {0, -20}, extent = {{-20, -15}, {20, 15}})));
       Capital capital(baseYear = base.year, assets0 = assets0, depreciation0 = depreciation0, life = life, constructionYears = constructionYears, constructionShare = constructionShare, workInProgress0 = workInProgress0, projectOpeningStock = projectOpeningStock, projectPayment = projectPayment, projectOpeningStep = projectOpeningStep, projectPlaces = projectPlaces) "Kapital" annotation(
@@ -2040,7 +2173,8 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
       yearIndex = clock.yearsClosed;
       year = base.year + clock.yearsClosed;
       annualInvestment = if yearIndex == 0 then base.investment else finance.investments.annual*(-1);
-      annualInterestRate = if yearIndex == 0 then (if base.openingDebt > 0 then base.interestExpense/base.openingDebt else interestRate) else interestRateYear;
+      annualFinancialIncome = if yearIndex == 0 then financialIncome else finance.financial.annual;
+      annualInterestRate = if yearIndex == 0 then (if base.openingDebt + base.debt > 0 then base.interestExpense/((base.openingDebt + base.debt)/2) else interestRate) else interestRateYear;
       p = demography.cohorts.p;
       population = demography.cohorts.population;
       population80Plus = sum(demography.cohorts.older[2:3]);

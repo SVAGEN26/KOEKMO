@@ -15,7 +15,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 82.5, financialIncome = 15.5, interestExpense = 7.4, otherFinancialExpense = 14,
       debt = 290, openingDebt = 296.4, cash = 147.8, assets = 1311.8, investment = 121.4, taxRate = 22.15,
       sectorShares = {0.4469, 0.2363, 0.3168}, educationShares = {0.2476, 0.5546, 0.1978},
-      careCostPerInhabitant = {23782, 185493})
+      careCostPerInhabitant = {23782, 185493},
+      infrastructureShare = 0.047,
+      ages = {158.4, 175.4, 182.4, 210.3, 201.3, 226.2, 227.2, 257.1, 230.2, 253.1, 264.1, 274, 252.1, 267.1, 296, 255.1, 269.1, 235.2, 240.2, 238.2, 200.3, 154.5, 176.4, 155.5, 167.4, 189.3, 184.4, 201.3, 195.3, 187.3, 230.2, 270.1, 258.1, 277, 283, 287, 314.9, 314.9, 246.1, 286, 257.1, 234.2, 246.1, 246.1, 234.2, 253.1, 239.2, 231.2, 217.2, 226.2, 260.1, 274, 288, 277, 272.1, 296, 279, 295, 298, 328.9, 333.8, 299, 271.1, 253.1, 280, 254.1, 260.1, 251.1, 268.1, 244.1, 237.2, 261.1, 233.2, 248.1, 228.2, 278, 275, 252.1, 243.2, 234.2, 240.2, 213.3, 221.2, 169.4, 159.4, 117.6, 92.7, 105.6, 95.7, 59.8, 71.7, 44.8, 38.9, 36.9, 24.9, 20.9, 12, 8, 7, 3, 10})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.682491, 0.267148, 0.050361};
     constant BaseYear finspang2024 = BaseYear(
@@ -31,7 +33,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 82.9, financialIncome = 21.3, interestExpense = 8.4, otherFinancialExpense = 16.8,
       debt = 296.4, openingDebt = 285.4, cash = 74.5, assets = 1278.4, investment = 98.5, taxRate = 22.15,
       sectorShares = {0.4476, 0.2379, 0.3145}, educationShares = {0.2551, 0.5518, 0.1931},
-      careCostPerInhabitant = {23206, 183691})
+      careCostPerInhabitant = {23206, 183691},
+      infrastructureShare = 0.0493,
+      ages = {164, 178, 205, 199, 224, 224, 253, 233, 253, 268, 276, 253, 268, 293, 257, 265, 233, 242, 244, 215, 163, 189, 169, 170, 189, 197, 189, 204, 182, 226, 260, 249, 271, 287, 294, 316, 315, 245, 279, 252, 225, 248, 250, 235, 254, 242, 230, 224, 225, 255, 271, 293, 281, 270, 300, 282, 291, 296, 331, 337, 306, 272, 256, 281, 256, 262, 256, 266, 243, 245, 262, 247, 253, 236, 286, 275, 259, 253, 244, 248, 232, 234, 185, 166, 131, 104, 117, 105, 73, 86, 51, 42, 39, 33, 27, 17, 14, 9, 8, 6, 5})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.694872, 0.259648, 0.045479};
     constant BaseYear finspang2023 = BaseYear(
@@ -47,7 +51,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 74.4, financialIncome = 3.4, interestExpense = 8.2, otherFinancialExpense = 4.9,
       debt = 285.4, openingDebt = 228.4, cash = 27.2, assets = 1264.4, investment = 200.7, taxRate = 22.15,
       sectorShares = {0.445, 0.2292, 0.3257}, educationShares = {0.2493, 0.5631, 0.1877},
-      careCostPerInhabitant = {21031, 177681})
+      careCostPerInhabitant = {21031, 177681},
+      infrastructureShare = 0.0431,
+      ages = {172, 195, 198, 225, 224, 250, 229, 256, 271, 271, 257, 268, 300, 259, 267, 233, 240, 243, 230, 185, 193, 180, 168, 188, 188, 188, 209, 179, 220, 240, 259, 263, 276, 288, 312, 319, 243, 285, 260, 222, 248, 255, 239, 248, 240, 233, 227, 222, 258, 275, 292, 282, 270, 295, 276, 291, 294, 324, 341, 309, 270, 257, 278, 264, 269, 261, 268, 243, 253, 267, 251, 250, 243, 285, 275, 267, 260, 246, 256, 239, 249, 191, 182, 142, 109, 128, 120, 83, 97, 68, 51, 44, 42, 34, 28, 16, 11, 12, 8, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.704595, 0.249635, 0.04577};
     constant BaseYear finspang2022 = BaseYear(
@@ -63,7 +69,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 72.1, financialIncome = 1.1, interestExpense = 3.5, otherFinancialExpense = 2.6,
       debt = 228.4, openingDebt = 217.4, cash = 85.8, assets = 1139.2, investment = 100.9, taxRate = 22.15,
       sectorShares = {0.4518, 0.2287, 0.3195}, educationShares = {0.2648, 0.5511, 0.1842},
-      careCostPerInhabitant = {19593, 177603})
+      careCostPerInhabitant = {19593, 177603},
+      infrastructureShare = 0.0459,
+      ages = {196, 195, 226, 231, 247, 230, 260, 277, 271, 260, 265, 299, 245, 266, 231, 235, 239, 235, 204, 214, 208, 176, 195, 202, 204, 206, 192, 210, 239, 265, 252, 266, 296, 289, 313, 257, 282, 258, 223, 254, 256, 250, 251, 245, 240, 229, 227, 257, 271, 300, 282, 272, 301, 275, 291, 291, 326, 346, 308, 273, 261, 280, 267, 269, 265, 270, 249, 256, 270, 252, 254, 247, 282, 281, 273, 273, 258, 262, 252, 256, 203, 194, 145, 112, 139, 134, 89, 107, 79, 61, 59, 53, 44, 31, 20, 20, 15, 9, 3, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.721092, 0.231446, 0.047462};
     constant BaseYear finspang2021 = BaseYear(
@@ -79,7 +87,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 70.6, financialIncome = 6, interestExpense = 4, otherFinancialExpense = 3.4,
       debt = 217.4, openingDebt = 272.1, cash = 96.6, assets = 1109.7, investment = 63.4, taxRate = 22.15,
       sectorShares = {0.4636, 0.2289, 0.3076}, educationShares = {0.2709, 0.5427, 0.1864},
-      careCostPerInhabitant = {18809, 175376})
+      careCostPerInhabitant = {18809, 175376},
+      infrastructureShare = 0.041,
+      ages = {198, 217, 229, 261, 230, 250, 273, 262, 254, 259, 288, 239, 262, 232, 239, 238, 240, 207, 238, 224, 197, 211, 206, 201, 193, 195, 224, 234, 260, 260, 265, 285, 276, 301, 247, 269, 256, 227, 252, 255, 250, 244, 238, 236, 228, 221, 259, 269, 296, 285, 264, 303, 274, 288, 292, 329, 336, 301, 269, 257, 282, 259, 271, 268, 267, 246, 254, 278, 261, 264, 251, 292, 288, 286, 276, 267, 267, 259, 262, 206, 208, 158, 116, 151, 142, 100, 114, 93, 75, 73, 62, 56, 41, 31, 24, 22, 11, 7, 1, 2, 5})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.726188, 0.225729, 0.048082};
     constant BaseYear finspang2020 = BaseYear(
@@ -95,7 +105,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 55.5, financialIncome = 7.5, interestExpense = 4.8, otherFinancialExpense = 8.2,
       debt = 272.1, openingDebt = 274.9, cash = 112, assets = 930.7, investment = 92.7, taxRate = 22.15,
       sectorShares = {0.4615, 0.2268, 0.3117}, educationShares = {0.282, 0.53, 0.188},
-      careCostPerInhabitant = {18691, 174633})
+      careCostPerInhabitant = {18691, 174633},
+      infrastructureShare = 0.04,
+      ages = {216, 226, 247, 226, 248, 273, 251, 250, 261, 289, 235, 255, 238, 236, 230, 232, 208, 236, 243, 212, 226, 210, 194, 189, 197, 214, 220, 260, 253, 261, 279, 272, 292, 250, 267, 241, 227, 244, 242, 246, 237, 239, 228, 226, 222, 259, 269, 298, 282, 260, 299, 274, 282, 292, 331, 336, 295, 271, 258, 278, 258, 270, 265, 267, 246, 253, 280, 261, 262, 253, 297, 293, 294, 280, 277, 271, 266, 265, 212, 225, 167, 126, 160, 149, 110, 121, 102, 88, 86, 73, 66, 46, 38, 34, 27, 16, 10, 5, 6, 5, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.735029, 0.2178, 0.047172};
     constant BaseYear finspang2019 = BaseYear(
@@ -111,7 +123,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 52.6, financialIncome = 10.4, interestExpense = 5.4, otherFinancialExpense = 2.7,
       debt = 274.9, openingDebt = 299.8, cash = 93.2, assets = 896.5, investment = 52, taxRate = 22.15,
       sectorShares = {0.4503, 0.2362, 0.3135}, educationShares = {0.2838, 0.5249, 0.1913},
-      careCostPerInhabitant = {18071, 171278})
+      careCostPerInhabitant = {18071, 171278},
+      infrastructureShare = 0.0435,
+      ages = {220, 244, 226, 250, 271, 252, 250, 267, 294, 237, 263, 239, 241, 231, 231, 208, 247, 248, 238, 250, 238, 192, 190, 200, 222, 225, 254, 254, 258, 274, 268, 290, 249, 263, 242, 225, 248, 241, 243, 238, 230, 225, 227, 221, 264, 279, 295, 279, 262, 301, 273, 286, 291, 323, 335, 296, 274, 261, 274, 264, 273, 267, 264, 254, 262, 279, 263, 269, 261, 305, 297, 300, 285, 283, 276, 275, 271, 218, 231, 174, 131, 169, 159, 119, 130, 110, 96, 101, 80, 75, 59, 46, 44, 34, 22, 19, 5, 10, 11, 1, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.736832, 0.216226, 0.046941};
     constant BaseYear finspang2018 = BaseYear(
@@ -127,7 +141,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 57.7, financialIncome = 16.1, interestExpense = 6.3, otherFinancialExpense = 2.3,
       debt = 299.8, openingDebt = 342.7, cash = 114, assets = 900.6, investment = 47.4, taxRate = 22.15,
       sectorShares = {0.4515, 0.2315, 0.317}, educationShares = {0.2923, 0.5176, 0.1901},
-      careCostPerInhabitant = {17404, 165681})
+      careCostPerInhabitant = {17404, 165681},
+      infrastructureShare = 0.049,
+      ages = {229, 224, 248, 264, 261, 245, 259, 286, 233, 267, 233, 239, 228, 232, 206, 244, 243, 227, 255, 228, 206, 200, 202, 222, 238, 251, 247, 256, 276, 259, 272, 236, 254, 233, 212, 245, 236, 239, 235, 224, 226, 228, 216, 257, 277, 286, 276, 257, 295, 274, 279, 294, 327, 333, 293, 275, 258, 279, 262, 270, 270, 269, 253, 267, 278, 267, 277, 264, 304, 307, 310, 291, 295, 288, 280, 275, 220, 239, 186, 138, 180, 162, 132, 139, 121, 105, 104, 90, 83, 67, 54, 58, 41, 24, 19, 6, 17, 13, 3, 3, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.734576, 0.220503, 0.044921};
     constant BaseYear finspang2017 = BaseYear(
@@ -143,7 +159,9 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       depreciation = 47.4, financialIncome = 18.8, interestExpense = 3.5, otherFinancialExpense = 18.3,
       debt = 342.7, openingDebt = 371.5, cash = 115.8, assets = 914, investment = 76.3, taxRate = 22.15,
       sectorShares = {0.4395, 0.2308, 0.3297}, educationShares = {0.2953, 0.5156, 0.1892},
-      careCostPerInhabitant = {16734, 160972})
+      careCostPerInhabitant = {16734, 160972},
+      infrastructureShare = 0.0393,
+      ages = {207, 248, 261, 256, 240, 251, 282, 222, 259, 222, 227, 230, 225, 203, 239, 238, 223, 258, 227, 217, 211, 207, 232, 253, 237, 241, 234, 268, 242, 263, 224, 242, 234, 209, 239, 230, 232, 227, 220, 226, 220, 210, 263, 273, 278, 276, 256, 291, 280, 278, 296, 323, 337, 294, 276, 259, 278, 270, 272, 273, 269, 253, 267, 282, 272, 277, 264, 304, 310, 312, 296, 301, 297, 289, 288, 227, 246, 194, 144, 189, 169, 137, 146, 129, 112, 111, 105, 96, 79, 68, 66, 48, 32, 26, 12, 17, 13, 8, 5, 4, 4})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.739531, 0.216338, 0.044131};
 

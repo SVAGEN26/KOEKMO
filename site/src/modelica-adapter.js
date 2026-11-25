@@ -22,7 +22,7 @@ export function modelicaSource(b,history,overrides={},path=null) {
   for(const k of ['deathRates','historyCohorts','historyTotals','historyBirths','historyDeaths','useObservedMigration','observedMigration','projectedCohorts','followProjection']) delete fields[k];
   fields.mortalityRates=`Kommunekonomi.Data.deathRatesPerYear(${literal(historyCohorts)},${literal(historyTotals)},${historyDeaths})`;
   fields.residualMigration=useObservedMigration?observedMigration
-    :`Kommunekonomi.Data.calibratedMigrationRates(${literal(historyCohorts)},${literal(historyTotals)},${literal(historyBirths)},mortalityRates,olderMortalityRatios,olderAgeingRates,olderShares)`;
-  if(projectedCohorts) fields.residualMigrationPath=`Kommunekonomi.Data.projectionResiduals(p0,${literal(projectedCohorts)},${literal(followProjection)},births0,mortalityRates,olderMortalityRatios,olderAgeingRates,olderShares,residualMigration)`;
+    :`Kommunekonomi.Data.calibratedMigrationRates(${literal(historyCohorts)},${literal(historyTotals)},${literal(historyBirths)},mortalityRates,ageProfile[1:2,:],olderShares)`;
+  if(projectedCohorts) fields.residualMigrationPath=`Kommunekonomi.Data.projectionResiduals(p0,${literal(projectedCohorts)},${literal(followProjection)},births0,mortalityRates,ageProfile[3:${fields.horizon}+2,:],olderShares,residualMigration)`;
   return `within ;\nmodel Scenario\n  extends ${settings.packageName}.Continuous(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=${1/12}));\nend Scenario;\n`;
 }

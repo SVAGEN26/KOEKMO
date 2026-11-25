@@ -1,0 +1,596 @@
+{
+ "source": "Källa: Kolada (RKA)",
+ "archive": "data/downloads/20261125T203859Z",
+ "kpis": {
+  "N07024": "Nettokostnad väg- och järnvägsnät, parkering, kr/inv",
+  "N07810": "Bil- och cykelväg i kommunen, kommunal, meter"
+ },
+ "note": "netCostPerInhabitant: nettokostnad för väg- och järnvägsnät samt parkering, kr per invånare. metres: kommunal bil- och cykelväg, meter.",
+ "municipalities": {
+  "0509": {
+   "2015": {
+    "netCostPerInhabitant": 1263.368984
+   },
+   "2016": {
+    "netCostPerInhabitant": 671.0403
+   },
+   "2017": {
+    "netCostPerInhabitant": 742.65394,
+    "metres": 46604.129167
+   },
+   "2018": {
+    "netCostPerInhabitant": 933.120421,
+    "metres": 49401.16582
+   },
+   "2019": {
+    "netCostPerInhabitant": 736.93086,
+    "metres": 49401.88967
+   },
+   "2020": {
+    "netCostPerInhabitant": 872.611465,
+    "metres": 49401.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 963.08156,
+    "metres": 49401.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 971.036299,
+    "metres": 49898.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1096.040917,
+    "metres": 49949.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1170.326523,
+    "metres": 50030.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 1437.655622,
+    "metres": 51301.0
+   }
+  },
+  "0512": {
+   "2015": {
+    "netCostPerInhabitant": 778.29415
+   },
+   "2016": {
+    "netCostPerInhabitant": 1116.462585
+   },
+   "2017": {
+    "netCostPerInhabitant": 789.177605
+   },
+   "2018": {
+    "netCostPerInhabitant": 798.022976,
+    "metres": 27254.989859
+   },
+   "2019": {
+    "netCostPerInhabitant": 700.026688,
+    "metres": 27504.963849
+   },
+   "2020": {
+    "netCostPerInhabitant": 981.749866,
+    "metres": 27505.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 915.832206,
+    "metres": 27437.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 910.127613,
+    "metres": 27451.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 934.561452,
+    "metres": 27434.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1072.531715,
+    "metres": 27434.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 1306.990881,
+    "metres": 27434.0
+   }
+  },
+  "0513": {
+   "2015": {
+    "netCostPerInhabitant": 610.923941
+   },
+   "2016": {
+    "netCostPerInhabitant": 686.449261
+   },
+   "2017": {
+    "netCostPerInhabitant": 674.559806
+   },
+   "2018": {
+    "netCostPerInhabitant": 706.202723,
+    "metres": 55916.530354
+   },
+   "2019": {
+    "netCostPerInhabitant": 628.772636,
+    "metres": 56351.800104
+   },
+   "2020": {
+    "netCostPerInhabitant": 619.057151,
+    "metres": 56274.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 724.223726,
+    "metres": 56030.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1264.799364,
+    "metres": 56822.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1160.028022,
+    "metres": 57466.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1594.556593,
+    "metres": 57793.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 1468.158001,
+    "metres": 58020.0
+   }
+  },
+  "0560": {
+   "2015": {
+    "netCostPerInhabitant": 1238.551051
+   },
+   "2016": {
+    "netCostPerInhabitant": 1418.760469,
+    "metres": 42751.3680032
+   },
+   "2017": {
+    "netCostPerInhabitant": 1370.988447,
+    "metres": 46948.836594
+   },
+   "2018": {
+    "netCostPerInhabitant": 1618.462103,
+    "metres": 47452.524958
+   },
+   "2019": {
+    "netCostPerInhabitant": 1268.07889,
+    "metres": 47490.625348
+   },
+   "2020": {
+    "netCostPerInhabitant": 1410.586289,
+    "metres": 47491.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1318.577649,
+    "metres": 47499.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1442.888323,
+    "metres": 47523.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1683.32428,
+    "metres": 47499.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1739.169839,
+    "metres": 47499.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 855.072464,
+    "metres": 47499.0
+   }
+  },
+  "0561": {
+   "2015": {
+    "netCostPerInhabitant": 1403.551321,
+    "metres": 108733.82724
+   },
+   "2016": {
+    "netCostPerInhabitant": 1376.086769,
+    "metres": 108600.34809
+   },
+   "2017": {
+    "netCostPerInhabitant": 1357.664861,
+    "metres": 108600.34809
+   },
+   "2018": {
+    "netCostPerInhabitant": 1451.330502,
+    "metres": 108600.34809
+   },
+   "2019": {
+    "netCostPerInhabitant": 1484.656177,
+    "metres": 125747.0
+   },
+   "2020": {
+    "netCostPerInhabitant": 1498.118491,
+    "metres": 110581.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1475.571453,
+    "metres": 110626.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1550.321571,
+    "metres": 110566.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1521.378709,
+    "metres": 110611.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 2274.526903,
+    "metres": 116648.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 2054.569191,
+    "metres": 116648.0
+   }
+  },
+  "0562": {
+   "2015": {
+    "netCostPerInhabitant": 803.57564,
+    "metres": 119321.33867
+   },
+   "2016": {
+    "netCostPerInhabitant": 867.555514,
+    "metres": 119321.33869
+   },
+   "2017": {
+    "netCostPerInhabitant": 732.863697,
+    "metres": 119068.83287
+   },
+   "2018": {
+    "netCostPerInhabitant": 902.288813,
+    "metres": 119498.86283
+   },
+   "2019": {
+    "netCostPerInhabitant": 809.784593,
+    "metres": 119702.73804
+   },
+   "2020": {
+    "netCostPerInhabitant": 751.987135,
+    "metres": 119702.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 777.376765,
+    "metres": 120685.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 961.923024,
+    "metres": 127017.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 997.00378,
+    "metres": 127189.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1134.393932,
+    "metres": 131340.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 1096.270114,
+    "metres": 133567.0
+   }
+  },
+  "0563": {
+   "2015": {
+    "netCostPerInhabitant": 780.689299
+   },
+   "2016": {
+    "netCostPerInhabitant": 864.259188
+   },
+   "2017": {
+    "netCostPerInhabitant": 682.19697,
+    "metres": 46664.456011
+   },
+   "2018": {
+    "netCostPerInhabitant": 964.680744,
+    "metres": 48248.364351
+   },
+   "2019": {
+    "netCostPerInhabitant": 1049.790423,
+    "metres": 48116.486851
+   },
+   "2020": {
+    "netCostPerInhabitant": 1857.95528,
+    "metres": 48236.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 2371.801567,
+    "metres": 48514.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 2291.874181,
+    "metres": 48595.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 2738.231004,
+    "metres": 49700.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 2691.827243,
+    "metres": 49700.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 2710.470369,
+    "metres": 50250.0
+   }
+  },
+  "0580": {
+   "2015": {
+    "netCostPerInhabitant": 1310.363087,
+    "metres": 970312.0155
+   },
+   "2016": {
+    "netCostPerInhabitant": 1337.960556,
+    "metres": 1038406.1998
+   },
+   "2017": {
+    "netCostPerInhabitant": 1250.643452,
+    "metres": 1048589.0696
+   },
+   "2018": {
+    "netCostPerInhabitant": 1217.867034,
+    "metres": 1019460.0997
+   },
+   "2019": {
+    "netCostPerInhabitant": 1352.582934,
+    "metres": 1004170.4181
+   },
+   "2020": {
+    "netCostPerInhabitant": 1485.991641,
+    "metres": 1012125.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1465.229238,
+    "metres": 1034326.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 2091.496523,
+    "metres": 1038574.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 2666.871759,
+    "metres": 1058674.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 2175.844318,
+    "metres": 1072278.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 2228.416136,
+    "metres": 1109552.0
+   }
+  },
+  "0581": {
+   "2015": {
+    "netCostPerInhabitant": 630.203962,
+    "metres": 629040.255
+   },
+   "2016": {
+    "netCostPerInhabitant": 689.279077,
+    "metres": 630952.047
+   },
+   "2017": {
+    "netCostPerInhabitant": 634.016193,
+    "metres": 640629.883
+   },
+   "2018": {
+    "netCostPerInhabitant": 777.280556,
+    "metres": 641804.9155
+   },
+   "2019": {
+    "netCostPerInhabitant": 587.213891,
+    "metres": 650658.0262
+   },
+   "2020": {
+    "netCostPerInhabitant": 902.828308,
+    "metres": 656685.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1090.586883,
+    "metres": 699843.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1391.917034,
+    "metres": 684518.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1640.25957,
+    "metres": 723446.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1717.630018,
+    "metres": 726089.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 1732.132998,
+    "metres": 732607.0
+   }
+  },
+  "0582": {
+   "2015": {
+    "netCostPerInhabitant": 1699.648876,
+    "metres": 52443.866217
+   },
+   "2016": {
+    "netCostPerInhabitant": 1547.840578,
+    "metres": 52443.866217
+   },
+   "2017": {
+    "netCostPerInhabitant": 1504.786172,
+    "metres": 72402.81736
+   },
+   "2018": {
+    "netCostPerInhabitant": 1541.934601,
+    "metres": 72340.87047
+   },
+   "2019": {
+    "netCostPerInhabitant": 1444.0722,
+    "metres": 72482.0016
+   },
+   "2020": {
+    "netCostPerInhabitant": 1504.994527,
+    "metres": 72904.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1841.750153,
+    "metres": 73455.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1697.316975,
+    "metres": 73475.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 2068.608327,
+    "metres": 75271.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 2072.283454,
+    "metres": 75271.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 2305.813717,
+    "metres": 75271.0
+   }
+  },
+  "0583": {
+   "2015": {
+    "netCostPerInhabitant": 1070.764282,
+    "metres": 404792.4784
+   },
+   "2016": {
+    "netCostPerInhabitant": 854.084794,
+    "metres": 404466.7405
+   },
+   "2017": {
+    "netCostPerInhabitant": 894.670371,
+    "metres": 404466.7405
+   },
+   "2018": {
+    "netCostPerInhabitant": 954.792043,
+    "metres": 407114.4226
+   },
+   "2019": {
+    "netCostPerInhabitant": 907.60882,
+    "metres": 408235.4038
+   },
+   "2020": {
+    "netCostPerInhabitant": 895.210816,
+    "metres": 411179.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1086.000824,
+    "metres": 407758.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1253.087267,
+    "metres": 409975.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1247.004208,
+    "metres": 408958.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1327.571544,
+    "metres": 409238.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 1523.289513,
+    "metres": 411199.0
+   }
+  },
+  "0584": {
+   "2015": {
+    "netCostPerInhabitant": 1092.615094,
+    "metres": 48526.355987
+   },
+   "2016": {
+    "netCostPerInhabitant": 1810.560697,
+    "metres": 69826.79387
+   },
+   "2017": {
+    "netCostPerInhabitant": 1180.838162,
+    "metres": 68786.12387
+   },
+   "2018": {
+    "netCostPerInhabitant": 1329.252063,
+    "metres": 69909.92513
+   },
+   "2019": {
+    "netCostPerInhabitant": 1200.726979,
+    "metres": 73416.27432
+   },
+   "2020": {
+    "netCostPerInhabitant": 1232.789977,
+    "metres": 73417.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1465.196599,
+    "metres": 73347.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1684.534153,
+    "metres": 74144.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1935.028249,
+    "metres": 74791.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 2044.726302,
+    "metres": 75960.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 2104.890433,
+    "metres": 75447.0
+   }
+  },
+  "0586": {
+   "2015": {
+    "netCostPerInhabitant": 1492.669724
+   },
+   "2016": {
+    "netCostPerInhabitant": 1395.724128
+   },
+   "2017": {
+    "netCostPerInhabitant": 1468.707206,
+    "metres": 261203.01257
+   },
+   "2018": {
+    "netCostPerInhabitant": 1696.014321,
+    "metres": 264738.7332
+   },
+   "2019": {
+    "netCostPerInhabitant": 1547.121551,
+    "metres": 264748.22335
+   },
+   "2020": {
+    "netCostPerInhabitant": 1236.194564,
+    "metres": 264861.0
+   },
+   "2021": {
+    "netCostPerInhabitant": 1297.958895,
+    "metres": 266875.0
+   },
+   "2022": {
+    "netCostPerInhabitant": 1433.669348,
+    "metres": 267634.0
+   },
+   "2023": {
+    "netCostPerInhabitant": 1764.242721,
+    "metres": 276975.0
+   },
+   "2024": {
+    "netCostPerInhabitant": 1794.040774,
+    "metres": 279753.0
+   },
+   "2025": {
+    "netCostPerInhabitant": 2003.955175,
+    "metres": 280349.0
+   }
+  }
+ }
+}

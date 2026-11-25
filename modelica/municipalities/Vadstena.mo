@@ -15,7 +15,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 41.8, financialIncome = 3.5, interestExpense = 11.4, otherFinancialExpense = 2.3,
       debt = 466.7, openingDebt = 429.5, cash = 67.6, assets = 819.1, investment = 89.2, taxRate = 22.8,
       sectorShares = {0.3522, 0.2656, 0.3822}, educationShares = {0.2759, 0.5649, 0.1592},
-      careCostPerInhabitant = {23763, 140538})
+      careCostPerInhabitant = {23763, 140538},
+      infrastructureShare = 0.0738,
+      ages = {44, 55, 69, 58, 62, 75, 64, 73, 67, 83, 68, 79, 83, 79, 76, 58, 64, 60, 69, 57, 69, 63, 59, 43, 34, 49, 61, 49, 64, 41, 73, 68, 69, 75, 91, 87, 79, 83, 78, 78, 93, 63, 81, 66, 64, 71, 76, 72, 70, 85, 57, 73, 76, 104, 114, 113, 96, 115, 95, 115, 110, 105, 120, 100, 118, 121, 96, 103, 120, 106, 117, 88, 114, 112, 118, 131, 119, 136, 106, 133, 106, 99, 86, 106, 77, 63, 61, 43, 43, 34, 33, 23, 23, 19, 12, 6, 7, 7, 3, 3, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.668221, 0.278943, 0.052836};
     constant BaseYear vadstena2024 = BaseYear(
@@ -31,7 +33,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 37.3, financialIncome = 4, interestExpense = 9.6, otherFinancialExpense = 5.1,
       debt = 429.5, openingDebt = 258.5, cash = 60.6, assets = 770.5, investment = 189.1, taxRate = 22.8,
       sectorShares = {0.3549, 0.2611, 0.384}, educationShares = {0.2807, 0.5603, 0.1591},
-      careCostPerInhabitant = {23342, 144709})
+      careCostPerInhabitant = {23342, 144709},
+      infrastructureShare = 0.0728,
+      ages = {54, 63, 57, 55, 74, 59, 65, 64, 81, 67, 79, 84, 77, 75, 60, 67, 66, 70, 66, 78, 56, 71, 57, 35, 48, 56, 49, 67, 35, 65, 61, 69, 83, 90, 92, 78, 87, 80, 80, 89, 65, 78, 63, 62, 75, 72, 69, 71, 88, 60, 74, 75, 104, 111, 108, 88, 107, 96, 112, 109, 108, 123, 102, 115, 121, 91, 101, 114, 110, 109, 91, 115, 120, 116, 134, 128, 142, 108, 138, 110, 103, 87, 102, 78, 61, 68, 52, 51, 38, 33, 30, 26, 20, 18, 9, 8, 6, 2, 2, 2, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.68396, 0.266535, 0.049505};
     constant BaseYear vadstena2023 = BaseYear(
@@ -47,7 +51,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 31.4, financialIncome = 3.5, interestExpense = 6.4, otherFinancialExpense = 5.1,
       debt = 258.5, openingDebt = 197.1, cash = 36.1, assets = 620, investment = 129.1, taxRate = 22.8,
       sectorShares = {0.3603, 0.2786, 0.3611}, educationShares = {0.2778, 0.5603, 0.162},
-      careCostPerInhabitant = {21742, 151254})
+      careCostPerInhabitant = {21742, 151254},
+      infrastructureShare = 0.076,
+      ages = {60, 51, 58, 71, 57, 68, 63, 77, 62, 79, 77, 78, 74, 62, 62, 67, 69, 64, 76, 64, 75, 56, 37, 45, 53, 40, 68, 29, 60, 64, 61, 78, 92, 93, 81, 80, 79, 83, 85, 62, 76, 64, 61, 77, 65, 70, 69, 88, 63, 79, 78, 99, 112, 106, 89, 104, 93, 108, 109, 110, 121, 101, 113, 117, 94, 104, 114, 109, 112, 93, 113, 115, 112, 134, 129, 145, 110, 147, 111, 106, 93, 107, 81, 66, 71, 54, 54, 44, 33, 33, 29, 23, 23, 15, 9, 7, 4, 4, 2, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.699362, 0.253589, 0.047049};
     constant BaseYear vadstena2022 = BaseYear(
@@ -63,7 +69,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 27.4, financialIncome = 2.5, interestExpense = 3, otherFinancialExpense = 1.2,
       debt = 197.1, openingDebt = 175.4, cash = 54.2, assets = 524.5, investment = 105.3, taxRate = 22.8,
       sectorShares = {0.3574, 0.2791, 0.3635}, educationShares = {0.2868, 0.5324, 0.1809},
-      careCostPerInhabitant = {20498, 158210})
+      careCostPerInhabitant = {20498, 158210},
+      infrastructureShare = 0.0718,
+      ages = {50, 53, 76, 60, 66, 68, 78, 60, 79, 76, 78, 72, 65, 63, 67, 69, 63, 73, 72, 89, 63, 39, 49, 58, 42, 67, 31, 58, 66, 58, 79, 86, 91, 80, 85, 76, 80, 84, 60, 75, 62, 61, 75, 62, 74, 65, 86, 61, 79, 80, 99, 117, 106, 91, 104, 94, 108, 106, 109, 122, 96, 113, 121, 96, 103, 111, 111, 111, 94, 113, 114, 113, 136, 134, 150, 114, 148, 119, 110, 94, 108, 83, 66, 71, 57, 61, 49, 39, 36, 33, 25, 25, 18, 13, 12, 11, 4, 2, 1, 1, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.712505, 0.242461, 0.045034};
     constant BaseYear vadstena2021 = BaseYear(
@@ -79,7 +87,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 26.8, financialIncome = 3.9, interestExpense = 1.6, otherFinancialExpense = 1.5,
       debt = 175.4, openingDebt = 183.5, cash = 57.6, assets = 450.3, investment = 40.6, taxRate = 22.8,
       sectorShares = {0.3617, 0.2784, 0.3598}, educationShares = {0.2762, 0.5279, 0.1959},
-      careCostPerInhabitant = {19387, 162997})
+      careCostPerInhabitant = {19387, 162997},
+      infrastructureShare = 0.0654,
+      ages = {50, 74, 58, 65, 68, 72, 61, 77, 74, 81, 70, 66, 65, 64, 69, 65, 75, 71, 94, 68, 52, 66, 72, 42, 69, 33, 53, 70, 54, 81, 79, 94, 77, 80, 71, 77, 81, 59, 72, 59, 62, 76, 62, 72, 65, 88, 64, 77, 77, 101, 120, 107, 93, 102, 94, 112, 101, 105, 116, 101, 110, 116, 99, 99, 111, 106, 108, 93, 112, 112, 121, 138, 139, 151, 117, 150, 123, 114, 95, 114, 86, 68, 76, 58, 65, 57, 41, 39, 35, 32, 25, 19, 21, 16, 20, 10, 3, 2, 4, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.725911, 0.225506, 0.048583};
     constant BaseYear vadstena2020 = BaseYear(
@@ -95,7 +105,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 33.5, financialIncome = 2.6, interestExpense = 1.6, otherFinancialExpense = 1,
       debt = 183.5, openingDebt = 161.5, cash = 66.8, assets = 434.5, investment = 43.7, taxRate = 22.8,
       sectorShares = {0.3807, 0.2853, 0.334}, educationShares = {0.2768, 0.5441, 0.1791},
-      careCostPerInhabitant = {18268, 169577})
+      careCostPerInhabitant = {18268, 169577},
+      infrastructureShare = 0.0596,
+      ages = {65, 59, 62, 67, 67, 62, 77, 76, 76, 70, 65, 62, 63, 65, 65, 78, 69, 95, 74, 60, 71, 71, 43, 67, 37, 62, 66, 55, 79, 68, 81, 75, 72, 64, 76, 75, 59, 69, 60, 59, 77, 60, 70, 67, 82, 60, 71, 77, 101, 112, 106, 92, 104, 96, 112, 98, 104, 115, 99, 107, 113, 97, 96, 104, 104, 109, 94, 113, 108, 115, 139, 136, 146, 122, 149, 119, 114, 101, 118, 87, 69, 78, 60, 65, 63, 42, 43, 40, 33, 30, 27, 24, 22, 20, 14, 3, 4, 5, 0, 0, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.733527, 0.216743, 0.049731};
     constant BaseYear vadstena2019 = BaseYear(
@@ -111,7 +123,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 26.4, financialIncome = 4.8, interestExpense = 3.7, otherFinancialExpense = 1.1,
       debt = 161.5, openingDebt = 0, cash = 22.6, assets = 425.7, investment = 185.8, taxRate = 22.8,
       sectorShares = {0.3925, 0.2853, 0.3222}, educationShares = {0.2779, 0.5466, 0.1755},
-      careCostPerInhabitant = {16170, 168230})
+      careCostPerInhabitant = {16170, 168230},
+      infrastructureShare = 0.0615,
+      ages = {54, 60, 64, 66, 57, 77, 74, 75, 71, 63, 64, 64, 63, 65, 82, 70, 97, 75, 74, 75, 75, 50, 62, 44, 74, 67, 65, 75, 75, 78, 71, 67, 68, 75, 79, 57, 66, 58, 57, 75, 63, 65, 68, 74, 61, 77, 74, 97, 107, 103, 90, 102, 95, 111, 97, 105, 113, 99, 108, 111, 97, 97, 105, 103, 106, 93, 110, 108, 110, 139, 136, 149, 122, 149, 120, 118, 102, 121, 91, 69, 80, 63, 69, 65, 47, 47, 44, 41, 31, 32, 24, 26, 21, 19, 7, 7, 7, 3, 1, 0, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.732293, 0.218803, 0.048904};
     constant BaseYear vadstena2018 = BaseYear(
@@ -127,7 +141,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 20, financialIncome = 3.2, interestExpense = 0, otherFinancialExpense = 1.2,
       debt = 0, openingDebt = 0, cash = 30.5, assets = 266.7, investment = 75.6, taxRate = 22.8,
       sectorShares = {0.4006, 0.2808, 0.3187}, educationShares = {0.2731, 0.5525, 0.1745},
-      careCostPerInhabitant = {14750, 164484})
+      careCostPerInhabitant = {14750, 164484},
+      infrastructureShare = 0.0725,
+      ages = {62, 64, 67, 57, 79, 75, 75, 70, 70, 59, 65, 64, 67, 84, 73, 101, 75, 72, 76, 94, 57, 79, 49, 72, 73, 67, 77, 69, 68, 74, 68, 69, 71, 79, 62, 69, 54, 59, 73, 65, 65, 67, 72, 65, 76, 75, 96, 105, 103, 88, 104, 98, 113, 97, 107, 112, 101, 107, 112, 98, 102, 105, 101, 105, 93, 109, 103, 108, 137, 134, 143, 124, 145, 119, 120, 106, 123, 91, 71, 84, 68, 74, 66, 49, 50, 49, 47, 37, 37, 28, 28, 24, 22, 12, 9, 10, 8, 2, 3, 1, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.732509, 0.215444, 0.052048};
     constant BaseYear vadstena2017 = BaseYear(
@@ -143,7 +159,9 @@ package Vadstena "Vadstena: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 17.3, financialIncome = 2.3, interestExpense = 0, otherFinancialExpense = 0.6,
       debt = 0, openingDebt = 0, cash = 82.6, assets = 215.1, investment = 24.4, taxRate = 22.8,
       sectorShares = {0.4073, 0.2721, 0.3206}, educationShares = {0.2653, 0.5198, 0.2149},
-      careCostPerInhabitant = {13594, 154171})
+      careCostPerInhabitant = {13594, 154171},
+      infrastructureShare = 0.0646,
+      ages = {58, 63, 51, 75, 77, 76, 70, 68, 53, 62, 62, 64, 80, 69, 102, 69, 68, 73, 91, 74, 75, 56, 78, 70, 68, 79, 66, 67, 65, 66, 72, 61, 67, 52, 71, 53, 52, 75, 67, 61, 70, 70, 64, 81, 74, 97, 104, 102, 89, 103, 93, 103, 96, 109, 114, 102, 106, 113, 98, 101, 101, 98, 103, 88, 104, 100, 106, 134, 133, 143, 121, 146, 123, 121, 107, 128, 92, 69, 87, 72, 78, 69, 52, 54, 55, 51, 39, 44, 31, 33, 30, 25, 16, 12, 12, 11, 8, 5, 3, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.727509, 0.218858, 0.053633};
 

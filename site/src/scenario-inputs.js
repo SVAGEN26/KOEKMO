@@ -242,6 +242,9 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
       return [details.recurringTax,details.incomeEqualisation,details.regulation+(row.regulationAdjustment??0)];
     });
   }
+  // The pension cost follows the payroll in the model; pensionGrowth is its growth beyond the payroll. A given path in
+  // mnkr (pensionExpensePath) replaces that.
+  fields.pensionFollowsPayroll=!a.pensionExpensePath;
   fields.pensionExpensePath=inputs.map((r,i)=>a.pensionExpensePath?.[i]??o.pensionExpense*(1+a.pensionGrowth/100)**(i+1));
   fields.pensionCashPaymentsPath=inputs.map((r,i)=>a.pensionCashPaymentsPath?.[i]??fields.pensionExpensePath[i]);
   fields.investmentPath=inputs.map((_,i)=>a.investment*investmentFactor(b,a,i));

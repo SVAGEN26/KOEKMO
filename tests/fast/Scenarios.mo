@@ -31,4 +31,20 @@ package FastTests "Scenarier för snabbtesterna (tests/fast/test_model.py): Mota
   model ReserveAtOnce "Likviditetsreserven gäller från första året"
     extends Motala.Continuous(reserveAdjustmentTime = 0);
   end ReserveAtOnce;
+
+  model GivenPension "Pensionskostnaden given i mnkr i stället för att följa lönesumman"
+    extends Motala.Continuous(pensionFollowsPayroll = false, pensionExpensePath = fill(190, horizon));
+  end GivenPension;
+
+  model Prefinanced "Halva första årets investering betalas året efter och lånas i förväg"
+    extends Motala.Continuous(deferInvestmentShare = 0.5, prefinanceShare = 1);
+  end Prefinanced;
+
+  model InflationShock "Tre procentenheter extra inflation första året"
+    extends Motala.Continuous(inflationShock = 0.03);
+  end InflationShock;
+
+  model NoFeeIndexation "Samma chock, men taxor och avgifter följer inte med"
+    extends Motala.Continuous(inflationShock = 0.03, inflationRevenuePassThrough = 0);
+  end NoFeeIndexation;
 end FastTests;

@@ -19,7 +19,7 @@ test('active population follows the anchored source path and preserves all balan
     r.cohorts.forEach((x,i)=>close(x,planning.rows[t-1].cohorts[i],1e-3));
     close(r.population,baseline.reportedPopulation*planning.rows[t-1].sourceTotal/planning.sourceBaseTotal,1e-3);
     for(const k of ['populationBalance','cashBalance','debtBalance','assetBalance']) close(r[k],0,1e-6);
-    close(r.result,r.tax+r.grants-r.cost-r.depreciation+baseline.financialIncome-r.interest-r.otherFinancialExpense,1e-6);
+    close(r.result,r.tax+r.grants-r.cost-r.depreciation+r.annualFinancialIncome-r.interest-r.otherFinancialExpense,1e-6);
     assert.equal(r.officialRevenue,null);
   }
   assert.notEqual(rows.at(-1).population,simulate(baseline,history).rows.at(-1).population);
@@ -32,7 +32,8 @@ test('dated labour and other-price rates move independently with scenario offset
     assert.ok(changed.rows[t].payroll>row.payroll);
     // Equal up to the solver's tolerance: a different wage path changes its steps.
     close(changed.rows[t].otherOperatingExpense,row.otherOperatingExpense,1e-3);
-    close(changed.rows[t].pensionExpense,row.pensionExpense,1e-3);
+    // The pension cost follows the payroll, so it rises with the wages and keeps its share of the payroll.
+    close(changed.rows[t].pensionExpense/changed.rows[t].payroll,row.pensionExpense/row.payroll,1e-6);
   }
 });
 test('migration and birth interventions still affect sourced scenarios; inputs stay unchanged',{skip},()=>{

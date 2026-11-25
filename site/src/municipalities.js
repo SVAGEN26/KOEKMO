@@ -22,8 +22,10 @@ export const municipalities=Object.fromEntries(Object.entries(names).map(([code,
 
 export function cohortModifiers(packageName, year) {
   const record=`${packageName}.Data.SCB.${packageName.toLowerCase()}${year}`;
+  // The level is the library's default: Sweden's fertility in the base year times the municipality's relation to Sweden
+  // over five years. Only the age profile is set here, for the years SCB's historical profiles cover.
   const profile=year>=2021&&year<=2024
-    ?`, profile=Kommunekonomi.Data.SCB.historicalFertilityProfile[${year-2020},:]`:'';
-  return `data=${record}, reportedTotal=sum(p0), migrationWeights=migrationWeights,
-          redeclare Kommunekonomi.Components.Fertility.Constant fertility(totalFertility=${record}.totalFertilityMean5${profile})`;
+    ?`,
+          redeclare Kommunekonomi.Components.Fertility.Constant fertility(totalFertility=Kommunekonomi.Data.SCB.totalFertilityAt(${year})*${record}.totalFertilityMean5/Kommunekonomi.Data.SCB.totalFertilityMean5(${year}), profile=Kommunekonomi.Data.SCB.historicalFertilityProfile[${year-2020},:])`:'';
+  return `data=${record}, reportedTotal=sum(p0), migrationWeights=migrationWeights${profile}`;
 }

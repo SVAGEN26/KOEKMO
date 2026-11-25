@@ -56,7 +56,7 @@
       "productivity": 0.0,
       "migrationDelta": 0,
       "birthChange": 0,
-      "interestRate": 3.7052353066773573,
+      "interestRate": 2.784492039126814,
       "taxRate": 22.8,
       "investment": 189.143,
       "adjustment": 0.5,
@@ -80,7 +80,7 @@
         0.15908409159084091
       ],
       "populationRevenueElasticity": 1.0,
-      "pensionGrowth": 2.0,
+      "pensionGrowth": 0.0,
       "operatingRevenueGrowth": 2.0,
       "pensionExpensePath": null,
       "pensionCashPaymentsPath": null
