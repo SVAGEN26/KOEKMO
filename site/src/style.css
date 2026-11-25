@@ -131,3 +131,24 @@ details.assumption-group .slider:last-child{border-bottom:0}
 .legend-symbol{flex:none}
 #rate-stress-table th small{display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px}
 #rate-stress-table th[scope=row]{white-space:normal;min-width:240px}
+/* Result chart: which series it shows, and what it takes to reach the target */
+.chart-tools{display:flex;align-items:center;gap:14px}
+.series-select{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.series-select select{font:inherit;font-size:11px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--white);max-width:220px}
+.target-solve{font-size:11px;line-height:1.6;margin-top:8px;padding:10px 12px;border-radius:8px;background:#eef1f7}
+.target-solve .text-button{margin-left:4px;text-decoration:underline}
+.target-solve .muted{font-size:10px;margin:0}
+@media(max-width:720px){.chart-heading{flex-wrap:wrap}.chart-tools{width:100%;justify-content:space-between}}
+.legend-note{font-size:10px;color:var(--muted);margin-left:auto}
+.model-variable{font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;width:220px;color:var(--ink);background:var(--white)}
+.chart-message{font-size:12px;color:var(--muted);padding:40px 0;text-align:center}
+.share-controls{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.share-controls select{font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:3px 5px}
+.share-view{display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding:10px 0}
+.share-view>svg{width:300px;max-width:100%;height:auto}
+.share-view table.share-table{width:auto;table-layout:auto;font-size:12px}
+.share-view .share-table th,.share-view .share-table td{padding:6px 14px;text-align:right;white-space:nowrap;width:auto}
+.share-view .share-table th{text-align:left;font-weight:500;min-width:110px;padding-right:28px}
+.share-view .share-table th .legend-item{justify-content:flex-start}
+.share-view .share-table tbody tr:last-child{background:none;font-weight:inherit}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
