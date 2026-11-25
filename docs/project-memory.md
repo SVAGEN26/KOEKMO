@@ -1436,3 +1436,16 @@ arkivera data.
 - Min bedömning: tre år är något bättre än två i båda perioderna men vinsten är liten (0,1–0,2 procentenheter), och
   bytet kräver fyra års åldersgrupper i varje basårspost (`BaseYear.cohorts[3, 5]`), i `history` på sidan och i
   `calibrateContinuous`. Inte gjort; att fråga användaren.
+
+## Modellen på egna ben mot SKR:s gamla prognoser (2026-11-25)
+
+- Användaren 2026-11-25 bad om testet "där modellen står utan SKR:s skatteunderlag".
+- `scripts/explain_outcome.py` har körningen `standard`: bokslut 2021 med modellens standardtakter (skatteunderlag
+  3,5 %, löner 3 %, priser 2 %, bidrag 2 % per år), inget från SKR utom rikets befolkning. Alla 13 kommuner.
+- Skatt och bidrag mot SCB, medelfel 2022–2025: −2,2/−3,9/−5,0/−5,1 % (SKR:s decembercirkulär: −2,2/−3,8/−4,9/−5,1;
+  SKR 21:35: −2,8/−4,8/−5,6/−5,3). Decembercirkuläret 2021 räknade med 3,5/3,7/3,4/3,4 % i skatteunderlag, så
+  standardtakten råkade vara SKR:s bild då. Ingen rangordning: en period, ett basår.
+- Uppdelat (medel av 13, procent av skatt och bidrag): modellen ensam skatt −2,5/−3,7/−2,9/−3,4, bidrag
+  +0,3/−0,2/−2,1/−1,7; SKR 21:35 skatt −2,0/−2,5/−1,3/−1,1, bidrag −0,9/−2,3/−4,2/−4,2. SKR:s skatt per kommun är
+  närmare; modellens 2 % bidragstillväxt närmare än SKR:s beslutade nivåer. Fördelningen skatt/bidrag i SKR:s
+  arbetsbok kanske inte följer SCB:s poster exakt (inte kontrollerat).

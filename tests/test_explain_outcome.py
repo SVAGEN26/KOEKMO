@@ -137,7 +137,14 @@ class Explanations(unittest.TestCase):
             d = explanation(m['municipality'])
             self.assertEqual(m['outcome'], [d['outcome'][str(y)]['result'] for y in d['years']])
             self.assertEqual(m['explained'], [d['runs']['investment'][str(y)]['result'] for y in d['years']])
-        self.assertEqual([len(f['rows']) for f in summary['taxAndGrantsForecasts']], [5, 4, 3, 2, 4])
+        self.assertEqual([len(f['rows']) for f in summary['taxAndGrantsForecasts']], [5, 4, 3, 2, 4, 4])
+        # The model on its own: its standard rates instead of SKR's tax base, in every municipality's file.
+        for path in [ROOT / 'data/outcome-explanation.json', *sorted((ROOT / 'data/municipalities').glob('*/outcome-explanation.json'))]:
+            d = json.loads(path.read_text())
+            self.assertEqual(set(d['runs']['standard']), set(d['runs']['believed']), path)
+        alone = summary['taxAndGrantsForecasts'][-1]
+        self.assertIn('own standard rates', alone['forecast'])
+        self.assertTrue(all(r['municipalities'] == 13 for r in alone['rows']))
         self.assertTrue(all(r['municipalities'] == 13 for f in summary['taxAndGrantsForecasts'] for r in f['rows']))
 
 
