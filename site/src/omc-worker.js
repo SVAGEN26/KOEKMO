@@ -2,8 +2,8 @@ import {municipalities} from './municipalities.js';
 // Module worker hosting OpenModelica's in-browser compiler, so compiling and
 // simulating never block the page. Protocol:
 //   → {type:'init'}                     ← {type:'progress', loaded, total} … {type:'ready'} | {type:'failed', error}
-//   → {type:'run', id, jobs:[{fields, years, baseYear}]}
-//   ← {type:'result', id, results:[{rows} | {error}]}
+//   → {type:'run', id, jobs:[{fields, years, baseYear, …, inspect?}]}
+//   ← {type:'result', id, results:[{rows, inspect?} | {error}]}
 import init,* as omc from './omc-web/omc/OpenModelicaCompiler.js';
 import {createSession} from './omc-session.js';
 
@@ -58,7 +58,10 @@ self.onmessage=async({data})=>{
   }
   if(data.type==='run') {
     const results=data.jobs.map(job=>{
-      try {return {rows:session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.continuous)};}
+      try {
+        const out=session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.continuous,job.inspect??null);
+        return job.inspect?out:{rows:out};
+      }
       catch(e) {return {error:e.message};}
     });
     self.postMessage({type:'result',id:data.id,results});

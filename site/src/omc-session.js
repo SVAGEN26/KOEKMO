@@ -77,7 +77,9 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
   compile(BASE_YEAR);
 
   // One simulation; returns per-year rows of OUTPUTS plus cohorts and investment.
-  function run(fields,years,baseYear=BASE_YEAR,cohort=false,ageMigration=null,municipality=DEFAULT_MUNICIPALITY,continuous=false) {
+  // inspect: {names} reruns the compiled model with every variable stored (-variableFilter=.* at simulation time, no new
+  // compilation) and returns, besides the rows, the model's variables (name, comment, unit) and the named ones per year.
+  function run(fields,years,baseYear=BASE_YEAR,cohort=false,ageMigration=null,municipality=DEFAULT_MUNICIPALITY,continuous=false,inspect=null) {
     if(!Number.isInteger(years)||years<1||years>MAX_YEARS) throw Error(`Modellen stöder 1–${MAX_YEARS} år.`);
     const model=compile(baseYear,cohort,!!ageMigration,municipality,continuous);
     // The wrapper has a hundred years of paths. In continuous time the wage and price rate at a year's end depends on
@@ -88,7 +90,7 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
     }
     // With single-year ages the 202 age stocks make IDA's Jacobian cost 20 s a run; its matrix-free linear solver takes 1.5 s.
     const solver=continuous&&cohort&&method==='ida'?' -idaLS=spgmr':'';
-    const flags=`-override=stopTime=${baseYear+years},${overrideFlags({...fields,...ageMigration})}${solver}`;
+    const flags=`-override=stopTime=${baseYear+years},${overrideFlags({...fields,...ageMigration})}${solver}${inspect?' -variableFilter=.*':''}`;
     if(!omc.omc_sim_start(model,`${model}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
     let code;
     do code=omc.omc_sim_advance(10000); while(code===0);
@@ -121,7 +123,15 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
       }
       rows.push(row);
     }
-    return rows;
+    if(!inspect) return rows;
+    const catalogue=series.filter(s=>!s.constant).map(s=>({name:s.name,comment:s.comment??'',unit:s.unit??''}));
+    const picked={};
+    for(const n of inspect.names??[]) {
+      if(!index.has(n)) continue;
+      const c=column(n);
+      picked[n]=Array.from({length:years+1},(_,t)=>{const i=at[baseYear+t];return c.length===1?c[0]:c[i];});  // base year first
+    }
+    return {rows,inspect:{catalogue,picked}};
   }
   return {run};
 }

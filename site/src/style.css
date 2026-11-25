@@ -131,3 +131,14 @@ details.assumption-group .slider:last-child{border-bottom:0}
 .legend-symbol{flex:none}
 #rate-stress-table th small{display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:2px}
 #rate-stress-table th[scope=row]{white-space:normal;min-width:240px}
+/* Result chart: which series it shows, and what it takes to reach the target */
+.chart-tools{display:flex;align-items:center;gap:14px}
+.series-select{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.series-select select{font:inherit;font-size:11px;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--white);max-width:220px}
+.target-solve{font-size:11px;line-height:1.6;margin-top:8px;padding:10px 12px;border-radius:8px;background:#eef1f7}
+.target-solve .text-button{margin-left:4px;text-decoration:underline}
+.target-solve .muted{font-size:10px;margin:0}
+@media(max-width:720px){.chart-heading{flex-wrap:wrap}.chart-tools{width:100%;justify-content:space-between}}
+.legend-note{font-size:10px;color:var(--muted);margin-left:auto}
+.model-variable{font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:4px 6px;width:220px;color:var(--ink);background:var(--white)}
+.chart-message{font-size:12px;color:var(--muted);padding:40px 0;text-align:center}

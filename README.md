@@ -75,6 +75,22 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
 - **Investment plans.** For nine of the 13 municipalities the investment follows
   the municipality's budget with plan (see [Investment plans](#investment-plans));
   a checkbox returns to the base year's amount every year.
+- **What the first chart shows.** A selector above the result chart picks the
+  quantity: the result, its share of tax and grants, revenues, costs, interest,
+  investment, debt, cash, assets, population, migration, births and deaths, or a
+  set of lines: age groups, the demand for education and elderly care, costs by
+  kind and revenues by kind.
+  "Valfri variabel i modellen" lists every variable of the compiled model (545
+  for Motala, with the model's description and unit) and plots the one chosen,
+  for the scenario and the base path. The page runs the compiled model again
+  with `-variableFilter=.*` as a simulation flag, so nothing is compiled anew;
+  the list takes about 0.3 s and a variable about 0.4 s.
+- **What it takes to reach the target.** With a result target set, the page
+  states the tax rate, or the slower cost growth beyond demography and prices,
+  that reaches it in the last year and in every year, with a button to try it. It
+  is solved per year from one extra run with the tax rate a krona higher and one
+  with costs growing half a point slower; the model is close to linear in both,
+  and the button gives the exact result.
 - **Balance requirement.** Years with a deficit are shaded in the result chart.
   An optional result target (% of tax and grants) draws a line and lists the
   years below it.

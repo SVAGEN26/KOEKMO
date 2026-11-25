@@ -89,7 +89,7 @@ const skrSources={
 };
 const comparisonSelectors=[$('comparison-scenario'),$('comparison-preset')];
 const scenarioStorageKey='motala.saved-scenarios.v1';
-const savedControlIds=['planning-enabled','regulation-held','investment-plan','time-model','revenue-mode','demography-mode','split-payroll',
+const savedControlIds=['planning-enabled','regulation-held','investment-plan','result-series','model-variable','time-model','revenue-mode','demography-mode','split-payroll',
   'employer-rate','construction-years','construction-share','liquidity-policy','cash-reserve','defer-investment-share',
   'prefinance-share','working-capital-enabled','collection-days','payment-days','grant-advance',
   'migration-profile','age-tax','project-choice'];
@@ -787,6 +787,135 @@ function resultTarget(){
   const el=$('result-target');
   return el.value===''||!el.validity.valid?null:Number(el.value);
 }
+// What the first chart can show: one quantity (scenario and base path), or a set of lines from another view.
+// Each series gives a value per row of a run; share is per cent of tax and grants.
+const AGE_COLORS=['#17634e','#80a979','#c8d779','#ad8053','#516e9c'];
+const RESULT_VIEWS=[
+  ['model','Valfri variabel i modellen …','',null],
+  ['ages','Invånare per åldersgrupp','personer',rows=>b.ageGroups.map((name,i)=>({name,values:rows.map(r=>r.cohorts[i]),color:AGE_COLORS[i]}))],
+  ['demand','Verksamhetens behov (utbildning, äldreomsorg)','index',rows=>[
+    {name:'Utbildning',values:rows.map(r=>r.educationIndex*100),color:'#17634e'},{name:'Äldreomsorg',values:rows.map(r=>r.careIndex*100),color:'#ad8053'}]],
+  ['costs','Kostnader: löner, pensioner, övrigt','mnkr',rows=>[
+    {name:'Lönekostnad',values:rows.map(r=>r.payroll),color:'#17634e'},{name:'Pensionskostnad',values:rows.map(r=>r.pensionExpense),color:'#516e9c'},
+    {name:'Övriga kostnader',values:rows.map(r=>r.otherOperatingExpense),color:'#ad8053'}]],
+  ['revenues','Intäkter: skatt, bidrag, verksamhet','mnkr',rows=>[
+    {name:'Skatteintäkter',values:rows.map(r=>r.tax),color:'#17634e'},{name:'Generella bidrag och utjämning',values:rows.map(r=>r.grants),color:'#516e9c'},
+    {name:'Verksamhetens intäkter',values:rows.map(r=>r.operatingRevenue),color:'#ad8053'}]]];
+const SERIES_GROUPS=[['Resultat och ekonomi',['result','resultShare','taxGrants','tax','grants','cost','payroll','pensionExpense','otherOperatingExpense','operatingRevenue','depreciation','interest','investment','debt','cash','assets','costs','revenues']],
+  ['Demografi och behov',['ages','demand','population','migration','births','deaths']],
+  ['Modellen',['model']]];
+const RESULT_SERIES=[
+  ['result','Årets resultat','mnkr',r=>r.result],
+  ['resultShare','Resultat i procent av skatt och bidrag','%',r=>100*r.result/(r.tax+r.grants)],
+  ['taxGrants','Skatt och bidrag','mnkr',r=>r.tax+r.grants],
+  ['tax','Skatteintäkter','mnkr',r=>r.tax],
+  ['grants','Generella bidrag och utjämning','mnkr',r=>r.grants],
+  ['cost','Nettokostnad','mnkr',r=>r.cost],
+  ['payroll','Lönekostnad','mnkr',r=>r.payroll],
+  ['pensionExpense','Pensionskostnad','mnkr',r=>r.pensionExpense],
+  ['otherOperatingExpense','Övriga kostnader','mnkr',r=>r.otherOperatingExpense],
+  ['operatingRevenue','Verksamhetens intäkter','mnkr',r=>r.operatingRevenue],
+  ['depreciation','Avskrivningar','mnkr',r=>r.depreciation],
+  ['interest','Räntekostnad','mnkr',r=>r.interest],
+  ['investment','Investeringar','mnkr',r=>r.investment],
+  ['debt','Låneskuld','mnkr',r=>r.debt],
+  ['cash','Kassa','mnkr',r=>r.cash],
+  ['assets','Anläggningstillgångar','mnkr',r=>r.assets],
+  ['population','Invånare vid årets slut','personer',r=>r.population],
+  ['migration','Flyttnetto','personer',r=>r.migration],
+  ['births','Födda','personer',r=>r.births],
+  ['deaths','Döda','personer',r=>r.deaths]];
+let resultChartInputs=null,RESULT_LEGEND='';
+// Any variable of the model: the compiled model is run again with every variable stored (omc-session.js, inspect),
+// once for the list and once per variable chosen, for the scenario and the base path. No new compilation.
+let modelCatalogue=null,modelVariableToken=0;
+async function renderModelVariable() {
+  const token=++modelVariableToken,name=$('model-variable').value.trim();
+  const message=text=>{$('result-chart').innerHTML=`<p class="chart-message">${safe(text)}</p>`;};
+  $('result-chart-title').textContent=name||'Valfri variabel i modellen';
+  $('result-legend').innerHTML='<span class="legend-line primary">Scenariot</span><span class="legend-line baseline">Grundbana</span>';
+  try {
+    if(!modelCatalogue||modelCatalogue.municipality!==b.municipality||modelCatalogue.baseYear!==b.baseYear) {
+      message('Hämtar modellens variabler …');
+      const [r]=await engine.simulateMany(b,history,[{overrides,revenuePath:path,inspect:{names:[]}}]);
+      if(token!==modelVariableToken) return;
+      if(r.error) throw Error(r.error);
+      modelCatalogue={municipality:b.municipality,baseYear:b.baseYear,variables:r.run.inspect.catalogue};
+      $('model-variables').innerHTML=modelCatalogue.variables.map(v=>`<option value="${safe(v.name)}">${safe([v.comment,v.unit].filter(Boolean).join(' · '))}</option>`).join('');
+    }
+    const info=modelCatalogue.variables.find(v=>v.name===name);
+    if(!info){message(`Skriv eller välj en av modellens ${fmt(modelCatalogue.variables.length)} variabler i fältet ovan, till exempel services.capacity[1] eller finance.debt.level.`);return;}
+    message('Räknar …');
+    const results=await engine.simulateMany(b,history,[{overrides,revenuePath:path,inspect:{names:[name]}},{overrides:{},revenuePath:path,inspect:{names:[name]}}]);
+    if(token!==modelVariableToken) return;
+    const [scenario,reference]=results.map(r=>{if(r.error)throw Error(r.error);return r.run.inspect.picked[name];});
+    chart('result-chart',[{name:'Grundbana',values:reference,color:'#ad8053',dash:true},{name:'Scenariot',values:scenario,color:'#17634e'}],{unit:info.unit});
+    $('result-chart-title').textContent=info.comment?`${info.comment} (${name})`:name;
+    $('result-chart-unit').textContent=info.unit;
+  } catch(e) {if(token===modelVariableToken)message(`Kunde inte visa variabeln: ${e.message}`);}
+}
+function renderResultChart() {
+  if(!resultChartInputs) return;
+  const {stresses,target,path}=resultChartInputs;
+  const view=RESULT_VIEWS.find(v=>v[0]===$('result-series').value);
+  $('model-variable').hidden=view?.[0]!=='model';
+  if(view?.[0]==='model') {renderModelVariable();return;}
+  if(view) {
+    const [,label,unit,lines]=view;
+    const series=lines(run.rows);
+    chart('result-chart',series,{unit});
+    $('result-chart-title').textContent=label;
+    $('result-chart-unit').textContent=unit;
+    $('result-legend').innerHTML=series.map(s=>`<span class="legend-item">${legendSymbol(s.color,null)}${safe(s.name)}</span>`).join('')+'<span class="legend-note">Scenariot</span>';
+    return;
+  }
+  if(!$('target-legend')) $('result-legend').innerHTML=RESULT_LEGEND;  // a view or a model variable replaced it
+  const [key,label,unit,value]=RESULT_SERIES.find(s=>s[0]===$('result-series').value)??RESULT_SERIES[0];
+  const values=rows=>rows.map(r=>{const v=value(r);return Number.isFinite(v)?v:NaN;});
+  const isResult=key==='result',isShare=key==='resultShare';
+  const targetSeries=target==null||!(isResult||isShare)?[]:[{name:`Resultatmål ${decimal(target)} %`,values:run.rows.map(r=>isShare?target:target/100*(r.tax+r.grants)),color:'#516e9c',dash:true,thin:true}];
+  const lines=isResult?stresses:isShare?stresses.map(s=>({...s,values:s.share})):[];
+  chart('result-chart',[...lines,...targetSeries,{name:'Grundbana',values:values(base.rows),color:'#ad8053',dash:true},{name:'Scenariot',values:values(run.rows),color:'#17634e'}],
+    {unit,bands:isResult||isShare?run.rows.map((r,i)=>i>0&&r.result<0?i:-1).filter(i=>i>0):[]});
+  $('result-chart-title').textContent=label;
+  $('result-chart-unit').textContent=unit;
+  $('target-legend').hidden=!targetSeries.length;
+  document.querySelector('#result-legend .legend-line.stress').hidden=!!path||!lines.length;
+  document.querySelector('#result-legend .legend-swatch.deficit').hidden=!(isResult||isShare);
+}
+// What it takes to reach the result target: the tax rate, or a slower cost growth, from one extra run of each.
+// The result is close to linear in both; the answer is the change that brings each year to the target, solved per
+// year with the target's own change (a higher tax rate raises tax and grants, so the target in kronor rises too).
+function solveForTarget(a,target,taxRun,costRun,step) {
+  const rows=run.rows.slice(1),need=(r,i,other)=>{
+    const o=other.rows[i+1],gain=o.result-r.result-target/100*(o.tax+o.grants-r.tax-r.grants);
+    return gain>1e-9?(target/100*(r.tax+r.grants)-r.result)/gain:NaN;
+  };
+  const tax=taxRun?rows.map((r,i)=>need(r,i,taxRun)):null;
+  const cost=costRun?rows.map((r,i)=>need(r,i,costRun)*step):null;
+  return {years:rows.map(r=>r.year),tax,cost,taxRate:a.taxRate,costDrift:a.costDrift??0};
+}
+function renderTargetSolve(a,target,solution,exactRevenue) {
+  const box=$('target-solve');
+  if(target==null||!solution){box.hidden=true;box.innerHTML='';return;}
+  box.hidden=false;
+  const last=solution.years.length-1,year=solution.years[last],first=solution.years[0];
+  const sign=x=>`${x>0?'+':x<0?'−':'±'}${decimal(Math.abs(x))}`;
+  const parts=[`<strong>Vad krävs för ${decimal(target)} %?</strong>`];
+  if(solution.tax&&!exactRevenue) {
+    const end=solution.tax[last],every=Math.max(...solution.tax.filter(Number.isFinite));
+    parts.push(`Skattesats ${decimal(solution.taxRate+end)} kr (${sign(end)}) från ${first} ger målet ${year}; ${decimal(solution.taxRate+every)} kr (${sign(every)}) ger det varje år ${first}–${year}.`+
+      ` <button type="button" class="text-button" data-apply="taxRate" data-value="${(solution.taxRate+every).toFixed(2)}">Pröva ${decimal(solution.taxRate+every)} kr</button>`);
+  } else if(exactRevenue) parts.push('Skattesatsen påverkar inte intäkterna när SKR:s belopp används som de är.');
+  if(solution.cost) {
+    const end=solution.cost[last],every=Math.min(...solution.cost.filter(Number.isFinite));
+    const drift=x=>decimal(solution.costDrift+x);
+    parts.push(`Eller kostnader som växer ${decimal(Math.abs(end))} procentenheter ${end<=0?'långsammare':'snabbare'} per år utöver demografi och pris (kostnadsökning ${drift(end)} %) ger målet ${year}; ${drift(every)} % ger det varje år.`+
+      ` <button type="button" class="text-button" data-apply="costDrift" data-value="${(solution.costDrift+every).toFixed(2)}">Pröva ${drift(every)} %</button>`);
+  }
+  parts.push('<span class="muted">Beräknat linjärt från en extra körning per reglage; prova värdet för exakt utfall.</span>');
+  box.innerHTML=parts.join(' ');
+}
 function renderBalanceFlag(deficits,belowTarget,target,rows){
   const period=forecastPeriod(rows),parts=[];
   parts.push(deficits.length
@@ -849,7 +978,10 @@ async function drawOnce() {
       ...stressed.map(d=>({overrides:stressOverrides(a,d),revenuePath:path})),
       ...sensitivityCases.map(([k,d])=>({overrides:{...overrides,[k]:a[k]+d},revenuePath:path})),
       ...rateStress.episodes.map(e=>({overrides:{...overrides,rateEpisode:e.id},revenuePath:path}))];
-    const comparisonIndex=requests.length,rateIndex=comparisonIndex-rateStress.episodes.length;
+    // The result target: one run with the tax rate a krona higher and one with costs growing half a point slower.
+    const target=resultTarget(),COST_STEP=-0.5;
+    if(target!=null) requests.push({overrides:{...overrides,taxRate:a.taxRate+1},revenuePath:path},{overrides:{...overrides,costDrift:(a.costDrift??0)+COST_STEP},revenuePath:path});
+    const comparisonIndex=requests.length,targetIndex=target!=null?comparisonIndex-2:comparisonIndex,rateIndex=targetIndex-rateStress.episodes.length;
     const presetIndexes=new Map([['latest',0],['base',1]]);
     for(const choice of choices) {
       if(choice in presets&&!presetIndexes.has(choice)) {
@@ -872,20 +1004,18 @@ async function drawOnce() {
     const stressRuns=results.slice(2,2+stressed.length),sensitivityRuns=results.slice(2+stressed.length,rateIndex);
     const end=run.rows.at(-1),initial=run.rows[0],margin=end.result/(end.tax+end.grants)*100;
     $('metrics').innerHTML=[['Resultat '+end.year,fmt(end.result),'mnkr',`${decimal(margin)} % av skatt och bidrag`],['Banklåneskuld '+end.year,fmt(end.debt),'mnkr',`${fmt(end.debt-initial.debt)} mnkr förändring från ${b.baseYear}`],['Invånare '+end.year,fmt(end.population),'pers.',`${fmt(end.population-initial.population)} personer från ${b.baseYear}`]].map(([label,value,unit,detail])=>`<div class="metric"><div class="metric-label">${label}</div><div class="metric-number">${value}<small>${unit}</small></div><div class="metric-detail">${detail}</div></div>`).join('');
-    const stresses=stressRuns.map((r,i)=>r.run?{name:'Stress '+(stressed[i]<0?'svag':'stark'),values:r.run.rows.map(x=>x.result),color:'#b4c0ae',thin:true}:null).filter(Boolean);
-    const target=resultTarget(),forecastRows=run.rows.slice(1);
+    const stresses=stressRuns.map((r,i)=>r.run?{name:'Stress '+(stressed[i]<0?'svag':'stark'),values:r.run.rows.map(x=>x.result),share:r.run.rows.map(x=>100*x.result/(x.tax+x.grants)),color:'#b4c0ae',thin:true}:null).filter(Boolean);
+    const forecastRows=run.rows.slice(1);
     const deficits=forecastRows.filter(r=>r.result<0).map(r=>r.year);
     const belowTarget=target==null?[]:forecastRows.filter(r=>r.result>=0&&100*r.result/(r.tax+r.grants)<target).map(r=>r.year);
-    const targetSeries=target==null?[]:[{name:`Resultatmål ${decimal(target)} %`,values:run.rows.map(r=>target/100*(r.tax+r.grants)),color:'#516e9c',dash:true,thin:true}];
-    chart('result-chart',[...stresses,...targetSeries,{name:'Grundbana',values:base.rows.map(r=>r.result),color:'#ad8053',dash:true},{name:'Scenariot',values:run.rows.map(r=>r.result),color:'#17634e'}],
-      {unit:'mnkr',bands:run.rows.map((r,i)=>i>0&&r.result<0?i:-1).filter(i=>i>0)});
-    $('target-legend').hidden=target==null;
+    resultChartInputs={stresses,target,path};
+    renderResultChart();
     renderBalanceFlag(deficits,belowTarget,target,forecastRows);
-    document.querySelector('.legend-line.stress').hidden=!!path;
     chart('debt-chart',[{name:'Grundbana',values:base.rows.map(r=>r.debt),color:'#ad8053',dash:true},{name:'Låneskuld',values:run.rows.map(r=>r.debt),color:'#17634e'}],{unit:'mnkr',height:205});
     const sensitivities=sensitivityCases.map(([,,label],i)=>({label,delta:sensitivityRuns[i].run?sensitivityRuns[i].run.rows.at(-1).result-end.result:NaN}));
     const max=Math.max(...sensitivities.filter(s=>Number.isFinite(s.delta)).map(s=>Math.abs(s.delta)),1);$('sensitivity').innerHTML=sensitivities.map(s=>`<div class="sensitivity-row"><div class="sensitivity-label"><span>${s.label}</span><strong>${Number.isFinite(s.delta)?`${s.delta>0?'+':''}${fmt(s.delta)} mnkr`:'—'}</strong></div><div class="sensitivity-track"><div class="sensitivity-fill ${s.delta>0?'positive':''}" style="width:${Number.isFinite(s.delta)?Math.abs(s.delta)/max*100:0}%"></div></div></div>`).join('');
-    renderRateStress(a,results.slice(rateIndex,comparisonIndex));
+    renderRateStress(a,results.slice(rateIndex,targetIndex));
+    renderTargetSolve(a,target,target!=null?solveForTarget(a,target,results[targetIndex]?.run,results[targetIndex+1]?.run,COST_STEP):null,!!path&&a.revenueMode===1);
     const colors=['#17634e','#80a979','#c8d779','#ad8053','#516e9c'];chart('population-chart',b.ageGroups.map((name,i)=>({name,values:run.rows.map(r=>r.cohorts[i]),color:colors[i]})),{unit:'personer'});
     $('age-legend').innerHTML=b.ageGroups.map((x,i)=>`<span><span style="color:${colors[i]}">●</span> ${x}</span>`).join('');chart('demand-chart',[{name:'Utbildning',values:run.rows.map(r=>r.educationIndex*100),color:'#17634e'},{name:'Äldreomsorg',values:run.rows.map(r=>r.careIndex*100),color:'#ad8053'}],{unit:'index'});
     $('revenue-status').textContent=path?`SKR-referens för ${b.name} · ${path.vintage}`:(b.planningInputs?'Nationella SKR-antaganden · lokal intäktsbana enligt modellen':'Illustrativ intäktsbana · SKR ej importerad');$('clear-import').hidden=!path;
@@ -1249,6 +1379,16 @@ async function boot(){try{
     }
   });
   $('result-target').oninput=()=>{if(run&&$('result-target').validity.valid)draw();};
+  RESULT_LEGEND=$('result-legend').innerHTML;
+  const seriesLabel=key=>(RESULT_SERIES.find(s=>s[0]===key)??RESULT_VIEWS.find(v=>v[0]===key))[1];
+  $('result-series').innerHTML=SERIES_GROUPS.map(([group,keys])=>`<optgroup label="${group}">${keys.map(k=>`<option value="${k}">${seriesLabel(k)}</option>`).join('')}</optgroup>`).join('');
+  $('result-series').onchange=()=>renderResultChart();
+  $('model-variable').onchange=()=>renderResultChart();
+  $('target-solve').onclick=event=>{
+    const button=event.target.closest('[data-apply]');
+    if(!button) return;
+    overrides[button.dataset.apply]=Number(button.dataset.value);$('preset').value='custom';syncControls();draw();
+  };
   $('share').onclick=async()=>{
     if(!b) return;
     const url=shareUrl();

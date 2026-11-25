@@ -1482,3 +1482,18 @@ arkivera data.
   resultat 2033 137 mnkr (151 utan plan, 97 med förra regeln), skuld 1 804 (1 576; 2 418).
 - Norrköpings budget 2025 är versionen med ändringsbudget; planen 2026 är den antagna i juni 2025 (versionen
   2026-10-01 har 1 881/2 100/1 861/1 262). Vadstenas budget 2025 innehåller 88,7 mnkr ombudgeterat från 2024.
+
+## Väljare för första grafen och omvänd beräkning mot resultatmålet (2026-11-25)
+
+- Användaren 2026-11-25: omvänd beräkning ("Vilken skattesats eller kostnadsnivå krävs för att nå 2 %?") ska finnas, och
+  man ska kunna välja vad första grafen visar, även demografin ("tex ska man kunna se demografi osv på första sidan").
+- Väljaren: 20 storheter ur körningen (scenario och grundbana) och fyra uppsättningar linjer (åldersgrupper, behov,
+  kostnader per slag, intäkter per slag), och "Valfri variabel i modellen". Sparas i adressen.
+- Användaren frågade om OpenModelica inte stöder omkörning. Det gör det: webbläsarens kompilator (2026-11-24,
+  68937567e, och lokalt cc09fe3f5b) tar flaggan `-variableFilter=.*` vid `omc_sim_start` utan ny kompilering och
+  lagrar då alla variabler (1 474 serier mot de lagrade utdatan). `omc-session.js` `run(..., inspect)` ger listan
+  (545 variabler som inte är konstanter, med `comment` och `unit`) och de valda per år från basåret.
+  `finance.debt.level` har negativt tecken (lager och flöden); `debt` är skulden. Test: `tests/inspect.test.mjs`.
+- Omvänd beräkning: med resultatmål görs två extra körningar (skattesats +1 kr, kostnadsökning −0,5 procentenheter);
+  ändringen som når målet löses per år linjärt, med hänsyn till att målet i kronor växer med skatten. Kontroll i
+  webbläsare: Motala 21,76 kr ger 2,00 % 2026 och mer övriga år; Finspång 21,33 kr ger 2,00 % 2026.

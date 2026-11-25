@@ -41,9 +41,12 @@ export function assemble(b,prepared,simRows,revenuePath=null) {
 
 // Synchronous simulator around an omc session (Node tests and scripts).
 export function createDirectSimulator(session) {
-  return function simulate(b,history,overrides={},revenuePath=null) {
+  return function simulate(b,history,overrides={},revenuePath=null,inspect=null) {
     const {prepared,job}=prepareJob(b,history,overrides,revenuePath);
-    return assemble(b,prepared,session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.continuous),revenuePath);
+    const out=session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.continuous,inspect);
+    const run=assemble(b,prepared,inspect?out.rows:out,revenuePath);
+    if(inspect) run.inspect=out.inspect;
+    return run;
   };
 }
 
@@ -67,8 +70,8 @@ export function createWorkerEngine({onProgress=()=>{},onCompiling=()=>{}}={}) {
   async function simulateMany(b,history,requests) {
     await ready;
     // Validate on the main thread; only valid scenarios reach the model.
-    const prepared=requests.map(({overrides={},revenuePath=null})=>{
-      try {return prepareJob(b,history,overrides,revenuePath);} catch(e) {return {error:e.message};}
+    const prepared=requests.map(({overrides={},revenuePath=null,inspect=null})=>{
+      try {const p=prepareJob(b,history,overrides,revenuePath);if(inspect)p.job.inspect=inspect;return p;} catch(e) {return {error:e.message};}
     });
     const jobs=prepared.filter(p=>!p.error).map(p=>p.job);
     const id=nextId++;
@@ -77,7 +80,10 @@ export function createWorkerEngine({onProgress=()=>{},onCompiling=()=>{}}={}) {
     return prepared.map((p,i)=>{
       if(p.error) return {error:p.error};
       const r=results[k++];
-      return r.error?{error:r.error}:{run:assemble(b,p.prepared,r.rows,requests[i].revenuePath??null)};
+      if(r.error) return {error:r.error};
+      const run=assemble(b,p.prepared,r.rows,requests[i].revenuePath??null);
+      if(r.inspect) run.inspect=r.inspect;
+      return {run};
     });
   }
   async function simulate(b,history,overrides={},revenuePath=null) {
