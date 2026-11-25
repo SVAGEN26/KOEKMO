@@ -1500,6 +1500,16 @@ arkivera data.
   kassan (Finspång från 2030). Utfall, SCB TAB6779 post 065 Kassa och bank, mnkr: Motala 2017–2025 120, 184, 263, 168,
   338, 86, 115, 229, 81; Finspång 116, 114, 93, 112, 97, 86, 27, 74, 148. Ingen trend, stora svängningar; basåret 2025
   är Motalas lägsta på nio år.
+- Likviditetsmål (2026-11-25, dokumenten i privata repot `styrdokument/`):
+  - Motala, finanspolicy KF 2022-10-31 § 130: "alltid en likviditetsreserv"; tillgänglig likviditet = kassa och bank,
+    räntepapper som kan säljas inom fem dagar, ej utnyttjade kreditlöften och checkkredit. Beloppet står i bilagan
+    "Limiter och riktlinjer", som inte är publicerad och inte hittades. Årsredovisningen visar bara riktlinjer för
+    ränte- och kapitalbindning. Checkkredit 200 mnkr, outnyttjad (ÅR 2023, not om likvida medel). Av kassan 338 mnkr
+    2021 var 167,6 mnkr disponibel likviditet; resten bundna medel (ÅR 2021 s. 33).
+  - Finspång, finansiella riktlinjer 2025-04-09 § 102: (omsättningstillgångar + kreditlöften)/kortfristiga skulder > 1,
+    och betalningsberedskap 30 dagar = (likvida medel + kreditlöften)/(alla in- och utbetalningar/365).
+  - 30 dagars utbetalningar (driftkostnad + investering + ränta, basår 2025): Motala 284 mnkr mot kassa 81 + checkkredit
+    200 = 281; Finspång 136 mnkr mot kassa 148. Båda ligger alltså nära 30 dagar.
 - Omvänd beräkning: med resultatmål görs två extra körningar (skattesats +1 kr, kostnadsökning −0,5 procentenheter);
   ändringen som når målet löses per år linjärt, med hänsyn till att målet i kronor växer med skatten. Kontroll i
   webbläsare: Motala 21,76 kr ger 2,00 % 2026 och mer övriga år; Finspång 21,33 kr ger 2,00 % 2026.
