@@ -60,7 +60,7 @@ const explanations={
   equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
 };
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let rateFixingTable,rateStress,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,rateStress,investmentPlans,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
@@ -89,7 +89,7 @@ const skrSources={
 };
 const comparisonSelectors=[$('comparison-scenario'),$('comparison-preset')];
 const scenarioStorageKey='motala.saved-scenarios.v1';
-const savedControlIds=['planning-enabled','regulation-held','time-model','revenue-mode','demography-mode','split-payroll',
+const savedControlIds=['planning-enabled','regulation-held','investment-plan','time-model','revenue-mode','demography-mode','split-payroll',
   'employer-rate','construction-years','construction-share','liquidity-policy','cash-reserve','defer-investment-share',
   'prefinance-share','working-capital-enabled','collection-days','payment-days','grant-advance',
   'migration-profile','age-tax','project-choice'];
@@ -241,7 +241,9 @@ function updateModelOptions() {
     deferInvestmentShare:liquidityPolicy?Number($('defer-investment-share').value)/100:0,
     prefinanceShare:liquidityPolicy?Number($('prefinance-share').value)/100:0,
     workingCapitalEnabled,collectionDays:enteredDays('collection-days'),paymentDays:enteredDays('payment-days'),
-    firstYearGrantAdvance:workingCapitalEnabled?Number($('grant-advance').value):0};
+    firstYearGrantAdvance:workingCapitalEnabled?Number($('grant-advance').value):0,
+    investmentPlan:!!b.investmentPlan&&$('investment-plan').checked};
+  renderInvestmentPlanNote();
   $('employer-rate-control').hidden=!splitPayroll;
   $('construction-share-control').hidden=constructionYears===0;
   $('liquidity-controls').hidden=!liquidityPolicy;
@@ -276,7 +278,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
+  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,investmentPlan:investmentPlanFor(activeMunicipality,year),assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;
@@ -392,6 +394,20 @@ function scaleControl(id) {
   box.addEventListener('change',apply);
   box.querySelector('button').onclick=()=>{box.querySelectorAll('input').forEach(el=>el.value='');apply();};
 }
+// Point markers by shape, so that series differ by more than colour. Centre (x, y), size r.
+function marker(shape,x,y,r,color,title='') {
+  const tip=title?`<title>${safe(title)}</title>`:'';
+  const at=(dx,dy)=>`${(x+dx).toFixed(2)},${(y+dy).toFixed(2)}`;
+  if(shape==='square') return `<rect x="${(x-r).toFixed(2)}" y="${(y-r).toFixed(2)}" width="${2*r}" height="${2*r}" fill="${color}">${tip}</rect>`;
+  if(shape==='triangle') return `<polygon points="${at(0,-1.25*r)} ${at(1.15*r,r)} ${at(-1.15*r,r)}" fill="${color}">${tip}</polygon>`;
+  if(shape==='diamond') return `<polygon points="${at(0,-1.35*r)} ${at(1.35*r,0)} ${at(0,1.35*r)} ${at(-1.35*r,0)}" fill="${color}">${tip}</polygon>`;
+  if(shape==='cross') return `<path d="M${at(-r,-r)}L${at(r,r)}M${at(r,-r)}L${at(-r,r)}" stroke="${color}" stroke-width="2.2">${tip}</path>`;
+  return `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${r}" fill="${color}">${tip}</circle>`;
+}
+// A legend entry that shows the line and the marker as the chart draws them.
+function legendSymbol(color,shape=null,{thin=false,dash=false}={}) {
+  return `<svg class="legend-symbol" width="26" height="12" viewBox="0 0 26 12" aria-hidden="true"><line x1="1" y1="6" x2="25" y2="6" stroke="${color}" stroke-width="${thin?1.5:2.8}" ${dash?'stroke-dasharray="4 3"':''}/>${shape?marker(shape,13,6,3.2,color):''}</svg>`;
+}
 function chart(id,series,options={}) {
   if(!run) return;
   chartArgs[id]=[series,options];scaleControl(id);
@@ -410,7 +426,7 @@ function chart(id,series,options={}) {
   // Shaded columns for flagged years, for example years with a deficit.
   const half=(width-left-right)/(run.rows.length-1)/2;
   const shaded=bands.map(i=>`<rect class="band" x="${(x(i)-half).toFixed(2)}" y="${top}" width="${(2*half).toFixed(2)}" height="${height-top-bottom}" fill="#f6dcd6"><title>Underskott ${run.rows[i].year}</title></rect>`).join('');
-  const paths=series.map(s=>`<path d="${s.values.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.thin?'':s.values.map((v,i)=>v<low||v>high?'':`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${s.color}"><title>${safe(s.name)} ${run.rows[i].year}: ${fmt(v)} ${unit}</title></circle>`).join('')}`).join('');
+  const paths=series.map(s=>`<path d="${s.values.map((v,i)=>`${i?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.plain||(s.thin&&!s.marker)?'':s.values.map((v,i)=>v<low||v>high?'':marker(s.marker??'circle',x(i),y(v),s.marker?3.6:3,s.color,`${s.name} ${run.rows[i].year}: ${fmt(v)} ${unit}`)).join('')}`).join('');
   const labelStep=Math.ceil((run.rows.length-1)/8);
   const labels=run.rows.map((r,i)=>i%labelStep===0||i===run.rows.length-1?`<text x="${x(i)}" y="${height-10}" text-anchor="middle" fill="#78837d" font-size="11">${r.year}</text>`:'').join('');
   $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${shaded}${lines}${zero}<g clip-path="url(#${clip})">${paths}</g>${labels}</svg>`;
@@ -783,27 +799,46 @@ function renderBalanceFlag(deficits,belowTarget,target,rows){
   $('balance-flag').className='balance-flag'+(deficits.length?' warning':'');
   $('balance-flag').innerHTML=parts.join(' ');
 }
+// The municipality's investment plan for the base year, as factors on the base year's investment (scenario-inputs.js).
+function investmentPlanFor(code,baseYear) {
+  const plan=investmentPlans?.municipalities?.[code];
+  if(!plan||plan.baseYear!==baseYear) return null;
+  const years=Object.keys(plan.plan).map(Number).sort((x,y)=>x-y);
+  return {...plan,years,factors:years.map(y=>plan.plan[y]/plan.baseBudget)};
+}
+function renderInvestmentPlanNote() {
+  const plan=b.investmentPlan;
+  $('investment-plan-control').hidden=!plan;
+  if(!plan) return;
+  const share=plan.baseOutcome/plan.baseBudget,base=b.assumptions.investment??b.investment;
+  const amounts=plan.factors.map(f=>fmt(base*f));
+  $('investment-plan-note').textContent=`Budget och plan ${plan.years[0]}–${plan.years.at(-1)}: ${plan.years.map(y=>fmt(plan.plan[y])).join(', ')} mnkr, mot ${fmt(plan.baseBudget)} för ${plan.baseYear}. `+
+    `Utfallet ${plan.baseYear} blev ${fmt(plan.baseOutcome)} mnkr, ${fmt(100*share)} % av budgeten. Modellen räknar med samma andel: ${amounts.join(', ')} mnkr, därefter ${amounts.at(-1)} mnkr per år. `+
+    (Math.abs(b.investment-plan.baseOutcome)>1?`Kommunens tal räknas på ett annat sätt än SCB:s, som ger ${fmt(b.investment)} mnkr för ${plan.baseYear}; modellen utgår från SCB:s tal och följer planens förändring. `:'')+
+    `Avmarkera för basårets nivå varje år.`;
+}
 // Rate stress: the scenario with the market rate moving as in an episode of Riksbank's statistics (data/rate-stress.json).
-const RATE_COLORS=['#a34840','#516e9c','#ad8053','#80a979'];
+const RATE_COLORS=['#a34840','#516e9c','#ad8053','#80a979'],RATE_MARKERS=['square','triangle','diamond','cross'];
 function renderRateStress(a,results) {
   const episodes=rateStress.episodes,rows=run.rows.slice(1);
   const market=e=>rows.map((_,i)=>Math.max(0,a.interestRate+e.changes[Math.min(i,e.changes.length-1)]));
-  const runs=episodes.map((e,i)=>({e,color:RATE_COLORS[i%RATE_COLORS.length],run:results[i]?.run,error:results[i]?.error}));
-  chart('rate-stress-chart',[...runs.filter(r=>r.run).map(r=>({name:r.e.label,values:r.run.rows.map(x=>x.result),color:r.color,thin:true})),
-    {name:'Scenariot',values:run.rows.map(r=>r.result),color:'#17634e'}],{unit:'mnkr',height:230});
-  $('rate-stress-legend').innerHTML=`<span class="legend-line primary">Scenariot</span>`+runs.map(r=>`<span class="legend-line" style="--line:${r.color}">${safe(r.e.label)}</span>`).join('');
-  const summary=(label,description,rates,r)=>{
+  const runs=episodes.map((e,i)=>({e,color:RATE_COLORS[i%RATE_COLORS.length],marker:RATE_MARKERS[i%RATE_MARKERS.length],run:results[i]?.run,error:results[i]?.error}));
+  chart('rate-stress-chart',[...runs.filter(r=>r.run).map(r=>({name:r.e.label,values:r.run.rows.map(x=>x.result),color:r.color,thin:true,marker:r.marker})),
+    {name:'Scenariot',values:run.rows.map(r=>r.result),color:'#17634e',plain:true}],{unit:'mnkr',height:230});
+  $('rate-stress-legend').innerHTML=`<span class="legend-item">${legendSymbol('#17634e',null)}Scenariot</span>`+
+    runs.map(r=>`<span class="legend-item">${legendSymbol(r.color,r.marker,{thin:true})}${safe(r.e.label)}</span>`).join('');
+  const summary=(label,description,rates,r,symbol)=>{
     const changes=r.rows.slice(1).map((x,i)=>({year:x.year,delta:x.result-rows[i].result})),worst=changes.reduce((m,x)=>x.delta<m.delta?x:m);
     const deficits=r.rows.slice(1).filter(x=>x.result<0).map(x=>x.year);
-    return `<tr><th scope="row">${safe(label)}${description?`<small>${safe(description)}</small>`:''}</th><td>${decimal(Math.max(...rates))} %</td>`+
+    return `<tr><th scope="row"><span class="legend-item">${symbol}${safe(label)}</span>${description?`<small>${safe(description)}</small>`:''}</th><td>${decimal(Math.max(...rates))} %</td>`+
       `<td>${fmt(Math.max(...r.rows.slice(1).map(x=>x.interest)))}</td><td>${r===run?'–':worst.delta<-0.5?`${fmt(worst.delta)} (${worst.year})`:'Ingen'}</td>`+
       `<td>${deficits.length?yearRanges(deficits):'Inga'}</td><td>${fmt(r.rows.at(-1).debt)}</td></tr>`;
   };
   const own=rows.map(()=>a.interestRate);
   $('rate-stress-table').innerHTML=`<caption>Marknadsräntan för nya och omsatta lån. Kommunens snittränta följer efter med räntebindningen (${decimal(a.rateFixingYears??0)} år). Belopp i mnkr, ${rows[0].year}–${rows.at(-1).year}.</caption>`+
     `<thead><tr><th scope="col">Räntebana</th><th scope="col">Högsta marknadsränta</th><th scope="col">Högsta räntekostnad</th><th scope="col">Största försämring av resultatet (år)</th><th scope="col">Underskott</th><th scope="col">Skuld ${rows.at(-1).year}</th></tr></thead><tbody>`+
-    summary('Scenariot','Räntan i antagandena',own,run)+
-    runs.map(r=>r.run?summary(r.e.label,r.e.description,market(r.e),r.run):`<tr><th scope="row">${safe(r.e.label)}</th><td colspan="5">${safe(r.error??'Beräkningen misslyckades')}</td></tr>`).join('')+'</tbody>';
+    summary('Scenariot','Räntan i antagandena',own,run,legendSymbol('#17634e',null))+
+    runs.map(r=>r.run?summary(r.e.label,r.e.description,market(r.e),r.run,legendSymbol(r.color,r.marker,{thin:true})):`<tr><th scope="row">${safe(r.e.label)}</th><td colspan="5">${safe(r.error??'Beräkningen misslyckades')}</td></tr>`).join('')+'</tbody>';
 }
 async function drawOnce() {
   try {
@@ -1092,7 +1127,7 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
@@ -1101,6 +1136,7 @@ async function boot(){try{
   regional=files[9];
   rateFixingTable=files[10];
   rateStress=files[11];
+  investmentPlans=files[12];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));
@@ -1158,7 +1194,7 @@ async function boot(){try{
     updatePeriod();
   };
   $('planning-enabled').onchange=()=>{customPath=undefined;updatePeriod();};
-  for(const id of ['time-model','revenue-mode','demography-mode','split-payroll','employer-rate','construction-years','construction-share','migration-profile','age-tax','project-choice']) {
+  for(const id of ['time-model','revenue-mode','demography-mode','split-payroll','employer-rate','construction-years','construction-share','migration-profile','age-tax','project-choice','investment-plan']) {
     $(id).onchange=()=>{
       if(!$('employer-rate').reportValidity()) return;
       if($('construction-years').value!=='0'&&!$('construction-share').reportValidity()) return;

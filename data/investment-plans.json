@@ -1,0 +1,149 @@
+{
+  "description": "Kommunernas investeringsplaner ur budget 2026 med plan, och budgeten för basåret 2025 ur budget 2025. Sidan låter basårets investering (SCB) följa planens utveckling: investering år t = basårets investering × plan(t) / budget(2025). Det antar att kommunen genomför samma andel av budgeten som 2025. Efter planens sista år ligger det året kvar.",
+  "unit": "mnkr, kommunens egna begrepp (nettoinvesteringar eller investeringsram); kvoten används, inte nivån",
+  "municipalities": {
+    "0583": {
+      "name": "Motala",
+      "baseYear": 2025,
+      "baseBudget": 750,
+      "baseOutcome": 413,
+      "plan": {
+        "2026": 755,
+        "2027": 897,
+        "2028": 961
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Mål och resursplan 2025 med plan 2026–2027, kommunfullmäktiges beslut punkt 4: total investeringsram 2025 750 mnkr (reviderad; preliminärt 757)",
+          "url": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2025-med-plan-for-2026-2027.pdf",
+          "archive": "data/downloads/20261106T090534Z/budget-2025-plan-2026-2027.pdf",
+          "page": 2
+        },
+        "plan": {
+          "text": "Mål och resursplan 2026 med plan 2027–2028, investeringsram",
+          "url": "https://www.motala.se/media/uploads/Budget-Mal-och-resursplan-for-2026-med-plan-for-2027-2028.pdf",
+          "archive": "data/downloads/20261106T090534Z/budget-2026-plan-2027-2028.pdf",
+          "page": 28
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025, investeringsredovisning: totala investeringar budget 797, utfall 413, avvikelse 384",
+          "url": "https://www.motala.se/media/uploads/Arsredovisning-2025.pdf",
+          "page": 33
+        }
+      },
+      "history": [
+        {
+          "year": 2021,
+          "budget": 381.5,
+          "outcome": 272.6
+        },
+        {
+          "year": 2022,
+          "budget": 598.6,
+          "outcome": 253.9
+        },
+        {
+          "year": 2023,
+          "budget": 557,
+          "outcome": 299
+        },
+        {
+          "year": 2024,
+          "budget": 686,
+          "outcome": 417
+        },
+        {
+          "year": 2025,
+          "budget": 797,
+          "outcome": 413
+        }
+      ],
+      "historyNote": "Budget enligt årsredovisningarnas investeringsredovisning (inklusive ombudgeteringar under året), utfall samma tabell. Årsredovisning 2021–2025."
+    },
+    "0580": {
+      "name": "Linköping",
+      "baseYear": 2025,
+      "baseBudget": 803,
+      "baseOutcome": 606,
+      "plan": {
+        "2026": 823,
+        "2027": 670,
+        "2028": 926,
+        "2029": 954,
+        "2030": 1024,
+        "2031": 825
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Budget för 2025 med plan för 2026–2030, Investeringsramar och finansiering av investeringarna: nettoinvesteringar 803 mnkr 2025",
+          "url": "https://drive.google.com/file/d/1ecpQg6XMOaeA4odM4V4VOB3pGu0hQlx-/view",
+          "page": 53
+        },
+        "plan": {
+          "text": "Budget för 2026 med plan för 2027–2031, investeringsram (mnkr) 2026–2031",
+          "url": "https://drive.google.com/file/d/1JivMAYM-defjXVEdSsjfOgF0uNHhj-UB/view",
+          "page": 8
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025, investeringsredovisning: summa investeringar 606 mnkr mot investeringsram 1 109 (genomförandegrad 55 % enligt kommunen)",
+          "url": "https://drive.google.com/file/d/1Ergw0NKfTxJpfbqpKWsfoNcEnLdxjyB_/view",
+          "page": 86
+        },
+        "realisation": {
+          "text": "Budget 2026 s. 20: genomsnittlig genomförandegrad 2016–2024 75 % av planerade investeringar",
+          "page": 20
+        }
+      },
+      "history": [
+        {
+          "year": 2021,
+          "budget": 843,
+          "outcome": 704
+        },
+        {
+          "year": 2022,
+          "budget": 848,
+          "outcome": 819
+        },
+        {
+          "year": 2023,
+          "budget": 714,
+          "outcome": 488
+        },
+        {
+          "year": 2025,
+          "budget": 803,
+          "outcome": 606
+        }
+      ],
+      "historyNote": "Budget: nettoinvesteringar i respektive års budgetdokument (budget 2022 s. för 2021–2022, budget 2023, budget 2025); 2024 saknas här. Utfall: årsredovisningarna 2021–2025. SCB:s investeringsutgift (TAB5179) är högre, 952 mnkr 2025, eftersom den räknar annorlunda; därför används kvoten."
+    },
+    "0562": {
+      "name": "Finspång",
+      "baseYear": 2025,
+      "baseBudget": 209,
+      "baseOutcome": 121.4,
+      "plan": {
+        "2026": 236,
+        "2027": 387,
+        "2028": 309
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Strategisk plan 2026–2028 med budget 2026, nyckeltal 4: investeringsvolym (mnkr) bokslut 2024 87, budget 2025 209",
+          "url": "https://finspang.se/download/18.6efd05c319b7d47d0ed893a/1767359647837/Strategisk%20plan%202026-2028%20med%20budget%202026.pdf",
+          "page": 37
+        },
+        "plan": {
+          "text": "Samma tabell: budget 2026 236, plan 2027 387, plan 2028 309",
+          "page": 37
+        },
+        "baseOutcome": {
+          "text": "SCB TAB5179, investeringsutgift 2025 (kommunens egen tabell ger bokslut 2024 87 mot SCB 98)"
+        }
+      },
+      "history": [],
+      "historyNote": "Årsredovisningarna redovisar årets del av budgeten (116 mnkr 2025) och den totala budgeten med ombudgeteringar (426 mnkr); de är inte jämförbara med planens 209."
+    }
+  }
+}

@@ -193,6 +193,16 @@ its places in use from then.
 `life` is the base year's assets over its depreciation, a blended life (Motala
 2025: 2,997 / 180 mnkr). This is a declining stock, not component depreciation.
 
+Investment is a yearly path. By default it is the base year's amount. Where the
+municipality's budget with plan is recorded (`data/investment-plans.json`: Motala,
+Linköping, Finspång), the page multiplies the base year's amount by the plan for
+each year over the budget for the base year, and holds the last plan year. This
+carries the base year's share of the budget carried out forward (Motala 55 %,
+Linköping 75 %, Finspång 58 % in 2025) and keeps SCB's definition of investment,
+which differs from the municipalities' own (Linköping 2025: 952 against 606 mnkr).
+Motala's annual reports show the share carried out between 42 and 71 % in
+2021–2025, so a single year's share is uncertain.
+
 ## Finance
 
     result = tax + grants − net cost − depreciation + financial income − interest − other financial costs
