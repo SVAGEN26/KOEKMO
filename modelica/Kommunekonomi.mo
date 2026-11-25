@@ -1723,7 +1723,8 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       Units.Rate rateNow[5] "Takten för det pågående årets ökning";
       Units.Rate rateNext[5] "Takten för nästa års ökning";
     initial equation
-      level = {Data.startLevel(rateNow[i]*Units.year) for i in 1:5};
+      // Taxenivån växte under basåret med sin egen ökning; årets extra inflation hör inte till basåret.
+      level = {Data.startLevel(if i == 3 then log(1 + operatingRevenueGrowth) else rateNow[i]*Units.year) for i in 1:5};
     equation
       share = (time - (calendar.baseYear + calendar.pathIndex)*Units.year)/Units.year;
       // Taxor och avgifter följer sin egen ökning och en del av årets extra inflation.

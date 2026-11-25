@@ -198,8 +198,9 @@ class CostsAndFinance(unittest.TestCase):
         fixed, _ = run('NoFeeIndexation', years=2)
         base, _ = run('Base', years=2)
         self.assertAlmostEqual(fixed[2026]['operatingRevenue'], base[2026]['operatingRevenue'], delta=1e-4)
+        # 30 % of 3 points in 2026, and of half as much in 2027 (the shock's persistence), of which half shows in 2027's mean.
         gain = shock[2027]['operatingRevenue']/fixed[2027]['operatingRevenue'] - 1
-        self.assertAlmostEqual(gain, 0.3*0.03, delta=0.002)
+        self.assertAlmostEqual(gain, 0.3*0.03 + 0.3*0.015/2, delta=0.001)
 
 
 @unittest.skipIf(SKIP, SKIP)
