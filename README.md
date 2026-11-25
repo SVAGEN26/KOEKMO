@@ -378,30 +378,31 @@ grants per component (a diagnosis, not a forecast):
 
 | Line | SKR | Components | Hindsight |
 | --- | --- | --- | --- |
-| Result | −39 / −51 / +7 | −12 / −22 / +27 | −19 / −24 / −9 |
-| Tax | −35 / −51 / −71 | −35 / −51 / −71 | −10 / −11 / −14 |
-| General grants | −23 / −61 / −104 | +4 / −33 / −85 | 0 / +9 / +15 |
-| Net cost | −20 / −60 / −177 | −20 / −60 / −177 | +8 / +25 / +16 |
+| Result | −38 / −48 / +14 | −11 / −18 / +35 | −17 / −21 / −1 |
+| Tax | −35 / −48 / −68 | −35 / −48 / −68 | −10 / −8 / −11 |
+| General grants | −23 / −65 / −109 | +4 / −36 / −89 | 0 / +5 / +10 |
+| Net cost | −20 / −64 / −187 | −20 / −64 / −187 | +8 / +20 / +5 |
 
 Read it this way. With SKR's assumptions the three-year result error is small only
-because two large errors cancel: net cost too low by 177 and tax and grants too low
-by 176. With the price outcomes alone (the set "prices") the net cost error after three
-years goes from −177 to +16: the circulars of December 2020 and 2021 assumed much lower wage and price
-growth than 2022–2023 brought (the runs from 2020 and 2021 miss net cost in 2023 by −251 and −177). With what actually happened to prices, the tax base and the state's grants,
+because two large errors cancel: net cost too low by 187 and tax and grants too low
+by 178. With the price outcomes alone (the set "prices") the net cost error after three
+years goes from −187 to +5: the circulars of December 2020 and 2021 assumed much lower wage and price
+growth than 2022–2023 brought. With what actually happened to prices, the tax base and the state's grants,
 tax, grants and net cost come close, but the result's mean absolute error is still
-44 / 59 / 40 mnkr against 40 / 63 / 57 with SKR's assumptions. Keeping the base
+44 / 56 / 33 mnkr against 41 / 62 / 64 with SKR's assumptions. Keeping the base
 year's result ("persistence") misses by 59 / 76 / 41. One year ahead the
 municipality's budget missed by 24. Mjölby and Finspång, the same way (mean
 absolute error of the result, mnkr):
 
 | | SKR | Hindsight | Persistence |
 | --- | --- | --- | --- |
-| Motala | 40 / 63 / 57 | 44 / 59 / 40 | 59 / 76 / 41 |
-| Mjölby | 41 / 66 / 117 | 27 / 42 / 61 | 44 / 82 / 91 |
-| Finspång | 38 / 78 / 56 | 23 / 44 / 16 | 38 / 52 / 38 |
+| Motala | 41 / 62 / 64 | 44 / 56 / 33 | 59 / 76 / 41 |
+| Mjölby | 42 / 66 / 114 | 27 / 43 / 57 | 44 / 82 / 91 |
+| Finspång | 37 / 78 / 59 | 23 / 44 / 18 | 38 / 52 / 38 |
 
-The tables are the continuous model as of 2026-11-25, with the ageing chain in 65+ and the liquidity reserve.
-The yearly model, removed in November 2026, gave the same accuracy over these horizons (within 3 mnkr).
+The tables are the model as of 2026-11-26: ageing from each base year's single years of age, pensions following
+the payroll, the liquidity reserve and interest on cash. Earlier versions, the removed yearly model included, gave
+the same accuracy over these horizons (within 7 mnkr).
 
 Five, four and three cases per horizon, from one period, are too few to rank the
 sets.
@@ -538,28 +539,27 @@ grants and Sweden's population; the municipality's population, costs, debt and
 result are the model's. Norrköping 2022 and 2023 are left out: the outcome holds the
 Ostlänken provision (−3 281 and −80 mnkr), not split into operating and financial
 items. Mean error / mean absolute error in percent of tax and grants (population:
-percent), from `data/long-hindcast-continuous.json` (2026-11-25, with the ageing chain and the liquidity
-reserve):
+percent), from `data/long-hindcast-continuous.json` (2026-11-26):
 
 | Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Result | 0.2 / 1.8 | −0.1 / 2.3 | −1.0 / 2.7 | −1.7 / 3.5 | −2.8 / 3.7 | −2.6 / 3.3 |
+| Result | 0.3 / 1.8 | 0.3 / 2.4 | −0.3 / 2.8 | −0.6 / 3.7 | −1.5 / 3.3 | −0.8 / 2.1 |
 | Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
-| Result, standard rates | −0.9 / 2.6 | −2.9 / 4.2 | −5.1 / 5.5 | −5.0 / 5.6 | −4.7 / 5.1 | −5.7 / 6.4 |
-| Net cost | −0.3 / 1.9 | −0.1 / 2.3 | 1.4 / 2.5 | 2.2 / 3.1 | 4.8 / 5.1 | 7.3 / 7.3 |
-| Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.2 / 1.4 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
-| General grants | 0.0 / 0.0 | 0.4 / 0.4 | 0.7 / 0.7 | 1.1 / 1.1 | 1.7 / 1.7 | 2.8 / 2.8 |
-| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.3 / 1.7 | 1.8 / 2.4 | 3.0 / 3.5 | 5.6 / 5.8 |
-| Debt | 0.8 / 4.4 | 0.5 / 8.2 | 1.8 / 12.3 | 4.0 / 16.0 | 6.0 / 20.0 | −11.0 / 20.0 |
+| Result, standard rates | −0.9 / 2.6 | −2.6 / 4.2 | −4.6 / 4.9 | −4.3 / 5.0 | −4.0 / 4.4 | −4.8 / 5.1 |
+| Net cost | −0.4 / 2.0 | −0.5 / 2.4 | 0.7 / 2.4 | 1.3 / 3.0 | 3.8 / 4.6 | 6.0 / 6.3 |
+| Tax | 0.0 / 0.9 | −0.1 / 1.2 | −0.0 / 1.4 | −0.3 / 1.7 | 0.5 / 2.1 | 2.3 / 2.9 |
+| General grants | 0.0 / 0.0 | 0.3 / 0.3 | 0.6 / 0.6 | 1.0 / 1.0 | 1.6 / 1.6 | 2.6 / 2.6 |
+| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.3 / 1.7 | 1.9 / 2.4 | 3.3 / 3.8 | 6.1 / 6.1 |
+| Debt | 0.7 / 4.4 | 0.0 / 8.4 | 0.6 / 12.5 | 1.9 / 16.3 | 1.9 / 20.4 | −18.8 / 21.0 |
 
 The model with hindsight beats persistence in years 1–3 only; from year 4 the base
 year's result share does as well or better. With the model's standard rates instead
-of hindsight it is worse than persistence at every horizon. With hindsight the result
-is too low from year 3: −1.7 % of tax and grants after four years and −2.6 % after eight,
-against a usual result target of 2 %. Before the ageing chain in 65+ it was within 0.3 % in years 1–6: the chain
-moves people into 80+ at fixed rates (5.6 % and 6.0 % a year), while from base years 2017–2019 it was the small
-cohorts of the 1930s that turned 80 (Motala 2020: 4.5 %). With 4.5 % and 5.0 % the error after eight years is
-−0.8 % (a diagnostic run, not kept). Rates taken from each base year's ages would fix this. The population grows too fast (6 % after eight years: migration calibrated on
+of hindsight it is worse than persistence at every horizon. With hindsight the mean
+error of the result is within 0.6 % of tax and grants in years 1–4, −1.5 % after six years and
+−0.8 % after eight, against a usual result target of 2 %. Net cost comes out 6.0 % too high after eight years.
+Before November 2026 the need for elder care grew only with 65+, which hid part of that: net cost was then 4.3 % too
+high and the result 0.9 % too high. A version with fixed transitions into 80+ gave −2.6 %; taking the transitions
+from each base year's single years of age gives the figures here. The population grows too fast (6 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
 together, so part of the result error cancels. A population-only test (`scripts/hindcast_migration.py`,
 `data/migration-hindcast.json`; its yearly copy of the five-group demography, with a fixed 65+
@@ -572,7 +572,7 @@ almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.
 error at medium horizons is births: the model keeps the base year's births per
 adult while fertility fell, so the 0–6 group is 5 % too large after three years
 and 11 % after five (base years 2017–2024). Debt, the municipality's own
-without loans passed on to its companies, comes out too low (11 % of tax and
+without loans passed on to its companies, comes out too low (19 % of tax and
 grants after eight years) because investment stays at the base year's amount. With costs growing by each
 municipality's historical residual up to the base year (set "drift",
 `data/cost-residual.json`, measured on the model's basis), net cost is 11.5 % too
@@ -591,8 +591,8 @@ municipalities. From `data/response-test.json`:
 
 | Rule | Model | History: slope (interval) | Cases |
 | --- | --- | --- | --- |
-| Need from the population → real operating cost, 5 years | 1 | 0.93 (0.42 to 1.54); 1.03 (0.54 to 1.64) with a yearly step | 126 |
-| The same, 1 year | 1 | 0.82 (0.30 to 1.30); 0.71 (0.09 to 1.31) | 180 |
+| Need from the population → real operating cost, 5 years | 1 | 0.95 (0.43 to 1.56); 1.05 (0.55 to 1.66) with a yearly step | 126 |
+| The same, 1 year | 1 | 0.71 (0.08 to 1.33); 0.83 (0.31 to 1.33) with a yearly step | 180 |
 | Population the year before → tax and grants, 1 year | 0.94 | 0.78 (0.49 to 1.10) | 189 |
 | The same, 10 years | 0.94 | 0.44 (0.10 to 0.90) | 74 |
 | Financing need → bank debt less lending and cash, 1 year | 1 | 0.71 (0.20 to 1.02); 0.53 (0.17 to 0.95) with the need from the balance sheet | 99 |

@@ -75,7 +75,7 @@ MODEL = 'Continuous'
 SUFFIX = '-continuous'
 PREFIX = PACKAGE.lower()
 ORIGINS = range(2020, 2025)
-OUTPUTS = ('tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', 'grantParts[4]', 'grantParts[5]', 'grantParts[6]', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'otherOperatingExpense', 'operatingRevenue', 'population', 'debt', 'cash')
+OUTPUTS = ('annualFinancialIncome', 'tax', 'grants', 'grantParts[1]', 'grantParts[2]', 'grantParts[3]', 'grantParts[4]', 'grantParts[5]', 'grantParts[6]', 'cost', 'depreciation', 'interest', 'result', 'payroll', 'pensionExpense', 'otherOperatingExpense', 'operatingRevenue', 'population', 'debt', 'cash')
 # Lines scored besides the result. Debt and cash depend on the financing rule as much as on the forecast.
 LINES = ('payroll', 'pension', 'otherCosts', 'operatingRevenue', 'depreciation', 'interest', 'debt', 'cash')
 

@@ -4,147 +4,147 @@
  "reading": "slope 1 = history moved as the model says; low and high are a 95 % interval from resampling municipalities",
  "costs": {
   "annual": {
-   "rule": "Kommunekonomi.Annual: adjustment 0.5, fixed share 0.25, need at the end of the year",
+   "rule": "A yearly step (the former Kommunekonomi.Annual): adjustment 0.5, fixed share 0.25, need at the end of the year",
    "byHorizon": {
     "1": {
-     "slope": 0.817512235154674,
-     "low": 0.30131894612876153,
-     "high": 1.3044489189678752,
-     "r2": 0.02099047263168661,
+     "slope": 0.8269769245035838,
+     "low": 0.3143861243927842,
+     "high": 1.3251016995936964,
+     "r2": 0.020697805764023573,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.003882996977854814,
+     "spreadOfModelChange": 0.0038117022374706206,
      "spreadOfObservedChange": 0.02191039489345981
     },
     "3": {
-     "slope": 1.065488143640493,
-     "low": 0.5586079787186429,
-     "high": 1.7040255365911516,
-     "r2": 0.12130303779906706,
+     "slope": 1.0848560528229865,
+     "low": 0.5708342312546149,
+     "high": 1.7372971933701375,
+     "r2": 0.12031869863508368,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.00986472217811412,
+     "spreadOfModelChange": 0.009649217328244787,
      "spreadOfObservedChange": 0.03017849943261218
     },
     "5": {
-     "slope": 1.0317679607164159,
-     "low": 0.5366338034445204,
-     "high": 1.6352104886280108,
-     "r2": 0.16717206408237695,
+     "slope": 1.0531416874296853,
+     "low": 0.5507529043373991,
+     "high": 1.6601182356814566,
+     "r2": 0.1658182450393544,
      "cases": 126,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.014951114890756572,
+     "spreadOfModelChange": 0.014588247309829296,
      "spreadOfObservedChange": 0.037728867052745266
     },
     "10": {
-     "slope": 0.8003504832975813,
-     "low": 0.24246353905035928,
-     "high": 1.199009498261609,
-     "r2": 0.2258407320658313,
+     "slope": 0.8220989875616699,
+     "low": 0.24208123020907152,
+     "high": 1.2247863474840306,
+     "r2": 0.22588799219473485,
      "cases": 61,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.024981917018292082,
+     "spreadOfModelChange": 0.024323568798603236,
      "spreadOfObservedChange": 0.04207313138255204
     }
    },
    "withMunicipalityEffects": {
     "1": {
-     "slope": 0.8697582139010158,
-     "low": 0.2018442451698404,
-     "high": 1.720239789166363,
-     "r2": 0.015753750726795593,
+     "slope": 0.87448355616197,
+     "low": 0.195919147627488,
+     "high": 1.723597828007305,
+     "r2": 0.015510170762921056,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.0031161577257077036,
+     "spreadOfModelChange": 0.003075265584472127,
      "spreadOfObservedChange": 0.02159364641695973
     },
     "3": {
-     "slope": 1.6344241771480754,
-     "low": 0.5595716611464941,
-     "high": 2.7256926656245253,
-     "r2": 0.13442948701918686,
+     "slope": 1.6432658566248903,
+     "low": 0.546756119728802,
+     "high": 2.7622599900748117,
+     "r2": 0.1316255919719412,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.006394276094906728,
+     "spreadOfModelChange": 0.0062931955773706015,
      "spreadOfObservedChange": 0.028504202309168853
     }
    }
   },
   "continuous": {
-   "rule": "Kommunekonomi.Continuous.Economy (the site's default): the same parameters, capacity adjusts continuously and the cost is the year's mean",
+   "rule": "Kommunekonomi.Continuous.Economy (the model): the same parameters, capacity adjusts continuously and the cost is the year's mean",
    "byHorizon": {
     "1": {
-     "slope": 0.7118712877816701,
-     "low": 0.08587585725355892,
-     "high": 1.3105738919482965,
-     "r2": 0.01264245908745859,
+     "slope": 0.7136656281267488,
+     "low": 0.08206891508473618,
+     "high": 1.3260040947436824,
+     "r2": 0.01217112281564073,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.0034607044126374253,
+     "spreadOfModelChange": 0.0033870432850316317,
      "spreadOfObservedChange": 0.02191039489345981
     },
     "3": {
-     "slope": 0.8791353882755255,
-     "low": 0.37695540713501485,
-     "high": 1.5116889942681164,
-     "r2": 0.08142599709139328,
+     "slope": 0.8930943095999634,
+     "low": 0.38655718717199444,
+     "high": 1.5363822716670998,
+     "r2": 0.08022855896826125,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.009795428116928828,
+     "spreadOfModelChange": 0.009571165262065464,
      "spreadOfObservedChange": 0.03017849943261218
     },
     "5": {
-     "slope": 0.9274436768918858,
-     "low": 0.4191103729602077,
-     "high": 1.5389481717184827,
-     "r2": 0.13646412278955625,
+     "slope": 0.9455847117022306,
+     "low": 0.42537655909786776,
+     "high": 1.5635438930109349,
+     "r2": 0.13506653556064796,
      "cases": 126,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.01502780196711352,
+     "spreadOfModelChange": 0.014663822750612744,
      "spreadOfObservedChange": 0.037728867052745266
     },
     "10": {
-     "slope": 0.7725463646000941,
-     "low": 0.24670312805252081,
-     "high": 1.1722173793733344,
-     "r2": 0.22544264262184188,
+     "slope": 0.7940067399524265,
+     "low": 0.2528155876317781,
+     "high": 1.1954027367902451,
+     "r2": 0.22590152801743535,
      "cases": 61,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.025858201573353067,
+     "spreadOfModelChange": 0.02518490006043361,
      "spreadOfObservedChange": 0.04207313138255204
     }
    },
    "withMunicipalityEffects": {
     "1": {
-     "slope": 0.7052837704858042,
-     "low": -0.13521645471008203,
-     "high": 1.6448313233973486,
-     "r2": 0.006302259092317802,
+     "slope": 0.6928018199727467,
+     "low": -0.15265350388303528,
+     "high": 1.6554491734757628,
+     "r2": 0.005905300185082795,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.002430581691675709,
+     "spreadOfModelChange": 0.0023951788904547897,
      "spreadOfObservedChange": 0.02159364641695973
     },
     "3": {
-     "slope": 1.421800888107775,
-     "low": 0.31557219366913025,
-     "high": 2.488979701151785,
-     "r2": 0.07888009133591328,
+     "slope": 1.4204277378906036,
+     "low": 0.3089046277615151,
+     "high": 2.516559609750686,
+     "r2": 0.07608362026758213,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.005630588811454852,
+     "spreadOfModelChange": 0.005535225672829936,
      "spreadOfObservedChange": 0.028504202309168853
     }
    }
@@ -153,71 +153,71 @@
    "rule": "as annual with the need at the end of the year before (the timing data/cost-residual.json used)",
    "byHorizon": {
     "1": {
-     "slope": 0.46961528085810234,
-     "low": -0.2519837843949096,
-     "high": 1.1108832944403344,
-     "r2": 0.0066984722603301,
+     "slope": 0.4638902288421059,
+     "low": -0.26332255694165235,
+     "high": 1.1211546361335465,
+     "r2": 0.006278130580615021,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.0038185270070377445,
+     "spreadOfModelChange": 0.003742399550973001,
      "spreadOfObservedChange": 0.02191039489345981
     },
     "3": {
-     "slope": 0.8423191564013992,
-     "low": 0.35469467278182576,
-     "high": 1.428515142710264,
-     "r2": 0.0799827465679421,
+     "slope": 0.8547542699306689,
+     "low": 0.3607294286271603,
+     "high": 1.449639793722566,
+     "r2": 0.07870135435121561,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.01013255851750091,
+     "spreadOfModelChange": 0.009904840025363003,
      "spreadOfObservedChange": 0.03017849943261218
     },
     "5": {
-     "slope": 0.9050917283180117,
-     "low": 0.393725949517364,
-     "high": 1.4880194581925306,
-     "r2": 0.13466866592022542,
+     "slope": 0.9223702065006911,
+     "low": 0.39964154113268024,
+     "high": 1.5050076424865513,
+     "r2": 0.1332098420921292,
      "cases": 126,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.01529728814098634,
+     "spreadOfModelChange": 0.014929204069051466,
      "spreadOfObservedChange": 0.037728867052745266
     },
     "10": {
-     "slope": 0.7629231187812613,
-     "low": 0.23975155639224027,
-     "high": 1.1581492952533698,
-     "r2": 0.2238770954230308,
+     "slope": 0.7839870200416212,
+     "low": 0.24708037257898735,
+     "high": 1.183378198080003,
+     "r2": 0.22432474727088653,
      "cases": 61,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.026093293116943635,
+     "spreadOfModelChange": 0.025417600983086434,
      "spreadOfObservedChange": 0.04207313138255204
     }
    },
    "withMunicipalityEffects": {
     "1": {
-     "slope": 0.28304501052992775,
-     "low": -0.5907271630747348,
-     "high": 1.1767365907247584,
-     "r2": 0.0014397689905193028,
+     "slope": 0.2664367811714185,
+     "low": -0.6185520018398039,
+     "high": 1.1773572160299848,
+     "r2": 0.0012400745776615467,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.0028947888419201514,
+     "spreadOfModelChange": 0.002854011440109529,
      "spreadOfObservedChange": 0.02159364641695973
     },
     "3": {
-     "slope": 1.2604357499112762,
-     "low": 0.27669060207428264,
-     "high": 2.214900018938392,
-     "r2": 0.07205078248362343,
+     "slope": 1.2579196265451842,
+     "low": 0.27291960691240735,
+     "high": 2.232656434379343,
+     "r2": 0.06938314390859998,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.006070263311285896,
+     "spreadOfModelChange": 0.005968744462007012,
      "spreadOfObservedChange": 0.028504202309168853
     }
    }
@@ -226,71 +226,71 @@
    "rule": "the need itself at the end of the year: no fixed share, no delay",
    "byHorizon": {
     "1": {
-     "slope": 0.3723195308699221,
-     "low": 0.09053265094564317,
-     "high": 0.7310759234097174,
-     "r2": 0.018222673286852915,
+     "slope": 0.3772009337826142,
+     "low": 0.08887933014288284,
+     "high": 0.739708998062441,
+     "r2": 0.018185902888860156,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.00794402186158126,
+     "spreadOfModelChange": 0.007833302166689085,
      "spreadOfObservedChange": 0.02191039489345981
     },
     "3": {
-     "slope": 0.7077943881983709,
-     "low": 0.358580136814841,
-     "high": 1.0549886759732776,
-     "r2": 0.12352778915244929,
+     "slope": 0.7183105232978447,
+     "low": 0.36211835771578366,
+     "high": 1.077637902107518,
+     "r2": 0.12257513270454752,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.014985555997842386,
+     "spreadOfModelChange": 0.014709116870829349,
      "spreadOfObservedChange": 0.03017849943261218
     },
     "5": {
-     "slope": 0.7443055293770912,
-     "low": 0.425241587323141,
-     "high": 1.0707962459999658,
-     "r2": 0.1705209241180139,
+     "slope": 0.7584670956581543,
+     "low": 0.4349402282291267,
+     "high": 1.0905687181769488,
+     "r2": 0.1690968614485852,
      "cases": 126,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.02093203043715048,
+     "spreadOfModelChange": 0.0204552500544913,
      "spreadOfObservedChange": 0.037728867052745266
     },
     "10": {
-     "slope": 0.613661569476186,
-     "low": 0.1983656600750116,
-     "high": 0.9192661037263731,
-     "r2": 0.21633624733409207,
+     "slope": 0.6281373780596103,
+     "low": 0.20256591261254128,
+     "high": 0.9422458944989962,
+     "r2": 0.21542638072404738,
      "cases": 61,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.03188897470571472,
+     "spreadOfModelChange": 0.03108849095019253,
      "spreadOfObservedChange": 0.04207313138255204
     }
    },
    "withMunicipalityEffects": {
     "1": {
-     "slope": 0.3507125050068305,
-     "low": 0.02414840300122902,
-     "high": 0.8017717062858302,
-     "r2": 0.014474518684674231,
+     "slope": 0.3557137303870604,
+     "low": 0.0198478724127514,
+     "high": 0.8102175329501711,
+     "r2": 0.014531695205382458,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.007407587668309581,
+     "spreadOfModelChange": 0.007317849892996919,
      "spreadOfObservedChange": 0.02159364641695973
     },
     "3": {
-     "slope": 0.8055468076370011,
-     "low": 0.2529511043344948,
-     "high": 1.3595833862908882,
-     "r2": 0.11415744899495434,
+     "slope": 0.811566570782606,
+     "low": 0.25055929890704853,
+     "high": 1.3772081471710904,
+     "r2": 0.11258502624034916,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.011955568676818967,
+     "spreadOfModelChange": 0.011784877125727365,
      "spreadOfObservedChange": 0.028504202309168853
     }
    }
@@ -299,71 +299,71 @@
    "rule": "the total population at the end of the year",
    "byHorizon": {
     "1": {
-     "slope": 0.39292628745606595,
-     "low": -0.24644812856898632,
-     "high": 0.9626208534280785,
-     "r2": 0.01163774104571027,
+     "slope": 0.421985450594896,
+     "low": -0.2619236332719041,
+     "high": 1.0426305653916315,
+     "r2": 0.011616994930613609,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.006015524013583475,
+     "spreadOfModelChange": 0.005596282473436777,
      "spreadOfObservedChange": 0.02191039489345981
     },
     "3": {
-     "slope": 0.7408283622188537,
-     "low": 0.1939460396802489,
-     "high": 1.1601376793680922,
-     "r2": 0.10534473559139525,
+     "slope": 0.7970262319830086,
+     "low": 0.2052811752210055,
+     "high": 1.2527175919318636,
+     "r2": 0.1042068874700948,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.013221674448420878,
+     "spreadOfModelChange": 0.012222871285222984,
      "spreadOfObservedChange": 0.03017849943261218
     },
     "5": {
-     "slope": 0.7371094732121652,
-     "low": 0.20996238742910717,
-     "high": 1.1539610083632672,
-     "r2": 0.16154248193380957,
+     "slope": 0.7922921796648597,
+     "low": 0.22200130839213456,
+     "high": 1.247511953473758,
+     "r2": 0.15922490755346652,
      "cases": 126,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.020572408857782266,
+     "spreadOfModelChange": 0.019001763023766674,
      "spreadOfObservedChange": 0.037728867052745266
     },
     "10": {
-     "slope": 0.5573062091701427,
-     "low": 0.03197376109348455,
-     "high": 1.155107434032885,
-     "r2": 0.20098789566322656,
+     "slope": 0.6027628562704588,
+     "low": 0.029373718219836926,
+     "high": 1.2351540447619955,
+     "r2": 0.20012204051677038,
      "cases": 61,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.03384510816314125,
+     "spreadOfModelChange": 0.031225242191724203,
      "spreadOfObservedChange": 0.04207313138255204
     }
    },
    "withMunicipalityEffects": {
     "1": {
-     "slope": 0.34422178309004847,
-     "low": -0.37569790422307425,
-     "high": 1.1353549102060396,
-     "r2": 0.0065089954545308505,
+     "slope": 0.3712561521498338,
+     "low": -0.4051703275120103,
+     "high": 1.2218255566916576,
+     "r2": 0.00658456609786838,
      "cases": 180,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.005061096521916377,
+     "spreadOfModelChange": 0.004719716444061148,
      "spreadOfObservedChange": 0.02159364641695973
     },
     "3": {
-     "slope": 1.1345388288848781,
-     "low": 0.27937695756886066,
-     "high": 1.7841642362483274,
-     "r2": 0.12009147361662947,
+     "slope": 1.2216717005184554,
+     "low": 0.2972393220338823,
+     "high": 1.930606526781035,
+     "r2": 0.11860198719653786,
      "cases": 152,
      "municipalities": 13,
      "modelSays": 1.0,
-     "spreadOfModelChange": 0.008706540304979044,
+     "spreadOfModelChange": 0.008035267899122534,
      "spreadOfObservedChange": 0.028504202309168853
     }
    }
@@ -373,7 +373,7 @@
   "horizon": 5,
   "model": "continuous",
   "adjustment": 1.0,
-  "fixedShare": 0.25,
+  "fixedShare": 0.2,
   "adjustmentInterval": [
    0.2,
    1.0
@@ -382,8 +382,8 @@
    0.0,
    0.6
   ],
-  "squaredErrorAtBest": 0.14705688519531177,
-  "squaredErrorAtDefault": 0.1550309124665527,
+  "squaredErrorAtBest": 0.14736033267622742,
+  "squaredErrorAtDefault": 0.15521200376759778,
   "squaredErrorWithoutVolume": 0.17935689354454964,
   "note": "Least squares over a grid (adjustment 0.1-1.0, fixed share 0-0.9), slope held at 1, year effects removed; intervals from 300 resamples of municipalities. A diagnostic, not an estimate to rely on."
  },
@@ -548,7 +548,7 @@
     "what": "provisions, mostly pensions (079)",
     "slope": 0.041103802096863665,
     "low": -0.03082043924950497,
-    "high": 0.12420113885550679,
+    "high": 0.1242011388555068,
     "r2": 0.006074837414531598,
     "cases": 99,
     "municipalities": 13,
@@ -608,7 +608,7 @@
   "netBankDebtOnBalanceSheetNeed": {
    "what": "as netBankDebt, with the need computed from the balance sheet's own change of fixed assets instead of SCB's investment survey",
    "slope": 0.5301058731951659,
-   "low": 0.16693808341939276,
+   "low": 0.16693808341939273,
    "high": 0.9493089440962651,
    "r2": 0.2334858412215512,
    "cases": 99,
@@ -626,7 +626,7 @@
   "netBankDebtOnSelfFinancing": {
    "slope": -0.2706375423563578,
    "low": -1.0042093486762935,
-   "high": 0.45112796902078495,
+   "high": 0.45112796902078484,
    "modelSays": -1.0
   },
   "netBankDebtByHorizon": {
@@ -644,7 +644,7 @@
     },
     "needFromBalanceSheet": {
      "slope": 0.5301058731951659,
-     "low": 0.16693808341939276,
+     "low": 0.16693808341939273,
      "high": 0.9493089440962651,
      "r2": 0.2334858412215512,
      "cases": 99,
@@ -668,7 +668,7 @@
     },
     "needFromBalanceSheet": {
      "slope": 0.6392566601512043,
-     "low": 0.2350302262081971,
+     "low": 0.23503022620819713,
      "high": 1.0145672638397674,
      "r2": 0.3715980712942043,
      "cases": 85,
@@ -761,7 +761,7 @@
    "provisions": 0.0016502448890513954,
    "shortTerm": 0.010207565519942063,
    "receivables": -0.01458208533189573,
-   "remainder": -0.0006443483117977346
+   "remainder": -0.000644348311797735
   },
   "investmentIncomeShare": {
    "source": "SCB TAB4201 items 210 and 560, TAB5179 item 950; data/downloads/20261124T114939Z-investment-income",
@@ -822,95 +822,95 @@
   }
  },
  "prices": {
-  "slope": 0.8351094031497897,
-  "low": -0.10133775704661573,
-  "high": 1.3385289440746637,
+  "slope": 0.8347546718382597,
+  "low": -0.10337312503211796,
+  "high": 1.3411067542612407,
   "modelSays": 1.0,
   "years": 14,
-  "meanDifference": 0.0021016369708255593,
+  "meanDifference": 0.0021533427112770016,
   "rows": [
    {
     "year": 2012,
     "pkv": 0.0202,
-    "costBeyondVolume": 0.019239526992031755,
+    "costBeyondVolume": 0.019235295614333545,
     "municipalities": 13
    },
    {
     "year": 2013,
     "pkv": 0.0261,
-    "costBeyondVolume": 0.03920794381663812,
+    "costBeyondVolume": 0.039248863122792826,
     "municipalities": 13
    },
    {
     "year": 2014,
     "pkv": 0.0236,
-    "costBeyondVolume": 0.04141486832527378,
+    "costBeyondVolume": 0.04149997809392812,
     "municipalities": 13
    },
    {
     "year": 2015,
     "pkv": 0.0262,
-    "costBeyondVolume": 0.04053484190203279,
+    "costBeyondVolume": 0.04062150299095647,
     "municipalities": 13
    },
    {
     "year": 2016,
     "pkv": 0.027309999999999997,
-    "costBeyondVolume": 0.1010116103400156,
+    "costBeyondVolume": 0.10113631785759655,
     "municipalities": 13
    },
    {
     "year": 2017,
     "pkv": 0.03655,
-    "costBeyondVolume": 0.019112571195419033,
+    "costBeyondVolume": 0.019257705133983283,
     "municipalities": 13
    },
    {
     "year": 2018,
     "pkv": 0.0324,
-    "costBeyondVolume": 0.01377389622373432,
+    "costBeyondVolume": 0.013893904264741293,
     "municipalities": 13
    },
    {
     "year": 2019,
     "pkv": 0.026835900002466495,
-    "costBeyondVolume": 0.01580876899662864,
+    "costBeyondVolume": 0.01588224303717858,
     "municipalities": 13
    },
    {
     "year": 2020,
     "pkv": 0.019186394962074527,
-    "costBeyondVolume": -0.00029264538760823773,
+    "costBeyondVolume": -0.00027128677333875504,
     "municipalities": 13
    },
    {
     "year": 2021,
     "pkv": 0.026321041904701303,
-    "costBeyondVolume": 0.027224015475241406,
+    "costBeyondVolume": 0.027261087467833366,
     "municipalities": 13
    },
    {
     "year": 2022,
     "pkv": 0.048789300485049994,
-    "costBeyondVolume": 0.04350729876869184,
+    "costBeyondVolume": 0.043538335404680474,
     "municipalities": 12
    },
    {
     "year": 2023,
     "pkv": 0.059181913279810816,
-    "costBeyondVolume": 0.06405232210933598,
+    "costBeyondVolume": 0.06403509490553018,
     "municipalities": 12
    },
    {
     "year": 2024,
     "pkv": 0.04458593954369805,
-    "costBeyondVolume": 0.028071350932163338,
+    "costBeyondVolume": 0.028057544601332116,
     "municipalities": 13
    },
    {
     "year": 2025,
     "pkv": 0.006124572694627295,
-    "costBeyondVolume": 0.00014161077438797824,
+    "costBeyondVolume": 0.0001352751087584711,
     "municipalities": 13
    }
   ],

@@ -48,29 +48,49 @@ and outputs in continuous time; see [Continuous time](#continuous-time).
 Two choices, both with a population balance checked every year
 (Δ population = births − deaths + migration).
 
-**Five age groups** (0–6, 7–15, 16–18, 19–64, 65+), the site's default.
-Survivors are last year's population times one minus the death rate. A uniform
-share of each group ages into the next: 1/7, 1/9, 1/3 and 1/46. Births enter 0–6
-and scale with the 19–64 population relative to the base year. Death rates under
-65 are illustrative; the 65+ rate is set so base-year deaths match the accounts.
-Residual migration per group is the average observed change minus the natural
-change over the two latest years. It holds statistical adjustments as well as
-migration. A scenario change in net migration is spread over the groups with
-fixed weights. Within 65+ an ageing chain 65–79 → 80–89 → 90+ sets how the group
-splits for elder care: it starts at SCB's shares in the base year, people move up
-at 5.6 % and 6.0 % a year (Sweden's life table for a stationary population;
-Motala 2025: 6.0 % and 4.8 %), and death rates rise with age in the life table's
-proportions, 1 : 3.8 : 13, scaled so the chain's deaths at the start are the
-group's. The chain only splits 65+; the group's size and death rate are as
-calibrated. Until November 2026 the split was fixed at the base year, so the care
-need grew only with 65+: for Motala 80+ grew 6 % to 2033 against 23 % now and
-29 % with single years of age.
+**Five age groups** (0–6, 7–15, 16–18, 19–64, 65+), the site's default. They are
+seven stocks: the four groups under 65, and within 65+ an ageing chain 65–79 →
+80–89 → 90+ whose sum is the group. Births enter 0–6 and scale with the 19–64
+population relative to the base year.
+
+Who crosses a group's upper age in a given year is known from the base year's
+single years of age: those who turn 65 in the first forecast year are the base
+year's 64-year-olds, the year after the 63-year-olds. `Data.ageProfile` lets the
+base year's population (`BaseYear.ages`, SCB) age one year at a time, with
+Sweden's death risks falling along the national trend and the base year's births,
+and reads off for every year
+
+- the share of each stock that crosses its upper age: the year's flow out of the
+  stock is that share times the stock;
+- the death rates of 65–79, 80–89 and 90+ relative to the 65+ rate in the base
+  year: the model multiplies them with the municipality's calibrated 65+ rate
+  (base-year deaths over the mean population), so more very old people mean more
+  deaths, and mortality falls about 1.7 % a year;
+- the split of 65+ at the start of the year.
+
+Death rates under 65 are illustrative. Residual migration per group is the even
+flow that, with the two latest years' ageing and deaths, reproduces their change;
+since ageing follows the real cohorts it is mostly migration and statistical
+adjustments. A scenario change in net migration is spread over the groups with
+fixed weights; flows to 65+ enter the chain in the base year's proportions.
+
+Until November 2026 a uniform share of each group aged into the next (1/7, 1/9,
+1/3, 1/46) and 65+ was one stock split in the base year's shares. For Motala that
+gave 500 people a year turning 65 against 576 due, and 80+ growing 6 % to 2033
+against 28 % now (SCB's projection 28 %, single years of age 29 %). In the long
+hindcast the fixed transitions made the result 2.6 % of tax and grants too low
+after eight years; with the age profile it is 0.9 %.
 
 **Single years of age** (`CohortDemography`): ages 0–100+ by sex, as in SCB's
 projections. Deaths follow Sweden's life table scaled to the municipality's
 level (five years of data), with the national trend (ten years). Births follow a
-total fertility rate (default 1.41; or SCB's national projection, or the
-five-group rule) with SCB's age profile. Residual flows are calibrated by age on
+total fertility rate with SCB's age profile. The default level is Sweden's in the
+base year times the municipality's relation to Sweden over five years (Motala
+2025: 1.42 · 1.634/1.498 = 1.55); SCB's national projection or the five-group rule
+can be chosen. In the demography hindcast from 2020–2024 every rule that knows
+only the base year overshoots births (+36 to +91 a year for this one), because
+fertility fell 15 % nationally. The oldest group is a mix of those who were 99
+and those already 100 or older, each with its own risk. Residual flows are calibrated by age on
 three years up to the base year, or taken from observed migration (SCB TAB1212).
 
 The amounts in the accounts and in SCB's age tables can differ by a few persons;
@@ -85,7 +105,12 @@ Demand indices, base year = 1:
 - elderly care: 65–79, 80–89 and 90+ weighted by care cost per inhabitant
   (Kolada). For Motala 2023–2025 a person 80+ costs 7.1 times a person 65–79.
   Kolada has no split of 80+, so 90+ gets the 80–89 weight;
-- other services: total population.
+- other services: total population, except the part that is roads
+  (`infrastructureShare`, 4–10 %: Kolada's net cost of roads, railways and parking
+  over the sector's net cost, `data/roads.json`). That part follows the road
+  network, a stock that only grows with `networkGrowth`: the municipal network is
+  nearly constant (Motala 405 km in 2015, 411 km in 2025) and stays when the
+  population falls.
 
 Capacity follows demand with a lag, and a fixed share does not follow:
 
@@ -118,9 +143,15 @@ standard deviation). Norrköping's 2022 and 2023 are left out: the Ostlänken
 provision is not split between operating and financial items. The mean known in
 each base year (`knownBy`) uses the weights known then. Used as a forecast it made
 costs too high eight years ahead (see Validation), so the default stays 0 and the
-site offers it as a scenario. Pension
-expense and pension payments are separate annual paths: the expense hits the
-result, the payment hits cash. Without a source the payments equal the expense.
+site offers it as a scenario. The pension
+cost follows the payroll (wages, volume and productivity); `pensionGrowth` is its
+growth beyond that, 0 by default. A given path in mnkr (`pensionExpensePath` with
+`pensionFollowsPayroll = false`) replaces the rule; the hindcasts use one that
+follows SKR's labour-cost index. The expense hits the result, the payment hits
+cash; without a source the payments equal the expense. Operating revenue takes
+`inflationRevenuePassThrough` (0.3) of a year's extra inflation: in 2022–2025 the
+median across the 13 municipalities was 5–50 % with a wide spread, so it is an
+assumption.
 The rounding term reconciles the base year's rounded components to the reported
 net cost.
 
@@ -130,7 +161,9 @@ Tax and grants start from a reference path: SKR's forecast for the
 municipality when imported, otherwise the base year's amounts grown at
 `taxGrowth` and `grantGrowth`. National growth includes Sweden's population
 growth, so the municipality's share is scaled by its population relative to
-Sweden's:
+Sweden's (SCB: outcomes, then the projection; from a base year before the last
+outcome the default keeps the last known year's growth, so that a run from an
+old base year does not see later outcomes):
 
     popFactor = (pop_{t−1} / pop_ref) / (Sweden_{t−1} / Sweden_ref)
 
@@ -224,13 +257,17 @@ a surplus repays debt, and what remains goes to cash. With `liquidityPolicy`,
 cash above a chosen reserve is used before borrowing, and a share of the first
 year's investment can be deferred and prefinanced.
 
-Interest is opening debt times the year's rate on it. Without a fixed-rate
+Interest is charged on the debt as it stands (opening debt times the year's rate in the yearly statement of the rule). Without a fixed-rate
 period (`rateFixingYears = 0`) that is the year's rate. With one, the rate path
 is the market rate for new and refixed loans, and the average rate moves toward
 it by the share 1 − exp(−1/τ) of the debt each year; new loans pay the market
 rate. `rateShock` raises the market rate from a date, counted for the rest of
 that year. The default rate is the base year's reported average rate when the
-annual report gives one, otherwise interest expense over opening debt.
+annual report gives one, otherwise interest expense over the year's mean debt
+(opening and closing). Cash above the base year's earns the market rate less
+`depositSpread` (0.5 points, an assumption); the base year's financial income
+covers the base year's cash. Without that a liquidity reserve would be borrowed at
+the full rate with no return.
 
 Rate stress paths (`rateEpisode` in the page's assumptions, `data/rate-stress.json`)
 replace the flat rate path: the market rate in forecast year i is the scenario's
@@ -303,8 +340,8 @@ Continuous:
   and migration are flows in persons per year. Births follow the 19–64 group as
   in `Annual`. Deaths are a death rate times the group: deaths per mean
   population, as SCB defines it (`Data.deathRatesPerYear`). Ageing out of a
-  group is its size over its width in years (7, 9, 3, 46), the rate at which a
-  uniform group crosses its upper bound. Migration is the calibrated residual
+  stock is the year's share from the base year's single years of age times the
+  stock (`Data.ageProfile`, see Demography). Migration is the calibrated residual
   plus the scenario's change, spread evenly. The residual is calibrated for these
   flows (`Data.calibratedMigrationRates`): the even inflow that takes each group
   from one year end to the next in the two latest years.

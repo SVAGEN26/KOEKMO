@@ -1336,6 +1336,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     Units.Money cashBalance "Kontroll av kassabalansen, mnkr";
     Units.Money debtBalance "Kontroll av skuldbalansen, mnkr";
     Units.Money annualInvestment "Årets investeringsutbetalningar, mnkr";
+    Units.Money annualFinancialIncome "Årets finansiella intäkter, mnkr: basårets belopp och räntan på kassa utöver basårets";
     Units.Money outstandingDeferredInvestment "Uppskjuten betalning som återstår vid årets slut, mnkr";
     Units.Money prefinancing "Förfinansiering genom lån under året, mnkr";
     Real annualInterestRate "Årets låneränta, andel";
@@ -2172,6 +2173,7 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
       yearIndex = clock.yearsClosed;
       year = base.year + clock.yearsClosed;
       annualInvestment = if yearIndex == 0 then base.investment else finance.investments.annual*(-1);
+      annualFinancialIncome = if yearIndex == 0 then financialIncome else finance.financial.annual;
       annualInterestRate = if yearIndex == 0 then (if base.openingDebt + base.debt > 0 then base.interestExpense/((base.openingDebt + base.debt)/2) else interestRate) else interestRateYear;
       p = demography.cohorts.p;
       population = demography.cohorts.population;

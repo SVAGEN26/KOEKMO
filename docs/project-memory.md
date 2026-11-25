@@ -24,6 +24,44 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 - README:s tabeller för bakåttestet mot SKR:s cirkulär är från årsmodellen och ska göras om; det långa bakåttestets
   tabell är byggd ur `long-hindcast-continuous.json`, som kördes före likviditetsreserven.
 
+## Granskningens punkter åtgärdade (2026-11-25/26, gren `model-fixes`)
+
+Användaren: "Åtgärda alla dessa punkter på det bästa sätt som du kan!" Gjort, allt i Modelica och prövat med
+`tests/fast` (21 tester) och omc:
+
+- Åldrande ur ettårsåldrar: `Data.ageProfile(base.ages, births0, horizon, olderShares)` ger per år andelen av varje
+  lager som fyller år över gränsen, dödstalen i 65-79/80-89/90+ i förhållande till 65+:s (med rikets trend) och
+  uppdelningen av 65+. `BaseYear.ages[101]` genereras (12 kommuner) eller tas ur `SCB.motalaYYYY` (Motala).
+  Rikets dödsrisktabell 2025 och fruktsamhet 2000-2025 ligger i `Data.SCB` (`write_demography_modelica.py`).
+  Motala 2033: 80+ 4 328 (SCB 4 329, ettårsåldrar 4 357), 65+ 11 905 (12 132), careIndex 1,21 (1,22).
+  Från 2020 till 2025: 65+ 10 770 mot utfall 11 016 (kvar: restflödet för 65+ kalibrerat 2018-2020, −11/år, mot
+  cirka +30/år i utfallet; dödstalet från pandemiåret 2020).
+- Rikets folkmängd för basår före sista utfallsåret: senast kända års tillväxt (`nationalPopulationAt(year, knownAt)`).
+- Pension följer lönesumman (`pensionFollowsPayroll`, `pensionGrowth` = ökning utöver, standard 0). Bakåttesten
+  har kvar sin givna bana (arbetskraftsindex) med `pensionFollowsPayroll = false`. Standardmängden: pensionsfelet
+  efter tre år −36 mot −42 (Motala), −30 mot −33 (Finspång), −35 mot −40 (Mjölby).
+- Avgifter: `inflationRevenuePassThrough = 0,3` av årets extra inflation. Underlag: utfall mot trodd bana 2022-2025,
+  median 13 kommuner +3,1, +3,1, +0,6, +5,8 % mot prisöverraskning ackumulerat 7,8-11,5 %; spridning −13 till +34 %.
+  Taxenivåns startnivå räknades med chocken (fel, rättat).
+- Kassan ger ränta: marknadsränta − `depositSpread` (0,5 punkter, antagande utan källa) på kassa utöver basårets.
+- Räntesats = räntekostnad / årets medelskuld (Motala 21/990 = 2,12 % mot 2,23 %); även sidans standardvärden
+  (`baseline.json`, `prepare_web_municipality.py`).
+- Förfinansiering hålls i kassan under år två tills den uppskjutna investeringen betalas.
+- Vägar: `infrastructureShare` av övrigt (Kolada N07024 / övrigt, 4-10 %; `scripts/fetch_roads.py`, `data/roads.json`,
+  arkiv `data/downloads/20261125T203859Z`) följer vägnätet (`services.network`, `networkGrowth`), inte befolkningen.
+- Ettårsåldrar: fruktsamhet = rikets nivå basåret × kommunens femårsrelation till riket (Motala 2025: 1,55; förut
+  1,41 i biblioteket och femårsmedlet 1,63 på sidan). Demografitestet 2020-2024: födda +36 till +91 per år, som
+  alla regler som bara känner basåret (fruktsamheten föll 15 %); 1,41 var bäst men är efterklokhet.
+  Äldsta gruppen (100+) har egen risk. 
+- Jämförelser omkörda (README-tabellerna): cirkulärtestet Motala 41/62/64 (SKR), 44/56/33 (facit); Finspång
+  37/78/59; Mjölby 42/66/114. Långa testet med facit: resultat −0,6 % efter 4 år, −1,5 % efter 6, −0,8 % efter 8
+  (main före kedjan: −0,2, −0,2, +0,9; fasta övergångar: −1,7, −2,8, −2,6). Nettokostnad +6,0 % efter 8 år
+  (main +4,3): befolkningen växer 6 % för mycket i testet (flyttning kalibrerad på 2015-2017), och nu följer
+  omsorgsbehovet med; förut dolde det platta omsorgsbehovet en del av det.
+- Kvar: femgruppernas 65+-dödstal bygger på ett enda års döda (brus i små kommuner; ettårsmodellen har fem år);
+  de två demografierna har olika födda/döda-källa för Motala (334/468 årsredovisning mot 337/459 SCB) och olika
+  kalibreringsfönster; `depositSpread` och avgifternas följsamhet är antaganden; vägandelen omfattar parkering.
+
 ## Jämförelse mot SKR med den nuvarande modellen (2026-11-25, gren `skr-hindcast`)
 
 - Omkört med kedjan och reserven: `hindcast_vintages.py` (Motala, 0562, 0586) och `hindcast_long.py` (13 kommuner).

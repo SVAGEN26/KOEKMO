@@ -34,6 +34,9 @@ med angiven enhet, men inte algoritmavsnitt: årsstegen (`when calendar.tick` me
 enhet härledd i stället för kontrollerad, och kronor och miljoner kronor är samma enhet för den. Beskrivningar är på svenska;
 namnen i koden är ASCII, eftersom Modelica inte tillåter å, ä eller ö i namn.
 
+Åldrandet mellan befolkningslagren följer basårets ettårsåldrar (`Data.ageProfile`, `BaseYear.ages`), pensionskostnaden
+följer lönesumman, kassan ger ränta och gator och vägar följer vägnätet (`infrastructureShare`).
+
 I `Continuous.Economy` är pengar och befolkning lager med flöden:
 födda, döda, åldrande och flyttningar (`Continuous.Demography`, fem grupper; `Continuous.CohortDemography`,
 ettårsåldrar), kostnader och löne-, pris- och kostnadsnivåer som växer under året. Löne- och prisnivåns takt inom

@@ -147,12 +147,14 @@ test('a pension expense shock is charged once and affects cash only when paid',{
   assert.ok(Math.abs(paid.result-accrued.result)<2,'only the interest on the extra borrowing');
   assert.ok(paid.debt-base.debt>85&&paid.debt-base.debt<85*(1+30/365)+2,`debt ${paid.debt-base.debt}`);
 });
-test('productivity changes payroll without reducing pensions, other costs or revenue',{skip},()=>{
+test('productivity lowers payroll and the pension cost with it, not other costs or revenue',{skip},()=>{
   const base=simulate(b,history).rows[1],efficient=simulate(b,history,{productivity:1}).rows[1];
   // One per cent a year, rising through the year from the base year's level.
   assert.ok(efficient.payroll<base.payroll&&efficient.payroll>base.payroll/1.02,`${efficient.payroll} vs ${base.payroll}`);
-  for(const k of ['pensionExpense','otherOperatingExpense','operatingRevenue']) assert.ok(Math.abs(efficient[k]-base[k])<1e-6,k);
-  assert.ok(Math.abs(efficient.result-base.result-(base.payroll-efficient.payroll))<1);
+  for(const k of ['otherOperatingExpense','operatingRevenue']) assert.ok(Math.abs(efficient[k]-base[k])<1e-6,k);
+  // The pension cost follows the payroll: the same share of it with fewer hours worked.
+  assert.ok(Math.abs(efficient.pensionExpense/efficient.payroll-base.pensionExpense/base.payroll)<1e-6,'pension share');
+  assert.ok(Math.abs(efficient.result-base.result-(base.payroll-efficient.payroll)-(base.pensionExpense-efficient.pensionExpense))<1);
 });
 test('operating revenue and expenditure grow independently',{skip},()=>{
   const base=simulate(b,history).rows[1],higherFees=simulate(b,history,{operatingRevenueGrowth:3}).rows[1];

@@ -136,6 +136,7 @@ class AgainstTheModel(unittest.TestCase):
         cls.education = [w / sum(record['educationShares']) for w in record['educationShares']]
         c65, c80 = record['careCostPerInhabitant']
         cls.care = [c65, c80, c80]
+        cls.roads = record['infrastructureShare']
         cls.continuous = simulate('Finspang.Continuous', 96)
 
     def needs(self, rows):
@@ -143,7 +144,7 @@ class AgainstTheModel(unittest.TestCase):
         group = lambda r: {'education': [r['p[1]'], r['p[2]'], r['p[3]']], 'older': [r[f'demography.cohorts.older[{i}]'] for i in (1, 2, 3)],
                            'total': r['population']}
         base = group(rows[2025])
-        return [rt.need(group(rows[y]), base, self.education, self.care) for y in range(2025, 2034)]
+        return [rt.need(group(rows[y]), base, self.education, self.care, self.roads) for y in range(2025, 2034)]
 
     def test_need_is_the_models(self):
         for k, n in enumerate(self.needs(self.continuous)):

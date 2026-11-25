@@ -30,7 +30,8 @@ function assertBooks(run,label) {
     // The population balance within 1e-8 of the population (the solver's tolerance on many small stocks; Ydre 2026:
     // 1e-5 persons of 3 500), the money balances within 1e-6 mnkr.
     for(const k of balances) assert.ok(Math.abs(row[k])<(k==='populationBalance'?Math.max(1e-6,1e-8*row.population):1e-6),`${label} ${row.year} ${k} = ${row[k]}`);
-    const parts=row.tax+row.grants-row.cost-row.depreciation+b.financialIncome-row.interest-row.otherFinancialExpense;
+    // Financial income is the base year's plus the interest on cash above the base year's (annualFinancialIncome).
+    const parts=row.tax+row.grants-row.cost-row.depreciation+row.annualFinancialIncome-row.interest-row.otherFinancialExpense;
     if(label.startsWith('Motala')) assert.ok(Math.abs(row.result-parts)<1e-6,`${label} ${row.year} result ${row.result} vs parts ${parts}`);
   }
 }
