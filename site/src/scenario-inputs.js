@@ -104,6 +104,7 @@ export function validate(b,a) {
     if(a[k]!=null&&(!Number.isFinite(a[k])||a[k]<low||a[k]>high)) throw Error(`${k} ska ligga mellan ${low} och ${high}.`);
   if(a.rateShock!=null&&(!Number.isFinite(a.rateShock)||a.rateShock<-5||a.rateShock>15)) throw Error('Räntehöjningen ska vara mellan -5 och 15 procentenheter.');
   rateEpisode(b,a);
+  if(a.investmentPlan&&!(b.investmentPlan?.factors?.length&&b.investmentPlan.factors.every(f=>Number.isFinite(f)&&f>=0))) throw Error('Kommunen saknar investeringsplan för basåret.');
   if(a.rateShockMonth!=null&&(!Number.isInteger(a.rateShockMonth)||a.rateShockMonth<1||a.rateShockMonth>12)) throw Error('Räntehöjningens månad ska vara 1–12.');
   if(a.rateFixingYears!=null&&(!Number.isFinite(a.rateFixingYears)||a.rateFixingYears<0||a.rateFixingYears>15)) throw Error('Räntebindningen ska vara 0–15 år.');
   if(a.projectChoice&&a.projectChoice!=='none'&&(!b.project||b.project.openingStock>b.workInProgress)) throw Error('Projektunderlaget matchar inte valt basår.');
@@ -277,7 +278,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   }
   fields.pensionExpensePath=inputs.map((r,i)=>a.pensionExpensePath?.[i]??o.pensionExpense*(1+a.pensionGrowth/100)**(i+1));
   fields.pensionCashPaymentsPath=inputs.map((r,i)=>a.pensionCashPaymentsPath?.[i]??fields.pensionExpensePath[i]);
-  fields.investmentPath=inputs.map(()=>a.investment);
+  fields.investmentPath=inputs.map((_,i)=>a.investment*investmentFactor(b,a,i));
   if(a.workingCapitalEnabled) {
     const wc=b.workingCapital;
     const days=workingCapitalDays(b);
@@ -354,4 +355,13 @@ export function rateEpisode(b,a) {
   const episode=b.rateEpisodes?.find(e=>e.id===a.rateEpisode);
   if(!episode||!episode.changes?.length||!episode.changes.every(Number.isFinite)) throw Error('Okänd räntebana.');
   return episode;
+}
+
+// The municipality's investment plan (data/investment-plans.json): the plan for forecast year i over the budget for
+// the base year, so the base year's investment follows the plan with the share of the budget carried out then.
+// After the plan's last year that year stays. 1 without a plan or when the scenario does not use it.
+export function investmentFactor(b,a,i) {
+  if(!a.investmentPlan||!b.investmentPlan) return 1;
+  const f=b.investmentPlan.factors;
+  return f[Math.min(i,f.length-1)];
 }

@@ -1398,3 +1398,22 @@ arkivera data.
 - Motala från bokslut 2025: 2022–2025 ger marknadsräntan 6 %, räntekostnaden 81 mnkr (35 i scenariot), resultatet som
   mest 46 mnkr lägre (2033). Norrköping: 8,3 %, 554 mnkr (400), som mest 200 mnkr lägre (2032). Inget underskott i
   någon bana för de två. Ett scenariobyte tar 1,7 s mot 1,0 s med de fyra extra körningarna.
+
+## Investeringar enligt budgetens plan (2026-11-25)
+
+- Användarens ja 2026-11-25 ("Ok") till att börja med investeringarna i 2026-starten, efter mitt förslag.
+- Kommunerna genomför en mindre del av investeringsbudgeten. Motala, årsredovisningarnas investeringsredovisning
+  (budget inklusive ombudgeteringar / utfall, mnkr): 2021 381,5/272,6, 2022 598,6/253,9, 2023 557/299, 2024 686/417,
+  2025 797/413. Linköping, budgetdokumentens nettoinvesteringar / årsredovisningarnas utfall: 2021 843/704,
+  2022 848/819, 2023 714/488, 2025 803/606; kommunen anger själv 75 % i snitt 2016–2024 (budget 2026 s. 20) och
+  55 % för 2025 mot reviderad ram 1 109 (årsredovisning 2025 s. 86). Finspångs årsredovisningar redovisar årets del
+  (116 mnkr 2025) och total budget med ombudgeteringar (426), inte jämförbart med planens 209.
+- Regel (mitt val): investering år t = basårets investering (SCB) × plan(t) / budget för basåret; sista planåret ligger
+  kvar. Antar basårets genomförandegrad och tar bort skillnaden mellan kommunens och SCB:s begrepp. Kryssruta
+  "Investeringar enligt kommunens budget och plan", förvald där plan finns; skjutreglaget för investeringar skalar banan.
+- `data/investment-plans.json`: Motala budget 2025 s. 2 (investeringsram 750), budget 2026 s. 28 (755/897/961),
+  årsredovisning 2025 s. 33; Linköping budget 2025 s. 53 (803), budget 2026 s. 8 (823/670/926/954/1 024/825),
+  årsredovisning 2025 s. 86; Finspång strategisk plan 2026–2028 s. 37 (209; 236/387/309).
+- Effekt från bokslut 2025: Motala resultat 2033 97 mnkr (151 utan plan), skuld 2 418 (1 576). Linköping nästan som
+  förut. Finspång behåller egna lån kring 250–290 mnkr i stället för att betala av till 2029.
+- README och metod säger att äldre siffror i README gäller basårets nivå. Övriga tio kommuner saknar insamlade budgetar.

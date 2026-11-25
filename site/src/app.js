@@ -60,7 +60,7 @@ const explanations={
   equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
 };
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let rateFixingTable,rateStress,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,rateStress,investmentPlans,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
@@ -89,7 +89,7 @@ const skrSources={
 };
 const comparisonSelectors=[$('comparison-scenario'),$('comparison-preset')];
 const scenarioStorageKey='motala.saved-scenarios.v1';
-const savedControlIds=['planning-enabled','regulation-held','time-model','revenue-mode','demography-mode','split-payroll',
+const savedControlIds=['planning-enabled','regulation-held','investment-plan','time-model','revenue-mode','demography-mode','split-payroll',
   'employer-rate','construction-years','construction-share','liquidity-policy','cash-reserve','defer-investment-share',
   'prefinance-share','working-capital-enabled','collection-days','payment-days','grant-advance',
   'migration-profile','age-tax','project-choice'];
@@ -241,7 +241,9 @@ function updateModelOptions() {
     deferInvestmentShare:liquidityPolicy?Number($('defer-investment-share').value)/100:0,
     prefinanceShare:liquidityPolicy?Number($('prefinance-share').value)/100:0,
     workingCapitalEnabled,collectionDays:enteredDays('collection-days'),paymentDays:enteredDays('payment-days'),
-    firstYearGrantAdvance:workingCapitalEnabled?Number($('grant-advance').value):0};
+    firstYearGrantAdvance:workingCapitalEnabled?Number($('grant-advance').value):0,
+    investmentPlan:!!b.investmentPlan&&$('investment-plan').checked};
+  renderInvestmentPlanNote();
   $('employer-rate-control').hidden=!splitPayroll;
   $('construction-share-control').hidden=constructionYears===0;
   $('liquidity-controls').hidden=!liquidityPolicy;
@@ -276,7 +278,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
+  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,investmentPlan:investmentPlanFor(activeMunicipality,year),assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;
@@ -783,6 +785,24 @@ function renderBalanceFlag(deficits,belowTarget,target,rows){
   $('balance-flag').className='balance-flag'+(deficits.length?' warning':'');
   $('balance-flag').innerHTML=parts.join(' ');
 }
+// The municipality's investment plan for the base year, as factors on the base year's investment (scenario-inputs.js).
+function investmentPlanFor(code,baseYear) {
+  const plan=investmentPlans?.municipalities?.[code];
+  if(!plan||plan.baseYear!==baseYear) return null;
+  const years=Object.keys(plan.plan).map(Number).sort((x,y)=>x-y);
+  return {...plan,years,factors:years.map(y=>plan.plan[y]/plan.baseBudget)};
+}
+function renderInvestmentPlanNote() {
+  const plan=b.investmentPlan;
+  $('investment-plan-control').hidden=!plan;
+  if(!plan) return;
+  const share=plan.baseOutcome/plan.baseBudget,base=b.assumptions.investment??b.investment;
+  const amounts=plan.factors.map(f=>fmt(base*f));
+  $('investment-plan-note').textContent=`Budget och plan ${plan.years[0]}–${plan.years.at(-1)}: ${plan.years.map(y=>fmt(plan.plan[y])).join(', ')} mnkr, mot ${fmt(plan.baseBudget)} för ${plan.baseYear}. `+
+    `Utfallet ${plan.baseYear} blev ${fmt(plan.baseOutcome)} mnkr, ${fmt(100*share)} % av budgeten. Modellen räknar med samma andel: ${amounts.join(', ')} mnkr, därefter ${amounts.at(-1)} mnkr per år. `+
+    (Math.abs(b.investment-plan.baseOutcome)>1?`Kommunens tal räknas på ett annat sätt än SCB:s, som ger ${fmt(b.investment)} mnkr för ${plan.baseYear}; modellen utgår från SCB:s tal och följer planens förändring. `:'')+
+    `Avmarkera för basårets nivå varje år.`;
+}
 // Rate stress: the scenario with the market rate moving as in an episode of Riksbank's statistics (data/rate-stress.json).
 const RATE_COLORS=['#a34840','#516e9c','#ad8053','#80a979'];
 function renderRateStress(a,results) {
@@ -1092,7 +1112,7 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
@@ -1101,6 +1121,7 @@ async function boot(){try{
   regional=files[9];
   rateFixingTable=files[10];
   rateStress=files[11];
+  investmentPlans=files[12];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));
@@ -1158,7 +1179,7 @@ async function boot(){try{
     updatePeriod();
   };
   $('planning-enabled').onchange=()=>{customPath=undefined;updatePeriod();};
-  for(const id of ['time-model','revenue-mode','demography-mode','split-payroll','employer-rate','construction-years','construction-share','migration-profile','age-tax','project-choice']) {
+  for(const id of ['time-model','revenue-mode','demography-mode','split-payroll','employer-rate','construction-years','construction-share','migration-profile','age-tax','project-choice','investment-plan']) {
     $(id).onchange=()=>{
       if(!$('employer-rate').reportValidity()) return;
       if($('construction-years').value!=='0'&&!$('construction-share').reportValidity()) return;
