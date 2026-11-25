@@ -370,7 +370,7 @@ inputs from errors in the model.
 **Up to three years against SKR's circulars.** `scripts/hindcast_vintages.py`
 starts from each set of accounts 2020–2024 and runs up to three years, not past
 2025. Motala, mean error (model minus outcome) after 1/2/3 years, mnkr, with 5, 4
-and 3 cases (the yearly model; see below). "SKR" uses only the assumptions in
+and 3 cases, from `data/vintage-hindcast-continuous.json`. "SKR" uses only the assumptions in
 SKR's December circular of the start year, with grants growing 2 % a year;
 "components" adds the state's grant decisions in that circular (grants per
 component); "hindsight" uses the outcomes for prices, the tax base and the state's
@@ -378,31 +378,30 @@ grants per component (a diagnosis, not a forecast):
 
 | Line | SKR | Components | Hindsight |
 | --- | --- | --- | --- |
-| Result | −38 / −47 / +18 | −11 / −17 / +37 | −18 / −20 / +2 |
+| Result | −39 / −51 / +7 | −12 / −22 / +27 | −19 / −24 / −9 |
 | Tax | −35 / −51 / −71 | −35 / −51 / −71 | −10 / −11 / −14 |
-| General grants | −23 / −61 / −104 | +4 / −33 / −84 | 0 / +9 / +16 |
-| Net cost | −20 / −64 / −187 | −20 / −64 / −187 | +8 / +21 / +5 |
+| General grants | −23 / −61 / −104 | +4 / −33 / −85 | 0 / +9 / +15 |
+| Net cost | −20 / −60 / −177 | −20 / −60 / −177 | +8 / +25 / +16 |
 
 Read it this way. With SKR's assumptions the three-year result error is small only
-because two large errors cancel: net cost too low by 187 and tax and grants too low
-by 175. With what actually happened to prices, the tax base and the state's grants,
+because two large errors cancel: net cost too low by 177 and tax and grants too low
+by 176. With the price outcomes alone (the set "prices") the net cost error after three
+years goes from −177 to +16: the circulars of December 2020 and 2021 assumed much lower wage and price
+growth than 2022–2023 brought (the runs from 2020 and 2021 miss net cost in 2023 by −251 and −177). With what actually happened to prices, the tax base and the state's grants,
 tax, grants and net cost come close, but the result's mean absolute error is still
-43 / 57 / 39 mnkr against 40 / 59 / 58 with SKR's assumptions. Keeping the base
+44 / 59 / 40 mnkr against 40 / 63 / 57 with SKR's assumptions. Keeping the base
 year's result ("persistence") misses by 59 / 76 / 41. One year ahead the
 municipality's budget missed by 24. Mjölby and Finspång, the same way (mean
 absolute error of the result, mnkr):
 
 | | SKR | Hindsight | Persistence |
 | --- | --- | --- | --- |
-| Motala | 40 / 59 / 58 | 43 / 57 / 39 | 59 / 76 / 41 |
-| Mjölby | 41 / 65 / 116 | 28 / 40 / 59 | 44 / 82 / 91 |
-| Finspång | 37 / 75 / 59 | 22 / 42 / 13 | 38 / 52 / 38 |
+| Motala | 40 / 63 / 57 | 44 / 59 / 40 | 59 / 76 / 41 |
+| Mjölby | 41 / 66 / 117 | 27 / 42 / 61 | 44 / 82 / 91 |
+| Finspång | 38 / 78 / 56 | 23 / 44 / 16 | 38 / 52 / 38 |
 
-These two tables were made with the yearly model, removed in November 2026. The
-continuous model gave the same accuracy with SKR's assumptions: 40 / 60 / 60 for
-Motala, 42 / 67 / 126 for Mjölby and 37 / 76 / 59 for Finspång
-(`data/vintage-hindcast-continuous.json`, before the liquidity reserve). The
-tables are to be redone with the continuous model.
+The tables are the continuous model as of 2026-11-25, with the ageing chain in 65+ and the liquidity reserve.
+The yearly model, removed in November 2026, gave the same accuracy over these horizons (within 3 mnkr).
 
 Five, four and three cases per horizon, from one period, are too few to rank the
 sets.
@@ -539,25 +538,28 @@ grants and Sweden's population; the municipality's population, costs, debt and
 result are the model's. Norrköping 2022 and 2023 are left out: the outcome holds the
 Ostlänken provision (−3 281 and −80 mnkr), not split into operating and financial
 items. Mean error / mean absolute error in percent of tax and grants (population:
-percent), from `data/long-hindcast-continuous.json` (run before the liquidity reserve was added on
-2026-11-25; debt and interest will shift slightly when it is rerun):
+percent), from `data/long-hindcast-continuous.json` (2026-11-25, with the ageing chain and the liquidity
+reserve):
 
 | Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Result | 0.3 / 1.8 | 0.3 / 2.3 | −0.1 / 2.5 | −0.2 / 3.4 | −0.2 / 3.0 | 0.9 / 2.1 |
+| Result | 0.2 / 1.8 | −0.1 / 2.3 | −1.0 / 2.7 | −1.7 / 3.5 | −2.8 / 3.7 | −2.6 / 3.3 |
 | Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
-| Result, standard rates | −0.8 / 2.6 | −2.5 / 4.0 | −4.2 / 4.5 | −3.5 / 4.5 | −2.2 / 3.3 | −2.4 / 3.9 |
-| Net cost | −0.4 / 2.0 | −0.5 / 2.3 | 0.5 / 2.2 | 0.8 / 2.7 | 2.5 / 3.6 | 4.3 / 5.1 |
+| Result, standard rates | −0.9 / 2.6 | −2.9 / 4.2 | −5.1 / 5.5 | −5.0 / 5.6 | −4.7 / 5.1 | −5.7 / 6.4 |
+| Net cost | −0.3 / 1.9 | −0.1 / 2.3 | 1.4 / 2.5 | 2.2 / 3.1 | 4.8 / 5.1 | 7.3 / 7.3 |
 | Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.2 / 1.4 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
-| General grants | 0.0 / 0.0 | 0.4 / 0.4 | 0.8 / 0.8 | 1.1 / 1.1 | 1.9 / 1.9 | 3.1 / 3.1 |
-| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.4 / 1.7 | 1.9 / 2.4 | 3.3 / 3.7 | 6.1 / 6.1 |
-| Debt | 0.0 / 4.3 | −1.3 / 8.2 | −1.4 / 12.1 | −0.8 / 14.9 | −3.6 / 19.4 | −23.7 / 23.9 |
+| General grants | 0.0 / 0.0 | 0.4 / 0.4 | 0.7 / 0.7 | 1.1 / 1.1 | 1.7 / 1.7 | 2.8 / 2.8 |
+| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.3 / 1.7 | 1.8 / 2.4 | 3.0 / 3.5 | 5.6 / 5.8 |
+| Debt | 0.8 / 4.4 | 0.5 / 8.2 | 1.8 / 12.3 | 4.0 / 16.0 | 6.0 / 20.0 | −11.0 / 20.0 |
 
 The model with hindsight beats persistence in years 1–3 only; from year 4 the base
 year's result share does as well or better. With the model's standard rates instead
-of hindsight it is worse than persistence at every horizon. With hindsight the mean
-error of the result is within 0.3 % of tax and grants in years 1–6 and 0.9 % after
-eight years, against a usual result target of 2 %. The population grows too fast (6 % after eight years: migration calibrated on
+of hindsight it is worse than persistence at every horizon. With hindsight the result
+is too low from year 3: −1.7 % of tax and grants after four years and −2.6 % after eight,
+against a usual result target of 2 %. Before the ageing chain in 65+ it was within 0.3 % in years 1–6: the chain
+moves people into 80+ at fixed rates (5.6 % and 6.0 % a year), while from base years 2017–2019 it was the small
+cohorts of the 1930s that turned 80 (Motala 2020: 4.5 %). With 4.5 % and 5.0 % the error after eight years is
+−0.8 % (a diagnostic run, not kept). Rates taken from each base year's ages would fix this. The population grows too fast (6 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
 together, so part of the result error cancels. A population-only test (`scripts/hindcast_migration.py`,
 `data/migration-hindcast.json`; its yearly copy of the five-group demography gives the
@@ -570,7 +572,7 @@ almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.
 error at medium horizons is births: the model keeps the base year's births per
 adult while fertility fell, so the 0–6 group is 5 % too large after three years
 and 11 % after five (base years 2017–2024). Debt, the municipality's own
-without loans passed on to its companies, comes out too low (24 % of tax and
+without loans passed on to its companies, comes out too low (11 % of tax and
 grants after eight years) because investment stays at the base year's amount. With costs growing by each
 municipality's historical residual up to the base year (set "drift",
 `data/cost-residual.json`, measured on the model's basis), net cost is 11.5 % too
