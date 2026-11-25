@@ -56,8 +56,15 @@ and scale with the 19–64 population relative to the base year. Death rates und
 Residual migration per group is the average observed change minus the natural
 change over the two latest years. It holds statistical adjustments as well as
 migration. A scenario change in net migration is spread over the groups with
-fixed weights. The 65+ group is split into 65–79, 80–89 and 90+ in fixed shares
-from SCB.
+fixed weights. Within 65+ an ageing chain 65–79 → 80–89 → 90+ sets how the group
+splits for elder care: it starts at SCB's shares in the base year, people move up
+at 5.6 % and 6.0 % a year (Sweden's life table for a stationary population;
+Motala 2025: 6.0 % and 4.8 %), and death rates rise with age in the life table's
+proportions, 1 : 3.8 : 13, scaled so the chain's deaths at the start are the
+group's. The chain only splits 65+; the group's size and death rate are as
+calibrated. Until November 2026 the split was fixed at the base year, so the care
+need grew only with 65+: for Motala 80+ grew 6 % to 2033 against 23 % now and
+29 % with single years of age.
 
 **Single years of age** (`CohortDemography`): ages 0–100+ by sex, as in SCB's
 projections. Deaths follow Sweden's life table scaled to the municipality's

@@ -106,7 +106,7 @@ class Arithmetic(unittest.TestCase):
 def simulate(model, intervals):
     with tempfile.TemporaryDirectory(prefix='response-') as tmp:
         tmp = Path(tmp)
-        names = 'p\\\\[.\\\\]|population80Plus|population|serviceVolume|capacity\\\\[.\\\\]|educationIndex|careIndex'
+        names = 'p\\\\[.\\\\]|demography.cohorts.older\\\\[.\\\\]|population80Plus|population|serviceVolume|capacity\\\\[.\\\\]|educationIndex|careIndex'
         (tmp / 'run.mos').write_text(
             f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
             f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Finspang.mo"))}); getErrorString();\n'
@@ -136,12 +136,11 @@ class AgainstTheModel(unittest.TestCase):
         cls.education = [w / sum(record['educationShares']) for w in record['educationShares']]
         c65, c80 = record['careCostPerInhabitant']
         cls.care = [c65, c80, c80]
-        cls.older = record['olderShares']
         cls.continuous = simulate('Finspang.Continuous', 96)
 
     def needs(self, rows):
-        # Five age groups: 65+ is split with the fixed shares of the base year (Components.Demography).
-        group = lambda r: {'education': [r['p[1]'], r['p[2]'], r['p[3]']], 'older': [r['p[5]'] * s for s in self.older],
+        # Five age groups: 65+ is split by the model's ageing chain (Continuous.Demography, olderChain).
+        group = lambda r: {'education': [r['p[1]'], r['p[2]'], r['p[3]']], 'older': [r[f'demography.cohorts.older[{i}]'] for i in (1, 2, 3)],
                            'total': r['population']}
         base = group(rows[2025])
         return [rt.need(group(rows[y]), base, self.education, self.care) for y in range(2025, 2034)]
@@ -154,13 +153,14 @@ class AgainstTheModel(unittest.TestCase):
 
     def test_continuous_capacity_is_the_models(self):
         # The model's need follows its population through the year; the Python rule joins the year ends with straight
-        # lines. The capacity at each year end agrees to a few parts in a hundred thousand.
+        # lines. The capacity at each year end agrees to 1e-4 (the care need now bends within the year, as the age
+        # chain in 65+ moves people into 80+).
         ends, means = rt.continuous_capacity(self.needs(self.continuous))
         for k in range(1, 9):
             row = self.continuous[2025 + k]
             for i in range(3):
-                self.assertAlmostEqual(ends[k][i], row[f'capacity[{i + 1}]'], delta=5e-5, msg=f'{2025 + k} sector {i + 1}')
-            self.assertAlmostEqual(sum(s * e for s, e in zip(self.shares, ends[k])), row['serviceVolume'], delta=5e-5)
+                self.assertAlmostEqual(ends[k][i], row[f'capacity[{i + 1}]'], delta=1e-4, msg=f'{2025 + k} sector {i + 1}')
+            self.assertAlmostEqual(sum(s * e for s, e in zip(self.shares, ends[k])), row['serviceVolume'], delta=1e-4)
             # The year's mean lies between the capacities at its ends.
             for i in range(3):
                 low, high = sorted((ends[k - 1][i], ends[k][i]))

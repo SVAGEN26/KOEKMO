@@ -363,7 +363,9 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Units.Persons revenuePopulation0[5] = Data.reconcile(base.cohorts[2, :], base.reportedPopulation[2]) "Invånare per åldersgrupp vid slutet av året före basåret: den folkmängd basårets skatt och bidrag bygger på";
     parameter Real deathRates[5] = Data.mortality(p0, base.deaths) "Dödsrisk per åldersgrupp och år; 65+ ger basårets observerade antal döda";
     parameter Units.PersonsPerYear residualMigration[5] = Data.calibratedMigration(base.cohorts, base.reportedPopulation, base.births, deathRates) "Kalibrerat restflöde per åldersgrupp, personer per år (flyttningar och statistiska justeringar)";
-    parameter Real olderShares[3] "Fast uppdelning av 65+ i 65-79, 80-89 och 90+ för femgruppsdemografin; kommunens paket ger den ur SCB-data";
+    parameter Real olderShares[3] "Uppdelning av 65+ i 65-79, 80-89 och 90+ vid basårets slut för femgruppsdemografin; kommunens paket ger den ur SCB-data";
+    parameter Real olderMortalityRatios[3] = {1, 3.84, 12.98} "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65-79: rikets livslängdstabell vid basåret 2025 (Motala.Data.SCB.motala2025.deathRisk), vägd med Motalas befolkning per ettårsålder 2025";
+    parameter Units.Rate olderAgeingRates[2] = {0.056, 0.060} "Andel per år som går från 65-79 till 80-89 och från 80-89 till 90+: rikets livslängdstabell 2025 för en stationär befolkning (Motala 2025: 0,060 och 0,048)";
     parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på åldersgrupperna; summerar till 1";
     parameter Units.Persons births0 = base.births[2] "Födda under basåret";
     parameter Units.PersonsPerYear migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer per år";
@@ -1232,7 +1234,9 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       parameter Units.Rate deathRates[5] "Dödstal per åldersgrupp: döda per person och år";
       parameter Real migrationWeights[5] "Fördelning av ett förändrat flyttnetto på åldersgrupperna";
       parameter Units.Persons births0 "Födda under basåret";
-      parameter Real olderShares[3] "Fast uppdelning av 65+ i 65-79, 80-89 och 90+ (SCB)";
+      parameter Real olderShares[3] "Uppdelning av 65+ i 65-79, 80-89 och 90+ vid basårets slut (SCB)";
+      parameter Real olderMortalityRatios[3] = {1, 3.84, 12.98} "Dödstal för 65-79, 80-89 och 90+ i förhållande till 65-79";
+      parameter Units.Rate olderAgeingRates[2] = {0.056, 0.060} "Andel per år som går från 65-79 till 80-89 och från 80-89 till 90+";
       parameter Units.Duration width[4] = {7, 9, 3, 46} "Bredden på åldersgrupperna 0-6, 7-15, 16-18 och 19-64, år";
       extends DemographyBase(births0Shown = births0);
       Units.Persons p[5](start = p0, each fixed = true) "Invånare per åldersgrupp";
@@ -1240,8 +1244,12 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       Units.PersonsPerYear died[5] "Döda per år och åldersgrupp";
       Units.PersonsPerYear ageing[4] "Åldras upp till nästa grupp, personer per år";
       Units.PersonsPerYear moved[5] "Flyttnetto och restflöde per år och åldersgrupp";
+      Units.Persons olderChain[3](start = p0[5]*olderShares, each fixed = true) "Åldringskedjan inom 65+: 65-79, 80-89 och 90+; ger uppdelningen av p[5]";
+      Units.PersonsPerYear olderAgeing[2] "Går från 65-79 till 80-89 och från 80-89 till 90+, personer per år";
+      Units.PersonsPerYear olderDied[3] "Döda per år i kedjans tre åldrar";
     protected
       Units.PersonsPerYear trend "Födda per år utan scenariots förändring";
+      final parameter Units.Rate olderDeathScale = deathRates[5]/(olderMortalityRatios*olderShares) "Dödstalet för 65-79, så att kedjans döda vid start är gruppens";
     equation
       // Skalära ekvationer, så att enhetskontrollen (scripts/check_units.py) prövar dem; vektorekvationer prövas inte.
       trend = births0/Units.year*p[4]/p0[4];
@@ -1258,11 +1266,22 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
         der(p[i]) = ageing[i - 1] - ageing[i] - died[i] + moved[i];
       end for;
       der(p[5]) = ageing[4] - died[5] + moved[5];
+      // Kedjan inom 65+: in från 19-64 och flyttningar i basårets proportioner, ut genom åldrande och död med dödstal
+      // som stiger med åldern. Den ger bara uppdelningen av p[5], så folkmängden och kalibreringen är oförändrade.
+      for j in 1:2 loop
+        olderAgeing[j] = olderAgeingRates[j]*olderChain[j];
+      end for;
+      for j in 1:3 loop
+        olderDied[j] = olderDeathScale*olderMortalityRatios[j]*olderChain[j];
+      end for;
+      der(olderChain[1]) = ageing[4] + moved[5]*olderShares[1] - olderAgeing[1] - olderDied[1];
+      der(olderChain[2]) = olderAgeing[1] + moved[5]*olderShares[2] - olderAgeing[2] - olderDied[2];
+      der(olderChain[3]) = olderAgeing[2] + moved[5]*olderShares[3] - olderDied[3];
       birthRate = born;
       deathRate = sum(died);
       migrationRate = sum(moved);
       cohorts.p = p;
-      cohorts.older = p[5]*olderShares;
+      cohorts.older = p[5]*olderChain/sum(olderChain);
       cohorts.population = sum(p);
       assert(min(p) >= 0, "Scenariot tömmer en åldersgrupp");
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Demografi")}),
@@ -1271,6 +1290,11 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
 <li>döda = dödstal · invånare i gruppen; dödstalet är döda per person och år (<code>Data.deathRatesPerYear</code>);</li>
 <li>åldrande = invånare / gruppens bredd i år: med jämn åldersfördelning fyller så många år över gruppens gräns;</li>
 <li>flyttnetto = kalibrerat restflöde plus scenariots ändring, jämnt under året.</li></ul>
+<p>Inom 65+ går en åldringskedja 65-79 → 80-89 → 90+ (<code>olderChain</code>): in från 19-64 och flyttningar i basårets
+proportioner, åldrande med <code>olderAgeingRates</code> och dödstal som stiger med åldern (<code>olderMortalityRatios</code>,
+skalade så att kedjans döda vid start är gruppens). Kedjan ger uppdelningen av 65+ till äldreomsorgens behov; folkmängden
+i 65+ och dess dödstal är <code>p[5]</code> och <code>deathRates[5]</code> som förut. Tidigare delades 65+ med basårets fasta
+andelar, så att 80+ bara växte med 65+.</p>
 <p>Årsmodellen flyttar 1/bredd av de överlevande en gång per år; här sker det jämnt. Restflödet är kalibrerat för de
 kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att basårens förändring återskapas.</p></html>"));
     end Demography;
@@ -1791,7 +1815,7 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
         Placement(transformation(origin = {-170, 140}, extent = {{-10, -10}, {10, 10}})));
       Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
         Placement(transformation(origin = {-200, 60}, extent = {{-20, -40}, {20, 40}})));
-      replaceable Demography demography(p0 = p0, olderShares = olderShares, deathRates = mortalityRates, migrationWeights = migrationWeights, births0 = births0) constrainedby DemographyBase "Demografi: lager med födda, döda, åldrande och flyttningar som flöden" annotation(
+      replaceable Demography demography(p0 = p0, olderShares = olderShares, olderMortalityRatios = olderMortalityRatios, olderAgeingRates = olderAgeingRates, deathRates = mortalityRates, migrationWeights = migrationWeights, births0 = births0) constrainedby DemographyBase "Demografi: lager med födda, döda, åldrande och flyttningar som flöden" annotation(
         Placement(transformation(origin = {-90, 100}, extent = {{-20, -15}, {20, 15}})));
       Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces) "Verksamhet" annotation(
         Placement(transformation(origin = {0, 100}, extent = {{-20, -15}, {20, 15}})));

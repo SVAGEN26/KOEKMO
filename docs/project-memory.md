@@ -31,9 +31,13 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
   365·(kassa + kredit)/utbetalningar, och går mot reserveDays med `reserveAdjustmentTime` (standard 3 år).
   Motala 2026: +25 mnkr lån i stället för +78; Norrköping 2026: resultat −6 mnkr i stället för −43.
 - Öppet, inte rättat (gällde före ändringarna):
-  1. Femgruppsdemografin delar 65+ med basårets fasta andelar, så `careIndex` = 65+-kvoten och Koladas vikter
-     verkar inte; 80+ växer 6 % till 2033 mot 29 % med ettårsåldrar (SCB:s projektion 28 %). Grovt 57 mnkr/år 2033
-     för Motala. Störst kvarvarande fel.
+  1. RÄTTAT 2026-11-25 (gren `eldercare`): femgruppsdemografin delade 65+ med basårets fasta andelar, så `careIndex`
+     = 65+-kvoten och Koladas vikter verkade inte. Nu en åldringskedja 65-79 → 80-89 → 90+ inom 65+ (`olderChain`):
+     övergångar 0,056 och 0,060 per år (rikets livslängdstabell 2025, stationär befolkning; Motala faktiskt 2020: 0,043
+     och 0,051, 2025: 0,060 och 0,048), dödstal 1 : 3,84 : 12,98 (rikets tabell vägd med Motalas befolkning 2025),
+     skalade så att kedjans döda vid start är gruppens. Kedjan delar bara p[5]. Motala 2033: 80+ 3 590 → 4 160
+     (ettårsåldrar 4 367), careIndex 1,06 → 1,17 (1,22), resultat 69 mnkr lägre. Kvar: ettårsmodellen har 466 fler
+     65+ 2033 (olika kalibrering, punkt 7).
   2. Kassan ger ingen ränta (finansiella intäkter fasta i kronor); en reserv lånas till full ränta. Norrköping med
      30 dagar och okänd kredit bygger 1,2 mdkr kassa till 2033, resultat −60 mnkr det året.
   3. Räntesatsen kalibreras på ingående skuld men tas på aktuell skuld (Ödeshög: ränta 2026 +45 % mot basåret).
