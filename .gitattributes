@@ -23,3 +23,4 @@ data/skr-historical/forecasts.json linguist-generated
 data/municipalities/*/*.json linguist-generated
 data/municipalities/*/annual-report-inputs.json -linguist-generated
 data/downloads/**/manifest.json linguist-generated
+data/migration-hindcast.json linguist-generated
