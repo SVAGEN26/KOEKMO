@@ -15,7 +15,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 61.9, financialIncome = 5.1, interestExpense = 27.9, otherFinancialExpense = 0.3,
       debt = 940, openingDebt = 940, cash = 37, assets = 1310.6, investment = 142.8, taxRate = 21.98,
       sectorShares = {0.4777, 0.2245, 0.2978}, educationShares = {0.2453, 0.5486, 0.2062},
-      careCostPerInhabitant = {24154, 161302})
+      careCostPerInhabitant = {24154, 161302},
+      ages = {115.7, 129.6, 125.6, 136.6, 185.4, 151.5, 184.4, 171.5, 205.4, 194.4, 188.4, 190.4, 211.4, 199.4, 172.5, 203.4, 182.5, 168.5, 178.5, 152.5, 125.6, 99.7, 104.7, 88.7, 82.8, 86.7, 90.7, 94.7, 109.7, 92.7, 127.6, 153.5, 158.5, 193.4, 214.4, 198.4, 194.4, 184.4, 198.4, 168.5, 174.5, 155.5, 168.5, 162.5, 182.5, 169.5, 183.5, 170.5, 180.5, 168.5, 152.5, 179.5, 195.4, 177.5, 197.4, 204.4, 188.4, 183.5, 228.3, 205.4, 234.3, 202.4, 165.5, 164.5, 181.5, 181.5, 171.5, 160.5, 180.5, 203.4, 188.4, 180.5, 212.4, 171.5, 187.4, 196.4, 177.5, 173.5, 166.5, 177.5, 195.4, 167.5, 143.6, 124.6, 108.7, 90.7, 77.8, 48.9, 63.8, 47.9, 36.9, 21.9, 27.9, 18.9, 13, 12, 7, 4, 3, 4, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.690987, 0.270639, 0.038374};
     constant BaseYear soderkoping2024 = BaseYear(
@@ -31,7 +32,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 55.3, financialIncome = 5.5, interestExpense = 27.4, otherFinancialExpense = 0,
       debt = 940, openingDebt = 810, cash = 54.8, assets = 1236.8, investment = 188.7, taxRate = 21.98,
       sectorShares = {0.46, 0.2181, 0.3219}, educationShares = {0.2501, 0.5558, 0.1941},
-      careCostPerInhabitant = {22777, 156777})
+      careCostPerInhabitant = {22777, 156777},
+      ages = {110, 122, 134, 180, 150, 177, 177, 199, 192, 187, 190, 211, 206, 182, 206, 185, 163, 184, 168, 160, 117, 107, 93, 84, 90, 90, 91, 103, 85, 122, 146, 143, 192, 199, 196, 193, 191, 203, 165, 173, 163, 173, 156, 180, 177, 179, 177, 189, 173, 151, 181, 198, 185, 202, 207, 181, 183, 219, 201, 240, 205, 165, 173, 179, 181, 166, 159, 189, 203, 192, 187, 217, 177, 194, 202, 184, 182, 173, 181, 201, 170, 150, 130, 116, 94, 85, 56, 70, 56, 40, 26, 29, 19, 16, 16, 8, 6, 4, 3, 1, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.718822, 0.247631, 0.033547};
     constant BaseYear soderkoping2023 = BaseYear(
@@ -47,7 +49,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 50.4, financialIncome = 4.2, interestExpense = 21.2, otherFinancialExpense = 0,
       debt = 810, openingDebt = 745, cash = 53.3, assets = 1106.1, investment = 110, taxRate = 21.18,
       sectorShares = {0.4494, 0.1915, 0.3592}, educationShares = {0.2533, 0.551, 0.1957},
-      careCostPerInhabitant = {21803, 154337})
+      careCostPerInhabitant = {21803, 154337},
+      ages = {112, 133, 175, 152, 172, 177, 201, 191, 186, 190, 210, 208, 189, 207, 181, 165, 190, 172, 164, 136, 119, 108, 88, 99, 87, 90, 105, 81, 123, 147, 130, 187, 192, 198, 196, 197, 206, 161, 171, 168, 172, 157, 174, 181, 181, 182, 187, 182, 157, 182, 198, 184, 198, 204, 182, 181, 221, 204, 239, 205, 165, 171, 176, 178, 168, 163, 192, 204, 191, 188, 218, 179, 201, 208, 186, 180, 180, 180, 210, 174, 150, 140, 127, 100, 91, 64, 80, 58, 40, 30, 34, 25, 20, 24, 9, 7, 7, 6, 2, 1, 5})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.736706, 0.227155, 0.036138};
     constant BaseYear soderkoping2022 = BaseYear(
@@ -63,7 +66,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 46.9, financialIncome = 3.7, interestExpense = 8.7, otherFinancialExpense = 0.3,
       debt = 745, openingDebt = 620, cash = 68.3, assets = 1049.2, investment = 171.9, taxRate = 21.18,
       sectorShares = {0.4838, 0.1877, 0.3285}, educationShares = {0.2628, 0.5432, 0.194},
-      careCostPerInhabitant = {21015, 160740})
+      careCostPerInhabitant = {21015, 160740},
+      ages = {122, 162, 143, 161, 178, 197, 191, 185, 191, 211, 208, 189, 205, 182, 164, 187, 169, 164, 164, 153, 123, 96, 94, 99, 75, 101, 85, 124, 138, 124, 179, 180, 189, 180, 195, 196, 157, 161, 159, 169, 155, 180, 174, 180, 184, 190, 178, 161, 183, 192, 188, 196, 200, 184, 187, 222, 202, 243, 208, 162, 179, 179, 179, 168, 171, 191, 207, 193, 192, 223, 179, 204, 212, 191, 177, 187, 182, 215, 177, 160, 143, 128, 105, 91, 66, 93, 63, 45, 37, 33, 35, 26, 27, 15, 14, 9, 7, 4, 3, 1, 4})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.7528, 0.20943, 0.03777};
     constant BaseYear soderkoping2021 = BaseYear(
@@ -79,7 +83,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 45.2, financialIncome = 2.8, interestExpense = 5.4, otherFinancialExpense = 0.2,
       debt = 620, openingDebt = 570, cash = 87.6, assets = 921.4, investment = 109.4, taxRate = 21.18,
       sectorShares = {0.4703, 0.204, 0.3258}, educationShares = {0.2679, 0.5336, 0.1986},
-      careCostPerInhabitant = {21021, 168767})
+      careCostPerInhabitant = {21021, 168767},
+      ages = {147, 129, 155, 169, 190, 185, 182, 188, 206, 206, 182, 208, 182, 166, 185, 171, 171, 166, 167, 153, 109, 99, 99, 69, 93, 80, 116, 127, 110, 164, 178, 179, 170, 188, 188, 157, 158, 162, 164, 146, 173, 173, 179, 178, 190, 178, 154, 182, 184, 186, 202, 199, 185, 186, 220, 203, 242, 209, 162, 178, 181, 178, 167, 166, 188, 204, 195, 192, 226, 179, 202, 219, 189, 181, 189, 186, 219, 180, 165, 145, 134, 108, 100, 71, 99, 68, 48, 43, 37, 39, 32, 27, 19, 19, 21, 13, 8, 4, 1, 2, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.762347, 0.198354, 0.039299};
     constant BaseYear soderkoping2020 = BaseYear(
@@ -95,7 +100,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 38.5, financialIncome = 3, interestExpense = 5.7, otherFinancialExpense = 0.3,
       debt = 570, openingDebt = 550, cash = 95.6, assets = 860.3, investment = 73.5, taxRate = 21.18,
       sectorShares = {0.4737, 0.211, 0.3153}, educationShares = {0.268, 0.5293, 0.2027},
-      careCostPerInhabitant = {20679, 172192})
+      careCostPerInhabitant = {20679, 172192},
+      ages = {119, 152, 163, 186, 176, 177, 182, 201, 201, 184, 207, 186, 157, 188, 169, 169, 167, 166, 187, 140, 119, 108, 89, 100, 83, 123, 118, 110, 156, 167, 165, 161, 181, 179, 161, 154, 157, 161, 144, 171, 180, 174, 181, 188, 180, 152, 178, 181, 181, 195, 197, 184, 183, 210, 201, 241, 210, 152, 182, 185, 182, 161, 165, 185, 203, 200, 188, 230, 180, 207, 222, 194, 186, 196, 187, 224, 186, 172, 148, 137, 114, 104, 76, 107, 71, 53, 47, 44, 46, 37, 32, 25, 22, 27, 15, 9, 6, 4, 3, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.771954, 0.188868, 0.039179};
     constant BaseYear soderkoping2019 = BaseYear(
@@ -111,7 +117,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 35.3, financialIncome = 4.1, interestExpense = 6.1, otherFinancialExpense = 0.2,
       debt = 550, openingDebt = 514, cash = 85.9, assets = 824.8, investment = 81.1, taxRate = 21.18,
       sectorShares = {0.4748, 0.2097, 0.3156}, educationShares = {0.2703, 0.5331, 0.1966},
-      careCostPerInhabitant = {20507, 173974})
+      careCostPerInhabitant = {20507, 173974},
+      ages = {143, 159, 178, 173, 169, 182, 194, 195, 182, 204, 180, 159, 186, 165, 168, 161, 170, 192, 150, 149, 128, 105, 111, 86, 125, 118, 124, 155, 154, 169, 153, 165, 172, 156, 147, 150, 156, 150, 170, 174, 170, 179, 185, 183, 151, 179, 176, 180, 193, 196, 187, 184, 205, 197, 241, 217, 157, 180, 190, 183, 158, 167, 185, 195, 199, 193, 233, 179, 209, 226, 199, 188, 199, 189, 227, 194, 188, 152, 141, 115, 108, 83, 113, 76, 60, 55, 52, 52, 43, 37, 31, 25, 31, 21, 18, 9, 7, 4, 3, 2, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.773348, 0.185418, 0.041234};
     constant BaseYear soderkoping2018 = BaseYear(
@@ -127,7 +134,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 30.2, financialIncome = 4, interestExpense = 6.3, otherFinancialExpense = 0.2,
       debt = 514, openingDebt = 474, cash = 103.1, assets = 780.2, investment = 85, taxRate = 21.18,
       sectorShares = {0.4601, 0.2331, 0.3068}, educationShares = {0.284, 0.5488, 0.1672},
-      careCostPerInhabitant = {17579, 187041})
+      careCostPerInhabitant = {17579, 187041},
+      ages = {148, 171, 170, 174, 181, 190, 194, 183, 203, 177, 161, 183, 165, 170, 165, 171, 192, 153, 163, 150, 120, 111, 88, 123, 107, 126, 148, 156, 157, 147, 156, 174, 150, 143, 142, 156, 144, 172, 167, 171, 181, 190, 181, 153, 187, 174, 177, 204, 194, 188, 183, 212, 205, 240, 218, 149, 180, 192, 188, 161, 165, 188, 201, 196, 197, 233, 182, 209, 230, 198, 190, 203, 193, 232, 193, 201, 162, 144, 117, 114, 87, 113, 79, 63, 60, 56, 59, 47, 41, 34, 31, 32, 26, 22, 13, 14, 5, 7, 2, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.779788, 0.177895, 0.042316};
     constant BaseYear soderkoping2017 = BaseYear(
@@ -143,7 +151,8 @@ package Soderkoping "Söderköping: kommunens ekonomi år för år med bibliotek
       depreciation = 29.1, financialIncome = 1.9, interestExpense = 7.8, otherFinancialExpense = 0.2,
       debt = 474, openingDebt = 449, cash = 71.3, assets = 750.8, investment = 72.8, taxRate = 21.18,
       sectorShares = {0.466, 0.2197, 0.3143}, educationShares = {0.2817, 0.5457, 0.1726},
-      careCostPerInhabitant = {17860, 179084})
+      careCostPerInhabitant = {17860, 179084},
+      ages = {160, 164, 168, 176, 183, 187, 186, 198, 174, 161, 183, 165, 169, 162, 172, 191, 148, 162, 157, 144, 126, 110, 129, 113, 125, 157, 143, 148, 138, 139, 169, 142, 142, 140, 154, 136, 158, 168, 170, 175, 186, 177, 161, 183, 175, 176, 204, 191, 183, 188, 211, 203, 241, 217, 146, 175, 195, 187, 163, 164, 191, 196, 196, 197, 229, 182, 209, 230, 204, 196, 207, 196, 237, 198, 207, 158, 151, 118, 120, 95, 119, 87, 70, 62, 61, 65, 51, 49, 42, 36, 36, 34, 24, 17, 14, 6, 7, 3, 1, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.775043, 0.183744, 0.041214};
 

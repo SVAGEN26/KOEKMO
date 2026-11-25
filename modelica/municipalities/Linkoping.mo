@@ -15,7 +15,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 331, financialIncome = 796.3, interestExpense = 22.8, otherFinancialExpense = 185.9,
       debt = 1100, openingDebt = 1000, cash = 612.6, assets = 6452.7, investment = 952.2, taxRate = 20.2,
       sectorShares = {0.4575, 0.1629, 0.3797}, educationShares = {0.2597, 0.5604, 0.1799},
-      careCostPerInhabitant = {19746, 134652}, interestRate = 0.0203)
+      careCostPerInhabitant = {19746, 134652}, interestRate = 0.0203,
+      ages = {1471, 1598, 1506, 1580, 1785.1, 1705.1, 1782.1, 1774.1, 1768.1, 1896.1, 1899.1, 1884.1, 1902.1, 2014.1, 1908.1, 1995.1, 2034.1, 1926.1, 1966.1, 2250.1, 2808.1, 3370.1, 3497.1, 3312.1, 3077.1, 2957.1, 2712.1, 2453.1, 2343.1, 2349.1, 2400.1, 2416.1, 2460.1, 2486.1, 2551.1, 2454.1, 2325.1, 2321.1, 2229.1, 2167.1, 2120.1, 2001.1, 2050.1, 1992.1, 1934.1, 1989.1, 1980.1, 1879.1, 1964.1, 2018.1, 1938.1, 2076.1, 2036.1, 1938.1, 2011.1, 1947.1, 1897.1, 1840.1, 2022.1, 1899.1, 2004.1, 1932.1, 1751.1, 1688.1, 1570, 1562, 1494, 1571, 1495, 1470, 1416, 1310, 1391, 1342, 1322, 1315, 1389, 1321, 1281, 1319, 1238, 1175, 1009, 983, 809, 743, 682, 608, 514, 423, 430, 267, 251, 209, 166, 115, 88, 66, 49, 37, 43})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.679481, 0.264829, 0.05569};
     constant BaseYear linkoping2024 = BaseYear(
@@ -31,7 +32,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 313, financialIncome = 783.7, interestExpense = 26.8, otherFinancialExpense = 172.8,
       debt = 1000, openingDebt = 600, cash = 55.6, assets = 5968, investment = 713.5, taxRate = 20.2,
       sectorShares = {0.4597, 0.16, 0.3803}, educationShares = {0.2643, 0.5575, 0.1782},
-      careCostPerInhabitant = {19988, 140422}, interestRate = 0.0154)
+      careCostPerInhabitant = {19988, 140422}, interestRate = 0.0154,
+      ages = {1613, 1529, 1584, 1790, 1720, 1819, 1785, 1770, 1908, 1911, 1893, 1912, 2013, 1912, 1971, 2012, 1906, 1953, 1958, 2220, 2757, 3321, 3332, 3161, 3130, 2910, 2575, 2378, 2428, 2462, 2495, 2499, 2533, 2579, 2477, 2340, 2319, 2229, 2186, 2133, 2004, 2062, 2000, 1942, 2003, 1995, 1891, 1967, 2003, 1936, 2077, 2043, 1953, 2008, 1964, 1892, 1854, 2034, 1917, 2007, 1947, 1771, 1700, 1580, 1583, 1524, 1584, 1515, 1492, 1427, 1331, 1405, 1367, 1329, 1337, 1408, 1345, 1317, 1351, 1265, 1217, 1043, 1020, 843, 778, 730, 673, 563, 472, 489, 331, 313, 252, 207, 151, 117, 85, 62, 63, 22, 51})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.688901, 0.256833, 0.054267};
     constant BaseYear linkoping2023 = BaseYear(
@@ -47,7 +49,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 277.2, financialIncome = 844.2, interestExpense = 100.2, otherFinancialExpense = 90.4,
       debt = 600, openingDebt = 600, cash = 360.1, assets = 5567.7, investment = 682.1, taxRate = 20.2,
       sectorShares = {0.4629, 0.1388, 0.3983}, educationShares = {0.2692, 0.5587, 0.1721},
-      careCostPerInhabitant = {21420, 145585})
+      careCostPerInhabitant = {21420, 145585},
+      ages = {1544, 1600, 1819, 1732, 1834, 1808, 1786, 1937, 1919, 1911, 1921, 2004, 1908, 1963, 2015, 1906, 1947, 1932, 1934, 2181, 2759, 3146, 3123, 3264, 3143, 2781, 2523, 2483, 2554, 2551, 2572, 2550, 2612, 2526, 2363, 2340, 2268, 2214, 2145, 2029, 2081, 2006, 1950, 2027, 1991, 1900, 1971, 2015, 1934, 2084, 2050, 1956, 2010, 1967, 1896, 1874, 2032, 1937, 2016, 1957, 1791, 1702, 1593, 1596, 1537, 1589, 1524, 1509, 1442, 1342, 1414, 1390, 1356, 1348, 1425, 1365, 1353, 1388, 1306, 1250, 1088, 1045, 874, 824, 772, 711, 627, 516, 537, 376, 360, 290, 254, 181, 150, 108, 84, 74, 37, 28, 47})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.700407, 0.245798, 0.053795};
     constant BaseYear linkoping2022 = BaseYear(
@@ -63,7 +66,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 237.6, financialIncome = 440.2, interestExpense = 18.9, otherFinancialExpense = 994.2,
       debt = 600, openingDebt = 599.5, cash = 1324.3, assets = 5241.3, investment = 844, taxRate = 20.2,
       sectorShares = {0.4718, 0.1523, 0.3758}, educationShares = {0.2742, 0.555, 0.1708},
-      careCostPerInhabitant = {20750, 146855})
+      careCostPerInhabitant = {20750, 146855},
+      ages = {1605, 1821, 1734, 1825, 1819, 1796, 1947, 1930, 1928, 1927, 2008, 1904, 1960, 2023, 1894, 1946, 1913, 1893, 1857, 2249, 2681, 2994, 3192, 3196, 3027, 2645, 2637, 2663, 2612, 2637, 2627, 2677, 2553, 2397, 2339, 2313, 2233, 2161, 2026, 2097, 2000, 1953, 2039, 1996, 1895, 1963, 2012, 1931, 2092, 2040, 1964, 2011, 1978, 1907, 1874, 2044, 1960, 2024, 1960, 1808, 1712, 1606, 1618, 1553, 1591, 1544, 1520, 1465, 1358, 1423, 1410, 1379, 1364, 1433, 1385, 1368, 1409, 1323, 1284, 1120, 1084, 919, 868, 809, 753, 670, 559, 583, 426, 420, 326, 293, 228, 194, 140, 122, 100, 57, 39, 36, 45})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.705629, 0.240732, 0.053639};
     constant BaseYear linkoping2021 = BaseYear(
@@ -79,7 +83,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 217.7, financialIncome = 1265.8, interestExpense = 1.5, otherFinancialExpense = 80.5,
       debt = 599.5, openingDebt = 0, cash = 561.1, assets = 4630.8, investment = 755.8, taxRate = 20.2,
       sectorShares = {0.4648, 0.1513, 0.3839}, educationShares = {0.2758, 0.5562, 0.168},
-      careCostPerInhabitant = {20596, 144372})
+      careCostPerInhabitant = {20596, 144372},
+      ages = {1814, 1756, 1831, 1807, 1787, 1933, 1936, 1917, 1934, 1998, 1898, 1965, 2011, 1884, 1930, 1888, 1880, 1829, 1826, 2151, 2645, 2981, 3124, 3077, 2868, 2839, 2817, 2762, 2723, 2672, 2710, 2571, 2365, 2379, 2327, 2250, 2152, 2015, 2106, 2000, 1968, 2026, 2003, 1915, 1968, 2032, 1921, 2090, 2033, 1976, 1999, 1962, 1891, 1881, 2046, 1963, 2023, 1973, 1805, 1722, 1608, 1622, 1559, 1604, 1555, 1530, 1476, 1369, 1444, 1431, 1382, 1380, 1448, 1396, 1393, 1438, 1354, 1308, 1154, 1117, 952, 906, 848, 801, 705, 606, 635, 475, 483, 364, 345, 284, 245, 183, 161, 145, 93, 57, 41, 29, 46})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.710447, 0.233428, 0.056126};
     constant BaseYear linkoping2020 = BaseYear(
@@ -95,7 +100,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 215.6, financialIncome = 769.3, interestExpense = 1.2, otherFinancialExpense = 129.8,
       debt = 0, openingDebt = 0, cash = 204.2, assets = 4091.4, investment = 867.8, taxRate = 20.2,
       sectorShares = {0.4688, 0.1514, 0.3798}, educationShares = {0.2773, 0.5578, 0.1649},
-      careCostPerInhabitant = {17658, 143494})
+      careCostPerInhabitant = {17658, 143494},
+      ages = {1784, 1826, 1809, 1795, 1941, 1922, 1930, 1921, 1975, 1882, 1945, 1991, 1869, 1914, 1860, 1860, 1803, 1788, 1750, 2113, 2612, 2917, 3053, 3008, 3080, 3048, 2951, 2878, 2776, 2741, 2626, 2429, 2425, 2363, 2266, 2203, 2002, 2136, 2008, 1966, 2016, 1990, 1923, 1959, 2049, 1906, 2071, 2035, 1969, 2001, 1962, 1876, 1886, 2057, 1987, 2025, 1985, 1814, 1749, 1616, 1636, 1571, 1612, 1571, 1533, 1497, 1372, 1466, 1449, 1394, 1392, 1482, 1434, 1417, 1461, 1382, 1344, 1190, 1154, 991, 936, 884, 846, 742, 658, 683, 516, 537, 425, 385, 326, 304, 231, 208, 175, 116, 85, 56, 43, 35, 35})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.71289, 0.230777, 0.056333};
     constant BaseYear linkoping2019 = BaseYear(
@@ -111,7 +117,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 211, financialIncome = 410.1, interestExpense = 1.8, otherFinancialExpense = 25.7,
       debt = 0, openingDebt = 0, cash = 1.3, assets = 3437.6, investment = 479.1, taxRate = 20.2,
       sectorShares = {0.4748, 0.1525, 0.3727}, educationShares = {0.2855, 0.5532, 0.1613},
-      careCostPerInhabitant = {16768, 138841})
+      careCostPerInhabitant = {16768, 138841},
+      ages = {1862, 1801, 1796, 1924, 1931, 1940, 1918, 1964, 1878, 1924, 1974, 1851, 1888, 1850, 1837, 1783, 1766, 1704, 1698, 2046, 2470, 2757, 2867, 3146, 3199, 3209, 3048, 2869, 2823, 2649, 2467, 2467, 2366, 2301, 2201, 2016, 2137, 1992, 1970, 2004, 1983, 1930, 1958, 2053, 1903, 2060, 2026, 1969, 1985, 1963, 1876, 1891, 2059, 1999, 2038, 1991, 1819, 1758, 1633, 1635, 1582, 1636, 1591, 1561, 1506, 1391, 1483, 1483, 1426, 1413, 1495, 1453, 1448, 1485, 1407, 1368, 1226, 1184, 1020, 976, 904, 884, 785, 697, 724, 572, 592, 481, 438, 387, 357, 283, 247, 210, 153, 126, 77, 65, 50, 33, 30})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.714492, 0.227983, 0.057525};
     constant BaseYear linkoping2018 = BaseYear(
@@ -127,7 +134,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 192.5, financialIncome = 589.3, interestExpense = 2.5, otherFinancialExpense = 52.1,
       debt = 0, openingDebt = 0, cash = 62.2, assets = 3165.9, investment = 393.1, taxRate = 20.2,
       sectorShares = {0.4693, 0.1499, 0.3808}, educationShares = {0.2975, 0.5464, 0.1561},
-      careCostPerInhabitant = {16608, 138519})
+      careCostPerInhabitant = {16608, 138519},
+      ages = {1797, 1797, 1898, 1925, 1926, 1927, 1966, 1875, 1913, 1956, 1842, 1859, 1837, 1822, 1751, 1752, 1693, 1655, 1689, 2021, 2385, 2656, 3013, 3150, 3344, 3217, 2938, 2929, 2702, 2503, 2475, 2365, 2268, 2199, 2009, 2117, 1980, 1982, 2001, 1980, 1950, 1966, 2049, 1898, 2046, 2026, 1960, 1995, 1962, 1871, 1886, 2057, 2001, 2046, 1996, 1829, 1762, 1642, 1641, 1597, 1653, 1604, 1582, 1518, 1402, 1501, 1495, 1440, 1422, 1519, 1477, 1479, 1512, 1424, 1397, 1253, 1215, 1039, 1004, 922, 909, 808, 737, 757, 608, 639, 515, 487, 434, 408, 320, 288, 260, 188, 164, 102, 92, 69, 39, 27, 31})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.718309, 0.225224, 0.056467};
     constant BaseYear linkoping2017 = BaseYear(
@@ -143,7 +151,8 @@ package Linkoping "Linköping: kommunens ekonomi år för år med biblioteket Ko
       depreciation = 176.7, financialIncome = 311.8, interestExpense = 2.6, otherFinancialExpense = 14.2,
       debt = 0, openingDebt = 0, cash = 56, assets = 2984.6, investment = 386.3, taxRate = 20.2,
       sectorShares = {0.4788, 0.1548, 0.3664}, educationShares = {0.2963, 0.5456, 0.1581},
-      careCostPerInhabitant = {16145, 135695})
+      careCostPerInhabitant = {16145, 135695},
+      ages = {1783, 1877, 1922, 1902, 1925, 1956, 1868, 1877, 1904, 1794, 1818, 1813, 1784, 1719, 1721, 1657, 1638, 1635, 1661, 1915, 2347, 2752, 2954, 3319, 3350, 3083, 3019, 2748, 2544, 2515, 2340, 2246, 2212, 2039, 2123, 1957, 1961, 1983, 1969, 1920, 1928, 2033, 1879, 2014, 2030, 1948, 1983, 1949, 1867, 1875, 2053, 1989, 2049, 1982, 1837, 1764, 1636, 1654, 1597, 1653, 1611, 1602, 1538, 1425, 1523, 1506, 1442, 1446, 1530, 1489, 1496, 1538, 1449, 1419, 1285, 1237, 1072, 1019, 948, 938, 838, 772, 792, 643, 695, 554, 541, 485, 456, 373, 344, 306, 234, 196, 146, 123, 95, 59, 35, 20, 30})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.719175, 0.223186, 0.057639};
 

@@ -219,6 +219,8 @@ def build(code, archive):
     for year, record in years.items():
         older = population[year][65:]
         record['olderShares'] = [sum(older[:15]) / sum(older), sum(older[15:25]) / sum(older), sum(older[25:]) / sum(older)]
+        # Single years of age 0-100+, both sexes: the library reads from them who crosses each group's upper age in which year.
+        record['ages'] = [round(x, 1) for x in population[year][:100]] + [round(sum(population[year][100:]), 1)]
     return years, years[max(YEARS)]['olderShares']
 
 
@@ -260,7 +262,8 @@ def modelica(package, name, code, archive, years, older_shares):
       depreciation = {number(r['depreciation'])}, financialIncome = {number(r['financialIncome'])}, interestExpense = {number(r['interestExpense'])}, otherFinancialExpense = {number(r['otherFinancialExpense'])},
       debt = {number(r['debt'])}, openingDebt = {number(r['openingDebt'])}, cash = {number(r['cash'])}, assets = {number(r['assets'])}, investment = {number(r['investment'])}, taxRate = {number(r['taxRate'], 2)},
       sectorShares = {vector(r['sectorShares'], 4)}, educationShares = {vector(r['educationShares'], 4)},
-      careCostPerInhabitant = {vector(r['careCostPerInhabitant'], 0)}{f", interestRate = {number(r['interestRate'], 4)}" if 'interestRate' in r else ''})
+      careCostPerInhabitant = {vector(r['careCostPerInhabitant'], 0)}{f", interestRate = {number(r['interestRate'], 4)}" if 'interestRate' in r else ''},
+      ages = {vector(r['ages'], 1)})
       "SCB:s räkenskapssammandrag och befolkningsstatistik {y} (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares{y}[3] = {vector(r['olderShares'], 6)};''')
     cohort_package = modelica_cohorts(code, package, name, archive, years)

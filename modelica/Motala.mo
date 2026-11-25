@@ -169,7 +169,8 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       depreciation = 180, financialIncome = 15, interestExpense = 21, otherFinancialExpense = 4,
       debt = 1040, openingDebt = 940, cash = 81, assets = 2997, investment = 413, taxRate = 21.7,
       sectorShares = {0.4314, 0.2151, 0.3535}, educationShares = {0.2647, 0.5462, 0.1891},
-      careCostPerInhabitant = {23331, 166483})
+      careCostPerInhabitant = {23331, 166483},
+      ages = SCB.ages(SCB.motala2025.population))
       "Årsredovisning 2025 (kommunen), s. 6-7, 47-53, 70; resultat 105 mnkr (avrundade poster ger 104)";
     constant BaseYear motala2024 = BaseYear(
       year = 2024,
@@ -184,7 +185,8 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       depreciation = 168, financialIncome = 17, interestExpense = 13, otherFinancialExpense = 11,
       debt = 940, openingDebt = 663, cash = 229, assets = 2782, investment = 417, taxRate = 21.7,
       sectorShares = {0.4292, 0.2148, 0.3559}, educationShares = {0.273, 0.5416, 0.1853},
-      careCostPerInhabitant = {22275, 168850})
+      careCostPerInhabitant = {22275, 168850},
+      ages = SCB.ages(SCB.motala2024.population))
       "Jämförelsekolumnen i årsredovisning 2025 (kommunen), s. 48-49 och not 8-9; resultat 1 mnkr";
     // Basåren 2020-2023 finns för tester mot historien (scripts/hindcast_vintages.py). Pengar ur
     // research/data/annual-ledgers.json (årsredovisningarna 2021-2024, kommunen); åldersgrupper, folkmängd,
@@ -202,7 +204,8 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       depreciation = 150, financialIncome = 11, interestExpense = 11, otherFinancialExpense = 6,
       debt = 663, openingDebt = 664.5, cash = 115, assets = 2389, investment = 299, taxRate = 21.7,
       sectorShares = {0.4395, 0.1974, 0.3631}, educationShares = {0.2744, 0.5392, 0.1864},
-      careCostPerInhabitant = {20538, 170510})
+      careCostPerInhabitant = {20538, 170510},
+      ages = SCB.ages(SCB.motala2023.population))
       "Årsredovisning 2023 (kommunen), s. 47-54; anläggningar i bruk ur jämförelsekolumnen i årsredovisning 2024, s. 48; resultat 23 mnkr";
     constant BaseYear motala2022 = BaseYear(
       year = 2022,
@@ -217,7 +220,8 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       depreciation = 162.3, financialIncome = 8.1, interestExpense = 5.6, otherFinancialExpense = 2.0,
       debt = 664.5, openingDebt = 830.2, cash = 85.8, assets = 2305.3, investment = 253.9, taxRate = 21.7,
       sectorShares = {0.4337, 0.1987, 0.3675}, educationShares = {0.2857, 0.5266, 0.1877},
-      careCostPerInhabitant = {18330, 169826})
+      careCostPerInhabitant = {18330, 169826},
+      ages = SCB.ages(SCB.motala2022.population))
       "Årsredovisning 2022 (kommunen), s. 6 och 37-43, not 14; låneskulden inklusive kortfristig del (s. 32); avskrivningarna innehåller en nedskrivning på 12,1 mnkr; resultat 125,1 mnkr";
     constant BaseYear motala2021 = BaseYear(
       year = 2021,
@@ -232,7 +236,8 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       depreciation = 138.4, financialIncome = 5.9, interestExpense = 5.2, otherFinancialExpense = 1.9,
       debt = 830.2, openingDebt = 788.0, cash = 338.2, assets = 2328.5, investment = 272.6, taxRate = 21.7,
       sectorShares = {0.4324, 0.2052, 0.3624}, educationShares = {0.2884, 0.521, 0.1905},
-      careCostPerInhabitant = {17287, 168919})
+      careCostPerInhabitant = {17287, 168919},
+      ages = SCB.ages(SCB.motala2021.population))
       "Jämförelsekolumnen i årsredovisning 2022 (kommunen), s. 6 och 37-43; anläggningarna inklusive pågående arbeten, som inte är särredovisade; resultat 61,7 mnkr";
     constant BaseYear motala2020 = BaseYear(
       year = 2020,
@@ -247,7 +252,8 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       depreciation = 124.5, financialIncome = 4.7, interestExpense = 4.7, otherFinancialExpense = 3.7,
       debt = 788.0, openingDebt = 801.3, cash = 167.9, assets = 2224.7, investment = 207.1, taxRate = 21.7,
       sectorShares = {0.4473, 0.2043, 0.3484}, educationShares = {0.2911, 0.5146, 0.1943},
-      careCostPerInhabitant = {16848, 167639})
+      careCostPerInhabitant = {16848, 167639},
+      ages = SCB.ages(SCB.motala2020.population))
       "Jämförelsekolumnen i årsredovisning 2021 (kommunen), s. 37-43, och femårsöversikten i årsredovisning 2022, s. 6; anläggningarna inklusive pågående arbeten; resultat 64,8 mnkr";
 
     constant Budget budget2026 = Budget(

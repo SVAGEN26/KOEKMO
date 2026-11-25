@@ -62,6 +62,8 @@ def cohort_records(name, prefix, calibration):
 
 
 def packages(d, national, years, chain, first_base, last_base, first, tfr, improve, nat_years, nat_values, pad):
+    fertility_years = sorted(int(y) for y in d['totalFertility']['Sweden'])
+    fertility_values = [d['totalFertility']['Sweden'][str(y)] for y in fertility_years]
     """The national package for the library and the municipality's package that extends it."""
     profiles = fertility_profiles(d)
     historical_profiles = ',\n        '.join(vector(profiles[year], 8) for year in range(2021, 2025))
@@ -91,6 +93,42 @@ def packages(d, national, years, chain, first_base, last_base, first, tfr, impro
       "Rikets summerade fruktsamhet enligt SCB:s antagande, {first}-{first + HORIZON - 1}";
     constant Real mortalityImprovement[2, 101] = {by_sex(improve['bySex'], 4, pad)}
       "Årlig minskning av dödsrisken per ålder och kön i SCB:s framskrivning {improve['from'][0]}-{improve['from'][1]}; ett alternativ till basårets historiska trend";
+    constant Real deathRisk[2, 101] = {by_sex(d['baseYears'][str(last_base)]['deathRisk'], 6, pad)}
+      "Rikets dödsrisk per ålder och kön {last_base}: fem livslängdstabeller flyttade längs trenden och medelvärdesbildade";
+    constant Integer fertilityFirstYear = {fertility_years[0]} "Första året i tabellen över rikets summerade fruktsamhet";
+    constant Real totalFertility[{len(fertility_years)}] = {vector(fertility_values, 4, 13, pad + '  ')}
+      "Rikets summerade fruktsamhet {fertility_years[0]}-{fertility_years[-1]} (SCB)";
+
+    function totalFertilityMean5 "Rikets genomsnittliga summerade fruktsamhet de fem åren fram till ett år"
+      input Integer year "Sista året";
+      output Real mean "Medel av fem år";
+    protected
+      Integer last = min(max(year, fertilityFirstYear + 4), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1;
+    algorithm
+      mean := sum(totalFertility[last - 4:last])/5;
+    end totalFertilityMean5;
+
+    function combinedDeathRisk "Dödsrisk (rad 1) och dess årliga minskning (rad 2) per ålder för båda könen tillsammans"
+      output Real combined[2, 101];
+    protected
+      Real alive[2] "Kvar i livet av lika många födda pojkar och flickor";
+      Real weight "Männens andel vid åldern";
+    algorithm
+      alive := {{1, 1}};
+      for a in 1:101 loop
+        weight := alive[1]/(alive[1] + alive[2]);
+        combined[1, a] := weight*deathRisk[1, a] + (1 - weight)*deathRisk[2, a];
+        combined[2, a] := (weight*deathRisk[1, a]*mortalityImprovement[1, a] + (1 - weight)*deathRisk[2, a]*mortalityImprovement[2, a])/max(1e-12, combined[1, a]);
+        alive := {{alive[1]*(1 - deathRisk[1, a]), alive[2]*(1 - deathRisk[2, a])}};
+      end for;
+    end combinedDeathRisk;
+
+    function ages "Invånare per ettårsålder, båda könen"
+      input Real population[2, 101] "Befolkning per ettårsålder och kön";
+      output Real total[101];
+    algorithm
+      total := population[1, :] + population[2, :];
+    end ages;
 
     function groups "Ettårsåldrar summerade till 0-6, 7-15, 16-18, 19-64 och 65+, båda könen"
       input Real population[2, 101] "Befolkning per ettårsålder och kön";
@@ -103,12 +141,23 @@ def packages(d, national, years, chain, first_base, last_base, first, tfr, impro
     constant Real nationalPopulation[{len(nat_years)}] = {vector(nat_values, 9, 8, pad + '  ')}
       "Rikets folkmängd 31 december {nat_years[0]}-{nat_years[-1]}: utfall till {national['lastOutcome']}, sedan SCB:s framskrivning ({national['archive']})";
 
-    function nationalPopulationAt "Rikets folkmängd 31 december ett visst år"
+    constant Integer nationalLastOutcome = {national['lastOutcome']} "Sista året med utfall i tabellen över rikets folkmängd";
+
+    function nationalPopulationAt "Rikets folkmängd 31 december ett visst år, som den var känd ett givet år"
       input Integer year "Kalenderår";
+      input Integer knownAt = nationalLastOutcome "Året då uppgiften ska vara känd: ett basår före sista utfallsåret ser inte senare utfall";
       output Real population "Folkmängd";
+    protected
+      Integer known = min(max(knownAt, nationalFirstYear + 1), nationalLastOutcome);
     algorithm
       assert(year >= nationalFirstYear and year < nationalFirstYear + size(nationalPopulation, 1), "Data.SCB.nationalPopulation saknar år " + String(year));
-      population := nationalPopulation[year - nationalFirstYear + 1];
+      if year <= known or known >= nationalLastOutcome then
+        population := nationalPopulation[year - nationalFirstYear + 1];
+      else
+        // Efter det kända året: folkmängden fortsätter växa som det senast kända året. Senare utfall och den senaste
+        // framskrivningen fanns inte då.
+        population := nationalPopulation[known - nationalFirstYear + 1]*(nationalPopulation[known - nationalFirstYear + 1]/nationalPopulation[known - nationalFirstYear])^(year - known);
+      end if;
     end nationalPopulationAt;
 
     function olderShares "Andelar av 65+ som är 65-79, 80-89 och 90+"

@@ -15,7 +15,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 22.9, financialIncome = 3.2, interestExpense = 4.7, otherFinancialExpense = 0.2,
       debt = 173, openingDebt = 123, cash = 44.8, assets = 440.9, investment = 73, taxRate = 22.4,
       sectorShares = {0.4128, 0.2211, 0.3662}, educationShares = {0.2671, 0.5556, 0.1773},
-      careCostPerInhabitant = {15566, 156023})
+      careCostPerInhabitant = {15566, 156023},
+      ages = {48.7, 38.8, 39.8, 53.7, 38.8, 66.7, 59.7, 57.7, 57.7, 81.6, 54.7, 64.7, 53.7, 61.7, 49.7, 54.7, 46.8, 60.7, 46.8, 54.7, 44.8, 42.8, 36.8, 37.8, 31.8, 37.8, 41.8, 52.7, 32.8, 42.8, 63.7, 49.7, 49.7, 56.7, 51.7, 95.5, 86.6, 51.7, 54.7, 60.7, 63.7, 52.7, 45.8, 59.7, 56.7, 53.7, 59.7, 68.6, 43.8, 69.6, 60.7, 59.7, 53.7, 66.7, 67.7, 51.7, 67.7, 55.7, 79.6, 86.6, 84.6, 79.6, 65.7, 57.7, 61.7, 66.7, 74.6, 60.7, 74.6, 73.6, 60.7, 68.6, 56.7, 72.6, 84.6, 69.6, 78.6, 74.6, 76.6, 65.7, 71.6, 72.6, 49.7, 48.7, 38.8, 26.9, 25.9, 21.9, 21.9, 14.9, 18.9, 9, 13.9, 9.9, 10.9, 7, 9.9, 0, 0, 0, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.690013, 0.256161, 0.053826};
     constant BaseYear odeshog2024 = BaseYear(
@@ -31,7 +32,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 20.9, financialIncome = 2.7, interestExpense = 2.5, otherFinancialExpense = 0.9,
       debt = 123, openingDebt = 96, cash = 24.1, assets = 390.9, investment = 61.4, taxRate = 22.6,
       sectorShares = {0.4263, 0.2233, 0.3504}, educationShares = {0.2784, 0.5397, 0.1819},
-      careCostPerInhabitant = {14075, 159662})
+      careCostPerInhabitant = {14075, 159662},
+      ages = {40, 38, 54, 40, 65, 59, 59, 51, 82, 51, 63, 57, 58, 46, 54, 46, 58, 52, 58, 49, 49, 44, 43, 29, 35, 45, 50, 30, 46, 66, 48, 52, 56, 57, 88, 80, 51, 56, 62, 60, 48, 48, 54, 55, 52, 57, 68, 46, 67, 57, 64, 55, 70, 72, 54, 68, 57, 84, 84, 82, 76, 71, 59, 61, 61, 70, 66, 75, 74, 62, 66, 61, 73, 84, 69, 84, 74, 76, 73, 76, 75, 52, 46, 38, 33, 32, 29, 28, 19, 21, 16, 16, 13, 10, 11, 5, 5, 3, 0, 1, 4})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.703247, 0.242208, 0.054545};
     constant BaseYear odeshog2023 = BaseYear(
@@ -47,7 +49,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 18.5, financialIncome = 2.7, interestExpense = 1.6, otherFinancialExpense = 0.4,
       debt = 96, openingDebt = 116, cash = 30.9, assets = 350.4, investment = 60.4, taxRate = 22.6,
       sectorShares = {0.431, 0.219, 0.35}, educationShares = {0.2794, 0.5287, 0.1919},
-      careCostPerInhabitant = {13869, 156941})
+      careCostPerInhabitant = {13869, 156941},
+      ages = {37, 50, 40, 64, 58, 59, 50, 85, 51, 68, 57, 58, 48, 53, 47, 58, 52, 60, 51, 61, 44, 43, 37, 36, 45, 43, 32, 50, 66, 48, 50, 62, 59, 86, 75, 45, 55, 68, 62, 48, 47, 54, 54, 57, 56, 70, 49, 67, 57, 63, 56, 71, 72, 54, 69, 55, 84, 83, 79, 77, 68, 62, 60, 60, 70, 67, 69, 73, 65, 66, 59, 74, 87, 73, 86, 77, 77, 76, 80, 72, 53, 55, 39, 33, 35, 30, 29, 22, 21, 17, 20, 19, 12, 11, 8, 6, 5, 2, 3, 1, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.722441, 0.21916, 0.058399};
     constant BaseYear odeshog2022 = BaseYear(
@@ -63,7 +66,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 18.5, financialIncome = 2.3, interestExpense = 2.2, otherFinancialExpense = 0.1,
       debt = 116, openingDebt = 131, cash = 57.1, assets = 315.4, investment = 30, taxRate = 22.6,
       sectorShares = {0.4279, 0.2082, 0.3639}, educationShares = {0.2756, 0.5134, 0.211},
-      careCostPerInhabitant = {13700, 148625})
+      careCostPerInhabitant = {13700, 148625},
+      ages = {48, 37, 63, 56, 61, 50, 82, 52, 68, 56, 59, 50, 55, 48, 59, 53, 66, 55, 62, 53, 44, 35, 43, 46, 47, 30, 47, 62, 50, 46, 62, 56, 86, 73, 44, 52, 64, 64, 49, 49, 54, 55, 60, 56, 71, 51, 64, 56, 64, 53, 70, 72, 53, 75, 53, 82, 85, 78, 74, 68, 59, 57, 59, 73, 73, 71, 75, 64, 65, 59, 79, 90, 75, 90, 78, 77, 78, 85, 74, 58, 54, 41, 36, 39, 35, 31, 27, 20, 19, 20, 21, 13, 13, 8, 7, 7, 2, 5, 1, 1, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.735526, 0.211842, 0.052632};
     constant BaseYear odeshog2021 = BaseYear(
@@ -79,7 +83,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 28.4, financialIncome = 1.3, interestExpense = 2.1, otherFinancialExpense = 0.6,
       debt = 131, openingDebt = 159, cash = 44.7, assets = 304.6, investment = 20.5, taxRate = 22.6,
       sectorShares = {0.4316, 0.2087, 0.3598}, educationShares = {0.2817, 0.5018, 0.2165},
-      careCostPerInhabitant = {13900, 138019})
+      careCostPerInhabitant = {13900, 138019},
+      ages = {40, 62, 60, 63, 55, 84, 49, 67, 54, 61, 51, 57, 49, 61, 57, 65, 58, 65, 58, 49, 42, 44, 45, 41, 30, 40, 62, 46, 40, 65, 58, 78, 74, 43, 52, 63, 69, 45, 52, 49, 54, 59, 58, 68, 52, 63, 57, 65, 53, 69, 68, 52, 74, 57, 84, 82, 77, 77, 66, 55, 55, 60, 70, 70, 71, 76, 65, 63, 59, 78, 90, 77, 89, 80, 76, 81, 87, 77, 58, 55, 44, 34, 43, 37, 34, 29, 21, 20, 20, 23, 14, 15, 10, 10, 10, 4, 6, 1, 2, 0, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.745638, 0.204698, 0.049664};
     constant BaseYear odeshog2020 = BaseYear(
@@ -95,7 +100,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 27.2, financialIncome = 1.1, interestExpense = 2.5, otherFinancialExpense = 0.1,
       debt = 159, openingDebt = 168.6, cash = 36, assets = 316.7, investment = 24.2, taxRate = 22.6,
       sectorShares = {0.4242, 0.2091, 0.3667}, educationShares = {0.2832, 0.5057, 0.211},
-      careCostPerInhabitant = {13811, 133164})
+      careCostPerInhabitant = {13811, 133164},
+      ages = {64, 66, 66, 54, 83, 49, 66, 50, 61, 47, 59, 47, 60, 58, 65, 59, 62, 57, 47, 48, 49, 46, 41, 39, 46, 57, 45, 42, 59, 54, 77, 72, 45, 59, 62, 63, 47, 52, 51, 57, 59, 57, 71, 52, 62, 56, 69, 54, 68, 68, 51, 75, 59, 86, 79, 74, 75, 63, 57, 56, 56, 73, 68, 73, 72, 64, 65, 61, 79, 94, 81, 89, 79, 79, 82, 88, 79, 61, 58, 43, 40, 43, 40, 36, 30, 23, 21, 22, 25, 17, 18, 14, 11, 12, 7, 8, 1, 2, 0, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.747626, 0.201493, 0.050882};
     constant BaseYear odeshog2019 = BaseYear(
@@ -111,7 +117,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 16.8, financialIncome = 1.7, interestExpense = 2.7, otherFinancialExpense = 0.4,
       debt = 168.6, openingDebt = 150.6, cash = 8.7, assets = 321.9, investment = 35.6, taxRate = 21.6,
       sectorShares = {0.4297, 0.2046, 0.3656}, educationShares = {0.254, 0.5587, 0.1873},
-      careCostPerInhabitant = {13646, 130134})
+      careCostPerInhabitant = {13646, 130134},
+      ages = {60, 65, 56, 83, 50, 64, 48, 62, 45, 57, 45, 63, 58, 64, 57, 64, 57, 51, 53, 60, 52, 47, 41, 53, 64, 45, 43, 59, 58, 79, 66, 49, 55, 55, 61, 48, 45, 52, 51, 57, 58, 64, 50, 61, 58, 72, 54, 63, 71, 54, 76, 57, 87, 78, 75, 73, 66, 58, 56, 55, 74, 69, 75, 71, 65, 66, 62, 76, 93, 85, 85, 80, 80, 81, 87, 83, 63, 61, 46, 42, 43, 42, 35, 32, 28, 22, 24, 28, 20, 23, 15, 13, 14, 9, 9, 2, 3, 1, 1, 1, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.749141, 0.204124, 0.046735};
     constant BaseYear odeshog2018 = BaseYear(
@@ -127,7 +134,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 13.5, financialIncome = 1.7, interestExpense = 3.1, otherFinancialExpense = 0,
       debt = 150.6, openingDebt = 172.9, cash = 5, assets = 304.8, investment = 32.7, taxRate = 21.6,
       sectorShares = {0.4495, 0.2154, 0.3352}, educationShares = {0.2468, 0.5816, 0.1716},
-      careCostPerInhabitant = {12829, 131517})
+      careCostPerInhabitant = {12829, 131517},
+      ages = {55, 58, 79, 47, 65, 49, 60, 45, 57, 46, 63, 60, 64, 57, 66, 59, 51, 52, 64, 62, 52, 47, 58, 65, 43, 39, 57, 56, 70, 55, 44, 54, 53, 58, 46, 48, 48, 52, 54, 56, 66, 52, 60, 59, 68, 49, 68, 71, 55, 72, 58, 87, 79, 74, 77, 65, 59, 58, 54, 74, 68, 76, 73, 62, 66, 62, 77, 96, 86, 86, 84, 82, 80, 87, 86, 64, 64, 50, 44, 45, 44, 37, 34, 35, 24, 25, 27, 22, 29, 19, 16, 17, 11, 10, 3, 6, 2, 3, 1, 0, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.749143, 0.202879, 0.047978};
     constant BaseYear odeshog2017 = BaseYear(
@@ -143,7 +151,8 @@ package Odeshog "Ödeshög: kommunens ekonomi år för år med biblioteket Kommu
       depreciation = 26.4, financialIncome = 1.2, interestExpense = 3.5, otherFinancialExpense = 0.1,
       debt = 172.9, openingDebt = 186.4, cash = 33.8, assets = 285.8, investment = 19.4, taxRate = 21.6,
       sectorShares = {0.4578, 0.2104, 0.3317}, educationShares = {0.2416, 0.5565, 0.2018},
-      careCostPerInhabitant = {12073, 129624})
+      careCostPerInhabitant = {12073, 129624},
+      ages = {55, 73, 45, 61, 52, 60, 48, 64, 44, 62, 61, 65, 57, 68, 59, 56, 56, 64, 68, 58, 55, 52, 61, 48, 46, 58, 55, 61, 54, 42, 49, 54, 52, 48, 47, 43, 54, 57, 56, 63, 57, 60, 59, 66, 53, 65, 72, 58, 72, 59, 88, 83, 74, 76, 64, 60, 58, 56, 73, 67, 78, 73, 60, 68, 62, 76, 97, 88, 88, 84, 85, 81, 87, 89, 66, 63, 51, 46, 45, 48, 40, 35, 34, 24, 26, 28, 27, 31, 20, 19, 18, 15, 14, 5, 8, 4, 4, 2, 0, 1, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.753963, 0.195727, 0.05031};
 

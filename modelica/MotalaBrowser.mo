@@ -6,7 +6,7 @@ model MotalaBrowserContinuous "Omslag för webbläsaren kring Motala.Continuous:
     deathRates={0.0004,0.0001,0.0002,0.0018,0.03867709722785895},
     mortalityRates=Kommunekonomi.Data.deathRatesPerYear(historyCohorts, historyTotals, historyDeaths),
     residualMigration=if useObservedMigration then observedMigration else Kommunekonomi.Data.calibratedMigrationRates(
-      historyCohorts, historyTotals, historyBirths, mortalityRates, olderMortalityRatios, olderAgeingRates, olderShares),
+      historyCohorts, historyTotals, historyBirths, mortalityRates, ageProfile[1:2, :], olderShares),
     tax0=2330, grants0=987, debt0=1040, cash0=81, assets0=2997, depreciation0=180,
     financialIncome=15, otherFinancialExpense=4, births0=334,
     payroll0=2288, pension0=190, otherOperatingExpense0=1297, operatingRevenue0=751,
@@ -15,7 +15,7 @@ model MotalaBrowserContinuous "Omslag för webbläsaren kring Motala.Continuous:
     nationalPopulation0=10587710,
     nationalPopulationPath=fill(10605529,100),
     residualMigrationPath=Kommunekonomi.Data.projectionResiduals(p0, projectedCohorts, followProjection, births0, mortalityRates,
-      olderMortalityRatios, olderAgeingRates, olderShares, residualMigration),
+      ageProfile[3:102, :], olderShares, residualMigration),
     employerContributions0=0, employerContributionRatePath=fill(-1,100),
     ageIncomeWeights=ones(5), equalisationCountyRate=0,
     importedRevenueMode=0, novemberPopulation0=43131, importedComponents=zeros(100,3),
