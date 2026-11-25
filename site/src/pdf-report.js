@@ -25,8 +25,8 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
   const populationSource=a.demographyMode?.includes('observed')
     ?'<a href="https://www.statistikdatabasen.scb.se/goto/sv/ssd/TAB1212">SCB:s in- och utflyttningar efter ålder och kön</a>.'
     :planning?.sources.population&&!run.cohort?`Befolkningskälla: <a href="${escape(planning.sources.population)}">regional statistikdatabas</a>.`:'';
-  const flow=a.timeModel==='continuous';
-  const common=[['Basår / horisont',`${first} / ${first+1}–${last}`],['Tid i modellen',flow?'Kontinuerlig tid: flöden under året':'Årssteg: ett steg per år'],['Intäktsunderlag',revenueLabel],['Befolkningsunderlag',populationLabel],
+  const flow=true;
+  const common=[['Basår / horisont',`${first} / ${first+1}–${last}`],['Tid i modellen','Kontinuerlig tid: flöden under året'],['Intäktsunderlag',revenueLabel],['Befolkningsunderlag',populationLabel],
     ...(revenueMode?[['Intäktsmodell',revenueMode]]:[]),
     ...(a.splitPayroll?[['Personalkostnader','Löner, sociala avgifter och pensioner i separata banor']]:[])];
   const pages=[];
@@ -43,9 +43,9 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
       rows.map(r=>[r.year,...['tradeReceivables','tradePayables','deferredGrants','workingCapitalCash','operatingCash'].map(key=>number(r[key]))]),
       'Mnkr. Kassaflödet påverkas av förändrade saldon för kundfordringar, leverantörsskulder och förutbetalda bidrag.'));
   }
-  if(a.liquidityPolicy) {
+  if(a.liquidityPolicy&&(a.deferInvestmentShare??0)>0) {
     page('Kassa och förfinansiering',parameters([
-      ['Kassareserv',`${number(a.cashReserve??0)} mnkr`],
+      ['Likviditetsreserv',`${number(a.reserveDays??b.liquidity?.reserveDays??30)} dagar av utbetalningarna, minus ${number(a.creditLine??b.liquidity?.creditLine??0)} mnkr i kredit`],
       ['Uppskjuten del av första årets investering',percent(100*(a.deferInvestmentShare??0))],
       ['Förfinansierad del av uppskjuten betalning',percent(100*(a.prefinanceShare??0))]
     ])+table(['År','Investering betald','Kvar att betala','Nya lån','Varav förfinansiering','Amortering','Kassa','Skuld'],

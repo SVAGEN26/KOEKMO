@@ -34,7 +34,7 @@ class FromSCB(unittest.TestCase):
 
     def test_generated_package_carries_the_base_years(self):
         source = (ROOT / 'modelica/municipalities/Mjolby.mo').read_text()
-        self.assertIn('extends Kommunekonomi.Annual(base = Data.mjolby2025', source)
+        self.assertIn('extends Kommunekonomi.Continuous.Economy(base = Data.mjolby2025', source)
         for y, r in years('0586').items():
             self.assertIn(f'constant BaseYear mjolby{y} = BaseYear(', source)
             self.assertAlmostEqual(sum(r['cohorts'][-1]), r['reportedPopulation'][-1], delta=0.5)

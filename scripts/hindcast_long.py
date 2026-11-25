@@ -38,11 +38,8 @@ out (annual-report-inputs.json, trendExclude): Norrköping 2022 and 2023, the pr
 
 Investment stays at the base year's amount: the model has no investment forecast. Where the base
 year gives no plausible interest rate (no debt at the start of the year: Linköping and
-Vadstena 2017-2019), the run uses 2 %. Writes data/long-hindcast.json.
-
-HINDCAST_MODEL=Continuous runs the packages' Continuous model (Kommunekonomi.Continuous.Economy, the model
-the site runs by default) with the same inputs, twelve output points a year, and writes
-data/long-hindcast-continuous.json.
+Vadstena 2017-2019), the run uses 2 %. The packages' Continuous model (Kommunekonomi.Continuous.Economy),
+twelve output points a year. Writes data/long-hindcast-continuous.json.
 """
 import csv
 import json
@@ -59,9 +56,9 @@ import prepare_municipality as pm  # noqa: E402
 from hindcast_vintages import modelica_array, pkv_outcomes, tax_base_outcomes  # noqa: E402
 
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
-MODEL = os.environ.get('HINDCAST_MODEL', 'Annual')
-STEPS = 1 if MODEL == 'Annual' else 12
-OUTPUT = 'data/long-hindcast.json' if MODEL == 'Annual' else f'data/long-hindcast-{MODEL.lower()}.json'
+MODEL = 'Continuous'
+STEPS = 12
+OUTPUT = 'data/long-hindcast-continuous.json'
 LAST = 2025
 ORIGINS = (2017, 2018, 2019)
 SETS = ('hindsight', 'drift', 'standard')
@@ -224,7 +221,7 @@ def main():
         errors = [100 * (share(r['baseYear']) - share(r['outcome'])) for r in cases]
         summary.setdefault('persistence', {})[horizon] = {'cases': len(cases), 'result': {
             'meanErrorPercent': sum(errors) / len(errors), 'meanAbsErrorPercent': sum(map(abs, errors)) / len(errors)}}
-    out = {'source': f'Model Kommunekonomi.{"Annual" if MODEL == "Annual" else "Continuous.Economy"} with SCB base years; outcomes SCB räkenskapssammandrag (kommunen), '
+    out = {'source': f'Model Kommunekonomi.Continuous.Economy with SCB base years; outcomes SCB räkenskapssammandrag (kommunen), '
                      'data/municipalities/<code>/base-years.json; Motala from data/downloads/20261109T162149Z',
            'method': __doc__.strip(),
            'units': 'mnkr; population in persons. Percent: error / outcome of tax and grants (population: / outcome)',

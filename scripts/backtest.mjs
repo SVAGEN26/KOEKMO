@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {calibrate,naturalStep,sum,reconcileHistory} from '../site/src/engine.js';
+import {calibrate,naturalStep,sum,reconcileHistory} from '../site/src/scenario-inputs.js';
 const rows=reconcileHistory(JSON.parse(fs.readFileSync(new URL('../data/history.json',import.meta.url))).rows);
 const results=[];
 for(let i=2;i<rows.length;i++) {

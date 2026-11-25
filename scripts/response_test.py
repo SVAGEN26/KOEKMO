@@ -73,7 +73,7 @@ def need(now, base, education_weights, care_weights):
 
 
 def annual_volume(needs, shares, adjustment=ADJUSTMENT, fixed_share=FIXED_SHARE, lag=0):
-    """Service volume per year as Kommunekonomi.Annual computes it: capacity closes `adjustment` of the gap to
+    """Service volume per year with a yearly step (the rule of the former Kommunekonomi.Annual): capacity closes `adjustment` of the gap to
     fixed + (1 - fixed) x need once a year, and the year's cost uses the capacity after that step.
     needs[k] is the need at the end of year k (needs[0] = 1, the start). lag = 1 uses the need a year earlier."""
     capacity, out = [1.0] * 3, [1.0]
@@ -110,9 +110,9 @@ def continuous_volume(needs, shares, adjustment=ADJUSTMENT, fixed_share=FIXED_SH
 
 
 VARIANTS = {
-    'annual': ('Kommunekonomi.Annual: adjustment 0.5, fixed share 0.25, need at the end of the year',
+    'annual': ('A yearly step (the former Kommunekonomi.Annual): adjustment 0.5, fixed share 0.25, need at the end of the year',
                lambda needs, shares: annual_volume(needs, shares)),
-    'continuous': ('Kommunekonomi.Continuous.Economy (the site\'s default): the same parameters, capacity adjusts '
+    'continuous': ('Kommunekonomi.Continuous.Economy (the model): the same parameters, capacity adjusts '
                    'continuously and the cost is the year\'s mean', lambda needs, shares: continuous_volume(needs, shares)),
     'annualLagged': ('as annual with the need at the end of the year before (the timing data/cost-residual.json used)',
                      lambda needs, shares: annual_volume(needs, shares, lag=1)),

@@ -1,0 +1,107 @@
+{
+  "description": "Likviditetsreserv: kassan ska vara minst reserveDays/365 av utbetalningarna (drift, investering och ränta) minus outnyttjad checkkredit och kreditlöften som kommunen själv förfogar över (creditLine, mnkr). Kommunens egen regel där den finns i dagar; annars standard 30 dagar. Krediten där årsredovisningen anger ett belopp; annars noll. Dokumenten ligger i det privata repot, styrdokument/.",
+  "default": {
+    "reserveDays": 30,
+    "creditLine": 0,
+    "note": "Standard: 30 dagars utbetalningar, ingen känd kredit."
+  },
+  "municipalities": {
+    "0509": {
+      "reserveDays": 30,
+      "creditLine": 15,
+      "note": "Ödeshög: betalningsberedskap om 30 betalningsdagar (Finanspolicy, KF 2017-05-16 § 21, avsnitt 4.2). Checkräkningskredit 15 mnkr (årsredovisning 2025, s. 22; samma 2021–2024).",
+      "sources": [
+        "https://www.odeshog.se/download/18.50544c211605519723d77efb/1698130602843/Finanspolicy-t.pdf"
+      ]
+    },
+    "0512": {
+      "reserveDays": 30,
+      "creditLine": 0,
+      "note": "Ydre: finanspolicyn är inte publicerad. Årsredovisningarna 2021–2023 har ett finansiellt mål i kvot (betalningsberedskapen minst 100 % av lån som förfaller inom ett år), inte i dagar; standard 30 dagar. Checkkredit finns men beloppet anges inte; noll antas.",
+      "sources": []
+    },
+    "0513": {
+      "reserveDays": 30,
+      "creditLine": 30,
+      "note": "Kinda: likvida medel inklusive checkräkningskredit motsvarande minst 30 dagars betalningsberedskap (Finanspolicy, KF 2019-09-16 § 96, avsnitt 4.1). Checkkredit 30 mnkr, outnyttjad (årsredovisning 2025, not 16 Kassa och bank).",
+      "sources": [
+        "https://www.kinda.se/download/18.10f955711960efad56e3993/1744036950343/Finanspolicy.pdf"
+      ]
+    },
+    "0560": {
+      "reserveDays": 30,
+      "creditLine": 10,
+      "note": "Boxholm: \"tillfredställande betalningsberedskap\" utan siffra (Finanspolicy, KF 2016-04-11 § 33, avsnitt 4); standard 30 dagar. Checkkredit 10 mnkr (årsredovisning 2025, s. 17).",
+      "sources": [
+        "https://www.boxholm.se/download/18.2004b681199fffdce8c577ed/1761574285490/Finanspolicy_2.pdf"
+      ]
+    },
+    "0561": {
+      "reserveDays": 30,
+      "creditLine": 0,
+      "note": "Åtvidaberg: \"god betalningsberedskap\" utan siffra (Ekonomistyrningsprinciper, KF 2023-12-13 § 106, Likviditetsförvaltning); standard 30 dagar. Kredit anges inte i årsredovisningarna; noll antas.",
+      "sources": [
+        "https://www.atvidaberg.se/download/18.389c6eb718cd15e40905708f/1704883286353/ekonomistryrningsprinciper.pdf"
+      ]
+    },
+    "0562": {
+      "reserveDays": 30,
+      "creditLine": 0,
+      "note": "Finspång: betalningsberedskap 30 dagar, (likvida medel + kreditlöften)/(utbetalningar/365) (Finansiella riktlinjer, KS 2025-04-09 § 102, avsnitt 6.1.2). Kredit okänd; noll antas.",
+      "sources": [
+        "https://finspang.se/download/18.561020fb18529b3aa4a7d431/1747822317036/Finansiella%20riktlinjer.pdf"
+      ]
+    },
+    "0563": {
+      "reserveDays": 60,
+      "creditLine": 0,
+      "note": "Valdemarsvik: kassa och bank minst 30 betalningsdagar och tillgängliga likvida medel minst 60 betalningsdagar (Finanspolicy, KF 2022-04-04 § 47, avsnitt 4.1). Ingen kredit nämns, så 60 dagar gäller kassan.",
+      "sources": [
+        "https://www.valdemarsvik.se/wp-content/uploads/2021/09/finanspolicy.pdf"
+      ]
+    },
+    "0580": {
+      "reserveDays": 30,
+      "creditLine": 0,
+      "note": "Linköping: likviditet minst en månads löpande utgifter, räknat som bankmedel plus tillgängliga checkkrediter (Kommunens riskinstruktion, KS 2025-12-16 § 326, avsnitt 2.1). Koncernens checkkredit 2 100 mnkr delas med bolagen och kommunen hade 787 mnkr utnyttjat vid årsskiftet (årsredovisning 2025, s. 18 och not 20); kommunens outnyttjade del anges inte, så noll antas.",
+      "sources": [
+        "https://www.linkoping.se/kommun-och-politik/sa-styrs-linkopings-kommun/regler-och-styrande-dokument"
+      ]
+    },
+    "0581": {
+      "reserveDays": 30,
+      "creditLine": 0,
+      "note": "Norrköping: likviditetsberedskapen för tolv månader mäts med S&P:s DSCR och ska överstiga 120 % (Riktlinje för kommunkoncernens finansverksamhet, KS 2025-11-17, avsnitt 4.1.1), inte i dagar; standard 30 dagar. Årsredovisningen 2025 anger koncernens krediter (1 437 mnkr) men inte kommunens outnyttjade checkkredit; noll antas.",
+      "sources": [
+        "https://norrkoping.se/download/18.4db05994188ba05ea203a4b/1768987648770/Riktlinje%20f%C3%B6r%20kommunkoncernens%20finansverksamhet.pdf"
+      ]
+    },
+    "0582": {
+      "reserveDays": 30,
+      "creditLine": 70,
+      "note": "Söderköping: finanspolicyn (KF december 2023) är inte publicerad; standard 30 dagar. Checkkredit 70 mnkr tillsammans med Ramunderstaden AB \"för att säkerställa betalningsberedskapen\" (årsredovisning 2025, avsnitt 1.3.6).",
+      "sources": []
+    },
+    "0583": {
+      "reserveDays": 30,
+      "creditLine": 200,
+      "note": "Motala: checkkredit 200 mnkr, outnyttjad (årsredovisning 2023, not 17 Kassa och bank; 2024 års förvaltningsberättelse nämner krediten). Finanspolicyn (KF 2022-10-31 § 130, avsnitt 4) kräver alltid en likviditetsreserv och räknar krediten dit; beloppet står i bilagan Limiter och riktlinjer, som inte är publicerad. 30 dagar är standardantagandet.",
+      "sources": [
+        "https://www.motala.se/media/uploads/Finanspolicy.pdf",
+        "https://www.motala.se/media/uploads/MK-arsredovisning-2023-laguppl.pdf"
+      ]
+    },
+    "0584": {
+      "reserveDays": 30,
+      "creditLine": 15,
+      "note": "Vadstena: finanspolicyn (KF 2022-12-14 § 154) och riktlinjerna är inte publicerade; standard 30 dagar. Checkkredit 15 mnkr hos Vadstena Sparbank, outnyttjad (årsredovisning 2025, s. 22 och not 16).",
+      "sources": []
+    },
+    "0586": {
+      "reserveDays": 30,
+      "creditLine": 0,
+      "note": "Mjölby: finanspolicyn är inte publicerad; årsredovisningen 2025 (s. 9) anger \"tillfredställande betalningsberedskap\" utan siffra; standard 30 dagar. Kredit anges inte; noll antas.",
+      "sources": []
+    }
+  }
+}

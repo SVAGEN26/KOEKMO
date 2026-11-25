@@ -73,6 +73,10 @@ export function calibrateContinuous(history) {
   return {deathRates:rates,migration:rates.map((_,i)=>sum(flows.map(f=>f[i]))/flows.length),continuous:true};
 }
 // Genomsnittlig räntebindning vid basårets slut (data/rate-fixing.json, ur årsredovisningarna); annars tabellens antagande.
+// The municipality's liquidity rule as attached to the baseline (b.liquidity), else the standard: 30 days, no credit line.
+export const STANDARD_LIQUIDITY={reserveDays:30,creditLine:0,note:'Standard: 30 dagars utbetalningar, ingen känd kredit.'};
+export function liquidityRule(b) {return b?.liquidity??STANDARD_LIQUIDITY;}
+export function liquidityFor(table,code) {return table?.municipalities?.[code]??table?.default??STANDARD_LIQUIDITY;}
 export function rateFixing(table,code,year) {
   return table?.municipalities?.[code]?.[year]??table?.default??{years:3,note:'Antagande: 3 år'};
 }
@@ -108,7 +112,7 @@ export function validate(b,a) {
   if(a.rateShockMonth!=null&&(!Number.isInteger(a.rateShockMonth)||a.rateShockMonth<1||a.rateShockMonth>12)) throw Error('Räntehöjningens månad ska vara 1–12.');
   if(a.rateFixingYears!=null&&(!Number.isFinite(a.rateFixingYears)||a.rateFixingYears<0||a.rateFixingYears>15)) throw Error('Räntebindningen ska vara 0–15 år.');
   if(a.projectChoice&&a.projectChoice!=='none'&&(!b.project||b.project.openingStock>b.workInProgress)) throw Error('Projektunderlaget matchar inte valt basår.');
-  if(a.timeModel!=null&&!['annual','continuous'].includes(a.timeModel)) throw Error('Ogiltigt val av tid i modellen.');
+  if(a.timeModel!=null&&a.timeModel!=='continuous') throw Error('Modellen räknar bara i kontinuerlig tid.');
   if(a.demographyMode!=null&&!['legacy','observed','cohort','cohort-observed'].includes(a.demographyMode)) throw Error('Ogiltig befolkningsmodell.');
   if(a.employerContributionRate!=null&&a.employerContributionRate!==-1&&(!Number.isFinite(a.employerContributionRate)||a.employerContributionRate<0||a.employerContributionRate>100)) throw Error('Sociala avgifter måste anges i procent av lönen.');
   if(a.constructionYears!=null&&(!Number.isInteger(a.constructionYears)||a.constructionYears<0||a.constructionYears>5)) throw Error('Byggtiden ska vara 0–5 hela år.');
@@ -121,7 +125,9 @@ export function validate(b,a) {
     if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>365)) throw Error('Betalningstiden ska vara 0–365 dagar.');
   }
   if(a.firstYearGrantAdvance!=null&&(!Number.isFinite(a.firstYearGrantAdvance)||a.firstYearGrantAdvance<0)) throw Error('Bidragsförskottet ska vara minst noll.');
-  if(a.cashReserve!=null&&(!Number.isFinite(a.cashReserve)||a.cashReserve<0)) throw Error('Kassareserven ska vara ett belopp på minst noll.');
+  if(a.reserveDays!=null&&(!Number.isFinite(a.reserveDays)||a.reserveDays<0||a.reserveDays>365)) throw Error('Likviditetsreserven ska vara 0–365 dagar.');
+  if(a.creditLine!=null&&(!Number.isFinite(a.creditLine)||a.creditLine<0)) throw Error('Krediten ska vara ett belopp på minst noll.');
+  if(a.reserveAdjustmentTime!=null&&(!Number.isFinite(a.reserveAdjustmentTime)||a.reserveAdjustmentTime<0||a.reserveAdjustmentTime>20)) throw Error('Tiden till reserven ska vara 0–20 år.');
   for(const key of ['deferInvestmentShare','prefinanceShare']) {
     if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>1)) throw Error('Andelarna för senare betalning och förfinansiering ska vara 0–100 procent.');
   }
@@ -219,8 +225,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   if(history.length<2||history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
   if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear,b.municipality); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
   // Continuous time: death rates per year and a residual flow calibrated for flows during the year.
-  const continuous=a.timeModel==='continuous';
-  const c=continuous?calibrateContinuous(history):calibrate(history),o=b.operatingAccounts;
+  const c=calibrateContinuous(history),o=b.operatingAccounts;
   const observed=['observed','cohort-observed'].includes(a.demographyMode),cohort=a.demographyMode?.startsWith('cohort')??false;
   const evidence=b.experiments;
   if((observed||a.splitPayroll)&&!evidence) throw Error('SCB-underlag saknas för valt basår.');
@@ -237,7 +242,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     return v;
   };
   const fields={p0:b.population,deathRates:c.deathRates,residualMigration:c.migration,migrationWeights:a.migrationWeights,educationWeights:a.educationWeights,sectorCosts:a.sectorCosts,tax0:b.tax,grants0:b.grants,debt0:b.debt,cash0:b.cash,assets0:b.assets,depreciation0:b.depreciation,financialIncome:b.financialIncome,otherFinancialExpense:b.otherFinancialExpense,payroll0:o.payrollExcludingPensions,pension0:o.pensionExpense,otherOperatingExpense0:o.otherOperatingExpense,operatingRevenue0:o.operatingRevenue,netCostRoundingAdjustment:o.netCostRoundingAdjustment,births0:b.births,migrationDelta:a.migrationDelta,taxRate:a.taxRate,baseTaxRate:b.taxRate,investment:a.investment,adjustment:a.adjustment,equalisationOffset:a.equalisationOffset,fixedShare:a.fixedShare,populationRevenueElasticity:a.populationRevenueElasticity};
-  if(continuous) fields.mortalityRates=c.deathRates;
+  fields.mortalityRates=c.deathRates;
   if(observed) fields.migrationWeights=toGroups(evidence.arrivalWeights);
   const profile=Object.hasOwn(migrationProfiles,a.migrationProfile)?migrationProfiles[a.migrationProfile]:null;
   if(profile) fields.migrationWeights=profile;
@@ -290,9 +295,15 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     fields.paymentDays=a.paymentDays??days.paymentDays;
     fields.firstYearGrantAdvance=a.firstYearGrantAdvance??0;
   }
-  if(a.liquidityPolicy) {
-    fields.liquidityPolicy=true;
-    fields.cashReserve=a.cashReserve??0;
+  // Liquidity reserve (data/liquidity.json, b.liquidity): on unless the scenario turns it off; the municipality's own rule,
+  // or 30 days of payments and no credit line.
+  const liquidity=liquidityRule(b);
+  fields.liquidityPolicy=a.liquidityPolicy??true;
+  fields.reserveDays=a.reserveDays??liquidity.reserveDays;
+  fields.creditLine=a.creditLine??liquidity.creditLine;
+  // From the accounts' own days toward the reserve, with this time constant in years (0: the reserve from the start).
+  fields.reserveAdjustmentTime=a.reserveAdjustmentTime??3;
+  if(fields.liquidityPolicy) {
     fields.deferInvestmentShare=a.deferInvestmentShare??0;
     fields.prefinanceShare=a.prefinanceShare??0;
   }
@@ -333,7 +344,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     'demography.observedDeltaShape':evidence.arrivalWeights,
     'demography.useObservedDeltaShape':!profile
   }:null;
-  return {assumptions:a,calibration:c,inputs,fields,cohort,continuous,ageMigration,
+  return {assumptions:{...a,timeModel:'continuous'},calibration:c,inputs,fields,cohort,ageMigration,
     planningStatus:b.planningInputs?'Sourced population and annual SKR assumptions':'Illustrative assumptions',
     revenueStatus:revenuePath?'Imported revenue path':'Illustrative revenue path'};
 }

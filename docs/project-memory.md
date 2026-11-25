@@ -3,6 +3,49 @@
 Uppdaterat 2026-11-23. Överst läget och det som är öppet; därunder daterade avsnitt,
 inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 
+## Årsmodellen borttagen (2026-11-25)
+
+- Användaren: "Jag skulle om det är möjligt ta bort den årsvisa modellen. Följer inte riktigt systemdynamiktänket"
+  och "old tests can be removed". Borttaget: `Kommunekonomi.Annual`, `Components.Services`, `OperatingAccounts`,
+  `Capital`, `WorkingCapital`, `Finance`, `Interfaces.OperatingCost`; `Motala.Annual`, `Examples.AnnualCohort` och
+  varje kommuns `Annual`; omslaget `MotalaBrowser`; valet "Tid i modellen" på sidan; `site/src/engine.js`,
+  `scripts/export_reference.mjs`, `validate_modelica.py`, `modelica/validate.py`, `compare_hindcasts.py`;
+  `data/vintage-hindcast.json`, `data/long-hindcast.json`, 0562/0586 `vintage-hindcast.json`.
+- Kvar med årssteg: `Components.Demography`, `CohortDemography`, `DemographyBase` och `Motala.Examples.DemographyOnly`
+  för demografitesterna (`scripts/hindcast_demography.py`, `hindcast_county_ages.py`), och den årsvisa regeln som
+  jämförelse i `scripts/response_test.py`.
+- Exemplen `Hindcast2025`, `Budget2026`, `Hindcast2025Cohort` och kommunernas `Hindcast2025` räknar nu kontinuerligt.
+- Tester: `jit-parity` → `jit-model.test.mjs` (motorjämförelsen och mekanismtester som `jit-continuous` täcker
+  borttagna); `engine.test.mjs` → `scenario-inputs.test.mjs` plus modellegenskaper i `jit-model`; `planning` och
+  `pdf-report` kör den kontinuerliga modellen.
+- Gränser som kontinuerlig tid ger: kortare horisont ändrar kassa och skuld upp till 0,5 mnkr (löne- och
+  prisnivån vid årsskiftet lutar sig mot nästa års tillväxt, och reserven följer utbetalningarna); +1 kr skatt
+  ger 1,2 mnkr lägre ränta år 1 (Motala); olika flyttprofiler skiljer 2,5 personer år 1 (äldre dör oftare).
+- README:s tabeller för bakåttestet mot SKR:s cirkulär är från årsmodellen och ska göras om; det långa bakåttestets
+  tabell är byggd ur `long-hindcast-continuous.json`, som kördes före likviditetsreserven.
+
+## Granskning av den kontinuerliga modellen (2026-11-25, underagent, läsande, kontrollerat med omc)
+
+- Rättat: reserven nåddes inom en månad oavsett bokslutets kassa (Norrköping lånade 1 083 mnkr i januari 2026,
+  resultat −43 mnkr; 9 av 13 kommuner flyttade mer än 5 % av skulden). Nu börjar kassan på bokslutets egna dagar,
+  365·(kassa + kredit)/utbetalningar, och går mot reserveDays med `reserveAdjustmentTime` (standard 3 år).
+  Motala 2026: +25 mnkr lån i stället för +78; Norrköping 2026: resultat −6 mnkr i stället för −43.
+- Öppet, inte rättat (gällde före ändringarna):
+  1. Femgruppsdemografin delar 65+ med basårets fasta andelar, så `careIndex` = 65+-kvoten och Koladas vikter
+     verkar inte; 80+ växer 6 % till 2033 mot 29 % med ettårsåldrar (SCB:s projektion 28 %). Grovt 57 mnkr/år 2033
+     för Motala. Störst kvarvarande fel.
+  2. Kassan ger ingen ränta (finansiella intäkter fasta i kronor); en reserv lånas till full ränta. Norrköping med
+     30 dagar och okänd kredit bygger 1,2 mdkr kassa till 2033, resultat −60 mnkr det året.
+  3. Räntesatsen kalibreras på ingående skuld men tas på aktuell skuld (Ödeshög: ränta 2026 +45 % mot basåret).
+  4. Femgrupps-åldrandet p/bredd gör basårets åldersstruktur till "flyttning" (7–15 år +8 % 2033 mot ettårsåldrar).
+  5. Förfinansierad kassa amorteras 1 januari år 2 och lånas igen.
+  6. Ettårsåldrar: summerad fruktsamhet 1,41 för alla ger 6 % färre födda än basåret i Motala.
+  7. Demografierna kalibreras med olika fönster och källor (Motala 2033: 40 490 mot 40 725).
+  8. Pensionskostnaden är en fast bana på 2 %/år, oberoende av löner och volym.
+  9. Verksamhetens intäkter följer inte priserna (inflationschocken överskattas).
+  10. Bakåttest ser rikets faktiska folkmängd (framtida data).
+  11. 100+ dör med 99-åringars risk; basårsraden visar döda = 0; MotalaBrowser har interestRate 21/940 mot 21/1040.
+
 ## Läget 2026-11-24
 
 - Mål: ett interaktivt verktyg för beslutsfattare. Bakåttestet är en kontroll, inte målet.
@@ -1510,6 +1553,27 @@ arkivera data.
     och betalningsberedskap 30 dagar = (likvida medel + kreditlöften)/(alla in- och utbetalningar/365).
   - 30 dagars utbetalningar (driftkostnad + investering + ränta, basår 2025): Motala 284 mnkr mot kassa 81 + checkkredit
     200 = 281; Finspång 136 mnkr mot kassa 148. Båda ligger alltså nära 30 dagar.
+- Likviditetsreserv i modellen (2026-11-25): `reserveDays`/365 av utbetalningarna (löner med sociala avgifter,
+  pensionsutbetalningar, övriga kostnader, investering och ränta) minus `creditLine`. På som standard
+  (`liquidityPolicy = true`). Kommunernas regler i `data/liquidity.json` och som kommentar i varje Modelica-paket
+  (skrivs av `scripts/prepare_municipality.py`). Dokumenten i privata repot `styrdokument/`.
+  - Regel i dagar: Ödeshög 30, Kinda 30, Linköping en månad (30), Valdemarsvik 60 (varav 30 i kassa), Finspång 30.
+  - Ingen siffra eller kvot: Boxholm, Åtvidaberg, Norrköping (DSCR > 120 %), Ydre (kvot mot lån som förfaller);
+    inte publicerad: Ydre, Söderköping, Vadstena, Mjölby, och Motalas bilaga. Dessa får 30 dagar.
+  - Kredit: Motala 200, Söderköping 70 (gemensam med Ramunderstaden), Kinda 30, Ödeshög 15, Vadstena 15, Boxholm 10.
+    Linköping och Norrköping anger koncernkrediter men inte kommunens outnyttjade del: noll.
+  - Motala 2026: reserv 150 mnkr, kassan går 81 → 158, resultatet 1,6 mnkr lägre av räntan.
+  - Den kontinuerliga finansieringen är nu `financingNeed = (reserv − kassa)/reserveRestoreTime − net`; lån = max(0,
+    behov), amortering = min(max(0, −behov), skuld/reserveRestoreTime). Den gamla regeln växlade vid reserven och
+    fastnade (Finspång, 857 MB händelser).
+- Vägar ur Kolada (2026-11-25, API v3, hämtat till scratch, inte arkiverat): N07810 kommunal bil- och cykelväg (m),
+  N07811 bilväg, N07812 cykelväg, N07807 m/inv, alla 13 kommuner 2012–2025 (brott i serien 2014–2015). N07024
+  nettokostnad väg- och järnvägsnät, parkering (kr/inv) 1998–2025. Driftkostnad per meter (U07427, U07501) och
+  beläggningsunderhåll (U07456) bara för Kinda, Åtvidaberg, Linköping, Vadstena, Mjölby.
+  - Motala: 405 km 2015, 411 km 2025; nästan oförändrat. Nettokostnad 1 523 kr/inv 2025 ≈ 65 mnkr ≈ 160 kr/m.
+  - Över de 13 kommunerna förklarar väglängd per invånare inte nettokostnaden per invånare: r 0,40 (2019),
+    −0,16 (2022), −0,10 (2025). Driftkostnad per meter: Kinda 35, Vadstena 62, Mjölby 87, Linköping 102,
+    Åtvidaberg 152 kr/m (senaste år).
 - Omvänd beräkning: med resultatmål görs två extra körningar (skattesats +1 kr, kostnadsökning −0,5 procentenheter);
   ändringen som når målet löses per år linjärt, med hänsyn till att målet i kronor växer med skatten. Kontroll i
   webbläsare: Motala 21,76 kr ger 2,00 % 2026 och mer övriga år; Finspång 21,33 kr ger 2,00 % 2026.

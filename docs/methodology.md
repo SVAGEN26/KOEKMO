@@ -1,13 +1,14 @@
 # Methodology
 
-How the model computes a municipality's finances. Updated 2026-11-24. The
-library has two models with the same assumptions and outputs. The site runs
-`Kommunekonomi.Continuous.Economy` by default: money and population are stocks
-with flows in continuous time, and only annual rules are events. The yearly
-model, `Kommunekonomi.Annual`, takes one step a year and can be chosen on the
-site ("Tid i modellen"). The sections from Structure to Finance describe
-`Annual`, whose rules are the simplest to state; [Continuous time](#continuous-time)
-says what the default model does differently and what that changes. The
+How the model computes a municipality's finances. Updated 2026-11-25. The model
+is `Kommunekonomi.Continuous.Economy`: money and population are stocks with flows
+in continuous time, and only annual rules are events. Until November 2026 the
+library also had a yearly model, `Kommunekonomi.Annual`, with one step a year; it
+was removed so that one model in a system-dynamics form remains. The sections from
+Structure to Finance state the rules per year, the way they are simplest to read
+(and the way the removed yearly model ran them); [Continuous time](#continuous-time)
+says how the model runs them as flows. Comparisons with `Annual` below are the
+record of how the continuous model was checked while both existed. The
 equations are read from `modelica/Kommunekonomi.mo`; the Modelica documentation
 of each component says the same in Swedish.
 
@@ -280,8 +281,8 @@ reaches cash. Inventories and land for development are not included.
 
 ## Continuous time
 
-`Kommunekonomi.Continuous.Economy` has the same assumptions, parameters and
-outputs as `Annual`. What changes gradually is a stock with flows; only rules
+`Kommunekonomi.Continuous.Economy` had the same assumptions, parameters and
+outputs as the removed `Annual`. What changes gradually is a stock with flows; only rules
 that are annual by law or practice are events.
 
 Continuous:
@@ -376,9 +377,8 @@ higher in 2030 (430 against 257 mnkr); both have repaid it by 2031. The adjustme
 models, not an estimate, so neither is shown to be closer to what will happen.
 
 **Against outcomes.** Hindcast from SKR's December circulars 2020–2024
-(`HINDCAST_MODEL=Continuous python3 scripts/hindcast_vintages.py`,
-`scripts/compare_hindcasts.py`) and eight years from the 2017–2019 accounts
-(`HINDCAST_MODEL=Continuous python3 scripts/hindcast_long.py`).
+(`python3 scripts/hindcast_vintages.py`) and eight years from the 2017–2019 accounts
+(`python3 scripts/hindcast_long.py`).
 From the circulars, the result's mean absolute error after 1/2/3 years is
 40/60/60 mnkr for Motala against `Annual`'s 40/59/58, 37/76/59 against 37/75/59
 for Finspång and 42/67/126 against 41/65/116 for Mjölby. Tax and grants are
@@ -415,9 +415,9 @@ gives the same values but takes 20 s a run with single-year ages.
 ## Validation
 
 **Identities and parity.** Every year the model asserts population balance,
-asset, debt and cash balances and non-negative debt. `npm test` and
-`npm run validate:modelica` check native OpenModelica and the browser build
-against the independent JavaScript reference (`site/src/engine.js`).
+asset, debt and cash balances and non-negative debt. `npm test` checks the browser
+build against `Motala.Continuous` as written and against native OpenModelica. The
+JavaScript reference of the yearly model (`site/src/engine.js`) was removed with it.
 `npm run check:units` runs OpenModelica's unit checker on the library with the
 money units written as SI units it knows; see [modelica/README.md](../modelica/README.md)
 for what it covers.
@@ -426,7 +426,8 @@ for what it covers.
 2020–2024 with only what SKR's December circular of that year assumed, and runs
 up to three years, not past 2025. Outcomes are Motala's annual reports
 (`research/data/annual-ledgers.json`) and SCB for the others. Results are in
-`data/vintage-hindcast.json`; the README has a summary. One year ahead the
+`data/vintage-hindcast-continuous.json`; the README has a summary (its tables were
+made with the yearly model and are to be redone). One year ahead the
 model's result is off by 40 mnkr on average for Motala, the municipality's
 budget by 24 and keeping the base year's result (persistence) by 59. The
 "components" set adds the state's grant decisions in the circular. With hindsight
@@ -449,7 +450,7 @@ of hindsight the model loses to the benchmark at every horizon. The population i
 costs and grants together, and debt is too low by 20 % of tax and grants because
 investment is held at the base year's level. The historical cost residual known in the base year, as
 `costDrift`, makes it worse (net cost +11.5 % after eight years), so its default
-is 0. Results in `data/long-hindcast.json`. Base years 2017–2019 use SCB's older
+is 0. Results in `data/long-hindcast-continuous.json`. Base years 2017–2019 use SCB's older
 series (`scripts/fetch_history.py`); Linköping and Vadstena get a 2 % interest
 rate there, since SCB's debt gives none. Boxholm's care weights for 2017 and 2018
 are the 2019 ones.
@@ -502,8 +503,8 @@ from resampling municipalities with their years (cluster bootstrap). Results in
   per year 2012–2025: 0.84 (−0.10 to 1.34), and 0.21 % a year more than PKV on
   average.
 
-The test's Python copy of the capacity rule is checked against `Finspang.Annual`
-(to 1e-9) and `Finspang.Continuous` (to 5e-5) in `tests/test_response.py`. Not
+The test's Python copy of the capacity rule is checked against `Finspang.Continuous`
+(to 5e-5) in `tests/test_response.py`. Not
 tested: the interest rate's pass-through, the tax rate and pension costs. The
 inflation scenario's shares are compared with 2022–2025 under "Explaining an
 outcome" below. The 2020 reform of the cost equalisation falls
@@ -601,14 +602,14 @@ the hindsight and prices sets use outcomes on purpose.
 
 The site compiles `Kommunekonomi.mo`, the municipality's package and
 `MotalaBrowser.mo` with OpenModelica's web compiler (`wasm-jit`), and re-runs the
-compiled model with `-override` for every scenario. `MotalaBrowser.mo` holds two
-wrappers without equations of their own: `MotalaBrowserContinuous` around
-`Motala.Continuous` (the default) and `MotalaBrowser` around `Motala.Annual`.
+compiled model with `-override` for every scenario. `MotalaBrowser.mo` holds the
+wrapper `MotalaBrowserContinuous` around `Motala.Continuous`, without equations of
+its own.
 Inputs are validated in JavaScript, and the model asserts the same limits. The
 compiler revision and file hashes are in `omc-web/manifest.json` on the site. No
 resident-level data are used or stored.
 
-For the continuous model the page computes the death rates and the residual
+The page computes the death rates and the residual
 flow in JavaScript (`calibrateContinuous` and `inflowBetween` in
 `site/src/scenario-inputs.js`), the same way as `Data.deathRatesPerYear` and
 `Data.calibratedMigrationRates`. With SCB's projection the residual flow is the
@@ -617,15 +618,14 @@ births included, so the model's population at each year end is the projection's.
 
 `tests/jit-continuous.test.mjs` runs the staged compiler in Node and checks that
 the page's inputs give `Motala.Continuous` as written (to 1e-8), that the
-population is SCB's projection at every year end, that tax and grants equal
-`Annual`'s, that wages and prices rise by the stated growth also through a
+population is SCB's projection at every year end, that wages and prices rise by the stated growth also through a
 3 → 9 → 0 % shock, that every option keeps the balance checks, that `ida` agrees
 with DASSL, that the exported `Scenario.mo` reproduces the page's run, that all
 13 municipalities run from the 2024 and 2025 accounts, and that the page's
 solver gives native OpenModelica's DASSL within 0.01 mnkr.
-`tests/jit-parity.test.mjs` checks the yearly model against the independent
-JavaScript reference (`site/src/engine.js`), which covers `Annual` only.
+`tests/jit-model.test.mjs` checks the base years, Finspång, the migration profiles,
+the single-year ages for every municipality and properties such as a tax rate
+change not being cancelled by equalisation.
 
-A run takes about 0.1 s in either model, 0.2 s with `ida`, and 0.4 s with
-single-year ages in continuous time (0.1 s in `Annual`; 1.5 s with `ida`). A
+A run takes about 0.2 s with `ida`, and 1.5 s with single-year ages. A
 page update runs about ten scenarios.

@@ -7,7 +7,7 @@ The residual is measured on the basis the model applies costDrift to. The model 
 other operating expenses (gross, before operating revenue) by the cost standard; their volume follows the
 service volume: per sector, capacity closes half the gap to 0.25 + 0.75 x demand each year (the model's
 defaults adjustment 0.5 and fixedShare 0.25), and demand in year y is the need from the population at the
-end of year y, as in Kommunekonomi.Annual. Operating revenue follows prices and the same population, not
+end of year y (a yearly approximation of Kommunekonomi.Continuous). Operating revenue follows prices and the same population, not
 the standard. The residual of a year is the costDrift that makes the model's net cost grow as the outcome did:
 
   net_y / (1 + PKV_y) = gross_{y-1} x volume growth x (1 + residual) - revenue_{y-1} x population growth
@@ -126,7 +126,7 @@ def series(pop, net, gross, prices, care, shares):
     capacity = [FIXED_SHARE + (1 - FIXED_SHARE) * 1.0] * 3  # steady state with the population at the end of FIRST - 1
     volume = {}
     for y in range(FIRST, 2026):
-        demand = [n / f for n, f in zip(need(y), first)]  # the need at the end of the year, as in Kommunekonomi.Annual
+        demand = [n / f for n, f in zip(need(y), first)]  # the need at the end of the year
         capacity = [c + ADJUSTMENT * (FIXED_SHARE + (1 - FIXED_SHARE) * d - c) for c, d in zip(capacity, demand)]
         volume[y] = sum(s * c for s, c in zip(share, capacity))
     rows = {}

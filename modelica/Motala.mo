@@ -146,7 +146,7 @@ kommer att hända; kommunen gör prognoser för innevarande år i april och augu
 <h4>Hur begreppen hänger ihop i modellen</h4>
 <p>Demografi ger befolkningen. Verksamhet räknar behovet av skola och omsorg. Drift ger nettokostnaden, Intäkter ger
 skatt och bidrag och Kapital ger avskrivningarna. I Finans möts allt: resultat, kassaflöde, nya lån och skuld. Pilarna i
-diagrammet för <a href=\"modelica://Motala.Annual\">Motala.Annual</a> följer den kedjan.</p>
+diagrammet för <a href=\"modelica://Motala.Continuous\">Motala.Continuous</a> följer den kedjan.</p>
 </html>"));
     end Ordlista;
     annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html><p>Börja med <a href=\"modelica://Motala.Handledning.Ordlista\">ordlistan</a>
@@ -631,60 +631,45 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -30}, {92, 40}}, textString = "Data"), Text(textColor = {90, 110, 130}, extent = {{-92, -80}, {92, -35}}, textString = "basår")}), 
       Documentation(info = "<html><p>Varje konstant innehåller det som publicerats för ett basår. Modellen kalibrerar
 dödlighet och restflöden från den (se Assumptions). Starta från ett annat år med
-<code>Annual(base = Data.motala2024)</code>. Värdena avser kommunen, inte koncernen.</p>
+<code>Continuous(base = Data.motala2024)</code>. Värdena avser kommunen, inte koncernen.</p>
 <p>Källor: Motala kommuns årsredovisningar, SCB och Kolada; se respektive post och paketet <code>SCB</code>.</p></html>"));
   end Data;
 
-  model Annual "Motalas ekonomi år för år: demografi, verksamhet, drift, intäkter, kapital och finans"
-    extends Kommunekonomi.Annual(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population));
-    annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
-      Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Med ett annat basår
-(<code>base</code>) ska starttiden vara det året.</p>
-<p><a href=\"modelica://Kommunekonomi.Annual\">Kommunekonomi.Annual</a> med Motalas bokslut 2025 (<code>Data.motala2025</code>)
-som standard. Starta från ett annat år med <code>Annual(base = Data.motala2024)</code>; basåren 2020-2025 finns.
-Uppdelningen av de äldre i femgruppsdemografin är SCB:s för 2025.</p></html>"));
-  end Annual;
   model Continuous "Motalas ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population));
+    // Checkkredit 200 mnkr, outnyttjad: årsredovisning 2023, not 17 Kassa och bank. Finanspolicyn (KF 2022-10-31 § 130, avsnitt 4)
+    // räknar krediten till likviditetsreserven; reservens storlek står i den opublicerade bilagan "Limiter och riktlinjer",
+    // så reserveDays är standardvärdet 30. Källor: https://www.motala.se/media/uploads/Finanspolicy.pdf och data/liquidity.json.
+    extends Kommunekonomi.Continuous.Economy(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population), creditLine = 200);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
-      Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Samma antaganden och utdata som
-<a href=\"modelica://Motala.Annual\">Annual</a>, men pengarna är lager och flöden i kontinuerlig tid inom året
-(<a href=\"modelica://Kommunekonomi.Continuous.Economy\">Kommunekonomi.Continuous.Economy</a>). Årsvärdena gäller vid
-årsskiftena; mellan dem visas året månad för månad.</p></html>"));
+      Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Med ett annat basår
+(<code>base</code>) ska starttiden vara det året; basåren 2020-2025 finns, till exempel <code>Continuous(base = Data.motala2024)</code>.</p>
+<p><a href=\"modelica://Kommunekonomi.Continuous.Economy\">Kommunekonomi.Continuous.Economy</a> med Motalas bokslut 2025
+(<code>Data.motala2025</code>): pengar och invånare är lager och flöden i kontinuerlig tid. Årsvärdena gäller vid
+årsskiftena; mellan dem visas året månad för månad. Uppdelningen av de äldre i femgruppsdemografin är SCB:s för 2025.</p></html>"));
   end Continuous;
   package Examples "Färdiga modeller att simulera"
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet 105 och budgeten 96 mnkr"
-      extends Annual(base = Data.motala2024, horizon = 1);
-      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1),
+      extends Continuous(base = Data.motala2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333),
         Documentation(info = "<html><p><b>Tid: start 2024 (bokslutet 2024), slut 2025.</b></p>
 <p>Ett år från bokslutet 2024 med modellens standardantaganden. Utfall 2025: resultat 105 mnkr. Budget 2025: 96 mnkr.
 De antaganden som var kända hösten 2024 (SKR, budget, pensionsprognos) är ännu inte inlagda.</p></html>"));
     end Hindcast2025;
-
-    model AnnualCohort "Annual med ettårsåldrar per kön (SCB-data); summerad fruktsamhet 1,41 om inget annat anges"
-      extends Annual(revenuePopulation0 = Data.SCB.groups(Data.SCB.populationForYear(base.year - 1)),
-        redeclare Kommunekonomi.Components.CohortDemography demography(data = Data.SCB.forYear(base.year), reportedTotal = sum(p0),
-        migrationWeights = migrationWeights));
-      annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
-        Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 2025), slut 2033.</b></p>
-<p>Samma ekonomi som Annual, men demografin är Kommunekonomi.Components.CohortDemography: ettårsåldrar per kön, dödsrisker som fortsätter
-sjunka i den historiska takten (sätt <code>improvement = Data.SCB.mortalityImprovement</code> för SCB:s framskrivning) och
-äldreomsorgen viktad efter 65-79, 80-89 och 90+. Byt födelsemodell i demografins parameterdialog eller med
-<code>redeclare Kommunekonomi.Components.Fertility.Projected fertility(firstYear = 2026)</code>.</p></html>"));
-    end AnnualCohort;
 
     model ContinuousCohort "Continuous med ettårsåldrar per kön (SCB-data)"
       extends Continuous(revenuePopulation0 = Data.SCB.groups(Data.SCB.populationForYear(base.year - 1)),
         redeclare Kommunekonomi.Continuous.CohortDemography demography(data = Data.SCB.forYear(base.year), reportedTotal = sum(p0),
         migrationWeights = migrationWeights));
       annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
-        Documentation(info = "<html><p>Som <a href=\"modelica://Motala.Examples.AnnualCohort\">AnnualCohort</a>, men med kontinuerlig tid
-inom året. Födelseårsgrupperna är lager; födda, döda och flyttningar är flöden, och åldern byter etikett vid årsskiftet
-(<a href=\"modelica://Kommunekonomi.Continuous.CohortDemography\">Kommunekonomi.Continuous.CohortDemography</a>).</p></html>"));
+        Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 2025), slut 2033.</b></p>
+<p>Samma ekonomi som Continuous, men demografin är ettårsåldrar per kön
+(<a href=\"modelica://Kommunekonomi.Continuous.CohortDemography\">Kommunekonomi.Continuous.CohortDemography</a>):
+födelseårsgrupperna är lager, födda, döda och flyttningar är flöden, och åldern byter etikett vid årsskiftet.
+Äldreomsorgen viktas efter 65-79, 80-89 och 90+. Summerad fruktsamhet 1,41 om inget annat anges.</p></html>"));
     end ContinuousCohort;
 
     model Budget2026 "Kommunens budget 2026-2028: budgetens investeringar, skatt och bidrag; modellens kostnader, räntor och lån"
-      extends AnnualCohort(horizon = 3, investmentPath = Data.budget2026.investment, referenceTax = Data.budget2026.tax,
+      extends ContinuousCohort(horizon = 3, investmentPath = Data.budget2026.investment, referenceTax = Data.budget2026.tax,
         referenceGrants = Data.budget2026.grants, revenueFromReference = true);
       // Budgetens siffror för samma år, att plotta mot modellens. Vid starttiden 2025 visas modellens värden.
       Real budgetResult = if year > 2025 then Data.budget2026.result[year - 2025] else result "Årets resultat enligt budgeten, mnkr";
@@ -695,7 +680,7 @@ inom året. Födelseårsgrupperna är lager; födda, döda och flyttningar är f
       Real budgetNewLoans = if year > 2025 then Data.budget2026.newLoans[year - 2025] else 0 "Nya lån enligt budgeten, mnkr";
       Real resultDifference = result - budgetResult "Modellens resultat minus budgetens, mnkr";
       Real netCostDifference = cost - budgetNetCost "Modellens nettokostnad minus budgetens, mnkr";
-      annotation(experiment(StartTime = 2025, StopTime = 2028, Interval = 1),
+      annotation(experiment(StartTime = 2025, StopTime = 2028, Interval = 0.0833333333333333),
         Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 2025), slut 2028.</b></p>
 <p>Följer kommunens budget 2026 med plan 2027-2028 där budgeten fattar beslut eller gör antaganden: investeringarna
 (755, 897 och 961 mnkr) och skatt och bidrag enligt budgetens belopp, som bygger på SKR:s prognos från oktober 2025.
@@ -709,8 +694,8 @@ ingående skuld (basårets räntekostnad delad med skulden vid årets början). 
     end Budget2026;
 
     model Hindcast2025Cohort "Starta i bokslutet 2024 med ettårsåldrar och räkna fram 2025"
-      extends AnnualCohort(base = Data.motala2024, horizon = 1);
-      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1),
+      extends ContinuousCohort(base = Data.motala2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333),
         Documentation(info = "<html><p><b>Tid: start 2024 (bokslutet 2024), slut 2025.</b></p></html>"));
     end Hindcast2025Cohort;
 
@@ -732,12 +717,12 @@ ingående skuld (basårets räntekostnad delad med skulden vid årets början). 
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Polygon(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, points = {{-35, 55}, {55, 0}, {-35, -55}, {-35, 55}})}));
   end Examples;
   annotation(uses(Kommunekonomi(version = "0.1.0")), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-70, -70}, {-35, 0}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-17, -70}, {18, 30}}), Rectangle(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, extent = {{35, -70}, {70, 60}})}), Documentation(info = "<html>
-<p><b>KOEKMO</b> (kommunekonomisk modell) räknar här Motala kommuns ekonomi år för år: befolkning, verksamhet, drift, skatt och bidrag,
+<p><b>KOEKMO</b> (kommunekonomisk modell) räknar här Motala kommuns ekonomi i kontinuerlig tid: befolkning, verksamhet, drift, skatt och bidrag,
 investeringar, resultat och lån. Belopp i mnkr och löpande priser; tiden är kalenderår.</p>
 <ul>
 <li><a href=\"modelica://Motala.Handledning.Ordlista\">Ordlista</a>: de ekonomiska begreppen.</li>
-<li><a href=\"modelica://Motala.Annual\">Annual</a>: modellen som webbplatsen kör, från bokslutet 2025.</li>
-<li><a href=\"modelica://Motala.Examples.AnnualCohort\">Examples.AnnualCohort</a>: samma modell med ettårsåldrar och
+<li><a href=\"modelica://Motala.Continuous\">Continuous</a>: modellen som webbplatsen kör, från bokslutet 2025.</li>
+<li><a href=\"modelica://Motala.Examples.ContinuousCohort\">Examples.ContinuousCohort</a>: samma modell med ettårsåldrar och
 äldreomsorgen viktad efter ålder.</li>
 <li><a href=\"modelica://Motala.Examples.Hindcast2025\">Examples.Hindcast2025</a>: från bokslutet 2024 fram till 2025,
 för att jämföra med utfallet.</li>

@@ -273,24 +273,21 @@ kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och ränt
 räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
-  model Annual "Valdemarsviks ekonomi år för år från bokslutet 2025"
-    extends Kommunekonomi.Annual(base = Data.valdemarsvik2025, olderShares = Data.olderShares);
-    annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
-      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
-Starta från ett annat år med <code>Annual(base = Data.valdemarsvik2024)</code>.</p></html>"));
-  end Annual;
-
   model Continuous "Valdemarsviks ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.valdemarsvik2025, olderShares = Data.olderShares);
+    // Valdemarsvik: kassa och bank minst 30 betalningsdagar och tillgängliga likvida medel minst 60 betalningsdagar
+    // (Finanspolicy, KF 2022-04-04 § 47, avsnitt 4.1). Ingen kredit nämns, så 60 dagar gäller kassan. Källa:
+    // https://www.valdemarsvik.se/wp-content/uploads/2021/09/finanspolicy.pdf
+    extends Kommunekonomi.Continuous.Economy(base = Data.valdemarsvik2025, olderShares = Data.olderShares, reserveDays = 60, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
-      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
-är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));
+      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
+Pengar och invånare är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy). Starta från
+ett annat år med <code>Continuous(base = Data.valdemarsvik2024)</code>.</p></html>"));
   end Continuous;
 
   package Examples "Färdiga modeller att simulera"
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet i Data.valdemarsvik2025"
-      extends Annual(base = Data.valdemarsvik2024, olderShares = Data.olderShares2024, horizon = 1);
-      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1));
+      extends Continuous(base = Data.valdemarsvik2024, olderShares = Data.olderShares2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333));
     end Hindcast2025;
   end Examples;
   annotation(uses(Kommunekonomi(version = "0.1.0")), Documentation(info = "<html><p>Valdemarsvik (kommunkod 0563) med biblioteket

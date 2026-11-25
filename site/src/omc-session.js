@@ -9,18 +9,17 @@ export const OUTPUTS=['population','population80Plus','births','deaths','migrati
   'depreciation','tax','grants','recurringTaxAdjustment','incomeEqualisationAdjustment','regulationPopulationAdjustment','result','debt','cash','assets','commissioned','workInProgress','interest','borrowing',
   'repayment','prefinancing','outstandingDeferredInvestment','projectPaid','projectCommissioned','projectWorkInProgress',
   'projectPlacesInUse','missingProjectPlaces','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
-export const MODEL='MotalaBrowser';
-// The same wrapper around Motala.Continuous: stocks and flows in continuous time.
-export const CONTINUOUS_MODEL='MotalaBrowserContinuous';
+// The wrapper around Motala.Continuous: stocks and flows in continuous time.
+export const MODEL='MotalaBrowserContinuous';
 export const MAX_YEARS=100;
 // Continuous time is integrated with IDA, an implicit solver with its own step control; twelve values a year are
 // stored. It gives the values of native OpenModelica's DASSL within 0.01 mnkr, and it also takes the flows with
 // time constants of days to weeks (payment terms, the cash reserve, a project taken into use). The explicit
 // Runge-Kutta solver used until November 2026 was twice as fast but does not start in OpenModelica's web compiler
-// after September 2026. The yearly model takes one step a year (its equations are events).
+// after September 2026.
 export const STEPS_PER_YEAR=12;
 export const CONTINUOUS_METHOD='ida';
-// Simulation time is the calendar year: MotalaBrowser starts at the 2025 accounts.
+// Simulation time is the calendar year: the wrapper starts at the 2025 accounts.
 export const BASE_YEAR=2025;
 
 // fields: {name: number | boolean | nested arrays} → "name=…,name[i]=…,name[i,j]=…"
@@ -42,19 +41,19 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
     if(reply!=='true') throw Error(`OpenModelica kunde inte läsa ${name}: ${errors()||reply}`);
   }
   const models=new Map();
-  function compile(baseYear,cohort=false,observed=false,municipality=DEFAULT_MUNICIPALITY,continuous=false) {
+  function compile(baseYear,cohort=false,observed=false,municipality=DEFAULT_MUNICIPALITY) {
     const settings=municipalities[municipality];
     if(!settings) throw Error('Kommunen saknar modellpaket.');
-    const key=`${municipality}/${baseYear}/${cohort}/${observed}/${continuous}`;
+    const key=`${municipality}/${baseYear}/${cohort}/${observed}`;
     if(models.has(key)) return models.get(key);
     if(!Number.isInteger(baseYear)||baseYear<2020||baseYear>BASE_YEAR) throw Error('Basåret saknar modellunderlag.');
     const motala=municipality===DEFAULT_MUNICIPALITY;
     if(!motala&&!settings.firstYears.includes(baseYear+1)) throw Error('Basåret eller demografin saknar underlag för kommunen.');
-    const wrapper=continuous?CONTINUOUS_MODEL:MODEL;
-    const model=`${motala?wrapper:settings.packageName+'Browser'+(continuous?'Continuous':'')}${baseYear===BASE_YEAR?'':baseYear}${cohort?'Cohort':''}${observed?'Observed':''}`;
+    const wrapper=MODEL;
+    const model=`${motala?wrapper:settings.packageName+'BrowserContinuous'}${baseYear===BASE_YEAR?'':baseYear}${cohort?'Cohort':''}${observed?'Observed':''}`;
     if(model!==wrapper) {
       const ageModel=cohort?`,
-        redeclare Kommunekonomi.${continuous?'Continuous':'Components'}.CohortDemography demography(
+        redeclare Kommunekonomi.Continuous.CohortDemography demography(
           ${cohortModifiers(settings.packageName,baseYear)}
           ${observed?', residualMigration=zeros(2,101), observedDeltaShape=zeros(2,101), useObservedDeltaShape=false':''})`:'';
       const data=`${settings.packageName}.Data`;
@@ -67,9 +66,7 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
     }
     // Only the series the page reads are stored: writing every variable at every step costs more than the equations.
     const stored=JSON.stringify(`^(${[...OUTPUTS,'annualInvestment'].join('|')}|p\\[[1-5]\\])$`);
-    const built=String(omc.omc_eval(`buildModel(${model},startTime=${baseYear},stopTime=${baseYear+MAX_YEARS},variableFilter=${stored},`+(continuous
-      ?`numberOfIntervals=${MAX_YEARS*stepsPerYear},method="${method}")`
-      :`numberOfIntervals=${MAX_YEARS},method="euler")`)));
+    const built=String(omc.omc_eval(`buildModel(${model},startTime=${baseYear},stopTime=${baseYear+MAX_YEARS},variableFilter=${stored},numberOfIntervals=${MAX_YEARS*stepsPerYear},method="${method}")`));
     if(!built.includes(`${model}_init.xml`)) throw Error(`OpenModelica kunde inte kompilera modellen: ${errors()||built}`);
     models.set(key,model);
     return model;
@@ -79,17 +76,15 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
   // One simulation; returns per-year rows of OUTPUTS plus cohorts and investment.
   // inspect: {names} reruns the compiled model with every variable stored (-variableFilter=.* at simulation time, no new
   // compilation) and returns, besides the rows, the model's variables (name, comment, unit) and the named ones per year.
-  function run(fields,years,baseYear=BASE_YEAR,cohort=false,ageMigration=null,municipality=DEFAULT_MUNICIPALITY,continuous=false,inspect=null) {
+  function run(fields,years,baseYear=BASE_YEAR,cohort=false,ageMigration=null,municipality=DEFAULT_MUNICIPALITY,inspect=null) {
     if(!Number.isInteger(years)||years<1||years>MAX_YEARS) throw Error(`Modellen stöder 1–${MAX_YEARS} år.`);
-    const model=compile(baseYear,cohort,!!ageMigration,municipality,continuous);
-    // The wrapper has a hundred years of paths. In continuous time the wage and price rate at a year's end depends on
-    // the next year's growth: after the scenario's last year the growth stays, so that only the scenario shapes it.
-    if(continuous) {
-      const extend=path=>[...path,...Array(MAX_YEARS-path.length).fill(path.at(-1))];
-      fields={...fields,wageGrowthPath:extend(fields.wageGrowthPath),priceGrowthPath:extend(fields.priceGrowthPath)};
-    }
+    const model=compile(baseYear,cohort,!!ageMigration,municipality);
+    // The wrapper has a hundred years of paths. The wage and price rate at a year's end depends on the next year's
+    // growth: after the scenario's last year the growth stays, so that only the scenario shapes it.
+    const extend=path=>[...path,...Array(MAX_YEARS-path.length).fill(path.at(-1))];
+    fields={...fields,wageGrowthPath:extend(fields.wageGrowthPath),priceGrowthPath:extend(fields.priceGrowthPath)};
     // With single-year ages the 202 age stocks make IDA's Jacobian cost 20 s a run; its matrix-free linear solver takes 1.5 s.
-    const solver=continuous&&cohort&&method==='ida'?' -idaLS=spgmr':'';
+    const solver=cohort&&method==='ida'?' -idaLS=spgmr':'';
     const flags=`-override=stopTime=${baseYear+years},${overrideFlags({...fields,...ageMigration})}${solver}${inspect?' -variableFilter=.*':''}`;
     if(!omc.omc_sim_start(model,`${model}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
     let code;

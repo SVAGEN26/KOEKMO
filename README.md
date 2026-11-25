@@ -38,7 +38,6 @@ with wide margins. See [Accuracy](#accuracy).
 npm run stage:omc -- /path/to/build-web/install_cmake/share/omc/web   # once per compiler build
 npm start                     # builds and serves http://127.0.0.1:8000
 npm test
-npm run validate:modelica     # native OpenModelica against the JavaScript reference
 ```
 
 Python 3 and Node 18+; no npm packages. Native validation, the hindcasts and
@@ -102,9 +101,9 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   The comparison tab shows the latest accounts and SKR 26:28 for the
   municipality.
 - **Modellen.** A flow diagram of the six components with the equations and
-  Modelica code of the model that is running, continuous or yearly.
+  Modelica code of the model.
 - **Export.** Scenario as JSON or as `Scenario.mo` for OpenModelica (extending
-  the municipality's `Continuous` or `Annual` model, whichever ran), and a PDF
+  the municipality's `Continuous` model), and a PDF
   report (A4 landscape, through the browser's print dialog).
 
 ## Scenarios
@@ -274,7 +273,7 @@ and refuses other browser origins.
 | Tool | What it does |
 | --- | --- |
 | `list_municipalities`, `list_parameters` | The 13 municipalities, base years 2020–2025, and the decisions that can be set |
-| `start_session` | Start from a base year's accounts, with `Annual` or `Continuous` |
+| `start_session` | Start from a base year's accounts |
 | `set_decisions` | This year's decisions (tax rate, investment, interest, wages, migration ...) with a reason |
 | `advance` | Simulate the next year; return accounts, balance checks and SKR's tax and grants |
 | `get_results`, `run_scenario` | Any output variable; a whole scenario at once (`higherInterest`, `higherInflation`) |
@@ -291,38 +290,25 @@ see [Connect an AI to the page](#connect-an-ai-to-the-page).
 
 | Model | Where | Used by |
 | --- | --- | --- |
-| `Kommunekonomi.Continuous.Economy` | `modelica/Kommunekonomi.mo` | The site (default), the MCP server (optional), the hindcasts |
-| `Kommunekonomi.Annual` | same | The site ("Tid i modellen: Årssteg"), the MCP server, the hindcasts |
-| `Motala.Annual`, `Motala.Continuous`, examples | `modelica/Motala.mo` | Motala's base years 2020–2025 |
+| `Kommunekonomi.Continuous.Economy` | `modelica/Kommunekonomi.mo` | The site, the MCP server, the hindcasts |
+| `Motala.Continuous`, examples | `modelica/Motala.mo` | Motala's base years 2020–2025 |
 | One package per municipality | `modelica/municipalities/*.mo` | Generated from SCB and Kolada |
 | M1, M2 (research) | `research/` | Nothing on the site; see [research/M2.md](research/M2.md) |
 
-`Continuous.Economy` has the same assumptions and outputs as `Annual` in
-continuous time. Money and population are stocks with flows: births, deaths,
-ageing and migration, costs, and wage and price levels that grow within the
-year. Only annual rules are events: the year-end close, decisions from
-1 January (tax rate, tax and grants, paid evenly), the 1 November population
-count and reading the annual paths. The site runs it by default; `Annual` takes
-one step a year and is a choice under "Pröva modellvarianter".
-
-With the same inputs the two give the same wage and price indices, the same
-population at each year end (with SCB's projection) and the same tax and grants
-(within 2 mnkr with adjustment per component, where the continuous model reads
-the population on 1 November instead of interpolating it). They differ in
-timing: capacity follows demand continuously and trails a steady trend by 1.4
-years where `Annual`'s trails by one, costs are counted through the year
-instead of at its end, interest accrues on the debt as it grows, and
-depreciation starts when an investment is paid. Where demand for schooling
-falls, costs are therefore higher than in `Annual`: for Motala from the 2025
-accounts the result is 5–11 mnkr lower each year (151 against 159 mnkr in 2033)
-and the debt 65 mnkr higher in 2033 (1 576 against 1 511); for Linköping the
-result is 21–46 mnkr lower a year. The adjustment speed is an illustrative
-assumption in both. The continuous model is no more accurate against outcomes
-than `Annual`; see [Accuracy](#accuracy) and
-[docs/methodology.md](docs/methodology.md#continuous-time).
+`Continuous.Economy` is the model, in continuous time. Money and population
+are stocks with flows: births, deaths, ageing and migration, costs, and wage
+and price levels that grow within the year. Only annual rules are events: the
+year-end close, decisions from 1 January (tax rate, tax and grants, paid
+evenly), the 1 November population count and reading the annual paths.
+Capacity follows demand continuously and trails a steady trend by 1.4 years,
+costs are counted through the year, interest accrues on the debt as it grows,
+and cash is steered toward a liquidity reserve of days of payments
+(`data/liquidity.json`). A yearly model (`Kommunekonomi.Annual`) existed until
+November 2026; it was removed so that one model in a system-dynamics form
+remains. See [docs/methodology.md](docs/methodology.md#continuous-time).
 
 In OMEdit, load `Kommunekonomi.mo` first, then `Motala.mo`, and open
-`Motala.Annual` or `Motala.Continuous` in Diagram view. Defaults are
+`Motala.Continuous` in Diagram view. Defaults are
 illustrative; download `Scenario.mo` from the site to reproduce a scenario with
 the planning inputs. See [modelica/README.md](modelica/README.md).
 
@@ -384,7 +370,7 @@ inputs from errors in the model.
 **Up to three years against SKR's circulars.** `scripts/hindcast_vintages.py`
 starts from each set of accounts 2020–2024 and runs up to three years, not past
 2025. Motala, mean error (model minus outcome) after 1/2/3 years, mnkr, with 5, 4
-and 3 cases, from `data/vintage-hindcast.json`. "SKR" uses only the assumptions in
+and 3 cases (the yearly model; see below). "SKR" uses only the assumptions in
 SKR's December circular of the start year, with grants growing 2 % a year;
 "components" adds the state's grant decisions in that circular (grants per
 component); "hindsight" uses the outcomes for prices, the tax base and the state's
@@ -412,13 +398,14 @@ absolute error of the result, mnkr):
 | Mjölby | 41 / 65 / 116 | 28 / 40 / 59 | 44 / 82 / 91 |
 | Finspång | 37 / 75 / 59 | 22 / 42 / 13 | 38 / 52 / 38 |
 
-These tables are for the yearly model. The continuous model, the site's
-default, gives 40 / 60 / 60 for Motala, 42 / 67 / 126 for Mjölby and
-37 / 76 / 59 for Finspång with SKR's assumptions (`HINDCAST_MODEL=Continuous`,
-`data/vintage-hindcast-continuous.json`): the same accuracy.
+These two tables were made with the yearly model, removed in November 2026. The
+continuous model gave the same accuracy with SKR's assumptions: 40 / 60 / 60 for
+Motala, 42 / 67 / 126 for Mjölby and 37 / 76 / 59 for Finspång
+(`data/vintage-hindcast-continuous.json`, before the liquidity reserve). The
+tables are to be redone with the continuous model.
 
 Five, four and three cases per horizon, from one period, are too few to rank the
-sets (`scripts/compare_hindcasts.py CODE [skr|components|hold|prices|hindsight|standard]`).
+sets.
 
 **What explains the outcome, 2022–2025.** The closing accounts are the facts.
 `scripts/explain_outcome.py` runs the continuous model from the 2021 accounts as
@@ -552,33 +539,29 @@ grants and Sweden's population; the municipality's population, costs, debt and
 result are the model's. Norrköping 2022 and 2023 are left out: the outcome holds the
 Ostlänken provision (−3 281 and −80 mnkr), not split into operating and financial
 items. Mean error / mean absolute error in percent of tax and grants (population:
-percent), from `data/long-hindcast.json` (the yearly model; the row "continuous
-model" is the site's default, from `data/long-hindcast-continuous.json`):
+percent), from `data/long-hindcast-continuous.json` (run before the liquidity reserve was added on
+2026-11-25; debt and interest will shift slightly when it is rerun):
 
 | Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Result | 0.1 / 1.7 | −0.1 / 2.2 | −0.7 / 2.3 | −0.8 / 3.2 | −0.8 / 2.9 | 0.0 / 2.1 |
-| Result, continuous model | 0.3 / 1.8 | 0.3 / 2.3 | −0.1 / 2.5 | −0.2 / 3.4 | −0.2 / 3.0 | 0.9 / 2.1 |
+| Result | 0.3 / 1.8 | 0.3 / 2.3 | −0.1 / 2.5 | −0.2 / 3.4 | −0.2 / 3.0 | 0.9 / 2.1 |
 | Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
-| Result, standard rates | −1.0 / 2.5 | −2.9 / 4.1 | −4.7 / 5.0 | −4.1 / 4.8 | −2.8 / 3.4 | −3.2 / 4.1 |
-| Net cost | −0.2 / 1.9 | −0.1 / 2.1 | 1.1 / 2.3 | 1.4 / 2.9 | 3.1 / 4.0 | 5.1 / 5.7 |
-| Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.2 / 1.5 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
+| Result, standard rates | −0.8 / 2.6 | −2.5 / 4.0 | −4.2 / 4.5 | −3.5 / 4.5 | −2.2 / 3.3 | −2.4 / 3.9 |
+| Net cost | −0.4 / 2.0 | −0.5 / 2.3 | 0.5 / 2.2 | 0.8 / 2.7 | 2.5 / 3.6 | 4.3 / 5.1 |
+| Tax | 0.0 / 0.9 | −0.2 / 1.2 | −0.2 / 1.4 | −0.5 / 1.7 | 0.1 / 2.3 | 1.6 / 2.8 |
 | General grants | 0.0 / 0.0 | 0.4 / 0.4 | 0.8 / 0.8 | 1.1 / 1.1 | 1.9 / 1.9 | 3.1 / 3.1 |
-| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.4 / 1.7 | 1.9 / 2.4 | 3.3 / 3.7 | 6.0 / 6.1 |
-| Debt | 0.2 / 4.2 | −0.7 / 7.9 | −0.3 / 11.5 | 0.5 / 14.3 | −1.4 / 17.9 | −19.7 / 20.9 |
+| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.4 / 1.7 | 1.9 / 2.4 | 3.3 / 3.7 | 6.1 / 6.1 |
+| Debt | 0.0 / 4.3 | −1.3 / 8.2 | −1.4 / 12.1 | −0.8 / 14.9 | −3.6 / 19.4 | −23.7 / 23.9 |
 
 The model with hindsight beats persistence in years 1–3 only; from year 4 the base
-year's result share does as well or better. The continuous model's result is
-about half a per cent of tax and grants higher than the yearly model's, since
-its costs trail the population by about a year more and the population grows too
-fast in this test; its errors are as large. With the model's standard rates instead
-of hindsight it is worse than persistence at every horizon. The result is too low by
-0.7–0.8 % of tax and grants in years 3–6, about a third of a usual result target of
-2 %. The population grows too fast (6 % after eight years: migration calibrated on
+year's result share does as well or better. With the model's standard rates instead
+of hindsight it is worse than persistence at every horizon. With hindsight the mean
+error of the result is within 0.3 % of tax and grants in years 1–6 and 0.9 % after
+eight years, against a usual result target of 2 %. The population grows too fast (6 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
 together, so part of the result error cancels. A population-only test (`scripts/hindcast_migration.py`,
-`data/migration-hindcast.json`; its copy of the five-group demography gives the
-model's population in all 273 runs) tries calibration windows of 1–8 years from
+`data/migration-hindcast.json`; its yearly copy of the five-group demography gives the
+model's population within 0.1 % in all 273 runs) tries calibration windows of 1–8 years from
 every base year to 2025. From base years 2020–2024 the two-year window has
 almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.5,
 0.9, 1.3, 1.8 and 2.1 %; three years give 0.5, 0.8, 1.1, 1.6 and 2.0 %, eight years
@@ -587,7 +570,7 @@ almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.
 error at medium horizons is births: the model keeps the base year's births per
 adult while fertility fell, so the 0–6 group is 5 % too large after three years
 and 11 % after five (base years 2017–2024). Debt, the municipality's own
-without loans passed on to its companies, comes out too low (20 % of tax and
+without loans passed on to its companies, comes out too low (24 % of tax and
 grants after eight years) because investment stays at the base year's amount. With costs growing by each
 municipality's historical residual up to the base year (set "drift",
 `data/cost-residual.json`, measured on the model's basis), net cost is 11.5 % too
@@ -606,7 +589,7 @@ municipalities. From `data/response-test.json`:
 
 | Rule | Model | History: slope (interval) | Cases |
 | --- | --- | --- | --- |
-| Need from the population → real operating cost, 5 years | 1 | 1.03 (0.54 to 1.64) yearly model; 0.93 (0.42 to 1.54) continuous | 126 |
+| Need from the population → real operating cost, 5 years | 1 | 0.93 (0.42 to 1.54); 1.03 (0.54 to 1.64) with a yearly step | 126 |
 | The same, 1 year | 1 | 0.82 (0.30 to 1.30); 0.71 (0.09 to 1.31) | 180 |
 | Population the year before → tax and grants, 1 year | 0.94 | 0.78 (0.49 to 1.10) | 189 |
 | The same, 10 years | 0.94 | 0.44 (0.10 to 0.90) | 74 |
@@ -657,14 +640,13 @@ The site has one engine: OpenModelica's compiler built for WebAssembly. A worker
 loads `Kommunekonomi.mo`, the municipality's package and `MotalaBrowser.mo`, and
 runs `buildModel` with the `wasm-jit` target (two to three seconds; nine with
 single-year ages). Each scenario re-runs the compiled model with `-override`, in
-about 0.1 s. `MotalaBrowser.mo` holds two wrappers that add no equations,
-`MotalaBrowserContinuous` (the default) and `MotalaBrowser` (the yearly model):
-they fix the array capacity at 100 years and make every input a free parameter
+about 0.1 s. `MotalaBrowser.mo` holds the wrapper `MotalaBrowserContinuous`,
+which adds no equations: it fixes the array capacity at 100 years and makes every input a free parameter
 with a literal default (OpenModelica folds defaults that depend on the base year
 at compile time, out of `-override`'s reach). No cross-origin isolation is
 needed.
 
-The continuous model is integrated with the implicit solver IDA, which gives
+The model is integrated with the implicit solver IDA, which gives
 native OpenModelica's DASSL within 0.01 mnkr (see
 [docs/methodology.md](docs/methodology.md#continuous-time)) and also takes the
 flows with time constants of days to weeks in scenarios with working capital, a
@@ -674,13 +656,13 @@ and in over ten with single-year ages. Until November 2026 the page used
 Runge-Kutta with twelve steps a year, about twice as fast; that solver does not
 start in OpenModelica's web compiler after September 2026.
 
-`site/src/engine.js` is an independent JavaScript reference for the yearly model,
-used only by the tests; the site does not ship it. `tests/jit-parity.test.mjs`
-runs the staged compiler in Node against it. The continuous model has no
-JavaScript reference: `tests/jit-continuous.test.mjs` checks it against
-`Motala.Continuous` as written, against SCB's and SKR's inputs, against the
-yearly model where the two must agree, and against native OpenModelica. Both
-are skipped when no compiler is staged.
+The tests run the staged compiler in Node. `tests/jit-continuous.test.mjs`
+checks the page's runs against `Motala.Continuous` as written, against SCB's and
+SKR's inputs and against native OpenModelica; `tests/jit-model.test.mjs` checks
+mechanisms, base years, the municipalities and properties such as a tax rate
+change not being cancelled by equalisation. Both are skipped when no compiler is
+staged. The yearly model's JavaScript reference (`engine.js`) was removed with
+the yearly model.
 
 Build the compiler once (Ubuntu 24.04):
 

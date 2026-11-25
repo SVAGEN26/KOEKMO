@@ -273,24 +273,23 @@ kommunen har lånat upp och lånat vidare till sina bolag ingår inte, och ränt
 räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_municipality.py.</p></html>"));
   end Data;
 
-  model Annual "Norrköpings ekonomi år för år från bokslutet 2025"
-    extends Kommunekonomi.Annual(base = Data.norrkoping2025, olderShares = Data.olderShares);
-    annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
-      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
-Starta från ett annat år med <code>Annual(base = Data.norrkoping2024)</code>.</p></html>"));
-  end Annual;
-
   model Continuous "Norrköpings ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.norrkoping2025, olderShares = Data.olderShares);
+    // Norrköping: likviditetsberedskapen för tolv månader mäts med S&P:s DSCR och ska överstiga 120 % (Riktlinje för
+    // kommunkoncernens finansverksamhet, KS 2025-11-17, avsnitt 4.1.1), inte i dagar; standard 30 dagar.
+    // Årsredovisningen 2025 anger koncernens krediter (1 437 mnkr) men inte kommunens outnyttjade checkkredit; noll
+    // antas. Källa: https://norrkoping.se/download/18.4db05994188ba05ea203a4b/1768987648770/Riktlinje%20f%C3%B6r%20kom
+    // munkoncernens%20finansverksamhet.pdf
+    extends Kommunekonomi.Continuous.Economy(base = Data.norrkoping2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
-      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
-är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));
+      Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
+Pengar och invånare är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy). Starta från
+ett annat år med <code>Continuous(base = Data.norrkoping2024)</code>.</p></html>"));
   end Continuous;
 
   package Examples "Färdiga modeller att simulera"
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet i Data.norrkoping2025"
-      extends Annual(base = Data.norrkoping2024, olderShares = Data.olderShares2024, horizon = 1);
-      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 1));
+      extends Continuous(base = Data.norrkoping2024, olderShares = Data.olderShares2024, horizon = 1);
+      annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333));
     end Hindcast2025;
   end Examples;
   annotation(uses(Kommunekonomi(version = "0.1.0")), Documentation(info = "<html><p>Norrköping (kommunkod 0581) med biblioteket

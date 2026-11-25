@@ -21,15 +21,6 @@
           <div id="assumption-groups" class="assumption-groups"></div>
           <details>
             <summary>Pröva modellvarianter</summary>
-            <label class="select-label" for="time-model">Tid i modellen</label>
-            <select id="time-model">
-              <option value="continuous" selected>Kontinuerlig tid · flöden under året</option>
-              <option value="annual">Årssteg · ett steg per år</option>
-            </select>
-            <p class="small muted">I kontinuerlig tid är pengar och invånare lager som ändras varje dag: verksamheten anpassas
-              löpande efter befolkningen och räntan räknas på den skuld som finns just då. Med årssteg räknas allt en gång per
-              år, med årsslutets befolkning och årets ingående skuld. Årets beslut och bokslutet är samma i båda. Skillnaden i
-              resultat är några mnkr per år för Motala.</p>
             <label class="select-label" for="revenue-mode">SKR:s intäkter</label>
             <select id="revenue-mode">
               <option value="0">Proportionell justering</option>
@@ -84,15 +75,21 @@
           </details>
           <details>
             <summary>Kassa, rörelsekapital och förfinansiering</summary>
-            <label><input id="liquidity-policy" type="checkbox"> Använd kassa och förfinansiering</label>
-            <div id="liquidity-controls" hidden>
-              <label class="select-label" for="cash-reserve">Kassareserv vid årets slut (mnkr)</label>
-              <input id="cash-reserve" type="number" min="0" step="any" value="0" required>
+            <label><input id="liquidity-policy" type="checkbox" checked> Håll en likviditetsreserv</label>
+            <div id="liquidity-controls">
+              <label class="select-label" for="reserve-days">Reserv i dagar av utbetalningarna</label>
+              <input id="reserve-days" type="number" min="0" max="365" step="any" placeholder="30">
+              <label class="select-label" for="credit-line">Checkkredit och kreditlöften (mnkr)</label>
+              <input id="credit-line" type="number" min="0" step="any" placeholder="0">
+              <p class="small muted" id="liquidity-note"></p>
+            </div>
+            <label><input id="defer-investment" type="checkbox"> Flytta en del av första årets investering</label>
+            <div id="defer-controls" hidden>
               <label class="select-label" for="defer-investment-share">Andel av första årets investering som betalas året efter (%)</label>
               <input id="defer-investment-share" type="number" min="0" max="100" step="any" value="50" required>
               <label class="select-label" for="prefinance-share">Andel av det uppskjutna beloppet som lånas första året (%)</label>
               <input id="prefinance-share" type="number" min="0" max="100" step="any" value="100" required>
-              <p class="small muted">Kassareserven är ett scenarioantagande. I kontinuerlig tid räknas räntan på den skuld som finns under året, med årssteg på ingående skuld.</p>
+              <p class="small muted">Det uppskjutna beloppet betalas året efter. Räntan räknas på den skuld som finns under året.</p>
             </div>
             <label><input id="working-capital-enabled" type="checkbox"> Modellera rörelsekapital</label>
             <div id="working-capital-controls" hidden>

@@ -1,9 +1,8 @@
-"""Continuous.Economy against Annual and against its own bookkeeping.
+"""Continuous.Economy, natively compiled: its decisions, indices and own bookkeeping.
 
-The continuous model has its own demography (stocks and flows) and indices that grow within the year,
-so it is not identical to Annual. It must still agree where the rules agree: the same reference path
-gives the same annual tax and grants, constant growth gives the same annual index, and every stock and
-the population reconcile at each year end.
+Tax and grants are decided for a year and paid evenly, so a reference path gives the same yearly amounts. Wage and
+price indices grow within the year so that the yearly mean follows the stated growth. Every stock and the
+population reconcile at each year end.
 
 Needs OpenModelica (OMC or omc on PATH); skipped otherwise.
 """
@@ -54,22 +53,18 @@ class ContinuousEconomy(unittest.TestCase):
             f'loadFile("{ROOT / "modelica/Kommunekonomi.mo"}"); getErrorString();',
             f'loadFile("{ROOT / "modelica/Motala.mo"}"); getErrorString();',
             'loadFile("Reference.mo"); getErrorString();',
-            'simulate(Motala.Annual, startTime=2025, stopTime=2033, numberOfIntervals=8, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv",'
-            ' simflags="-override=workingCapitalEnabled=true,collectionDays=30,paymentDays=30,liquidityPolicy=true,cashReserve=150,constructionYears=2",'
+            ' simflags="-override=workingCapitalEnabled=true,collectionDays=30,paymentDays=30,liquidityPolicy=true,reserveDays=15,creditLine=0,reserveAdjustmentTime=0,constructionYears=2",'
             ' fileNamePrefix="Stress"); getErrorString();',
             'simulate(Reference, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
-            'simulate(Motala.Examples.AnnualCohort, startTime=2025, stopTime=2030, numberOfIntervals=5, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Examples.ContinuousCohort, startTime=2025, stopTime=2030, numberOfIntervals=60, outputFormat="csv"); getErrorString();'])
         (cls.dir / 'run.mos').write_text(script)
         subprocess.run([OMC, 'run.mos'], cwd=cls.dir, capture_output=True, text=True, timeout=900)
-        cls.annual = year_rows(cls.dir / 'Motala.Annual_res.csv')
         cls.continuous = year_rows(cls.dir / 'Motala.Continuous_res.csv')
         cls.stress = year_rows(cls.dir / 'Stress_res.csv')
         cls.reference = year_rows(cls.dir / 'Reference_res.csv')
         cls.reference_all = all_rows(cls.dir / 'Reference_res.csv')
-        cls.annual_cohort = year_rows(cls.dir / 'Motala.Examples.AnnualCohort_res.csv')
         cls.cohort = year_rows(cls.dir / 'Motala.Examples.ContinuousCohort_res.csv')
         cls.cohort_all = all_rows(cls.dir / 'Motala.Examples.ContinuousCohort_res.csv')
 
@@ -78,8 +73,7 @@ class ContinuousEconomy(unittest.TestCase):
         shutil.rmtree(cls.dir, ignore_errors=True)
 
     def test_same_years(self):
-        self.assertEqual(sorted(self.annual), list(range(2025, 2034)))
-        self.assertEqual(sorted(self.continuous), sorted(self.annual))
+        self.assertEqual(sorted(self.continuous), list(range(2025, 2034)))
 
     def test_annual_amounts_follow_the_reference_path(self):
         # Tax and grants are decided for the year on 1 January and paid evenly; the year's total is the decision.
@@ -92,12 +86,11 @@ class ContinuousEconomy(unittest.TestCase):
             if 2026 < t < 2027 and abs(t - round(t)) > 1e-6:
                 self.assertAlmostEqual(row['finance.tax.rate'], TAX[1]*TAX_RATE[1]/21.7, places=6, msg=t)
 
-    def test_constant_growth_gives_annual_index(self):
-        # With the same growth every year the continuous index has Annual's annual means.
-        for year, a in self.annual.items():
-            c = self.continuous[year]
-            for key in ('wageIndex', 'priceIndex', 'revenueIndex'):
-                self.assertAlmostEqual(c[key], a[key], places=5, msg=f'{key} {year}')
+    def test_constant_growth_gives_a_constant_yearly_rise(self):
+        # With the same growth every year the index rises by the same share every year.
+        for key in ('wageIndex', 'priceIndex', 'revenueIndex'):
+            rises = [self.continuous[y][key]/self.continuous[y - 1][key] for y in range(2027, 2034)]
+            self.assertLess(max(rises) - min(rises), 1e-5, key)
 
     def test_changed_growth_keeps_the_annual_means(self):
         # A wage jump in 2028 (6 % instead of 3 %): the annual mean still rises by the path's growth every year.
@@ -109,17 +102,10 @@ class ContinuousEconomy(unittest.TestCase):
             self.assertAlmostEqual(idx[year]/idx[year - 1] - 1, g, delta=1e-4, msg=str(year))
             self.assertAlmostEqual(idx[year]/path, 1, delta=1e-4, msg=str(year))
 
-    def test_demography_close_to_annual(self):
-        for year, a in self.annual.items():
-            c = self.continuous[year]
-            self.assertLess(abs(c['population']/a['population'] - 1), 0.001, year)
-            for key in ('tax', 'grants'):
-                self.assertLess(abs(c[key]/a[key] - 1), 0.002, f'{key} {year}')
-        for year, a in self.annual_cohort.items():
-            c = self.cohort[year]
-            self.assertLess(abs(c['population']/a['population'] - 1), 0.001, year)
-            # Single years age by relabelling at the turn of the year, so a group that only ages matches closely.
-            self.assertLess(abs(c['p[3]']/a['p[3]'] - 1), 0.01, year)
+    def test_single_years_stay_near_the_five_groups(self):
+        # Two calibrations of the same population; they drift apart slowly (under 2 % in five years).
+        for year, c in self.cohort.items():
+            self.assertLess(abs(c['population']/self.continuous[year]['population'] - 1), 0.02, year)
 
     def test_population_is_continuous(self):
         # The relabelling at the turn of the year moves no one: no age group jumps at a year end.
@@ -131,13 +117,10 @@ class ContinuousEconomy(unittest.TestCase):
             previous = row
 
     def test_base_year_row_is_the_accounts(self):
-        a, c = self.annual[2025], self.continuous[2025]
-        for key in ('result', 'cost', 'depreciation', 'interest', 'debt', 'cash', 'assets', 'operatingCash', 'population', 'tax', 'grants'):
-            self.assertAlmostEqual(c[key], a[key], places=6, msg=key)
-
-    def test_depreciation_matches_without_construction_time(self):
-        for year, a in self.annual.items():
-            self.assertAlmostEqual(self.continuous[year]['depreciation'], a['depreciation'], delta=0.5, msg=year)
+        # Motala's accounts 2025 (Motala.Data.motala2025): debt, cash, assets, depreciation, tax and grants.
+        c = self.continuous[2025]
+        for key, value in (('debt', 1040), ('cash', 81), ('assets', 2997), ('depreciation', 180), ('tax', 2330), ('grants', 987)):
+            self.assertAlmostEqual(c[key], value, places=6, msg=key)
 
     def test_stocks_and_flows_balance(self):
         for rows in (self.continuous, self.stress, self.reference, self.cohort):
