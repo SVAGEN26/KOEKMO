@@ -506,13 +506,24 @@ linjärt mellan dem, får just banans ökning mellan årsmedlen. Med samma ökni
           1.89, 1.88, 1.85, 1.85, 1.78, 1.75, 1.7, 1.66, 1.67, 1.52, 1.45, 1.43, 1.42}
         "Rikets summerade fruktsamhet 2000-2025 (SCB)";
 
+      function totalFertilityAt "Rikets summerade fruktsamhet ett år; det senaste kända året om året ligger efter tabellen"
+        input Integer year "Kalenderår";
+        output Real level "Barn per kvinna";
+      algorithm
+        level := totalFertility[min(max(year, fertilityFirstYear), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1];
+      end totalFertilityAt;
+
       function totalFertilityMean5 "Rikets genomsnittliga summerade fruktsamhet de fem åren fram till ett år"
         input Integer year "Sista året";
         output Real mean "Medel av fem år";
       protected
         Integer last = min(max(year, fertilityFirstYear + 4), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1;
       algorithm
-        mean := sum(totalFertility[last - 4:last])/5;
+        // En slinga: OpenModelicas kodgenerering klarar inte ett snitt med dynamiska index ur en konstant tabell.
+        mean := 0;
+        for i in 0:4 loop
+          mean := mean + totalFertility[last - i]/5;
+        end for;
       end totalFertilityMean5;
 
       function combinedDeathRisk "Dödsrisk (rad 1) och dess årliga minskning (rad 2) per ålder för båda könen tillsammans"
@@ -983,9 +994,9 @@ inflation är banorna oförändrade.</p></html>"));
 början och till hälften i nästa. CohortDemography delar upp de födda i pojkar och flickor.</p></html>"));
       end Partial;
 
-      model Constant "Konstant summerad fruktsamhet; standard 1,41 barn per kvinna"
+      model Constant "Konstant summerad fruktsamhet; demografin sätter rikets nivå basåret gånger kommunens förhållande till riket"
         extends Partial;
-        parameter Real totalFertility = 1.41 "Summerad fruktsamhet: barn per kvinna under ett liv med årets fruktsamhet";
+        parameter Real totalFertility = 1.42 "Summerad fruktsamhet: barn per kvinna under ett liv med årets fruktsamhet; rikets 2025 om inget annat anges";
         parameter Real profile[101] = Data.SCB.fertilityProfile "Andel av de födda vid varje ålder hos modern";
       equation
         births = totalFertility*profile*exposure;
@@ -1029,7 +1040,7 @@ Alla utom Legacy använder SCB:s åldersprofil för fruktsamheten. Prövning mot
       parameter Real observedDeltaShape[2,101] = zeros(2,101) "Andelar efter ålder och kön för ändrad inflyttning";
       parameter Boolean useObservedDeltaShape = false;
       parameter Real shareBoys = data.shareBoys "Andel pojkar bland de födda";
-      replaceable Fertility.Constant fertility constrainedby Fertility.Partial(births0 = data.births, population0 = population0)
+      replaceable Fertility.Constant fertility(totalFertility = Data.SCB.totalFertilityAt(data.year)*data.totalFertilityMean5/Data.SCB.totalFertilityMean5(data.year)) constrainedby Fertility.Partial(births0 = data.births, population0 = population0)
         "Födelsemodell" annotation(choicesAllMatching = true);
       discrete output Units.Persons p[2, 101](start = population0, each fixed = true) "Befolkning vid årets slut, ettårsåldrar per kön";
       discrete output Real older[3](start = {sum(population0[:, 66:80]), sum(population0[:, 81:90]), sum(population0[:, 91:101])}, each fixed = true)
@@ -1568,7 +1579,7 @@ kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att bas
       parameter Boolean useObservedDeltaShape = false;
       parameter Real shareBoys = data.shareBoys "Andel pojkar bland de födda";
       parameter Units.Persons outflowFloor = 1 "Under så många personer i en ålder minskar utflyttningen i proportion, så att lagret inte blir negativt";
-      replaceable Components.Fertility.Constant fertility constrainedby Components.Fertility.Partial(births0 = data.births, population0 = population0)
+      replaceable Components.Fertility.Constant fertility(totalFertility = Data.SCB.totalFertilityAt(data.year)*data.totalFertilityMean5/Data.SCB.totalFertilityMean5(data.year)) constrainedby Components.Fertility.Partial(births0 = data.births, population0 = population0)
         "Födelsemodell" annotation(choicesAllMatching = true);
       Units.Persons p[2, 101](start = population0, each fixed = true) "Invånare efter ålder vid årets slut (födelseår) och kön";
       Units.Rate mortality[2, 101] "Dödstal per år för varje födelseårsgrupp";
@@ -1581,6 +1592,7 @@ kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att bas
       parameter Integer group[101] = {if a <= 7 then 1 elseif a <= 16 then 2 elseif a <= 19 then 3 elseif a <= 65 then 4 else 5 for a in 1:101};
       parameter Real deltaShape[2, 101] = {{0.5*migrationWeights[group[a]]/width[group[a]] for a in 1:101} for s in 1:2};
       discrete Units.Duration labelYearEnd(fixed = false) "Det årsslut som åldrarna i p avser";
+      discrete Real oldest[2](each start = 0.5, each fixed = true) "Andel av den äldsta gruppen som var 100 år eller äldre vid årsskiftet; resten var 99 år";
       Units.PersonsPerYear wanted[2, 101] "Restflöde och scenariots ändring innan gränsen för tomma åldrar";
     initial equation
       labelYearEnd = time;
@@ -1594,11 +1606,14 @@ kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att bas
             reinit(p[s, a], pre(p[s, a - 1]));
           end for;
           reinit(p[s, 101], pre(p[s, 100]) + pre(p[s, 101]));
+          oldest[s] = pre(p[s, 101])/max(1e-9, pre(p[s, 100]) + pre(p[s, 101]));
         end for;
       end when;
       share = 1 - (labelYearEnd - time)/Units.year;
-      // Dödsrisken gäller åldern vid förra årsskiftet; de födda under året har ingen.
-      mortality = {cat(1, {0}, {-log(max(1e-6, 1 - min(1, data.deathRisk[s, a]*mortalityRatio[s]*exp(-improvement[s, a]*calendar.yearIndex)))) for a in 1:100}) for s in 1:2}/Units.year;
+      // Dödsrisken gäller åldern vid förra årsskiftet; de födda under året har ingen. Den äldsta gruppen består av dem som
+      // var 99 år och dem som redan var 100 år eller äldre, med var sin risk.
+      mortality = {cat(1, {0}, {-log(max(1e-6, 1 - min(1, data.deathRisk[s, a]*mortalityRatio[s]*exp(-improvement[s, a]*calendar.yearIndex)))) for a in 1:99},
+        {-log(max(1e-6, 1 - min(1, mortalityRatio[s]*((1 - oldest[s])*data.deathRisk[s, 100]*exp(-improvement[s, 100]*calendar.yearIndex) + oldest[s]*data.deathRisk[s, 101]*exp(-improvement[s, 101]*calendar.yearIndex)))))}) for s in 1:2}/Units.year;
       wanted = residualMigration + drivers.migrationDelta*(if useObservedDeltaShape then observedDeltaShape else deltaShape);
       // Fruktsamheten läser åldern vid årets början: födelseårsgruppen a + 1 var a år då.
       fertility.population = cat(2, p[:, 2:101], zeros(2, 1));

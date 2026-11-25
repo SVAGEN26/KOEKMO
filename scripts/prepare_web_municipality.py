@@ -75,7 +75,9 @@ def prepare(code, year, source):
     national, planning = historical_inputs(code, common) if year == 2024 else (
         common['nationalPopulation'], current_inputs(code, folder/'skr-revenue-path.json'))
     net = book['payroll']+book['pension']+book['otherOperatingExpense']-book['operatingRevenue']
-    inferred_rate = 100*book['interestExpense']/book['openingDebt'] if book['openingDebt'] else 0
+    # Interest over the year's mean debt: the model charges interest on the debt as it stands (Assumptions.interestRate).
+    mean_debt = (book['openingDebt'] + book['debt'])/2
+    inferred_rate = 100*book['interestExpense']/mean_debt if mean_debt else 0
     forecast_rate = supplement.get('forecastInterestRate', {}).get(str(year), inferred_rate)
     assumptions = {**common['assumptions'], 'taxRate': book['taxRate'], 'investment': book['investment'],
                    'interestRate': forecast_rate,

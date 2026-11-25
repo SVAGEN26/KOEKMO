@@ -99,13 +99,24 @@ def packages(d, national, years, chain, first_base, last_base, first, tfr, impro
     constant Real totalFertility[{len(fertility_years)}] = {vector(fertility_values, 4, 13, pad + '  ')}
       "Rikets summerade fruktsamhet {fertility_years[0]}-{fertility_years[-1]} (SCB)";
 
+    function totalFertilityAt "Rikets summerade fruktsamhet ett år; det senaste kända året om året ligger efter tabellen"
+      input Integer year "Kalenderår";
+      output Real level "Barn per kvinna";
+    algorithm
+      level := totalFertility[min(max(year, fertilityFirstYear), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1];
+    end totalFertilityAt;
+
     function totalFertilityMean5 "Rikets genomsnittliga summerade fruktsamhet de fem åren fram till ett år"
       input Integer year "Sista året";
       output Real mean "Medel av fem år";
     protected
       Integer last = min(max(year, fertilityFirstYear + 4), fertilityFirstYear + size(totalFertility, 1) - 1) - fertilityFirstYear + 1;
     algorithm
-      mean := sum(totalFertility[last - 4:last])/5;
+      // En slinga: OpenModelicas kodgenerering klarar inte ett snitt med dynamiska index ur en konstant tabell.
+      mean := 0;
+      for i in 0:4 loop
+        mean := mean + totalFertility[last - i]/5;
+      end for;
     end totalFertilityMean5;
 
     function combinedDeathRisk "Dödsrisk (rad 1) och dess årliga minskning (rad 2) per ålder för båda könen tillsammans"

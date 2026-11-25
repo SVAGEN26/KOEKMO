@@ -189,6 +189,53 @@
     "deathsMeanError": 12.382696064370975,
     "populationMeanError": 572.278284961103
    }
+  },
+  "national level, local relation": {
+   "1": {
+    "cases": 5,
+    "birthsMeanAbsError": 35.851060047827445,
+    "deathsMeanAbsError": 25.554017232403577,
+    "populationMeanAbsError": 120.36913773023699,
+    "birthsMeanError": 35.851060047827445,
+    "deathsMeanError": 23.838750831193455,
+    "populationMeanError": 95.75640401663259
+   },
+   "2": {
+    "cases": 4,
+    "birthsMeanAbsError": 56.45266380412927,
+    "deathsMeanAbsError": 34.7554454751953,
+    "populationMeanAbsError": 227.71822334333228,
+    "birthsMeanError": 56.45266380412927,
+    "deathsMeanError": 34.7554454751953,
+    "populationMeanError": 179.93395049770152
+   },
+   "3": {
+    "cases": 3,
+    "birthsMeanAbsError": 66.35172212812854,
+    "deathsMeanAbsError": 34.905521002413785,
+    "populationMeanAbsError": 245.6422461817177,
+    "birthsMeanError": 66.35172212812854,
+    "deathsMeanError": 34.905521002413785,
+    "populationMeanError": 235.44287073278488
+   },
+   "4": {
+    "cases": 2,
+    "birthsMeanAbsError": 91.44761901540295,
+    "deathsMeanAbsError": 40.32921810919288,
+    "populationMeanAbsError": 362.329944720459,
+    "birthsMeanError": 91.44761901540295,
+    "deathsMeanError": 40.32921810919288,
+    "populationMeanError": 362.329944720459
+   },
+   "5": {
+    "cases": 1,
+    "birthsMeanAbsError": 87.1718622503709,
+    "deathsMeanAbsError": 12.399931692168991,
+    "populationMeanAbsError": 609.288130726949,
+    "birthsMeanError": 87.1718622503709,
+    "deathsMeanError": 12.399931692168991,
+    "populationMeanError": 609.288130726949
+   }
   }
  },
  "scbProjection2025": {
@@ -1096,6 +1143,231 @@
    "horizon": 1,
    "population": 43404.07272400302,
    "births": 336.0,
+   "deaths": 454.7118339969747,
+   "migration": 17.78455799999938,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2020,
+   "year": 2021,
+   "horizon": 1,
+   "population": 43668.09151400356,
+   "births": 440.3035637174031,
+   "deaths": 458.5107257138443,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43674.0,
+    "births": 420.0,
+    "deaths": 455.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2020,
+   "year": 2022,
+   "horizon": 2,
+   "population": 43693.66342502661,
+   "births": 439.3042233853079,
+   "deaths": 460.4451934825847,
+   "migration": 46.71288112032926,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2020,
+   "year": 2023,
+   "horizon": 3,
+   "population": 43712.7009368266,
+   "births": 436.2575199144625,
+   "deaths": 463.5186841144605,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2020,
+   "year": 2024,
+   "horizon": 4,
+   "population": 43723.21752416875,
+   "births": 431.0952277811008,
+   "deaths": 466.9331530248601,
+   "migration": 46.35451258590911,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2020,
+   "year": 2025,
+   "horizon": 5,
+   "population": 43722.28813072695,
+   "births": 424.1718622503709,
+   "deaths": 471.399931692169,
+   "migration": 46.29867599999852,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2021,
+   "year": 2022,
+   "horizon": 1,
+   "population": 43674.31307812802,
+   "births": 441.1608363897075,
+   "deaths": 461.1714382616919,
+   "migration": 20.32368000000133,
+   "observed": {
+    "population": 43728.0,
+    "births": 360.0,
+    "deaths": 420.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2021,
+   "year": 2023,
+   "horizon": 2,
+   "population": 43666.76802928213,
+   "births": 437.5659957406053,
+   "deaths": 465.1194245864899,
+   "migration": 20.00837999999931,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2021,
+   "year": 2024,
+   "horizon": 3,
+   "population": 43649.35925821599,
+   "births": 431.9798802472637,
+   "deaths": 469.4562826841866,
+   "migration": 20.06763137078087,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2021,
+   "year": 2025,
+   "horizon": 4,
+   "population": 43619.44236527217,
+   "births": 424.8000102497051,
+   "deaths": 474.7252831935257,
+   "migration": 20.00838000000658,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2022,
+   "year": 2023,
+   "horizon": 1,
+   "population": 43726.06357358441,
+   "births": 392.9654336999736,
+   "deaths": 463.8055101155624,
+   "migration": 68.90364999999292,
+   "observed": {
+    "population": 43728.0,
+    "births": 381.0,
+    "deaths": 445.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2022,
+   "year": 2024,
+   "horizon": 2,
+   "population": 43714.2885971417,
+   "births": 389.7413862197589,
+   "deaths": 470.420012662471,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2022,
+   "year": 2025,
+   "horizon": 3,
+   "population": 43690.26841715576,
+   "births": 384.8177662226595,
+   "deaths": 477.7415962085943,
+   "migration": 68.9036500000002,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2023,
+   "year": 2024,
+   "horizon": 1,
+   "population": 43729.44394183876,
+   "births": 378.0282779066627,
+   "deaths": 461.994246067894,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43505.0,
+    "births": 336.0,
+    "deaths": 402.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2023,
+   "year": 2025,
+   "horizon": 2,
+   "population": 43719.01575054037,
+   "births": 373.199049870845,
+   "deaths": 469.0371511692356,
+   "migration": 85.40990999999485,
+   "observed": {
+    "population": 43113.0,
+    "births": 337.0,
+    "deaths": 459.0
+   }
+  },
+  {
+   "birthModel": "national level, local relation",
+   "base": 2024,
+   "year": 2025,
+   "horizon": 1,
+   "population": 43428.86991252841,
+   "births": 360.7971885253903,
    "deaths": 454.7118339969747,
    "migration": 17.78455799999938,
    "observed": {

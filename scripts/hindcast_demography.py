@@ -26,6 +26,8 @@ BIRTH_MODELS = {
     'Motala base year': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertility)',
     'Motala 5-year mean': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertilityMean5)',
     'old rule (19-64)': 'Kommunekonomi.Components.Fertility.Legacy fertility',
+    # Sweden's level in the base year times the municipality's relation to Sweden over five years: known at the base year.
+    'national level, local relation': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Kommunekonomi.Data.SCB.totalFertilityAt({base})*Motala.Data.SCB.motala{base}.totalFertilityMean5/Kommunekonomi.Data.SCB.totalFertilityMean5({base}))',
 }
 
 
