@@ -813,7 +813,7 @@ function renderInvestmentPlanNote() {
   const share=plan.baseOutcome/plan.baseBudget,base=b.assumptions.investment??b.investment;
   const amounts=plan.factors.map(f=>fmt(base*f));
   $('investment-plan-note').textContent=`Budget och plan ${plan.years[0]}–${plan.years.at(-1)}: ${plan.years.map(y=>fmt(plan.plan[y])).join(', ')} mnkr, mot ${fmt(plan.baseBudget)} för ${plan.baseYear}. `+
-    `Utfallet ${plan.baseYear} blev ${fmt(plan.baseOutcome)} mnkr, ${fmt(100*share)} % av budgeten. Modellen räknar med samma andel: ${amounts.join(', ')} mnkr, därefter ${amounts.at(-1)} mnkr per år. `+
+    `Utfallet ${plan.baseYear} blev ${fmt(plan.baseOutcome)} mnkr, ${fmt(100*share)} % av budgeten. Modellen räknar med samma andel: ${amounts.join(', ')} mnkr, därefter basårets nivå, ${fmt(base)} mnkr per år. `+
     (Math.abs(b.investment-plan.baseOutcome)>1?`Kommunens tal räknas på ett annat sätt än SCB:s, som ger ${fmt(b.investment)} mnkr för ${plan.baseYear}; modellen utgår från SCB:s tal och följer planens förändring. `:'')+
     `Avmarkera för basårets nivå varje år.`;
 }

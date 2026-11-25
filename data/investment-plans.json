@@ -1,5 +1,5 @@
 {
-  "description": "Kommunernas investeringsplaner ur budget 2026 med plan, och budgeten för basåret 2025 ur budget 2025. Sidan låter basårets investering (SCB) följa planens utveckling: investering år t = basårets investering × plan(t) / budget(2025). Det antar att kommunen genomför samma andel av budgeten som 2025. Efter planens sista år ligger det året kvar.",
+  "description": "Kommunernas investeringsplaner ur budget 2026 med plan, och budgeten för basåret 2025 ur budget 2025. Sidan låter basårets investering (SCB) följa planens förändring: investering år t = basårets investering × plan(t) / budget(2025). Det antar att kommunen genomför samma andel av budgeten som 2025. Efter planens sista år gäller basårets nivå igen. En kommun tas med när utfallet 2025 var mellan halva och hela budgeten 2025 (kommunens egna tal); annars mäter budgeten något annat än utfallet, och kommunen står under excluded med skäl.",
   "unit": "mnkr, kommunens egna begrepp (nettoinvesteringar eller investeringsram); kvoten används, inte nivån",
   "municipalities": {
     "0583": {
@@ -144,6 +144,214 @@
       },
       "history": [],
       "historyNote": "Årsredovisningarna redovisar årets del av budgeten (116 mnkr 2025) och den totala budgeten med ombudgeteringar (426 mnkr); de är inte jämförbara med planens 209."
+    },
+    "0513": {
+      "name": "Kinda",
+      "baseYear": 2025,
+      "baseBudget": 146.63,
+      "baseOutcome": 105,
+      "plan": {
+        "2026": 192.477,
+        "2027": 186.72,
+        "2028": 51.98,
+        "2029": 33.18
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Budget och verksamhetsplan 2025, investeringsplan: summa 146 630 tkr 2025 (strategiska, övriga och taxefinansierade)",
+          "url": "https://www.kinda.se/download/18.6aa2f733194c8e4cf1d6e739/1739264572936/Budget%202025.pdf",
+          "page": 32,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0513-kinda/2025-budget.pdf"
+        },
+        "plan": {
+          "text": "Budget och verksamhetsplan 2026, plan 2027–2029: summa investeringsplan 192 477, 186 720, 51 980, 33 180 tkr",
+          "url": "https://www.kinda.se/download/18.2dbcc4b819bc63a479f864b6/1769528937303/Budget%202026.pdf",
+          "page": 27,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0513-kinda/2026-budget.pdf"
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025: budgeterad investeringsutgift inklusive överförda medel 166 mnkr, utfall ca 105",
+          "url": "https://www.kinda.se/download/18.13dd5c8c19e63166e8835660/1780299400240/%C3%85rsredovisning%202025.pdf",
+          "page": 49
+        }
+      },
+      "history": []
+    },
+    "0563": {
+      "name": "Valdemarsvik",
+      "baseYear": 2025,
+      "baseBudget": 50.9,
+      "baseOutcome": 36.4,
+      "plan": {
+        "2026": 72.8,
+        "2027": 60.0,
+        "2028": 60.0,
+        "2029": 64.5,
+        "2030": 59.1
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Mål & budget 2025–2027 med investeringsplan 2025–2029 (majoritetens förslag, antaget KF 2024-11-18 § 101), i kallelsen till KF",
+          "url": "https://www.valdemarsvik.se/wp-content/uploads/2024/11/kallelse-kf.pdf",
+          "page": 294,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0563-valdemarsvik/2025-kf-kallelse.pdf"
+        },
+        "plan": {
+          "text": "Mål & budget 2026–2028 med investeringsplan 2026–2030 (antaget KF 2025-11-10 § 106), i kallelsen till KF",
+          "url": "https://www.valdemarsvik.se/wp-content/uploads/2025/10/kallelse-3.pdf",
+          "page": 324,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0563-valdemarsvik/2026-kf-kallelse.pdf"
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025: den samlade investeringsutgiften uppgick till 36,4 mnkr",
+          "url": "https://www.valdemarsvik.se/wp-content/uploads/2026/09/arsredovisning-2025.pdf",
+          "page": 15
+        }
+      },
+      "history": []
+    },
+    "0581": {
+      "name": "Norrköping",
+      "baseYear": 2025,
+      "baseBudget": 1299.317,
+      "baseOutcome": 1087,
+      "plan": {
+        "2026": 1842.749,
+        "2027": 2177.076,
+        "2028": 1844.061,
+        "2029": 1395.788
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Budget 2025 och plan 2026–2028, sammanställning: summa investeringar 1 299 317 tkr 2025 (versionen med ändringsbudget november 2024; originalet från juni 2024 hittades inte)",
+          "url": "https://norrkoping.se/download/18.61617f1419b2c0522ec2ac0/1767880182233/Budget-2025-och-plan-2026-2028-2026-01-08.pdf",
+          "page": 12,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0581-norrkoping/2025-budget-med-andringsbudget.pdf"
+        },
+        "plan": {
+          "text": "Budget 2026 och plan 2027–2029 (antagen KF 2025-06-16 § 91), sammanställning: 1 842 749, 2 177 076, 1 844 061, 1 395 788 tkr; versionen 2026-10-01 ger 1 881,4 / 2 099,9 / 1 860,8 / 1 262,3",
+          "url": "https://norrkoping.se/download/18.373e7d5197a1b30d44b2b/1751009708492/Budget%202026%20och%20plan%202027-2029%20Norrk%C3%B6pings%20kommun.pdf",
+          "page": 16,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0581-norrkoping/2026-budget.pdf"
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025 del 1: årets nettoinvesteringar i kommunen uppgår till 1 087 mnkr (SCB TAB5179: 1 171)",
+          "url": "https://norrkoping.se/download/18.3a8c6b3019eafce305b3e1/1781159178882/%C3%85rsredovisning%202025%20-%20del%201.pdf",
+          "page": 26
+        }
+      },
+      "history": []
+    },
+    "0582": {
+      "name": "Söderköping",
+      "baseYear": 2025,
+      "baseBudget": 150,
+      "baseOutcome": 143,
+      "plan": {
+        "2026": 150,
+        "2027": 150,
+        "2028": 160
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Strategisk plan 2025–2027 (KF 2024-11-28 § 140), investeringar: budget 2025 150 000 tkr (därtill överfört 13 481)",
+          "url": "https://www.soderkoping.se/globalassets/documents/06-kommun-och-politik/06-styrande-dokument/planer/strategisk-plan-2025-2027.pdf",
+          "page": 19,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0582-soderkoping/2025-budget.pdf"
+        },
+        "plan": {
+          "text": "Strategisk plan 2026–2028 (KF 2025-11-17 § 116), investeringar: 150 000, 150 000, 160 000 tkr",
+          "url": "https://www.soderkoping.se/globalassets/documents/06-kommun-och-politik/06-styrande-dokument/planer/strategisk-plan-2026-2028.pdf",
+          "page": 19,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0582-soderkoping/2026-budget.pdf"
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025: kommunen har investerat 143 mnkr, 24 mnkr lägre än budget (med överförda medel)",
+          "url": "https://www.soderkoping.se/globalassets/documents/06-kommun-och-politik/05-ekonomi/arsredovisningar/arsredovisning-soderkopings-kommun-2025.pdf",
+          "page": 13
+        }
+      },
+      "history": []
+    },
+    "0584": {
+      "name": "Vadstena",
+      "baseYear": 2025,
+      "baseBudget": 110.813,
+      "baseOutcome": 88.8,
+      "plan": {
+        "2026": 152.892,
+        "2027": 73.28,
+        "2028": 39.08
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Majoritetens förslag till budget 2025 med plan 2026–2027 (antaget KF 2024-11-27 § 104), investeringsbudget per nämnd: 110 813 tkr 2025, varav ombudgetering från 2024",
+          "url": "https://www.vadstena.se/wp-content/uploads/2024/11/samlingshandling-for-kommunfull_2024-11-27-webben.pdf",
+          "page": 137,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0584-vadstena/2025-kf-kallelse.pdf"
+        },
+        "plan": {
+          "text": "Konsensus budget 2026 och plan 2027–2028 (antaget KF 2025-11-25 § 166), investeringsbudget per kategori: 152 892, 73 280, 39 080 tkr",
+          "url": "https://www.vadstena.se/wp-content/uploads/2025/11/samlingshandling-for-kommunfull_2025-11-25-webben.pdf",
+          "page": 46,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0584-vadstena/2026-kf-kallelse.pdf"
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025: 88,8 mnkr avser kommunens investeringar inklusive VA",
+          "url": "https://www.vadstena.se/wp-content/uploads/2023/02/Arsredovisning-for-Vadstena-kommun-2025.pdf",
+          "page": 18
+        }
+      },
+      "history": []
+    },
+    "0586": {
+      "name": "Mjölby",
+      "baseYear": 2025,
+      "baseBudget": 465.572,
+      "baseOutcome": 437,
+      "plan": {
+        "2026": 531.235,
+        "2027": 444.152,
+        "2028": 417.451
+      },
+      "sources": {
+        "baseBudget": {
+          "text": "Mål och budget 2025–2027, summa investeringsanslag per nämnd: 465 572 tkr 2025 (inklusive exploatering 53 174)",
+          "url": "https://www.mjolby.se/download/18.59c2649419391c29fa9e3b/1733405998723/Mal%20och%20budget%202025-2027.pdf",
+          "page": 77,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0586-mjolby/2025-budget.pdf"
+        },
+        "plan": {
+          "text": "Mål och budget 2026–2028, summa investeringsanslag per nämnd: 531 235, 444 152, 417 451 tkr",
+          "url": "https://www.mjolby.se/download/18.198b11a419afde077c92f78/1765548167556/Mal-och-budget-%202026-2028.pdf",
+          "page": 88,
+          "archive": "privat repo SVAGEN26/ekonomilabb-kallor, budget-och-rapporter/0586-mjolby/2026-budget.pdf"
+        },
+        "baseOutcome": {
+          "text": "Årsredovisning 2025: kommunens nettoinvesteringar uppgår till 437 mnkr mot en total budget på 537 (med tillkommande beslut)",
+          "url": "https://www.mjolby.se/download/18.5dd57ed519e636b6901aac/1779795433787/%C3%85rsredovisning-2025-Mjolby-kommun.pdf",
+          "page": 18
+        }
+      },
+      "history": []
+    }
+  },
+  "excluded": {
+    "0509": {
+      "name": "Ödeshög",
+      "reason": "Utfallet 2025, 68,9 mnkr (årsredovisning s. 40), var högre än budgeten 58,9 (planeringsdirektiv 2025 s. 15): överförda projekt från 2024. Planen 2026–2030 (180,2, 132,4, 76,3, 51,9, 36,6; planeringsdirektiv 2026 s. 20) skulle med regeln ge 223 mnkr 2026, mer än planen själv."
+    },
+    "0512": {
+      "name": "Ydre",
+      "reason": "Budget och verksamhetsplan 2025–2028 och 2026–2029 beskriver projekten men har inga investeringsbelopp per år."
+    },
+    "0560": {
+      "name": "Boxholm",
+      "reason": "Budget 2025 sätter bara en ram på 15 mnkr per år 2025–2027 (s. 21); utfallet 2025 var 25,7. Budget 2026 (nämndsramar) har ingen investeringstabell."
+    },
+    "0561": {
+      "name": "Åtvidaberg",
+      "reason": "Budgeten, 29,8 mnkr 2025 (s. 19–21), räknar inte med överförda projekt eller exploateringen Grebo Norrby; med överförda medel var budgeten 237 mnkr (årsredovisning 2025 s. 69) och SCB:s utfall 93,4. Budget och utfall mäter inte samma sak."
     }
   }
 }

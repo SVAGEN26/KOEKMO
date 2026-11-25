@@ -72,7 +72,7 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   (default) or one step a year.
 - **Prepared scenarios** as buttons: Higher interest, Higher inflation, a weaker
   economy, more migration and lower investment. See [Scenarios](#scenarios).
-- **Investment plans.** For Motala, Linköping and Finspång the investment follows
+- **Investment plans.** For nine of the 13 municipalities the investment follows
   the municipality's budget with plan (see [Investment plans](#investment-plans));
   a checkbox returns to the base year's amount every year.
 - **Balance requirement.** Years with a deficit are shaded in the result chart.
@@ -119,7 +119,7 @@ into the average rate. Riksbank's yearly averages (SWEA API) are archived by
 `scripts/fetch_riksbank_rates.py`; `scripts/prepare_rate_stress.py` writes
 `data/rate-stress.json`. For Motala from the 2025 accounts, with the
 investment plan below, the 2022–2025 path raises the market rate to 6 % and the
-interest cost to 121 mnkr (52 in the scenario), and the result is at most 68 mnkr
+interest cost to 94 mnkr (40 in the scenario), and the result is at most 54 mnkr
 lower, in 2033. These are paths that
 happened, not forecasts and not probabilities. The four extra runs make a change
 on the page take about 1.7 s instead of 1.0.
@@ -137,25 +137,46 @@ The page lets the base year's investment follow the plan's change:
 investment in year t = base year's investment × plan(t) / budget for the base
 year (`data/investment-plans.json`, `investmentFactor` in
 `site/src/scenario-inputs.js`). That assumes the share of the budget carried out
-in the base year holds. After the plan's last year that year stays. The ratio also
-removes the difference between the municipality's own investment figures and
+in the base year holds. After the plan's last year the base year's level returns:
+plans often end with low years because later projects are not yet decided (Kinda
+plans 52 and 33 mnkr for 2028–2029 against 108 carried out in 2025). The ratio
+also removes the difference between the municipality's own investment figures and
 SCB's, which the base year uses (Linköping: 606 mnkr in its annual report, 952 in
 SCB TAB5179 for 2025).
 
-| | Budget for 2025 | Outcome 2025 | Plan | Model, mnkr |
-| --- | --- | --- | --- | --- |
-| Motala | 750 | 413 (55 %) | 755, 897, 961 (2026–2028) | 416, 494, 529, then 529 |
-| Linköping | 803 | 606 (75 %) | 823, 670, 926, 954, 1 024, 825 (2026–2031) | 976, 794, 1 098, 1 131, 1 214, 978 |
-| Finspång | 209 | 121 (58 %, SCB) | 236, 387, 309 (2026–2028) | 137, 225, 180, then 180 |
+A municipality is taken in when it carried out between half and all of its
+budget for 2025, by its own figures. Outside that range the budget measures
+something else than the outcome, and the rule would mislead.
 
-Sources with pages are in the data file: Motala's budgets 2025 (p. 2) and 2026
-(p. 28) and annual report 2025 (p. 33); Linköping's budgets 2025 (p. 53) and 2026
-(p. 8) and annual report 2025 (p. 86); Finspång's strategic plan 2026–2028 (p. 37).
-The other ten municipalities keep the base year's amount until their budgets are
-collected. With the plan, Motala's result in 2033 is 97 mnkr instead of 151 and
-its debt 2 418 instead of 1 576; figures quoted elsewhere in this README are with
-the base year's amount unless stated. One year's share carried out is a thin
-basis: Motala's varied from 42 to 71 % in five years.
+| | Budget 2025 | Outcome 2025 | Plan | Model, mnkr |
+| --- | --- | --- | --- | --- |
+| Motala | 750 | 413 (55 %) | 755, 897, 961 (2026–2028) | 416, 494, 529 |
+| Linköping | 803 | 606 (75 %) | 823, 670, 926, 954, 1 024, 825 (2026–2031) | 976, 794, 1 098, 1 131, 1 214, 978 |
+| Finspång | 209 | 121 (58 %, SCB) | 236, 387, 309 (2026–2028) | 137, 225, 180 |
+| Kinda | 147 | 105 (72 %) | 192, 187, 52, 33 (2026–2029) | 142, 137, 38, 24 |
+| Valdemarsvik | 51 | 36 (72 %) | 73, 60, 60, 65, 59 (2026–2030) | 52, 43, 43, 46, 42 |
+| Norrköping | 1 299 | 1 087 (84 %) | 1 843, 2 177, 1 844, 1 396 (2026–2029) | 1 661, 1 962, 1 662, 1 258 |
+| Söderköping | 150 | 143 (95 %) | 150, 150, 160 (2026–2028) | 143, 143, 152 |
+| Vadstena | 111 | 89 (80 %) | 153, 73, 39 (2026–2028) | 123, 59, 31 |
+| Mjölby | 466 | 437 (94 %) | 531, 444, 417 (2026–2028) | 504, 421, 396 |
+
+After the plan each returns to its base-year amount. Sources with pages are in
+the data file; the budgets are archived in the private source repository. Four
+municipalities keep the base year's amount, with the reason in the data file
+(`excluded`): Ödeshög carried out more than its budget in 2025 (68.9 against 58.9
+mnkr, projects carried over), so its plan of 180 mnkr for 2026 would become 223;
+Ydre's budgets have no investment amounts per year; Boxholm sets only a frame of
+15 mnkr a year and invested 25.7; Åtvidaberg's budget leaves out projects carried
+over and its exploitation area (29.8 mnkr against 93.4 in SCB's outcome).
+
+Norrköping's budget for 2025 is the version with the change budget of November
+2024; the original was not found. Vadstena's budget for 2025 includes 88.7 mnkr
+moved from 2024 over 2025–2027.
+
+With the plan, Motala's result in 2033 is 137 mnkr instead of 151 and its debt
+1 804 instead of 1 576; figures quoted elsewhere in this README are with the base
+year's amount unless stated. One year's share carried out is a thin basis:
+Motala's varied from 42 to 71 % in five years.
 
 ### Higher inflation
 

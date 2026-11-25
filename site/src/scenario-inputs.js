@@ -359,9 +359,10 @@ export function rateEpisode(b,a) {
 
 // The municipality's investment plan (data/investment-plans.json): the plan for forecast year i over the budget for
 // the base year, so the base year's investment follows the plan with the share of the budget carried out then.
-// After the plan's last year that year stays. 1 without a plan or when the scenario does not use it.
+// After the plan's last year the base year's level returns: plans often end with low years because later
+// projects are not yet decided. 1 without a plan or when the scenario does not use it.
 export function investmentFactor(b,a,i) {
   if(!a.investmentPlan||!b.investmentPlan) return 1;
   const f=b.investmentPlan.factors;
-  return f[Math.min(i,f.length-1)];
+  return i<f.length?f[i]:1;
 }

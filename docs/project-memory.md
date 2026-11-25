@@ -1467,3 +1467,18 @@ arkivera data.
 - Att tänka på innan de används som i `data/investment-plans.json`: begreppen skiljer (skattefinansierat eller med
   taxefinansierat, med eller utan exploatering), Norrköpings budget avser kommunen men dess bolag lånar via
   internbanken, och för Ödeshög 2025 ger tabellen 45,5 skattefinansierat mot hjälpagentens 58,9 totalt.
+## Investeringsplaner för nio kommuner (2026-11-25)
+
+- Användaren 2026-11-25: "Ok gör det" om att läsa igenom budgetarna en och en.
+- Lästa tabeller (budget 2025 i 2025 års dokument, plan i 2026 års; kommunens egna begrepp) och utfall 2025 ur
+  årsredovisningarna, alla med sida i `data/investment-plans.json`. Kvot utfall/budget 2025: Kinda 0,72, Valdemarsvik
+  0,72, Norrköping 0,84, Söderköping 0,95, Vadstena 0,80, Mjölby 0,94 (Motala 0,55, Linköping 0,75, Finspång 0,58).
+- Regel för att ta med en kommun (min): kvoten mellan 0,5 och 1. Utanför mäter budgeten något annat än utfallet.
+  Uteslutna med skäl i `excluded`: Ödeshög (utfall 68,9 över budget 58,9; regeln gav 223 mnkr 2026 mot planens 180),
+  Ydre (inga belopp per år i dokumenten), Boxholm (bara en ram på 15 mnkr/år, utfall 25,7), Åtvidaberg (budgeten
+  utan överförda projekt och exploatering: 29,8 mot SCB 93,4).
+- Ändrat samtidigt: efter planens sista år gäller basårets nivå, inte sista planåret. Kinda (33 mnkr 2029) och
+  Vadstena (39 mnkr 2028) har låga slutår eftersom senare projekt inte är beslutade. Motala från bokslut 2025:
+  resultat 2033 137 mnkr (151 utan plan, 97 med förra regeln), skuld 1 804 (1 576; 2 418).
+- Norrköpings budget 2025 är versionen med ändringsbudget; planen 2026 är den antagna i juni 2025 (versionen
+  2026-10-01 har 1 881/2 100/1 861/1 262). Vadstenas budget 2025 innehåller 88,7 mnkr ombudgeterat från 2024.
