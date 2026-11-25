@@ -12,7 +12,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {boot,read,runModel,staged,skip} from './support/omc-node.mjs';
 import {createSession,CONTINUOUS_METHOD} from '../site/src/omc-session.js';
 import {createDirectSimulator} from '../site/src/jit-engine.js';
-import {calibrateContinuous,continuousYear,extendPlanning,inflowBetween,sum} from '../site/src/scenario-inputs.js';
+import {extendPlanning,sum} from '../site/src/scenario-inputs.js';
 import {modelicaSource} from '../site/src/modelica-adapter.js';
 import {municipalities} from '../site/src/municipalities.js';
 
@@ -27,7 +27,9 @@ const continuous=(baseline,rows,overrides={},revenuePath=null)=>simulate(baselin
 const balances=['populationBalance','assetBalance','cashBalance','debtBalance'];
 function assertBooks(run,label) {
   for(const row of run.rows.slice(1)) {
-    for(const k of balances) assert.ok(Math.abs(row[k])<1e-6,`${label} ${row.year} ${k} = ${row[k]}`);
+    // The population balance within 1e-8 of the population (the solver's tolerance on many small stocks; Ydre 2026:
+    // 1e-5 persons of 3 500), the money balances within 1e-6 mnkr.
+    for(const k of balances) assert.ok(Math.abs(row[k])<(k==='populationBalance'?Math.max(1e-6,1e-8*row.population):1e-6),`${label} ${row.year} ${k} = ${row[k]}`);
     const parts=row.tax+row.grants-row.cost-row.depreciation+b.financialIncome-row.interest-row.otherFinancialExpense;
     if(label.startsWith('Motala')) assert.ok(Math.abs(row.result-parts)<1e-6,`${label} ${row.year} result ${row.result} vs parts ${parts}`);
   }
@@ -38,16 +40,6 @@ test('the page has only continuous time',()=>{
   const html=fs.readFileSync(new URL('../site/src/index.html',import.meta.url),'utf8');
   assert.doesNotMatch(html,/id="time-model"/);
   assert.doesNotMatch(html,/Årssteg/);
-});
-
-test('the flow between two year ends is the one that takes the groups there',()=>{
-  const year=continuousYear([0.0004,0.0001,0.0002,0.0018,0.04],334/23000);
-  const from=[2900,4600,1600,23000,11000],flow=[-40,60,10,-200,30];
-  const to=year.Phi.map((row,i)=>sum(row.map((x,j)=>x*from[j]))+sum(year.Psi[i].map((x,j)=>x*flow[j])));
-  inflowBetween(year,from,to).forEach((x,i)=>close(x,flow[i],1e-9,`group ${i+1}`));
-  // No deaths, births or flows: the population is kept, and the oldest group only receives.
-  const still=continuousYear([0,0,0,0,0]);
-  close(sum(still.Phi.map(row=>sum(row.map((x,j)=>x*from[j])))),sum(from),1e-9,'population kept');
 });
 
 test('the page\'s calibration is the library\'s: site inputs give Motala.Continuous as written',{skip},()=>{
@@ -124,10 +116,11 @@ test('optional mechanisms keep the books in continuous time',{skip},()=>{
   assert.deepEqual(project.map(r=>Math.round(r.projectPaid)),[4,0,0]);
   assert.deepEqual(project.map(r=>Math.round(r.projectCommissioned)),[0,65,0]);
   assert.deepEqual(project.map(r=>r.projectPlacesInUse),[0,144,144]);
-  // Receivables settle at the payment term times the revenue flow.
+  // Receivables and payables settle at the payment term times the flow at the year's end. The year's total is the flow's
+  // mean, which a growing flow exceeds by half a year's growth at the end: within 2 % (other costs 2027: 1.0 %).
   const terms=continuous(full,history,{workingCapitalEnabled:true,collectionDays:30,paymentDays:35},revenue).rows[2];
-  close(terms.tradeReceivables/(terms.operatingRevenue*30/365),1,0.01,'receivables');
-  close(terms.tradePayables/(terms.otherOperatingExpense*35/365),1,0.01,'payables');
+  close(terms.tradeReceivables/(terms.operatingRevenue*30/365),1,0.02,'receivables');
+  close(terms.tradePayables/(terms.otherOperatingExpense*35/365),1,0.02,'payables');
 });
 
 test('the page\'s solver agrees with DASSL, with and without fast flows',{skip},()=>{
@@ -171,7 +164,9 @@ test('the exported Scenario.mo is the scenario the page ran',{skip},()=>{
   const overrides={timeModel:'continuous',taxRate:22.2,investment:300,migrationDelta:150,years:5};
   const source=modelicaSource(sourced,history,overrides,revenue);
   assert.match(source,/extends Motala\.Continuous\(/);
-  assert.match(source,/mortalityRates=\{/);
+  // The calibration is computed by the library's functions, in the exported model as in the page's wrapper.
+  assert.match(source,/mortalityRates=Kommunekonomi\.Data\.deathRatesPerYear\(/);
+  assert.match(source,/residualMigrationPath=Kommunekonomi\.Data\.projectionResiduals\(/);
   assert.doesNotMatch(source,/deathRates=/);
   assert.equal(String(omc.omc_eval(`loadString(${JSON.stringify(source.replace('model Scenario','model ExportedScenario').replace('end Scenario','end ExportedScenario'))})`)).trim(),'true');
   const keys=['population','tax','grants','cost','result','debt','cash'];

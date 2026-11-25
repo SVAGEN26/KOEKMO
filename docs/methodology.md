@@ -56,8 +56,15 @@ and scale with the 19–64 population relative to the base year. Death rates und
 Residual migration per group is the average observed change minus the natural
 change over the two latest years. It holds statistical adjustments as well as
 migration. A scenario change in net migration is spread over the groups with
-fixed weights. The 65+ group is split into 65–79, 80–89 and 90+ in fixed shares
-from SCB.
+fixed weights. Within 65+ an ageing chain 65–79 → 80–89 → 90+ sets how the group
+splits for elder care: it starts at SCB's shares in the base year, people move up
+at 5.6 % and 6.0 % a year (Sweden's life table for a stationary population;
+Motala 2025: 6.0 % and 4.8 %), and death rates rise with age in the life table's
+proportions, 1 : 3.8 : 13, scaled so the chain's deaths at the start are the
+group's. The chain only splits 65+; the group's size and death rate are as
+calibrated. Until November 2026 the split was fixed at the base year, so the care
+need grew only with 65+: for Motala 80+ grew 6 % to 2033 against 23 % now and
+29 % with single years of age.
 
 **Single years of age** (`CohortDemography`): ages 0–100+ by sex, as in SCB's
 projections. Deaths follow Sweden's life table scaled to the municipality's
@@ -609,12 +616,17 @@ Inputs are validated in JavaScript, and the model asserts the same limits. The
 compiler revision and file hashes are in `omc-web/manifest.json` on the site. No
 resident-level data are used or stored.
 
-The page computes the death rates and the residual
-flow in JavaScript (`calibrateContinuous` and `inflowBetween` in
-`site/src/scenario-inputs.js`), the same way as `Data.deathRatesPerYear` and
-`Data.calibratedMigrationRates`. With SCB's projection the residual flow is the
-even inflow that takes the five groups from one projected year end to the next,
-births included, so the model's population at each year end is the projection's.
+The population calibration is computed in Modelica, in the wrapper: the page sends
+the three years of history and, where loaded, SCB's projection (`historyCohorts`,
+`projectedCohorts`, `followProjection`), and the model computes the death rates
+(`Data.deathRatesPerYear`), the residual flow (`Data.calibratedMigrationRates`) and,
+with the projection, the flow per year (`Data.projectionResiduals`) when it starts.
+`-override` reaches them because they are computed from the inputs at
+initialization. With SCB's projection the residual flow is the even inflow that
+takes the five groups from one projected year end to the next through the ageing
+chain, births included, so the model's population at each year end is the
+projection's. Until November 2026 the page computed these in JavaScript, a copy
+of the Modelica functions.
 
 `tests/jit-continuous.test.mjs` runs the staged compiler in Node and checks that
 the page's inputs give `Motala.Continuous` as written (to 1e-8), that the

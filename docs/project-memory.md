@@ -24,6 +24,27 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 - README:s tabeller för bakåttestet mot SKR:s cirkulär är från årsmodellen och ska göras om; det långa bakåttestets
   tabell är byggd ur `long-hindcast-continuous.json`, som kördes före likviditetsreserven.
 
+## 65+ som åldringskedja, kalibreringen i Modelica och snabbtester (2026-11-25, gren `eldercare`)
+
+- Användaren: "Här får vi tänka lite på stocks och flows också". Första versionen (skuggkedja bredvid p[5]) hade
+  samma personer i två lager; nu är 65+ tre lager 65-79 → 80-89 → 90+ och p[5] deras summa, de döda i 65+ kedjans.
+  Motala 2033: 80+ 4 083, 65+ 11 457, careIndex 1,15, resultat −105 (ettårsåldrar: 4 367, 12 142, 1,22, −84).
+- Gapet mot ettårsåldrarna i 65+ (685 personer 2033) förklaras av (1) att 19-64/46 = 500 fyller 65 per år mot
+  576 i verkligheten (Motalas 56-64-åringar 2025: 596, 591, 594, 615, 604, 622, 539, 486, 533) och (2) att
+  dödligheten inte sjunker (rikets trend för 65+ 1,7 %/år). Förslag: dela 19-64 i 19-54 och 55-64; dödlighetstrend
+  i kedjan. Inte gjort.
+- Kalibreringen flyttad från JavaScript till Modelica: omslaget får `historyCohorts`, `historyTotals`,
+  `historyBirths`, `historyDeaths`, `useObservedMigration`/`observedMigration` och `projectedCohorts`/
+  `followProjection`, och räknar `mortalityRates`, `residualMigration` (`Data.calibratedMigrationRates`, nu med kedjan,
+  `Data.chainYear`) och `residualMigrationPath` (`Data.projectionResiduals`, ny) vid start. Kontrollerat med omc:
+  omslaget följer SCB:s projektion vid varje årsskifte (43 019,003 mot 43 019) och exporterad Scenario.mo ger samma
+  resultat (inom 0,003 mnkr). `final` på `olderRates` låste 65+:s dödstal vid kompileringen; borttaget.
+- Sidan simulerade alltid omslagets hela 100 år: `-override=stopTime=…` läses inte av körtiden (varning "override
+  variable name not found in model: stopTime"). Med kedjan tömdes en grupp 2112 och körningen avbröts (27 JS-tester).
+  Nu `-stopTime=…` som egen flagga i `omc-session.js`; sidan räknar bara scenariots år.
+- Snabbtester: `tests/fast/test_model.py` med OMPython 4.1 och scenarier som modeller i `tests/fast/Scenarios.mo`;
+  12 tester på cirka två minuter (`npm run test:fast`). Arbetssättet står i den lokala `CLAUDE.local.md` (ignoreras).
+
 ## Granskning av den kontinuerliga modellen (2026-11-25, underagent, läsande, kontrollerat med omc)
 
 - Rättat: reserven nåddes inom en månad oavsett bokslutets kassa (Norrköping lånade 1 083 mnkr i januari 2026,
@@ -31,9 +52,13 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
   365·(kassa + kredit)/utbetalningar, och går mot reserveDays med `reserveAdjustmentTime` (standard 3 år).
   Motala 2026: +25 mnkr lån i stället för +78; Norrköping 2026: resultat −6 mnkr i stället för −43.
 - Öppet, inte rättat (gällde före ändringarna):
-  1. Femgruppsdemografin delar 65+ med basårets fasta andelar, så `careIndex` = 65+-kvoten och Koladas vikter
-     verkar inte; 80+ växer 6 % till 2033 mot 29 % med ettårsåldrar (SCB:s projektion 28 %). Grovt 57 mnkr/år 2033
-     för Motala. Störst kvarvarande fel.
+  1. RÄTTAT 2026-11-25 (gren `eldercare`): femgruppsdemografin delade 65+ med basårets fasta andelar, så `careIndex`
+     = 65+-kvoten och Koladas vikter verkade inte. Nu en åldringskedja 65-79 → 80-89 → 90+ inom 65+ (`olderChain`):
+     övergångar 0,056 och 0,060 per år (rikets livslängdstabell 2025, stationär befolkning; Motala faktiskt 2020: 0,043
+     och 0,051, 2025: 0,060 och 0,048), dödstal 1 : 3,84 : 12,98 (rikets tabell vägd med Motalas befolkning 2025),
+     skalade så att kedjans döda vid start är gruppens. Kedjan delar bara p[5]. Motala 2033: 80+ 3 590 → 4 160
+     (ettårsåldrar 4 367), careIndex 1,06 → 1,17 (1,22), resultat 69 mnkr lägre. Kvar: ettårsmodellen har 466 fler
+     65+ 2033 (olika kalibrering, punkt 7).
   2. Kassan ger ingen ränta (finansiella intäkter fasta i kronor); en reserv lånas till full ränta. Norrköping med
      30 dagar och okänd kredit bygger 1,2 mdkr kassa till 2033, resultat −60 mnkr det året.
   3. Räntesatsen kalibreras på ingående skuld men tas på aktuell skuld (Ödeshög: ränta 2026 +45 % mot basåret).

@@ -26,52 +26,9 @@ export function calibrate(history) {
   });
   return {deathRates:rates,migration:rates.map((_,i)=>sum(residuals.map(r=>r[i]))/residuals.length)};
 }
-// Continuous time (Kommunekonomi.Continuous.Demography): der(p) = A·p + inflow, with deaths and ageing as flows.
-// Returns Phi = exp(A), the population a year later per person at the start, and Psi = A⁻¹(exp(A) − I), the population
-// a year later per person and year of even inflow. birthsPerAdult adds the births, births0/p0[4] per person aged 19-64
-// (Kommunekonomi.Data.continuousYear has no births: the calibration below takes the year's births as an inflow).
-const WIDTH=[7,9,3,46];
-const product=(X,Y)=>X.map(row=>Y[0].map((_,j)=>sum(row.map((x,k)=>x*Y[k][j]))));
-const apply=(X,v)=>X.map(row=>sum(row.map((x,j)=>x*v[j])));
-export function continuousYear(rates,birthsPerAdult=0) {
-  const identity=()=>Array.from({length:5},(_,i)=>Array.from({length:5},(_,j)=>+(i===j)));
-  const A=Array.from({length:5},(_,i)=>Array.from({length:5},(_,j)=>i===j?-rates[i]-(i<4?1/WIDTH[i]:0):j===i-1?1/WIDTH[j]:0));
-  A[0][3]+=birthsPerAdult;
-  let term=identity();const Phi=identity(),Psi=identity();
-  for(let k=1;k<=30;k++) {
-    term=product(term,A).map(row=>row.map(x=>x/k));
-    for(let i=0;i<5;i++) for(let j=0;j<5;j++) {Phi[i][j]+=term[i][j];Psi[i][j]+=term[i][j]/(k+1);}
-  }
-  return {Phi,Psi};
-}
-// The even inflow per year that takes the five groups from `from` to `to` in one year of continuous time.
-export function inflowBetween({Phi,Psi},from,to) {
-  const M=Psi.map((row,i)=>[...row,to[i]-apply(Phi,from)[i]]);
-  for(let i=0;i<5;i++) {
-    let pivot=i;
-    for(let r=i+1;r<5;r++) if(Math.abs(M[r][i])>Math.abs(M[pivot][i])) pivot=r;
-    [M[i],M[pivot]]=[M[pivot],M[i]];
-    for(let r=0;r<5;r++) if(r!==i) {const f=M[r][i]/M[i][i];for(let j=i;j<6;j++) M[r][j]-=f*M[i][j];}
-  }
-  return M.map((row,i)=>row[5]/row[i]);
-}
-// Death rates per person and year: for 65+ the base year's deaths over the mean population (Data.deathRatesPerYear).
-export function mortalityPerYear(history) {
-  const [previous,row]=reconcileHistory(history).slice(-2);
-  const mean=row.population.map((x,i)=>(x+previous.population[i])/2);
-  const d=[0.0004,0.0001,0.0002,0.0018,0];
-  d[4]=(row.deaths-sum(mean.slice(0,4).map((x,i)=>x*d[i])))/mean[4];
-  return d;
-}
-// As calibrate, for continuous time: the residual flow that reproduces the last two years' change, with the
-// year's births as an even inflow to 0-6 (Data.calibratedMigrationRates).
-export function calibrateContinuous(history) {
-  const rows=reconcileHistory(history).slice(-3);
-  if(rows.length<2) throw Error('At least two completed years are required');
-  const rates=mortalityPerYear(history),year=continuousYear(rates);
-  const flows=rows.slice(1).map((row,i)=>inflowBetween(year,rows[i].population,row.population).map((x,j)=>j?x:x-row.births));
-  return {deathRates:rates,migration:rates.map((_,i)=>sum(flows.map(f=>f[i]))/flows.length),continuous:true};
-}
+// The population calibration of the continuous model (death rates, the residual flow and the flows that follow a
+// projection) is computed in Modelica, in the wrapper MotalaBrowserContinuous: the page sends the history and the
+// projection (historyCohorts, projectedCohorts ...), and the model computes the rest when it starts.
 // Genomsnittlig räntebindning vid basårets slut (data/rate-fixing.json, ur årsredovisningarna); annars tabellens antagande.
 // The municipality's liquidity rule as attached to the baseline (b.liquidity), else the standard: 30 days, no credit line.
 export const STANDARD_LIQUIDITY={reserveDays:30,creditLine:0,note:'Standard: 30 dagars utbetalningar, ingen känd kredit.'};
@@ -132,11 +89,10 @@ export function validate(b,a) {
     if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>1)) throw Error('Andelarna för senare betalning och förfinansiering ska vara 0–100 procent.');
   }
 }
-export function planningSeries(b,a,c) {
+export function planningSeries(b,a) {
   const source=b.planningInputs;
   if(source && (source.municipality!==(b.municipality??DEFAULT_MUNICIPALITY)||source.baseYear!==b.baseYear||!Array.isArray(source.rows))) throw Error('Planning inputs must match the selected municipality and base year');
   let previous=[...b.population],taxFactor=1;
-  const flowYear=c.continuous?continuousYear(c.deathRates,b.births/b.population[3]):null;
   const rows=[];
   for(let t=1;t<=a.years;t++) {
     const row=source?.rows.find(r=>r.year===b.baseYear+t);
@@ -144,17 +100,12 @@ export function planningSeries(b,a,c) {
     const cohorts=row?.cohorts;
     const validCohorts=Array.isArray(cohorts)&&cohorts.length===5&&cohorts.every(x=>Number.isFinite(x)&&x>0);
     if(row && (!(validCohorts||(cohorts==null&&(source.demography==='calibrated'||row.projected)))||!['taxBaseGrowth','labourCostGrowth','otherPriceGrowth'].every(k=>Number.isFinite(row[k])&&row[k]>-100&&row[k]<100))) throw Error('Invalid planning input row');
-    // The residual that takes last year's groups to SCB's for this year: one step a year, or an even flow in continuous time.
-    const residual=()=>flowYear?inflowBetween(flowYear,previous,cohorts)
-      :(natural=>cohorts.map((x,i)=>x-natural[i]))(naturalStep(previous,b.births*previous[3]/b.population[3],c.deathRates));
-    const migration=a.demographyMode==='observed'?c.migration:cohorts?residual():c.migration;
     const wageGrowth=row&&!a.splitPayroll?row.labourCostGrowth+a.wageGrowth-b.assumptions.wageGrowth:a.wageGrowth;
     const priceGrowth=row?row.otherPriceGrowth+a.priceGrowth-b.assumptions.priceGrowth:a.priceGrowth;
     const taxGrowth=row?row.taxBaseGrowth+a.taxGrowth-b.assumptions.taxGrowth:a.taxGrowth;
     if([wageGrowth,priceGrowth,taxGrowth].some(x=>x<=-100||x>100)) throw Error('Adjusted annual planning rate outside supported range');
     taxFactor*=1+taxGrowth/100;
-    rows.push({year:b.baseYear+t,migration:[...migration],wageGrowth,priceGrowth,taxGrowth,referenceTax:(b.tax-(b.priorYearSettlement??0))*taxFactor});
-    if(cohorts) previous=cohorts;
+    rows.push({year:b.baseYear+t,cohorts:validCohorts?[...cohorts]:null,wageGrowth,priceGrowth,taxGrowth,referenceTax:(b.tax-(b.priorYearSettlement??0))*taxFactor});
   }
   return rows;
 }
@@ -222,15 +173,14 @@ export function validateRevenuePath(path,baseYear,municipality=DEFAULT_MUNICIPAL
 }
 export function prepareScenario(b,history,overrides={},revenuePath=null) {
   const a={...b.assumptions,...overrides}; validate(b,a);
-  if(history.length<2||history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
+  if(history.length<3) throw Error('The model calibrates on three completed years up to the base year');
+  if(history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
   if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear,b.municipality); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
-  // Continuous time: death rates per year and a residual flow calibrated for flows during the year.
-  const c=calibrateContinuous(history),o=b.operatingAccounts;
+  const o=b.operatingAccounts;
   const observed=['observed','cohort-observed'].includes(a.demographyMode),cohort=a.demographyMode?.startsWith('cohort')??false;
   const evidence=b.experiments;
   if((observed||a.splitPayroll)&&!evidence) throw Error('SCB-underlag saknas för valt basår.');
-  if(a.demographyMode==='observed') c.migration=toGroups(evidence.netMigration);
-  const inputs=planningSeries(b,a,c);
+  const inputs=planningSeries(b,a);
   const revenuePopulation0=reconcileHistory(history).find(r=>r.year===b.baseYear-1).population;
   const national=year=>{
     const population=b.nationalPopulation?.population;
@@ -241,8 +191,20 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     if(!Number.isFinite(v))throw Error(`Rikets folkmängd saknas för ${year}`);
     return v;
   };
-  const fields={p0:b.population,deathRates:c.deathRates,residualMigration:c.migration,migrationWeights:a.migrationWeights,educationWeights:a.educationWeights,sectorCosts:a.sectorCosts,tax0:b.tax,grants0:b.grants,debt0:b.debt,cash0:b.cash,assets0:b.assets,depreciation0:b.depreciation,financialIncome:b.financialIncome,otherFinancialExpense:b.otherFinancialExpense,payroll0:o.payrollExcludingPensions,pension0:o.pensionExpense,otherOperatingExpense0:o.otherOperatingExpense,operatingRevenue0:o.operatingRevenue,netCostRoundingAdjustment:o.netCostRoundingAdjustment,births0:b.births,migrationDelta:a.migrationDelta,taxRate:a.taxRate,baseTaxRate:b.taxRate,investment:a.investment,adjustment:a.adjustment,equalisationOffset:a.equalisationOffset,fixedShare:a.fixedShare,populationRevenueElasticity:a.populationRevenueElasticity};
-  fields.mortalityRates=c.deathRates;
+  const fields={p0:b.population,migrationWeights:a.migrationWeights,educationWeights:a.educationWeights,sectorCosts:a.sectorCosts,tax0:b.tax,grants0:b.grants,debt0:b.debt,cash0:b.cash,assets0:b.assets,depreciation0:b.depreciation,financialIncome:b.financialIncome,otherFinancialExpense:b.otherFinancialExpense,payroll0:o.payrollExcludingPensions,pension0:o.pensionExpense,otherOperatingExpense0:o.otherOperatingExpense,operatingRevenue0:o.operatingRevenue,netCostRoundingAdjustment:o.netCostRoundingAdjustment,births0:b.births,migrationDelta:a.migrationDelta,taxRate:a.taxRate,baseTaxRate:b.taxRate,investment:a.investment,adjustment:a.adjustment,equalisationOffset:a.equalisationOffset,fixedShare:a.fixedShare,populationRevenueElasticity:a.populationRevenueElasticity};
+  // The history the model calibrates on: the three years up to the base year (Data.calibratedMigrationRates).
+  const recent=history.slice(-3);
+  fields.historyCohorts=recent.map(r=>r.population);
+  fields.historyTotals=recent.map(r=>r.reportedTotal??sum(r.population));
+  fields.historyBirths=recent.slice(1).map(r=>r.births);
+  fields.historyDeaths=recent.at(-1).deaths;
+  // SCB's observed net migration instead of the calibrated flow; otherwise SCB's projection where it is loaded.
+  fields.useObservedMigration=a.demographyMode==='observed';
+  if(fields.useObservedMigration) fields.observedMigration=toGroups(evidence.netMigration);
+  else {
+    fields.projectedCohorts=inputs.map(r=>r.cohorts??[0,0,0,0,0]);
+    fields.followProjection=inputs.map(r=>!!r.cohorts);
+  }
   if(observed) fields.migrationWeights=toGroups(evidence.arrivalWeights);
   const profile=Object.hasOwn(migrationProfiles,a.migrationProfile)?migrationProfiles[a.migrationProfile]:null;
   if(profile) fields.migrationWeights=profile;
@@ -259,7 +221,6 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   // Reference growth is national; Motala's share follows its population relative to Sweden's (end of the previous year).
   fields.nationalPopulation0=national(b.baseYear-1);
   fields.nationalPopulationPath=inputs.map(r=>national(r.year-1));
-  fields.residualMigrationPath=inputs.map(r=>r.migration);
   fields.wageGrowthPath=inputs.map(r=>r.wageGrowth/100);
   fields.priceGrowthPath=inputs.map(r=>r.priceGrowth/100);
   const refs=inputs.map(r=>revenuePath?.rows.find(p=>p.year===r.year));
@@ -344,7 +305,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     'demography.observedDeltaShape':evidence.arrivalWeights,
     'demography.useObservedDeltaShape':!profile
   }:null;
-  return {assumptions:{...a,timeModel:'continuous'},calibration:c,inputs,fields,cohort,ageMigration,
+  return {assumptions:{...a,timeModel:'continuous'},calibration:'Kommunekonomi.Data i Modelica (MotalaBrowserContinuous)',inputs,fields,cohort,ageMigration,
     planningStatus:b.planningInputs?'Sourced population and annual SKR assumptions':'Illustrative assumptions',
     revenueStatus:revenuePath?'Imported revenue path':'Illustrative revenue path'};
 }
