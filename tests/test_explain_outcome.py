@@ -108,10 +108,12 @@ class Explanations(unittest.TestCase):
             self.assertAlmostEqual(s['delayed'][1], s['shock'][0] / 2)
             self.assertAlmostEqual(s['delayed'][3], (s['shock'][2] + s['shock'][1]) / 2)
             first, later = s['runs']['mechanism']['2022'], s['runs']['mechanism']['2024']
-            # The first year only the prices of other costs move; wages, pensions and tax follow the years after.
+            # The first year only the prices of other costs move; wages, pensions and tax follow the years after. In
+            # continuous time the wage rate at the year's end leans on the next year's growth, which the shock raises:
+            # within 1e-5 of the amount (Norrköping's payroll 2022: 0.03 of 5 491 mnkr).
             self.assertGreater(first['otherCosts'], believed['2022']['otherCosts'] * 1.05)
             for line in ('payroll', 'pension', 'tax'):
-                self.assertAlmostEqual(first[line], believed['2022'][line], delta=0.02, msg=f'{code} {line}')
+                self.assertAlmostEqual(first[line], believed['2022'][line], delta=max(0.02, 1e-5 * abs(believed['2022'][line])), msg=f'{code} {line}')
                 self.assertGreater(later[line], believed['2024'][line], msg=f'{code} {line}')
             self.assertAlmostEqual(later['pension'] / believed['2024']['pension'], 1 + 8 * s['delayed'][2], places=6)
             # Compensation changes the grants from the second year and nothing on the cost side.

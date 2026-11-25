@@ -24,6 +24,18 @@ inte i strikt ordning (de senaste, 2026-11-20, ligger sist).
 - README:s tabeller för bakåttestet mot SKR:s cirkulär är från årsmodellen och ska göras om; det långa bakåttestets
   tabell är byggd ur `long-hindcast-continuous.json`, som kördes före likviditetsreserven.
 
+## Jämförelse mot SKR med den nuvarande modellen (2026-11-25, gren `skr-hindcast`)
+
+- Omkört med kedjan och reserven: `hindcast_vintages.py` (Motala, 0562, 0586) och `hindcast_long.py` (13 kommuner).
+- Mot SKR:s decembercirkulär 2020-2024 (medelabsolutfel i resultatet, mnkr, 1/2/3 år): Motala 40/63/57, Finspång
+  38/78/56, Mjölby 41/66/117; budgeten 24 (Motala, år 1), att behålla basårets resultat 59/76/41. Nästan oförändrat
+  mot före (±3). SKR-felet är mest indata: med prisutfallen går Motalas kostnadsfel efter tre år från −177 till +16.
+- Långa testet (2017-2019 → 2025, med facit): resultatet för lågt från år 3, −1,7 % av skatt och bidrag efter 4 år
+  och −2,6 % efter 8 (före kedjan inom 0,3 %). Nettokostnaden +7,3 % efter 8 år (före +4,3). Orsak: kedjans fasta
+  övergångar 5,6 %/6,0 % mot 1930-talets små kullar 2017-2020 (Motala 2020: 4,5 %). Diagnos med 4,5/5,0 %: −0,8 %
+  efter 8 år. Åtgärd: ta övergångarna (och 65-inflödet) ur varje basårs ettårsåldrar. Från 2020 träffar kedjan
+  Motalas 80+ (3 321 mot 3 387 år 2025) men 65+ är för låg (10 701 mot 11 016).
+
 ## 65+ som åldringskedja, kalibreringen i Modelica och snabbtester (2026-11-25, gren `eldercare`)
 
 - Användaren: "Här får vi tänka lite på stocks och flows också". Första versionen (skuggkedja bredvid p[5]) hade
