@@ -1510,6 +1510,19 @@ arkivera data.
     och betalningsberedskap 30 dagar = (likvida medel + kreditlöften)/(alla in- och utbetalningar/365).
   - 30 dagars utbetalningar (driftkostnad + investering + ränta, basår 2025): Motala 284 mnkr mot kassa 81 + checkkredit
     200 = 281; Finspång 136 mnkr mot kassa 148. Båda ligger alltså nära 30 dagar.
+- Likviditetsreserv i modellen (2026-11-25): `reserveDays`/365 av utbetalningarna (löner med sociala avgifter,
+  pensionsutbetalningar, övriga kostnader, investering och ränta) minus `creditLine`. På som standard
+  (`liquidityPolicy = true`). Kommunernas regler i `data/liquidity.json` och som kommentar i varje Modelica-paket
+  (skrivs av `scripts/prepare_municipality.py`). Dokumenten i privata repot `styrdokument/`.
+  - Regel i dagar: Ödeshög 30, Kinda 30, Linköping en månad (30), Valdemarsvik 60 (varav 30 i kassa), Finspång 30.
+  - Ingen siffra eller kvot: Boxholm, Åtvidaberg, Norrköping (DSCR > 120 %), Ydre (kvot mot lån som förfaller);
+    inte publicerad: Ydre, Söderköping, Vadstena, Mjölby, och Motalas bilaga. Dessa får 30 dagar.
+  - Kredit: Motala 200, Söderköping 70 (gemensam med Ramunderstaden), Kinda 30, Ödeshög 15, Vadstena 15, Boxholm 10.
+    Linköping och Norrköping anger koncernkrediter men inte kommunens outnyttjade del: noll.
+  - Motala 2026: reserv 150 mnkr, kassan går 81 → 158, resultatet 1,6 mnkr lägre av räntan.
+  - Den kontinuerliga finansieringen är nu `financingNeed = (reserv − kassa)/reserveRestoreTime − net`; lån = max(0,
+    behov), amortering = min(max(0, −behov), skuld/reserveRestoreTime). Den gamla regeln växlade vid reserven och
+    fastnade (Finspång, 857 MB händelser).
 - Omvänd beräkning: med resultatmål görs två extra körningar (skattesats +1 kr, kostnadsökning −0,5 procentenheter);
   ändringen som når målet löses per år linjärt, med hänsyn till att målet i kronor växer med skatten. Kontroll i
   webbläsare: Motala 21,76 kr ger 2,00 % 2026 och mer övriga år; Finspång 21,33 kr ger 2,00 % 2026.

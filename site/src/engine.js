@@ -57,7 +57,10 @@ export function simulate(b,history,overrides={},revenuePath=null) {
     const interest=previousDebt*a.interestRate/100;
     const result=tax+grants-cost-depreciation+b.financialIncome-interest-b.otherFinancialExpense;
     const operatingCash=result+depreciation+pensionExpense-pensionCashPayments;
-    const financingGap=a.investment-operatingCash;
+    // Liquidity reserve: reserveDays of the year's payments (operations, investment, interest) less the credit line.
+    const reserveOn=a.liquidityPolicy??true,liquidity=b.liquidity??{reserveDays:30,creditLine:0};
+    const cashReserve=reserveOn?Math.max(0,(a.reserveDays??liquidity.reserveDays)/365*(payroll+pensionCashPayments+otherOperatingExpense+a.investment+interest)-(a.creditLine??liquidity.creditLine)):0;
+    const financingGap=a.investment-operatingCash+(reserveOn?cashReserve-previousCash:0);
     const borrowing=Math.max(0,financingGap),repayment=Math.min(previousDebt,Math.max(0,-financingGap));
     debt=previousDebt+borrowing-repayment;
     cash=previousCash+operatingCash-a.investment+borrowing-repayment;

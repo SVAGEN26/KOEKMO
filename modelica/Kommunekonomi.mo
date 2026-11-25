@@ -465,8 +465,9 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real collectionDays(min=0,max=365) = 0 "Kundfordringar i dagar av verksamhetsintäkterna";
     parameter Real paymentDays(min=0,max=365) = 0 "Leverantörsskulder i dagar av övriga driftkostnader";
     parameter Units.Money firstYearGrantAdvance(min=0) = 0 "Bidrag inbetalt första året som hör till året efter, mnkr";
-    parameter Boolean liquidityPolicy = false "Använd tillgänglig kassa och håll en vald kassareserv";
-    parameter Units.Money cashReserve(min=0) = 0 "Önskad lägsta kassa vid årets slut, mnkr";
+    parameter Boolean liquidityPolicy = true "Styr kassan mot likviditetsreserven; false = kassan ligger kvar på basårets nivå så länge kommunen har skuld";
+    parameter Real reserveDays(min=0,max=365) = 30 "Likviditetsreserv i dagar av årets utbetalningar (drift, investering och ränta); standard 30 dagar (data/liquidity.json)";
+    parameter Units.Money creditLine(min=0) = 0 "Outnyttjad checkkredit och bekräftade kreditlöften, mnkr; räknas av från reserven";
     parameter Real deferInvestmentShare(min=0,max=1) = 0 "Andel av första årets planerade investering som betalas året efter";
     parameter Real prefinanceShare(min=0,max=1) = 0 "Andel av uppskjuten betalning som lånas första året";
     parameter Integer constructionYears(min = 0, max = 5) = 0 "Årssteg mellan utbetalning och driftsättning för byggprojekt";
@@ -505,8 +506,8 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     assert(min(referencePopulation) > 0, "referencePopulation måste vara positiv varje år");
     assert(min({receivables0,payables0,grantAdvances0,collectionDays,paymentDays,firstYearGrantAdvance}) >= 0 and collectionDays <= 365 and paymentDays <= 365,
       "Ogiltiga antaganden för rörelsekapital");
-    assert(cashReserve >= 0 and deferInvestmentShare >= 0 and deferInvestmentShare <= 1 and prefinanceShare >= 0 and prefinanceShare <= 1,
-      "Ogiltig kassareserv eller andel för uppskjuten betalning och förfinansiering");
+    assert(reserveDays >= 0 and reserveDays <= 365 and creditLine >= 0 and deferInvestmentShare >= 0 and deferInvestmentShare <= 1 and prefinanceShare >= 0 and prefinanceShare <= 1,
+      "Ogiltig likviditetsreserv eller andel för uppskjuten betalning och förfinansiering");
     assert(min(investmentPath) >= 0, "investmentPath får inte vara negativ; försäljningar av tillgångar modelleras inte");
     assert(births0 >= 0 and min(birthChangePath) >= -1, "births0 och birthChangePath får inte ge negativt antal födda");
     assert(min(pensionExpensePath) >= 0 and min(pensionCashPaymentsPath) >= 0, "pensionExpensePath och pensionCashPaymentsPath får inte vara negativa");
@@ -1226,8 +1227,9 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       parameter Units.Money financialIncome "Finansiella intäkter per år, mnkr";
       parameter Units.Money otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
       parameter Units.Money revenue0 "Skatt och generella bidrag i basåret, mnkr";
-      parameter Boolean liquidityPolicy = false;
-      parameter Real cashReserve = 0;
+      parameter Boolean liquidityPolicy = false "Styr kassan mot likviditetsreserven";
+      parameter Real reserveDays = 0 "Likviditetsreserv i dagar av årets utbetalningar";
+      parameter Units.Money creditLine = 0 "Checkkredit och kreditlöften som räknas av från reserven, mnkr";
       parameter Units.Money plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
       parameter Real averageRate0 = 0 "Snittränta på skulden vid basårets slut, andel";
       parameter Units.Duration rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid, år; 0 = hela skulden till årets ränta";
@@ -1235,6 +1237,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       parameter Real rateShockTime = 1e9 "Datum för höjningen som decimalår (2026,5 = 1 juli 2026)";
       outer Calendar calendar;
       input Real workingCapitalCash "Kassaeffekt av ändrade rörelsekapitalposter";
+      input Real operatingPayments "Driftens utbetalningar: löner med sociala avgifter, pensionsutbetalningar och övriga kostnader, mnkr";
       Interfaces.TaxAndGrantsInput taxAndGrants "Skatt och bidrag" annotation(
         Placement(transformation(origin = {0, -130}, extent = {{-18, -18}, {18, 18}}, rotation = 90), iconTransformation(origin = {0, -75}, extent = {{-9, -9}, {9, 9}}, rotation = 90)));
       Interfaces.OperatingCostInput operations "Nettokostnad och pensioner" annotation(
@@ -1253,6 +1256,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
       discrete output Units.Money borrowing(start = 0, fixed = true) "Nya lån under året, mnkr";
       discrete output Units.Money prefinancing(start = 0, fixed = true) "Lån i förväg under året, mnkr";
       discrete output Units.Money repayment(start = 0, fixed = true) "Amortering under året, mnkr";
+      discrete output Units.Money cashReserve(start = 0, fixed = true) "Likviditetsreserv i kassan vid årets slut: dagar av årets utbetalningar minus krediten, mnkr";
       discrete output Units.Money cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
       discrete output Units.Money debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
       discrete output Real resultShare(start = 100*result0/revenue0, fixed = true) "Årets resultat i procent av skatter och bidrag (kommunens finansiella mål)";
@@ -1280,6 +1284,8 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
         resultShare := 100*result/(taxAndGrants.tax + taxAndGrants.grants);
         interestShare := 100*interest/(taxAndGrants.tax + taxAndGrants.grants);
         cumulativeInterest := pre(cumulativeInterest) + interest;
+        // Reserven: reserveDays av årets utbetalningar (drift, investering, ränta), minus checkkredit och kreditlöften.
+        cashReserve := if liquidityPolicy then max(0, reserveDays/365*(operatingPayments + investment + interest) - creditLine) else 0;
         financingGap := investment - operatingCash +
           (if liquidityPolicy then cashReserve - pre(cash) else 0);
         prefinancing := if liquidityPolicy and calendar.pathIndex == 1 then plannedPrefinancing else 0;
@@ -1404,7 +1410,7 @@ marknadsräntan från <code>rateShockTime</code>.</li>
     Components.WorkingCapital workingCapital(active=workingCapitalEnabled, receivables0=receivables0,
       payables0=payables0, grantAdvances0=grantAdvances0, collectionDays=collectionDays,
       paymentDays=paymentDays, firstYearGrantAdvance=firstYearGrantAdvance) "Rörelsekapital";
-    Components.Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, result0 = tax0 + grants0 - (payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment) - depreciation0 + financialIncome - base.interestExpense - otherFinancialExpense, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, revenue0 = tax0 + grants0, liquidityPolicy = liquidityPolicy, cashReserve = cashReserve,
+    Components.Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, result0 = tax0 + grants0 - (payroll0 + pension0 + otherOperatingExpense0 - operatingRevenue0 + netCostRoundingAdjustment) - depreciation0 + financialIncome - base.interestExpense - otherFinancialExpense, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, revenue0 = tax0 + grants0, liquidityPolicy = liquidityPolicy, reserveDays = reserveDays, creditLine = creditLine,
       plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
         averageRate0 = interestRate, rateFixingYears = rateFixingYears, rateShock = rateShock, rateShockTime = rateShockTime) "Finans" annotation(
       Placement(transformation(origin = {250, -110}, extent = {{-75, -56}, {75, 56}})));
@@ -1486,6 +1492,7 @@ marknadsräntan från <code>rateShockTime</code>.</li>
     workingCapital.operatingRevenue = operations.operatingRevenue;
     workingCapital.otherOperatingExpense = operations.otherOperatingExpense;
     finance.workingCapitalCash = workingCapital.cashEffect;
+    finance.operatingPayments = operations.payroll + operations.pensionCashPayments + operations.otherOperatingExpense;
     tradeReceivables = workingCapital.receivables;
     tradePayables = workingCapital.payables;
     deferredGrants = workingCapital.grantAdvances;
@@ -2095,8 +2102,9 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       parameter Units.Money grants0 = 0 "Generella bidrag i basåret, mnkr";
       parameter Units.Money financialIncome "Finansiella intäkter per år, mnkr";
       parameter Units.Money otherFinancialExpense "Finansiella kostnader utöver räntor per år, mnkr";
-      parameter Boolean liquidityPolicy = false;
-      parameter Real cashReserve = 0;
+      parameter Boolean liquidityPolicy = false "Styr kassan mot likviditetsreserven";
+      parameter Real reserveDays = 0 "Likviditetsreserv i dagar av utbetalningarna";
+      parameter Units.Money creditLine = 0 "Checkkredit och kreditlöften som räknas av från reserven, mnkr";
       parameter Units.Money plannedPrefinancing = 0 "Förutbestämd ny upplåning första året, mnkr";
       parameter Units.Duration reserveRestoreTime = 1/12 "Tid för att låna upp till kassareserven när kassan understiger den, år";
       parameter Real averageRate0 = 0 "Snittränta på skulden vid basårets slut, andel";
@@ -2127,9 +2135,10 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       Real marketRate "Marknadsränta för nya och omsatta lån just nu, andel";
       Units.MoneyRate fixedInterest(start = averageRate0*debt0, fixed = true) "Årlig räntekostnad på lånen med deras bundna räntor, mnkr per år";
       Real averageRate "Snittränta på skulden just nu, andel";
-      Units.Money reserve "Kassareserven just nu: policyns reserv plus det som lånats i förväg under första året, mnkr";
-      Boolean surplusCash "Kassan över reserven finansierar underskott";
-      Boolean belowReserve "Kassan under reserven fylls på först";
+      input Units.MoneyRate operatingPayments "Driftens utbetalningar: löner med sociala avgifter, pensionsutbetalningar och övriga kostnader, mnkr per år";
+      Units.Money cashReserve "Likviditetsreserv just nu: dagar av utbetalningarna minus krediten, mnkr";
+      Units.Money reserve "Kassareserven just nu: likviditetsreserven plus det som lånats i förväg under första året, mnkr";
+      Units.MoneyRate financingNeed "Behov av finansiering: underskottet plus det som fattas till reserven, fördelat på reserveRestoreTime, mnkr per år";
       discrete output Units.Money debtLevel(start = debt0, fixed = true) "Låneskuld vid årets slut, mnkr";
       discrete output Units.Money cashBalance(start = 0, fixed = true) "Kontroll av kassabalansen, mnkr; ska vara noll";
       discrete output Units.Money debtBalance(start = 0, fixed = true) "Kontroll av skuldbalansen, mnkr; ska vara noll";
@@ -2147,13 +2156,16 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       otherFinancial.rate = otherFinancialExpense/Units.year;
       net = operations.rate + investments.rate;
       prefinancing.rate = if liquidityPolicy and calendar.pathIndex == 1 then plannedPrefinancing/Units.year else 0;
+      // Utbetalningarna just nu: drift, investering (investments.rate är negativ när pengar går ut) och ränta.
+      cashReserve = if liquidityPolicy then max(0, reserveDays/365*(operatingPayments - investments.rate + interest.rate) - creditLine) else 0;
       reserve = cashReserve + (if calendar.pathIndex == 1 then prefinancing.accumulated else 0);
-      surplusCash = liquidityPolicy and cash.level > reserve;
-      belowReserve = liquidityPolicy and cash.level < reserve;
-      borrowing.rate = (if net < 0 and not surplusCash then -net else 0) + (if belowReserve then (reserve - cash.level)/reserveRestoreTime else 0);
-      // Med kassapolicy amorterar kassan över reserven, dock inte mer än skulden; som i årsmodellen, där kassan går till reserven.
-      repayment.rate = (if net > 0 and not belowReserve and debt.level < 0 then net else 0)
-        + (if surplusCash then max(0, min(cash.level - reserve, -debt.level))/reserveRestoreTime else 0);
+      // Med kassapolicy styrs kassan mot reserven: behovet är underskottet plus avvikelsen från reserven delad med
+      // reserveRestoreTime. Det är kontinuerligt i kassan, så lån och amortering växlar inte fram och tillbaka vid reserven.
+      // Ett negativt behov amorterar, dock högst så att skulden går mot noll; finns ingen skuld stannar överskottet i kassan.
+      financingNeed = if liquidityPolicy then (reserve - cash.level)/reserveRestoreTime - net else -net;
+      borrowing.rate = max(0, financingNeed);
+      repayment.rate = if liquidityPolicy then min(max(0, -financingNeed), -debt.level/reserveRestoreTime)
+        else (if net > 0 and debt.level < 0 then net else 0);
       connect(operating, tax.to);
       connect(operating, grants.to);
       connect(operating, financial.to);
@@ -2188,9 +2200,12 @@ driftens och investeringarnas betalningar kommer genom kopplingarna och mäts (<
 bundna räntor. Den närmar sig marknadsräntan gånger skulden med tidskonstanten <code>rateFixingYears</code>; nya lån tas till
 marknadsräntan. En räntechock (<code>rateShock</code> från <code>rateShockTime</code>) slår därför igenom gradvis.</p>
 <ul><li>Underskott före finansiering lånas när det uppstår; ett överskott amorterar, och när skulden är noll växer kassan.</li>
-<li>Med kassapolicy går kassan mot reserven, som i årsmodellen: kassan över reserven finansierar underskott och amorterar
-lån, och en kassa under reserven fylls på genom lån, båda inom ungefär <code>reserveRestoreTime</code>. Det som lånas i
-förväg första året hålls i kassan till året därpå.</li></ul></html>"));
+<li>Med kassapolicy (standard) går kassan mot likviditetsreserven <code>reserveDays</code>/365 av utbetalningarna just nu
+(drift, investering och ränta) minus <code>creditLine</code>, som i årsmodellen: kassan över reserven finansierar underskott
+och amorterar lån, och en kassa under reserven fylls på genom lån, båda inom ungefär <code>reserveRestoreTime</code>.
+Behovet av finansiering är kontinuerligt i kassan, så lån och amortering växlar inte vid reserven. Utan skuld stannar
+överskottet i kassan. Det som lånas i förväg första året hålls i kassan till året därpå. Kommunernas regler och källor
+står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></html>"));
     end Finance;
 
     partial model Economy "Kommunens ekonomi i kontinuerlig tid: samma antaganden och utdata som Annual"
@@ -2216,7 +2231,7 @@ förväg första året hålls i kassan till året därpå.</li></ul></html>"));
         Placement(transformation(origin = {-120, 20}, extent = {{-20, -15}, {20, 15}})));
       Payments payments(active = workingCapitalEnabled, receivables0 = receivables0, payables0 = payables0, grantAdvances0 = grantAdvances0, collectionDays = collectionDays, paymentDays = paymentDays, firstYearGrantAdvance = firstYearGrantAdvance, netCostRoundingAdjustment = netCostRoundingAdjustment) "Driftens betalningar" annotation(
         Placement(transformation(origin = {60, 40}, extent = {{-20, -15}, {20, 15}})));
-      Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, liquidityPolicy = liquidityPolicy, cashReserve = cashReserve, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
+      Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, liquidityPolicy = liquidityPolicy, reserveDays = reserveDays, creditLine = creditLine, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
         averageRate0 = interestRate, rateFixingYears = rateFixingYears, rateShock = rateShock, rateShockTime = rateShockTime) "Kassa och lån" annotation(
         Placement(transformation(origin = {0, -20}, extent = {{-20, -15}, {20, 15}})));
       Capital capital(baseYear = base.year, assets0 = assets0, depreciation0 = depreciation0, life = life, constructionYears = constructionYears, constructionShare = constructionShare, workInProgress0 = workInProgress0, projectOpeningStock = projectOpeningStock, projectPayment = projectPayment, projectOpeningStep = projectOpeningStep, projectPlaces = projectPlaces) "Kapital" annotation(
@@ -2238,6 +2253,7 @@ förväg första året hålls i kassan till året därpå.</li></ul></html>"));
       connect(scenario.revenue, revenues.reference);
       connect(scenario.investment, capital.investment);
       connect(scenario.interestRate, finance.interestRate);
+      finance.operatingPayments = operations.wagesRate + operations.employerContributionsRate + operations.pensionCashPaymentsRate + operations.otherOperatingExpenseRate;
       connect(demography.cohorts, revenues.cohorts);
       connect(demography.cohorts, services.cohorts);
       connect(demography.cohorts, operations.cohorts);

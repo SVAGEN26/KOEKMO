@@ -1,5 +1,5 @@
 import {DEFAULT_MUNICIPALITY,municipalities} from './municipalities.js';
-import {sum,validateRevenuePath,holdRegulation,extendPlanning,workingCapitalDays,rateFixing} from './scenario-inputs.js';
+import {sum,validateRevenuePath,holdRegulation,extendPlanning,workingCapitalDays,rateFixing,liquidityFor,liquidityRule} from './scenario-inputs.js';
 import {MAX_YEARS} from './omc-session.js';
 import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
@@ -60,7 +60,7 @@ const explanations={
   equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
 };
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let rateFixingTable,rateStress,investmentPlans,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,rateStress,investmentPlans,liquidityTable,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
@@ -90,7 +90,7 @@ const skrSources={
 const comparisonSelectors=[$('comparison-scenario'),$('comparison-preset')];
 const scenarioStorageKey='motala.saved-scenarios.v1';
 const savedControlIds=['planning-enabled','regulation-held','investment-plan','result-series','model-variable','as-shares','time-model','revenue-mode','demography-mode','split-payroll',
-  'employer-rate','construction-years','construction-share','liquidity-policy','cash-reserve','defer-investment-share',
+  'employer-rate','construction-years','construction-share','liquidity-policy','reserve-days','credit-line','defer-investment','defer-investment-share',
   'prefinance-share','working-capital-enabled','collection-days','payment-days','grant-advance',
   'migration-profile','age-tax','project-choice'];
 let savedScenarios=[],latestSettings,explanationRuns;
@@ -225,7 +225,8 @@ function updateModelOptions() {
   $('construction-years').disabled=!Number.isFinite(b.workInProgress);
   const constructionYears=$('construction-years').disabled?0:Number($('construction-years').value);
   const constructionShare=Number($('construction-share').value)/100;
-  const liquidityPolicy=$('liquidity-policy').checked;
+  const liquidityPolicy=$('liquidity-policy').checked,deferInvestment=liquidityPolicy&&$('defer-investment').checked;
+  const enteredValue=id=>$(id).value===''?null:Number($(id).value);
   const workingCapitalEnabled=$('working-capital-enabled').checked;
   const enteredDays=id=>workingCapitalEnabled&&$(id).value!==''?Number($(id).value):null;
   const revenueMode=path?Number($('revenue-mode').value):0;
@@ -237,9 +238,9 @@ function updateModelOptions() {
     ageTax:!$('age-tax').disabled&&$('age-tax').checked,migrationProfile:$('migration-profile').value,
     projectChoice:b.project?$('project-choice').value:'none',
     demographyMode:demography.selectedOptions[0].disabled?'legacy':demography.value,splitPayroll,employerContributionRate,constructionYears,constructionShare,liquidityPolicy,
-    cashReserve:liquidityPolicy?Number($('cash-reserve').value):0,
-    deferInvestmentShare:liquidityPolicy?Number($('defer-investment-share').value)/100:0,
-    prefinanceShare:liquidityPolicy?Number($('prefinance-share').value)/100:0,
+    reserveDays:enteredValue('reserve-days'),creditLine:enteredValue('credit-line'),
+    deferInvestmentShare:deferInvestment?Number($('defer-investment-share').value)/100:0,
+    prefinanceShare:deferInvestment?Number($('prefinance-share').value)/100:0,
     workingCapitalEnabled,collectionDays:enteredDays('collection-days'),paymentDays:enteredDays('payment-days'),
     firstYearGrantAdvance:workingCapitalEnabled?Number($('grant-advance').value):0,
     investmentPlan:!!b.investmentPlan&&$('investment-plan').checked};
@@ -247,6 +248,8 @@ function updateModelOptions() {
   $('employer-rate-control').hidden=!splitPayroll;
   $('construction-share-control').hidden=constructionYears===0;
   $('liquidity-controls').hidden=!liquidityPolicy;
+  $('defer-controls').hidden=!deferInvestment;
+  renderLiquidityNote();
   $('working-capital-controls').hidden=!workingCapitalEnabled;
   const days=workingCapitalDays(b);
   $('collection-days').placeholder=`Basåret, ${decimal(days.collectionDays)} dagar`;
@@ -278,7 +281,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,investmentPlan:investmentPlanFor(activeMunicipality,year),assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
+  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,investmentPlan:investmentPlanFor(activeMunicipality,year),liquidity:liquidityFor(liquidityTable,activeMunicipality),assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;
@@ -460,8 +463,9 @@ function ledger() {
     $('capital-stocks').innerHTML=comparisonTable('capital-stock-ledger','Investeringar och byggtid',headers,rows,
       `Belopp i mnkr. Ingående pågående arbeten fördelas jämnt över byggtiden.${link}`);
   }
-  $('liquidity-ledger').hidden=!run.assumptions.liquidityPolicy;
-  if(run.assumptions.liquidityPolicy) {
+  const deferred=run.assumptions.liquidityPolicy&&(run.assumptions.deferInvestmentShare??0)>0;
+  $('liquidity-ledger').hidden=!deferred;
+  if(deferred) {
     const headers=['År','Investering betald','Kvar att betala','Nya lån','Varav förfinansiering','Amortering','Ränta','Kassa','Skuld'];
     const keys=['investment','outstandingDeferredInvestment','borrowing','prefinancing','repayment','interest','cash','debt'];
     const rows=run.rows.map(r=>[r.year,...keys.map(key=>r[key]==null?'—':decimal(r[key]))]);
@@ -533,7 +537,7 @@ function renderScenarioComparison(scenario,comparison) {
       ['workInProgress','Pågående arbeten'],['depreciation','Avskrivningar']
     ]]);
   }
-  if(scenario.run.assumptions.liquidityPolicy||comparison.run.assumptions.liquidityPolicy||
+  if([scenario,comparison].some(item=>(item.run.assumptions.deferInvestmentShare??0)>0)||
       scenario.run.assumptions.workingCapitalEnabled||comparison.run.assumptions.workingCapitalEnabled||
       [scenario,comparison].some(item=>['planned','delay'].includes(item.run.assumptions.projectChoice))) {
     const debtGroup=groups.find(([id])=>id==='comparison-debt');
@@ -719,7 +723,7 @@ function renderComparisonContext(scenario,reference) {
   const keys={...Object.fromEntries([...definitions,...advanced].map(([key,label])=>[key,label])),
     timeModel:'Tid i modellen',revenueMode:'Intäktsmodell',demographyMode:'Demografi',migrationProfile:'Flyttprofil',ageTax:'Åldersviktad skatt',
     splitPayroll:'Delad lönebana',constructionYears:'Byggtid',constructionShare:'Andel med byggtid',
-    liquidityPolicy:'Kassapolicy',cashReserve:'Kassareserv',deferInvestmentShare:'Flyttad betalning',
+    liquidityPolicy:'Likviditetsreserv',reserveDays:'Reserv, dagar',creditLine:'Kredit',deferInvestmentShare:'Flyttad betalning',
     prefinanceShare:'Förfinansiering',workingCapitalEnabled:'Rörelsekapital',firstYearGrantAdvance:'Bidragsförskott',
     collectionDays:'Kundfordringar, dagar',paymentDays:'Leverantörsskulder, dagar',employerContributionRate:'Sociala avgifter',
     projectChoice:'Projekt'};
@@ -958,6 +962,14 @@ function investmentPlanFor(code,baseYear) {
   if(!plan||plan.baseYear!==baseYear) return null;
   const years=Object.keys(plan.plan).map(Number).sort((x,y)=>x-y);
   return {...plan,years,factors:years.map(y=>plan.plan[y]/plan.baseBudget)};
+}
+// The municipality's liquidity rule (data/liquidity.json): the fields show it as their placeholder; an entry overrides it.
+function renderLiquidityNote() {
+  const rule=liquidityRule(b);
+  $('reserve-days').placeholder=fmt(rule.reserveDays);
+  $('credit-line').placeholder=fmt(rule.creditLine);
+  const links=(rule.sources??[]).map((url,i)=>` <a href="${safe(url)}">Källa${rule.sources.length>1?' '+(i+1):''}</a>`).join('');
+  $('liquidity-note').innerHTML=`Kassan styrs mot reserven: dagarna av årets utbetalningar (drift, investering och ränta) minus krediten. Tomma fält ger kommunens regel. ${safe(rule.note)}${links}`;
 }
 function renderInvestmentPlanNote() {
   const plan=b.investmentPlan;
@@ -1281,7 +1293,7 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json','liquidity.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
@@ -1291,6 +1303,7 @@ async function boot(){try{
   rateFixingTable=files[10];
   rateStress=files[11];
   investmentPlans=files[12];
+  liquidityTable=files[13];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));
@@ -1357,10 +1370,11 @@ async function boot(){try{
       draw();
     };
   }
-  for(const id of ['liquidity-policy','cash-reserve','defer-investment-share','prefinance-share']) {
+  for(const id of ['liquidity-policy','reserve-days','credit-line','defer-investment','defer-investment-share','prefinance-share']) {
     $(id).onchange=()=>{
       $('liquidity-controls').hidden=!$('liquidity-policy').checked;
-      if($('liquidity-policy').checked&&['cash-reserve','defer-investment-share','prefinance-share'].some(key=>!$(key).reportValidity())) return;
+      $('defer-controls').hidden=!($('liquidity-policy').checked&&$('defer-investment').checked);
+      if($('liquidity-policy').checked&&['reserve-days','credit-line','defer-investment-share','prefinance-share'].some(key=>!$(key).reportValidity())) return;
       updateModelOptions();
       draw();
     };

@@ -126,7 +126,8 @@ test('construction delays depreciation while payments still finance the investme
 
 test('prefinancing carries the deferred payment across year-end and charges interest on opening debt',{skip},()=>{
   const baseline={...b,planningInputs:planning};
-  const opts={years:3,investment:400,liquidityPolicy:true,cashReserve:40,deferInvestmentShare:0.5};
+  const opts={years:3,investment:400,liquidityPolicy:true,reserveDays:4,creditLine:0,deferInvestmentShare:0.5};
+  const reserveOf=row=>4/365*(row.payroll+row.pensionCashPayments+row.otherOperatingExpense+row.investment+row.interest);
   const without=simulate(baseline,history,opts,planning.revenuePath).rows;
   const withLoan=simulate(baseline,history,{...opts,prefinanceShare:1},planning.revenuePath).rows;
   assert.deepEqual(withLoan.slice(1).map(row=>row.investment),[200,600,400]);
@@ -136,7 +137,7 @@ test('prefinancing carries the deferred payment across year-end and charges inte
   assert.equal(withLoan[1].interest,without[1].interest);
   assert.ok(Math.abs(withLoan[2].interest-without[2].interest-200*b.assumptions.interestRate/100)<1e-8);
   for(const row of withLoan.slice(1)) {
-    assert.ok(row.cash>=40-1e-8);
+    assert.ok(row.cash>=reserveOf(row)-1e-8);
     for(const key of ['cashBalance','debtBalance','assetBalance']) assert.ok(Math.abs(row[key])<1e-8,key);
   }
   const short=simulate(baseline,history,{...opts,years:1,prefinanceShare:1},planning.revenuePath).rows;

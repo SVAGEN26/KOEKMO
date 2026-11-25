@@ -636,7 +636,10 @@ dödlighet och restflöden från den (se Assumptions). Starta från ett annat å
   end Data;
 
   model Annual "Motalas ekonomi år för år: demografi, verksamhet, drift, intäkter, kapital och finans"
-    extends Kommunekonomi.Annual(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population));
+    // Checkkredit 200 mnkr, outnyttjad: årsredovisning 2023, not 17 Kassa och bank. Finanspolicyn (KF 2022-10-31 § 130, avsnitt 4)
+    // räknar krediten till likviditetsreserven; reservens storlek står i den opublicerade bilagan "Limiter och riktlinjer",
+    // så reserveDays är standardvärdet 30. Källor: https://www.motala.se/media/uploads/Finanspolicy.pdf och data/liquidity.json.
+    extends Kommunekonomi.Annual(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population), creditLine = 200);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
       Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Med ett annat basår
 (<code>base</code>) ska starttiden vara det året.</p>
@@ -645,7 +648,10 @@ som standard. Starta från ett annat år med <code>Annual(base = Data.motala2024
 Uppdelningen av de äldre i femgruppsdemografin är SCB:s för 2025.</p></html>"));
   end Annual;
   model Continuous "Motalas ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population));
+    // Checkkredit 200 mnkr, outnyttjad: årsredovisning 2023, not 17 Kassa och bank. Finanspolicyn (KF 2022-10-31 § 130, avsnitt 4)
+    // räknar krediten till likviditetsreserven; reservens storlek står i den opublicerade bilagan "Limiter och riktlinjer",
+    // så reserveDays är standardvärdet 30. Källor: https://www.motala.se/media/uploads/Finanspolicy.pdf och data/liquidity.json.
+    extends Kommunekonomi.Continuous.Economy(base = Data.motala2025, olderShares = Data.SCB.olderShares(Data.SCB.motala2025.population), creditLine = 200);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
       Documentation(info = "<html><p><b>Tid: start 2025 (bokslutet 31 december 2025), slut 2033.</b> Samma antaganden och utdata som
 <a href=\"modelica://Motala.Annual\">Annual</a>, men pengarna är lager och flöden i kontinuerlig tid inom året

@@ -73,6 +73,10 @@ export function calibrateContinuous(history) {
   return {deathRates:rates,migration:rates.map((_,i)=>sum(flows.map(f=>f[i]))/flows.length),continuous:true};
 }
 // Genomsnittlig räntebindning vid basårets slut (data/rate-fixing.json, ur årsredovisningarna); annars tabellens antagande.
+// The municipality's liquidity rule as attached to the baseline (b.liquidity), else the standard: 30 days, no credit line.
+export const STANDARD_LIQUIDITY={reserveDays:30,creditLine:0,note:'Standard: 30 dagars utbetalningar, ingen känd kredit.'};
+export function liquidityRule(b) {return b?.liquidity??STANDARD_LIQUIDITY;}
+export function liquidityFor(table,code) {return table?.municipalities?.[code]??table?.default??STANDARD_LIQUIDITY;}
 export function rateFixing(table,code,year) {
   return table?.municipalities?.[code]?.[year]??table?.default??{years:3,note:'Antagande: 3 år'};
 }
@@ -121,7 +125,8 @@ export function validate(b,a) {
     if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>365)) throw Error('Betalningstiden ska vara 0–365 dagar.');
   }
   if(a.firstYearGrantAdvance!=null&&(!Number.isFinite(a.firstYearGrantAdvance)||a.firstYearGrantAdvance<0)) throw Error('Bidragsförskottet ska vara minst noll.');
-  if(a.cashReserve!=null&&(!Number.isFinite(a.cashReserve)||a.cashReserve<0)) throw Error('Kassareserven ska vara ett belopp på minst noll.');
+  if(a.reserveDays!=null&&(!Number.isFinite(a.reserveDays)||a.reserveDays<0||a.reserveDays>365)) throw Error('Likviditetsreserven ska vara 0–365 dagar.');
+  if(a.creditLine!=null&&(!Number.isFinite(a.creditLine)||a.creditLine<0)) throw Error('Krediten ska vara ett belopp på minst noll.');
   for(const key of ['deferInvestmentShare','prefinanceShare']) {
     if(a[key]!=null&&(!Number.isFinite(a[key])||a[key]<0||a[key]>1)) throw Error('Andelarna för senare betalning och förfinansiering ska vara 0–100 procent.');
   }
@@ -290,9 +295,13 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     fields.paymentDays=a.paymentDays??days.paymentDays;
     fields.firstYearGrantAdvance=a.firstYearGrantAdvance??0;
   }
-  if(a.liquidityPolicy) {
-    fields.liquidityPolicy=true;
-    fields.cashReserve=a.cashReserve??0;
+  // Liquidity reserve (data/liquidity.json, b.liquidity): on unless the scenario turns it off; the municipality's own rule,
+  // or 30 days of payments and no credit line.
+  const liquidity=liquidityRule(b);
+  fields.liquidityPolicy=a.liquidityPolicy??true;
+  fields.reserveDays=a.reserveDays??liquidity.reserveDays;
+  fields.creditLine=a.creditLine??liquidity.creditLine;
+  if(fields.liquidityPolicy) {
     fields.deferInvestmentShare=a.deferInvestmentShare??0;
     fields.prefinanceShare=a.prefinanceShare??0;
   }

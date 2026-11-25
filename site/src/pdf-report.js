@@ -43,9 +43,9 @@ export function buildScenarioReport({baseline:b,run,referenceRun,revenuePath=nul
       rows.map(r=>[r.year,...['tradeReceivables','tradePayables','deferredGrants','workingCapitalCash','operatingCash'].map(key=>number(r[key]))]),
       'Mnkr. Kassaflödet påverkas av förändrade saldon för kundfordringar, leverantörsskulder och förutbetalda bidrag.'));
   }
-  if(a.liquidityPolicy) {
+  if(a.liquidityPolicy&&(a.deferInvestmentShare??0)>0) {
     page('Kassa och förfinansiering',parameters([
-      ['Kassareserv',`${number(a.cashReserve??0)} mnkr`],
+      ['Likviditetsreserv',`${number(a.reserveDays??b.liquidity?.reserveDays??30)} dagar av utbetalningarna, minus ${number(a.creditLine??b.liquidity?.creditLine??0)} mnkr i kredit`],
       ['Uppskjuten del av första årets investering',percent(100*(a.deferInvestmentShare??0))],
       ['Förfinansierad del av uppskjuten betalning',percent(100*(a.prefinanceShare??0))]
     ])+table(['År','Investering betald','Kvar att betala','Nya lån','Varav förfinansiering','Amortering','Kassa','Skuld'],

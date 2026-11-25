@@ -15,7 +15,7 @@ OMC = ROOT / 'site/omc-web'
 NOT_SHIPPED = {'engine.js'}
 DATA = ['baseline.json', 'history.json', 'sources.json', 'backtest.json', 'municipal-benchmarks.json',
         'operating-accounts-history.json', 'planning-inputs.json', 'skr-revenue-path.json', 'replay-2022.json',
-        'model-experiments.json', 'age-income.json', 'rate-fixing.json', 'rate-stress.json', 'investment-plans.json']
+        'model-experiments.json', 'age-income.json', 'rate-fixing.json', 'rate-stress.json', 'investment-plans.json', 'liquidity.json']
 
 
 def sha(path):

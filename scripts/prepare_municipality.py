@@ -29,6 +29,7 @@ for 2020-2022 the annual reports split payroll and pension differently, and fixe
 """
 import argparse
 import json
+import textwrap
 import sys
 from pathlib import Path
 
@@ -229,7 +230,19 @@ def vector(values, digits=1):
     return '{' + ', '.join(number(v, digits) for v in values) + '}'
 
 
+def liquidity_modifiers(code):
+    """Known liquidity rules (data/liquidity.json) as model modifiers with their source as a comment; '' for the defaults."""
+    entry = json.loads((ROOT / 'data/liquidity.json').read_text())['municipalities'].get(code)
+    if not entry:
+        return '', ''
+    source = ' Källa: ' + ', '.join(entry['sources']) if entry['sources'] else ' Källa: årsredovisningen, se data/liquidity.json.'
+    lines = textwrap.wrap(entry['note'] + source, 112)
+    comment = ''.join(f'    // {line}\n' for line in lines)
+    return comment, f", reserveDays = {number(entry['reserveDays'], 0)}, creditLine = {number(entry['creditLine'], 0)}"
+
+
 def modelica(package, name, code, archive, years, older_shares):
+    liquidity_comment, liquidity = liquidity_modifiers(code)
     last = max(years)
     constants = []
     for y in sorted(years, reverse=True):
@@ -268,14 +281,14 @@ räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_
   end Data;
 
   model Annual "{name}s ekonomi år för år från bokslutet {last}"
-    extends Kommunekonomi.Annual(base = Data.{package.lower()}{last}, olderShares = Data.olderShares);
+{liquidity_comment}    extends Kommunekonomi.Annual(base = Data.{package.lower()}{last}, olderShares = Data.olderShares{liquidity});
     annotation(experiment(StartTime = {last}, StopTime = {last + 8}, Interval = 1),
       Documentation(info = "<html><p><b>Tid: start {last}, slut {last + 8}.</b> Med standardantagandena (illustrativ tillväxt).
 Starta från ett annat år med <code>Annual(base = Data.{package.lower()}{last - 1})</code>.</p></html>"));
   end Annual;
 
   model Continuous "{name}s ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.{package.lower()}{last}, olderShares = Data.olderShares);
+{liquidity_comment}    extends Kommunekonomi.Continuous.Economy(base = Data.{package.lower()}{last}, olderShares = Data.olderShares{liquidity});
     annotation(experiment(StartTime = {last}, StopTime = {last + 8}, Interval = 0.0833333333333333),
       Documentation(info = "<html><p><b>Tid: start {last}, slut {last + 8}.</b> Samma antaganden och utdata som Annual, men pengarna
 är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));

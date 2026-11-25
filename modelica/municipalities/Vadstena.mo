@@ -274,14 +274,20 @@ räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_
   end Data;
 
   model Annual "Vadstenas ekonomi år för år från bokslutet 2025"
-    extends Kommunekonomi.Annual(base = Data.vadstena2025, olderShares = Data.olderShares);
+    // Vadstena: finanspolicyn (KF 2022-12-14 § 154) och riktlinjerna är inte publicerade; standard 30 dagar.
+    // Checkkredit 15 mnkr hos Vadstena Sparbank, outnyttjad (årsredovisning 2025, s. 22 och not 16). Källa:
+    // årsredovisningen, se data/liquidity.json.
+    extends Kommunekonomi.Annual(base = Data.vadstena2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 15);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
       Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
 Starta från ett annat år med <code>Annual(base = Data.vadstena2024)</code>.</p></html>"));
   end Annual;
 
   model Continuous "Vadstenas ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.vadstena2025, olderShares = Data.olderShares);
+    // Vadstena: finanspolicyn (KF 2022-12-14 § 154) och riktlinjerna är inte publicerade; standard 30 dagar.
+    // Checkkredit 15 mnkr hos Vadstena Sparbank, outnyttjad (årsredovisning 2025, s. 22 och not 16). Källa:
+    // årsredovisningen, se data/liquidity.json.
+    extends Kommunekonomi.Continuous.Economy(base = Data.vadstena2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 15);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
       Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
 är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));

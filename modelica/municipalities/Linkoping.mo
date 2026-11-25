@@ -274,14 +274,24 @@ räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_
   end Data;
 
   model Annual "Linköpings ekonomi år för år från bokslutet 2025"
-    extends Kommunekonomi.Annual(base = Data.linkoping2025, olderShares = Data.olderShares);
+    // Linköping: likviditet minst en månads löpande utgifter, räknat som bankmedel plus tillgängliga checkkrediter
+    // (Kommunens riskinstruktion, KS 2025-12-16 § 326, avsnitt 2.1). Koncernens checkkredit 2 100 mnkr delas med
+    // bolagen och kommunen hade 787 mnkr utnyttjat vid årsskiftet (årsredovisning 2025, s. 18 och not 20); kommunens
+    // outnyttjade del anges inte, så noll antas. Källa: https://www.linkoping.se/kommun-och-politik/sa-styrs-
+    // linkopings-kommun/regler-och-styrande-dokument
+    extends Kommunekonomi.Annual(base = Data.linkoping2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
       Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
 Starta från ett annat år med <code>Annual(base = Data.linkoping2024)</code>.</p></html>"));
   end Annual;
 
   model Continuous "Linköpings ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.linkoping2025, olderShares = Data.olderShares);
+    // Linköping: likviditet minst en månads löpande utgifter, räknat som bankmedel plus tillgängliga checkkrediter
+    // (Kommunens riskinstruktion, KS 2025-12-16 § 326, avsnitt 2.1). Koncernens checkkredit 2 100 mnkr delas med
+    // bolagen och kommunen hade 787 mnkr utnyttjat vid årsskiftet (årsredovisning 2025, s. 18 och not 20); kommunens
+    // outnyttjade del anges inte, så noll antas. Källa: https://www.linkoping.se/kommun-och-politik/sa-styrs-
+    // linkopings-kommun/regler-och-styrande-dokument
+    extends Kommunekonomi.Continuous.Economy(base = Data.linkoping2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
       Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
 är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));

@@ -274,14 +274,20 @@ räntekostnad och finansiella intäkter. Definitionerna står i scripts/prepare_
   end Data;
 
   model Annual "Finspångs ekonomi år för år från bokslutet 2025"
-    extends Kommunekonomi.Annual(base = Data.finspang2025, olderShares = Data.olderShares);
+    // Finspång: betalningsberedskap 30 dagar, (likvida medel + kreditlöften)/(utbetalningar/365) (Finansiella
+    // riktlinjer, KS 2025-04-09 § 102, avsnitt 6.1.2). Kredit okänd; noll antas. Källa:
+    // https://finspang.se/download/18.561020fb18529b3aa4a7d431/1747822317036/Finansiella%20riktlinjer.pdf
+    extends Kommunekonomi.Annual(base = Data.finspang2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 1),
       Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Med standardantagandena (illustrativ tillväxt).
 Starta från ett annat år med <code>Annual(base = Data.finspang2024)</code>.</p></html>"));
   end Annual;
 
   model Continuous "Finspångs ekonomi med kontinuerlig tid inom året: lager och flöden"
-    extends Kommunekonomi.Continuous.Economy(base = Data.finspang2025, olderShares = Data.olderShares);
+    // Finspång: betalningsberedskap 30 dagar, (likvida medel + kreditlöften)/(utbetalningar/365) (Finansiella
+    // riktlinjer, KS 2025-04-09 § 102, avsnitt 6.1.2). Kredit okänd; noll antas. Källa:
+    // https://finspang.se/download/18.561020fb18529b3aa4a7d431/1747822317036/Finansiella%20riktlinjer.pdf
+    extends Kommunekonomi.Continuous.Economy(base = Data.finspang2025, olderShares = Data.olderShares, reserveDays = 30, creditLine = 0);
     annotation(experiment(StartTime = 2025, StopTime = 2033, Interval = 0.0833333333333333),
       Documentation(info = "<html><p><b>Tid: start 2025, slut 2033.</b> Samma antaganden och utdata som Annual, men pengarna
 är lager och flöden i kontinuerlig tid inom året (Kommunekonomi.Continuous.Economy).</p></html>"));

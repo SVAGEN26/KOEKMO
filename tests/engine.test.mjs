@@ -62,7 +62,8 @@ test('pension expense shock is charged once and affects cash only when paid',()=
   close(accrued.cost-base.cost,85);close(accrued.result-base.result,-85);
   close(accrued.operatingCash,base.operatingCash);close(accrued.debt,base.debt);close(accrued.cash,base.cash);
   const paid=simulate(b,history,{...fixed,pensionExpensePath:[275,...Array(7).fill(190)],pensionCashPaymentsPath:[275,...Array(7).fill(190)]}).rows[1];
-  close(paid.result,accrued.result);close(paid.operatingCash-base.operatingCash,-85);close(paid.debt-base.debt,85);
+  // Paid pensions are borrowed, and they also raise the liquidity reserve by 30 days of the payment.
+  close(paid.result,accrued.result);close(paid.operatingCash-base.operatingCash,-85);close(paid.debt-base.debt,85*(1+30/365));
 });
 test('productivity changes payroll without silently reducing pension obligations or revenue',()=>{
   const base=simulate(b,history).rows[1],efficient=simulate(b,history,{productivity:1}).rows[1];

@@ -46,7 +46,7 @@ REPORTED = ('population', 'tax', 'grants', 'cost', 'payroll', 'otherOperatingExp
             'borrowing', 'repayment', 'debt', 'cash', 'assets', 'serviceVolume', 'wageIndex', 'annualInterestRate')
 CHECKS = ('populationBalance', 'assetBalance', 'cashBalance', 'debtBalance', 'equityBalance')
 CORE_DECISIONS = ('taxRatePath', 'investmentPath', 'interestRatePath', 'wageGrowthPath', 'priceGrowthPath',
-                  'productivityGrowth', 'migrationDeltaPath', 'serviceAdjustment', 'liquidityPolicy', 'cashReserve',
+                  'productivityGrowth', 'migrationDeltaPath', 'serviceAdjustment', 'liquidityPolicy', 'reserveDays', 'creditLine',
                   'constructionYears', 'constructionShare', 'workingCapitalEnabled', 'collectionDays', 'paymentDays',
                   'rateShock', 'rateShockTime', 'rateFixingYears', 'inflationShock', 'inflationPersistence',
                   'inflationWagePassThrough', 'inflationPensionPassThrough', 'inflationRateResponse', 'inflationGrantCompensation')

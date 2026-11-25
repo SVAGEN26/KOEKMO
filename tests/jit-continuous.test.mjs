@@ -52,7 +52,8 @@ test('the flow between two year ends is the one that takes the groups there',()=
 });
 
 test('the page\'s calibration is the library\'s: site inputs give Motala.Continuous as written',{skip},()=>{
-  const site=continuous({...b,planningInputs:null},history);
+  // Motala's liquidity rule from data/liquidity.json, as the page attaches it; Motala.Continuous has the same in Modelica.
+  const site=continuous({...b,planningInputs:null,liquidity:read('data/liquidity.json').municipalities['0583']},history);
   const keys=['population','births','deaths','migration','cost','payroll','otherOperatingExpense','operatingRevenue','depreciation',
     'tax','grants','result','debt','cash','assets','interest','borrowing','repayment','educationIndex','careIndex'];
   const model=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
@@ -117,7 +118,7 @@ test('optional mechanisms keep the books in continuous time',{skip},()=>{
     'cost growth and grant increase':{costDrift:0.5,grantIncrease:3},
     'working capital':{workingCapitalEnabled:true},
     'short payment terms':{workingCapitalEnabled:true,collectionDays:1,paymentDays:0,firstYearGrantAdvance:100},
-    'cash policy':{liquidityPolicy:true,cashReserve:100,deferInvestmentShare:0.3,prefinanceShare:0.5},
+    'cash policy':{liquidityPolicy:true,reserveDays:10,creditLine:0,deferInvestmentShare:0.3,prefinanceShare:0.5},
     'project':{projectChoice:'delay',years:3},
     'observed migration':{demographyMode:'observed'}
   };
@@ -131,13 +132,16 @@ test('optional mechanisms keep the books in continuous time',{skip},()=>{
   const pay=runs['split payroll'][1];
   close(pay.employerContributions/pay.wages,0.32,1e-8,'employer contributions');
   close(pay.payroll,pay.wages+pay.employerContributions,1e-8,'payroll');
-  for(const row of runs['cash policy'].slice(1)) assert.ok(row.cash>=100-0.05,`${row.year} cash ${row.cash} holds the reserve`);
+  // The reserve is days of the year's payments (operations, investment, interest) less the credit line.
+  const reserveOf=(row,days,credit=0)=>Math.max(0,days/365*(row.payroll+row.pensionCashPayments+row.otherOperatingExpense+row.investment+row.interest)-credit);
+  // In continuous time the reserve follows the payments at each moment, so the year-end cash is near the yearly figure.
+  for(const row of runs['cash policy'].slice(1)) assert.ok(row.cash>=0.97*reserveOf(row,10),`${row.year} cash ${row.cash} holds the reserve`);
   // Cash above the reserve repays debt, as in the yearly model: the cash ends each year at the reserve in both.
-  const idle={liquidityPolicy:true,cashReserve:20,investment:0,years:3};
+  const idle={liquidityPolicy:true,reserveDays:2,creditLine:0,investment:0,years:3};
   const flow=continuous(full,history,idle,revenue).rows,yearly=annual(full,history,idle,revenue).rows;
   for(const [i,row] of flow.slice(1).entries()) {
-    close(row.cash,20,0.5,`${row.year} cash at the reserve`);
-    close(yearly[i+1].cash,20,1e-6,`${row.year} cash at the reserve, yearly model`);
+    close(row.cash,reserveOf(row,2),1,`${row.year} cash at the reserve`);
+    close(yearly[i+1].cash,reserveOf(yearly[i+1],2),1e-6,`${row.year} cash at the reserve, yearly model`);
     close(row.debt,yearly[i+1].debt,15,`${row.year} debt against the yearly model`);
     assert.ok(row.debt<flow[i].debt,`${row.year} debt falls`);
   }
@@ -164,7 +168,7 @@ test('the page\'s solver agrees with DASSL, with and without fast flows',{skip},
   assert.equal(CONTINUOUS_METHOD,'ida');
   compare({},0.01,'base path');
   // Payment terms of days and a cash reserve refilled within a month: flows too fast for a few explicit steps a year.
-  compare({workingCapitalEnabled:true,liquidityPolicy:true,cashReserve:90,years:4},0.01,'fast flows');
+  compare({workingCapitalEnabled:true,liquidityPolicy:true,reserveDays:10,creditLine:0,years:4},0.01,'fast flows');
   // Lower investment and a higher tax rate make the cash flow change sign during a year.
   const turning=compare({taxRate:22.2,investment:300,migrationDelta:150,years:5},0.01,'turning');
   assert.ok(turning.slice(1).some(r=>r.repayment>0)&&turning.slice(1).some(r=>r.borrowing>0),'the scenario both borrows and repays');
@@ -198,7 +202,8 @@ test('the exported Scenario.mo is the scenario the page ran',{skip},()=>{
   const exported=runModel(omc,'ExportedScenario',{start:2025,stop:2030,intervals:60,method:CONTINUOUS_METHOD},keys);
   const page=simulate(sourced,history,overrides,revenue).rows;
   // The page's wrapper holds the last year's wage and price growth for a hundred years; the export ends at the horizon.
-  for(const [i,row] of exported.entries()) for(const k of keys) close(page[i+1][k],row[k],0.005,`${row.year} ${k}`);
+  // The liquidity reserve follows the payment flows, so debt carries the solver's tolerance too: 1e-4 of the amount.
+  for(const [i,row] of exported.entries()) for(const k of keys) close(page[i+1][k],row[k],Math.max(0.005,1e-4*Math.abs(row[k])),`${row.year} ${k}`);
   assert.match(modelicaSource(sourced,history,{timeModel:'annual'},revenue),/extends Motala\.Annual\(/);
 });
 

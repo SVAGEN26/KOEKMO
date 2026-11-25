@@ -57,7 +57,7 @@ class ContinuousEconomy(unittest.TestCase):
             'simulate(Motala.Annual, startTime=2025, stopTime=2033, numberOfIntervals=8, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv",'
-            ' simflags="-override=workingCapitalEnabled=true,collectionDays=30,paymentDays=30,liquidityPolicy=true,cashReserve=150,constructionYears=2",'
+            ' simflags="-override=workingCapitalEnabled=true,collectionDays=30,paymentDays=30,liquidityPolicy=true,reserveDays=15,creditLine=0,constructionYears=2",'
             ' fileNamePrefix="Stress"); getErrorString();',
             'simulate(Reference, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Examples.AnnualCohort, startTime=2025, stopTime=2030, numberOfIntervals=5, outputFormat="csv"); getErrorString();',
