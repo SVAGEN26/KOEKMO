@@ -51,6 +51,7 @@ import hindcast_vintages as hv  # noqa: E402  (reads the municipality from sys.a
 MODEL = os.environ.get('HINDCAST_MODEL', 'Continuous')
 
 ROOT = hv.ROOT
+STANDARD = {'taxBase': 0.035, 'wages': 0.03, 'prices': 0.02}  # Kommunekonomi.Assumptions: taxGrowth, wageGrowth, priceGrowth
 STEPS = ('believed', 'wages', 'prices', 'pensions', 'taxBase', 'grants', 'interest', 'investment')
 LABELS = {
     'believed': 'Som man trodde då (SKR:s decembercirkulär)',
@@ -147,11 +148,11 @@ def main():
     older = regional.get(ORIGIN, {}).get('olderShares')
     runs = {}
     with tempfile.TemporaryDirectory(prefix='explain-') as tmp:
-        def run(name, done, extra=()):
+        def run(name, done, extra=(), source=None):
             directory = Path(tmp) / name
             directory.mkdir()
             hv.MODEL = MODEL  # simulate() takes twelve steps a year for the continuous model
-            result = hv.simulate(ORIGIN, horizon, model_source(ORIGIN, horizon, v, done, ledgers, older, extra), directory)
+            result = hv.simulate(ORIGIN, horizon, source or model_source(ORIGIN, horizon, v, done, ledgers, older, extra), directory)
             return {y: {'tax': m['tax'], 'grants': m['grants'], 'payroll': m['payroll'], 'pension': m['pensionExpense'],
                         'otherCosts': m['otherOperatingExpense'], 'operatingRevenue': m['operatingRevenue'],
                         'depreciation': m['depreciation'], 'interest': m['interest'], 'result': m['result'],
@@ -164,6 +165,11 @@ def main():
         path = 'inflationShockPath = ' + hv.modelica_array(shock)
         scenario = {'mechanism': run('mechanism', STEPS[:1], [path]),
                     'compensated': run('compensated', STEPS[:1], [path, 'inflationGrantCompensation = 1'])}
+        # The model on its own: its standard rates instead of SKR's circular (tax base 3.5 %, wages 3 %, prices 2 %;
+        # grants 2 % as in every run). Sweden's population stays the circular's, which was known then.
+        own = {**v, 'taxBase': {y: STANDARD['taxBase'] for y in years}, 'labour': {y: STANDARD['wages'] for y in years},
+               'other': {y: STANDARD['prices'] for y in years}}
+        runs['standard'] = run('standard', (), source=model_source(ORIGIN, horizon, own, (), ledgers, older))
     outcome = {y: {'tax': o['tax'], 'grants': o['grants'], 'payroll': o.get('payroll'), 'pension': o.get('pension'),
                    'otherCosts': o.get('otherExpense'), 'operatingRevenue': o.get('operatingRevenue'),
                    'depreciation': o.get('depreciation'), 'interest': o.get('interest'), 'result': o['result'],
@@ -297,6 +303,18 @@ def summary():
     forecasts.append({'forecast': f'The model from the {ORIGIN} accounts (believed)', 'published': 'accounts in spring; circular of December',
                       'rows': [{'year': y, 'municipalities': len(e), 'meanErrorPercent': statistics.mean(e),
                                 'meanAbsErrorPercent': statistics.mean(map(abs, e))} for y, e in sorted(own.items())]})
+    alone = {}
+    for d in runs.values():
+        if 'standard' not in d['runs']:
+            continue
+        for y in years:
+            o, m = d['outcome'][str(y)], d['runs']['standard'][str(y)]
+            alone.setdefault(y, []).append(share(m['tax'] + m['grants'] - o['tax'] - o['grants'], o['tax'] + o['grants']))
+    if alone:
+        forecasts.append({'forecast': f'The model from the {ORIGIN} accounts with its own standard rates (no SKR tax base)',
+                          'published': 'accounts in spring', 'rows': [
+                              {'year': y, 'municipalities': len(e), 'meanErrorPercent': statistics.mean(e),
+                               'meanAbsErrorPercent': statistics.mean(map(abs, e))} for y, e in sorted(alone.items())]})
     out = {'origin': ORIGIN, 'years': years, 'municipalities': rows,
            'units': 'mnkr; gaps in per cent',
            'medianGap': {name: {str(y): {'resultPercentOfTaxAndGrants': median(g['result']),
