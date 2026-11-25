@@ -508,13 +508,25 @@ stay local). Mean error against SCB's outcomes, percent, 13 municipalities:
 | SKR 22:28, August 2022 | | −0.8 | −3.0 | −2.8 | −1.9 |
 | SKR 23:56, December 2023 | | | −0.7 | −1.2 | −0.5 |
 | SKR 24:56, December 2024 | | | | −0.7 | 0.4 |
-| The model from the 2021 accounts | | −2.2 | −3.8 | −4.9 | −5.1 |
+| The model from the 2021 accounts, SKR's December circular | | −2.2 | −3.8 | −4.9 | −5.1 |
+| The model from the 2021 accounts, its own standard rates | | −2.2 | −3.9 | −5.0 | −5.1 |
 
 For Motala SKR 21:35 was 63, 155, 177 and 197 mnkr below the outcome 2022–2025,
 the model 75, 158, 196 and 233 mnkr below. Nobody foresaw the inflation. The dates
 differ: the model's run has the 2021 closing accounts and the December circular,
 both later than SKR 21:35. The outcome includes general grants decided after a
 forecast was made.
+
+The model on its own, with its standard rates (tax base 3.5 % a year, grants 2 %)
+and nothing from SKR, gives the same: SKR's December circular of 2021 expected the
+tax base to grow 3.5, 3.7, 3.4 and 3.4 % in 2022–2025, so the two runs differ by at
+most 0.1 percentage points. The error splits differently. Mean of 13, percent of tax
+and grants, 2022–2025: the model alone misses tax by −2.5, −3.7, −2.9 and −3.4 and
+grants by +0.3, −0.2, −2.1 and −1.7; SKR 21:35 misses tax by −2.0, −2.5, −1.3 and
+−1.1 and grants by −0.9, −2.3, −4.2 and −4.2. SKR's tax per municipality is closer;
+the model's assumed 2 % growth of grants comes closer than SKR's decided levels,
+since the state raised the general grants. One base year, one period; the split
+between tax and grants in SKR's workbook may not follow SCB's items exactly.
 
 **Eight years, 13 municipalities.** `scripts/hindcast_long.py` starts from SCB's
 accounts of 2017, 2018 and 2019 and runs to 2025 (8, 7 and 6 years) for all 13

@@ -578,7 +578,11 @@ earlier, and every forecast for the year under way is within 3 % of the outcome
 municipalities: SKR 21:35 −2.8, −4.8, −5.6 and −5.3 % for 2022–2025; SKR 22:28
 −3.0, −2.8 and −1.9 % for 2023–2025; the model from the 2021 accounts −2.2, −3.8,
 −4.9 and −5.1 %. The model's run has later information than SKR 21:35 (the closing
-accounts and the December circular), so the two are not a ranking.
+accounts and the December circular), so the two are not a ranking. With its own
+standard rates instead of the circular (run `standard`: tax base 3.5 %, wages 3 %,
+prices 2 % a year) the model gives −2.2, −3.9, −5.0 and −5.1 %: the circular expected
+3.4–3.7 % a year, so the model's default happened to be SKR's view then. Sweden's
+population in that run is still the circular's.
 
 **Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025; results in

@@ -1437,6 +1437,36 @@ arkivera data.
   bytet kräver fyra års åldersgrupper i varje basårspost (`BaseYear.cohorts[3, 5]`), i `history` på sidan och i
   `calibrateContinuous`. Inte gjort; att fråga användaren.
 
+## Modellen på egna ben mot SKR:s gamla prognoser (2026-11-25)
+
+- Användaren 2026-11-25 bad om testet "där modellen står utan SKR:s skatteunderlag".
+- `scripts/explain_outcome.py` har körningen `standard`: bokslut 2021 med modellens standardtakter (skatteunderlag
+  3,5 %, löner 3 %, priser 2 %, bidrag 2 % per år), inget från SKR utom rikets befolkning. Alla 13 kommuner.
+- Skatt och bidrag mot SCB, medelfel 2022–2025: −2,2/−3,9/−5,0/−5,1 % (SKR:s decembercirkulär: −2,2/−3,8/−4,9/−5,1;
+  SKR 21:35: −2,8/−4,8/−5,6/−5,3). Decembercirkuläret 2021 räknade med 3,5/3,7/3,4/3,4 % i skatteunderlag, så
+  standardtakten råkade vara SKR:s bild då. Ingen rangordning: en period, ett basår.
+- Uppdelat (medel av 13, procent av skatt och bidrag): modellen ensam skatt −2,5/−3,7/−2,9/−3,4, bidrag
+  +0,3/−0,2/−2,1/−1,7; SKR 21:35 skatt −2,0/−2,5/−1,3/−1,1, bidrag −0,9/−2,3/−4,2/−4,2. SKR:s skatt per kommun är
+  närmare; modellens 2 % bidragstillväxt närmare än SKR:s beslutade nivåer. Fördelningen skatt/bidrag i SKR:s
+  arbetsbok kanske inte följer SCB:s poster exakt (inte kontrollerat).
+
+## Budgetar för länets övriga kommuner (2026-11-25)
+
+- Hämtade till det privata repot (`budget-och-rapporter/`, commits 5d5acf6 och 9593313, lista `kallor-budget.csv` med
+  käll-URL och sida, manifest med SHA-256). Budget med plan 2025 och 2026 för alla tolv utom Motala (som finns i
+  `data/downloads/20261106T090534Z`); Ydre och Boxholm även 2024, Mjölby 2023–2024.
+- Investeringar enligt dokumenten, mnkr, budgetår / planår (läst av en hjälpagent och stickprovskontrollerat, inte
+  inlagt i modellen): Ödeshög 2026 180,2/132,4/76,3 (s. 20), 2025 58,9/137,3/132,6 (s. 15; Wayback-kopia);
+  Kinda 2026 192,5/186,7/52,0/33,2 (s. 27), 2025 146,6/200,0/144,8/67,8 (s. 32); Åtvidaberg 2026 30,5/67,8/24,8
+  (s. 21–23, exklusive exploatering Grebo Norrby och överförda medel), 2025 29,8/22,2/50,1; Valdemarsvik 2026
+  72,8/60,0/60,0 (kallelse KF 2025-11-10 s. 324), 2025 50,9/68,7/123,8 (kallelse KF 2024-11-18 s. 294);
+  Norrköping 2026 1 842,7/2 177,1/1 844,1/1 395,8 (antagen juni 2025, s. 16; version 2026-10-01 1 881,4/…),
+  2025 1 299,3/… (version med ändringsbudget; originalet ej funnet); Söderköping 2026 150/150/160, 2025 150/150/150
+  (s. 19); Vadstena 2026 152,9/73,3/39,1 (Konsensus, antagen KF 2025-11-25 § 166, kallelse s. 46), 2025
+  110,8/133,7/55,6 (kallelse s. 137).
+- Att tänka på innan de används som i `data/investment-plans.json`: begreppen skiljer (skattefinansierat eller med
+  taxefinansierat, med eller utan exploatering), Norrköpings budget avser kommunen men dess bolag lånar via
+  internbanken, och för Ödeshög 2025 ger tabellen 45,5 skattefinansierat mot hjälpagentens 58,9 totalt.
 ## Investeringsplaner för nio kommuner (2026-11-25)
 
 - Användaren 2026-11-25: "Ok gör det" om att läsa igenom budgetarna en och en.

@@ -1394,6 +1394,36 @@
      "meanAbsErrorPercent": 5.070624796630073
     }
    ]
+  },
+  {
+   "forecast": "The model from the 2021 accounts with its own standard rates (no SKR tax base)",
+   "published": "accounts in spring",
+   "rows": [
+    {
+     "year": 2022,
+     "municipalities": 13,
+     "meanErrorPercent": -2.1768054086411883,
+     "meanAbsErrorPercent": 2.1768054086411883
+    },
+    {
+     "year": 2023,
+     "municipalities": 13,
+     "meanErrorPercent": -3.942494300813537,
+     "meanAbsErrorPercent": 3.942494300813537
+    },
+    {
+     "year": 2024,
+     "municipalities": 13,
+     "meanErrorPercent": -4.990311831598713,
+     "meanAbsErrorPercent": 4.990311831598713
+    },
+    {
+     "year": 2025,
+     "municipalities": 13,
+     "meanErrorPercent": -5.070427082052275,
+     "meanAbsErrorPercent": 5.070427082052275
+    }
+   ]
   }
  ],
  "notes": [
