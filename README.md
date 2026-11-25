@@ -562,8 +562,8 @@ cohorts of the 1930s that turned 80 (Motala 2020: 4.5 %). With 4.5 % and 5.0 % t
 −0.8 % (a diagnostic run, not kept). Rates taken from each base year's ages would fix this. The population grows too fast (6 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
 together, so part of the result error cancels. A population-only test (`scripts/hindcast_migration.py`,
-`data/migration-hindcast.json`; its yearly copy of the five-group demography gives the
-model's population within 0.1 % in all 273 runs) tries calibration windows of 1–8 years from
+`data/migration-hindcast.json`; its yearly copy of the five-group demography, with a fixed 65+
+death rate, gives the model's population within 0.8 % in all 273 runs) tries calibration windows of 1–8 years from
 every base year to 2025. From base years 2020–2024 the two-year window has
 almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.5,
 0.9, 1.3, 1.8 and 2.1 %; three years give 0.5, 0.8, 1.1, 1.6 and 2.0 %, eight years
