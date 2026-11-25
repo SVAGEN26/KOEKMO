@@ -1,0 +1,39 @@
+{
+  "retrieved_at": "2026-11-25T20:38:59.608296+00:00",
+  "municipalities": [
+    "0509",
+    "0512",
+    "0513",
+    "0560",
+    "0561",
+    "0562",
+    "0563",
+    "0580",
+    "0581",
+    "0582",
+    "0583",
+    "0584",
+    "0586"
+  ],
+  "source": "Kolada (RKA), open data",
+  "files": [
+    {
+      "file": "kolada-roads-kpi-metadata.json",
+      "url": "https://api.kolada.se/v3/kpi/N07024,N07810",
+      "bytes": 1399,
+      "sha256": "20b4eee290a5b6701265b3f9714bd6b0e966faf86696cff4b17187a855ee47fb"
+    },
+    {
+      "file": "kolada-N07024.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N07024/municipality/0509,0512,0513,0560,0561,0562,0563,0580,0581,0582,0583,0584,0586/year/2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025",
+      "bytes": 19874,
+      "sha256": "7742afff3088c6c6dd03411960690de94dd26e7467d2ed3151baae96af1235f0"
+    },
+    {
+      "file": "kolada-N07810.json",
+      "url": "https://api.kolada.se/v3/data/kpi/N07810/municipality/0509,0512,0513,0560,0561,0562,0563,0580,0581,0582,0583,0584,0586/year/2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025",
+      "bytes": 19677,
+      "sha256": "deebb3f9adf5c75043e540941c0b6a56c5fa2c90f719ce031515b7873100b5d7"
+    }
+  ]
+}

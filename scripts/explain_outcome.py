@@ -103,6 +103,7 @@ def model_source(origin, horizon, v, done, ledgers, older_shares=None, extra=())
              f'referenceTax = {hv.modelica_array(tax)}*recurringTax0',
              f'wageGrowthPath = {hv.modelica_array([labour[y] for y in years])}',
              f'priceGrowthPath = {hv.modelica_array([other[y] for y in years])}',
+             'pensionFollowsPayroll = false',  # the path is given: believed (the labour index) or the accounts
              'pensionExpensePath = ' + (hv.modelica_array([ledgers[y]['pension'] for y in years]) if 'pensions' in done
                                         else f'{hv.modelica_array(pension)}*pension0')]
     if older_shares:

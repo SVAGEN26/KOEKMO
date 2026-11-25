@@ -85,7 +85,8 @@ def run(name, years=8, start=2025, **parameters):
         for k, old in changed.items():
             m.setParameters(**{k: str(old)})
     names = m.getSolutions(resultfile=str(result))
-    wanted = [n for n in names if n == 'time' or '.' not in n or n.startswith('demography.older')]
+    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual')
+    wanted = [n for n in names if n == 'time' or '.' not in n or n.startswith(extra)]
     series = dict(zip(wanted, m.getSolutions(wanted, resultfile=str(result))))
     rows = {}
     for y in range(start, start + years + 1):
@@ -131,6 +132,74 @@ class OlderPeople(unittest.TestCase):
         rows, _ = run('Base')
         rate = lambda y: rows[y]['deaths']/((rows[y - 1]['p[5]'] + rows[y]['p[5]'])/2)
         self.assertGreater(rate(2033), rate(2026))
+
+
+@unittest.skipIf(SKIP, SKIP)
+class AgeProfile(unittest.TestCase):
+    """Ageing between the stocks follows the base year's single years of age (Data.ageProfile)."""
+
+    def test_those_who_turn_65_are_the_64_year_olds(self):
+        # SCB, Motala 31 December 2025: 533 persons aged 64, 486 aged 63 (Motala.Data.SCB.motala2025.population).
+        _, s = run('Base', years=2)
+        inside = lambda year: (s['time'] > year) & (s['time'] < year + 1)
+        flow = lambda year: float(np.mean((s['demography.ageing[4]'])[inside(year)]))
+        self.assertAlmostEqual(flow(2025), 533, delta=533*0.04)
+        self.assertAlmostEqual(flow(2026), 486, delta=486*0.04)
+
+    def test_the_death_rate_of_each_older_stock_falls_with_the_national_trend(self):
+        _, s = run('Base')
+        for j in (1, 2, 3):
+            rate = s[f'demography.olderRate[{j}]'] if f'demography.olderRate[{j}]' in s else None
+            if rate is not None:
+                self.assertLess(rate[-1], rate[0])
+
+    def test_eighty_plus_follows_the_cohorts(self):
+        # SCB's projection for Motala gives 4 329 persons 80+ in 2033 (data/planning-inputs.json, olderGroups).
+        rows, _ = run('Base')
+        self.assertAlmostEqual(rows[2033]['population80Plus'], 4329, delta=4329*0.03)
+
+
+@unittest.skipIf(SKIP, SKIP)
+class CostsAndFinance(unittest.TestCase):
+    def test_the_pension_cost_follows_the_payroll(self):
+        rows, _ = run('Base')
+        share = [rows[y]['pensionExpense']/rows[y]['payroll'] for y in range(2026, 2034)]
+        self.assertLess(max(share) - min(share), 1e-6)
+        self.assertAlmostEqual(share[0], 190/2288, delta=1e-4)
+        given, _ = run('GivenPension')
+        self.assertAlmostEqual(given[2033]['pensionExpense'], 190, delta=1e-6)
+
+    def test_roads_stay_when_the_population_falls(self):
+        # 5.8 % of "other" follows the road network (Kolada N07024 for Motala 2025), not the population.
+        _, s = run('Shrinking')
+        population = s['population'][-1]/s['population'][0]
+        self.assertLess(population, 0.95)
+        self.assertAlmostEqual(float(s['services.network'][-1]), 1, delta=1e-9)
+        self.assertAlmostEqual(float(s['services.demand[3]'][-1]), 0.0583 + (1 - 0.0583)*population, delta=1e-4)
+
+    def test_cash_above_the_base_years_earns_interest(self):
+        rows, s = run('Base')
+        extra = rows[2033]['finance.financial.annual'] - 15  # Motala's financial income 2025: 15 mnkr
+        mean_cash = float(np.mean(s['cash'][(s['time'] > 2032) & (s['time'] < 2033)]))
+        self.assertGreater(extra, 0)
+        self.assertAlmostEqual(extra, float(s['finance.depositRate'][-1])*(mean_cash - 81), delta=0.3)
+
+    def test_the_base_years_rate_is_interest_over_mean_debt(self):
+        rows, _ = run('Base', years=1)
+        self.assertAlmostEqual(rows[2025]['annualInterestRate'], 21/((940 + 1040)/2), delta=1e-9)
+
+    def test_money_borrowed_ahead_is_kept_until_the_deferred_payment(self):
+        rows, _ = run('Prefinanced', years=3)
+        self.assertGreater(rows[2026]['prefinancing'], 100)
+        self.assertLess(rows[2027]['repayment'], 10, 'not repaid in January and borrowed again')
+
+    def test_fees_follow_part_of_an_inflation_shock(self):
+        shock, _ = run('InflationShock', years=2)
+        fixed, _ = run('NoFeeIndexation', years=2)
+        base, _ = run('Base', years=2)
+        self.assertAlmostEqual(fixed[2026]['operatingRevenue'], base[2026]['operatingRevenue'], delta=1e-4)
+        gain = shock[2027]['operatingRevenue']/fixed[2027]['operatingRevenue'] - 1
+        self.assertAlmostEqual(gain, 0.3*0.03, delta=0.002)
 
 
 @unittest.skipIf(SKIP, SKIP)

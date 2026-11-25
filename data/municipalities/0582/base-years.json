@@ -5,7 +5,7 @@
  "name": "Söderköping",
  "packageName": "Soderkoping",
  "unit": "mnkr; persons",
- "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\n  Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables\n  from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest\n  expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's\n  items do not give the borrowing or the lending, annual-report-inputs.json gives them from the municipality's reports:\n  externalBankDebt (all borrowing), ownDebt (the municipality's own) and onLending (lent to its companies).\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
+ "definitions": "tax 6777:040, of which priorYearSettlement 6782:040; grants 6777:050, of which income\n  equalisation 6782:090-170, cost equalisation 130-190, regulation 120-180, LSS 140-200 and\n  property fee 210; payroll 4202:100+110; pension 4202:115+120+180+185+186; other operating\n  expense the rest of 6777:022; operating revenue 6777:010; depreciation 6777:025; financial\n  income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds\n  (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025\n  (including work in progress, which SCB does not separate); investment 5179:950.\n  infrastructureShare: Kolada N07024 (net cost of roads, railways and parking, kr per inhabitant) over the net cost of\n  the sector \"other\" (fetch_roads.py, data/roads.json).\n  Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables\n  from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest\n  expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's\n  items do not give the borrowing or the lending, annual-report-inputs.json gives them from the municipality's reports:\n  externalBankDebt (all borrowing), ownDebt (the municipality's own) and onLending (lent to its companies).\nFor Motala the same definitions reproduce the annual reports to within 2 mnkr from 2023 (tests/test_municipality.py);\nfor 2020-2022 the annual reports split payroll and pension differently, and fixed assets here include work in progress.",
  "olderShares": [
   0.6909871244635194,
   0.2706387275940419,
@@ -105,6 +105,7 @@
     0.1837435603892387,
     0.0412135088723526
    ],
+   "infrastructureShare": 0.0895,
    "ages": [
     160.0,
     164.0,
@@ -301,6 +302,7 @@
     0.17789532293986637,
     0.042316258351893093
    ],
+   "infrastructureShare": 0.0887,
    "ages": [
     148.0,
     171.0,
@@ -497,6 +499,7 @@
     0.1854178044784271,
     0.04123429819770617
    ],
+   "infrastructureShare": 0.0771,
    "ages": [
     143.0,
     159.0,
@@ -694,6 +697,7 @@
     0.1888678735476898,
     0.03917860037827614
    ],
+   "infrastructureShare": 0.0826,
    "ages": [
     119.0,
     152.0,
@@ -892,6 +896,7 @@
     0.1983536909187467,
     0.03929899097185342
    ],
+   "infrastructureShare": 0.0894,
    "ages": [
     147.0,
     129.0,
@@ -1090,6 +1095,7 @@
     0.20942953894243294,
     0.037770252669966135
    ],
+   "infrastructureShare": 0.0795,
    "ages": [
     122.0,
     162.0,
@@ -1288,6 +1294,7 @@
     0.22715539494062983,
     0.036138358286009295
    ],
+   "infrastructureShare": 0.0812,
    "ages": [
     112.0,
     133.0,
@@ -1486,6 +1493,7 @@
     0.2476312419974392,
     0.03354673495518566
    ],
+   "infrastructureShare": 0.0869,
    "ages": [
     110.0,
     122.0,
@@ -1684,6 +1692,7 @@
     0.2706387275940419,
     0.038374147942438784
    ],
+   "infrastructureShare": 0.102,
    "ages": [
     115.7,
     129.6,

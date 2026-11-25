@@ -19,6 +19,8 @@ Definitions (SCB item codes):
   income 6777:060 and costs 6777:072, of which interest 6782:380 (390 is the group's); borrowing is bank loans and bonds
   (6779:081+082+136) plus the short-term part (134); cash 6779:065; fixed assets 6779:025
   (including work in progress, which SCB does not separate); investment 5179:950.
+  infrastructureShare: Kolada N07024 (net cost of roads, railways and parking, kr per inhabitant) over the net cost of
+  the sector "other" (fetch_roads.py, data/roads.json).
   Debt is the municipality's own: borrowing minus what it has lent on to its own companies (long-term receivables
   from them, 6779:034). The interest on the lent part, at the rate the municipality pays, is taken out of both interest
   expense and financial income (never more than its interest income, 6782:260), so the result is unchanged. Where SCB's
@@ -117,6 +119,7 @@ def build(code, archive):
 
     care = json.loads((folder / 'care-weights.json').read_text())['baseYears']
     sectors = json.loads((folder / 'sector-costs.json').read_text())['years']
+    roads = json.loads((ROOT / 'data/roads.json').read_text())['municipalities'].get(code, {})
     capacity = json.loads((ROOT / 'data/tax-capacity.json').read_text())['municipalities'][code]
     equalisation = json.loads((ROOT / 'data/equalisation.json').read_text())['municipalities'][code]['years']
 
@@ -219,6 +222,12 @@ def build(code, archive):
     for year, record in years.items():
         older = population[year][65:]
         record['olderShares'] = [sum(older[:15]) / sum(older), sum(older[15:25]) / sum(older), sum(older[25:]) / sum(older)]
+        # Roads as a share of the sector "other": Kolada's net cost of roads, railways and parking over the net cost of
+        # everything but education and elderly care (data/roads.json, sector-costs.json); 0 where a series is missing.
+        road = roads.get(str(year), {}).get('netCostPerInhabitant')
+        sector = sectors.get(str(year))
+        record['infrastructureShare'] = (round(road / (sector['krPerInhabitant']['N03067'] * sector['shares']['other']), 4)
+                                         if road is not None and sector else 0.0)
         # Single years of age 0-100+, both sexes: the library reads from them who crosses each group's upper age in which year.
         record['ages'] = [round(x, 1) for x in population[year][:100]] + [round(sum(population[year][100:]), 1)]
     return years, years[max(YEARS)]['olderShares']
@@ -263,6 +272,7 @@ def modelica(package, name, code, archive, years, older_shares):
       debt = {number(r['debt'])}, openingDebt = {number(r['openingDebt'])}, cash = {number(r['cash'])}, assets = {number(r['assets'])}, investment = {number(r['investment'])}, taxRate = {number(r['taxRate'], 2)},
       sectorShares = {vector(r['sectorShares'], 4)}, educationShares = {vector(r['educationShares'], 4)},
       careCostPerInhabitant = {vector(r['careCostPerInhabitant'], 0)}{f", interestRate = {number(r['interestRate'], 4)}" if 'interestRate' in r else ''},
+      infrastructureShare = {number(r['infrastructureShare'], 4)},
       ages = {vector(r['ages'], 1)})
       "SCB:s räkenskapssammandrag och befolkningsstatistik {y} (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares{y}[3] = {vector(r['olderShares'], 6)};''')

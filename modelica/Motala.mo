@@ -170,6 +170,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 1040, openingDebt = 940, cash = 81, assets = 2997, investment = 413, taxRate = 21.7,
       sectorShares = {0.4314, 0.2151, 0.3535}, educationShares = {0.2647, 0.5462, 0.1891},
       careCostPerInhabitant = {23331, 166483},
+      infrastructureShare = 0.0583 /* Kolada N07024, nettokostnad väg- och järnvägsnät samt parkering, delad med övrig verksamhet (data/roads.json, data/sector-costs.json) */,
       ages = SCB.ages(SCB.motala2025.population))
       "Årsredovisning 2025 (kommunen), s. 6-7, 47-53, 70; resultat 105 mnkr (avrundade poster ger 104)";
     constant BaseYear motala2024 = BaseYear(
@@ -186,6 +187,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 940, openingDebt = 663, cash = 229, assets = 2782, investment = 417, taxRate = 21.7,
       sectorShares = {0.4292, 0.2148, 0.3559}, educationShares = {0.273, 0.5416, 0.1853},
       careCostPerInhabitant = {22275, 168850},
+      infrastructureShare = 0.0512 /* Kolada N07024, nettokostnad väg- och järnvägsnät samt parkering, delad med övrig verksamhet (data/roads.json, data/sector-costs.json) */,
       ages = SCB.ages(SCB.motala2024.population))
       "Jämförelsekolumnen i årsredovisning 2025 (kommunen), s. 48-49 och not 8-9; resultat 1 mnkr";
     // Basåren 2020-2023 finns för tester mot historien (scripts/hindcast_vintages.py). Pengar ur
@@ -205,6 +207,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 663, openingDebt = 664.5, cash = 115, assets = 2389, investment = 299, taxRate = 21.7,
       sectorShares = {0.4395, 0.1974, 0.3631}, educationShares = {0.2744, 0.5392, 0.1864},
       careCostPerInhabitant = {20538, 170510},
+      infrastructureShare = 0.0505 /* Kolada N07024, nettokostnad väg- och järnvägsnät samt parkering, delad med övrig verksamhet (data/roads.json, data/sector-costs.json) */,
       ages = SCB.ages(SCB.motala2023.population))
       "Årsredovisning 2023 (kommunen), s. 47-54; anläggningar i bruk ur jämförelsekolumnen i årsredovisning 2024, s. 48; resultat 23 mnkr";
     constant BaseYear motala2022 = BaseYear(
@@ -221,6 +224,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 664.5, openingDebt = 830.2, cash = 85.8, assets = 2305.3, investment = 253.9, taxRate = 21.7,
       sectorShares = {0.4337, 0.1987, 0.3675}, educationShares = {0.2857, 0.5266, 0.1877},
       careCostPerInhabitant = {18330, 169826},
+      infrastructureShare = 0.0539 /* Kolada N07024, nettokostnad väg- och järnvägsnät samt parkering, delad med övrig verksamhet (data/roads.json, data/sector-costs.json) */,
       ages = SCB.ages(SCB.motala2022.population))
       "Årsredovisning 2022 (kommunen), s. 6 och 37-43, not 14; låneskulden inklusive kortfristig del (s. 32); avskrivningarna innehåller en nedskrivning på 12,1 mnkr; resultat 125,1 mnkr";
     constant BaseYear motala2021 = BaseYear(
@@ -237,6 +241,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 830.2, openingDebt = 788.0, cash = 338.2, assets = 2328.5, investment = 272.6, taxRate = 21.7,
       sectorShares = {0.4324, 0.2052, 0.3624}, educationShares = {0.2884, 0.521, 0.1905},
       careCostPerInhabitant = {17287, 168919},
+      infrastructureShare = 0.0485 /* Kolada N07024, nettokostnad väg- och järnvägsnät samt parkering, delad med övrig verksamhet (data/roads.json, data/sector-costs.json) */,
       ages = SCB.ages(SCB.motala2021.population))
       "Jämförelsekolumnen i årsredovisning 2022 (kommunen), s. 6 och 37-43; anläggningarna inklusive pågående arbeten, som inte är särredovisade; resultat 61,7 mnkr";
     constant BaseYear motala2020 = BaseYear(
@@ -253,6 +258,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.
       debt = 788.0, openingDebt = 801.3, cash = 167.9, assets = 2224.7, investment = 207.1, taxRate = 21.7,
       sectorShares = {0.4473, 0.2043, 0.3484}, educationShares = {0.2911, 0.5146, 0.1943},
       careCostPerInhabitant = {16848, 167639},
+      infrastructureShare = 0.0438 /* Kolada N07024, nettokostnad väg- och järnvägsnät samt parkering, delad med övrig verksamhet (data/roads.json, data/sector-costs.json) */,
       ages = SCB.ages(SCB.motala2020.population))
       "Jämförelsekolumnen i årsredovisning 2021 (kommunen), s. 37-43, och femårsöversikten i årsredovisning 2022, s. 6; anläggningarna inklusive pågående arbeten; resultat 64,8 mnkr";
 

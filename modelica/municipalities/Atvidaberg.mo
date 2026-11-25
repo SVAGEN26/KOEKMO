@@ -16,6 +16,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 158, openingDebt = 164.8, cash = 75.2, assets = 943.3, investment = 93.4, taxRate = 22.39,
       sectorShares = {0.4582, 0.2418, 0.3}, educationShares = {0.2323, 0.5646, 0.2031},
       careCostPerInhabitant = {24395, 176116},
+      infrastructureShare = 0.0954,
       ages = {104.1, 93.1, 109.2, 129.2, 137.2, 123.2, 103.1, 145.2, 122.2, 145.2, 133.2, 134.2, 135.2, 139.2, 132.2, 94.1, 128.2, 132.2, 122.2, 144.2, 106.1, 94.1, 90.1, 82.1, 85.1, 80.1, 90.1, 91.1, 87.1, 105.1, 122.2, 129.2, 125.2, 152.2, 159.2, 210.3, 147.2, 146.2, 123.2, 106.1, 144.2, 112.2, 133.2, 113.2, 109.2, 133.2, 123.2, 132.2, 130.2, 126.2, 139.2, 156.2, 153.2, 151.2, 137.2, 160.2, 152.2, 134.2, 154.2, 165.2, 181.3, 172.2, 162.2, 141.2, 123.2, 149.2, 144.2, 142.2, 129.2, 145.2, 126.2, 148.2, 142.2, 136.2, 140.2, 134.2, 156.2, 132.2, 135.2, 140.2, 128.2, 134.2, 105.1, 105.1, 78.1, 93.1, 65.1, 57.1, 43.1, 44.1, 42.1, 28, 20, 21, 15, 11, 8, 3, 6, 0, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.675249, 0.27422, 0.050531};
@@ -33,6 +34,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 164.8, openingDebt = 112, cash = 114.7, assets = 916.8, investment = 98.7, taxRate = 22.39,
       sectorShares = {0.439, 0.2435, 0.3175}, educationShares = {0.2383, 0.5573, 0.2044},
       careCostPerInhabitant = {24709, 172060},
+      infrastructureShare = 0.1008,
       ages = {90, 110, 123, 137, 121, 104, 142, 121, 145, 133, 129, 136, 135, 131, 91, 124, 137, 115, 146, 121, 108, 91, 81, 96, 78, 84, 92, 80, 102, 115, 128, 118, 153, 152, 207, 148, 139, 129, 107, 148, 114, 130, 107, 106, 133, 118, 128, 132, 127, 141, 156, 155, 159, 137, 165, 148, 137, 148, 162, 180, 171, 166, 140, 119, 140, 141, 141, 131, 143, 126, 151, 144, 138, 145, 142, 160, 130, 143, 147, 135, 144, 110, 114, 84, 102, 75, 63, 53, 49, 47, 33, 24, 28, 20, 14, 9, 4, 6, 1, 2, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.682683, 0.271203, 0.046114};
@@ -50,6 +52,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 112, openingDebt = 133.8, cash = 92.4, assets = 864, investment = 89.3, taxRate = 22.39,
       sectorShares = {0.4485, 0.246, 0.3055}, educationShares = {0.2397, 0.5572, 0.2031},
       careCostPerInhabitant = {24116, 165926},
+      infrastructureShare = 0.0785,
       ages = {107, 117, 134, 123, 104, 140, 115, 142, 132, 123, 135, 133, 131, 91, 126, 134, 114, 139, 125, 117, 107, 85, 96, 76, 90, 93, 82, 97, 116, 120, 115, 142, 145, 194, 144, 145, 126, 106, 148, 115, 129, 106, 106, 132, 112, 129, 128, 128, 145, 156, 156, 161, 141, 161, 145, 136, 149, 162, 181, 168, 171, 140, 120, 143, 140, 141, 133, 146, 128, 153, 145, 138, 149, 148, 161, 140, 154, 151, 141, 144, 113, 117, 88, 112, 81, 71, 57, 58, 52, 35, 25, 36, 25, 16, 12, 5, 9, 1, 2, 2, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.702685, 0.25364, 0.043675};
@@ -67,6 +70,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 133.8, openingDebt = 151.2, cash = 108.5, assets = 817.7, investment = 58.3, taxRate = 22.39,
       sectorShares = {0.4507, 0.2314, 0.3178}, educationShares = {0.2356, 0.5564, 0.2079},
       careCostPerInhabitant = {22552, 159832},
+      infrastructureShare = 0.0794,
       ages = {107, 133, 117, 102, 143, 117, 143, 134, 123, 134, 133, 131, 96, 127, 133, 118, 143, 125, 129, 118, 105, 103, 88, 83, 88, 87, 97, 116, 125, 108, 138, 142, 193, 136, 143, 119, 105, 149, 109, 125, 103, 107, 133, 110, 126, 125, 129, 145, 153, 160, 165, 141, 158, 148, 137, 149, 159, 186, 173, 173, 141, 122, 140, 142, 143, 137, 147, 126, 155, 147, 143, 149, 151, 168, 146, 158, 153, 144, 150, 118, 120, 89, 118, 87, 76, 62, 60, 55, 41, 34, 36, 28, 20, 16, 11, 12, 5, 3, 4, 0, 4})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.713309, 0.241458, 0.045233};
@@ -84,6 +88,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 151.2, openingDebt = 156.2, cash = 89, assets = 796.9, investment = 45.6, taxRate = 22.39,
       sectorShares = {0.4505, 0.2391, 0.3104}, educationShares = {0.2375, 0.5512, 0.2113},
       careCostPerInhabitant = {20693, 155760},
+      infrastructureShare = 0.0808,
       ages = {128, 109, 94, 140, 116, 135, 128, 121, 133, 127, 130, 97, 129, 135, 119, 139, 123, 131, 124, 126, 111, 92, 97, 93, 78, 93, 107, 123, 103, 134, 130, 181, 136, 142, 115, 102, 148, 108, 127, 101, 108, 129, 109, 126, 121, 128, 143, 153, 163, 162, 146, 154, 147, 135, 146, 157, 185, 173, 173, 146, 120, 139, 141, 143, 139, 147, 130, 156, 151, 144, 152, 152, 170, 150, 162, 158, 144, 151, 124, 128, 96, 124, 92, 83, 67, 67, 58, 51, 39, 41, 33, 28, 22, 16, 14, 7, 4, 4, 0, 4, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.722566, 0.2338, 0.043634};
@@ -101,6 +106,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 156.2, openingDebt = 153, cash = 60.6, assets = 775.9, investment = 35.2, taxRate = 22.39,
       sectorShares = {0.4547, 0.2274, 0.3179}, educationShares = {0.2458, 0.5421, 0.2122},
       careCostPerInhabitant = {19546, 155506},
+      infrastructureShare = 0.0826,
       ages = {97, 95, 138, 116, 138, 133, 121, 132, 134, 129, 97, 127, 137, 118, 146, 120, 133, 124, 128, 112, 104, 103, 93, 84, 89, 104, 122, 104, 126, 132, 165, 134, 133, 108, 95, 142, 109, 127, 94, 108, 125, 103, 121, 120, 127, 146, 158, 159, 161, 147, 154, 146, 138, 152, 156, 189, 172, 175, 147, 121, 141, 139, 140, 139, 149, 129, 160, 156, 145, 154, 153, 170, 154, 166, 157, 148, 154, 127, 131, 100, 130, 96, 86, 70, 74, 65, 57, 47, 47, 39, 33, 29, 21, 20, 11, 7, 4, 2, 4, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.722386, 0.233038, 0.044576};
@@ -118,6 +124,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 153, openingDebt = 113.5, cash = 34.9, assets = 446.9, investment = 56.8, taxRate = 21.95,
       sectorShares = {0.4476, 0.2335, 0.3189}, educationShares = {0.2429, 0.5397, 0.2174},
       careCostPerInhabitant = {19447, 155160},
+      infrastructureShare = 0.0828,
       ages = {90, 131, 120, 137, 132, 120, 135, 134, 129, 96, 129, 141, 119, 150, 124, 137, 123, 129, 119, 124, 117, 106, 97, 92, 105, 116, 100, 123, 121, 165, 120, 130, 105, 87, 141, 110, 124, 92, 103, 125, 106, 124, 122, 127, 146, 159, 160, 165, 153, 159, 147, 140, 145, 159, 186, 172, 172, 148, 119, 145, 144, 140, 140, 149, 129, 160, 157, 144, 161, 155, 174, 152, 171, 161, 151, 158, 130, 135, 110, 129, 100, 90, 78, 81, 70, 65, 50, 54, 42, 40, 37, 22, 23, 13, 11, 8, 3, 7, 2, 1, 4})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.737291, 0.219744, 0.042965};
@@ -135,6 +142,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 113.5, openingDebt = 103.3, cash = 46, assets = 390.4, investment = 31.8, taxRate = 21.95,
       sectorShares = {0.4508, 0.24, 0.3093}, educationShares = {0.2472, 0.5316, 0.2211},
       careCostPerInhabitant = {19339, 154691},
+      infrastructureShare = 0.0863,
       ages = {120, 116, 144, 127, 116, 138, 129, 124, 95, 129, 138, 113, 147, 121, 137, 126, 128, 124, 128, 126, 118, 106, 103, 110, 118, 101, 120, 117, 159, 123, 122, 101, 90, 141, 110, 120, 96, 102, 127, 100, 121, 117, 122, 142, 158, 160, 162, 153, 159, 149, 141, 148, 163, 181, 172, 172, 147, 120, 151, 147, 142, 141, 149, 130, 158, 157, 146, 165, 154, 176, 155, 172, 162, 153, 165, 129, 144, 117, 130, 103, 95, 84, 92, 74, 69, 60, 56, 45, 44, 46, 28, 27, 17, 17, 13, 6, 12, 3, 2, 1, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.73726, 0.220053, 0.042687};
@@ -152,6 +160,7 @@ package Atvidaberg "Åtvidaberg: kommunens ekonomi år för år med biblioteket 
       debt = 103.3, openingDebt = 155.3, cash = 45.5, assets = 377.3, investment = 58.7, taxRate = 21.95,
       sectorShares = {0.4511, 0.2418, 0.3071}, educationShares = {0.2558, 0.5239, 0.2204},
       careCostPerInhabitant = {18735, 154198},
+      infrastructureShare = 0.0854,
       ages = {116, 139, 130, 115, 129, 127, 123, 94, 133, 138, 113, 149, 118, 132, 125, 129, 120, 128, 142, 137, 125, 113, 124, 133, 107, 121, 120, 158, 115, 118, 103, 85, 140, 111, 116, 97, 98, 128, 99, 126, 117, 120, 148, 163, 164, 163, 159, 161, 156, 141, 146, 164, 180, 171, 170, 150, 125, 153, 152, 141, 144, 150, 133, 153, 157, 149, 165, 155, 178, 156, 175, 162, 158, 167, 132, 145, 118, 133, 111, 100, 88, 101, 75, 74, 64, 65, 51, 45, 50, 33, 31, 20, 21, 15, 8, 14, 6, 5, 1, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.740591, 0.21707, 0.042339};

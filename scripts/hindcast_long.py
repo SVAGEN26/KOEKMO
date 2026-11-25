@@ -21,7 +21,7 @@ There are no forecasts from those years in the project, so the assumption sets a
   drift      as hindsight, with costDrift the municipality's mean residual from 2011 to the base
              year, measured on the model's basis with the weights known then (data/cost-residual.json,
              knownBy): does the history of that residual help?
-  standard   the model's standard rates (tax base 3.5 %, wages 3 %, prices 2 %, pensions 2 %,
+  standard   the model's standard rates (tax base 3.5 %, wages 3 %, prices 2 %, pensions following the payroll,
              grants 2 %), costDrift 0. Sweden's population is SCB's outcome, not a forecast of the
              time: no forecast from 2017-2019 is in the project.
 
@@ -133,7 +133,7 @@ def model_source(package, code, origin, records, assumptions):
         lines += [f'referenceTax = {modelica_array(tax)}*recurringTax0',
                   f'wageGrowthPath = {modelica_array([pkv[y]["labour"] for y in years])}',
                   f'priceGrowthPath = {modelica_array([pkv[y]["other"] for y in years])}',
-                  f'pensionExpensePath = {modelica_array(pension)}*pension0',
+                  f'pensionExpensePath = {modelica_array(pension)}*pension0', 'pensionFollowsPayroll = false',
                   f'costDrift = {drift:.6g}',
                   'grantsByComponent = true',
                   f'incomeEqualisationPerCapitaPath = {per_capita(1)}',

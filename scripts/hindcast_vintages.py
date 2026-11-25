@@ -35,7 +35,7 @@ assumptions are run from every base year:
             property fee and other general grants in mnkr). Only the municipality's population is
             the model's.
   standard  the model's standard growth rates (tax base 3.5 %, wages 3 %, prices 2 %,
-            pensions 2 %, grants 2 %), with the same population as above.
+            pensions following the payroll, grants 2 %), with the same population as above.
 
 No set has cost growth beyond demography and prices (costDrift 0, the model's default);
 scripts/hindcast_long.py shows that the historical mean of that residual made eight-year
@@ -149,7 +149,9 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
         lines += [f'referenceTax = {modelica_array(tax)}*recurringTax0',
                   f'wageGrowthPath = {modelica_array([v["labour"][y] for y in years])}',
                   f'priceGrowthPath = {modelica_array([v["other"][y] for y in years])}',
-                  f'pensionExpensePath = {modelica_array(pension)}*pension0']
+                  # The pension cost follows the labour-cost index, as SKR's PKV does; the model's own rule (the payroll,
+                  # with volume and productivity) is tested in the standard set.
+                  f'pensionExpensePath = {modelica_array(pension)}*pension0', 'pensionFollowsPayroll = false']
     if assumptions in ('components', 'hold'):
         regulation = [v['regulation'][y] for y in years]
         capacity = [v['capacity'][y] / v['capacity'][origin] for y in years]
