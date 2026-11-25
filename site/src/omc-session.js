@@ -131,5 +131,7 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
     }
     return {rows,inspect:{catalogue,picked}};
   }
-  return {run};
+  // Whether a variant is compiled already: a new one takes a few seconds, which the page shows.
+  const isCompiled=(baseYear=BASE_YEAR,cohort=false,observed=false,municipality=DEFAULT_MUNICIPALITY)=>models.has(`${municipality}/${baseYear}/${cohort}/${observed}`);
+  return {run,isCompiled};
 }

@@ -773,11 +773,25 @@ function renderExplanation() {
 // Each draw asks the OpenModelica worker for every scenario it shows in one batch.
 // While a batch runs, further input only marks the view dirty; the latest state is drawn next.
 let drawing=false,dirty=false;
+// While a simulation runs: a bar at the top, the count in the engine status, and the charts dimmed until the new
+// numbers are in. The worker reports each scenario (jit-engine.js, onRun); a new model variant is compiled first.
+function simProgress({done,total,compiling}) {
+  const bar=$('sim-progress'),share=total?Math.max(0.04,done/total):0.04;
+  bar.hidden=false;
+  bar.firstElementChild.style.width=`${(100*share).toFixed(1)}%`;
+  bar.setAttribute('aria-valuenow',String(Math.round(100*share)));
+  $('engine').textContent=compiling?`Kompilerar modellen för ${municipalities[activeMunicipality]?.name??'kommunen'}…`:total?`Simulerar ${Math.min(done+1,total)} av ${total}…`:'Simulerar…';
+}
+function simBusy(busy) {
+  document.body.classList.toggle('simulating',busy);
+  if(busy) simProgress({done:0,total:0,compiling:false});
+  else {$('sim-progress').hidden=true;$('engine').textContent=ENGINE;}
+}
 async function draw() {
   if(drawing){dirty=true;return;}
-  drawing=true;
+  drawing=true;simBusy(true);
   try {do {dirty=false;await drawOnce();} while(dirty);}
-  finally {drawing=false;}
+  finally {drawing=false;simBusy(false);}
 }
 const stressOverrides=(a,direction)=>({...overrides,taxGrowth:a.taxGrowth+direction*.7,wageGrowth:Math.max(0,a.wageGrowth-direction*.7),priceGrowth:Math.max(0,a.priceGrowth-direction*.4),migrationDelta:a.migrationDelta+direction*100,birthChange:a.birthChange+direction*5,interestRate:Math.max(0,a.interestRate-direction*.75)});
 const sensitivityCases=[['wageGrowth',1,'Löneökning +1 procentenhet'],['interestRate',1,'Låneränta +1 procentenhet'],['migrationDelta',100,'Flyttnetto +100 personer/år'],['investment',100,'Investeringar +100 mnkr/år']];
@@ -1025,7 +1039,7 @@ async function drawOnce() {
         requests.push({overrides:presetOverrides(choice),revenuePath:path});
       }
     }
-    const results=await engine.simulateMany(b,history,requests);
+    const results=await engine.simulateMany(b,history,requests,{onRun:simProgress});
     if(dirty) return;
     for(const r of results.slice(0,2)) if(r.error) throw Error(r.error);
     if(run&&scenarioKey!==lastScenarioKey) previousRun=run;
@@ -1036,7 +1050,7 @@ async function drawOnce() {
       municipality:b.municipality,basis:path?`SKR ${circular?`${circular} · `:''}${path.vintage}`:b.planningInputs?'Nationella SKR-antaganden':'Egna grundantaganden'};
     // The address always describes the scenario on screen, so a reload or a copied address gives the same view.
     if(!document.body.classList.contains('picking')) window.history.replaceState(null,'',shareUrl());
-    run=results[0].run;base=results[1].run;latestSettings=snapshotSettings();version++;modelView?.update(run);$('error').hidden=true;$('engine').textContent=ENGINE;
+    run=results[0].run;base=results[1].run;latestSettings=snapshotSettings();version++;modelView?.update(run);$('error').hidden=true;
     const stressRuns=results.slice(2,2+stressed.length),sensitivityRuns=results.slice(2+stressed.length,rateIndex);
     const end=run.rows.at(-1),initial=run.rows[0],margin=end.result/(end.tax+end.grants)*100;
     $('metrics').innerHTML=[['Resultat '+end.year,fmt(end.result),'mnkr',`${decimal(margin)} % av skatt och bidrag`],['Banklåneskuld '+end.year,fmt(end.debt),'mnkr',`${fmt(end.debt-initial.debt)} mnkr förändring från ${b.baseYear}`],['Invånare '+end.year,fmt(end.population),'pers.',`${fmt(end.population-initial.population)} personer från ${b.baseYear}`]].map(([label,value,unit,detail])=>`<div class="metric"><div class="metric-label">${label}</div><div class="metric-number">${value}<small>${unit}</small></div><div class="metric-detail">${detail}</div></div>`).join('');
@@ -1289,7 +1303,9 @@ async function boot(){try{
   $('engine').textContent='Hämtar OpenModelica…';
   const mib=x=>(x/1048576).toFixed(0);
   engine=createWorkerEngine({
-    onProgress:(loaded,total)=>{$('engine').textContent=total?`Hämtar OpenModelica ${Math.round(loaded/total*100)} % (${mib(total)} MB)`:`Hämtar OpenModelica ${mib(loaded)} MB`;},
+    onProgress:(loaded,total)=>{
+      if(total) simProgress({done:loaded,total,compiling:false});
+      $('engine').textContent=total?`Hämtar OpenModelica ${Math.round(loaded/total*100)} % (${mib(total)} MB)`:`Hämtar OpenModelica ${mib(loaded)} MB`;},
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});

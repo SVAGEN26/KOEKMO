@@ -54,10 +54,11 @@ export function createDirectSimulator(session) {
 }
 
 // Browser simulator: the compiler runs in a worker. `simulateMany` takes
-// [{overrides, revenuePath}] and resolves to [{run} | {error}] in the same order.
+// [{overrides, revenuePath}] and resolves to [{run} | {error}] in the same order. onRun({done, total, compiling})
+// reports progress as the worker takes the scenarios one at a time.
 export function createWorkerEngine({onProgress=()=>{},onCompiling=()=>{}}={}) {
   const worker=new Worker(new URL('./omc-worker.js',import.meta.url),{type:'module'});
-  const pending=new Map();let nextId=1;
+  const pending=new Map(),listeners=new Map();let nextId=1;
   let settle;
   const ready=new Promise((resolve,reject)=>{settle={resolve,reject};});
   worker.onmessage=({data})=>{
@@ -65,12 +66,13 @@ export function createWorkerEngine({onProgress=()=>{},onCompiling=()=>{}}={}) {
     else if(data.type==='compiling') onCompiling();
     else if(data.type==='ready') settle.resolve();
     else if(data.type==='failed') settle.reject(Error(data.error));
-    else if(data.type==='result') {pending.get(data.id)?.(data.results);pending.delete(data.id);}
+    else if(data.type==='runProgress') listeners.get(data.id)?.(data);
+    else if(data.type==='result') {pending.get(data.id)?.(data.results);pending.delete(data.id);listeners.delete(data.id);}
   };
   worker.onerror=e=>settle.reject(Error(e.message||'OpenModelica-tråden avbröts.'));
   worker.postMessage({type:'init'});
 
-  async function simulateMany(b,history,requests) {
+  async function simulateMany(b,history,requests,{onRun=null}={}) {
     await ready;
     // Validate on the main thread; only valid scenarios reach the model.
     const prepared=requests.map(({overrides={},revenuePath=null,inspect=null})=>{
@@ -78,7 +80,9 @@ export function createWorkerEngine({onProgress=()=>{},onCompiling=()=>{}}={}) {
     });
     const jobs=prepared.filter(p=>!p.error).map(p=>p.job);
     const id=nextId++;
+    if(onRun) listeners.set(id,onRun);
     const results=jobs.length?await new Promise(resolve=>{pending.set(id,resolve);worker.postMessage({type:'run',id,jobs});}):[];
+    listeners.delete(id);
     let k=0;
     return prepared.map((p,i)=>{
       if(p.error) return {error:p.error};
