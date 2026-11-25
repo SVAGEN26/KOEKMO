@@ -1652,3 +1652,36 @@ arkivera data.
 - Omvänd beräkning: med resultatmål görs två extra körningar (skattesats +1 kr, kostnadsökning −0,5 procentenheter);
   ändringen som når målet löses per år linjärt, med hänsyn till att målet i kronor växer med skatten. Kontroll i
   webbläsare: Motala 21,76 kr ger 2,00 % 2026 och mer övriga år; Finspång 21,33 kr ger 2,00 % 2026.
+
+## Osäkerhetsband för skatt och bidrag, och SKR mot regeringen och ESV (2026-11-25)
+
+- Bandet: `scripts/prepare_revenue_uncertainty.py` sorterar felen i SKR:s fyra arbetsböcker (21:35, 22:28, 23:56,
+  24:56; ur `data/outcome-explanation-summary.json`) efter antal år fram och skriver `data/revenue-uncertainty.json`.
+  Medelabsolutfel för skatt och bidrag, 13 kommuner: 0,8 % samma år, 1,9, 2,9, 3,9 och 5,3 % efter 1–4 år (4, 4, 3,
+  2 och 1 arbetsbok). Sidan ritar det som ett band när "Skatt och bidrag" är vald; efter fyra år hålls värdet kvar.
+  Felen är negativa på alla horisonter (prognoserna för låga); bandet är ändå symmetriskt. Ingen sannolikhet.
+- Andra prognosmakare: varje decembercirkulär har tabellen "De senaste skatteunderlagsprognoserna" med SKR,
+  SKR:s föregående, regeringen (budgetpropositionen) och ESV. Avläst ur cirkulären 20:57, 21:49, 22:54, 23:56 och
+  24:56 till `research/data/tax-base-forecasters.json`; `scripts/compare_tax_base_forecasters.py` jämför med utfallet
+  (till och med 2024) och skriver `data/tax-base-forecasters.json`.
+  - Fel i tillväxten ett år fram, procentenheter, fyra fall (2021–2024), medelfel = −medelabsolutfel för alla:
+    SKR −1,8, ESV −1,5, regeringen −1,5. Två år fram (tre fall), medelabsolutfel: SKR 1,3, ESV 1,2, regeringen 1,4.
+  - Nivån tre år efter december 2020: SKR −4,9 %, ESV −5,9 %, regeringen −5,8 %. Efter december 2021: SKR −3,3 %,
+    ESV −3,3 %, regeringen −4,4 %.
+  - Missen 2021 var återhämtningen efter pandemin (prognos 1,9–2,5 %, utfall 5,3 %), inte inflationen; 2022
+    (3,5–3,8 % mot 5,8 %) var löner och priser.
+  - Ingen stack ut. Prognoserna är inte från samma dag: regeringens är upp till tre månader äldre, och dess två
+    första år är fastställda uppräkningsfaktorer.
+- ESV:s rader är kontrollräknade mot ESV:s egna Prognostabeller (Beskattningsbar förvärvsinkomst) och stämmer på
+  decimalen, utom 2025 i novemberprognosen 2021 (cirkuläret 3,7, tabellen 3,6). Cirkulär 24:56 kallar raden
+  "ESV, juni" i ena blocket och "ESV, nov" i det andra; talen är novemberprognosen. esv.se svarade 404 härifrån,
+  så tabellerna är Wayback-kopior.
+- Konjunkturinstitutet publicerar ingen prognos för det kommunala skatteunderlaget i Konjunkturläget, bara lönesumman
+  (tabell A7) och kommunsektorns skatteintäkter (tabell A23). Lönesumman december 2020–2024 står i
+  `research/data/tax-base-forecasters.json`, märkt som en annan storhet, och jämförs inte.
+- Regeringens rader är lästa ur SKR:s tabell, inte ur budgetpropositionerna.
+- Länkarna `skr.se/download/...` till cirkulären 21:49 och 22:54 i `research/data/skr-*-vintages.json` ger numera
+  en HTML-sida; samma sökväg på `extra.skr.se` fungerar.
+- Dokumenten (fem cirkulär, fem Konjunkturläget, ESV:s tabeller) ligger i privata repot `cirkular/` med
+  `kallor-cirkular.csv`.
+

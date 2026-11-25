@@ -1,0 +1,390 @@
+{
+  "description": "Forecasts of Sweden's municipal tax base (per cent change a year) as SKR's December circulars compare them, table 'De senaste skatteunderlagsprognoserna'. Read from the circulars' PDFs on 2026-11-25; the ESV rows were recomputed from ESV's own Prognostabeller (Beskattningsbar förvärvsinkomst) and agree to the decimal, except 2025 in the November 2021 forecast (circular 3.7, workbook 3.6).",
+  "notes": [
+    "The government's rows are budget propositions. For the current and the next year they are the fixed uppräkningsfaktorer (for example 1,020 and 1,022 in the budget for 2021), set in September.",
+    "The forecasts are not from the same day: the government's is up to three months older than SKR's, ESV's zero to three.",
+    "The government's rows are read from SKR's table, not from the budget propositions themselves.",
+    "Konjunkturinstitutet publishes no forecast of the municipal tax base in Konjunkturläget, only the wage sum (Tabell A7, Lönesumma, justerad för utland) and the municipal sector's tax revenue (Tabell A23). The wage sum is another quantity and is recorded apart, not compared."
+  ],
+  "circulars": [
+    {
+      "circular": "20:57",
+      "published": "2020-12-15",
+      "source": "https://meetingsplus.gavle.se/welcome-sv/namnder-styrelser/kommunstyrelsen/mote-2021-02-09/agenda/cirkular-2057-fran-skr-budgetforutsattningar-for-aren-2020-2023pdf?downloadMode=open",
+      "locator": "Tabell 2, printed page 4, PDF page 6",
+      "rows": [
+        {
+          "forecaster": "SKR",
+          "label": "SKR dec",
+          "made": "2020-12",
+          "growthPercent": {
+            "2019": 2.8,
+            "2020": 1.7,
+            "2021": 2.5,
+            "2022": 4.0,
+            "2023": 4.1,
+            "2024": 3.1
+          }
+        },
+        {
+          "forecaster": "ESV",
+          "label": "ESV nov",
+          "made": "2020-11",
+          "growthPercent": {
+            "2019": 3.0,
+            "2020": 1.6,
+            "2021": 1.9,
+            "2022": 4.1,
+            "2023": 3.6,
+            "2024": 3.2
+          }
+        },
+        {
+          "forecaster": "SKR previous",
+          "label": "SKR okt",
+          "made": "2020-10",
+          "growthPercent": {
+            "2019": 2.8,
+            "2020": 1.9,
+            "2021": 1.5,
+            "2022": 3.5,
+            "2023": 3.9,
+            "2024": 3.5
+          }
+        },
+        {
+          "forecaster": "Government",
+          "label": "Reg sep (budgetpropositionen för 2021)",
+          "made": "2020-09",
+          "growthPercent": {
+            "2019": 2.9,
+            "2020": 2.0,
+            "2021": 2.2,
+            "2022": 3.6,
+            "2023": 3.9
+          }
+        }
+      ]
+    },
+    {
+      "circular": "21:49",
+      "published": "2021-12-16",
+      "source": "https://extra.skr.se/download/18.3bf105b617db3dab4fe18617/1639652701859/21049.pdf",
+      "locator": "Tabell 2, printed page 5, PDF page 7",
+      "rows": [
+        {
+          "forecaster": "SKR",
+          "label": "SKR, aktuell",
+          "made": "2021-12",
+          "growthPercent": {
+            "2020": 2.1,
+            "2021": 4.6,
+            "2022": 3.5,
+            "2023": 3.7,
+            "2024": 3.4,
+            "2025": 3.7
+          }
+        },
+        {
+          "forecaster": "SKR previous",
+          "label": "SKR, föregående (sep, cirkulär 21:35)",
+          "made": "2021-09",
+          "growthPercent": {
+            "2020": 2.1,
+            "2021": 4.3,
+            "2022": 4.2,
+            "2023": 3.7,
+            "2024": 3.3,
+            "2025": 3.8
+          }
+        },
+        {
+          "forecaster": "Government",
+          "label": "Regeringen, sep (budgetpropositionen för 2022)",
+          "made": "2021-09",
+          "growthPercent": {
+            "2020": 2.0,
+            "2021": 4.3,
+            "2022": 3.8,
+            "2023": 2.8,
+            "2024": 2.8
+          }
+        },
+        {
+          "forecaster": "ESV",
+          "label": "ESV, nov",
+          "made": "2021-11",
+          "growthPercent": {
+            "2020": 2.7,
+            "2021": 4.5,
+            "2022": 3.5,
+            "2023": 3.4,
+            "2024": 3.7,
+            "2025": 3.7
+          }
+        }
+      ]
+    },
+    {
+      "circular": "22:54",
+      "published": "2022-12-15",
+      "source": "https://extra.skr.se/download/18.2867e67f185050c7b9f1e723/1671105243834/22054.pdf",
+      "locator": "Tabell 3, printed page 5, PDF page 7",
+      "rows": [
+        {
+          "forecaster": "SKR",
+          "label": "SKR, aktuell",
+          "made": "2022-12",
+          "growthPercent": {
+            "2021": 5.3,
+            "2022": 5.2,
+            "2023": 3.6,
+            "2024": 4.4,
+            "2025": 4.3,
+            "2026": 4.0
+          }
+        },
+        {
+          "forecaster": "SKR previous",
+          "label": "SKR, föregående (okt, cirkulär 22:37)",
+          "made": "2022-10",
+          "growthPercent": {
+            "2021": 5.3,
+            "2022": 5.2,
+            "2023": 4.0,
+            "2024": 4.5,
+            "2025": 4.1,
+            "2026": 4.0
+          }
+        },
+        {
+          "forecaster": "Government",
+          "label": "Regeringen, nov (budgetpropositionen för 2023)",
+          "made": "2022-11",
+          "growthPercent": {
+            "2021": 5.0,
+            "2022": 5.1,
+            "2023": 4.0,
+            "2024": 3.5,
+            "2025": 5.4
+          }
+        },
+        {
+          "forecaster": "ESV",
+          "label": "ESV, sep",
+          "made": "2022-09",
+          "growthPercent": {
+            "2021": 5.3,
+            "2022": 5.1,
+            "2023": 4.7,
+            "2024": 3.9,
+            "2025": 3.7
+          }
+        }
+      ]
+    },
+    {
+      "circular": "23:56",
+      "published": "2023-12-14",
+      "source": "https://extra.skr.se/download/18.40b25ebf18c6245376516b5b/1702628339915/Cirkul%C3%A4r%2023056.pdf",
+      "locator": "Tabell 4, printed page 7, PDF page 8",
+      "rows": [
+        {
+          "forecaster": "SKR",
+          "label": "SKR, aktuell",
+          "made": "2023-12",
+          "growthPercent": {
+            "2022": 5.8,
+            "2023": 5.3,
+            "2024": 2.6,
+            "2025": 4.7,
+            "2026": 4.1,
+            "2027": 4.0
+          }
+        },
+        {
+          "forecaster": "SKR previous",
+          "label": "SKR, föregående (okt, cirkulär 23:41)",
+          "made": "2023-10",
+          "growthPercent": {
+            "2022": 5.6,
+            "2023": 4.7,
+            "2024": 3.3,
+            "2025": 5.0,
+            "2026": 4.3,
+            "2027": 4.1
+          }
+        },
+        {
+          "forecaster": "Government",
+          "label": "Regeringen, sept (budgetpropositionen för 2024)",
+          "made": "2023-09",
+          "growthPercent": {
+            "2022": 5.7,
+            "2023": 4.6,
+            "2024": 3.3,
+            "2025": 4.2,
+            "2026": 5.0
+          }
+        },
+        {
+          "forecaster": "ESV",
+          "label": "ESV, nov",
+          "made": "2023-11",
+          "growthPercent": {
+            "2022": 5.9,
+            "2023": 4.9,
+            "2024": 3.3,
+            "2025": 4.4,
+            "2026": 4.2,
+            "2027": 4.8
+          }
+        }
+      ]
+    },
+    {
+      "circular": "24:56",
+      "published": "2024-12-12",
+      "source": "https://extra.skr.se/download/18.72fac55919386070c95830a7/1733995400288/Cirkul%C3%A4r%2024056.pdf",
+      "locator": "Tabell 5, printed page 7, PDF page 8",
+      "rows": [
+        {
+          "forecaster": "SKR",
+          "label": "SKR, aktuell",
+          "made": "2024-12",
+          "growthPercent": {
+            "2022": 5.8,
+            "2023": 4.8,
+            "2024": 3.5,
+            "2025": 4.4,
+            "2026": 4.8,
+            "2027": 4.6,
+            "2028": 4.1
+          }
+        },
+        {
+          "forecaster": "SKR previous",
+          "label": "SKR, föregående (okt, cirkulär 24:43)",
+          "made": "2024-10",
+          "growthPercent": {
+            "2022": 5.8,
+            "2023": 4.9,
+            "2024": 3.7,
+            "2025": 4.3,
+            "2026": 4.6,
+            "2027": 4.3,
+            "2028": 4.1
+          }
+        },
+        {
+          "forecaster": "Government",
+          "label": "Regeringen, sept (budgetpropositionen för 2025)",
+          "made": "2024-09",
+          "growthPercent": {
+            "2022": 5.8,
+            "2023": 4.9,
+            "2024": 3.1,
+            "2025": 4.5,
+            "2026": 5.0,
+            "2027": 5.1
+          }
+        },
+        {
+          "forecaster": "ESV",
+          "label": "ESV, juni in the growth block, nov in the accumulated block; the numbers are ESV's November forecast",
+          "made": "2024-11",
+          "growthPercent": {
+            "2022": 5.8,
+            "2023": 4.9,
+            "2024": 3.4,
+            "2025": 4.0,
+            "2026": 4.8,
+            "2027": 4.8,
+            "2028": 4.2
+          }
+        }
+      ]
+    }
+  ],
+  "konjunkturinstitutetWageSum": {
+    "quantity": "Lönesumma, justerad för utland, per cent change a year, current prices. Not the tax base.",
+    "locator": "Konjunkturläget, Tabell A7 Hushållens inkomster, konsumtionsutgifter och sparande",
+    "reports": [
+      {
+        "report": "Konjunkturläget december 2020",
+        "published": "2020-12-17",
+        "source": "https://www.konj.se/media/ad3owssx/konjunkturlaget-december-2020.pdf",
+        "page": 55,
+        "growthPercent": {
+          "2019": 3.9,
+          "2020": 0.8,
+          "2021": 2.6,
+          "2022": 5.5,
+          "2023": 4.0,
+          "2024": 3.7,
+          "2025": 3.8
+        }
+      },
+      {
+        "report": "Konjunkturläget december 2021",
+        "published": "2021-12-21",
+        "source": "https://www.konj.se/media/fasbb5vp/konjunkturlaget-december-2021.pdf",
+        "page": 38,
+        "growthPercent": {
+          "2020": 0.9,
+          "2021": 5.8,
+          "2022": 4.6,
+          "2023": 4.3,
+          "2024": 3.2,
+          "2025": 3.4,
+          "2026": 3.8
+        }
+      },
+      {
+        "report": "Konjunkturläget december 2022",
+        "published": "2022-12-21",
+        "source": "https://www.konj.se/media/jgodu4r2/konjunkturlaget-december-2022.pdf",
+        "page": 45,
+        "growthPercent": {
+          "2021": 5.7,
+          "2022": 6.4,
+          "2023": 3.8,
+          "2024": 4.2,
+          "2025": 4.9,
+          "2026": 4.7,
+          "2027": 4.3
+        }
+      },
+      {
+        "report": "Konjunkturläget december 2023",
+        "published": "2023-12-20",
+        "source": "https://www.konj.se/media/shrlm05q/konjunkturlaget-december-2023.pdf",
+        "page": 39,
+        "growthPercent": {
+          "2022": 6.5,
+          "2023": 5.3,
+          "2024": 3.7,
+          "2025": 4.8,
+          "2026": 5.5,
+          "2027": 4.9,
+          "2028": 4.3
+        }
+      },
+      {
+        "report": "Konjunkturläget december 2024",
+        "published": "2024-12-20",
+        "source": "https://www.konj.se/media/4fopyp5j/konjunkturlaget-december-2024.pdf",
+        "page": 33,
+        "growthPercent": {
+          "2023": 5.5,
+          "2024": 3.7,
+          "2025": 3.4,
+          "2026": 4.6,
+          "2027": 5.0,
+          "2028": 4.1,
+          "2029": 3.8
+        }
+      }
+    ]
+  }
+}

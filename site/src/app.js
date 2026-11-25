@@ -60,7 +60,7 @@ const explanations={
   equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
 };
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let rateFixingTable,rateStress,investmentPlans,liquidityTable,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,rateStress,investmentPlans,liquidityTable,revenueUncertainty,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
@@ -414,8 +414,9 @@ function legendSymbol(color,shape=null,{thin=false,dash=false}={}) {
 function chart(id,series,options={}) {
   if(!run) return;
   chartArgs[id]=[series,options];scaleControl(id);
-  const {unit='',height=255,bands=[]}=options;
-  const width=760,left=62,right=22,top=20,bottom=38,values=series.flatMap(s=>s.values).filter(Number.isFinite);
+  const {unit='',height=255,bands=[],range=null}=options;
+  // range: {low, high} per year, drawn as a shaded band behind the lines; the axis makes room for it.
+  const width=760,left=62,right=22,top=20,bottom=38,values=[...series.flatMap(s=>s.values),...(range?[...range.low,...range.high]:[])].filter(Number.isFinite);
   const auto=niceAxis(Math.min(...values),Math.max(...values)),manual=scales[id];
   // A chosen end replaces the automatic one; round steps are kept between them.
   let low=manual?.min??auto.low,high=manual?.max??auto.high;
@@ -429,11 +430,13 @@ function chart(id,series,options={}) {
   // Shaded columns for flagged years, for example years with a deficit.
   const half=(width-left-right)/(run.rows.length-1)/2;
   const shaded=bands.map(i=>`<rect class="band" x="${(x(i)-half).toFixed(2)}" y="${top}" width="${(2*half).toFixed(2)}" height="${height-top-bottom}" fill="#f6dcd6"><title>Underskott ${run.rows[i].year}</title></rect>`).join('');
+  const span=range?(()=>{const k=range.low.map((v,i)=>Number.isFinite(v)&&Number.isFinite(range.high[i])?i:-1).filter(i=>i>=0);
+    return k.length<2?'':`<path class="range" d="M${k.map(i=>`${x(i).toFixed(2)},${y(range.high[i]).toFixed(2)}`).join(' L')} L${k.reverse().map(i=>`${x(i).toFixed(2)},${y(range.low[i]).toFixed(2)}`).join(' L')} Z" fill="#17634e" fill-opacity="0.13"><title>${safe(range.title??'')}</title></path>`;})():'';
   const line=values=>{let pen='M';return values.map((v,i)=>{if(!Number.isFinite(v)){pen='M';return '';}const s=`${pen}${x(i).toFixed(2)},${y(v).toFixed(2)}`;pen='L';return s;}).filter(Boolean).join(' ');};
   const paths=series.map(s=>`<path d="${line(s.values)}" fill="none" stroke="${s.color}" stroke-width="${s.thin?1.3:2.8}" ${s.dash?'stroke-dasharray="5 5"':''}/>${s.plain||(s.thin&&!s.marker)?'':s.values.map((v,i)=>!Number.isFinite(v)||v<low||v>high?'':marker(s.marker??'circle',x(i),y(v),s.marker?3.6:3,s.color,`${s.name} ${run.rows[i].year}: ${fmt(v)} ${unit}`)).join('')}`).join('');
   const labelStep=Math.ceil((run.rows.length-1)/8);
   const labels=run.rows.map((r,i)=>i%labelStep===0||i===run.rows.length-1?`<text x="${x(i)}" y="${height-10}" text-anchor="middle" fill="#78837d" font-size="11">${r.year}</text>`:'').join('');
-  $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${shaded}${lines}${zero}<g clip-path="url(#${clip})">${paths}</g>${labels}</svg>`;
+  $(id).innerHTML=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${safe(series.map(s=>s.name).join(', '))}, ${run.rows[0].year}–${run.rows.at(-1).year}. Se tabeller för värden."><title>${safe(series.map(s=>s.name).join(', '))}</title><defs><clipPath id="${clip}"><rect x="${left}" y="${top-4}" width="${width-left-right}" height="${height-top-bottom+8}"/></clipPath></defs>${shaded}${lines}${zero}<g clip-path="url(#${clip})">${span}${paths}</g>${labels}</svg>`;
 }
 function ledger() {
   const cols=[['year','År'],['tax','Skatt'],['grants','Bidrag & utj.'],['cost','Nettodrift'],['depreciation','Avskr.'],['interest','Ränta'],['result','Resultat'],['investment','Invest.'],['debt','Låneskuld'],['cash','Kassa']];
@@ -898,6 +901,7 @@ function renderResultChart() {
   if(!resultChartInputs) return;
   const {stresses,target,path}=resultChartInputs;
   const view=RESULT_VIEWS.find(v=>v[0]===$('result-series').value);
+  $('uncertainty-note').hidden=true;  // shown again below when the quantity has a band
   $('model-variable').hidden=view?.[0]!=='model';
   if(view?.[0]==='model') {renderModelVariable();return;}
   $('share-controls').hidden=!view||!SHARE_VIEWS.has(view[0]);
@@ -917,13 +921,31 @@ function renderResultChart() {
   const isResult=key==='result',isShare=key==='resultShare';
   const targetSeries=target==null||!(isResult||isShare)?[]:[{name:`Resultatmål ${decimal(target)} %`,values:run.rows.map(r=>isShare?target:target/100*(r.tax+r.grants)),color:'#516e9c',dash:true,thin:true}];
   const lines=isResult?stresses:isShare?stresses.map(s=>({...s,values:s.share})):[];
+  const range=key==='taxGrants'?revenueRange(values(run.rows)):null;
   chart('result-chart',[...lines,...targetSeries,{name:'Grundbana',values:values(base.rows),color:'#ad8053',dash:true},{name:'Scenariot',values:values(run.rows),color:'#17634e'}],
-    {unit,bands:isResult||isShare?run.rows.map((r,i)=>i>0&&r.result<0?i:-1).filter(i=>i>0):[]});
+    {unit,range,bands:isResult||isShare?run.rows.map((r,i)=>i>0&&r.result<0?i:-1).filter(i=>i>0):[]});
+  $('uncertainty-legend').hidden=!range;
+  $('uncertainty-note').hidden=!range;
+  if(range) $('uncertainty-note').textContent=range.note;
   $('result-chart-title').textContent=label;
   $('result-chart-unit').textContent=unit;
   $('target-legend').hidden=!targetSeries.length;
   document.querySelector('#result-legend .legend-line.stress').hidden=!!path||!lines.length;
   document.querySelector('#result-legend .legend-swatch.deficit').hidden=!(isResult||isShare);
+}
+// How far SKR's forecasts of tax and grants have been from the outcome (data/revenue-uncertainty.json), as a band
+// around the scenario: the mean absolute error by years ahead of the forecast's year, held after the last horizon
+// there is data for. Without an imported SKR path the first forecast year counts as one year ahead.
+function revenueRange(values) {
+  const rows=revenueUncertainty?.byYearsAhead;
+  if(!rows?.length) return null;
+  const last=rows.at(-1),made=path?Number(String(path.vintage).slice(0,4)):b.baseYear;
+  const error=year=>(rows.find(r=>r.yearsAhead===Math.max(0,year-made))??last).meanAbsErrorPercent/100;
+  const low=[],high=[];
+  run.rows.forEach((r,i)=>{const e=i?error(r.year):NaN;low.push(values[i]*(1-e));high.push(values[i]*(1+e));});
+  const text=rows.map(r=>`${decimal(r.meanAbsErrorPercent)} % ${r.yearsAhead?`efter ${r.yearsAhead} år`:'samma år'}`).join(', ');
+  return {low,high,title:"SKR:s genomsnittliga prognosfel",
+    note:`Bandet visar hur fel SKR:s prognoser för skatt och bidrag har legat i länets 13 kommuner, ${revenueUncertainty.forecasts.length} prognoser 2021–2024 mot utfallen: ${text}. Längsta horisonten bygger på en enda prognos, och därefter hålls bandet kvar. Prognoserna låg oftast för lågt under inflationsåren. Samma inflation höjde också kostnaderna, så resultatet är mindre osäkert än intäkterna var för sig. Bandet är ingen sannolikhet.`};
 }
 // What it takes to reach the result target: the tax rate, or a slower cost growth, from one extra run of each.
 // The result is close to linear in both; the answer is the change that brings each year to the target, solved per
@@ -1309,7 +1331,7 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json','liquidity.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json','liquidity.json','revenue-uncertainty.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
@@ -1320,6 +1342,7 @@ async function boot(){try{
   rateStress=files[11];
   investmentPlans=files[12];
   liquidityTable=files[13];
+  revenueUncertainty=files[14];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));

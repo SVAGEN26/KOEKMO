@@ -84,6 +84,17 @@ the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
   for the scenario and the base path. The page runs the compiled model again
   with `-variableFilter=.*` as a simulation flag, so nothing is compiled anew;
   the list takes about 0.3 s and a variable about 0.4 s.
+- **How uncertain the revenue is.** With "Skatt och bidrag" chosen, a band around
+  the scenario shows how far SKR's forecasts of tax and grants have been from the
+  outcome in the 13 municipalities: 0.8 % in the forecast's own year, then 1.9, 2.9,
+  3.9 and 5.3 % one to four years ahead (`data/revenue-uncertainty.json`, from four
+  forecasts 2021–2024; the last horizon rests on one). It is the size of the
+  errors in one period with high inflation, not a probability, and the same
+  inflation raised costs too.
+  The government and ESV were as far off in the same years
+  (`data/tax-base-forecasters.json`): one year ahead the growth of Sweden's tax
+  base was forecast 1.8 (SKR), 1.5 (ESV) and 1.5 (the government) percentage
+  points too low on average.
 - **What it takes to reach the target.** With a result target set, the page
   states the tax rate, or the slower cost growth beyond demography and prices,
   that reaches it in the last year and in every year, with a button to try it. It

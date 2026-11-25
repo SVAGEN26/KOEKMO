@@ -629,6 +629,37 @@ prices 2 % a year) the model gives −2.2, −3.9, −5.0 and −5.1 %: the circ
 3.4–3.7 % a year, so the model's default happened to be SKR's view then. Sweden's
 population in that run is still the circular's.
 
+**The band around tax and grants.** `scripts/prepare_revenue_uncertainty.py` sorts
+the same errors of SKR's four workbooks by years ahead of the year the workbook was
+published and writes `data/revenue-uncertainty.json`: mean absolute error 0.8 % in
+the forecast's own year, then 1.9, 2.9, 3.9 and 5.3 % one to four years ahead, from
+4, 4, 3, 2 and 1 workbooks. The page draws it as a band around the scenario's tax
+and grants and holds the last value after four years. With an imported SKR path the
+years count from the path's vintage, otherwise from the base year. The mean errors
+are negative at every horizon (−0.8 to −5.3 %): the forecasts were too low through
+the inflation of 2022–2023. The band is symmetric anyway, since one period gives no
+ground for expecting the same sign again. It is the size of the errors in that
+period, not a probability, and it is not carried over to the result: the inflation
+that raised the tax base raised wages and prices too.
+
+**SKR beside the government and ESV.** Each December circular has a table of the
+latest forecasts of Sweden's tax base: SKR's, SKR's previous, the government's
+(the budget proposition) and ESV's. They are read from the five circulars 2020–2024
+(`research/data/tax-base-forecasters.json`, with page and table), and
+`scripts/compare_tax_base_forecasters.py` compares them with the outcome through
+2024 (`data/tax-base-forecasters.json`, `tests/test_tax_base_forecasters.py`). One
+year ahead, four cases, every forecast was too low: mean error of the growth SKR
+−1.8, ESV −1.5 and the government −1.5 percentage points. Two years ahead, three
+cases, the mean absolute error is 1.3, 1.2 and 1.4. The level three years after
+December 2020 was 4.9 % too low with SKR, 5.9 % with ESV and 5.8 % with the
+government; after December 2021 3.3, 3.3 and 4.4 %. Nobody stood out. The miss of
+2021 was the recovery after the pandemic (forecasts 1.9–2.5 %, outcome 5.3 %), that
+of 2022 wages and prices (3.5–3.8 % against 5.8 %). The forecasts are not from the
+same day (the government's is up to three months older, and its first two years
+are fixed factors), the cases are few and share one period. Konjunkturinstitutet
+publishes the wage sum, not the tax base; it is recorded in the same file and not
+compared.
+
 **Population.** `scripts/hindcast_county_ages.py` runs the demography for all 13
 municipalities from 2022–2024 to 2025; results in
 `research/data/age-group-hindcast.json`.

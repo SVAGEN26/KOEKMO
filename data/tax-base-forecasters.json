@@ -1,0 +1,838 @@
+{
+  "source": "scripts/compare_tax_base_forecasters.py from research/data/tax-base-forecasters.json",
+  "description": "Forecasts of Sweden's municipal tax base in SKR's December circulars 2020-2024 against the outcome (growth by income year, through 2024). Error = forecast minus outcome, percentage points of growth.",
+  "notes": [
+    "The government's rows are budget propositions. For the current and the next year they are the fixed uppräkningsfaktorer (for example 1,020 and 1,022 in the budget for 2021), set in September.",
+    "The forecasts are not from the same day: the government's is up to three months older than SKR's, ESV's zero to three.",
+    "The government's rows are read from SKR's table, not from the budget propositions themselves.",
+    "Konjunkturinstitutet publishes no forecast of the municipal tax base in Konjunkturläget, only the wage sum (Tabell A7, Lönesumma, justerad för utland) and the municipal sector's tax revenue (Tabell A23). The wage sum is another quantity and is recorded apart, not compared."
+  ],
+  "summary": [
+    {
+      "forecaster": "SKR",
+      "yearsAhead": 0,
+      "forecasts": 5,
+      "meanErrorPoints": -0.24,
+      "meanAbsErrorPoints": 0.44
+    },
+    {
+      "forecaster": "SKR",
+      "yearsAhead": 1,
+      "forecasts": 4,
+      "meanErrorPoints": -1.79,
+      "meanAbsErrorPoints": 1.79
+    },
+    {
+      "forecaster": "SKR",
+      "yearsAhead": 2,
+      "forecasts": 3,
+      "meanErrorPoints": -0.66,
+      "meanAbsErrorPoints": 1.26
+    },
+    {
+      "forecaster": "SKR",
+      "yearsAhead": 3,
+      "forecasts": 2,
+      "meanErrorPoints": -0.39,
+      "meanAbsErrorPoints": 0.39
+    },
+    {
+      "forecaster": "ESV",
+      "yearsAhead": 0,
+      "forecasts": 5,
+      "meanErrorPoints": -0.4,
+      "meanAbsErrorPoints": 0.44
+    },
+    {
+      "forecaster": "ESV",
+      "yearsAhead": 1,
+      "forecasts": 4,
+      "meanErrorPoints": -1.49,
+      "meanAbsErrorPoints": 1.49
+    },
+    {
+      "forecaster": "ESV",
+      "yearsAhead": 2,
+      "forecasts": 3,
+      "meanErrorPoints": -0.89,
+      "meanAbsErrorPoints": 1.16
+    },
+    {
+      "forecaster": "ESV",
+      "yearsAhead": 3,
+      "forecasts": 2,
+      "meanErrorPoints": -0.49,
+      "meanAbsErrorPoints": 0.69
+    },
+    {
+      "forecaster": "Government",
+      "yearsAhead": 0,
+      "forecasts": 5,
+      "meanErrorPoints": -0.48,
+      "meanAbsErrorPoints": 0.48
+    },
+    {
+      "forecaster": "Government",
+      "yearsAhead": 1,
+      "forecasts": 4,
+      "meanErrorPoints": -1.52,
+      "meanAbsErrorPoints": 1.52
+    },
+    {
+      "forecaster": "Government",
+      "yearsAhead": 2,
+      "forecasts": 3,
+      "meanErrorPoints": -1.39,
+      "meanAbsErrorPoints": 1.39
+    },
+    {
+      "forecaster": "Government",
+      "yearsAhead": 3,
+      "forecasts": 2,
+      "meanErrorPoints": -0.79,
+      "meanAbsErrorPoints": 0.79
+    },
+    {
+      "forecaster": "SKR previous",
+      "yearsAhead": 0,
+      "forecasts": 5,
+      "meanErrorPoints": -0.34,
+      "meanAbsErrorPoints": 0.42
+    },
+    {
+      "forecaster": "SKR previous",
+      "yearsAhead": 1,
+      "forecasts": 4,
+      "meanErrorPoints": -1.59,
+      "meanAbsErrorPoints": 1.59
+    },
+    {
+      "forecaster": "SKR previous",
+      "yearsAhead": 2,
+      "forecasts": 3,
+      "meanErrorPoints": -0.79,
+      "meanAbsErrorPoints": 1.46
+    },
+    {
+      "forecaster": "SKR previous",
+      "yearsAhead": 3,
+      "forecasts": 2,
+      "meanErrorPoints": -0.54,
+      "meanAbsErrorPoints": 0.54
+    }
+  ],
+  "levels": [
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "years": 2,
+      "levelErrorPercent": -4.32
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "years": 3,
+      "levelErrorPercent": -4.94
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "years": 2,
+      "levelErrorPercent": -4.78
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "years": 3,
+      "levelErrorPercent": -5.86
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "years": 2,
+      "levelErrorPercent": -5.7
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "years": 3,
+      "levelErrorPercent": -6.5
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "Government",
+      "years": 2,
+      "levelErrorPercent": -4.96
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "Government",
+      "years": 3,
+      "levelErrorPercent": -5.76
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR",
+      "years": 2,
+      "levelErrorPercent": -3.19
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR",
+      "years": 3,
+      "levelErrorPercent": -3.28
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR previous",
+      "years": 2,
+      "levelErrorPercent": -2.53
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR previous",
+      "years": 3,
+      "levelErrorPercent": -2.72
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "Government",
+      "years": 2,
+      "levelErrorPercent": -3.75
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "Government",
+      "years": 3,
+      "levelErrorPercent": -4.4
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "ESV",
+      "years": 2,
+      "levelErrorPercent": -3.47
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "ESV",
+      "years": 3,
+      "levelErrorPercent": -3.28
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR",
+      "years": 2,
+      "levelErrorPercent": -0.26
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR previous",
+      "years": 2,
+      "levelErrorPercent": 0.22
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "Government",
+      "years": 2,
+      "levelErrorPercent": -0.74
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "ESV",
+      "years": 2,
+      "levelErrorPercent": 0.31
+    }
+  ],
+  "errors": [
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "made": "2020-12",
+      "year": 2020,
+      "yearsAhead": 0,
+      "forecastPercent": 1.7,
+      "outcomePercent": 2.1,
+      "errorPoints": -0.4
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "made": "2020-12",
+      "year": 2021,
+      "yearsAhead": 1,
+      "forecastPercent": 2.5,
+      "outcomePercent": 5.3,
+      "errorPoints": -2.8
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "made": "2020-12",
+      "year": 2022,
+      "yearsAhead": 2,
+      "forecastPercent": 4.0,
+      "outcomePercent": 5.8,
+      "errorPoints": -1.8
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "made": "2020-12",
+      "year": 2023,
+      "yearsAhead": 3,
+      "forecastPercent": 4.1,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.68
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR",
+      "made": "2020-12",
+      "year": 2024,
+      "yearsAhead": 4,
+      "forecastPercent": 3.1,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.4
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "made": "2020-11",
+      "year": 2020,
+      "yearsAhead": 0,
+      "forecastPercent": 1.6,
+      "outcomePercent": 2.1,
+      "errorPoints": -0.5
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "made": "2020-11",
+      "year": 2021,
+      "yearsAhead": 1,
+      "forecastPercent": 1.9,
+      "outcomePercent": 5.3,
+      "errorPoints": -3.4
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "made": "2020-11",
+      "year": 2022,
+      "yearsAhead": 2,
+      "forecastPercent": 4.1,
+      "outcomePercent": 5.8,
+      "errorPoints": -1.7
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "made": "2020-11",
+      "year": 2023,
+      "yearsAhead": 3,
+      "forecastPercent": 3.6,
+      "outcomePercent": 4.78,
+      "errorPoints": -1.18
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "ESV",
+      "made": "2020-11",
+      "year": 2024,
+      "yearsAhead": 4,
+      "forecastPercent": 3.2,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.3
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "made": "2020-10",
+      "year": 2020,
+      "yearsAhead": 0,
+      "forecastPercent": 1.9,
+      "outcomePercent": 2.1,
+      "errorPoints": -0.2
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "made": "2020-10",
+      "year": 2021,
+      "yearsAhead": 1,
+      "forecastPercent": 1.5,
+      "outcomePercent": 5.3,
+      "errorPoints": -3.8
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "made": "2020-10",
+      "year": 2022,
+      "yearsAhead": 2,
+      "forecastPercent": 3.5,
+      "outcomePercent": 5.8,
+      "errorPoints": -2.3
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "made": "2020-10",
+      "year": 2023,
+      "yearsAhead": 3,
+      "forecastPercent": 3.9,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.88
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "SKR previous",
+      "made": "2020-10",
+      "year": 2024,
+      "yearsAhead": 4,
+      "forecastPercent": 3.5,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.0
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "Government",
+      "made": "2020-09",
+      "year": 2020,
+      "yearsAhead": 0,
+      "forecastPercent": 2.0,
+      "outcomePercent": 2.1,
+      "errorPoints": -0.1
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "Government",
+      "made": "2020-09",
+      "year": 2021,
+      "yearsAhead": 1,
+      "forecastPercent": 2.2,
+      "outcomePercent": 5.3,
+      "errorPoints": -3.1
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "Government",
+      "made": "2020-09",
+      "year": 2022,
+      "yearsAhead": 2,
+      "forecastPercent": 3.6,
+      "outcomePercent": 5.8,
+      "errorPoints": -2.2
+    },
+    {
+      "circular": "20:57",
+      "forecaster": "Government",
+      "made": "2020-09",
+      "year": 2023,
+      "yearsAhead": 3,
+      "forecastPercent": 3.9,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.88
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR",
+      "made": "2021-12",
+      "year": 2021,
+      "yearsAhead": 0,
+      "forecastPercent": 4.6,
+      "outcomePercent": 5.3,
+      "errorPoints": -0.7
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR",
+      "made": "2021-12",
+      "year": 2022,
+      "yearsAhead": 1,
+      "forecastPercent": 3.5,
+      "outcomePercent": 5.8,
+      "errorPoints": -2.3
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR",
+      "made": "2021-12",
+      "year": 2023,
+      "yearsAhead": 2,
+      "forecastPercent": 3.7,
+      "outcomePercent": 4.78,
+      "errorPoints": -1.08
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR",
+      "made": "2021-12",
+      "year": 2024,
+      "yearsAhead": 3,
+      "forecastPercent": 3.4,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.1
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR previous",
+      "made": "2021-09",
+      "year": 2021,
+      "yearsAhead": 0,
+      "forecastPercent": 4.3,
+      "outcomePercent": 5.3,
+      "errorPoints": -1.0
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR previous",
+      "made": "2021-09",
+      "year": 2022,
+      "yearsAhead": 1,
+      "forecastPercent": 4.2,
+      "outcomePercent": 5.8,
+      "errorPoints": -1.6
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR previous",
+      "made": "2021-09",
+      "year": 2023,
+      "yearsAhead": 2,
+      "forecastPercent": 3.7,
+      "outcomePercent": 4.78,
+      "errorPoints": -1.08
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "SKR previous",
+      "made": "2021-09",
+      "year": 2024,
+      "yearsAhead": 3,
+      "forecastPercent": 3.3,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.2
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "Government",
+      "made": "2021-09",
+      "year": 2021,
+      "yearsAhead": 0,
+      "forecastPercent": 4.3,
+      "outcomePercent": 5.3,
+      "errorPoints": -1.0
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "Government",
+      "made": "2021-09",
+      "year": 2022,
+      "yearsAhead": 1,
+      "forecastPercent": 3.8,
+      "outcomePercent": 5.8,
+      "errorPoints": -2.0
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "Government",
+      "made": "2021-09",
+      "year": 2023,
+      "yearsAhead": 2,
+      "forecastPercent": 2.8,
+      "outcomePercent": 4.78,
+      "errorPoints": -1.98
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "Government",
+      "made": "2021-09",
+      "year": 2024,
+      "yearsAhead": 3,
+      "forecastPercent": 2.8,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.7
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "ESV",
+      "made": "2021-11",
+      "year": 2021,
+      "yearsAhead": 0,
+      "forecastPercent": 4.5,
+      "outcomePercent": 5.3,
+      "errorPoints": -0.8
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "ESV",
+      "made": "2021-11",
+      "year": 2022,
+      "yearsAhead": 1,
+      "forecastPercent": 3.5,
+      "outcomePercent": 5.8,
+      "errorPoints": -2.3
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "ESV",
+      "made": "2021-11",
+      "year": 2023,
+      "yearsAhead": 2,
+      "forecastPercent": 3.4,
+      "outcomePercent": 4.78,
+      "errorPoints": -1.38
+    },
+    {
+      "circular": "21:49",
+      "forecaster": "ESV",
+      "made": "2021-11",
+      "year": 2024,
+      "yearsAhead": 3,
+      "forecastPercent": 3.7,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.2
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR",
+      "made": "2022-12",
+      "year": 2022,
+      "yearsAhead": 0,
+      "forecastPercent": 5.2,
+      "outcomePercent": 5.8,
+      "errorPoints": -0.6
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR",
+      "made": "2022-12",
+      "year": 2023,
+      "yearsAhead": 1,
+      "forecastPercent": 3.6,
+      "outcomePercent": 4.78,
+      "errorPoints": -1.18
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR",
+      "made": "2022-12",
+      "year": 2024,
+      "yearsAhead": 2,
+      "forecastPercent": 4.4,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.9
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR previous",
+      "made": "2022-10",
+      "year": 2022,
+      "yearsAhead": 0,
+      "forecastPercent": 5.2,
+      "outcomePercent": 5.8,
+      "errorPoints": -0.6
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR previous",
+      "made": "2022-10",
+      "year": 2023,
+      "yearsAhead": 1,
+      "forecastPercent": 4.0,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.78
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "SKR previous",
+      "made": "2022-10",
+      "year": 2024,
+      "yearsAhead": 2,
+      "forecastPercent": 4.5,
+      "outcomePercent": 3.5,
+      "errorPoints": 1.0
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "Government",
+      "made": "2022-11",
+      "year": 2022,
+      "yearsAhead": 0,
+      "forecastPercent": 5.1,
+      "outcomePercent": 5.8,
+      "errorPoints": -0.7
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "Government",
+      "made": "2022-11",
+      "year": 2023,
+      "yearsAhead": 1,
+      "forecastPercent": 4.0,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.78
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "Government",
+      "made": "2022-11",
+      "year": 2024,
+      "yearsAhead": 2,
+      "forecastPercent": 3.5,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.0
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "ESV",
+      "made": "2022-09",
+      "year": 2022,
+      "yearsAhead": 0,
+      "forecastPercent": 5.1,
+      "outcomePercent": 5.8,
+      "errorPoints": -0.7
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "ESV",
+      "made": "2022-09",
+      "year": 2023,
+      "yearsAhead": 1,
+      "forecastPercent": 4.7,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.08
+    },
+    {
+      "circular": "22:54",
+      "forecaster": "ESV",
+      "made": "2022-09",
+      "year": 2024,
+      "yearsAhead": 2,
+      "forecastPercent": 3.9,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.4
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "SKR",
+      "made": "2023-12",
+      "year": 2023,
+      "yearsAhead": 0,
+      "forecastPercent": 5.3,
+      "outcomePercent": 4.78,
+      "errorPoints": 0.52
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "SKR",
+      "made": "2023-12",
+      "year": 2024,
+      "yearsAhead": 1,
+      "forecastPercent": 2.6,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.9
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "SKR previous",
+      "made": "2023-10",
+      "year": 2023,
+      "yearsAhead": 0,
+      "forecastPercent": 4.7,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.08
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "SKR previous",
+      "made": "2023-10",
+      "year": 2024,
+      "yearsAhead": 1,
+      "forecastPercent": 3.3,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.2
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "Government",
+      "made": "2023-09",
+      "year": 2023,
+      "yearsAhead": 0,
+      "forecastPercent": 4.6,
+      "outcomePercent": 4.78,
+      "errorPoints": -0.18
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "Government",
+      "made": "2023-09",
+      "year": 2024,
+      "yearsAhead": 1,
+      "forecastPercent": 3.3,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.2
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "ESV",
+      "made": "2023-11",
+      "year": 2023,
+      "yearsAhead": 0,
+      "forecastPercent": 4.9,
+      "outcomePercent": 4.78,
+      "errorPoints": 0.12
+    },
+    {
+      "circular": "23:56",
+      "forecaster": "ESV",
+      "made": "2023-11",
+      "year": 2024,
+      "yearsAhead": 1,
+      "forecastPercent": 3.3,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.2
+    },
+    {
+      "circular": "24:56",
+      "forecaster": "SKR",
+      "made": "2024-12",
+      "year": 2024,
+      "yearsAhead": 0,
+      "forecastPercent": 3.5,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.0
+    },
+    {
+      "circular": "24:56",
+      "forecaster": "SKR previous",
+      "made": "2024-10",
+      "year": 2024,
+      "yearsAhead": 0,
+      "forecastPercent": 3.7,
+      "outcomePercent": 3.5,
+      "errorPoints": 0.2
+    },
+    {
+      "circular": "24:56",
+      "forecaster": "Government",
+      "made": "2024-09",
+      "year": 2024,
+      "yearsAhead": 0,
+      "forecastPercent": 3.1,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.4
+    },
+    {
+      "circular": "24:56",
+      "forecaster": "ESV",
+      "made": "2024-11",
+      "year": 2024,
+      "yearsAhead": 0,
+      "forecastPercent": 3.4,
+      "outcomePercent": 3.5,
+      "errorPoints": -0.1
+    }
+  ]
+}
