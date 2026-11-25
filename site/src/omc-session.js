@@ -65,7 +65,8 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
       if(String(omc.omc_eval(`loadString(${JSON.stringify(source)})`)).trim()!=='true') throw Error(errors());
     }
     // Only the series the page reads are stored: writing every variable at every step costs more than the equations.
-    const stored=JSON.stringify(`^(${[...OUTPUTS,'annualInvestment'].join('|')}|p\\[[1-5]\\])$`);
+    // Besides the outputs: the population calibration the model computed (mortalityRates, residualMigration).
+    const stored=JSON.stringify(`^(${[...OUTPUTS,'annualInvestment'].join('|')}|p\\[[1-5]\\]|mortalityRates\\[[1-5]\\]|residualMigration\\[[1-5]\\])$`);
     const built=String(omc.omc_eval(`buildModel(${model},startTime=${baseYear},stopTime=${baseYear+MAX_YEARS},variableFilter=${stored},numberOfIntervals=${MAX_YEARS*stepsPerYear},method="${method}")`));
     if(!built.includes(`${model}_init.xml`)) throw Error(`OpenModelica kunde inte kompilera modellen: ${errors()||built}`);
     models.set(key,model);
@@ -85,7 +86,9 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
     fields={...fields,wageGrowthPath:extend(fields.wageGrowthPath),priceGrowthPath:extend(fields.priceGrowthPath)};
     // With single-year ages the 202 age stocks make IDA's Jacobian cost 20 s a run; its matrix-free linear solver takes 1.5 s.
     const solver=cohort&&method==='ida'?' -idaLS=spgmr':'';
-    const flags=`-override=stopTime=${baseYear+years},${overrideFlags({...fields,...ageMigration})}${solver}${inspect?' -variableFilter=.*':''}`;
+    // The stop time is a flag of its own: the runtime does not read simulation options from -override (it warns
+    // and simulates the wrapper's whole hundred years).
+    const flags=`-stopTime=${baseYear+years} -override=${overrideFlags({...fields,...ageMigration})}${solver}${inspect?' -variableFilter=.*':''}`;
     if(!omc.omc_sim_start(model,`${model}_res.mat`,flags)) throw Error(`Modelica: ${errors()||'simuleringen startade inte'}`);
     let code;
     do code=omc.omc_sim_advance(10000); while(code===0);
@@ -104,7 +107,7 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
     // The last row at each whole year is the post-event state.
     const at=[];
     for(let i=0;i<time.length;i++) {const y=Math.round(time[i]);if(Math.abs(time[i]-y)<1e-9)at[y]=i;}
-    const names=[...OUTPUTS,...[1,2,3,4,5].map(j=>`p[${j}]`),'annualInvestment'];
+    const names=[...OUTPUTS,...[1,2,3,4,5].flatMap(j=>[`p[${j}]`,`mortalityRates[${j}]`,`residualMigration[${j}]`]),'annualInvestment'];
     const columns=Object.fromEntries(names.map(n=>[n,column(n)]));
     const rows=[];
     for(let t=1;t<=years;t++) {

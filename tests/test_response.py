@@ -153,14 +153,14 @@ class AgainstTheModel(unittest.TestCase):
 
     def test_continuous_capacity_is_the_models(self):
         # The model's need follows its population through the year; the Python rule joins the year ends with straight
-        # lines. The capacity at each year end agrees to 1e-4 (the care need now bends within the year, as the age
-        # chain in 65+ moves people into 80+).
+        # lines. The capacity at each year end agrees to 3e-4 (the care need bends within the year as the ageing chain
+        # in 65+ moves people into 80+ and they die at higher rates; 2027 elder care: 1.3e-4).
         ends, means = rt.continuous_capacity(self.needs(self.continuous))
         for k in range(1, 9):
             row = self.continuous[2025 + k]
             for i in range(3):
-                self.assertAlmostEqual(ends[k][i], row[f'capacity[{i + 1}]'], delta=1e-4, msg=f'{2025 + k} sector {i + 1}')
-            self.assertAlmostEqual(sum(s * e for s, e in zip(self.shares, ends[k])), row['serviceVolume'], delta=1e-4)
+                self.assertAlmostEqual(ends[k][i], row[f'capacity[{i + 1}]'], delta=3e-4, msg=f'{2025 + k} sector {i + 1}')
+            self.assertAlmostEqual(sum(s * e for s, e in zip(self.shares, ends[k])), row['serviceVolume'], delta=3e-4)
             # The year's mean lies between the capacities at its ends.
             for i in range(3):
                 low, high = sorted((ends[k - 1][i], ends[k][i]))

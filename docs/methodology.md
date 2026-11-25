@@ -616,12 +616,17 @@ Inputs are validated in JavaScript, and the model asserts the same limits. The
 compiler revision and file hashes are in `omc-web/manifest.json` on the site. No
 resident-level data are used or stored.
 
-The page computes the death rates and the residual
-flow in JavaScript (`calibrateContinuous` and `inflowBetween` in
-`site/src/scenario-inputs.js`), the same way as `Data.deathRatesPerYear` and
-`Data.calibratedMigrationRates`. With SCB's projection the residual flow is the
-even inflow that takes the five groups from one projected year end to the next,
-births included, so the model's population at each year end is the projection's.
+The population calibration is computed in Modelica, in the wrapper: the page sends
+the three years of history and, where loaded, SCB's projection (`historyCohorts`,
+`projectedCohorts`, `followProjection`), and the model computes the death rates
+(`Data.deathRatesPerYear`), the residual flow (`Data.calibratedMigrationRates`) and,
+with the projection, the flow per year (`Data.projectionResiduals`) when it starts.
+`-override` reaches them because they are computed from the inputs at
+initialization. With SCB's projection the residual flow is the even inflow that
+takes the five groups from one projected year end to the next through the ageing
+chain, births included, so the model's population at each year end is the
+projection's. Until November 2026 the page computed these in JavaScript, a copy
+of the Modelica functions.
 
 `tests/jit-continuous.test.mjs` runs the staged compiler in Node and checks that
 the page's inputs give `Motala.Continuous` as written (to 1e-8), that the

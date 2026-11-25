@@ -71,3 +71,6 @@ data/downloads/**
 !data/downloads/*/
 !data/downloads/*/manifest.json
 !data/downloads/*/README.md
+
+# Local instructions for Claude Code (not shared)
+CLAUDE.local.md
