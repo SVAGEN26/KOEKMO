@@ -3,6 +3,7 @@ import {municipalities} from './municipalities.js';
 // simulating never block the page. Protocol:
 //   → {type:'init'}                     ← {type:'progress', loaded, total} … {type:'ready'} | {type:'failed', error}
 //   → {type:'run', id, jobs:[{fields, years, baseYear, …, inspect?}]}
+//   ← {type:'runProgress', id, done, total, compiling} before each job and once all are done
 //   ← {type:'result', id, results:[{rows, inspect?} | {error}]}
 import init,* as omc from './omc-web/omc/OpenModelicaCompiler.js';
 import {createSession} from './omc-session.js';
@@ -57,13 +58,16 @@ self.onmessage=async({data})=>{
     return;
   }
   if(data.type==='run') {
-    const results=data.jobs.map(job=>{
+    const total=data.jobs.length;
+    const results=data.jobs.map((job,i)=>{
+      self.postMessage({type:'runProgress',id:data.id,done:i,total,compiling:!session.isCompiled(job.baseYear,job.cohort,!!job.ageMigration,job.municipality)});
       try {
         const out=session.run(job.fields,job.years,job.baseYear,job.cohort,job.ageMigration,job.municipality,job.inspect??null);
         return job.inspect?out:{rows:out};
       }
       catch(e) {return {error:e.message};}
     });
+    self.postMessage({type:'runProgress',id:data.id,done:total,total,compiling:false});
     self.postMessage({type:'result',id:data.id,results});
   }
 };

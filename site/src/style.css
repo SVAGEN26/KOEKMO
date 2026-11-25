@@ -152,3 +152,8 @@ details.assumption-group .slider:last-child{border-bottom:0}
 .share-view .share-table th .legend-item{justify-content:flex-start}
 .share-view .share-table tbody tr:last-child{background:none;font-weight:inherit}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sim-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:50;background:rgba(23,99,78,.12)}
+.sim-progress>span{display:block;height:100%;width:0;background:var(--green);transition:width .25s ease}
+.simulating .chart,.simulating #debt-chart,.simulating #rate-stress-chart,.simulating #ledger{opacity:.55;transition:opacity .2s}
+.chart,#debt-chart,#rate-stress-chart,#ledger{transition:opacity .2s}
+@media(prefers-reduced-motion:reduce){.sim-progress>span,.chart,#debt-chart,#rate-stress-chart,#ledger{transition:none}}
