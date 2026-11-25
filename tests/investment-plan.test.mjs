@@ -19,18 +19,25 @@ test('the plans are the budgets as recorded elsewhere in the project',()=>{
     assert.ok(plan.baseBudget>0&&Object.values(plan.plan).every(x=>x>0),code);
     assert.ok(plan.sources.baseBudget&&plan.sources.plan,`${code} sources`);
     for(const h of plan.history) assert.ok(h.outcome<=h.budget,`${code} ${h.year}: outcome above budget`);
+    // The rule for taking a municipality in: half to all of the budget for the base year carried out.
+    const share=plan.baseOutcome/plan.baseBudget;
+    assert.ok(share>=0.5&&share<=1,`${code}: ${share}`);
   }
+  // The others are named with a reason; together they are the 13.
+  const excluded=read('data/investment-plans.json').excluded;
+  assert.equal(Object.keys(plans).length+Object.keys(excluded).length,13);
+  for(const [code,x] of Object.entries(excluded)) assert.ok(!(code in plans)&&x.reason.length>40,code);
 });
 
-test('the base year\'s investment follows the plan, and holds its last year',()=>{
+test('the base year\'s investment follows the plan, and returns to its own level after it',()=>{
   const b={...read('data/baseline.json')},history=read('data/history.json').rows;
   const plan=plans['0583'],factors=factorsOf(plan);
   const planned={...b,investmentPlan:{...plan,factors}};
   const path=prepareScenario(planned,history,{years:8,investmentPlan:true}).fields.investmentPath;
   assert.equal(path.length>=8,true);
-  path.slice(0,8).forEach((x,i)=>assert.ok(Math.abs(x-b.investment*factors[Math.min(i,factors.length-1)])<1e-9,`year ${i+1}`));
-  // 413 mnkr in 2025, 55 % of the budget of 750; 755, 897 and 961 in the plan.
-  assert.deepEqual(path.slice(0,4).map(Math.round),[416,494,529,529]);
+  path.slice(0,8).forEach((x,i)=>assert.ok(Math.abs(x-b.investment*(i<factors.length?factors[i]:1))<1e-9,`year ${i+1}`));
+  // 413 mnkr in 2025, 55 % of the budget of 750; 755, 897 and 961 in the plan; then 413 again.
+  assert.deepEqual(path.slice(0,4).map(Math.round),[416,494,529,413]);
   // A changed level scales the whole path; without the plan every year is the level.
   const scaled=prepareScenario(planned,history,{years:3,investmentPlan:true,investment:300}).fields.investmentPath;
   scaled.slice(0,3).forEach((x,i)=>assert.ok(Math.abs(x-300*factors[i])<1e-9));
