@@ -89,6 +89,12 @@ extended the grants' sum, which stood still at about 1 150 mnkr and gave −354.
   for the scenario and the base path. The page runs the compiled model again
   with `-variableFilter=.*` as a simulation flag, so nothing is compiled anew;
   the list takes about 0.3 s and a variable about 0.4 s.
+- **How the equalisation works.** `utjamning.html`, linked from the footer, explains the
+  municipal equalisation system in Swedish: its parts, the income equalisation's
+  formula, how age enters the cost equalisation, the regulation grant and the state's
+  frame, the timetable, the 13 municipalities' amounts for 2026 and what the model
+  does and does not compute. Every statement points to the law, the ordinance or SCB
+  (`tests/test_equalisation_page.py`).
 - **How uncertain the revenue is.** With "Skatt och bidrag" chosen, a band around
   the scenario shows how far SKR's forecasts of tax and grants have been from the
   outcome in the 13 municipalities: 0.8 % in the forecast's own year, then 1.9, 2.9,

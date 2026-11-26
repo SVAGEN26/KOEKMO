@@ -1721,3 +1721,60 @@ arkivera data.
 - En fallgrop: `a and b` i en Modelica-funktion beräknar båda leden; `d >= 1 and sourced[d, 6] <> 0` med d = 0 gick
   igenom i inbyggd omc men gav "assertion failed" i webbkompilatorn. Skriv ett villkor i taget.
 
+## Sidan om utjämningssystemet (2026-11-26)
+
+- `site/src/utjamning.html`, länkad från sidfoten. Tabellen för de 13 kommunerna läses ur `data/equalisation-county.json`
+  (`scripts/prepare_equalisation_page.py`, ur `data/equalisation.json`).
+- Källor lästa 2026-11-26: lag (2004:773) i lydelse t.o.m. SFS 2025:735, förordning (2004:881) t.o.m. SFS 2025:1171,
+  lag (1965:269) 4 §, lag (2008:342), lag (2007:1398), SCB:s utfall för kommuner 2026 (publicerat 2025-12-22) och
+  beskrivningen för 2027 (preliminär), prop. 2026/27:1 utgiftsområde 25, skr. 2017/18:300 (finansieringsprincipen),
+  prop. 2019/20:11 och SOU 2024:50. Kopior i `data/downloads/20261126T093000Z-underlag/utjamning/` (utanför git).
+- 2026, kommunerna: anslag 124 327 mnkr; inkomstutjämning bidrag 107 988, avgifter 14 319; kostnadsutjämning 12 068
+  och 12 143; strukturbidrag 1 039; netto 94 633; regleringspost 29 694 mnkr = 2 799 kr/inv. Medelskattekraft 293 581
+  kr/inv. Länsvis skattesats Östergötland 18,93 % (bidrag) och 16,86 % (avgift). 273 kommuner får inkomstutjämning,
+  17 betalar.
+- Äldreomsorgens normkostnader (förordningens bilaga): sammanboende 6 948 / 47 954 / 129 050 och ensamboende 32 678 /
+  127 094 / 258 543 kr per person 65–79 / 80–89 / 90+. Standardkostnaden bygger på folkmängden två år före
+  utjämningsåret. Detta är underlaget om modellen senare ska räkna kostnadsutjämningens åldersdel själv.
+- Inte bekräftat: om promemorian Fi2025/02010 (administrationstillägget) har antagits; riksdagens beslut om anslaget
+  2027; någon proposition om SOU 2024:50 hittades inte till och med 2026-11-12.
+
+## Underlag: flyttning per kommungrupp (2026-11-26)
+
+- Fråga: ger en indelning av landets kommuner i typer en stadigare flyttkalibrering än kommunens egna två år?
+- Indelning: SKR:s kommungruppsindelning 2023 (9 grupper, 3 huvudgrupper). Länets kommuner: Linköping och Norrköping B3
+  Större stad; Kinda, Åtvidaberg, Valdemarsvik, Söderköping, Mjölby B4 Pendlingskommun nära större stad; Finspång och
+  Motala B5 Lågpendlingskommun nära större stad; Ödeshög, Ydre, Boxholm, Vadstena C7 Pendlingskommun nära mindre tätort.
+- Data: SCB, alla 290 kommuner 2000–2025 (TAB5169/TAB6481 förändringar, TAB638/TAB5557 folkmängd, TAB1212/TAB6640
+  flyttningar per ålder). Filer och skript i `data/downloads/20261126T093000Z-underlag/flyttzoner/` (utanför git).
+- Sammanvägt flyttnetto per 1 000 invånare 2018–2025 (inrikes / utrikes / totalt): B3 1,6 / 3,8 / 5,4; B4 2,2 / 2,8 /
+  5,0; B5 −3,3 / 3,9 / 0,6; C7 −3,8 / 3,9 / 0,1; C8 −5,6 / 4,1 / −1,6; A2 2,8 / 4,3 / 7,1. Flyktingåren 2015–2017:
+  utrikes netto 16–18 i B5, C7 och C8 mot 7–10 i A1, A2 och B3.
+- Grupperna förklarar 28,5 % av variansen mellan kommunernas medelflyttnetto 2018–2025 (tre huvudgrupper 16,9 %);
+  utrikes netto 13 %. Spridningen inom en grupp är lika stor som mellan grupperna (kvartilavstånd 4–7 per 1 000).
+- Prognostest: kommunens medelflyttnetto år T+1 till T+3 ur år T−1 och T, RMSE per 1 000, startår 2003–2022
+  (2018–2022): egna två år 6,2 (6,2); gruppens sammanvägda tal 5,9 (6,5); rikets 6,5 (7,2); hälften eget, hälften
+  gruppens 5,4 (5,6), bäst i 19 av 20 startår.
+- Slutsats så långt: gruppen ensam är inte bättre än kommunens egna två år; en blandning är det. Inte infört i modellen.
+- Motala: eget medel 2018–2025 −0,2 per 1 000 (inrikes −2,0, utrikes 1,8), gruppen 0,6, de två senaste åren −4,6.
+
+## Underlag: klimatkostnader för kommuner (2026-11-26)
+
+- Ingen svensk källa ger ett belopp för kommunernas skattefinansierade merkostnad för drift och underhåll. SOU 2007:60
+  (s. 467–469) saknar kommunala vägar och VA, Nationella expertrådet 2022 (s. 535) kallar kommunernas investeringsbehov
+  okänt, skr. 2023/24:97 (s. 30) saknar en samlad skattning.
+- Drift, vägar: JRC PESETA II (2012, tabell 10) ger +1,7 till +5,2 % på vägunderhållet i Skandinavien 2040–2100. På
+  Koladas nettokostnad för väg- och järnvägsnät 2024 (riket 1 867, Motala 1 328 kr/inv) blir det 31–97 respektive
+  22–69 kr/inv och år. Färre nollgenomgångar väntas i södra Sverige, så tjälskador och vinterväghållning ökar inte.
+- Skador på egna tillgångar: försäkrade naturskador cirka 100 kr/inv och år (Svensk Försäkring 2015–2024); kommunens
+  del 6,5–9 % (Gävle 2021, Köpenhamn 2011): 7–9 kr/inv och år, mest VA. Kostnaden kommer som sällsynta händelser:
+  Gävle 2021 gav offentliga aktörer 1 160–1 450 kr/inv på ett år.
+- Investering: Ramböll i SOU 2017:42 (kap. 6): 137–205 mdkr till 2100 för hela landet, betalare inte avgjord. Götaland
+  utan havsskydd 63–94 kr/inv och år, med havsskydd 113–171 (2016 års priser). Statsbidrag (MCF) upp till 60 %, cirka
+  490 mnkr per år 2023–2025.
+- VA (taxefinansierat, inte i modellens drift): Svenskt Vatten R2023-02, 2,06 (1,03–4,12) mdkr per år = 195 kr/inv.
+- Länet: Norrköpings riskhanteringsplan (Länsstyrelsen 2021): ett klimatjusterat 100-årsregn ger knappt 300 mnkr i
+  skador, alla aktörer. Länsstyrelsens handlingsplan 2025–2029 har inga belopp.
+- Sammantaget stöd: drift cirka 30–110 kr/inv och år runt 2050 (0,05–0,15 % av nettokostnaden); 2035 finns ingen
+  källa för. Källorna i `data/downloads/20261126T093000Z-underlag/klimat/` (utanför git). Inte infört i modellen.
+
