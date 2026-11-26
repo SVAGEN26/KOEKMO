@@ -1,0 +1,138 @@
+{
+  "source": "Källa: SCB, Statistikdatabasen (CC BY 4.0), TAB1981 och TAB4011",
+  "archive": "data/downloads/20261109T160234Z",
+  "year": 2026,
+  "unit": "kr per invånare (folkmängd 1 november året före)",
+  "municipalities": [
+    {
+      "code": "0509",
+      "name": "Ödeshög",
+      "income": 16142,
+      "cost": 2119,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 21060,
+      "lss": -26
+    },
+    {
+      "code": "0512",
+      "name": "Ydre",
+      "income": 16667,
+      "cost": 4762,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 24228,
+      "lss": -2795
+    },
+    {
+      "code": "0513",
+      "name": "Kinda",
+      "income": 14175,
+      "cost": 5308,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 22282,
+      "lss": -107
+    },
+    {
+      "code": "0560",
+      "name": "Boxholm",
+      "income": 14961,
+      "cost": 47,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 17807,
+      "lss": 134
+    },
+    {
+      "code": "0561",
+      "name": "Åtvidaberg",
+      "income": 15749,
+      "cost": 969,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 19517,
+      "lss": 228
+    },
+    {
+      "code": "0562",
+      "name": "Finspång",
+      "income": 13068,
+      "cost": 1698,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 17565,
+      "lss": 1761
+    },
+    {
+      "code": "0563",
+      "name": "Valdemarsvik",
+      "income": 19490,
+      "cost": 286,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 22575,
+      "lss": 2324
+    },
+    {
+      "code": "0580",
+      "name": "Linköping",
+      "income": 9087,
+      "cost": -4098,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 7788,
+      "lss": -633
+    },
+    {
+      "code": "0581",
+      "name": "Norrköping",
+      "income": 12550,
+      "cost": -722,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 14627,
+      "lss": 1276
+    },
+    {
+      "code": "0582",
+      "name": "Söderköping",
+      "income": 12089,
+      "cost": 729,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 15617,
+      "lss": 2742
+    },
+    {
+      "code": "0583",
+      "name": "Motala",
+      "income": 14734,
+      "cost": 1175,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 18708,
+      "lss": 1230
+    },
+    {
+      "code": "0584",
+      "name": "Vadstena",
+      "income": 12331,
+      "cost": 597,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 15727,
+      "lss": -1
+    },
+    {
+      "code": "0586",
+      "name": "Mjölby",
+      "income": 13316,
+      "cost": -210,
+      "structure": 0,
+      "regulation": 2799,
+      "total": 15905,
+      "lss": 194
+    }
+  ]
+}

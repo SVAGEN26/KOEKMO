@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Så fungerar utjämningen · KOEKMO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#193835;--muted:#647671;--bg:#f4f5f0;--line:#dde4dc;--green:#17634e;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.6}
+main{max-width:860px;margin:auto;padding:28px 16px 60px}
+a{color:var(--green)}
+.back{font-size:14px}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.1;letter-spacing:-1px;margin:18px 0 10px;font-weight:600}
+h2{font-size:22px;margin:0 0 10px;font-weight:600}
+.lead{font-size:18px;color:var(--muted);margin:0 0 26px}
+section{background:var(--white);border:1px solid var(--line);border-radius:15px;padding:22px 24px;margin-bottom:18px}
+section p{margin:0 0 12px}
+section ul{margin:0 0 12px;padding-left:20px}
+li{margin-bottom:6px}
+.formula{background:var(--bg);border-radius:8px;padding:12px 14px;margin:0 0 12px;font-weight:500;overflow-x:auto}
+.scroll{overflow-x:auto;margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:right;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{font-weight:600;color:var(--muted);font-size:12px}
+caption{caption-side:bottom;text-align:left;color:var(--muted);font-size:13px;padding-top:8px}
+sup a{text-decoration:none;font-weight:600}
+.note{color:var(--muted);font-size:14px}
+ol.sources{padding-left:22px;font-size:14px}
+ol.sources li{margin-bottom:8px;overflow-wrap:anywhere}
+footer{color:var(--muted);font-size:13px;margin-top:24px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="./">← Tillbaka till KOEKMO</a>
+<h1>Så fungerar utjämningen</h1>
+<p class="lead">Det kommunalekonomiska utjämningssystemet ska ge alla kommuner likvärdiga ekonomiska förutsättningar. Här står reglerna i korthet, med 2026 års belopp och en källa för varje uppgift.</p>
+
+<section>
+<h2>Delarna</h2>
+<p>Lagen har fem delar för kommunerna.<sup><a href="#k1">1</a></sup> Två utjämningar ligger utanför systemet men redovisas ofta tillsammans med det.</p>
+<div class="scroll"><table>
+<thead><tr><th>Del</th><th style="text-align:left">Vad den utjämnar</th><th>Kommunerna 2026, mnkr</th></tr></thead>
+<tbody>
+<tr><td>Inkomstutjämning (4–7 §§)</td><td style="text-align:left;white-space:normal">Skillnader i skattekraft, alltså beskattningsbar inkomst per invånare</td><td>Bidrag 107 988, avgifter 14 319</td></tr>
+<tr><td>Kostnadsutjämning (8–10 §§)</td><td style="text-align:left;white-space:normal">Skillnader i behov och kostnader som kommunen inte rår över, till exempel åldersstruktur</td><td>Bidrag 12 068, avgifter 12 143</td></tr>
+<tr><td>Strukturbidrag (11 §)</td><td style="text-align:left;white-space:normal">Fasta belopp till vissa kommuner, bland annat för svagt befolkningsunderlag</td><td>1 039</td></tr>
+<tr><td>Införandebidrag (13 §)</td><td style="text-align:left;white-space:normal">Dämpar förluster när systemet ändras</td><td>0</td></tr>
+<tr><td>Regleringsbidrag eller regleringsavgift (15–16 §§)</td><td style="text-align:left;white-space:normal">Resten av statens anslag, lika per invånare</td><td>29 694</td></tr>
+</tbody>
+<caption>Statens anslag för kommunerna 2026 var 124 327 mnkr. Beloppen är SCB:s utfall.<sup><a href="#k3">3</a></sup></caption>
+</table></div>
+</section>
+
+<section>
+<h2>Inkomstutjämningen</h2>
+<p>Staten garanterar varje kommun 115 procent av rikets medelskattekraft.<sup><a href="#k1">1</a></sup> En kommun under den nivån får bidrag, en kommun över betalar avgift:</p>
+<p class="formula">bidrag per invånare = (115 % × rikets medelskattekraft − kommunens skattekraft) × länsvis skattesats</p>
+<ul>
+<li><strong>Skattekraft</strong> är kommunens uppräknade skatteunderlag delat med antalet invånare den 1 november året före.<sup><a href="#k1">1</a>, <a href="#k4">4</a></sup></li>
+<li><strong>Uppräknat</strong> betyder att den senast taxerade inkomsten räknas fram två år med faktorer som regeringen fastställer i september.<sup><a href="#k6">6</a></sup> Medelskattekraften 2026 var 293 581 kronor per invånare.<sup><a href="#k3">3</a></sup></li>
+<li><strong>Den länsvisa skattesatsen</strong> bygger på 95 procent av medelskattesatsen 2003 för kommuner som får bidrag och 85 procent för dem som betalar avgift.<sup><a href="#k1">1</a></sup> För Östergötlands kommuner är den 18,93 respektive 16,86 procent.<sup><a href="#k2">2</a></sup> Kommunens egen skattesats påverkar inte beloppet.<sup><a href="#k4">4</a></sup></li>
+</ul>
+<p>Ett räkneexempel med 2026 års tal: en kommun i Östergötland med 90 procent av medelskattekraften får (1,15 − 0,90) × 293 581 × 18,93 % ≈ 13 900 kronor per invånare.</p>
+<p>Två följder är värda att känna till. Bidraget följer rikets skatteunderlag per invånare, inte kommunens eget. Och en kommun som tappar skattekraft får tillbaka nästan hela bortfallet, medan en invånare som flyttar tar med sig både sin skatt och sitt bidrag.</p>
+<p>År 2026 fick 273 kommuner bidrag och 17 betalade avgift (räknat ur SCB:s tabell).<sup><a href="#k3">3</a></sup></p>
+</section>
+
+<section>
+<h2>Kostnadsutjämningen</h2>
+<p>Den utjämnar strukturella skillnader, "till exempel skillnader i andelen barn eller andelen äldre". Den ska inte utjämna för vald servicenivå, avgifter eller effektivitet.<sup><a href="#k4">4</a></sup> För varje verksamhet räknas en standardkostnad: vad verksamheten borde kosta med kommunens struktur. En kommun över rikets genomsnitt får bidrag, en kommun under betalar avgift.<sup><a href="#k1">1</a></sup> Bidrag och avgifter går i stort sett jämnt upp, så staten skjuter inte till pengar här.<sup><a href="#k4">4</a></sup></p>
+<div class="scroll"><table>
+<thead><tr><th>Delmodell</th><th>Rikets genomsnitt 2026, kr per invånare</th></tr></thead>
+<tbody>
+<tr><td>Förskoleklass och grundskola</td><td>15 127</td></tr>
+<tr><td>Äldreomsorg</td><td>13 934</td></tr>
+<tr><td>Förskola, fritidshem och annan pedagogisk verksamhet</td><td>10 077</td></tr>
+<tr><td>Individ- och familjeomsorg</td><td>5 826</td></tr>
+<tr><td>Gymnasieskola</td><td>5 038</td></tr>
+<tr><td>Kollektivtrafik</td><td>1 567</td></tr>
+<tr><td>Kommunal vuxenutbildning</td><td>756</td></tr>
+<tr><td>Infrastruktur och skydd</td><td>239</td></tr>
+<tr><td>Verksamhetsövergripande kostnader</td><td>110</td></tr>
+<tr><td><strong>Summa</strong></td><td><strong>52 674</strong></td></tr>
+</tbody>
+<caption>Delmodellerna enligt 8 § i lagen; beloppen ur SCB:s utfall.<sup><a href="#k1">1</a>, <a href="#k3">3</a></sup></caption>
+</table></div>
+<p><strong>Ger äldre invånare mer bidrag?</strong> Ja. Äldreomsorgens standardkostnad räknas ur andelen invånare i sex grupper, var och en med en normkostnad per person:<sup><a href="#k2">2</a></sup></p>
+<div class="scroll"><table>
+<thead><tr><th>Normkostnad, kr per person</th><th>65–79 år</th><th>80–89 år</th><th>90 år och äldre</th></tr></thead>
+<tbody>
+<tr><td>Sammanboende</td><td>6 948</td><td>47 954</td><td>129 050</td></tr>
+<tr><td>Ensamboende</td><td>32 678</td><td>127 094</td><td>258 543</td></tr>
+</tbody>
+</table></div>
+<p>En kommun med fler äldre än riket får alltså en högre standardkostnad och mer bidrag. På samma sätt räknas skolans modeller på antalet barn i åldrarna 1–5, 6–15 och 16–18 år i befolkningen, inte på inskrivna elever.<sup><a href="#k2">2</a></sup> Standardkostnaden bygger på folkmängden två år före utjämningsåret.<sup><a href="#k2">2</a></sup></p>
+</section>
+
+<section>
+<h2>Regleringsbidraget och statens ram</h2>
+<p>Riksdagen beslutar ett anslag för utjämningen. Först betalas inkomstutjämning, kostnadsutjämning och strukturbidrag. Det som blir kvar av anslaget fördelas "med ett enhetligt belopp per invånare i landet" som regleringsbidrag. Räcker anslaget inte tas mellanskillnaden ut som en regleringsavgift, också den lika per invånare.<sup><a href="#k1">1</a></sup></p>
+<p>År 2026 kostade de övriga delarna 94 633 mnkr netto av anslagets 124 327 mnkr. Resten, 29 694 mnkr, blev 2 799 kronor per invånare.<sup><a href="#k3">3</a></sup></p>
+<p>Två saker följer av regeln:</p>
+<ul>
+<li>Inkomstutjämningen växer med skatteunderlaget. Ligger anslaget still i kronor krymper regleringsbidraget för varje år.</li>
+<li>När staten ger kommunerna nya uppgifter ska den också ge pengar för dem (finansieringsprincipen). Det sker genom att anslaget höjs, och pengarna når varje kommun som ett lika belopp per invånare.<sup><a href="#k7">7</a></sup> Principen har tillämpats sedan 1993 men står inte i någon lag.<sup><a href="#k7">7</a></sup></li>
+</ul>
+</section>
+
+<section>
+<h2>Utanför systemet</h2>
+<ul>
+<li><strong>LSS-utjämningen</strong> jämnar ut kostnaderna för stöd och service till vissa funktionshindrade mellan kommunerna. Bidrag och avgifter är exakt lika stora, 6 387 mnkr år 2026.<sup><a href="#k8">8</a>, <a href="#k5">5</a></sup></li>
+<li><strong>Den kommunala fastighetsavgiften</strong> betalas av ägare till bostäder. Taket per småhus följer inkomstbasbeloppet och var 10 425 kronor år 2026.<sup><a href="#k9">9</a></sup> Kommunen får förra årets belopp justerat med förändringen av avgifterna i den egna kommunen.<sup><a href="#k6">6</a></sup></li>
+</ul>
+</section>
+
+<section>
+<h2>Tidplanen</h2>
+<ul>
+<li><strong>September året före:</strong> regeringen fastställer uppräkningsfaktorerna.<sup><a href="#k6">6</a></sup></li>
+<li><strong>Senast 1 oktober:</strong> SCB lämnar en preliminär beräkning till varje kommun.<sup><a href="#k2">2</a></sup></li>
+<li><strong>December:</strong> SCB:s utfall, med folkmängden den 1 november.<sup><a href="#k2">2</a></sup></li>
+<li><strong>Senast 15 april:</strong> Skatteverket fastställer beloppen.<sup><a href="#k1">1</a></sup></li>
+<li><strong>Varje månad:</strong> en tolftedel betalas ut tillsammans med kommunalskatten.<sup><a href="#k6">6</a></sup></li>
+</ul>
+</section>
+
+<section>
+<h2>Östergötlands kommuner <span id="county-year">2026</span></h2>
+<div class="scroll"><table id="county"><thead><tr><th>Kommun</th><th>Inkomst­utjämning</th><th>Kostnads­utjämning</th><th>Reglerings­bidrag</th><th>Summa</th><th>LSS-utjämning</th></tr></thead><tbody><tr><td colspan="6">Laddar …</td></tr></tbody>
+<caption>Kronor per invånare; avgift med minustecken. Källa: SCB, Statistikdatabasen, tabellerna TAB1981 och TAB4011.</caption></table></div>
+<p class="note">Linköping har hög skattekraft och en ung befolkning och får därför minst. Regleringsbidraget är detsamma i alla kommuner.</p>
+</section>
+
+<section>
+<h2>Så räknar KOEKMO</h2>
+<ul>
+<li><strong>Åren SKR har räknat:</strong> modellen utgår från SKR:s beräkning för kommunen och justerar skatt, inkomstutjämning och regleringsbidrag för modellens egen folkmängd.</li>
+<li><strong>Statens ram:</strong> för år som staten inte har beslutat antar modellen att anslaget följer rikets skatteunderlag. Då växer regleringsbidraget per invånare i samma takt. SKR antar i stället att anslaget ligger still i kronor. En kryssruta väljer mellan dem.</li>
+<li><strong>Efter SKR:s sista år:</strong> skatt och inkomstutjämning fortsätter i takt med skatteunderlaget.</li>
+<li><strong>Det modellen inte gör:</strong> den räknar inte kostnadsutjämningen själv. Beloppet per invånare ligger kvar, så en kommun som åldras snabbare än riket får för lite i modellen.</li>
+</ul>
+<p class="note">Metoden och testerna mot utfall står i <a href="methodology.md">metodbeskrivningen</a>.</p>
+</section>
+
+<section>
+<h2>Ändringar på gång</h2>
+<p>Kostnadsutjämningen gjordes om 2020.<sup><a href="#k10">10</a></sup> Utjämningskommittén föreslog 2024 flera ändringar, bland annat en garantinivå på 116 procent och nya modeller för gles bebyggelse (SOU 2024:50 "Nätt och jämnt").<sup><a href="#k11">11</a></sup> Förslagen är inte beslutade. Regeringen har aviserat förslag till riksdagen, men någon proposition fanns inte när den här sidan skrevs i november 2026.</p>
+</section>
+
+<section>
+<h2>Källor</h2>
+<ol class="sources">
+<li id="k1">Lag (2004:773) om kommunalekonomisk utjämning. <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2004773-om-kommunalekonomisk-utjamning_sfs-2004-773/">riksdagen.se</a></li>
+<li id="k2">Förordning (2004:881) om kommunalekonomisk utjämning, med bilaga. <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-2004881-om-kommunalekonomisk_sfs-2004-881/">riksdagen.se</a></li>
+<li id="k3">SCB, Kommunalekonomisk utjämning för kommuner 2026, utfall (tabell 1–3, 9, 15 och 16), publicerad 2025-12-22. <a href="https://www.scb.se/hitta-statistik/statistik-efter-amne/offentlig-ekonomi/finanser-for-den-kommunala-sektorn/kommunalekonomisk-utjamning-och-utjamning-av-lss-kostnader/">scb.se</a></li>
+<li id="k4">SCB, Kommunalekonomisk utjämning, utjämningsåret 2027, beskrivning (preliminär). <a href="https://www.scb.se/contentassets/d93ddb5be2504691ba3912701fc1e32a/beskrivning-av-kommunalekonomisk-utjamning-2027_prel.pdf">scb.se (pdf)</a></li>
+<li id="k5">Budgetpropositionen för 2027 (prop. 2026/27:1), utgiftsområde 25. <a href="https://data.riksdagen.se/dokument/HE031d27.html">riksdagen.se</a></li>
+<li id="k6">Lag (1965:269) med särskilda bestämmelser om kommuns och annan menighets utdebitering av skatt, 4 §. <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-1965269-med-sarskilda-bestammelser-om_sfs-1965-269/">riksdagen.se</a></li>
+<li id="k7">Regeringens skrivelse 2017/18:300 med Riksrevisionens rapport RiR 2018:8 om finansieringsprincipen. <a href="https://data.riksdagen.se/dokument/H503300.html">riksdagen.se</a></li>
+<li id="k8">Lag (2008:342) om utjämning av kostnader för stöd och service till vissa funktionshindrade. <a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2008342-om-utjamning-av-kostnader-for-stod_sfs-2008-342/">riksdagen.se</a></li>
+<li id="k9">Lag (2007:1398) om kommunal fastighetsavgift (<a href="https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-20071398-om-kommunal-fastighetsavgift_sfs-2007-1398/">riksdagen.se</a>) och Skatteverkets tabell över avgiften 2008 och 2018–2026 (<a href="https://skatteverket.se/download/18.16f588619a39f2c14aa57/1762862283047/kommunal-fastighetsavgift-kalenderaren-2008-och-2018-2026.pdf">skatteverket.se, pdf</a>).</li>
+<li id="k10">Prop. 2019/20:11, Ändringar i kostnadsutjämningen för kommuner och landsting. <a href="https://www.regeringen.se/rattsliga-dokument/proposition/2019/09/prop.-20192011/">regeringen.se</a></li>
+<li id="k11">SOU 2024:50, Nätt och jämnt. <a href="https://www.regeringen.se/rattsliga-dokument/statens-offentliga-utredningar/2024/07/sou-202450/">regeringen.se</a></li>
+</ol>
+<p class="note">Uppgifterna kontrollerades mot källorna 2026-11-26. Lagtexten gäller; den här sidan är en sammanfattning.</p>
+</section>
+<footer>KOEKMO · Oberoende forskningsprototyp · Ingen officiell kommunprognos</footer>
+</main>
+<script>
+const number=x=>(x<0?'−':'')+Math.abs(x).toLocaleString('sv-SE');
+fetch('equalisation-county.json').then(r=>r.json()).then(data=>{
+  document.getElementById('county-year').textContent=data.year;
+  document.querySelector('#county tbody').innerHTML=data.municipalities.map(m=>
+    `<tr><td>${m.name}</td>${['income','cost','regulation','total','lss'].map(k=>`<td>${number(m[k])}</td>`).join('')}</tr>`).join('');
+}).catch(()=>{document.querySelector('#county tbody').innerHTML='<tr><td colspan="6">Tabellen kunde inte laddas.</td></tr>';});
+</script>
+</body>
+</html>
