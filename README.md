@@ -51,6 +51,11 @@ forecast year is 2025 (from the 2024 accounts) or 2026 (from the 2025 accounts);
 Motala also has a run from 2022. The end year can be set up to 100 years ahead, but
 the model is built for 8–10 years, like SKR's forecasts. After SKR's last year
 (2033) its growth rates are held, so later years are arithmetic, not a forecast.
+The model continues SKR's revenue path itself (`Data.sourcedRevenue`): tax and
+income equalisation with the tax base, the regulation grant with the state's
+frame, the other grants at the rate SKR's path had in its last year. Motala to
+2045: grants 1 462 mnkr and a result of +14 mnkr; until November 2026 the site
+extended the grants' sum, which stood still at about 1 150 mnkr and gave −354.
 
 ## What the site does
 
@@ -393,6 +398,27 @@ grants per component (a diagnosis, not a forecast):
 | Tax | −35 / −48 / −68 | −35 / −48 / −68 | −10 / −8 / −11 |
 | General grants | −23 / −65 / −109 | +4 / −36 / −89 | 0 / +5 / +10 |
 | Net cost | −20 / −64 / −187 | −20 / −64 / −187 | +8 / +20 / +5 |
+
+**The state's frame.** The regulation grant is what is left of the state's frame
+when the income equalisation is paid, the same per inhabitant everywhere. SKR
+keeps the frame fixed in kronor after the decided years, so the grant shrinks; the
+model lets the frame follow the nation's tax base, so the grant per inhabitant
+grows with the tax base per inhabitant (the checkbox "Statens ram följer rikets
+skatteunderlag"). Two tests, both with only what was known at the start:
+
+- Against the regulation grant 2005–2026 (`scripts/hindcast_regulation.py`), mean
+  absolute error after 2 / 4 / 8 years, kronor per inhabitant: frame fixed in
+  kronor 898 / 1 928 / 4 221, grant per inhabitant held 635 / 1 129 / 2 082, frame
+  following the tax base 662 / 1 235 / 2 075. All are too low; the last is the
+  least biased (−167 / −542 / −1 900 against −280 / −719 / −2 002 for the held grant).
+- Against the December circulars, general grants in Motala, Finspång and Mjölby
+  (15, 12 and 9 cases), mean error / mean absolute error after 1 / 2 / 3 years,
+  mnkr: SKR's regulation grant +6 / 17, −18 / 34, −45 / 49; held +8 / 17, −1 / 29,
+  −15 / 39; frame following the tax base +8 / 17, +3 / 28, −9 / 38 (sets
+  "components", "hold" and "frame").
+
+The fixed frame is the worst in both. The other two are close; the model uses the
+frame rule because it is also meaningful over decades.
 
 Read it this way. With SKR's assumptions the three-year result error is small only
 because two large errors cancel: net cost too low by 187 and tax and grants too low

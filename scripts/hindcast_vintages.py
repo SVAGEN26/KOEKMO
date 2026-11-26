@@ -23,8 +23,10 @@ assumptions are run from every base year:
             tax capacity and follows the law's formula for the relative tax capacity; the
             regulation grant follows the circular; cost and LSS equalisation stay at year one's
             level; the property fee grows 3.5 % a year; other general grants stay as in the base year.
-  hold      as components, but the regulation grant stays at year one's amount per inhabitant:
-            the rule for years the state has not decided.
+  hold      as components, but the regulation grant stays at year one's amount per inhabitant.
+  frame     as components, but the state's frame follows the nation's tax base, so the regulation
+            grant per inhabitant grows from year one's with the circular's tax base per inhabitant:
+            the model's rule for years the state has not decided (stateFrameFollowsTaxBase).
   prices    a diagnostic, not a forecast: as skr, but wages, pensions and other prices follow
             the PKV outcomes (SKR, October 2026). It shows how much of the cost error is the
             price forecast and how much is the model.
@@ -139,7 +141,7 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
         v = {**v, 'labour': {y: outcome[y]['labour'] for y in years}, 'other': {y: outcome[y]['other'] for y in years}}
     if assumptions == 'hindsight':
         v = {**v, 'taxBase': tax_base_outcomes()}
-    if assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight'):
+    if assumptions in ('skr', 'components', 'hold', 'frame', 'prices', 'hindsight'):
         cum_tax, cum_labour, tax, pension = 1.0, 1.0, [], []
         for y in years:
             cum_tax *= 1 + v['taxBase'][y]
@@ -152,7 +154,7 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
                   # The pension cost follows the labour-cost index, as SKR's PKV does; the model's own rule (the payroll,
                   # with volume and productivity) is tested in the standard set.
                   f'pensionExpensePath = {modelica_array(pension)}*pension0', 'pensionFollowsPayroll = false']
-    if assumptions in ('components', 'hold'):
+    if assumptions in ('components', 'hold', 'frame'):
         regulation = [v['regulation'][y] for y in years]
         capacity = [v['capacity'][y] / v['capacity'][origin] for y in years]
         # Year one's equalisation is known from SCB in December of the base year (BaseYear.equalisationNextYear);
@@ -161,6 +163,8 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
                   f'incomeEqualisationPerCapitaPath = {modelica_array([c / capacity[0] for c in capacity])}*base.equalisationNextYear[1]']
         if assumptions == 'components':
             lines += [f'regulationPerCapitaPath = {modelica_array(regulation)}']
+        if assumptions == 'hold':
+            lines += ['stateFrameFollowsTaxBase = false']
     if assumptions == 'hindsight':
         # The state's grants as they turned out: each component as booked in year y, per inhabitant at the end of
         # y - 1 (the population the model multiplies by), so a mid-year decision is included.
@@ -233,7 +237,7 @@ def main():
         for origin in ORIGINS:
             v = vintage(origin)
             horizon = min(3, LAST - origin)
-            for assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight', 'standard'):
+            for assumptions in ('skr', 'components', 'hold', 'frame', 'prices', 'hindsight', 'standard'):
                 directory = Path(tmp) / f'{origin}-{assumptions}'
                 directory.mkdir()
                 for year, m in simulate(origin, horizon, model_source(origin, horizon, v, assumptions, regional_years.get(origin, {}).get('olderShares')), directory).items():
@@ -246,7 +250,7 @@ def main():
                                   'population': m['population'], 'payroll': m['payroll'], 'pension': m['pensionExpense'],
                                   'otherCosts': m['otherOperatingExpense'], 'operatingRevenue': m['operatingRevenue'],
                                   'depreciation': m['depreciation'], 'interest': m['interest'], 'debt': m['debt'], 'cash': m['cash'],
-                                  **({'grantParts': [m[f'grantParts[{j}]'] for j in range(1, 7)]} if assumptions in ('components', 'hold', 'hindsight') else {})},
+                                  **({'grantParts': [m[f'grantParts[{j}]'] for j in range(1, 7)]} if assumptions in ('components', 'hold', 'frame', 'hindsight') else {})},
                         'outcome': {'tax': o['tax'], 'grants': o['grants'], 'netCost': o['netCost'],
                                     'personnel': o['payroll'] + o['pension'], 'result': o['result'],
                                     'population': o['population'], 'payroll': o.get('payroll'), 'pension': o.get('pension'),
@@ -259,7 +263,7 @@ def main():
                     })
     keys = ('tax', 'grants', 'netCost', 'result')
     summary = {}
-    for assumptions in ('skr', 'components', 'hold', 'prices', 'hindsight', 'standard'):
+    for assumptions in ('skr', 'components', 'hold', 'frame', 'prices', 'hindsight', 'standard'):
         for horizon in (1, 2, 3):
             cases = [r for r in runs if r['assumptions'] == assumptions and r['horizon'] == horizon]
             if cases:

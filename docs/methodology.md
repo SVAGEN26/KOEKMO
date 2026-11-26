@@ -181,9 +181,10 @@ a simplified equalisation. A changed tax rate changes only tax.
 **Grants by component** (`grantsByComponent`): income equalisation, cost
 equalisation, the regulation grant and LSS equalisation as kronor per inhabitant
 times last year's population; property fee and other grants in mnkr. Next
-year's amounts are SCB's published values (TAB1981, TAB4011); later years hold
-the per-inhabitant amounts, with income equalisation following Sweden's tax
-capacity. Income equalisation follows the law (2004:773): the municipality
+year's amounts are SCB's published values (TAB1981, TAB4011). After that income
+equalisation and the regulation grant follow Sweden's tax base per inhabitant
+(the state's frame, below), and cost and LSS equalisation hold their amounts per
+inhabitant. Income equalisation follows the law (2004:773): the municipality
 receives 95 % of a tax rate times the gap between 115 % of Sweden's mean tax
 capacity and its own, and pays 85 % when above (`Data.equalisationShare`). A
 changed share in working age changes its own tax capacity. The hindcasts use
@@ -200,14 +201,68 @@ this mode; the site does not, because it has SKR's path.
   Cost and LSS equalisation, the property fee and other grants follow SKR's path.
 
 SKR's path is SKR's own calculation of the equalisation law for the
-municipality (Modellverktyget Skatter och bidrag). The model only adjusts it
-for its own population; it does not compute cost or LSS equalisation.
+municipality (Modellverktyget Skatter och bidrag). The model adjusts it for its
+own population, replaces the regulation grant after the decided years and
+continues the path after its last year (both below); it does not compute cost
+or LSS equalisation.
 
 `revenueFromReference` takes a path as given, for example a budget's amounts.
 
-**The state's grant increases.** SKR's path holds what the budget bill has
-decided; the site's rule `holdRegulation` keeps the regulation grant per
-inhabitant after that year. A user can add a further increase, `grantIncrease`
+**The state's frame.** The income equalisation is the law's formula, but the
+money comes from a national pot: the state's frame for the equalisation. What is
+left of the frame when the income equalisation is paid is shared equally per
+inhabitant in the whole country, as the regulation grant (a fee when the frame
+does not suffice). With F the frame, N Sweden's population, m the nation's mean
+tax capacity (tax base per inhabitant) and c the state's net cost of the income
+equalisation as a share of m (about 15 % of the county rate, since the guarantee
+is 115 % of the mean):
+
+    regulation per inhabitant_t = F_t / N_t − c · m_t
+
+The frame is the state's decision, so years not yet decided need a rule. SKR
+keeps F fixed in kronor: c · m grows with the tax base, so the regulation grant
+shrinks every year (Motala: 110 mnkr 2027, 15 mnkr 2033). The model lets F follow
+the nation's tax base (`stateFrameFollowsTaxBase`, the site's checkbox). Then
+F/N and c · m both grow with m, and so does what is left:
+
+    regulation per inhabitant_t = regulation per inhabitant_d · m_t / m_d
+
+from the last decided year d: the year after the base year with grants by
+component (SCB's published amount), the year after SKR's workbook on the site
+(the budget bill). c is not needed. `scripts/hindcast_regulation.py` tries three
+rules against the regulation grant 2005–2026 (SCB TAB1981), from every start year
+2011–2025 (`data/regulation-hindcast.json`, `tests/test_regulation_hindcast.py`).
+Mean error / mean absolute error, kronor per inhabitant:
+
+| Years ahead | Frame fixed in kronor (SKR) | Grant per inhabitant held | Frame follows the tax base |
+|---|---|---|---|
+| 2 | −881 / 898 | −280 / 635 | −167 / 662 |
+| 4 | −1 908 / 1 928 | −719 / 1 129 | −542 / 1 235 |
+| 8 | −4 221 / 4 221 | −2 002 / 2 082 | −1 900 / 2 075 |
+
+Every rule is too low: the state raised the frame beyond all of them in
+2019–2021 and 2024. The fixed frame is the worst at every horizon. Holding the
+grant per inhabitant and following the tax base cannot be told apart on the
+absolute error; following the tax base is less biased, and it is the only one of
+the two that makes sense over decades, where an amount held in kronor erodes to
+nothing. It is an assumption about the state, not a forecast of it: in 2021–2025
+general grants and equalisation rose 12 % nationally (SCB TAB6777) while the tax
+base rose 19 %.
+
+**After the path's last year.** `Data.sourcedRevenue` computes the path the model
+uses from SKR's rows, in Modelica; the site sends the rows as they stand. After
+the last row (2033) every part keeps its last yearly change: tax and income
+equalisation with the tax base, the grants other than the regulation grant at the
+rate SKR's path itself had in its last year (3.0 % for Motala: income equalisation
+with the tax base, cost and LSS equalisation and the property fee held), and the
+regulation grant follows the state's frame. Until November 2026 the site extended
+the sum of the grants at its last rate, 1.2 %, which SKR's shrinking regulation
+grant had pulled down; with a falling population the grants then stood still in
+kronor. Without the frame rule SKR's own regulation grant keeps its yearly change
+in kronor and turns into a fee. `Report.referenceRevenue` is the path's tax and
+grants for the year.
+
+**The state's grant increases.** A user can add a further increase, `grantIncrease`
 billion kronor more nationally for every year from the second forecast year,
 spread equally per inhabitant like the regulation grant. The model
 (`Components.Revenue`, all revenue modes, Annual and Continuous) adds it to the

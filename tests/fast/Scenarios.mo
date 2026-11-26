@@ -47,4 +47,12 @@ package FastTests "Scenarier för snabbtesterna (tests/fast/test_model.py): Mota
   model NoFeeIndexation "Samma chock, men taxor och avgifter följer inte med"
     extends Motala.Continuous(inflationShock = 0.03, inflationRevenuePassThrough = 0);
   end NoFeeIndexation;
+
+  model GrantParts "Bidragen per del; statens ram följer rikets skatteunderlag"
+    extends Motala.Continuous(grantsByComponent = true);
+  end GrantParts;
+
+  model GrantPartsHeld "Bidragen per del; regleringsbidraget per invånare ligger kvar i kronor"
+    extends Motala.Continuous(grantsByComponent = true, stateFrameFollowsTaxBase = false);
+  end GrantPartsHeld;
 end FastTests;

@@ -1,5 +1,5 @@
 import {DEFAULT_MUNICIPALITY,municipalities} from './municipalities.js';
-import {sum,validateRevenuePath,holdRegulation,extendPlanning,workingCapitalDays,rateFixing,liquidityFor,liquidityRule} from './scenario-inputs.js';
+import {sum,validateRevenuePath,followStateFrame,extendPlanning,workingCapitalDays,rateFixing,liquidityFor,liquidityRule} from './scenario-inputs.js';
 import {MAX_YEARS} from './omc-session.js';
 import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
@@ -175,7 +175,7 @@ function selectPath(enabled){
   const source=b.planningInputs;
   if(!enabled||!source?.revenuePath) return null;
   const skr=validateRevenuePath(source.revenuePath,b.baseYear,b.municipality);
-  return $('regulation-held').checked&&source.regulationRule?holdRegulation(skr,source.regulationRule.heldFrom):skr;
+  return $('regulation-held').checked&&source.regulationRule?followStateFrame(skr,source.regulationRule.heldFrom):skr;
 }
 function planningControls(){
   const controls=definitions.map(d=>{
@@ -214,7 +214,7 @@ function updatePeriod() {
   const last=source?.rows.at(-1).year;
   const vintage=b.baseYear===2021?'SKR 21:35 från september 2021 och bokslut 2021. ':b.baseYear===2024?'Bokslut 2024 och daterade riksantaganden från SKR 24:56. Bokslut 2025 finns i fliken Jämförelser. ':'';
   $('period-status').textContent=vintage+(enabled&&endYear>last
-    ?`Från ${last+1} används sista årets prisantaganden och kalibrerade flyttflöden.${source.revenuePath?' Importerade intäkter förlängs med den sista årsförändringen.':''}`
+    ?`Från ${last+1} används sista årets prisantaganden och kalibrerade flyttflöden.${source.revenuePath?' Skatt och bidrag fortsätter i SKR:s sista årstakt, och regleringsbidraget följer statens ram.':''}`
     :'');
   planningControls();
   draw();

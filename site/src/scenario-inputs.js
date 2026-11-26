@@ -110,8 +110,9 @@ export function planningSeries(b,a) {
   return rows;
 }
 
-// Extend the bundled series for scenarios beyond their publication horizon.
-// Keep imported custom paths subject to the ordinary coverage check.
+// Extend the bundled series for scenarios beyond their publication horizon: the yearly rates keep the last year's
+// values. The revenue path is not extended here; the model continues it (Kommunekonomi.Data.sourcedRevenue), which
+// `extend` allows. Imported custom paths stay subject to the ordinary coverage check.
 export function extendPlanning(source,endYear) {
   const last=source.rows.at(-1);
   if(endYear<=last.year) return source;
@@ -120,22 +121,7 @@ export function extendPlanning(source,endYear) {
     year,labourCostGrowth:last.labourCostGrowth,otherPriceGrowth:last.otherPriceGrowth,
     taxBaseGrowth:last.taxBaseGrowth,projected:true
   }))];
-  const revenuePath=source.revenuePath;
-  if(!revenuePath) return {...source,rows};
-  const [previous,final]=revenuePath.rows.slice(-2);
-  const referenceRows=years.map(year=>{
-    const row={year,projected:true};
-    for(const k of ['tax','grants','population']) row[k]=final[k]*(final[k]/previous[k])**(year-final.year);
-    if(Number.isFinite(final.regulation)) row.regulation=final.regulation*row.population/final.population;
-    const components=revenueComponents(revenuePath,final);
-    if(components) row.components={
-      recurringTax:components.recurringTax*row.tax/final.tax,
-      incomeEqualisation:components.incomeEqualisation*row.population/final.population,
-      regulation:components.regulation*row.population/final.population
-    };
-    return row;
-  });
-  return {...source,rows,revenuePath:{...revenuePath,rows:[...revenuePath.rows,...referenceRows]}};
+  return {...source,rows,...(source.revenuePath?{revenuePath:{...source.revenuePath,extend:true}}:{})};
 }
 function revenueComponents(path,row) {
   if(!row) return null;
@@ -147,20 +133,14 @@ function toGroups(values) {
   const totals=values[0].map((x,i)=>x+values[1][i]);
   return [[0,7],[7,16],[16,19],[19,65],[65,101]].map(([start,end])=>sum(totals.slice(start,end)));
 }
-// SKR's revenue path assumes the state's grant frame stays fixed in kronor after the years the
-// budget bill has decided, so the regulation grant shrinks each year. Over 2005-2026 the regulation
-// grant per inhabitant had no such trend (SCB TAB1981), and SKR's figure for the second and third
-// year was too low in every December circular 2021-2023. This keeps the regulation grant per
-// inhabitant from `heldFrom` and adds the difference to the grants. The original stays in skrGrants.
-export function holdRegulation(path,heldFrom) {
-  const from=path?.rows.find(r=>r.year===heldFrom);
-  if(!from||!Number.isFinite(from.regulation)) return path;
-  const perInhabitant=from.regulation/from.population;
-  return {...path,regulationHeldFrom:heldFrom,rows:path.rows.map(r=>{
-    if(r.year<=heldFrom||!Number.isFinite(r.regulation)) return r;
-    const adjustment=perInhabitant*r.population-r.regulation;
-    return {...r,grants:r.grants+adjustment,skrGrants:r.grants,regulationAdjustment:adjustment};
-  })};
+// SKR's revenue path assumes the state's grant frame stays fixed in kronor after the years the budget bill has
+// decided, so the regulation grant shrinks each year. Against SCB's outcomes 2005-2026 that assumption was the worst
+// of three (scripts/hindcast_regulation.py), and SKR's figure for the second and third year was too low in every
+// December circular 2021-2023. This marks the path so that the model lets the state's frame follow the nation's tax
+// base from the year after `decidedYear`: the regulation grant per inhabitant then grows with the tax base per
+// inhabitant. The rows stay SKR's; the model computes the rest (Kommunekonomi.Data.sourcedRevenue).
+export function followStateFrame(path,decidedYear) {
+  return path?.rows.some(r=>r.year===decidedYear&&Number.isFinite(r.regulation))?{...path,stateFrameFrom:decidedYear}:path;
 }
 export function validateRevenuePath(path,baseYear,municipality=DEFAULT_MUNICIPALITY) {
   if(path?.municipality!==municipality||!/^\d{4}-\d{2}-\d{2}$/.test(path?.vintage??'')||!Array.isArray(path.rows)||!path.rows.length) throw Error(`SKR-underlaget måste gälla kommun ${municipality}, ha versionsdatum YYYY-MM-DD och innehålla årsbelopp.`);
@@ -175,7 +155,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   const a={...b.assumptions,...overrides}; validate(b,a);
   if(history.length<3) throw Error('The model calibrates on three completed years up to the base year');
   if(history.at(-1).year!==b.baseYear||history.some((r,i)=>r.year>b.baseYear||(i>0&&r.year!==history[i-1].year+1))) throw Error('Calibration history must be consecutive and end at the baseline year; future observations are not allowed');
-  if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear,b.municipality); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
+  if(revenuePath) { validateRevenuePath(revenuePath,b.baseYear,b.municipality); const lastYear=Math.max(...revenuePath.rows.map(r=>r.year)); for(let t=1;t<=a.years;t++) if(!revenuePath.rows.some(r=>r.year===b.baseYear+t)&&!(revenuePath.extend&&b.baseYear+t>lastYear)) throw Error(`Imported revenue path missing ${b.baseYear+t}; supply all forecast years`); }
   const o=b.operatingAccounts;
   const observed=['observed','cohort-observed'].includes(a.demographyMode),cohort=a.demographyMode?.startsWith('cohort')??false;
   const evidence=b.experiments;
@@ -226,9 +206,22 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   const refs=inputs.map(r=>revenuePath?.rows.find(p=>p.year===r.year));
   fields.importedRevenue=!!revenuePath;
   if(revenuePath&&a.revenueMode) fields.importedRevenueMode=a.revenueMode;
-  fields.referenceTax=inputs.map((r,i)=>refs[i]?.tax??r.referenceTax);
-  fields.referenceGrants=inputs.map((r,i)=>(a.revenueMode===1?refs[i]?.skrGrants:undefined)??refs[i]?.grants??b.grants*(1+a.grantGrowth/100)**(i+1));
-  fields.referencePopulation=inputs.map((r,i)=>refs[i]?.population??sum(b.population));
+  // The revenue path as it stands: tax, grants, population, tax before the settlement, income equalisation and the
+  // regulation grant. The model computes the path it uses from these (Kommunekonomi.Data.sourcedRevenue): the state's
+  // frame after the decided years, and every year after the path's last. Without a path the rows are illustrative
+  // growth and stand as given (sourcedRevenueYears = 0).
+  const covered=refs.findIndex(r=>!r);
+  fields.sourcedRevenueYears=revenuePath?(covered<0?refs.length:covered):0;
+  fields.sourcedRevenue=inputs.map((r,i)=>{
+    const ref=i<fields.sourcedRevenueYears?refs[i]:null;
+    if(!ref) return [r.referenceTax,b.grants*(1+a.grantGrowth/100)**(i+1),sum(b.population),0,0,0];
+    const details=revenueComponents(revenuePath,ref);
+    return [ref.tax,ref.grants,ref.population,details?.recurringTax??0,details?.incomeEqualisation??0,details?.regulation??ref.regulation??0];
+  });
+  // "SKR:s publicerade bana" (mode 1) is SKR's own figures, with its fixed frame.
+  fields.stateFrame=!!revenuePath?.stateFrameFrom&&a.revenueMode!==1;
+  fields.regulationDecidedYears=fields.stateFrame?Math.max(0,revenuePath.stateFrameFrom-b.baseYear):0;
+  fields.taxBaseGrowthPath=inputs.map(r=>r.taxGrowth/100);
   if(revenuePath&&a.revenueMode===2) {
     if(!Number.isFinite(evidence?.novemberPopulation)) throw Error('SCB:s novemberbefolkning saknas för valt basår.');
     fields.novemberPopulation0=evidence.novemberPopulation;
@@ -236,11 +229,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
       fields.ageIncomeWeights=b.ageIncome.weights;
       fields.equalisationCountyRate=b.ageIncome.countyRate;
     }
-    fields.importedComponents=refs.map(row=>{
-      const details=revenueComponents(revenuePath,row);
-      if(!details) throw Error('SKR-underlaget behöver delposter för vald intäktsmodell.');
-      return [details.recurringTax,details.incomeEqualisation,details.regulation+(row.regulationAdjustment??0)];
-    });
+    if(refs.slice(0,fields.sourcedRevenueYears).some(row=>!revenueComponents(revenuePath,row))) throw Error('SKR-underlaget behöver delposter för vald intäktsmodell.');
   }
   // The pension cost follows the payroll in the model; pensionGrowth is its growth beyond the payroll. A given path in
   // mnkr (pensionExpensePath) replaces that.

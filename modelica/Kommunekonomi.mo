@@ -305,6 +305,59 @@ restflödet kalibreras. Saknas ettårsåldrarna (bara nollor) antas jämn ålder
       end for;
     end groupResponse;
 
+    function sourcedRevenue "En kommunvis intäktsbana (SKR) med statens ram enligt rikets skatteunderlag, förlängd efter banans sista år"
+      input Real sourced[:, 6] "Per prognosår: skatt, generella bidrag, folkmängd 1 november året före, skatt före slutavräkning, inkomstutjämning och regleringspost; mnkr och personer";
+      input Integer years "Antal år banan täcker; raderna därefter räknas här. 0 = alla rader gäller som de står";
+      input Integer decided "Antal år då regleringsposten är statens beslut (budgetpropositionen); därefter följer den statens ram";
+      input Boolean followTaxBase "Statens ram följer rikets skatteunderlag efter de beslutade åren; annars gäller banans egen regleringspost (SKR: ramen ligger still i kronor)";
+      input Real taxBaseGrowth[size(sourced, 1)] "Rikets skatteunderlag, ökning per år, andel";
+      input Real nationalPopulation[size(sourced, 1)] "Rikets folkmängd vid slutet av året före varje prognosår, personer";
+      output Real path[size(sourced, 1), 6] "Skatt, generella bidrag, folkmängd, skatt före slutavräkning, inkomstutjämning och regleringspost";
+    protected
+      Integer n = size(sourced, 1);
+      Integer s = min(years, n) "Banans sista år";
+      Integer d = min(decided, s) "Sista året med beslutad regleringspost";
+      Boolean frame "Regleringsposten följer statens ram";
+      Real capacity "Rikets skatteunderlag per invånare i förhållande till det sista beslutade året";
+      Real growth[4] "Sista årets förändring av skatt, bidrag utom regleringsposten, folkmängd och inkomstutjämning";
+      Real regulation;
+      Integer k;
+    algorithm
+      path := sourced;
+      if s >= 1 then
+        // Ett villkor i taget: and beräknar båda leden, och sourced[0, 6] finns inte.
+        frame := false;
+        if followTaxBase and d >= 1 then
+          frame := sourced[d, 6] <> 0;
+        end if;
+        growth := if s >= 2 then {sourced[s, 1]/sourced[s - 1, 1], (sourced[s, 2] - sourced[s, 6])/(sourced[s - 1, 2] - sourced[s - 1, 6]),
+          sourced[s, 3]/sourced[s - 1, 3], if sourced[s - 1, 5] > 0 then sourced[s, 5]/sourced[s - 1, 5] else 1} else ones(4);
+        capacity := 1;
+        for i in 1:n loop
+          k := i - s;
+          if k > 0 then
+            // Efter banans sista år fortsätter varje del i sin sista årstakt: skatten och inkomstutjämningen med rikets
+            // skatteunderlag, bidragen utom regleringsposten i den takt banan själv hade. Banans egen regleringspost
+            // fortsätter sin förändring i kronor (med SKR:s stilla ram krymper den varje år).
+            path[i, 1] := sourced[s, 1]*growth[1]^k;
+            path[i, 3] := sourced[s, 3]*growth[3]^k;
+            path[i, 4] := sourced[s, 4]*growth[1]^k;
+            path[i, 5] := sourced[s, 5]*growth[4]^k;
+            path[i, 6] := sourced[s, 6] + (if s >= 2 then (sourced[s, 6] - sourced[s - 1, 6])*k else 0);
+            path[i, 2] := (sourced[s, 2] - sourced[s, 6])*growth[2]^k + path[i, 6];
+          end if;
+          if frame and i > d then
+            // Statens ram: inkomstutjämningen kostar staten en andel av rikets skatteunderlag, och regleringsposten är
+            // resten av ramen, lika per invånare. Följer ramen skatteunderlaget gör regleringsposten per invånare det också.
+            capacity := capacity*(1 + taxBaseGrowth[i])/(nationalPopulation[i]/nationalPopulation[i - 1]);
+            regulation := sourced[d, 6]/sourced[d, 3]*capacity*path[i, 3];
+            path[i, 2] := path[i, 2] + regulation - path[i, 6];
+            path[i, 6] := regulation;
+          end if;
+        end for;
+      end if;
+    end sourcedRevenue;
+
     function projectionResiduals "Restflöde per år som tar de fem grupperna till en befolkningsprojektion vid varje årsskifte"
       input Real p0[5] "Invånare per åldersgrupp vid basårets slut";
       input Real projected[:, 5] "Projektionens invånare per åldersgrupp vid varje årsskifte";
@@ -699,8 +752,10 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real relativeTaxCapacityPath[horizon] = fill(base.relativeTaxCapacity[2], horizon)
       "Skattekraft i förhållande till rikets medel per utjämningsår; året efter basåret är känt (SCB), sedan oförändrad om inget annat anges";
     parameter Units.MoneyPerPerson costEqualisationPerCapitaPath[horizon] = fill(base.equalisationNextYear[2], horizon) "Kostnadsutjämning per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrad";
-    parameter Real regulationPerCapitaPath[horizon] = fill(base.equalisationNextYear[3], horizon)
-      "Regleringsbidrag per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrat. Samma för alla kommuner; staten beslutar det i budgeten";
+    parameter Boolean stateFrameFollowsTaxBase = true
+      "Statens ram för utjämningen följer rikets skatteunderlag, så att regleringsbidraget per invånare växer med skatteunderlaget per invånare; false = bidraget per invånare ligger kvar i kronor";
+    parameter Real regulationPerCapitaPath[horizon] = {base.equalisationNextYear[3]*(if stateFrameFollowsTaxBase then taxCapacityIndex[i]/taxCapacityIndex[1] else 1) for i in 1:horizon}
+      "Regleringsbidrag per år, kr per invånare; året efter basåret enligt SCB, sedan enligt statens ram. Samma för alla kommuner: det är resten av statens ram när inkomstutjämningen är betald";
     parameter Units.MoneyPerPerson lssEqualisationPerCapitaPath[horizon] = fill(base.equalisationNextYear[4], horizon) "LSS-utjämning per år, kr per invånare; året efter basåret enligt SCB, sedan oförändrad";
     parameter Real propertyFeeGrowth = 0.035 "Fastighetsavgiftens årliga ökning, andel; taket följer inkomstbasbeloppet (3,8 procent om året 2020-2026)";
     parameter Units.Money propertyFeePath[horizon] = {grantComponents0[5]*(1 + propertyFeeGrowth)^i for i in 1:horizon} "Kommunal fastighetsavgift per år, mnkr";
@@ -1337,6 +1392,7 @@ ger cirka 29 mnkr mindre i skatt och bidrag från 2026.</p></html>"));
     Units.Money debtBalance "Kontroll av skuldbalansen, mnkr";
     Units.Money annualInvestment "Årets investeringsutbetalningar, mnkr";
     Units.Money annualFinancialIncome "Årets finansiella intäkter, mnkr: basårets belopp och räntan på kassa utöver basårets";
+    Units.Money referenceRevenue "Referensbanans skatt och bidrag för året, mnkr: en importerad bana är SKR:s tal för kommunen, med regleringsposten enligt statens ram";
     Units.Money outstandingDeferredInvestment "Uppskjuten betalning som återstår vid årets slut, mnkr";
     Units.Money prefinancing "Förfinansiering genom lån under året, mnkr";
     Real annualInterestRate "Årets låneränta, andel";
@@ -2174,6 +2230,7 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
       year = base.year + clock.yearsClosed;
       annualInvestment = if yearIndex == 0 then base.investment else finance.investments.annual*(-1);
       annualFinancialIncome = if yearIndex == 0 then financialIncome else finance.financial.annual;
+      referenceRevenue = if yearIndex == 0 then tax0 + grants0 else referenceTax[min(yearIndex, horizon)] + referenceGrants[min(yearIndex, horizon)];
       annualInterestRate = if yearIndex == 0 then (if base.openingDebt + base.debt > 0 then base.interestExpense/((base.openingDebt + base.debt)/2) else interestRate) else interestRateYear;
       p = demography.cohorts.p;
       population = demography.cohorts.population;
