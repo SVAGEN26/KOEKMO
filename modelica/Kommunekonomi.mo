@@ -1512,6 +1512,46 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-60, -60}, {60, 60}}, lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid), Line(points = {{-90, 0}, {-60, 0}}, color = {155, 95, 35}), Line(points = {{60, 0}, {90, 0}}, color = {155, 95, 35}), Line(points = {{0, 0}, {35, 35}}, color = {90, 110, 130}, thickness = 1), Text(extent = {{-100, 100}, {100, 65}}, textString = "%name")}));
     end Meter;
 
+    connector LevelPort "Koppling till ett nivålager: nivån och flödet in i den anslutna komponenten"
+      Real level "Nivå, index";
+      flow Units.Rate rate "Flöde in i komponenten, index per år";
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid)}));
+    end LevelPort;
+
+    model Level "Nivålager: en storhet utan enhet som ändras med flöden, till exempel kapacitet, prisnivå eller vägnät (index)"
+      parameter Real level0 = 1 "Nivå vid start, index";
+      parameter Boolean fixedStart = true "Startvärdet är level0; false när en begynnelseekvation ger det";
+      LevelPort port annotation(Placement(transformation(extent = {{-10, -110}, {10, -90}}), iconTransformation(extent = {{-10, -110}, {10, -90}})));
+      Real level(start = level0, fixed = fixedStart) "Nivå just nu, index";
+    equation
+      port.level = level;
+      der(level) = port.rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-80, -90}, {80, 60}}, lineColor = {35, 115, 85}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-80, -90}, {80, -20}}, lineColor = {35, 115, 85}, fillColor = {214, 238, 226}, fillPattern = FillPattern.Solid), Text(extent = {{-100, 100}, {100, 65}}, textString = "%name")}),
+        Documentation(info = "<html><p>Ett lager för en nivå utan enhet. Nivån ändras bara genom flöden: tillväxt (<code>Growth</code>)
+eller anpassning mot ett mål (<code>Adjustment</code>).</p></html>"));
+    end Level;
+
+    model Growth "Flöde in i en nivå: tillväxt i proportion till nivån"
+      LevelPort to annotation(Placement(transformation(extent = {{90, -10}, {110, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+      input Units.Rate pace "Tillväxttakt, andel av nivån per år";
+      Units.Rate rate "Flöde in i nivån, index per år";
+    equation
+      rate = pace*to.level;
+      to.rate = -rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-100, -30}, {-40, 30}}, lineColor = {90, 110, 130}), Line(points = {{-40, 0}, {90, 0}}, color = {35, 115, 85}, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-100, 80}, {100, 40}}, textString = "%name")}));
+    end Growth;
+
+    model Adjustment "Flöde in i eller ut ur en nivå: anpassning mot ett mål"
+      LevelPort to annotation(Placement(transformation(extent = {{90, -10}, {110, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+      input Real target "Målet som nivån närmar sig, index";
+      input Units.Rate pace "Andel av glappet mellan mål och nivå som stängs per år";
+      Units.Rate rate "Flöde in i nivån, index per år; negativt när nivån ligger över målet";
+    equation
+      rate = pace*(target - to.level);
+      to.rate = -rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-100, -30}, {-40, 30}}, lineColor = {90, 110, 130}), Line(points = {{-40, 0}, {90, 0}}, color = {35, 115, 85}, thickness = 1, arrow = {Arrow.Filled, Arrow.Filled}), Text(extent = {{-100, 80}, {100, 40}}, textString = "%name")}));
+    end Adjustment;
+
     connector PeoplePort "Koppling till ett befolkningslager: antalet personer och flödet in i den anslutna komponenten"
       Units.Persons level "Personer i lagret";
       flow Units.PersonsPerYear rate "Flöde in i komponenten, personer per år";
@@ -1870,14 +1910,23 @@ fyllt år. Åldersgrupperna till verksamheten och intäkterna går därför jäm
       input Real projectPlacesInUse;
       output Real missingProjectPlaces = if clock.yearsClosed > 0 then max(0, plannedProjectPlaces - projectPlacesInUse) else 0 "Projektplatser som saknas jämfört med öppningsplanen";
       Interfaces.CohortsInput cohorts "Befolkning just nu" annotation(
-        Placement(transformation(extent = {{-120, -20}, {-80, 20}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
-      Real capacity[3](each start = 1, each fixed = true) "Kapacitet för utbildning, äldreomsorg och övrigt, index (basår = 1)";
+        Placement(transformation(origin={-80,-80}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
+      // Lager: kapaciteten per sektor och vägnätet. Flöden: anpassningen mot behovet och vägnätets tillväxt.
+      Level capacityEducation "Kapacitet i utbildning" annotation(Placement(transformation(origin={-40,90}, extent={{-10,-10},{10,10}})));
+      Level capacityCare "Kapacitet i äldreomsorg" annotation(Placement(transformation(origin={80,90}, extent={{-10,-10},{10,10}})));
+      Level capacityOther "Kapacitet i övrig verksamhet" annotation(Placement(transformation(origin={-40,10}, extent={{-10,-10},{10,10}})));
+      Level roadNetwork "Vägnätet" annotation(Placement(transformation(origin={80,10}, extent={{-10,-10},{10,10}})));
+      Adjustment adjustEducation "Anpassning mot behovet, utbildning" annotation(Placement(transformation(origin={-90,80}, extent={{-10,-10},{10,10}})));
+      Adjustment adjustCare "Anpassning mot behovet, äldreomsorg" annotation(Placement(transformation(origin={30,80}, extent={{-10,-10},{10,10}})));
+      Adjustment adjustOther "Anpassning mot behovet, övrigt" annotation(Placement(transformation(origin={-90,0}, extent={{-10,-10},{10,10}})));
+      Growth roadGrowth "Vägnätets tillväxt" annotation(Placement(transformation(origin={30,0}, extent={{-10,-10},{10,10}})));
+      Real capacity[3] "Kapacitet för utbildning, äldreomsorg och övrigt, index (basår = 1): lagrens nivåer";
       Real demand[3] "Behov för utbildning, äldreomsorg och övrigt, index (basår = 1)";
       Real educationIndex "Utbildningsbehov, index (basår = 1)";
       Real careIndex "Äldreomsorgsbehov viktat efter ålder, index (basår = 1)";
-      Real network(start = 1, fixed = true) "Vägnätet: lager, index (basår = 1); växer bara med networkGrowth";
+      Real network "Vägnätet, index (basår = 1): lagrets nivå; växer bara med networkGrowth";
       Interfaces.SignalOutput serviceVolume "Verksamhetens volym: kostnadsviktad kapacitet, index (basår = 1)" annotation(
-        Placement(transformation(extent = {{80, -20}, {120, 20}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+        Placement(transformation(origin={-10,-80}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
     protected
       parameter Real careBase(fixed = false) "Viktat antal äldre vid start";
       parameter Units.Persons cohorts0[5](each fixed = false) "Invånare per åldersgrupp vid start";
@@ -1888,14 +1937,26 @@ fyllt år. Åldersgrupperna till verksamheten och intäkterna går därför jäm
       educationIndex = sum({educationWeights[i]*cohorts.p[i]/cohorts0[i] for i in 1:3});
       careIndex = careWeights*cohorts.older/careBase;
       // Gator och vägar ligger kvar när invånarna blir färre: den delen av övrig verksamhet följer vägnätet.
-      der(network) = log(1 + networkGrowth)*network;
+      roadGrowth.pace = log(1 + networkGrowth)/Units.year;
+      connect(roadGrowth.to, roadNetwork.port) annotation(Line(points={{40,0},{65,0},{65,-5},{80,-5},{80,0}}, color={35,115,85}));
+      network = roadNetwork.level;
       demand = {educationIndex, careIndex, infrastructureShare*network + (1 - infrastructureShare)*sum(cohorts.p)/sum(cohorts0)};
-      der(capacity) = adjustmentRate .* (fixedShare + (ones(3) - fixedShare) .* demand - capacity);
+      // Kapaciteten närmar sig målet: en fast del och en del som följer behovet.
+      adjustEducation.target = fixedShare[1] + (1 - fixedShare[1])*demand[1];
+      adjustCare.target = fixedShare[2] + (1 - fixedShare[2])*demand[2];
+      adjustOther.target = fixedShare[3] + (1 - fixedShare[3])*demand[3];
+      adjustEducation.pace = adjustmentRate[1]/Units.year;
+      adjustCare.pace = adjustmentRate[2]/Units.year;
+      adjustOther.pace = adjustmentRate[3]/Units.year;
+      connect(adjustEducation.to, capacityEducation.port) annotation(Line(points={{-80,80},{-55,80},{-55,75},{-40,75},{-40,80}}, color={35,115,85}));
+      connect(adjustCare.to, capacityCare.port) annotation(Line(points={{40,80},{65,80},{65,75},{80,75},{80,80}}, color={35,115,85}));
+      connect(adjustOther.to, capacityOther.port) annotation(Line(points={{-80,0},{-55,0},{-55,-5},{-40,-5},{-40,0}}, color={35,115,85}));
+      capacity = {capacityEducation.level, capacityCare.level, capacityOther.level};
       serviceVolume = sum(sectorCosts .* capacity)/sum(sectorCosts);
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {35, 115, 85}, fillColor = {230, 245, 238}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Verksamhet")}),
         Documentation(info = "<html><p>Verksamhetens behov följer befolkningen under året, och kapaciteten närmar sig
 behovet kontinuerligt: <code>der(capacity) = takt · (mål - capacity)</code>. Takten är vald så att ett konstant glapp
-stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
+stängs med andelen <code>adjustment</code> på ett år.</p></html>"), Diagram(coordinateSystem(extent={{-120,-120},{120,120}})));
     end Services;
 
     model OperatingAccounts "Driftens kostnader och intäkter som flöden; löne-, pris- och kostnadsnivåer växer kontinuerligt"
@@ -1919,11 +1980,11 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       outer Components.Calendar calendar;
       outer Clock clock;
       Interfaces.CohortsInput cohorts "Befolkning just nu" annotation(
-        Placement(transformation(extent = {{-120, 20}, {-80, 60}}), iconTransformation(extent = {{-110, 30}, {-90, 50}})));
+        Placement(transformation(origin={-80,-120}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{-110, 30}, {-90, 50}})));
       Interfaces.SignalInput serviceVolume "Verksamhetens volym, index" annotation(
-        Placement(transformation(extent = {{-120, -20}, {-80, 20}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
+        Placement(transformation(origin={-10,-120}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
       Interfaces.CostDriversInput drivers "Årets löne-, pris- och pensionsantaganden" annotation(
-        Placement(transformation(extent = {{-120, -60}, {-80, -20}}), iconTransformation(extent = {{-110, -50}, {-90, -30}})));
+        Placement(transformation(origin={60,-120}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{-110, -50}, {-90, -30}})));
       output Units.MoneyRate wagesRate "Löner, mnkr per år";
       output Units.MoneyRate employerContributionsRate "Sociala avgifter exklusive pensioner, mnkr per år";
       output Units.MoneyRate pensionExpenseRate "Pensionskostnad, mnkr per år";
@@ -1931,7 +1992,18 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       output Units.MoneyRate otherOperatingExpenseRate "Övriga verksamhetskostnader, mnkr per år";
       output Units.MoneyRate operatingRevenueRate "Verksamhetens intäkter, mnkr per år";
       Units.MoneyRate oneOffCostRate "Engångskostnaden just nu, mnkr per år";
-      Real level[5](each fixed = false) "Löne-, pris-, taxe-, produktivitets- och standardnivå just nu, index (basårets medel = 1)";
+      // Lager: de fem nivåerna. Flöden: deras tillväxt. Startnivåerna ges av begynnelseekvationen nedan.
+      Level wageLevel(fixedStart = false) "Lönenivå" annotation(Placement(transformation(origin={-40,130}, extent={{-10,-10},{10,10}})));
+      Level priceLevel(fixedStart = false) "Prisnivå för övriga kostnader" annotation(Placement(transformation(origin={80,130}, extent={{-10,-10},{10,10}})));
+      Level feeLevel(fixedStart = false) "Taxor och avgifter" annotation(Placement(transformation(origin={-40,50}, extent={{-10,-10},{10,10}})));
+      Level productivityLevel(fixedStart = false) "Produktivitet" annotation(Placement(transformation(origin={80,50}, extent={{-10,-10},{10,10}})));
+      Level standardLevel(fixedStart = false) "Kostnadsnivå utöver demografi och pris" annotation(Placement(transformation(origin={-40,-30}, extent={{-10,-10},{10,10}})));
+      Growth wageRise "Löneökning" annotation(Placement(transformation(origin={-90,120}, extent={{-10,-10},{10,10}})));
+      Growth priceRise "Prisökning" annotation(Placement(transformation(origin={30,120}, extent={{-10,-10},{10,10}})));
+      Growth feeRise "Taxeökning" annotation(Placement(transformation(origin={-90,40}, extent={{-10,-10},{10,10}})));
+      Growth productivityRise "Produktivitetsökning" annotation(Placement(transformation(origin={30,40}, extent={{-10,-10},{10,10}})));
+      Growth standardRise "Standardökning" annotation(Placement(transformation(origin={-90,-40}, extent={{-10,-10},{10,10}})));
+      Real level[5] "Löne-, pris-, taxe-, produktivitets- och standardnivå just nu, index (basårets medel = 1): lagrens nivåer";
       Units.Rate growth[5] "Nivåernas tillväxttakt just nu";
       Real payrollIndex "Lönesumman just nu i förhållande till basårets, när pensionskostnaden följer den; annars 1";
       Real share "Andel av året som gått";
@@ -1963,7 +2035,17 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       rateNext = {drivers.wageRateNext, drivers.priceRateNext, log(1 + operatingRevenueGrowth + inflationRevenuePassThrough*drivers.extraInflation), log(1 + productivityGrowth), log(1 + costDrift)}/Units.year;
       // Banans ökning gäller årsmedlet. Takterna vid årsskiftena är valda så att årsmedlen får den ökningen (Data.meanPreservingRates).
       growth = rateNow + (rateNext - rateNow)*share;
-      der(level) = growth .* level;
+      wageRise.pace = growth[1];
+      priceRise.pace = growth[2];
+      feeRise.pace = growth[3];
+      productivityRise.pace = growth[4];
+      standardRise.pace = growth[5];
+      connect(wageRise.to, wageLevel.port) annotation(Line(points={{-80,120},{-55,120},{-55,115},{-40,115},{-40,120}}, color={35,115,85}));
+      connect(priceRise.to, priceLevel.port) annotation(Line(points={{40,120},{65,120},{65,115},{80,115},{80,120}}, color={35,115,85}));
+      connect(feeRise.to, feeLevel.port) annotation(Line(points={{-80,40},{-55,40},{-55,35},{-40,35},{-40,40}}, color={35,115,85}));
+      connect(productivityRise.to, productivityLevel.port) annotation(Line(points={{40,40},{65,40},{65,35},{80,35},{80,40}}, color={35,115,85}));
+      connect(standardRise.to, standardLevel.port) annotation(Line(points={{-80,-40},{-55,-40},{-55,-45},{-40,-45},{-40,-40}}, color={35,115,85}));
+      level = {wageLevel.level, priceLevel.level, feeLevel.level, productivityLevel.level, standardLevel.level};
       wagesRate = (payroll0 - employerContributions0)/Units.year*level[1]*serviceVolume*level[5]/level[4];
       employerContributionsRate = if employerContributionRatePath[calendar.pathIndex] < 0 then employerContributions0/Units.year*level[1]*serviceVolume*level[5]/level[4] else wagesRate*employerContributionRatePath[calendar.pathIndex];
       // Pensionskostnaden är en andel av lönesumman: följer lönerna, volymen och produktiviteten. Med en given bana i mnkr
@@ -2013,7 +2095,7 @@ svänger mer än de årliga ökningarna när de ändras mycket. Nivån vid baså
 basåret växte med takten vid första årsskiftet.</p>
 <p>Pensionskostnaden och pensionsutbetalningarna är årsbanor och flyter jämnt under året. Årets belopp är summan av
 flödena; <code>wageIndex</code> och de andra indexen i utdata är årets medelnivå. Pengarnas väg genom kassa och skulder
-finns i <code>Payments</code>.</p></html>"));
+finns i <code>Payments</code>.</p></html>"), Diagram(coordinateSystem(extent={{-120,-160},{120,160}})));
     end OperatingAccounts;
 
     model Capital "Investeringar, pågående arbeten, tillgångar i bruk och avskrivning som lager och flöden"

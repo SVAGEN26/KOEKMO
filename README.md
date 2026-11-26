@@ -353,14 +353,19 @@ folder, OpenModelica looks for the libraries a package uses beside its folder, a
 (A checkout without symbolic links, as on Windows by default, needs
 `Kommunekonomi.mo` loaded first.)
 
-`Continuous.Economy`, `Demography`, `Capital`, `Payments` and `Finance` are built
+`Continuous.Economy` and all its parts (`Demography`, `Services`,
+`OperatingAccounts`, `Capital`, `Payments`, `Finance`) are built
 of components and have diagrams with every connection drawn, laid out with
 [mocoal](https://github.com/OpenModelica/mocoal-rs)
 (`mocoal -i -c Kommunekonomi.Continuous.Economy modelica/Kommunekonomi.mo`, and
 the same for the others; `--svg DIR` writes a preview). `Demography` is seven age
 groups as stocks (`AgeGroup`) in a chain, with births, ageing, deaths and
-migration as flow components between and around them. `Services` and
-`OperatingAccounts` are written as equations and have no diagram of their inside. Each base-year record says where its accounts come from
+migration as flow components between and around them. `Services` has four level
+stocks (`Level`): the capacity of education, elderly care and other services, each
+with a flow that adjusts it towards the need (`Adjustment`), and the road network
+with its growth. `OperatingAccounts` has five: the levels of wages, prices, fees,
+productivity and standard, each with its growth (`Growth`). The cost flows
+themselves are equations: their stock is the cash, drawn in `Payments`. Each base-year record says where its accounts come from
 (`BaseYear.source`: the annual report or SCB's account summary). Defaults are
 illustrative; download `Scenario.mo` from the site to reproduce a scenario with
 the planning inputs. See [modelica/README.md](modelica/README.md).

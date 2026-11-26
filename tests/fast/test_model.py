@@ -86,7 +86,8 @@ def run(name, years=8, start=2025, **parameters):
             m.setParameters(**{k: str(old)})
     names = m.getSolutions(resultfile=str(result))
     extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual', 'revenues.grantParts', 'operations.oneOffCostRate',
-             'demography.age', 'demography.turn', 'demography.death', 'demography.move', 'demography.birth', 'demography.migrationRate')
+             'demography.age', 'demography.turn', 'demography.death', 'demography.move', 'demography.birth', 'demography.migrationRate',
+             'services.capacity', 'services.adjust', 'services.road', 'operations.level', 'operations.wage', 'operations.price')
     wanted = [n for n in names if n == 'time' or '.' not in n or n.startswith(extra)]
     series = dict(zip(wanted, m.getSolutions(wanted, resultfile=str(result))))
     rows = {}
@@ -499,6 +500,40 @@ class DemographyOfComponents(unittest.TestCase):
         total = (r['demography.birth.rate'] - sum(r[f'demography.death{g}.rate'] for g in self.GROUPS)
                  + sum(r[f'demography.move{g}.rate'] for g in self.GROUPS))
         self.assertAlmostEqual(total, r['demography.birthRate'] - r['demography.deathRate'] + r['demography.migrationRate'], delta=1e-6)
+
+
+
+@unittest.skipIf(SKIP, SKIP)
+class LevelsOfComponents(unittest.TestCase):
+    """The services' capacity and the operating accounts' price and wage levels are stocks with flows (Level, Adjustment, Growth)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rows, cls.points = run('Shrinking')
+
+    def test_the_readings_are_the_stocks(self):
+        for y, r in self.rows.items():
+            for i, name in enumerate(('capacityEducation', 'capacityCare', 'capacityOther'), start=1):
+                self.assertEqual(r[f'services.capacity[{i}]'], r[f'services.{name}.level'], (y, name))
+            self.assertEqual(r['services.network'], r['services.roadNetwork.level'], y)
+            self.assertEqual(r['operations.level[1]'], r['operations.wageLevel.level'], y)
+            self.assertEqual(r['operations.level[2]'], r['operations.priceLevel.level'], y)
+
+    def test_capacity_moves_towards_its_target_at_the_stated_pace(self):
+        # The flow into a capacity stock is pace * (target - level): negative while the need shrinks.
+        for name in ('Education', 'Other'):
+            rate, pace = self.points[f'services.adjust{name}.rate'], self.points[f'services.adjust{name}.pace']
+            target, level = self.points[f'services.adjust{name}.target'], self.points[f'services.capacity{name}.level']
+            self.assertTrue(np.allclose(rate, pace*(target - level), atol=1e-12), name)
+        self.assertLess(self.rows[2030]['services.adjustEducation.rate'], 0)
+        self.assertLess(self.rows[2033]['services.capacityEducation.level'], 1)
+
+    def test_the_wage_level_grows_by_its_flow(self):
+        t, level, rate = self.points['time'], self.points['operations.wageLevel.level'], self.points['operations.wageRise.rate']
+        a = int(np.where(np.isclose(t, 2026))[0][-1]); b = int(np.where(np.isclose(t, 2027))[0][0])
+        integral = float(np.sum((rate[a + 1:b + 1] + rate[a:b])/2*np.diff(t[a:b + 1])))
+        self.assertAlmostEqual(level[b] - level[a], integral, delta=2e-5)
+        self.assertAlmostEqual(self.rows[2033]['services.roadNetwork.level'], 1, delta=1e-9)   # the road network does not shrink
 
 
 if __name__ == '__main__':

@@ -1880,3 +1880,17 @@ arkivera data.
   antaganden −188 mnkr, med prisfacit +4.
 - Motala 2026–2033 på sidan ändras inte: den inlästa befolkningsprognosen följs de åren.
 
+## Verksamheten och driften som lager och flöden i komponenter (2026-11-26)
+
+- Nya komponenter: `LevelPort`, `Level` (lager för en nivå utan enhet), `Growth` (tillväxt i proportion till nivån) och
+  `Adjustment` (anpassning mot ett mål).
+- `Continuous.Services`: `capacityEducation`, `capacityCare`, `capacityOther` med `adjustEducation`, `adjustCare`,
+  `adjustOther`, och `roadNetwork` med `roadGrowth`. `capacity[3]` och `network` är avläsningar.
+- `Continuous.OperatingAccounts`: `wageLevel`, `priceLevel`, `feeLevel`, `productivityLevel`, `standardLevel` med
+  `wageRise` och så vidare. Startnivåerna ges som förut av begynnelseekvationen (`Level(fixedStart = false)`).
+  `level[5]` är en avläsning. Kostnadsflödena är kvar som ekvationer.
+- Jämfört med versionen före, DASSL med tolerans 1e-10: `Motala.Continuous` 2025–2040 (41 variabler), inflationschocken
+  och den krympande kommunen 2025–2033; största relativa avvikelse 1,1e-10.
+- Utlagda med mocoal: `Services` 10 komponenter och 4 kopplingar, `OperatingAccounts` 13 och 5. Alla delar av
+  `Economy` har nu diagram.
+

@@ -56,15 +56,19 @@ Modellen behöver en riktig lösare. Sajten kör den implicita lösaren `ida`, s
 Standardvärdena är illustrativa. Hämta `Scenario.mo` från sajten för att återskapa ett scenario med
 planeringsunderlagen. Ekvationerna beskrivs i [../docs/methodology.md](../docs/methodology.md).
 
-Diagram i OMEdit: `Continuous.Economy`, `Demography`, `Capital`, `Payments` och `Finance` är byggda av komponenter och har
-diagram med alla kopplingar dragna. Demografin är sju åldersgrupper som lager (`AgeGroup`) i en kedja, med födda
+Diagram i OMEdit: `Continuous.Economy` och alla dess delar (`Demography`, `Services`, `OperatingAccounts`, `Capital`,
+`Payments` och `Finance`) är byggda av komponenter och har diagram med alla kopplingar dragna. Demografin är sju åldersgrupper som lager (`AgeGroup`) i en kedja, med födda
 (`Births`), åldrande (`Ageing`), döda (`Deaths`) och flyttningar (`Migration`) som flödeskomponenter. Layouten är gjord med [mocoal](https://github.com/OpenModelica/mocoal-rs):
 
     mocoal -i -c Kommunekonomi.Continuous.Economy -c Kommunekonomi.Continuous.Demography \
+           -c Kommunekonomi.Continuous.Services -c Kommunekonomi.Continuous.OperatingAccounts \
            -c Kommunekonomi.Continuous.Capital -c Kommunekonomi.Continuous.Payments \
            -c Kommunekonomi.Continuous.Finance modelica/Kommunekonomi.mo
 
-Kör om det när komponenter eller kopplingar ändras; `--svg KATALOG` skriver en förhandsvisning. `Services`
-och `OperatingAccounts` är skrivna som ekvationer och har inget diagram över insidan.
+Kör om det när komponenter eller kopplingar ändras; `--svg KATALOG` skriver en förhandsvisning. Verksamheten
+(`Services`) har fyra nivålager (`Level`): kapaciteten i utbildning, äldreomsorg och övrigt, var och en med ett flöde som
+anpassar den mot behovet (`Adjustment`), och vägnätet med sin tillväxt. Driften (`OperatingAccounts`) har fem: löne-,
+pris-, taxe-, produktivitets- och standardnivån, var och en med sin tillväxt (`Growth`). Kostnadsflödena är ekvationer;
+deras lager är kassan, som ritas i `Payments`.
 
 Forskningsmodellerna M1 och M2 ligger i `../research/` och används inte av sajten.
