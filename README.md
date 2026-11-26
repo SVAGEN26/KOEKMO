@@ -353,13 +353,14 @@ library by itself:
 
     ln -s "$PWD/modelica/Kommunekonomi.mo" "$HOME/.openmodelica/libraries/Kommunekonomi 0.1.0.mo"
 
-`Continuous.Economy`, `Capital`, `Payments` and `Finance` are built of components
-and have diagrams with every connection drawn, laid out with
+`Continuous.Economy`, `Demography`, `Capital`, `Payments` and `Finance` are built
+of components and have diagrams with every connection drawn, laid out with
 [mocoal](https://github.com/OpenModelica/mocoal-rs)
 (`mocoal -i -c Kommunekonomi.Continuous.Economy modelica/Kommunekonomi.mo`, and
-the same for the other three; `--svg DIR` writes a preview). `Demography`,
-`Services` and `OperatingAccounts` are written as equations and have no diagram of
-their inside. Each base-year record says where its accounts come from
+the same for the others; `--svg DIR` writes a preview). `Demography` is seven age
+groups as stocks (`AgeGroup`) in a chain, with births, ageing, deaths and
+migration as flow components between and around them. `Services` and
+`OperatingAccounts` are written as equations and have no diagram of their inside. Each base-year record says where its accounts come from
 (`BaseYear.source`: the annual report or SCB's account summary). Defaults are
 illustrative; download `Scenario.mo` from the site to reproduce a scenario with
 the planning inputs. See [modelica/README.md](modelica/README.md).

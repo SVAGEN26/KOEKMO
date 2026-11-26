@@ -1512,6 +1512,62 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-60, -60}, {60, 60}}, lineColor = {90, 110, 130}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid), Line(points = {{-90, 0}, {-60, 0}}, color = {155, 95, 35}), Line(points = {{60, 0}, {90, 0}}, color = {155, 95, 35}), Line(points = {{0, 0}, {35, 35}}, color = {90, 110, 130}, thickness = 1), Text(extent = {{-100, 100}, {100, 65}}, textString = "%name")}));
     end Meter;
 
+    connector PeoplePort "Koppling till ett befolkningslager: antalet personer och flödet in i den anslutna komponenten"
+      Units.Persons level "Personer i lagret";
+      flow Units.PersonsPerYear rate "Flöde in i komponenten, personer per år";
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid)}));
+    end PeoplePort;
+
+    model AgeGroup "Befolkningslager: invånarna i en åldersgrupp"
+      parameter Units.Persons people0 "Invånare vid basårets slut";
+      PeoplePort port annotation(Placement(transformation(extent = {{-10, -110}, {10, -90}}), iconTransformation(extent = {{-10, -110}, {10, -90}})));
+      Units.Persons people(start = people0, fixed = true) "Invånare just nu";
+    equation
+      port.level = people;
+      der(people) = port.rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-80, -90}, {80, 60}}, lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-80, -90}, {80, -20}}, lineColor = {40, 95, 140}, fillColor = {214, 230, 245}, fillPattern = FillPattern.Solid), Text(extent = {{-100, 100}, {100, 65}}, textString = "%name")}),
+        Documentation(info = "<html><p>Ett lager av personer. Antalet ändras bara genom flöden: födda, åldrande, döda och flyttningar.
+<code>der(people)</code> är summan av flödena in genom kopplingen.</p></html>"));
+    end AgeGroup;
+
+    model Ageing "Flöde mellan två åldersgrupper: de som fyller år över gränsen"
+      PeoplePort from annotation(Placement(transformation(extent = {{-110, -10}, {-90, 10}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
+      PeoplePort to annotation(Placement(transformation(extent = {{90, -10}, {110, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+      input Units.Rate share "Andel av den yngre gruppen som går över per år";
+      Units.PersonsPerYear rate "Personer per år";
+    equation
+      rate = share*from.level;
+      from.rate = rate;
+      to.rate = -rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Line(points = {{-90, 0}, {90, 0}}, color = {40, 95, 140}, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Polygon(points = {{-20, 30}, {20, 30}, {-20, -30}, {20, -30}, {-20, 30}}, lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid), Text(extent = {{-100, 80}, {100, 40}}, textString = "%name")}));
+    end Ageing;
+
+    model Births "Flöde in i den yngsta åldersgruppen: födda"
+      PeoplePort to annotation(Placement(transformation(extent = {{90, -10}, {110, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+      input Units.PersonsPerYear rate "Födda per år";
+    equation
+      to.rate = -rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-100, -30}, {-40, 30}}, lineColor = {90, 110, 130}), Line(points = {{-40, 0}, {90, 0}}, color = {40, 120, 80}, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-100, 80}, {100, 40}}, textString = "%name")}));
+    end Births;
+
+    model Deaths "Flöde ut ur en åldersgrupp: döda"
+      PeoplePort from annotation(Placement(transformation(extent = {{-110, -10}, {-90, 10}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
+      input Units.Rate risk "Dödstal: döda per person och år";
+      Units.PersonsPerYear rate "Döda per år";
+    equation
+      rate = risk*from.level;
+      from.rate = rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{40, -30}, {100, 30}}, lineColor = {90, 110, 130}), Line(points = {{-90, 0}, {40, 0}}, color = {170, 60, 50}, thickness = 1, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-100, 80}, {100, 40}}, textString = "%name")}));
+    end Deaths;
+
+    model Migration "Flöde in i eller ut ur en åldersgrupp: flyttnetto och restflöde"
+      PeoplePort to annotation(Placement(transformation(extent = {{90, -10}, {110, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+      input Units.PersonsPerYear rate "Flyttnetto per år; negativt när fler flyttar ut";
+    equation
+      to.rate = -rate;
+      annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(extent = {{-100, -30}, {-40, 30}}, lineColor = {90, 110, 130}), Line(points = {{-40, 0}, {90, 0}}, color = {40, 95, 140}, thickness = 1, arrow = {Arrow.Filled, Arrow.Filled}), Text(extent = {{-100, 80}, {100, 40}}, textString = "%name")}));
+    end Migration;
+
     partial model DemographyBase "Det en demografi i kontinuerlig tid ska ge: befolkningen just nu och årets födda, döda och flyttnetto"
       outer Components.Calendar calendar;
       outer Clock clock;
@@ -1562,9 +1618,40 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       parameter Units.Rate ageingRatePath[horizon, 6] "Andel per år som åldras ur 0-6, 7-15, 16-18, 19-64, 65-79 och 80-89, år för år (Data.ageProfile)";
       parameter Real olderMortalityPath[horizon, 3] "Dödstal i 65-79, 80-89 och 90+ i förhållande till deathRates[5], år för år (Data.ageProfile)";
       extends DemographyBase(births0Shown = births0);
+      // Lager: sju åldersgrupper. 65+ är de tre sista, en åldringskedja.
+      AgeGroup age0to6(people0 = p0[1]) "0-6 år" annotation(Placement(transformation(origin={-300,-28}, extent={{-10,-10},{10,10}})));
+      AgeGroup age7to15(people0 = p0[2]) "7-15 år" annotation(Placement(transformation(origin={-200,16}, extent={{-10,-10},{10,10}})));
+      AgeGroup age16to18(people0 = p0[3]) "16-18 år" annotation(Placement(transformation(origin={-100,36}, extent={{-10,-10},{10,10}})));
+      AgeGroup age19to64(people0 = p0[4]) "19-64 år" annotation(Placement(transformation(origin={0,52}, extent={{-10,-10},{10,10}})));
+      AgeGroup age65to79(people0 = p0[5]*olderShares[1]) "65-79 år" annotation(Placement(transformation(origin={100,66}, extent={{-10,-10},{10,10}})));
+      AgeGroup age80to89(people0 = p0[5]*olderShares[2]) "80-89 år" annotation(Placement(transformation(origin={200,48}, extent={{-10,-10},{10,10}})));
+      AgeGroup age90plus(people0 = p0[5]*olderShares[3]) "90 år och äldre" annotation(Placement(transformation(origin={300,-14}, extent={{-10,-10},{10,10}})));
+      // Flöden: födda in, åldrande mellan grupperna, döda ut och flyttningar in eller ut.
+      Births birth "Födda" annotation(Placement(transformation(origin={-350,-38}, extent={{-10,-10},{10,10}})));
+      Ageing turn7 "Fyller 7 år" annotation(Placement(transformation(origin={-250,6}, extent={{-10,-10},{10,10}})));
+      Ageing turn16 "Fyller 16 år" annotation(Placement(transformation(origin={-150,40}, extent={{-10,-10},{10,10}})));
+      Ageing turn19 "Fyller 19 år" annotation(Placement(transformation(origin={-50,58}, extent={{-10,-10},{10,10}})));
+      Ageing turn65 "Fyller 65 år" annotation(Placement(transformation(origin={50,74}, extent={{-10,-10},{10,10}})));
+      Ageing turn80 "Fyller 80 år" annotation(Placement(transformation(origin={150,86}, extent={{-10,-10},{10,10}})));
+      Ageing turn90 "Fyller 90 år" annotation(Placement(transformation(origin={250,58}, extent={{-10,-10},{10,10}})));
+      Deaths death0to6 "Döda 0-6 år" annotation(Placement(transformation(origin={-250,-34}, extent={{-10,-10},{10,10}})));
+      Deaths death7to15 "Döda 7-15 år" annotation(Placement(transformation(origin={-150,0}, extent={{-10,-10},{10,10}})));
+      Deaths death16to18 "Döda 16-18 år" annotation(Placement(transformation(origin={-50,18}, extent={{-10,-10},{10,10}})));
+      Deaths death19to64 "Döda 19-64 år" annotation(Placement(transformation(origin={50,34}, extent={{-10,-10},{10,10}})));
+      Deaths death65to79 "Döda 65-79 år" annotation(Placement(transformation(origin={150,46}, extent={{-10,-10},{10,10}})));
+      Deaths death80to89 "Döda 80-89 år" annotation(Placement(transformation(origin={250,18}, extent={{-10,-10},{10,10}})));
+      Deaths death90plus "Döda 90 år och äldre" annotation(Placement(transformation(origin={350,-24}, extent={{-10,-10},{10,10}})));
+      Migration move0to6 "Flyttnetto 0-6 år" annotation(Placement(transformation(origin={-350,-78}, extent={{-10,-10},{10,10}})));
+      Migration move7to15 "Flyttnetto 7-15 år" annotation(Placement(transformation(origin={-250,-74}, extent={{-10,-10},{10,10}})));
+      Migration move16to18 "Flyttnetto 16-18 år" annotation(Placement(transformation(origin={-150,-40}, extent={{-10,-10},{10,10}})));
+      Migration move19to64 "Flyttnetto 19-64 år" annotation(Placement(transformation(origin={-50,-22}, extent={{-10,-10},{10,10}})));
+      Migration move65to79 "Flyttnetto 65-79 år" annotation(Placement(transformation(origin={50,-6}, extent={{-10,-10},{10,10}})));
+      Migration move80to89 "Flyttnetto 80-89 år" annotation(Placement(transformation(origin={160,10}, extent={{-10,-10},{10,10}})));
+      Migration move90plus "Flyttnetto 90 år och äldre" annotation(Placement(transformation(origin={250,-24}, extent={{-10,-10},{10,10}})));
+      // Samma storheter som förut, nu avlästa ur lagren och flödena.
       Units.Persons p[5] "Invånare per åldersgrupp; 65+ är summan av åldringskedjan";
-      Units.Persons young[4](start = p0[1:4], each fixed = true) "Lager: 0-6, 7-15, 16-18 och 19-64 år";
-      Units.Persons older[3](start = p0[5]*olderShares, each fixed = true) "Lager: 65-79, 80-89 och 90+ år, en åldringskedja";
+      Units.Persons young[4] "Lagren 0-6, 7-15, 16-18 och 19-64 år";
+      Units.Persons older[3] "Lagren 65-79, 80-89 och 90+ år, en åldringskedja";
       Units.PersonsPerYear born "Födda per år";
       Units.PersonsPerYear died[5] "Döda per år och åldersgrupp";
       Units.PersonsPerYear ageing[4] "Åldras upp till nästa grupp, personer per år";
@@ -1583,32 +1670,89 @@ av flödena in genom kopplingen. Skulder har negativ nivå, så att summan av al
       for i in 1:5 loop
         moved[i] = drivers.residualMigration[i] + drivers.migrationDelta*migrationWeights[i];
       end for;
-      for i in 1:4 loop
-        p[i] = young[i];
-        died[i] = deathRates[i]*young[i];
-        ageing[i] = ageingRate[i]*young[i];
-      end for;
-      der(young[1]) = born - ageing[1] - died[1] + moved[1];
-      for i in 2:4 loop
-        der(young[i]) = ageing[i - 1] - ageing[i] - died[i] + moved[i];
-      end for;
       // Vilka som fyller år över en gräns följer årskullarna: årets andel ur basårets ettårsåldrar (Data.ageProfile).
       for i in 1:6 loop
         ageingRate[i] = ageingRatePath[calendar.pathIndex, i];
       end for;
-      // 65+ är en åldringskedja: in från 19-64, uppåt med årets andelar och ut genom död med dödstal som stiger med åldern
-      // och sjunker med rikets trend. Flyttningarna till 65+ fördelas efter basårets andelar. Gruppens döda är kedjans.
-      for j in 1:2 loop
-        olderAgeing[j] = ageingRate[4 + j]*older[j];
-      end for;
+      // 65+: dödstal som stiger med åldern och sjunker med rikets trend; flyttningarna fördelas efter basårets andelar.
       for j in 1:3 loop
         olderRate[j] = deathRates[5]*olderMortalityPath[calendar.pathIndex, j];
-        olderDied[j] = olderRate[j]*older[j];
         olderMoved[j] = moved[5]*olderShares[j];
       end for;
-      der(older[1]) = ageing[4] - olderAgeing[1] - olderDied[1] + olderMoved[1];
-      der(older[2]) = olderAgeing[1] - olderAgeing[2] - olderDied[2] + olderMoved[2];
-      der(older[3]) = olderAgeing[2] - olderDied[3] + olderMoved[3];
+      // Flödenas takter.
+      birth.rate = born;
+      turn7.share = ageingRate[1];
+      turn16.share = ageingRate[2];
+      turn19.share = ageingRate[3];
+      turn65.share = ageingRate[4];
+      turn80.share = ageingRate[5];
+      turn90.share = ageingRate[6];
+      death0to6.risk = deathRates[1];
+      death7to15.risk = deathRates[2];
+      death16to18.risk = deathRates[3];
+      death19to64.risk = deathRates[4];
+      death65to79.risk = olderRate[1];
+      death80to89.risk = olderRate[2];
+      death90plus.risk = olderRate[3];
+      move0to6.rate = moved[1];
+      move7to15.rate = moved[2];
+      move16to18.rate = moved[3];
+      move19to64.rate = moved[4];
+      move65to79.rate = olderMoved[1];
+      move80to89.rate = olderMoved[2];
+      move90plus.rate = olderMoved[3];
+      // Kedjan: födda in i 0-6 år, sedan från grupp till grupp; döda och flyttningar vid varje lager.
+      connect(birth.to, age0to6.port) annotation(Line(points={{-340,-38},{-315,-38},{-315,-45},{-300,-45},{-300,-38}}, color={40,95,140}));
+      connect(turn7.from, age0to6.port) annotation(Line(points={{-260,6},{-285,6},{-285,-45},{-300,-45},{-300,-38}}, color={40,95,140}));
+      connect(turn7.to, age7to15.port) annotation(Line(points={{-240,6},{-215,6},{-215,0},{-200,0},{-200,6}}, color={40,95,140}));
+      connect(turn16.from, age7to15.port) annotation(Line(points={{-160,40},{-165,40},{-165,0},{-200,0},{-200,6}}, color={40,95,140}));
+      connect(turn16.to, age16to18.port) annotation(Line(points={{-140,40},{-115,40},{-115,18},{-100,18},{-100,26}}, color={40,95,140}));
+      connect(turn19.from, age16to18.port) annotation(Line(points={{-60,58},{-65,58},{-65,18},{-100,18},{-100,26}}, color={40,95,140}));
+      connect(turn19.to, age19to64.port) annotation(Line(points={{-40,58},{-15,58},{-15,34},{0,34},{0,42}}, color={40,95,140}));
+      connect(turn65.from, age19to64.port) annotation(Line(points={{40,74},{35,74},{35,34},{0,34},{0,42}}, color={40,95,140}));
+      connect(turn65.to, age65to79.port) annotation(Line(points={{60,74},{85,74},{85,50},{100,50},{100,56}}, color={40,95,140}));
+      connect(turn80.from, age65to79.port) annotation(Line(points={{140,86},{135,86},{135,46},{100,46},{100,56}}, color={40,95,140}));
+      connect(turn80.to, age80to89.port) annotation(Line(points={{160,86},{185,86},{185,30},{200,30},{200,38}}, color={40,95,140}));
+      connect(turn90.from, age80to89.port) annotation(Line(points={{240,58},{215,58},{215,30},{200,30},{200,38}}, color={40,95,140}));
+      connect(turn90.to, age90plus.port) annotation(Line(points={{260,58},{285,58},{285,-30},{300,-30},{300,-24}}, color={40,95,140}));
+      connect(death0to6.from, age0to6.port) annotation(Line(points={{-260,-34},{-285,-34},{-285,-45},{-300,-45},{-300,-38}}, color={40,95,140}));
+      connect(move0to6.to, age0to6.port) annotation(Line(points={{-340,-78},{-300,-78},{-300,-38}}, color={40,95,140}));
+      connect(death7to15.from, age7to15.port) annotation(Line(points={{-160,0},{-200,0},{-200,6}}, color={40,95,140}));
+      connect(move7to15.to, age7to15.port) annotation(Line(points={{-240,-74},{-200,-74},{-200,6}}, color={40,95,140}));
+      connect(death16to18.from, age16to18.port) annotation(Line(points={{-60,18},{-100,18},{-100,26}}, color={40,95,140}));
+      connect(move16to18.to, age16to18.port) annotation(Line(points={{-140,-40},{-100,-40},{-100,26}}, color={40,95,140}));
+      connect(death19to64.from, age19to64.port) annotation(Line(points={{40,34},{0,34},{0,42}}, color={40,95,140}));
+      connect(move19to64.to, age19to64.port) annotation(Line(points={{-40,-22},{0,-22},{0,42}}, color={40,95,140}));
+      connect(death65to79.from, age65to79.port) annotation(Line(points={{140,46},{100,46},{100,56}}, color={40,95,140}));
+      connect(move65to79.to, age65to79.port) annotation(Line(points={{60,-6},{85,-6},{85,50},{100,50},{100,56}}, color={40,95,140}));
+      connect(death80to89.from, age80to89.port) annotation(Line(points={{240,18},{200,18},{200,38}}, color={40,95,140}));
+      connect(move80to89.to, age80to89.port) annotation(Line(points={{170,10},{200,10},{200,38}}, color={40,95,140}));
+      connect(death90plus.from, age90plus.port) annotation(Line(points={{340,-24},{315,-24},{315,-30},{300,-30},{300,-24}}, color={40,95,140}));
+      connect(move90plus.to, age90plus.port) annotation(Line(points={{260,-24},{285,-24},{285,-30},{300,-30},{300,-24}}, color={40,95,140}));
+      // Avläsning.
+      young[1] = age0to6.people;
+      young[2] = age7to15.people;
+      young[3] = age16to18.people;
+      young[4] = age19to64.people;
+      older[1] = age65to79.people;
+      older[2] = age80to89.people;
+      older[3] = age90plus.people;
+      ageing[1] = turn7.rate;
+      ageing[2] = turn16.rate;
+      ageing[3] = turn19.rate;
+      ageing[4] = turn65.rate;
+      olderAgeing[1] = turn80.rate;
+      olderAgeing[2] = turn90.rate;
+      died[1] = death0to6.rate;
+      died[2] = death7to15.rate;
+      died[3] = death16to18.rate;
+      died[4] = death19to64.rate;
+      olderDied[1] = death65to79.rate;
+      olderDied[2] = death80to89.rate;
+      olderDied[3] = death90plus.rate;
+      for i in 1:4 loop
+        p[i] = young[i];
+      end for;
       p[5] = older[1] + older[2] + older[3];
       died[5] = olderDied[1] + olderDied[2] + olderDied[3];
       birthRate = born;
@@ -1630,7 +1774,7 @@ In kommer de som fyller 65 och flyttningar i basårets proportioner. Dödstalen 
 trend (<code>olderMortalityPath</code> gånger kommunens kalibrerade dödstal för 65+). Gruppens döda är kedjans: när 80+ växer
 dör fler. Kalibreringen räknar med samma kedja (<code>Data.chainYear</code>).</p>
 <p>Årsmodellen flyttar 1/bredd av de överlevande en gång per år; här sker det jämnt. Restflödet är kalibrerat för de
-kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att basårens förändring återskapas.</p></html>"));
+kontinuerliga flödena (<code>Data.calibratedMigrationRates</code>), så att basårens förändring återskapas.</p></html>"), Diagram(coordinateSystem(extent={{-380,-120},{380,160}})));
     end Demography;
 
     model CohortDemography "Ettårsåldrar 0-100+ per kön som lager: födda, döda och flyttningar är flöden; åldern räknas vid årets slut"
