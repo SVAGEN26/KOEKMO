@@ -17,6 +17,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4406, 0.2385, 0.3209}, educationShares = {0.27, 0.5851, 0.1449},
       careCostPerInhabitant = {21706, 175515},
       infrastructureShare = 0.035,
+      groupMigration = {0.006991, -0.00287, -0.008988, -0.002981, -0.000744}, ownMigration = {0.012974, -0.006959, 0.012344, 0.000192, -0.001671},
       ages = {49.1, 45, 47.1, 68.1, 62.1, 52.1, 52.1, 57.1, 66.1, 63.1, 62.1, 77.1, 60.1, 61.1, 58.1, 56.1, 55.1, 61.1, 51.1, 44, 46.1, 46.1, 32, 34, 45, 35, 34, 42, 61.1, 50.1, 52.1, 57.1, 75.1, 74.1, 58.1, 80.1, 78.1, 66.1, 59.1, 67.1, 71.1, 74.1, 48.1, 68.1, 48.1, 59.1, 52.1, 55.1, 40, 60.1, 59.1, 56.1, 67.1, 76.1, 80.1, 68.1, 83.1, 77.1, 84.1, 88.1, 89.1, 90.1, 70.1, 86.1, 76.1, 64.1, 82.1, 66.1, 72.1, 79.1, 75.1, 66.1, 76.1, 67.1, 71.1, 70.1, 66.1, 89.1, 68.1, 57.1, 61.1, 56.1, 62.1, 51.1, 37, 34, 27, 14, 19, 14, 3, 10, 5, 9, 3, 4, 4, 0, 0, 3, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.719677, 0.252695, 0.027628};
@@ -35,6 +36,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4332, 0.2485, 0.3182}, educationShares = {0.2687, 0.5799, 0.1514},
       careCostPerInhabitant = {19119, 173053},
       infrastructureShare = 0.0746,
+      groupMigration = {0.004282, -0.004471, -0.007371, -0.004807, -0.000844}, ownMigration = {0.015162, 0.010941, 0.009201, 0.009982, -0.000993},
       ages = {41, 48, 65, 64, 47, 50, 60, 64, 65, 65, 74, 62, 65, 59, 62, 57, 55, 54, 54, 52, 51, 33, 32, 46, 36, 39, 42, 67, 56, 47, 54, 71, 75, 59, 78, 76, 71, 56, 70, 75, 75, 50, 66, 51, 59, 51, 59, 41, 62, 63, 57, 67, 74, 80, 67, 86, 77, 84, 89, 89, 90, 69, 85, 73, 65, 74, 68, 74, 75, 73, 69, 75, 70, 71, 72, 66, 89, 72, 59, 65, 63, 64, 57, 38, 39, 27, 23, 22, 19, 11, 10, 8, 15, 6, 4, 4, 2, 2, 3, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.718981, 0.243461, 0.037559};
@@ -53,6 +55,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4278, 0.2314, 0.3408}, educationShares = {0.2596, 0.5709, 0.1695},
       careCostPerInhabitant = {16040, 162063},
       infrastructureShare = 0.0728,
+      groupMigration = {0.007289, -0.001888, -0.006104, -0.003302, 0.000189}, ownMigration = {0.021302, 0.011989, 0.027533, 0.004471, -0.004358},
       ages = {44, 64, 62, 46, 51, 62, 61, 64, 67, 74, 60, 63, 59, 65, 59, 55, 53, 56, 58, 49, 41, 35, 47, 34, 38, 44, 57, 55, 49, 53, 66, 74, 57, 77, 76, 65, 56, 73, 73, 71, 51, 58, 52, 55, 51, 61, 44, 59, 63, 59, 64, 71, 82, 66, 84, 78, 82, 87, 89, 92, 67, 88, 74, 64, 74, 72, 72, 76, 72, 70, 79, 73, 71, 73, 69, 93, 75, 61, 67, 67, 70, 58, 40, 42, 28, 24, 26, 24, 15, 16, 11, 15, 8, 4, 4, 5, 4, 5, 3, 1, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.729097, 0.229431, 0.041472};
@@ -71,6 +74,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4253, 0.2213, 0.3535}, educationShares = {0.2522, 0.5846, 0.1632},
       careCostPerInhabitant = {14320, 157687},
       infrastructureShare = 0.0618,
+      groupMigration = {0.012697, 0.003381, -0.003011, 0.00058, 0.001436}, ownMigration = {0.027676, 0.011638, 0.015338, 0.009827, -0.006735},
       ages = {61, 62, 46, 49, 61, 60, 65, 66, 71, 61, 61, 57, 64, 58, 54, 53, 55, 56, 53, 49, 46, 55, 38, 37, 51, 47, 53, 46, 56, 60, 73, 53, 72, 75, 65, 53, 70, 69, 69, 49, 57, 52, 54, 50, 57, 42, 60, 63, 58, 66, 70, 82, 64, 83, 77, 82, 88, 90, 93, 68, 86, 73, 61, 71, 73, 73, 77, 72, 68, 80, 74, 73, 74, 71, 96, 75, 63, 69, 67, 70, 61, 43, 44, 32, 25, 28, 26, 19, 16, 12, 18, 15, 7, 5, 7, 7, 6, 3, 1, 2, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.745098, 0.206897, 0.048005};
@@ -89,6 +93,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4589, 0.2204, 0.3206}, educationShares = {0.2775, 0.5626, 0.1598},
       careCostPerInhabitant = {15871, 168068},
       infrastructureShare = 0.0666,
+      groupMigration = {0.011228, 0.002399, -0.003903, 0.000244, 0.001101}, ownMigration = {0.011369, -0.000981, 0.008474, 0.00659, 0.000728},
       ages = {60, 46, 48, 60, 54, 67, 62, 72, 63, 60, 60, 65, 57, 53, 50, 53, 55, 51, 57, 54, 61, 37, 42, 55, 51, 51, 42, 55, 55, 70, 57, 76, 74, 66, 50, 67, 64, 69, 42, 58, 53, 54, 47, 57, 40, 60, 59, 57, 67, 69, 82, 65, 86, 74, 82, 88, 90, 96, 70, 84, 73, 62, 71, 72, 76, 78, 74, 68, 83, 76, 76, 76, 73, 102, 79, 66, 72, 69, 71, 66, 44, 49, 32, 29, 31, 31, 21, 18, 15, 21, 17, 10, 6, 8, 13, 6, 4, 3, 2, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.758227, 0.195433, 0.04634};
@@ -107,6 +112,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4565, 0.2248, 0.3187}, educationShares = {0.2532, 0.5734, 0.1734},
       careCostPerInhabitant = {19049, 182509},
       infrastructureShare = 0.0758,
+      groupMigration = {0.009508, 0.002579, -0.003563, -0.001321, 0.000316}, ownMigration = {0.002361, -0.001756, 0.013909, 0.000343, 0.005275},
       ages = {41, 47, 58, 54, 66, 61, 71, 61, 56, 60, 67, 54, 51, 52, 52, 57, 54, 52, 60, 63, 39, 46, 53, 52, 45, 39, 49, 57, 65, 51, 78, 72, 63, 49, 59, 61, 69, 41, 60, 49, 53, 45, 59, 37, 58, 57, 55, 67, 72, 82, 55, 83, 73, 80, 87, 85, 95, 70, 83, 75, 63, 71, 72, 81, 81, 77, 70, 85, 78, 75, 79, 73, 96, 82, 69, 74, 74, 74, 68, 46, 51, 33, 32, 35, 34, 22, 21, 16, 22, 18, 12, 7, 8, 16, 8, 7, 4, 2, 0, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.762943, 0.19346, 0.043597};
@@ -125,6 +131,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4502, 0.2412, 0.3086}, educationShares = {0.2992, 0.515, 0.1858},
       careCostPerInhabitant = {19049, 182509},
       infrastructureShare = 0.0675,
+      groupMigration = {0.016012, 0.010179, 0.003669, -6.6e-05, 0.000154}, ownMigration = {6.6e-05, 0.006032, 0.029759, 0.004427, 0.002468},
       ages = {50, 55, 52, 67, 62, 71, 62, 56, 61, 70, 54, 54, 54, 55, 54, 52, 51, 60, 66, 57, 54, 60, 61, 50, 41, 52, 53, 58, 57, 70, 72, 68, 52, 56, 60, 69, 41, 58, 49, 58, 46, 56, 42, 57, 58, 53, 68, 69, 81, 55, 80, 72, 78, 90, 82, 92, 71, 75, 77, 60, 70, 70, 79, 82, 76, 67, 83, 79, 75, 80, 71, 96, 85, 72, 76, 77, 76, 68, 48, 51, 34, 35, 38, 33, 23, 22, 18, 25, 19, 14, 8, 8, 22, 9, 8, 6, 4, 2, 2, 0, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.769338, 0.181882, 0.04878};
@@ -143,6 +150,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4627, 0.2397, 0.2976}, educationShares = {0.306, 0.4998, 0.1942},
       careCostPerInhabitant = {19049, 182509},
       infrastructureShare = 0.093,
+      groupMigration = {0.02567, 0.017669, 0.018365, 0.002358, 0.000564}, ownMigration = {-0.005711, -0.000994, 0.059006, 0.012764, -0.002546},
       ages = {55, 51, 68, 63, 67, 63, 55, 60, 69, 53, 53, 53, 53, 53, 53, 50, 60, 65, 59, 69, 64, 58, 55, 44, 49, 53, 56, 53, 71, 66, 65, 50, 59, 61, 64, 41, 55, 48, 57, 46, 58, 41, 57, 62, 54, 67, 67, 77, 55, 79, 71, 78, 85, 82, 91, 71, 68, 76, 63, 72, 66, 79, 79, 80, 71, 81, 79, 73, 83, 71, 97, 85, 71, 78, 80, 76, 68, 46, 53, 36, 39, 41, 38, 24, 23, 20, 28, 19, 17, 8, 10, 26, 13, 11, 7, 4, 2, 4, 0, 2, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.762208, 0.181883, 0.055909};
@@ -161,6 +169,7 @@ package Boxholm "Boxholm: kommunens ekonomi år för år med biblioteket Kommune
       sectorShares = {0.4992, 0.2482, 0.2527}, educationShares = {0.2812, 0.5344, 0.1844},
       careCostPerInhabitant = {19049, 182509},
       infrastructureShare = 0.0992,
+      groupMigration = {0.036765, 0.027728, 0.035707, 0.008688, 0.000438}, ownMigration = {0.002462, 0.019107, 0.063782, 0.009171, 0.0008},
       ages = {49, 68, 62, 74, 62, 54, 61, 71, 51, 55, 51, 57, 52, 51, 50, 58, 62, 55, 68, 66, 59, 50, 43, 60, 53, 59, 53, 71, 63, 69, 47, 58, 56, 63, 41, 53, 50, 56, 44, 58, 42, 61, 63, 56, 70, 63, 76, 58, 79, 73, 81, 81, 79, 88, 71, 65, 75, 61, 72, 65, 79, 79, 79, 75, 83, 79, 75, 83, 71, 98, 90, 70, 79, 80, 76, 69, 48, 54, 37, 40, 46, 41, 25, 24, 23, 30, 24, 21, 9, 13, 31, 16, 14, 9, 7, 4, 4, 2, 2, 0, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.751433, 0.183381, 0.065186};

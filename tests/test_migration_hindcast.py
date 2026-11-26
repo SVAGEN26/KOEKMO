@@ -11,6 +11,63 @@ import hindcast_migration as hm  # noqa: E402
 ARCHIVES = (ROOT / json.loads((ROOT / 'data/municipalities/ostergotland-sources.json').read_text())['historyArchive'] / 'population.json').exists()
 
 
+class MigrationGroups(unittest.TestCase):
+    """SKR's municipality groups and their migration (data/migration-groups.json, scripts/fetch_migration_groups.py)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.table = json.loads((ROOT / 'data/migration-groups.json').read_text())
+        cls.hindcast = json.loads((ROOT / 'data/migration-hindcast.json').read_text())['migrationBasis']
+
+    def test_the_nine_groups_cover_sweden_and_the_county_has_four_of_them(self):
+        groups = self.table['groups']
+        self.assertEqual(sorted(groups), ['A1', 'A2', 'B3', 'B4', 'B5', 'C6', 'C7', 'C8', 'C9'])
+        self.assertEqual(sum(g['municipalities'] for g in groups.values()), 290)
+        county = self.table['municipalities']
+        self.assertEqual(len(county), 13)
+        self.assertEqual({m['group'] for m in county.values()}, {'B3', 'B4', 'B5', 'C7'})
+        self.assertEqual((county['0583']['group'], groups['B5']['name']), ('B5', 'Lågpendlingskommun nära större stad'))
+        self.assertEqual(county['0580']['group'], 'B3')
+        for rates in [g['rates'] for g in groups.values()] + [m['rates'] for m in county.values()]:
+            self.assertEqual(sorted(rates), [str(y) for y in range(2000, 2026)])
+            self.assertTrue(all(len(r) == 5 and all(abs(x) < 0.2 for x in r) for r in rates.values()))
+
+    def test_the_refugee_years_show_in_the_groups_that_lose_people_otherwise(self):
+        # The working ages in rural municipalities: about 4 per 1 000 leave in an ordinary year; 2016, when those granted
+        # asylum were placed, 10 per 1 000 arrived. The same year is the peak in Motala's group.
+        for group in ('C8', 'B5'):
+            rates = {int(y): r[3] for y, r in self.table['groups'][group]['rates'].items()}
+            self.assertEqual(max(rates, key=rates.get), 2016, group)
+            self.assertGreater(rates[2016], 0.01, group)
+        rural = {int(y): r[3] for y, r in self.table['groups']['C8']['rates'].items()}
+        self.assertLess(sum(rural[y] for y in range(2018, 2026)) / 8, -0.003)
+
+    def test_the_base_year_records_carry_the_two_year_means(self):
+        from prepare_municipality import migration_rates
+        for code in ('0562', '0580', '0584'):
+            years = json.loads((ROOT / f'data/municipalities/{code}/base-years.json').read_text())['years']
+            for year in ('2024', '2025'):
+                own, group = migration_rates(self.table, code, int(year))
+                self.assertEqual(years[year]['ownMigration'], own)
+                self.assertEqual(years[year]['groupMigration'], group)
+        motala = (ROOT / 'modelica/Motala.mo').read_text()
+        own, group = migration_rates(self.table, '0583', 2025)
+        self.assertIn('groupMigration = {' + ', '.join(f'{x:g}' for x in group) + '}, ownMigration = {' + ', '.join(f'{x:g}' for x in own) + '}', motala)
+
+    def test_half_own_half_group_gives_the_lowest_error_and_own_is_the_models_window(self):
+        windows = json.loads((ROOT / 'data/migration-hindcast.json').read_text())['summary']
+        for period, basis in ((k, v) for k, v in self.hindcast.items() if k != 'note'):
+            self.assertEqual(basis['own'], windows[period]['modelBirths']['2'])
+            for horizon in ('1', '2', '3', '4', '5'):
+                self.assertLess(basis['half'][horizon]['meanAbsError'], basis['own'][horizon]['meanAbsError'], (period, horizon))
+                self.assertLess(basis['half'][horizon]['meanAbsError'], basis['group'][horizon]['meanAbsError'] + 0.02, (period, horizon))
+        recent = self.hindcast['bases2020to2024']
+        self.assertAlmostEqual(recent['own']['4']['meanAbsError'], 1.76, delta=0.02)
+        self.assertAlmostEqual(recent['half']['4']['meanAbsError'], 1.37, delta=0.02)
+        # From the refugee years the group does not help at eight years: it too was calibrated on 2016-2017.
+        self.assertGreater(self.hindcast['bases2017to2024']['half']['8']['meanAbsError'], self.hindcast['bases2017to2024']['own']['8']['meanAbsError'])
+
+
 class Stored(unittest.TestCase):
     def test_the_result_covers_every_window_and_says_what_it_shows(self):
         out = json.loads((ROOT / 'data/migration-hindcast.json').read_text())

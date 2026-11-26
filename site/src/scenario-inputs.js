@@ -34,6 +34,14 @@ export function calibrate(history) {
 export const STANDARD_LIQUIDITY={reserveDays:30,creditLine:0,note:'Standard: 30 dagars utbetalningar, ingen känd kredit.'};
 export function liquidityRule(b) {return b?.liquidity??STANDARD_LIQUIDITY;}
 export function liquidityFor(table,code) {return table?.municipalities?.[code]??table?.default??STANDARD_LIQUIDITY;}
+// The municipality's and its SKR group's net migration per inhabitant by age group, the mean of the base year and the year
+// before (data/migration-groups.json), as scripts/prepare_municipality.py writes them into the base-year records.
+export function migrationBasis(table,code,year) {
+  const own=table?.municipalities?.[code],group=table?.groups?.[own?.group];
+  const mean=rates=>rates?.[year]&&rates?.[year-1]?rates[year].map((x,i)=>Math.round((x+rates[year-1][i])/2*1e6)/1e6):null;
+  const ownRates=mean(own?.rates),groupRates=mean(group?.rates);
+  return ownRates&&groupRates?{group:own.group,groupName:group.name,municipalities:group.municipalities,own:ownRates,groupRates}:null;
+}
 export function rateFixing(table,code,year) {
   return table?.municipalities?.[code]?.[year]??table?.default??{years:3,note:'Antagande: 3 år'};
 }
@@ -64,6 +72,8 @@ export function validate(b,a) {
   for(const [k,low,high] of [['inflationPersistence',0,1],['inflationWagePassThrough',0,2],['inflationPensionPassThrough',0,30],['inflationRateResponse',0,3],['inflationGrantCompensation',0,100]])
     if(a[k]!=null&&(!Number.isFinite(a[k])||a[k]<low||a[k]>high)) throw Error(`${k} ska ligga mellan ${low} och ${high}.`);
   if(a.rateShock!=null&&(!Number.isFinite(a.rateShock)||a.rateShock<-5||a.rateShock>15)) throw Error('Räntehöjningen ska vara mellan -5 och 15 procentenheter.');
+  if(a.migrationGroupWeight!=null&&(!Number.isFinite(a.migrationGroupWeight)||a.migrationGroupWeight<0||a.migrationGroupWeight>100)) throw Error('Andelen från kommungruppen ska vara 0–100 procent.');
+  if(a.migrationGroupWeight>0&&!b.migrationBasis) throw Error('Flyttning per kommungrupp saknas för valt basår.');
   if(a.stormCost!=null&&(!Number.isFinite(a.stormCost)||a.stormCost<0||a.stormCost>20000)) throw Error('Skyfallets kostnad ska vara 0–20 000 kronor per invånare.');
   if(a.stormYear!=null&&(!Number.isInteger(a.stormYear)||a.stormYear<1||a.stormYear>100)) throw Error('Skyfallets år ska vara ett helt prognosår.');
   rateEpisode(b,a);
@@ -180,6 +190,10 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   fields.historyTotals=recent.map(r=>r.reportedTotal??sum(r.population));
   fields.historyBirths=recent.slice(1).map(r=>r.births);
   fields.historyDeaths=recent.at(-1).deaths;
+  // Where the calibrated migration comes from: the municipality's own two years (0), its group in SKR's classification (1)
+  // or a mix. The model swaps the municipality's own net migration for the group's (migrationGroupWeight).
+  fields.migrationGroupWeight=(a.migrationGroupWeight??0)/100;
+  if(b.migrationBasis) {fields.groupMigration=b.migrationBasis.groupRates;fields.ownMigration=b.migrationBasis.own;}
   // SCB's observed net migration instead of the calibrated flow; otherwise SCB's projection where it is loaded.
   fields.useObservedMigration=a.demographyMode==='observed';
   if(fields.useObservedMigration) fields.observedMigration=toGroups(evidence.netMigration);

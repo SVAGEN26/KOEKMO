@@ -1792,3 +1792,31 @@ arkivera data.
 - Inte med: privata skador, försäkringsbolagens regresskrav (Gävle: 1,2 mdkr krävt, 250 mnkr avsatt av Gästrike
   Vatten), VA-taxan och en jämn årlig klimatkostnad (se underlaget ovan).
 
+## Flyttning ur egna år eller ur SKR:s kommungrupp (2026-11-26)
+
+- Två varianter att välja mellan, och en blandning: `Assumptions.migrationGroupWeight` (0 = kommunens egna två år, standard;
+  1 = kommunens grupp i SKR:s kommungruppsindelning 2023; 0,5 = hälften av varje). Kommunens eget flyttnetto per
+  åldersgrupp byts mot gruppens: restflöde = kalibrerat + vikt · (gruppens tal − eget tal) · p0. Resten av restflödet
+  ligger kvar. På sidan: reglaget "Flyttning: andel från SKR:s kommungrupp" (0, 50, 100 %) i gruppen Befolkning.
+- Valet är en parameter och inte ett komponentbyte, eftersom sidan kompilerar omslaget en gång och kör om med
+  `-override`. I OMEdit sätts samma parameter.
+- Data: `scripts/fetch_migration_groups.py` hämtar SKR:s Excel och SCB:s folkmängd och flyttningar per ettårsålder för
+  alla 290 kommuner 1999–2025 (arkiv `data/downloads/20261126T093433Z`, 44 filer) och skriver
+  `data/migration-groups.json`: flyttnetto per invånare och åldersgrupp, per år 2000–2025, sammanvägt per grupp och för
+  länets 13 kommuner. 2025 är brusat av SCB (Cell Key Method); skriptet använder publicerade åldersaggregat där det går.
+  Hela hämtningen kördes om och gav samma fil som agentens underlag.
+- `BaseYear.groupMigration` och `BaseYear.ownMigration` (medel av basåret och året före) skrivs av
+  `prepare_municipality.py`; Motalas sex poster i `modelica/Motala.mo` är ifyllda med samma funktion.
+- Länets grupper: B3 Större stad (Linköping, Norrköping); B4 Pendlingskommun nära större stad (Kinda, Åtvidaberg,
+  Valdemarsvik, Söderköping, Mjölby); B5 Lågpendlingskommun nära större stad (Finspång, Motala); C7 Pendlingskommun nära
+  mindre tätort (Ödeshög, Ydre, Boxholm, Vadstena).
+- Bakåttest (`scripts/hindcast_migration.py`, nyckeln `migrationBasis`), medelabsolutfel i folkmängden efter 1–5 år,
+  basår 2020–2024: egna år 0,51 / 0,86 / 1,28 / 1,76 / 2,13 %; hälften 0,46 / 0,77 / 1,08 / 1,37 / 1,71; gruppen 0,48 /
+  0,86 / 1,33 / 1,66 / 1,70. Basår 2017–2024, 4 år: 2,11 / 1,85 / 2,06. Efter åtta år från 2017: 5,9 / 6,5 / 7,2 %
+  för många invånare med alla tre; grupperna hade samma flyktinginvandring (arbetsför ålder i landsbygdskommuner +10
+  per 1 000 år 2016, annars cirka −4).
+- Standard är fortfarande egna år. Blandningen är bäst i testet men ändrar befolkningen för alla kommuner och därmed alla
+  bakåttester; beslutet om standard är användarens.
+- Motala 2025: eget flyttnetto 19–64 år −0,9 % per år (medel 2024–2025), gruppens −0,2 %. Med gruppens tal cirka 170
+  fler invånare per år, cirka 1 400 fler 2033 när ingen prognos följs.
+

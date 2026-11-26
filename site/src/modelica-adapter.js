@@ -21,8 +21,10 @@ export function modelicaSource(b,history,overrides={},path=null) {
   const {historyCohorts,historyTotals,historyBirths,historyDeaths,useObservedMigration,observedMigration,projectedCohorts,followProjection}=fields;
   for(const k of ['deathRates','historyCohorts','historyTotals','historyBirths','historyDeaths','useObservedMigration','observedMigration','projectedCohorts','followProjection']) delete fields[k];
   fields.mortalityRates=`Kommunekonomi.Data.deathRatesPerYear(${literal(historyCohorts)},${literal(historyTotals)},${historyDeaths})`;
+  // The base-year record carries the group's and the municipality's own migration rates; the wrapper's copies go.
+  delete fields.groupMigration; delete fields.ownMigration;
   fields.residualMigration=useObservedMigration?observedMigration
-    :`Kommunekonomi.Data.calibratedMigrationRates(${literal(historyCohorts)},${literal(historyTotals)},${literal(historyBirths)},mortalityRates,ageProfile[1:2,:],olderShares)`;
+    :`Kommunekonomi.Data.calibratedMigrationRates(${literal(historyCohorts)},${literal(historyTotals)},${literal(historyBirths)},mortalityRates,ageProfile[1:2,:],olderShares)+migrationGroupWeight*(base.groupMigration-base.ownMigration).*p0`;
   // The revenue path too: SKR's rows become a call of the library's function, declared in the scenario model.
   const {sourcedRevenue,sourcedRevenueYears,regulationDecidedYears,stateFrame,taxBaseGrowthPath}=fields;
   for(const k of ['sourcedRevenue','sourcedRevenueYears','regulationDecidedYears','stateFrame','taxBaseGrowthPath']) delete fields[k];

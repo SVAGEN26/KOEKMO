@@ -236,3 +236,30 @@ test('the state frame raises the grants after the decided years, and they keep g
   assert.ok(framed.rows[i2033].officialRevenue>0);
 });
 
+test('migration can come from the municipality\'s own years, its SKR group, or half of each',{skip},async()=>{
+  const {migrationBasis}=await import('../site/src/scenario-inputs.js');
+  const basis=migrationBasis(read('data/migration-groups.json'),'0583',b.baseYear);
+  assert.equal(basis.group,'B5');
+  assert.equal(basis.groupName,'Lågpendlingskommun nära större stad');
+  const withBasis={...b,migrationBasis:basis};
+  const own=continuous(withBasis,history),half=continuous(withBasis,history,{migrationGroupWeight:50}),group=continuous(withBasis,history,{migrationGroupWeight:100});
+  // The rates are carried also with weight 0, and change nothing then.
+  own.rows.forEach((row,i)=>close(row.population,continuous(b,history).rows[i].population,1e-6,`${row.year} weight 0`));
+  // Motala's own two years were weak (19-64 lost 0.9 % a year, the group 0.2 %), so the group's migration loses fewer people.
+  const yearly=basis.groupRates.reduce((s,g,i)=>s+(g-basis.own[i])*b.population[i],0);
+  assert.ok(yearly>100,`yearly swap ${yearly}`);
+  for(let i=1;i<own.rows.length;i++) assert.ok(group.rows[i].population>half.rows[i].population&&half.rows[i].population>own.rows[i].population,`year ${i}`);
+  close(group.rows.at(-1).population-own.rows.at(-1).population,8*yearly,0.1*8*yearly,'eight years of the swap');
+  assertBooks(group,'group migration');
+  // The exported scenario states the same choice with the base-year record's rates.
+  const source=modelicaSource(withBasis,history,{migrationGroupWeight:100});
+  assert.match(source,/migrationGroupWeight=1,/);
+  assert.match(source,/\+migrationGroupWeight\*\(base\.groupMigration-base\.ownMigration\)\.\*p0/);
+  assert.doesNotMatch(source,/\bgroupMigration=\{/);
+  assert.throws(()=>continuous(b,history,{migrationGroupWeight:50}),/kommungrupp saknas/);
+  // With a population projection followed year by year, the calibration and so the choice has no effect on those years.
+  const projected={...withBasis,planningInputs:planning};
+  const a=continuous(projected,history,{},revenue),c=continuous(projected,history,{migrationGroupWeight:100},revenue);
+  a.rows.forEach((row,i)=>close(row.population,c.rows[i].population,1e-6,`${row.year} projection followed`));
+});
+

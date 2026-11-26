@@ -627,7 +627,33 @@ every base year to 2025. From base years 2020–2024 the two-year window has
 almost no bias (−0.1 to +0.5 % in years 1–5) and a mean absolute error of 0.5,
 0.9, 1.3, 1.8 and 2.1 %; three years give 0.5, 0.8, 1.1, 1.6 and 2.0 %, eight years
 1.0 to 2.2 % with a bias of +0.7 to +1.8 %. The 6 % comes from calibrating on
-2016–2017; it does not carry over to a base year without such years. The larger
+2016–2017; it does not carry over to a base year without such years.
+
+**Migration from the municipality's own years or from its group.** A municipality's
+last two years are noisy, so the model can take its net migration from the
+municipality's group in SKR's classification instead (Kommungruppsindelning 2023:
+Linköping and Norrköping are "Större stad", Motala and Finspång "Lågpendlingskommun
+nära större stad"), or half from each: `migrationGroupWeight` in the Modelica
+model, the control "Flyttning: andel från SKR:s kommungrupp" on the site. The
+group's rate is the pooled net migration per inhabitant of all its municipalities
+in the same two years, by age group (`scripts/fetch_migration_groups.py`,
+`data/migration-groups.json`, SCB for all 290 municipalities). The same test, mean
+absolute error of the population after 1–5 years from base years 2020–2024:
+
+| Migration from | 1 | 2 | 3 | 4 | 5 years |
+|---|---|---|---|---|---|
+| The municipality's own two years (default) | 0.51 | 0.86 | 1.28 | 1.76 | 2.13 % |
+| Half own, half the group | 0.46 | 0.77 | 1.08 | 1.37 | 1.71 % |
+| The group | 0.48 | 0.86 | 1.33 | 1.66 | 1.70 % |
+
+Half of each is the best at every horizon to five years, also from base years
+2017–2024 (4 years: 1.85 against 2.11 and 2.06 %). It does not help against the
+refugee years: from 2017 all three give 6–7 % too many people after eight years,
+since the groups had the same immigration. Nine groups explain 28 % of the
+difference between municipalities' net migration 2018–2025, so the group alone
+is not better than the municipality's own years. The default is still the
+municipality's own years; the mix is one click away. For Motala the choice moves
+the population in 2033 by about 1 400 people when no projection is followed. The larger
 error at medium horizons is births: the model keeps the base year's births per
 adult while fertility fell, so the 0–6 group is 5 % too large after three years
 and 11 % after five (base years 2017–2024). Debt, the municipality's own

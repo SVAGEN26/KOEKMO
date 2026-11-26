@@ -68,6 +68,17 @@ and reads off for every year
   deaths, and mortality falls about 1.7 % a year;
 - the split of 65+ at the start of the year.
 
+**Where the migration comes from.** `migrationGroupWeight` (0 by default) swaps a share of the municipality's own net
+migration for that of its group in SKR's Kommungruppsindelning 2023:
+
+    residual flow_g = calibrated flow_g + weight · (group rate_g − own rate_g) · p0_g
+
+with both rates the net migration (domestic and foreign) per inhabitant of age group g, the mean of the base year and
+the year before (`BaseYear.groupMigration`, `BaseYear.ownMigration`; SCB via `scripts/fetch_migration_groups.py`). The
+group rate pools all the group's municipalities. Only the migration is swapped: the rest of the calibrated residual
+(statistical adjustments, what the ageing rule misses) stays the municipality's own. The single-years model and years in
+which a projection is followed are not affected. `scripts/hindcast_migration.py` compares weights 0, 0.5 and 1.
+
 Death rates under 65 are illustrative. Residual migration per group is the even
 flow that, with the two latest years' ageing and deaths, reproduces their change;
 since ageing follows the real cohorts it is mostly migration and statistical
