@@ -1,9 +1,9 @@
 # Modellerna som sajten kör
 
-Ladda alltid `Kommunekonomi.mo` först. En kommunfil som öppnas ensam i OMEdit blir en tom modell, eftersom OMEdit bara
-letar efter bibliotek i `~/.openmodelica/libraries/`. Med en länk dit hittar OMEdit biblioteket själv:
-
-    ln -s "$PWD/modelica/Kommunekonomi.mo" "$HOME/.openmodelica/libraries/Kommunekonomi 0.1.0.mo"
+Öppna en kommuns `package.mo` i OMEdit, till exempel `municipalities/Motala/package.mo`. Biblioteket laddas av sig självt:
+varje kommun är en paketmapp, OpenModelica letar efter de bibliotek ett paket använder (`uses`) bredvid mappen, och
+`municipalities/Kommunekonomi 0.1.0.mo` är en länk dit till `Kommunekonomi.mo`. Utan symboliska länkar (Windows utan den
+inställningen) laddar man `Kommunekonomi.mo` först. När bibliotekets version ändras ska länken och `uses` byta namn med den.
 
 - `Kommunekonomi.mo`: biblioteket. Posttyper för bokslut och befolkning, rikets SCB-data, de gemensamma delarna
   (`Components.Scenario`, `Revenue`, `Calendar`, `Fertility`), de gemensamma antagandena (`Assumptions`), utdata
@@ -11,8 +11,8 @@ letar efter bibliotek i `~/.openmodelica/libraries/`. Med en länk dit hittar OM
   `Demography`, `CohortDemography`, `Services`, `OperatingAccounts`, `Payments`, `Capital` och `Finance`.
   Årsmodellen (`Annual`) togs bort i november 2026. `Components.Demography` och `CohortDemography` finns kvar
   med årssteg för demografitesterna (`Motala.Examples.DemographyOnly`).
-- `municipalities/`: ett paket per kommun i Östergötland.
-  - `Motala.mo` är skriven för hand ur kommunens årsredovisningar: basår 2020–2025 (`Data.motala2020` till
+- `municipalities/`: ett paket per kommun i Östergötland, var och en en mapp med `package.mo`.
+  - `Motala/package.mo` är skriven för hand ur kommunens årsredovisningar: basår 2020–2025 (`Data.motala2020` till
     `motala2025`), handledning och ordlista, `Motala.Continuous` och exempel som `Hindcast2025`, `ContinuousCohort`
     och `Budget2026`.
   - De tolv andra genereras av `scripts/prepare_municipality.py` ur SCB:s räkenskapssammandrag och Kolada, med basår

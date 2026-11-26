@@ -109,7 +109,7 @@ def simulate(model, intervals):
         names = 'p\\\\[.\\\\]|demography.cohorts.older\\\\[.\\\\]|population80Plus|population|serviceVolume|capacity\\\\[.\\\\]|educationIndex|careIndex'
         (tmp / 'run.mos').write_text(
             f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-            f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Finspang.mo"))}); getErrorString();\n'
+            f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Finspang/package.mo"))}); getErrorString();\n'
             f'simulate({model}, startTime=2025, stopTime=2033, numberOfIntervals={intervals}, tolerance=1e-9, outputFormat="csv", '
             f'variableFilter="{names}"); getErrorString();\n')
         out = subprocess.run([OMC, 'run.mos'], cwd=tmp, capture_output=True, text=True, timeout=600).stdout

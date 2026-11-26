@@ -1,0 +1,1 @@
+../Kommunekonomi.mo

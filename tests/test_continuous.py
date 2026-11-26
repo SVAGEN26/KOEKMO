@@ -51,7 +51,7 @@ class ContinuousEconomy(unittest.TestCase):
         (cls.dir / 'Reference.mo').write_text(REFERENCE)
         script = '\n'.join([
             f'loadFile("{ROOT / "modelica/Kommunekonomi.mo"}"); getErrorString();',
-            f'loadFile("{ROOT / "modelica/municipalities/Motala.mo"}"); getErrorString();',
+            f'loadFile("{ROOT / "modelica/municipalities/Motala/package.mo"}"); getErrorString();',
             'loadFile("Reference.mo"); getErrorString();',
             'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
             'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv",'
