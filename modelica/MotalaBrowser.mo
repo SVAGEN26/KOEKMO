@@ -35,6 +35,7 @@ model MotalaBrowserContinuous "Omslag för webbläsaren kring Motala.Continuous:
     investmentPath=fill(413,100),
     interestRatePath=fill(21/990,100),
     rateFixingYears=0, rateShock=0, rateShockTime=2026,
+    oneOffCost=0, oneOffCostTime=2027.5, oneOffCostDuration=0.5,
     inflationShockPath=zeros(100), inflationWagePassThrough=0.4, inflationPensionPassThrough=8, inflationRateResponse=0.5, inflationGrantCompensation=0,
     migrationDeltaPath=zeros(100),
     birthChangePath=zeros(100),

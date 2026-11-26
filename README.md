@@ -74,8 +74,9 @@ extended the grants' sum, which stood still at about 1 150 mnkr and gave −354.
   as published, proportionally adjusted or adjusted per component, five age
   groups (default) or single years of age, and the model's time: continuous
   (default) or one step a year.
-- **Prepared scenarios** as buttons: Higher interest, Higher inflation, a weaker
-  economy, more migration and lower investment. See [Scenarios](#scenarios).
+- **Prepared scenarios** as buttons: Higher interest, Higher inflation, a
+  cloudburst, a weaker economy, more migration and lower investment. See
+  [Scenarios](#scenarios).
 - **Investment plans.** For nine of the 13 municipalities the investment follows
   the municipality's budget with plan (see [Investment plans](#investment-plans));
   a checkbox returns to the base year's amount every year.
@@ -234,8 +235,23 @@ Motala from the 2025 accounts the result is 39 mnkr below the base path in 2026,
 117 mnkr below in 2028, when it is negative, and 109 mnkr below in 2033. Without
 compensation from the state the loss stays: prices are up 6 %, the tax base 2.4 %.
 
+**Skyfall** (a cloudburst in the second forecast year): a one-off operating cost
+of 1 300 kronor per inhabitant, booked and paid from July to December
+(`oneOffCost`, `oneOffCostTime` in the Modelica model; the group "Extremväder"
+sets the amount and the year). For Motala that is 56 mnkr in the base year's
+prices: the 2027 result goes from 78 to 18 mnkr, and the debt stays about 69 mnkr
+higher. The amount is the direct damage to public actors in Gävle's cloudburst of
+August 2021, 120–150 mnkr or 1 160–1 450 kronor per inhabitant (Länsstyrelsen
+Gävleborg, rapport 2022:05). It includes the municipality's companies and
+Trafikverket, so it is an upper bound for the municipality itself. Damage to
+private houses, the insurers' recourse claims and the fee-financed water utility
+are not included. It is a stress test with no probability attached. A steady
+yearly climate cost is not in the model: no Swedish source puts a figure on it
+for the tax-financed budget, and what can be derived is 30–110 kronor per
+inhabitant a year around 2050 (docs/project-memory.md).
+
 These numbers are the site's, read from the page in headless Chromium on
-2026-11-24 with the continuous model. The rate and inflation controls are also
+2026-11-24 with the continuous model (the cloudburst on 2026-11-26). The rate and inflation controls are also
 run in the staged compiler by `tests/jit-continuous.test.mjs`.
 
 ## Connect an AI to the page
