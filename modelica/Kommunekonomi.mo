@@ -674,8 +674,8 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real olderShares[3] "Uppdelning av 65+ i 65-79, 80-89 och 90+ vid basårets slut för femgruppsdemografin; kommunens paket ger den ur SCB-data";
     parameter Real ageProfile[horizon + 2, 12] = Data.ageProfile(base.ages, births0, horizon, olderShares) "Åldrande och dödlighet år för år ur basårets ettårsåldrar (Data.ageProfile): rad 1-2 året före basåret och basåret, sedan prognosåren; kolumn 1-6 andel per år som åldras ur varje lager, 7-9 dödstal i 65-79, 80-89 och 90+ i förhållande till 65+:s, 10-12 uppdelningen av 65+ vid årets början";
     parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på åldersgrupperna; summerar till 1";
-    parameter Real migrationGroupWeight(min = 0, max = 1) = 0
-      "Varifrån det kalibrerade flyttflödet tas: 0 = kommunens egna två år, 1 = kommunens grupp enligt SKR:s kommungruppsindelning, 0,5 = hälften av varje. Kommunens eget flyttnetto byts då mot gruppens; resten av restflödet ligger kvar";
+    parameter Real migrationGroupWeight(min = 0, max = 1) = 0.5
+      "Varifrån det kalibrerade flyttflödet tas: 0 = kommunens egna två år, 1 = kommunens grupp enligt SKR:s kommungruppsindelning, 0,5 = hälften av varje (standard: lägst fel i bakåttestet, data/migration-hindcast.json). Kommunens eget flyttnetto byts då mot gruppens; resten av restflödet ligger kvar";
     parameter Units.Persons births0 = base.births[2] "Födda under basåret";
     parameter Units.PersonsPerYear migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer per år";
     parameter Real birthChange = 0 "Relativ förändring av antalet födda, andel (0,1 = tio procent fler)";

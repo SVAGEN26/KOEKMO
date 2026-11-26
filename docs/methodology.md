@@ -68,7 +68,8 @@ and reads off for every year
   deaths, and mortality falls about 1.7 % a year;
 - the split of 65+ at the start of the year.
 
-**Where the migration comes from.** `migrationGroupWeight` (0 by default) swaps a share of the municipality's own net
+**Where the migration comes from.** `migrationGroupWeight` (0.5 by default: half of each gave the lowest error in the
+migration hindcast) swaps a share of the municipality's own net
 migration for that of its group in SKR's Kommungruppsindelning 2023:
 
     residual flow_g = calibrated flow_g + weight · (group rate_g − own rate_g) · p0_g

@@ -12,7 +12,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {boot,read,runModel,staged,skip} from './support/omc-node.mjs';
 import {createSession,CONTINUOUS_METHOD} from '../site/src/omc-session.js';
 import {createDirectSimulator} from '../site/src/jit-engine.js';
-import {extendPlanning,sum} from '../site/src/scenario-inputs.js';
+import {extendPlanning,sum,migrationBasis} from '../site/src/scenario-inputs.js';
 import {modelicaSource} from '../site/src/modelica-adapter.js';
 import {municipalities} from '../site/src/municipalities.js';
 
@@ -44,8 +44,10 @@ test('the page has only continuous time',()=>{
 });
 
 test('the page\'s calibration is the library\'s: site inputs give Motala.Continuous as written',{skip},()=>{
-  // Motala's liquidity rule from data/liquidity.json, as the page attaches it; Motala.Continuous has the same in Modelica.
-  const site=continuous({...b,planningInputs:null,liquidity:read('data/liquidity.json').municipalities['0583']},history);
+  // Motala's liquidity rule from data/liquidity.json and its migration rates from data/migration-groups.json, as the page
+  // attaches them; Motala.Continuous has the same in Modelica, with half the migration from the group by default.
+  const site=continuous({...b,planningInputs:null,liquidity:read('data/liquidity.json').municipalities['0583'],
+    migrationBasis:migrationBasis(read('data/migration-groups.json'),'0583',b.baseYear)},history);
   const keys=['population','births','deaths','migration','cost','payroll','otherOperatingExpense','operatingRevenue','depreciation',
     'tax','grants','result','debt','cash','assets','interest','borrowing','repayment','educationIndex','careIndex'];
   const model=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
@@ -237,13 +239,13 @@ test('the state frame raises the grants after the decided years, and they keep g
 });
 
 test('migration can come from the municipality\'s own years, its SKR group, or half of each',{skip},async()=>{
-  const {migrationBasis}=await import('../site/src/scenario-inputs.js');
   const basis=migrationBasis(read('data/migration-groups.json'),'0583',b.baseYear);
   assert.equal(basis.group,'B5');
   assert.equal(basis.groupName,'Lågpendlingskommun nära större stad');
   const withBasis={...b,migrationBasis:basis};
-  const own=continuous(withBasis,history),half=continuous(withBasis,history,{migrationGroupWeight:50}),group=continuous(withBasis,history,{migrationGroupWeight:100});
-  // The rates are carried also with weight 0, and change nothing then.
+  const own=continuous(withBasis,history,{migrationGroupWeight:0}),half=continuous(withBasis,history,{migrationGroupWeight:50}),group=continuous(withBasis,history,{migrationGroupWeight:100});
+  // Half of each is the default. Without the rates there is only the municipality's own years, the same as weight 0.
+  half.rows.forEach((row,i)=>close(row.population,continuous(withBasis,history).rows[i].population,1e-6,`${row.year} default`));
   own.rows.forEach((row,i)=>close(row.population,continuous(b,history).rows[i].population,1e-6,`${row.year} weight 0`));
   // Motala's own two years were weak (19-64 lost 0.9 % a year, the group 0.2 %), so the group's migration loses fewer people.
   const yearly=basis.groupRates.reduce((s,g,i)=>s+(g-basis.own[i])*b.population[i],0);

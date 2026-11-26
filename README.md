@@ -431,10 +431,10 @@ grants per component (a diagnosis, not a forecast):
 
 | Line | SKR | Components | Hindsight |
 | --- | --- | --- | --- |
-| Result | −38 / −48 / +14 | −11 / −18 / +35 | −17 / −21 / −1 |
-| Tax | −35 / −48 / −68 | −35 / −48 / −68 | −10 / −8 / −11 |
-| General grants | −23 / −65 / −109 | +4 / −36 / −89 | 0 / +5 / +10 |
-| Net cost | −20 / −64 / −187 | −20 / −64 / −187 | +8 / +20 / +5 |
+| Result | −38 / −47 / +19 | −11 / −17 / +40 | −17 / −20 / +4 |
+| Tax | −35 / −47 / −64 | −35 / −47 / −64 | −10 / −6 / −6 |
+| General grants | −23 / −67 / −111 | +4 / −37 / −91 | 0 / +4 / +9 |
+| Net cost | −20 / −65 / −188 | −20 / −65 / −188 | +8 / +19 / +4 |
 
 **The state's frame.** The regulation grant is what is left of the state's frame
 when the income equalisation is paid, the same per inhabitant everywhere. SKR
@@ -458,24 +458,24 @@ The fixed frame is the worst in both. The other two are close; the model uses th
 frame rule because it is also meaningful over decades.
 
 Read it this way. With SKR's assumptions the three-year result error is small only
-because two large errors cancel: net cost too low by 187 and tax and grants too low
-by 178. With the price outcomes alone (the set "prices") the net cost error after three
-years goes from −187 to +5: the circulars of December 2020 and 2021 assumed much lower wage and price
+because two large errors cancel: net cost too low by 188 and tax and grants too low
+by 174. With the price outcomes alone (the set "prices") the net cost error after three
+years goes from −188 to +4: the circulars of December 2020 and 2021 assumed much lower wage and price
 growth than 2022–2023 brought. With what actually happened to prices, the tax base and the state's grants,
 tax, grants and net cost come close, but the result's mean absolute error is still
-44 / 56 / 33 mnkr against 41 / 62 / 64 with SKR's assumptions. Keeping the base
+44 / 55 / 31 mnkr against 41 / 63 / 66 with SKR's assumptions. Keeping the base
 year's result ("persistence") misses by 59 / 76 / 41. One year ahead the
 municipality's budget missed by 24. Mjölby and Finspång, the same way (mean
 absolute error of the result, mnkr):
 
 | | SKR | Hindsight | Persistence |
 | --- | --- | --- | --- |
-| Motala | 41 / 62 / 64 | 44 / 56 / 33 | 59 / 76 / 41 |
-| Mjölby | 42 / 66 / 114 | 27 / 43 / 57 | 44 / 82 / 91 |
-| Finspång | 37 / 78 / 59 | 23 / 44 / 18 | 38 / 52 / 38 |
+| Motala | 41 / 63 / 66 | 44 / 55 / 31 | 59 / 76 / 41 |
+| Mjölby | 42 / 67 / 112 | 27 / 44 / 55 | 44 / 82 / 91 |
+| Finspång | 37 / 78 / 59 | 23 / 44 / 20 | 38 / 52 / 38 |
 
 The tables are the model as of 2026-11-26: ageing from each base year's single years of age, pensions following
-the payroll, the liquidity reserve and interest on cash. Earlier versions, the removed yearly model included, gave
+the payroll, the liquidity reserve, interest on cash, and half the migration from the municipality's SKR group. Earlier versions, the removed yearly model included, gave
 the same accuracy over these horizons (within 7 mnkr).
 
 Five, four and three cases per horizon, from one period, are too few to rank the
@@ -617,23 +617,23 @@ percent), from `data/long-hindcast-continuous.json` (2026-11-26):
 
 | Years ahead (cases) | 1 (39) | 2 (39) | 3 (38) | 4 (37) | 6 (38) | 8 (13) |
 | --- | --- | --- | --- | --- | --- | --- |
-| Result | 0.3 / 1.8 | 0.3 / 2.4 | −0.3 / 2.8 | −0.6 / 3.7 | −1.5 / 3.3 | −0.8 / 2.1 |
+| Result | 0.3 / 1.8 | 0.3 / 2.3 | −0.3 / 2.7 | −0.7 / 3.7 | −1.6 / 3.1 | −0.7 / 2.1 |
 | Result, persistence | −0.5 / 2.4 | −1.8 / 3.7 | −3.1 / 3.4 | −2.1 / 3.0 | −0.3 / 2.3 | −0.5 / 2.2 |
-| Result, standard rates | −0.9 / 2.6 | −2.6 / 4.2 | −4.6 / 4.9 | −4.3 / 5.0 | −4.0 / 4.4 | −4.8 / 5.1 |
-| Net cost | −0.4 / 2.0 | −0.5 / 2.4 | 0.7 / 2.4 | 1.3 / 3.0 | 3.8 / 4.6 | 6.0 / 6.3 |
-| Tax | 0.0 / 0.9 | −0.1 / 1.2 | −0.0 / 1.4 | −0.3 / 1.7 | 0.5 / 2.1 | 2.3 / 2.9 |
-| General grants | 0.0 / 0.0 | 0.3 / 0.3 | 0.6 / 0.6 | 1.0 / 1.0 | 1.6 / 1.6 | 2.6 / 2.6 |
-| Population | 0.4 / 0.6 | 0.9 / 1.2 | 1.3 / 1.7 | 1.9 / 2.4 | 3.3 / 3.8 | 6.1 / 6.1 |
-| Debt | 0.7 / 4.4 | 0.0 / 8.4 | 0.6 / 12.5 | 1.9 / 16.3 | 1.9 / 20.4 | −18.8 / 21.0 |
+| Result, standard rates | −0.9 / 2.6 | −2.6 / 4.2 | −4.6 / 4.9 | −4.3 / 4.9 | −4.1 / 4.5 | −4.7 / 5.0 |
+| Net cost | −0.4 / 2.0 | −0.4 / 2.3 | 0.8 / 2.3 | 1.4 / 2.9 | 4.1 / 4.7 | 6.5 / 6.5 |
+| Tax | 0.0 / 0.9 | −0.1 / 1.1 | −0.1 / 1.3 | −0.4 / 1.5 | 0.4 / 1.6 | 2.5 / 2.8 |
+| General grants | 0.0 / 0.0 | 0.3 / 0.4 | 0.7 / 0.7 | 1.0 / 1.1 | 1.7 / 1.7 | 2.8 / 2.9 |
+| Population | 0.4 / 0.6 | 0.9 / 1.1 | 1.4 / 1.6 | 2.0 / 2.2 | 3.4 / 3.7 | 6.8 / 6.8 |
+| Debt | 0.7 / 4.4 | 0.1 / 8.3 | 0.6 / 12.5 | 2.0 / 16.2 | 2.1 / 20.1 | −19.6 / 20.7 |
 
 The model with hindsight beats persistence in years 1–3 only; from year 4 the base
 year's result share does as well or better. With the model's standard rates instead
 of hindsight it is worse than persistence at every horizon. With hindsight the mean
-error of the result is within 0.6 % of tax and grants in years 1–4, −1.5 % after six years and
-−0.8 % after eight, against a usual result target of 2 %. Net cost comes out 6.0 % too high after eight years.
+error of the result is within 0.7 % of tax and grants in years 1–4, −1.6 % after six years and
+−0.7 % after eight, against a usual result target of 2 %. Net cost comes out 6.5 % too high after eight years.
 Before November 2026 the need for elder care grew only with 65+, which hid part of that: net cost was then 4.3 % too
 high and the result 0.9 % too high. A version with fixed transitions into 80+ gave −2.6 %; taking the transitions
-from each base year's single years of age gives the figures here. The population grows too fast (6 % after eight years: migration calibrated on
+from each base year's single years of age gives the figures here. The population grows too fast (7 % after eight years: migration calibrated on
 2015–2017, the years of high refugee immigration), which raises costs and grants
 together, so part of the result error cancels. A population-only test (`scripts/hindcast_migration.py`,
 `data/migration-hindcast.json`; its yearly copy of the five-group demography, with a fixed 65+
@@ -657,8 +657,8 @@ absolute error of the population after 1–5 years from base years 2020–2024:
 
 | Migration from | 1 | 2 | 3 | 4 | 5 years |
 |---|---|---|---|---|---|
-| The municipality's own two years (default) | 0.51 | 0.86 | 1.28 | 1.76 | 2.13 % |
-| Half own, half the group | 0.46 | 0.77 | 1.08 | 1.37 | 1.71 % |
+| The municipality's own two years | 0.51 | 0.86 | 1.28 | 1.76 | 2.13 % |
+| Half own, half the group (default) | 0.46 | 0.77 | 1.08 | 1.37 | 1.71 % |
 | The group | 0.48 | 0.86 | 1.33 | 1.66 | 1.70 % |
 
 Half of each is the best at every horizon to five years, also from base years
@@ -666,8 +666,11 @@ Half of each is the best at every horizon to five years, also from base years
 refugee years: from 2017 all three give 6–7 % too many people after eight years,
 since the groups had the same immigration. Nine groups explain 28 % of the
 difference between municipalities' net migration 2018–2025, so the group alone
-is not better than the municipality's own years. The default is still the
-municipality's own years; the mix is one click away. For Motala the choice moves
+is not better than the municipality's own years. Half of each is the default
+since 2026-11-26, in the library and on the site. In the long hindcast it changed
+little: the population's mean absolute error after 2, 3, 4 and 6 years went from
+1.2, 1.7, 2.4 and 3.8 % to 1.1, 1.6, 2.2 and 3.7 %, and from 6.1 to 6.8 % after eight
+years (the 2017 base year). For Motala the choice moves
 the population in 2033 by about 1 400 people when no projection is followed. The larger
 error at medium horizons is births: the model keeps the base year's births per
 adult while fertility fell, so the 0–6 group is 5 % too large after three years
