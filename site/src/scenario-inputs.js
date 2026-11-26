@@ -27,7 +27,7 @@ export function calibrate(history) {
   return {deathRates:rates,migration:rates.map((_,i)=>sum(residuals.map(r=>r[i]))/residuals.length)};
 }
 // The population calibration of the continuous model (death rates, the residual flow and the flows that follow a
-// projection) is computed in Modelica, in the wrapper MotalaBrowserContinuous: the page sends the history and the
+// projection) is computed in Modelica, in the wrapper BrowserContinuous: the page sends the history and the
 // projection (historyCohorts, projectedCohorts ...), and the model computes the rest when it starts.
 // Genomsnittlig räntebindning vid basårets slut (data/rate-fixing.json, ur årsredovisningarna); annars tabellens antagande.
 // The municipality's liquidity rule as attached to the baseline (b.liquidity), else the standard: 30 days, no credit line.
@@ -317,7 +317,7 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
     'demography.observedDeltaShape':evidence.arrivalWeights,
     'demography.useObservedDeltaShape':!profile
   }:null;
-  return {assumptions:{...a,timeModel:'continuous'},calibration:'Kommunekonomi.Data i Modelica (MotalaBrowserContinuous)',inputs,fields,cohort,ageMigration,
+  return {assumptions:{...a,timeModel:'continuous'},calibration:'Kommunekonomi.Data i Modelica (BrowserContinuous)',inputs,fields,cohort,ageMigration,
     planningStatus:b.planningInputs?'Sourced population and annual SKR assumptions':'Illustrative assumptions',
     revenueStatus:revenuePath?'Imported revenue path':'Illustrative revenue path'};
 }

@@ -47,7 +47,7 @@ def tearDownModule():
         shutil.rmtree(WORK, ignore_errors=True)
 
 
-WRAPPER = 'MotalaBrowserContinuous'
+WRAPPER = 'BrowserContinuous'
 
 
 def model(name):
@@ -55,8 +55,8 @@ def model(name):
     if name not in MODELS:
         work = Path(WORK) / name.replace('.', '_')
         work.mkdir()
-        libraries = [str(ROOT / 'modelica/Kommunekonomi.mo'), str(ROOT / 'modelica/Motala.mo')]
-        file, full = (ROOT / 'modelica/MotalaBrowser.mo', name) if name == WRAPPER else (Path(__file__).with_name('Scenarios.mo'), f'FastTests.{name}')
+        libraries = [str(ROOT / 'modelica/Kommunekonomi.mo'), str(ROOT / 'modelica/municipalities/Motala.mo')]
+        file, full = (ROOT / 'modelica/Browser.mo', name) if name == WRAPPER else (Path(__file__).with_name('Scenarios.mo'), f'FastTests.{name}')
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
             m = ModelicaSystemOMC(work_directory=str(work), omhome=OMHOME)

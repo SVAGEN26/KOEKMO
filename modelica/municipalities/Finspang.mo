@@ -18,6 +18,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {23782, 185493},
       infrastructureShare = 0.047,
       groupMigration = {0.006841, -0.000647, 0.001372, -0.001624, -0.000291}, ownMigration = {0.019451, -0.001885, 0.00419, -0.000347, -0.000451},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {158.4, 175.4, 182.4, 210.3, 201.3, 226.2, 227.2, 257.1, 230.2, 253.1, 264.1, 274, 252.1, 267.1, 296, 255.1, 269.1, 235.2, 240.2, 238.2, 200.3, 154.5, 176.4, 155.5, 167.4, 189.3, 184.4, 201.3, 195.3, 187.3, 230.2, 270.1, 258.1, 277, 283, 287, 314.9, 314.9, 246.1, 286, 257.1, 234.2, 246.1, 246.1, 234.2, 253.1, 239.2, 231.2, 217.2, 226.2, 260.1, 274, 288, 277, 272.1, 296, 279, 295, 298, 328.9, 333.8, 299, 271.1, 253.1, 280, 254.1, 260.1, 251.1, 268.1, 244.1, 237.2, 261.1, 233.2, 248.1, 228.2, 278, 275, 252.1, 243.2, 234.2, 240.2, 213.3, 221.2, 169.4, 159.4, 117.6, 92.7, 105.6, 95.7, 59.8, 71.7, 44.8, 38.9, 36.9, 24.9, 20.9, 12, 8, 7, 3, 10})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.682491, 0.267148, 0.050361};
@@ -37,6 +38,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {23206, 183691},
       infrastructureShare = 0.0493,
       groupMigration = {0.00419, -0.002985, -0.001973, -0.003985, -0.000455}, ownMigration = {0.007071, -0.000816, 0.005054, -0.005314, -0.002017},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {164, 178, 205, 199, 224, 224, 253, 233, 253, 268, 276, 253, 268, 293, 257, 265, 233, 242, 244, 215, 163, 189, 169, 170, 189, 197, 189, 204, 182, 226, 260, 249, 271, 287, 294, 316, 315, 245, 279, 252, 225, 248, 250, 235, 254, 242, 230, 224, 225, 255, 271, 293, 281, 270, 300, 282, 291, 296, 331, 337, 306, 272, 256, 281, 256, 262, 256, 266, 243, 245, 262, 247, 253, 236, 286, 275, 259, 253, 244, 248, 232, 234, 185, 166, 131, 104, 117, 105, 73, 86, 51, 42, 39, 33, 27, 17, 14, 9, 8, 6, 5})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.694872, 0.259648, 0.045479};
@@ -56,6 +58,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {21031, 177681},
       infrastructureShare = 0.0431,
       groupMigration = {0.006795, -0.001261, -0.003218, -0.002306, -0.000229}, ownMigration = {0.002686, 0.010722, -0.00216, -0.003631, -0.004125},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {172, 195, 198, 225, 224, 250, 229, 256, 271, 271, 257, 268, 300, 259, 267, 233, 240, 243, 230, 185, 193, 180, 168, 188, 188, 188, 209, 179, 220, 240, 259, 263, 276, 288, 312, 319, 243, 285, 260, 222, 248, 255, 239, 248, 240, 233, 227, 222, 258, 275, 292, 282, 270, 295, 276, 291, 294, 324, 341, 309, 270, 257, 278, 264, 269, 261, 268, 243, 253, 267, 251, 250, 243, 285, 275, 267, 260, 246, 256, 239, 249, 191, 182, 142, 109, 128, 120, 83, 97, 68, 51, 44, 42, 34, 28, 16, 11, 12, 8, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.704595, 0.249635, 0.04577};
@@ -75,6 +78,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {19593, 177603},
       infrastructureShare = 0.0459,
       groupMigration = {0.012677, 0.003837, -0.000147, 0.001583, 0.000307}, ownMigration = {0.011912, 0.01396, -0.000743, 0.006374, -0.00202},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {196, 195, 226, 231, 247, 230, 260, 277, 271, 260, 265, 299, 245, 266, 231, 235, 239, 235, 204, 214, 208, 176, 195, 202, 204, 206, 192, 210, 239, 265, 252, 266, 296, 289, 313, 257, 282, 258, 223, 254, 256, 250, 251, 245, 240, 229, 227, 257, 271, 300, 282, 272, 301, 275, 291, 291, 326, 346, 308, 273, 261, 280, 267, 269, 265, 270, 249, 256, 270, 252, 254, 247, 282, 281, 273, 273, 258, 262, 252, 256, 203, 194, 145, 112, 139, 134, 89, 107, 79, 61, 59, 53, 44, 31, 20, 20, 15, 9, 3, 2, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.721092, 0.231446, 0.047462};
@@ -94,6 +98,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {18809, 175376},
       infrastructureShare = 0.041,
       groupMigration = {0.011391, 0.004197, 0.002076, 0.000479, 0.000304}, ownMigration = {0.011222, -0.001165, -0.006547, 0.001811, -0.001848},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {198, 217, 229, 261, 230, 250, 273, 262, 254, 259, 288, 239, 262, 232, 239, 238, 240, 207, 238, 224, 197, 211, 206, 201, 193, 195, 224, 234, 260, 260, 265, 285, 276, 301, 247, 269, 256, 227, 252, 255, 250, 244, 238, 236, 228, 221, 259, 269, 296, 285, 264, 303, 274, 288, 292, 329, 336, 301, 269, 257, 282, 259, 271, 268, 267, 246, 254, 278, 261, 264, 251, 292, 288, 286, 276, 267, 267, 259, 262, 206, 208, 158, 116, 151, 142, 100, 114, 93, 75, 73, 62, 56, 41, 31, 24, 22, 11, 7, 1, 2, 5})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.726188, 0.225729, 0.048082};
@@ -113,6 +118,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {18691, 174633},
       infrastructureShare = 0.04,
       groupMigration = {0.011247, 0.005033, 0.002575, -0.000561, -0.000189}, ownMigration = {0.011009, 0.000582, 0.00219, 0.002394, -0.004366},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {216, 226, 247, 226, 248, 273, 251, 250, 261, 289, 235, 255, 238, 236, 230, 232, 208, 236, 243, 212, 226, 210, 194, 189, 197, 214, 220, 260, 253, 261, 279, 272, 292, 250, 267, 241, 227, 244, 242, 246, 237, 239, 228, 226, 222, 259, 269, 298, 282, 260, 299, 274, 282, 292, 331, 336, 295, 271, 258, 278, 258, 270, 265, 267, 246, 253, 280, 261, 262, 253, 297, 293, 294, 280, 277, 271, 266, 265, 212, 225, 167, 126, 160, 149, 110, 121, 102, 88, 86, 73, 66, 46, 38, 34, 27, 16, 10, 5, 6, 5, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.735029, 0.2178, 0.047172};
@@ -132,6 +138,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {18071, 171278},
       infrastructureShare = 0.0435,
       groupMigration = {0.014595, 0.008712, 0.00634, 0.000202, -0.000596}, ownMigration = {0.02013, 0.020731, 0.017341, 0.009445, -0.003078},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {220, 244, 226, 250, 271, 252, 250, 267, 294, 237, 263, 239, 241, 231, 231, 208, 247, 248, 238, 250, 238, 192, 190, 200, 222, 225, 254, 254, 258, 274, 268, 290, 249, 263, 242, 225, 248, 241, 243, 238, 230, 225, 227, 221, 264, 279, 295, 279, 262, 301, 273, 286, 291, 323, 335, 296, 274, 261, 274, 264, 273, 267, 264, 254, 262, 279, 263, 269, 261, 305, 297, 300, 285, 283, 276, 275, 271, 218, 231, 174, 131, 169, 159, 119, 130, 110, 96, 101, 80, 75, 59, 46, 44, 34, 22, 19, 5, 10, 11, 1, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.736832, 0.216226, 0.046941};
@@ -151,6 +158,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {17404, 165681},
       infrastructureShare = 0.049,
       groupMigration = {0.017924, 0.013458, 0.019006, 0.001459, -3.8e-05}, ownMigration = {0.014037, 0.012347, 0.025191, 0.006005, 0.001334},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {229, 224, 248, 264, 261, 245, 259, 286, 233, 267, 233, 239, 228, 232, 206, 244, 243, 227, 255, 228, 206, 200, 202, 222, 238, 251, 247, 256, 276, 259, 272, 236, 254, 233, 212, 245, 236, 239, 235, 224, 226, 228, 216, 257, 277, 286, 276, 257, 295, 274, 279, 294, 327, 333, 293, 275, 258, 279, 262, 270, 270, 269, 253, 267, 278, 267, 277, 264, 304, 307, 310, 291, 295, 288, 280, 275, 220, 239, 186, 138, 180, 162, 132, 139, 121, 105, 104, 90, 83, 67, 54, 58, 41, 24, 19, 6, 17, 13, 3, 3, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.734576, 0.220503, 0.044921};
@@ -170,6 +178,7 @@ package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Komm
       careCostPerInhabitant = {16734, 160972},
       infrastructureShare = 0.0393,
       groupMigration = {0.030523, 0.022708, 0.035644, 0.007523, 0.000867}, ownMigration = {0.030099, 0.012053, 0.045479, 0.008954, 0.002188},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {207, 248, 261, 256, 240, 251, 282, 222, 259, 222, 227, 230, 225, 203, 239, 238, 223, 258, 227, 217, 211, 207, 232, 253, 237, 241, 234, 268, 242, 263, 224, 242, 234, 209, 239, 230, 232, 227, 220, 226, 220, 210, 263, 273, 278, 276, 256, 291, 280, 278, 296, 323, 337, 294, 276, 259, 278, 270, 272, 273, 269, 253, 267, 282, 272, 277, 264, 304, 310, 312, 296, 301, 297, 289, 288, 227, 246, 194, 144, 189, 169, 137, 146, 129, 112, 111, 105, 96, 79, 68, 66, 48, 32, 26, 12, 17, 13, 8, 5, 4, 4})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.739531, 0.216338, 0.044131};

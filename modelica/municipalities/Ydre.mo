@@ -18,6 +18,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {23981, 180564},
       infrastructureShare = 0.0601,
       groupMigration = {0.006991, -0.00287, -0.008988, -0.002981, -0.000744}, ownMigration = {0.023748, 0.016214, -0.067648, 0.004866, -0.002937},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {19.9, 26.8, 21.9, 32.8, 38.8, 38.8, 45.7, 25.9, 36.8, 45.7, 40.8, 53.7, 34.8, 39.8, 30.8, 41.8, 34.8, 29.8, 47.7, 29.8, 37.8, 20.9, 15.9, 10.9, 20.9, 27.8, 28.8, 28.8, 33.8, 33.8, 26.8, 18.9, 36.8, 51.7, 35.8, 37.8, 46.7, 39.8, 42.8, 42.8, 32.8, 34.8, 30.8, 42.8, 33.8, 31.8, 28.8, 22.9, 44.7, 42.8, 38.8, 45.7, 48.7, 38.8, 50.7, 47.7, 33.8, 46.7, 45.7, 58.7, 53.7, 58.7, 52.7, 45.7, 56.7, 56.7, 63.6, 52.7, 65.6, 68.6, 48.7, 62.6, 53.7, 47.7, 55.7, 60.6, 51.7, 54.7, 50.7, 57.7, 42.8, 51.7, 33.8, 32.8, 26.8, 28.8, 19.9, 22.9, 18.9, 15.9, 9.9, 12.9, 3, 3, 8, 6, 3, 0, 3, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2025 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2025[3] = {0.712739, 0.246461, 0.040799};
@@ -37,6 +38,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {23308, 175947},
       infrastructureShare = 0.0458,
       groupMigration = {0.004282, -0.004471, -0.007371, -0.004807, -0.000844}, ownMigration = {-0.001337, 0.007642, -0.027664, 0.00459, -0.012234},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {29, 23, 28, 40, 37, 45, 28, 36, 42, 40, 49, 36, 38, 30, 41, 39, 26, 49, 30, 47, 32, 19, 16, 17, 25, 32, 25, 30, 27, 26, 18, 39, 44, 36, 37, 41, 37, 42, 43, 34, 33, 28, 45, 37, 31, 30, 20, 45, 44, 37, 48, 49, 39, 51, 47, 33, 43, 46, 63, 50, 59, 56, 46, 60, 51, 60, 51, 66, 71, 47, 62, 57, 48, 58, 61, 51, 56, 52, 62, 42, 56, 45, 35, 29, 28, 23, 21, 21, 18, 12, 15, 6, 5, 9, 4, 3, 1, 4, 3, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2024 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2024[3] = {0.714044, 0.243655, 0.042301};
@@ -56,6 +58,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {21734, 163686},
       infrastructureShare = 0.0418,
       groupMigration = {0.007289, -0.001888, -0.006104, -0.003302, 0.000189}, ownMigration = {0.003671, 0.001655, -0.020593, -0.003347, -0.003348},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {22, 29, 41, 37, 43, 29, 35, 43, 40, 48, 37, 37, 25, 39, 39, 27, 52, 30, 49, 39, 18, 19, 18, 27, 36, 26, 28, 25, 23, 16, 37, 39, 39, 34, 40, 36, 39, 41, 35, 29, 26, 44, 33, 30, 29, 22, 46, 44, 38, 48, 50, 38, 50, 48, 33, 45, 45, 66, 50, 55, 56, 43, 57, 50, 59, 54, 65, 70, 46, 64, 58, 51, 59, 64, 58, 57, 53, 67, 45, 63, 47, 37, 31, 32, 23, 23, 26, 20, 12, 17, 7, 8, 9, 4, 4, 2, 6, 4, 0, 0, 0})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2023 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2023[3] = {0.736931, 0.22597, 0.037099};
@@ -75,6 +78,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {19860, 160073},
       infrastructureShare = 0.0472,
       groupMigration = {0.012697, 0.003381, -0.003011, 0.00058, 0.001436}, ownMigration = {0.002403, 0.004486, -0.026378, -0.007289, 0.000391},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {28, 41, 39, 45, 29, 35, 43, 39, 49, 36, 39, 28, 39, 37, 28, 54, 30, 50, 41, 26, 26, 21, 25, 35, 24, 23, 22, 27, 15, 38, 39, 36, 35, 40, 36, 36, 41, 35, 27, 26, 45, 35, 29, 28, 23, 45, 43, 40, 51, 50, 38, 49, 49, 34, 44, 46, 63, 48, 56, 54, 44, 57, 49, 59, 57, 66, 72, 42, 63, 60, 53, 61, 65, 57, 59, 55, 68, 45, 68, 49, 41, 34, 35, 30, 23, 29, 22, 12, 17, 8, 10, 9, 4, 8, 3, 7, 5, 1, 1, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2022 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2022[3] = {0.745777, 0.211993, 0.04223};
@@ -94,6 +98,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {18808, 156753},
       infrastructureShare = 0.0566,
       groupMigration = {0.011228, 0.002399, -0.003903, 0.000244, 0.001101}, ownMigration = {-0.005376, -0.011325, -0.031575, -0.009073, 0.000908},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {37, 38, 44, 26, 35, 44, 40, 47, 37, 38, 26, 39, 36, 27, 54, 32, 51, 40, 31, 28, 31, 25, 43, 25, 24, 27, 22, 14, 40, 35, 32, 32, 39, 36, 35, 40, 36, 28, 26, 44, 35, 31, 23, 21, 42, 42, 41, 51, 51, 37, 50, 47, 34, 41, 45, 63, 49, 61, 55, 43, 56, 47, 61, 58, 64, 71, 42, 63, 61, 53, 64, 66, 55, 60, 56, 71, 49, 71, 50, 43, 34, 35, 33, 24, 31, 25, 14, 16, 12, 9, 10, 6, 10, 7, 8, 6, 3, 2, 1, 0, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2021 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2021[3] = {0.752365, 0.200344, 0.047291};
@@ -113,6 +118,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {16707, 161161},
       infrastructureShare = 0.0709,
       groupMigration = {0.009508, 0.002579, -0.003563, -0.001321, 0.000316}, ownMigration = {0.018565, -0.011267, -0.049979, -0.003979, 0.008681},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {38, 43, 28, 38, 45, 39, 48, 37, 36, 28, 36, 39, 28, 55, 31, 51, 43, 32, 35, 37, 28, 46, 25, 24, 27, 19, 17, 37, 36, 31, 35, 37, 36, 34, 45, 36, 28, 29, 42, 37, 34, 21, 23, 45, 42, 44, 47, 52, 38, 48, 44, 37, 40, 46, 59, 47, 61, 53, 43, 56, 46, 62, 57, 63, 73, 43, 64, 60, 57, 62, 63, 57, 59, 61, 71, 49, 72, 50, 44, 36, 39, 35, 26, 31, 27, 15, 18, 12, 10, 14, 10, 10, 8, 8, 8, 4, 2, 1, 0, 0, 3})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2020 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2020[3] = {0.751107, 0.201063, 0.04783};
@@ -132,6 +138,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {17756, 163565},
       infrastructureShare = 0.049,
       groupMigration = {0.016012, 0.010179, 0.003669, -6.6e-05, 0.000154}, ownMigration = {0.007788, -0.006873, -0.024958, 0.006058, 0.012101},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {43, 28, 36, 47, 38, 50, 37, 37, 28, 37, 41, 28, 54, 34, 52, 44, 33, 36, 43, 33, 52, 30, 22, 30, 22, 22, 37, 37, 30, 38, 38, 30, 35, 43, 37, 29, 28, 39, 37, 32, 24, 25, 44, 43, 44, 49, 52, 39, 49, 46, 35, 40, 45, 59, 45, 59, 53, 45, 55, 45, 59, 56, 61, 66, 44, 65, 56, 54, 62, 64, 58, 59, 64, 72, 52, 74, 51, 42, 37, 41, 35, 28, 33, 28, 19, 19, 12, 13, 15, 14, 11, 9, 10, 8, 4, 2, 2, 0, 1, 2, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2019 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2019[3] = {0.761181, 0.193202, 0.045617};
@@ -151,6 +158,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {17756, 163565},
       infrastructureShare = 0.0518,
       groupMigration = {0.02567, 0.017669, 0.018365, 0.002358, 0.000564}, ownMigration = {0.019833, 0.002732, 0.026895, 0.01925, 0.006126},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {25, 37, 46, 36, 50, 35, 38, 32, 36, 40, 29, 53, 33, 51, 44, 37, 40, 44, 39, 52, 34, 24, 35, 23, 21, 39, 35, 27, 32, 39, 28, 30, 43, 39, 29, 31, 39, 37, 35, 24, 26, 46, 44, 45, 51, 51, 39, 52, 42, 36, 41, 46, 58, 46, 60, 51, 45, 53, 43, 59, 52, 58, 66, 44, 62, 55, 50, 60, 64, 57, 58, 65, 76, 54, 76, 50, 42, 35, 42, 37, 28, 35, 29, 21, 22, 11, 16, 18, 19, 13, 13, 14, 9, 6, 3, 2, 1, 1, 2, 0, 2})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2018 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2018[3] = {0.755985, 0.195212, 0.048803};
@@ -170,6 +178,7 @@ package Ydre "Ydre: kommunens ekonomi år för år med biblioteket Kommunekonomi
       careCostPerInhabitant = {16315, 143637},
       infrastructureShare = 0.0658,
       groupMigration = {0.036765, 0.027728, 0.035707, 0.008688, 0.000438}, ownMigration = {0.019564, 0.021128, 0.036101, 0.011869, 0.001914},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {41, 46, 35, 49, 34, 40, 33, 37, 42, 29, 54, 33, 49, 45, 37, 40, 41, 39, 49, 46, 29, 31, 23, 22, 41, 38, 22, 31, 38, 30, 33, 42, 41, 29, 31, 41, 36, 36, 23, 26, 45, 41, 43, 46, 50, 37, 50, 40, 36, 42, 43, 57, 45, 60, 48, 45, 50, 43, 58, 50, 58, 64, 45, 61, 53, 47, 57, 63, 59, 57, 67, 73, 54, 74, 51, 44, 39, 44, 38, 32, 38, 30, 21, 22, 12, 18, 20, 22, 17, 15, 15, 10, 8, 4, 3, 1, 2, 2, 0, 1, 1})
       "SCB:s räkenskapssammandrag och befolkningsstatistik 2017 (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares2017[3] = {0.753063, 0.202639, 0.044298};

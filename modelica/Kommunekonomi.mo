@@ -18,6 +18,9 @@ dimensionslösa. Antagna flyttflöden är personer per år (<code>PersonsPerYear
   end Units;
 
   package Data "Posttyper för bokslut, budget och befolkning, rikets data från SCB och funktioner för kalibrering"
+    type AccountsSource = enumeration(unknown "Inte angiven", annualReport "Kommunens årsredovisning", accountSummary "SCB:s räkenskapssammandrag")
+      "Varifrån basårets bokslut är hämtat";
+
     record BaseYear "Utfall vid basårets slut; mnkr och personer"
       Integer year "Basår";
       Real cohorts[3, 5] "Redovisade invånare 0-6, 7-15, 16-18, 19-64 och 65+ vid slutet av de två föregående åren och basåret";
@@ -51,6 +54,7 @@ dimensionslösa. Antagna flyttflöden är personer per år (<code>PersonsPerYear
       Real infrastructureShare = 0 "Gator och vägar som andel av övrig verksamhet: nettokostnaden för väg- och järnvägsnät samt parkering (Kolada N07024) delad med övrig verksamhets nettokostnad; 0 när uppgiften saknas";
       Units.Rate groupMigration[5] = zeros(5) "Flyttnetto per invånare och år i kommunens grupp enligt SKR:s kommungruppsindelning 2023, medel av basåret och året före, per åldersgrupp 0-6, 7-15, 16-18, 19-64 och 65+ (SCB; data/migration-groups.json)";
       Units.Rate ownMigration[5] = zeros(5) "Kommunens eget flyttnetto per invånare och år, samma två år och åldersgrupper (SCB; data/migration-groups.json)";
+      AccountsSource source = AccountsSource.unknown "Källa för bokslutet: kommunens årsredovisning (avläst post för post, med sidhänvisning) eller SCB:s räkenskapssammandrag (samma uppställning för alla kommuner)";
       Units.Persons ages[101] = zeros(101) "Invånare per ettårsålder 0-100+ vid basårets slut, båda könen (SCB); nollor när uppgiften saknas";
       Real interestRate = -1 "Genomsnittlig ränta på upplåningen enligt årsredovisningen, andel; -1 när den saknas och räntan härleds ur räntekostnaden och årets medelskuld";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
@@ -1887,18 +1891,18 @@ finns i <code>Payments</code>.</p></html>"));
       outer Components.Calendar calendar;
       outer Clock clock;
       Interfaces.SignalInput investment "Investeringsutbetalningar, mnkr per år" annotation(
-        Placement(transformation(origin = {-120, 80}, extent = {{-20, -20}, {20, 20}}), iconTransformation(origin = {0, 110}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+        Placement(transformation(origin={-140,-90}, extent={{-20,-20},{20,20}}), iconTransformation(origin = {0, 110}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
       StockPort cash "Kassan som betalar" annotation(
-        Placement(transformation(extent = {{-130, -10}, {-110, 10}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
-      Stock assets(level0 = assets0) "Tillgångar i bruk" annotation(Placement(transformation(origin = {60, 0}, extent = {{-20, -20}, {20, 20}})));
-      Stock pending(level0 = workInProgress0) "Pågående arbeten" annotation(Placement(transformation(origin = {0, 40}, extent = {{-20, -20}, {20, 20}})));
-      Stock project(level0 = projectOpeningStock) "Projektets pågående arbeten" annotation(Placement(transformation(origin = {0, -50}, extent = {{-20, -20}, {20, 20}})));
-      Transfer payDirect "Investering som tas i bruk samma år" annotation(Placement(transformation(origin = {-50, 0}, extent = {{-10, -10}, {10, 10}})));
-      Transfer payPending "Investering till pågående arbeten" annotation(Placement(transformation(origin = {-50, 40}, extent = {{-10, -10}, {10, 10}})));
-      Transfer payProject "Projektutbetalning" annotation(Placement(transformation(origin = {-50, -50}, extent = {{-10, -10}, {10, 10}})));
-      Transfer commission "Driftsättning av pågående arbeten" annotation(Placement(transformation(origin = {40, 40}, extent = {{-10, -10}, {10, 10}})));
-      Transfer openProject "Projektet tas i bruk" annotation(Placement(transformation(origin = {40, -50}, extent = {{-10, -10}, {10, 10}})));
-      Outflow depreciation(annual0 = depreciation0) "Avskrivning" annotation(Placement(transformation(origin = {100, 0}, extent = {{-10, -10}, {10, 10}})));
+        Placement(transformation(origin={-150,24}, extent={{-10,-10},{10,10}}), iconTransformation(extent = {{-110, -10}, {-90, 10}})));
+      Stock assets(level0 = assets0) "Tillgångar i bruk" annotation(Placement(transformation(origin={80,80}, extent={{-20,-20},{20,20}})));
+      Stock pending(level0 = workInProgress0) "Pågående arbeten" annotation(Placement(transformation(origin={-40,74}, extent={{-20,-20},{20,20}})));
+      Stock project(level0 = projectOpeningStock) "Projektets pågående arbeten" annotation(Placement(transformation(origin={-40,14}, extent={{-20,-20},{20,20}})));
+      Transfer payDirect "Investering som tas i bruk samma år" annotation(Placement(transformation(origin={-100,74}, extent={{-10,-10},{10,10}})));
+      Transfer payPending "Investering till pågående arbeten" annotation(Placement(transformation(origin={-100,34}, extent={{-10,-10},{10,10}})));
+      Transfer payProject "Projektutbetalning" annotation(Placement(transformation(origin={-100,-6}, extent={{-10,-10},{10,10}})));
+      Transfer commission "Driftsättning av pågående arbeten" annotation(Placement(transformation(origin={20,60}, extent={{-10,-10},{10,10}})));
+      Transfer openProject "Projektet tas i bruk" annotation(Placement(transformation(origin={20,20}, extent={{-10,-10},{10,10}})));
+      Outflow depreciation(annual0 = depreciation0) "Avskrivning" annotation(Placement(transformation(origin={140,60}, extent={{-10,-10},{10,10}})));
       discrete Boolean opened(start = false, fixed = true) "Projektet är i bruk";
       Units.MoneyRate regular "Investeringar utöver projektet, mnkr per år";
       output Real projectPlacesNow = if opened then projectPlaces else 0 "Projektplatser i bruk";
@@ -1920,17 +1924,17 @@ finns i <code>Payments</code>.</p></html>"));
       when time >= projectOpeningTime then
         opened = true;
       end when;
-      connect(cash, payDirect.from);
-      connect(cash, payPending.from);
-      connect(cash, payProject.from);
-      connect(payDirect.to, assets.port);
-      connect(payPending.to, pending.port);
-      connect(payProject.to, project.port);
-      connect(pending.port, commission.from);
-      connect(commission.to, assets.port);
-      connect(project.port, openProject.from);
-      connect(openProject.to, assets.port);
-      connect(assets.port, depreciation.from);
+      connect(cash, payDirect.from) annotation(Line(points={{-150,24},{-115,24},{-115,74},{-110,74}}, color={155,95,35}));
+      connect(cash, payPending.from) annotation(Line(points={{-150,24},{-115,24},{-115,34},{-110,34}}, color={155,95,35}));
+      connect(cash, payProject.from) annotation(Line(points={{-150,24},{-115,24},{-115,-6},{-110,-6}}, color={155,95,35}));
+      connect(payDirect.to, assets.port) annotation(Line(points={{-90,74},{-70,74},{-70,40},{80,40},{80,60}}, color={155,95,35}));
+      connect(payPending.to, pending.port) annotation(Line(points={{-90,34},{-65,34},{-65,45},{-40,45},{-40,54}}, color={155,95,35}));
+      connect(payProject.to, project.port) annotation(Line(points={{-90,-6},{-65,-6},{-65,-15},{-40,-15},{-40,-6}}, color={155,95,35}));
+      connect(pending.port, commission.from) annotation(Line(points={{-40,54},{-40,45},{5,45},{5,60},{10,60}}, color={155,95,35}));
+      connect(commission.to, assets.port) annotation(Line(points={{30,60},{55,60},{55,55},{80,55},{80,60}}, color={155,95,35}));
+      connect(project.port, openProject.from) annotation(Line(points={{-40,-6},{-40,-15},{5,-15},{5,20},{10,20}}, color={155,95,35}));
+      connect(openProject.to, assets.port) annotation(Line(points={{30,20},{80,20},{80,60}}, color={155,95,35}));
+      connect(assets.port, depreciation.from) annotation(Line(points={{80,60},{80,55},{125,55},{125,60},{130,60}}, color={155,95,35}));
       when clock.yearEnd then
         workInProgress = pending.level + project.level;
         commissioned = payDirect.annual + commission.annual + openProject.annual;
@@ -1941,7 +1945,7 @@ finns i <code>Payments</code>.</p></html>"));
       assert(min({assets.level, pending.level, project.level}) >= -1e-6, "Kapitalets lager får inte bli negativa");
       assert(abs(assetBalance) < 1e-6*max(1, assets.level), "Tillgångsbalansen stämmer inte");
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {155, 95, 35}, fillColor = {255, 246, 230}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Kapital")}),
-        Diagram(coordinateSystem(extent = {{-140, -100}, {140, 100}})),
+        Diagram(coordinateSystem(extent={{-180,-140},{180,120}})),
         Documentation(info = "<html><p>Tre lager: pågående arbeten, projektets pågående arbeten och tillgångar i bruk. Investeringen betalas
 ur kassan under året. Byggandelen ligger som pågående arbete i byggtidens antal år och tas sedan i bruk; resten tas i bruk
 direkt. Ingående pågående arbeten tas i bruk jämnt under byggtiden. Projektet tas i bruk vid <code>projectOpeningTime</code>,
@@ -1966,22 +1970,22 @@ nivån, med en takt som ger den sammanvägda avskrivningstidens årliga andel.</
       input Units.MoneyRate pensionCashPayments "mnkr per år";
       input Units.MoneyRate otherOperatingExpense "mnkr per år";
       input Units.MoneyRate operatingRevenue "mnkr per år";
-      StockPort cash "Kassan" annotation(Placement(transformation(extent = {{130, -10}, {150, 10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
-      Stock receivables(level0 = receivables0) "Kundfordringar" annotation(Placement(transformation(origin = {40, 60}, extent = {{-20, -20}, {20, 20}})));
-      Stock payables(level0 = -payables0) "Leverantörsskulder (negativ nivå)" annotation(Placement(transformation(origin = {40, -10}, extent = {{-20, -20}, {20, 20}})));
-      Stock pensionProvision(level0 = 0) "Pensionsavsättning, förändring sedan basåret (negativ nivå)" annotation(Placement(transformation(origin = {40, -70}, extent = {{-20, -20}, {20, 20}})));
-      Stock grantAdvances(level0 = -grantAdvances0) "Förutbetalda bidrag (negativ nivå)" annotation(Placement(transformation(origin = {-40, -70}, extent = {{-20, -20}, {20, 20}})));
-      Outflow payroll "Löner och sociala avgifter" annotation(Placement(transformation(origin = {100, 90}, extent = {{-10, -10}, {10, 10}})));
-      Outflow rounding "Avrundningsjustering" annotation(Placement(transformation(origin = {100, -100}, extent = {{-10, -10}, {10, 10}})));
-      Inflow revenueDirect "Verksamhetens intäkter, betalda direkt" annotation(Placement(transformation(origin = {100, 60}, extent = {{-10, -10}, {10, 10}})));
-      Inflow revenueBooked "Fakturerade verksamhetsintäkter" annotation(Placement(transformation(origin = {0, 60}, extent = {{-10, -10}, {10, 10}})));
-      Transfer collection "Kunderna betalar" annotation(Placement(transformation(origin = {80, 40}, extent = {{-10, -10}, {10, 10}})));
-      Outflow otherDirect "Övriga kostnader, betalda direkt" annotation(Placement(transformation(origin = {100, 20}, extent = {{-10, -10}, {10, 10}})));
-      Outflow otherBooked "Bokförda övriga kostnader" annotation(Placement(transformation(origin = {0, -10}, extent = {{-10, -10}, {10, 10}})));
-      Transfer supplierPayment "Betalning till leverantörer" annotation(Placement(transformation(origin = {80, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      Outflow pensionCost "Pensionskostnad" annotation(Placement(transformation(origin = {0, -70}, extent = {{-10, -10}, {10, 10}})));
-      Transfer pensionPayment "Pensionsutbetalning" annotation(Placement(transformation(origin = {80, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      Transfer grantAdvance "Ändring av förutbetalda bidrag" annotation(Placement(transformation(origin = {-40, -30}, extent = {{-10, -10}, {10, 10}})));
+      StockPort cash "Kassan" annotation(Placement(transformation(origin={0,10}, extent={{-10,-10},{10,10}}), iconTransformation(extent = {{90, -10}, {110, 10}})));
+      Stock receivables(level0 = receivables0) "Kundfordringar" annotation(Placement(transformation(origin={-110,-20}, extent={{-20,-20},{20,20}})));
+      Stock payables(level0 = -payables0) "Leverantörsskulder (negativ nivå)" annotation(Placement(transformation(origin={120,0}, extent={{-20,-20},{20,20}})));
+      Stock pensionProvision(level0 = 0) "Pensionsavsättning, förändring sedan basåret (negativ nivå)" annotation(Placement(transformation(origin={120,-60}, extent={{-20,-20},{20,20}})));
+      Stock grantAdvances(level0 = -grantAdvances0) "Förutbetalda bidrag (negativ nivå)" annotation(Placement(transformation(origin={-180,40}, extent={{-20,-20},{20,20}})));
+      Outflow payroll "Löner och sociala avgifter" annotation(Placement(transformation(origin={60,90}, extent={{-10,-10},{10,10}})));
+      Outflow rounding "Avrundningsjustering" annotation(Placement(transformation(origin={60,50}, extent={{-10,-10},{10,10}})));
+      Inflow revenueDirect "Verksamhetens intäkter, betalda direkt" annotation(Placement(transformation(origin={-50,10}, extent={{-10,-10},{10,10}})));
+      Inflow revenueBooked "Fakturerade verksamhetsintäkter" annotation(Placement(transformation(origin={-180,-50}, extent={{-10,-10},{10,10}})));
+      Transfer collection "Kunderna betalar" annotation(Placement(transformation(origin={-50,-30}, extent={{-10,-10},{10,10}})));
+      Outflow otherDirect "Övriga kostnader, betalda direkt" annotation(Placement(transformation(origin={60,10}, extent={{-10,-10},{10,10}})));
+      Outflow otherBooked "Bokförda övriga kostnader" annotation(Placement(transformation(origin={180,-20}, extent={{-10,-10},{10,10}})));
+      Transfer supplierPayment "Betalning till leverantörer" annotation(Placement(transformation(origin={60,-30}, extent={{-10,-10},{10,10}})));
+      Outflow pensionCost "Pensionskostnad" annotation(Placement(transformation(origin={180,-80}, extent={{-10,-10},{10,10}})));
+      Transfer pensionPayment "Pensionsutbetalning" annotation(Placement(transformation(origin={60,-70}, extent={{-10,-10},{10,10}})));
+      Transfer grantAdvance "Ändring av förutbetalda bidrag" annotation(Placement(transformation(origin={-110,30}, extent={{-10,-10},{10,10}})));
       discrete output Units.Money tradeReceivables(start = receivables0, fixed = true) "Kundfordringar vid årets slut, mnkr";
       discrete output Units.Money tradePayables(start = payables0, fixed = true) "Leverantörsskulder vid årets slut, mnkr";
       discrete output Units.Money deferredGrants(start = grantAdvances0, fixed = true) "Förutbetalda bidrag vid årets slut, mnkr";
@@ -2003,21 +2007,21 @@ nivån, med en takt som ger den sammanvägda avskrivningstidens årliga andel.</
         grantChange = if active then ((if calendar.pathIndex == 1 then firstYearGrantAdvance else 0) + grantAdvances.level)/Units.year else 0;
       end when;
       grantAdvance.rate = grantChange;
-      connect(cash, payroll.from);
-      connect(cash, rounding.from);
-      connect(revenueDirect.to, cash);
-      connect(revenueBooked.to, receivables.port);
-      connect(receivables.port, collection.from);
-      connect(collection.to, cash);
-      connect(cash, otherDirect.from);
-      connect(payables.port, otherBooked.from);
-      connect(cash, supplierPayment.from);
-      connect(supplierPayment.to, payables.port);
-      connect(pensionProvision.port, pensionCost.from);
-      connect(cash, pensionPayment.from);
-      connect(pensionPayment.to, pensionProvision.port);
-      connect(grantAdvances.port, grantAdvance.from);
-      connect(grantAdvance.to, cash);
+      connect(cash, payroll.from) annotation(Line(points={{0,10},{0,90},{50,90}}, color={155,95,35}));
+      connect(cash, rounding.from) annotation(Line(points={{0,10},{45,10},{45,50},{50,50}}, color={155,95,35}));
+      connect(revenueDirect.to, cash) annotation(Line(points={{-40,10},{0,10}}, color={155,95,35}));
+      connect(revenueBooked.to, receivables.port) annotation(Line(points={{-170,-50},{-110,-50},{-110,-40}}, color={155,95,35}));
+      connect(receivables.port, collection.from) annotation(Line(points={{-110,-40},{-110,-45},{-65,-45},{-65,-30},{-60,-30}}, color={155,95,35}));
+      connect(collection.to, cash) annotation(Line(points={{-40,-30},{-35,-30},{-35,10},{0,10}}, color={155,95,35}));
+      connect(cash, otherDirect.from) annotation(Line(points={{0,10},{50,10}}, color={155,95,35}));
+      connect(payables.port, otherBooked.from) annotation(Line(points={{120,-20},{120,-25},{165,-25},{165,-20},{170,-20}}, color={155,95,35}));
+      connect(cash, supplierPayment.from) annotation(Line(points={{0,10},{45,10},{45,-30},{50,-30}}, color={155,95,35}));
+      connect(supplierPayment.to, payables.port) annotation(Line(points={{70,-30},{120,-30},{120,-20}}, color={155,95,35}));
+      connect(pensionProvision.port, pensionCost.from) annotation(Line(points={{120,-80},{120,-85},{165,-85},{165,-80},{170,-80}}, color={155,95,35}));
+      connect(cash, pensionPayment.from) annotation(Line(points={{0,10},{0,-70},{50,-70}}, color={155,95,35}));
+      connect(pensionPayment.to, pensionProvision.port) annotation(Line(points={{70,-70},{95,-70},{95,-85},{120,-85},{120,-80}}, color={155,95,35}));
+      connect(grantAdvances.port, grantAdvance.from) annotation(Line(points={{-180,20},{-180,15},{-125,15},{-125,30},{-120,30}}, color={155,95,35}));
+      connect(grantAdvance.to, cash) annotation(Line(points={{-100,30},{-35,30},{-35,10},{0,10}}, color={155,95,35}));
       when clock.yearEnd then
         tradeReceivables = receivables.level;
         tradePayables = -payables.level;
@@ -2025,7 +2029,7 @@ nivån, med en takt som ger den sammanvägda avskrivningstidens årliga andel.</
         cashEffect = collection.annual - revenueBooked.annual + otherBooked.annual - supplierPayment.annual + grantAdvance.annual;
       end when;
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {35, 115, 85}, fillColor = {230, 245, 238}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Betalningar")}),
-        Diagram(coordinateSystem(extent = {{-140, -120}, {140, 120}})),
+        Diagram(coordinateSystem(extent={{-220,-120},{220,120}})),
         Documentation(info = "<html><p>Driftens kostnader och intäkter blir flöden till och från kassan. Med rörelsekapital går fakturerade
 intäkter först till kundfordringar och kostnader till leverantörsskulder; de betalas efter betalningstiden, så lagret blir
 ungefär årets flöde gånger dagar/365. Pensionskostnaden ökar avsättningen och utbetalningarna minskar den. Skulder har
@@ -2056,23 +2060,23 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       outer Components.Calendar calendar;
       outer Clock clock;
       Interfaces.TaxAndGrantsInput taxAndGrants "Skatt och bidrag, mnkr per år" annotation(
-        Placement(transformation(extent = {{-160, 60}, {-120, 100}}), iconTransformation(extent = {{-110, 30}, {-90, 50}})));
+        Placement(transformation(origin={-140,-120}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{-110, 30}, {-90, 50}})));
       Interfaces.SignalInput interestRate "Låneränta, andel" annotation(
-        Placement(transformation(extent = {{-160, -100}, {-120, -60}}), iconTransformation(extent = {{-110, -50}, {-90, -30}})));
-      StockPort operating "Driftens betalningar" annotation(Placement(transformation(extent = {{-150, -10}, {-130, 10}}), iconTransformation(extent = {{-10, 90}, {10, 110}})));
-      StockPort investing "Investeringarnas betalningar" annotation(Placement(transformation(extent = {{-150, -50}, {-130, -30}}), iconTransformation(extent = {{-10, -110}, {10, -90}})));
-      Stock cash(level0 = cash0) "Kassa och bank" annotation(Placement(transformation(origin = {0, 0}, extent = {{-20, -20}, {20, 20}})));
-      Stock debt(level0 = -debt0) "Låneskuld (negativ nivå)" annotation(Placement(transformation(origin = {100, 0}, extent = {{-20, -20}, {20, 20}})));
-      Meter operations "Kassaflöde från den löpande verksamheten" annotation(Placement(transformation(origin = {-60, 0}, extent = {{-10, -10}, {10, 10}})));
-      Meter investments "Kassaflöde från investeringar" annotation(Placement(transformation(origin = {-60, -40}, extent = {{-10, -10}, {10, 10}})));
-      Inflow tax(annual0 = tax0) "Skatteintäkter" annotation(Placement(transformation(origin = {-100, 60}, extent = {{-10, -10}, {10, 10}})));
-      Inflow grants(annual0 = grants0) "Generella bidrag och utjämning" annotation(Placement(transformation(origin = {-100, 40}, extent = {{-10, -10}, {10, 10}})));
-      Inflow financial(annual0 = financialIncome) "Finansiella intäkter" annotation(Placement(transformation(origin = {-100, 20}, extent = {{-10, -10}, {10, 10}})));
-      Outflow interest(annual0 = interest0) "Räntekostnader" annotation(Placement(transformation(origin = {-100, -20}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      Outflow otherFinancial(annual0 = otherFinancialExpense) "Övriga finansiella kostnader" annotation(Placement(transformation(origin = {-100, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      Transfer borrowing "Nya lån" annotation(Placement(transformation(origin = {50, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      Transfer prefinancing "Lån i förväg" annotation(Placement(transformation(origin = {50, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      Transfer repayment "Amortering" annotation(Placement(transformation(origin = {50, -30}, extent = {{-10, -10}, {10, 10}})));
+        Placement(transformation(origin={-70,-120}, extent={{-20,-20},{20,20}}), iconTransformation(extent = {{-110, -50}, {-90, -30}})));
+      StockPort operating "Driftens betalningar" annotation(Placement(transformation(origin={-60,8}, extent={{-10,-10},{10,10}}), iconTransformation(extent = {{-10, 90}, {10, 110}})));
+      StockPort investing "Investeringarnas betalningar" annotation(Placement(transformation(origin={-140,138}, extent={{-10,-10},{10,10}}), iconTransformation(extent = {{-10, -110}, {10, -90}})));
+      Stock cash(level0 = cash0) "Kassa och bank" annotation(Placement(transformation(origin={80,86}, extent={{-20,-20},{20,20}})));
+      Stock debt(level0 = -debt0) "Låneskuld (negativ nivå)" annotation(Placement(transformation(origin={-140,88}, extent={{-20,-20},{20,20}})));
+      Meter operations "Kassaflöde från den löpande verksamheten" annotation(Placement(transformation(origin={10,66}, extent={{-10,-10},{10,10}})));
+      Meter investments "Kassaflöde från investeringar" annotation(Placement(transformation(origin={-60,138}, extent={{-10,-10},{10,10}})));
+      Inflow tax(annual0 = tax0) "Skatteintäkter" annotation(Placement(transformation(origin={-140,38}, extent={{-10,-10},{10,10}})));
+      Inflow grants(annual0 = grants0) "Generella bidrag och utjämning" annotation(Placement(transformation(origin={-140,-2}, extent={{-10,-10},{10,10}})));
+      Inflow financial(annual0 = financialIncome) "Finansiella intäkter" annotation(Placement(transformation(origin={-140,-42}, extent={{-10,-10},{10,10}})));
+      Outflow interest(annual0 = interest0) "Räntekostnader" annotation(Placement(transformation(origin={10,26}, extent={{-10,-10},{10,10}})));
+      Outflow otherFinancial(annual0 = otherFinancialExpense) "Övriga finansiella kostnader" annotation(Placement(transformation(origin={10,-14}, extent={{-10,-10},{10,10}})));
+      Transfer borrowing "Nya lån" annotation(Placement(transformation(origin={-60,88}, extent={{-10,-10},{10,10}})));
+      Transfer prefinancing "Lån i förväg" annotation(Placement(transformation(origin={-60,48}, extent={{-10,-10},{10,10}})));
+      Transfer repayment "Amortering" annotation(Placement(transformation(origin={140,68}, extent={{-10,-10},{10,10}})));
       Units.MoneyRate net "Kassaflöde före finansiering, mnkr per år";
       Real marketRate "Marknadsränta för nya och omsatta lån just nu, andel";
       Real depositRate "Ränta på kassan just nu, andel";
@@ -2120,21 +2124,21 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       borrowing.rate = max(0, financingNeed);
       repayment.rate = if liquidityPolicy then min(max(0, -financingNeed), -debt.level/reserveRestoreTime)
         else (if net > 0 and debt.level < 0 then net else 0);
-      connect(operating, tax.to);
-      connect(operating, grants.to);
-      connect(operating, financial.to);
-      connect(operating, interest.from);
-      connect(operating, otherFinancial.from);
-      connect(operating, operations.a);
-      connect(operations.b, cash.port);
-      connect(investing, investments.a);
-      connect(investments.b, cash.port);
-      connect(debt.port, borrowing.from);
-      connect(borrowing.to, cash.port);
-      connect(debt.port, prefinancing.from);
-      connect(prefinancing.to, cash.port);
-      connect(cash.port, repayment.from);
-      connect(repayment.to, debt.port);
+      connect(operating, tax.to) annotation(Line(points={{-60,8},{-125,8},{-125,38},{-130,38}}, color={155,95,35}));
+      connect(operating, grants.to) annotation(Line(points={{-60,8},{-125,8},{-125,-2},{-130,-2}}, color={155,95,35}));
+      connect(operating, financial.to) annotation(Line(points={{-60,8},{-125,8},{-125,-42},{-130,-42}}, color={155,95,35}));
+      connect(operating, interest.from) annotation(Line(points={{-60,8},{-5,8},{-5,26},{0,26}}, color={155,95,35}));
+      connect(operating, otherFinancial.from) annotation(Line(points={{-60,8},{-5,8},{-5,-14},{0,-14}}, color={155,95,35}));
+      connect(operating, operations.a) annotation(Line(points={{-60,8},{-5,8},{-5,66},{0,66}}, color={155,95,35}));
+      connect(operations.b, cash.port) annotation(Line(points={{20,66},{55,66},{55,60},{80,60},{80,66}}, color={155,95,35}));
+      connect(investing, investments.a) annotation(Line(points={{-140,138},{-70,138}}, color={155,95,35}));
+      connect(investments.b, cash.port) annotation(Line(points={{-50,138},{55,138},{55,60},{80,60},{80,66}}, color={155,95,35}));
+      connect(debt.port, borrowing.from) annotation(Line(points={{-140,68},{-140,60},{-75,60},{-75,88},{-70,88}}, color={155,95,35}));
+      connect(borrowing.to, cash.port) annotation(Line(points={{-50,88},{55,88},{55,60},{80,60},{80,66}}, color={155,95,35}));
+      connect(debt.port, prefinancing.from) annotation(Line(points={{-140,68},{-140,60},{-75,60},{-75,48},{-70,48}}, color={155,95,35}));
+      connect(prefinancing.to, cash.port) annotation(Line(points={{-50,48},{80,48},{80,66}}, color={155,95,35}));
+      connect(cash.port, repayment.from) annotation(Line(points={{80,66},{80,60},{125,60},{125,68},{130,68}}, color={155,95,35}));
+      connect(repayment.to, debt.port) annotation(Line(points={{150,68},{155,68},{155,115},{-75,115},{-75,60},{-140,60},{-140,68}}, color={155,95,35}));
       when clock.yearEnd then
         debtLevel = -debt.level;
         cumulativeInterest = pre(cumulativeInterest) + interest.annual;
@@ -2146,7 +2150,7 @@ negativ nivå. Utan rörelsekapital betalas intäkter och övriga kostnader dire
       assert(abs(debtBalance) < 1e-6*max(1, debtLevel), "Skuldbalansen stämmer inte");
       assert(abs(cashBalance) < 1e-6*max(1, abs(cash.level)), "Kassabalansen stämmer inte");
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -60}, {100, 60}}, lineColor = {155, 95, 35}, fillColor = {255, 246, 230}, fillPattern = FillPattern.Solid, radius = 8), Text(extent = {{-95, 25}, {95, -25}}, textString = "Finans")}),
-        Diagram(coordinateSystem(extent = {{-140, -100}, {140, 100}})),
+        Diagram(coordinateSystem(extent={{-180,-160},{180,180}})),
         Documentation(info = "<html><p>Kassan och låneskulden är lager. Skatt, bidrag och finansiella poster flödar in och ut över gränsen;
 driftens och investeringarnas betalningar kommer genom kopplingarna och mäts (<code>operations</code>,
 <code>investments</code>). Räntan är ett flöde på den aktuella skulden, inte på årets ingående skuld.</p>
@@ -2172,26 +2176,26 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
       discrete Units.Money equityBalance(start = 0, fixed = true) "Kontroll: förändringen av alla lager minus årets resultat, mnkr; ska vara noll";
       discrete Units.Money revenueBalance(start = 0, fixed = true) "Kontroll: skatt och bidrag som flutit in under året minus årets beslut, mnkr; ska vara noll";
       inner Components.Calendar calendar(horizon = horizon, baseYear = base.year - 1) "Årets regler: räknas fram när året börjar" annotation(
-        Placement(transformation(origin = {-200, 140}, extent = {{-10, -10}, {10, 10}})));
+        Placement(transformation(origin={-170,-90}, extent={{-10,-10},{10,10}})));
       inner Clock clock(horizon = horizon, baseYear = base.year) "Bokslut vid årets slut" annotation(
         Placement(transformation(origin = {-170, 140}, extent = {{-10, -10}, {10, 10}})));
       Components.Scenario scenario(horizon = horizon, residualMigrationPath = residualMigrationPath, migrationDeltaPath = migrationDeltaPath, birthChangePath = birthChangePath, wageGrowthPath = wageGrowthPath, priceGrowthPath = priceGrowthPath, pensionExpensePath = pensionExpensePath, pensionCashPaymentsPath = pensionCashPaymentsPath, referenceTax = referenceTax, referenceGrants = referenceGrants, referencePopulation = referencePopulation, nationalPopulationPath = nationalPopulationPath, investmentPath = investmentPath, deferInvestmentShare = deferInvestmentShare, projectPayment = projectPayment, interestRatePath = interestRatePath, inflationShockPath = inflationShockPath, inflationWagePassThrough = inflationWagePassThrough, inflationPensionPassThrough = inflationPensionPassThrough, inflationRateResponse = inflationRateResponse, inflationGrantCompensation = inflationGrantCompensation) "Årets antaganden" annotation(
-        Placement(transformation(origin = {-200, 60}, extent = {{-20, -40}, {20, 40}})));
+        Placement(transformation(origin={-160,20}, extent={{-20,-40},{20,40}})));
       replaceable Demography demography(p0 = p0, olderShares = olderShares, horizon = horizon, ageingRatePath = ageProfile[3:horizon + 2, 1:6], olderMortalityPath = ageProfile[3:horizon + 2, 7:9], deaths0Shown = base.deaths, deathRates = mortalityRates, migrationWeights = migrationWeights, births0 = births0) constrainedby DemographyBase "Demografi: lager med födda, döda, åldrande och flyttningar som flöden" annotation(
-        Placement(transformation(origin = {-90, 100}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={-80,62}, extent={{-20,-15},{20,15}})));
       Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces, infrastructureShare = infrastructureShare, networkGrowth = networkGrowth) "Verksamhet" annotation(
-        Placement(transformation(origin = {0, 100}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={10,84}, extent={{-20,-15},{20,15}})));
       OperatingAccounts operations(population0 = sum(p0), oneOffCost = oneOffCost, oneOffCostTime = oneOffCostTime, oneOffCostDuration = oneOffCostDuration, payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, inflationRevenuePassThrough = inflationRevenuePassThrough, pensionFollowsPayroll = pensionFollowsPayroll, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
-        Placement(transformation(origin = {60, 100}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={100,62}, extent={{-20,-15},{20,15}})));
       Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, taxRatePath = taxRatePath, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, importedRevenueMode = importedRevenueMode, novemberPopulation0 = novemberPopulation0, openingCohorts = p0, ageIncomeWeights = ageIncomeWeights, equalisationCountyRate = equalisationCountyRate, importedComponents = importedComponents, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0, grantsByComponent = grantsByComponent, horizon = horizon, grantComponents0 = grantComponents0, incomeEqualisationPerCapita = incomeEqualisationPerCapitaPath, equalisationGuarantee = equalisationGuarantee, relativeTaxCapacity0 = incomeEqualisationCapacity, incomeEqualisationComposition = incomeEqualisationComposition, relativeTaxCapacity = relativeTaxCapacityPath, costEqualisationPerCapita = costEqualisationPerCapitaPath, regulationPerCapita = regulationPerCapitaPath, lssEqualisationPerCapita = lssEqualisationPerCapitaPath, propertyFee = propertyFeePath, otherGeneralGrants = otherGeneralGrantsPath, grantIncrease = grantIncrease, novemberObserved = true, novemberCohortsObserved = novemberCohorts, novemberPopulationObserved = novemberPopulation) "Intäkter: årets belopp beslutas när året börjar och betalas jämnt under året" annotation(
-        Placement(transformation(origin = {-120, 20}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={10,-16}, extent={{-20,-15},{20,15}})));
       Payments payments(active = workingCapitalEnabled, receivables0 = receivables0, payables0 = payables0, grantAdvances0 = grantAdvances0, collectionDays = collectionDays, paymentDays = paymentDays, firstYearGrantAdvance = firstYearGrantAdvance, netCostRoundingAdjustment = netCostRoundingAdjustment) "Driftens betalningar" annotation(
-        Placement(transformation(origin = {60, 40}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={10,34}, extent={{-20,-15},{20,15}})));
       Finance finance(debt0 = debt0, cash0 = cash0, interest0 = base.interestExpense, tax0 = tax0, grants0 = grants0, financialIncome = financialIncome, otherFinancialExpense = otherFinancialExpense, depositSpread = depositSpread, liquidityPolicy = liquidityPolicy, reserveDays = reserveDays, reserveAdjustmentTime = reserveAdjustmentTime, creditLine = creditLine, plannedPrefinancing = investmentPath[1]*deferInvestmentShare*prefinanceShare,
         averageRate0 = interestRate, rateFixingYears = rateFixingYears, rateShock = rateShock, rateShockTime = rateShockTime) "Kassa och lån" annotation(
-        Placement(transformation(origin = {0, -20}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={100,12}, extent={{-20,-15},{20,15}})));
       Capital capital(baseYear = base.year, assets0 = assets0, depreciation0 = depreciation0, life = life, constructionYears = constructionYears, constructionShare = constructionShare, workInProgress0 = workInProgress0, projectOpeningStock = projectOpeningStock, projectPayment = projectPayment, projectOpeningStep = projectOpeningStep, projectPlaces = projectPlaces) "Kapital" annotation(
-        Placement(transformation(origin = {0, -80}, extent = {{-20, -15}, {20, 15}})));
+        Placement(transformation(origin={170,1.83}, extent={{-20,-15},{20,15}})));
       discrete Units.Persons novemberCohorts[5](start = p0, each fixed = true) "Invånare per åldersgrupp den 1 november, underlag för nästa års skatt och bidrag";
       discrete Units.Persons novemberPopulation(start = novemberPopulation0, fixed = true) "Folkmängd den 1 november";
     protected
@@ -2204,24 +2208,24 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
       interestRateYear = scenario.interestRate;
       netWorth = netWorthNow;
     equation
-      connect(scenario.demography, demography.drivers);
-      connect(scenario.operations, operations.drivers);
-      connect(scenario.revenue, revenues.reference);
-      connect(scenario.investment, capital.investment);
-      connect(scenario.interestRate, finance.interestRate);
+      connect(scenario.demography, demography.drivers) annotation(Line(points={{-177.33,18.33},{-190,18.33},{-190,90},{-80,90},{-80,78.5}}, color={90,110,130}));
+      connect(scenario.operations, operations.drivers) annotation(Line(points={{-142,18.33},{-25,18.33},{-25,56},{85,56}}, color={90,110,130}));
+      connect(scenario.revenue, revenues.reference) annotation(Line(points={{-180,20},{-195,20},{-195,-25},{-15,-25},{-15,-16},{-10,-16}}, color={90,110,130}));
+      connect(scenario.investment, capital.investment) annotation(Line(points={{-153.33,18.33},{-135,18.33},{-135,-40},{140,-40},{140,25},{170,25},{170,18.33}}, color={90,110,130}));
+      connect(scenario.interestRate, finance.interestRate) annotation(Line(points={{-140,20},{-20,20},{-20,6},{85,6}}, color={90,110,130}));
       finance.operatingPayments = operations.wagesRate + operations.employerContributionsRate + operations.pensionCashPaymentsRate + operations.otherOperatingExpenseRate;
-      connect(demography.cohorts, revenues.cohorts);
-      connect(demography.cohorts, services.cohorts);
-      connect(demography.cohorts, operations.cohorts);
+      connect(demography.cohorts, revenues.cohorts) annotation(Line(points={{-63.5,62},{-15,62},{-15,10},{10,10},{10,-1}}, color={40,95,140}));
+      connect(demography.cohorts, services.cohorts) annotation(Line(points={{-63.5,62},{-15,62},{-15,84},{-5,84}}, color={40,95,140}));
+      connect(demography.cohorts, operations.cohorts) annotation(Line(points={{-63.5,62},{65,62},{65,68},{85,68}}, color={40,95,140}));
       // Folkbokföringen den 1 november bestämmer nästa års skatt och bidrag (mode 2); här läses lagret den dagen.
       when sample(base.year + 10/12, 1) then
         novemberCohorts = demography.cohorts.p;
         novemberPopulation = demography.cohorts.population;
       end when;
-      connect(services.serviceVolume, operations.serviceVolume);
-      connect(revenues.taxAndGrants, finance.taxAndGrants);
-      connect(payments.cash, finance.operating);
-      connect(capital.cash, finance.investing);
+      connect(services.serviceVolume, operations.serviceVolume) annotation(Line(points={{25,84},{70,84},{70,62},{85,62}}, color={90,110,130}));
+      connect(revenues.taxAndGrants, finance.taxAndGrants) annotation(Line(points={{30,-16},{70,-16},{70,18},{85,18}}, color={40,95,140}));
+      connect(payments.cash, finance.operating) annotation(Line(points={{25,34},{100,34},{100,27}}, color={155,95,35}));
+      connect(capital.cash, finance.investing) annotation(Line(points={{155,1.83},{125,1.83},{125,-10},{100,-10},{100,-3}}, color={155,95,35}));
       payments.wages = operations.wagesRate;
       payments.employerContributions = operations.employerContributionsRate;
       payments.pensionExpense = operations.pensionExpenseRate;
@@ -2307,7 +2311,8 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
       interestShare = 100*interest/(tax + grants);
       cumulativeInterest = finance.cumulativeInterest;
       annotation(
-        Diagram(coordinateSystem(extent = {{-220, -120}, {120, 160}})),
+        Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(extent = {{-100, -100}, {100, 100}}, lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, radius = 10), Text(extent = {{-96, 58}, {96, 92}}, textString = "%name", textColor = {40, 95, 140}), Rectangle(extent = {{-80, -10}, {-40, 30}}, lineColor = {40, 95, 140}, fillColor = {214, 230, 245}, fillPattern = FillPattern.Solid), Rectangle(extent = {{-20, -10}, {20, 30}}, lineColor = {40, 95, 140}, fillColor = {214, 230, 245}, fillPattern = FillPattern.Solid), Rectangle(extent = {{40, -10}, {80, 30}}, lineColor = {40, 95, 140}, fillColor = {214, 230, 245}, fillPattern = FillPattern.Solid), Line(points = {{-40, 10}, {-20, 10}}, color = {40, 95, 140}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Line(points = {{20, 10}, {40, 10}}, color = {40, 95, 140}, thickness = 0.5, arrow = {Arrow.None, Arrow.Filled}), Text(extent = {{-96, -70}, {96, -40}}, textString = "lager och flöden", textColor = {90, 110, 130})}),
+        Diagram(coordinateSystem(extent={{-220,-120},{220,160}})),
         Documentation(info = "<html><p><b>Tid: kalenderår, kontinuerlig tid.</b> Starttiden ska vara basårets år.</p>
 <p>Antagandena står i <code>Assumptions</code> och utdata i <code>Report</code>. Allt som ändras gradvis är lager och flöden:</p>
 <ul><li>Pengar: kassa, låneskuld, tillgångar, pågående arbeten, kundfordringar, leverantörsskulder, pensionsavsättning och
