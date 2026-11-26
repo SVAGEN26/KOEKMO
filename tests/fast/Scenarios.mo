@@ -60,11 +60,12 @@ package FastTests "Scenarier för snabbtesterna (tests/fast/test_model.py): Mota
     extends Motala.Continuous(oneOffCost = 56, oneOffCostTime = 2027.5);
   end Cloudburst;
 
+  model OwnMigration "Flyttningen tas bara från kommunens egna två år"
+    extends Motala.Continuous(migrationGroupWeight = 0);
+  end OwnMigration;
+
   model GroupMigration "Flyttningen tas från kommunens grupp enligt SKR i stället för kommunens egna två år"
     extends Motala.Continuous(migrationGroupWeight = 1);
   end GroupMigration;
 
-  model HalfGroupMigration "Hälften från kommunens egna år, hälften från kommungruppen"
-    extends Motala.Continuous(migrationGroupWeight = 0.5);
-  end HalfGroupMigration;
 end FastTests;

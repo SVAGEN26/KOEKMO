@@ -83,17 +83,19 @@ class Stored(unittest.TestCase):
 @unittest.skipUnless(ARCHIVES, 'SCB archives under data/downloads/ are not in this checkout')
 class AgainstTheModel(unittest.TestCase):
     def test_two_years_give_the_models_population(self):
-        """The model's own population in the eight-year hindcast (hindsight set, two-year calibration).
+        """The model's own population in the eight-year hindcast (hindsight set, two-year calibration, half the migration
+        from the municipality's SKR group: the model's default).
 
         The script steps once a year with a fixed 65+ death rate; the model's flows run during the year and 65+ is an
         ageing chain whose deaths rise as 80+ grows. They agree within 1 per cent (largest: Valdemarsvik 2025 from
         2017, 0.8 %)."""
         runs = [r for r in json.loads((ROOT / 'data/long-hindcast-continuous.json').read_text())['runs'] if r['assumptions'] == 'hindsight']
+        table = json.loads((ROOT / 'data/migration-groups.json').read_text())
         cache = {}
         for r in runs:
             code = r['municipality']
             cache.setdefault(code, hm.series(code))
-            projected, _ = hm.project(*cache[code], r['origin'], 2)
+            projected, _ = hm.project(*cache[code], r['origin'], 2, rate_change=hm.swap(table, code, r['origin'], 0.5))
             self.assertAlmostEqual(sum(projected[r['year']]) / r['model']['population'], 1, delta=1e-2, msg=f"{code} {r['origin']} {r['year']}")
 
 

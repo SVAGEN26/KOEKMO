@@ -423,8 +423,8 @@ class MigrationBasis(unittest.TestCase):
         own, group = table['municipalities']['0583'], table['groups']['B5']
         mean = lambda rates: [round((a + b)/2, 6) for a, b in zip(rates['2024'], rates['2025'])]
         cls.own, cls.group = mean(own['rates']), mean(group['rates'])
-        cls.base, _ = run('Base')
-        cls.half, _ = run('HalfGroupMigration')
+        cls.base, _ = run('OwnMigration')   # the municipality's own two years
+        cls.half, _ = run('Base')            # half of each: the default
         cls.full, _ = run('GroupMigration')
 
     def test_the_municipalitys_own_migration_is_swapped_for_the_groups(self):
@@ -453,7 +453,7 @@ class MigrationBasis(unittest.TestCase):
         wrapper, _ = run(WRAPPER, migrationGroupWeight=1, **rates)
         for y in wrapper:
             self.assertAlmostEqual(wrapper[y]['population'], self.full[y]['population'], delta=1e-3, msg=y)
-        untouched, _ = run(WRAPPER, **rates)   # weight 0: the rates are carried but not used
+        untouched, _ = run(WRAPPER, migrationGroupWeight=0, **rates)   # the rates are carried but not used
         for y in untouched:
             self.assertAlmostEqual(untouched[y]['population'], self.base[y]['population'], delta=1e-3, msg=y)
 

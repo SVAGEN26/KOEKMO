@@ -1865,3 +1865,18 @@ arkivera data.
   webbkompilatorn samma platta namn.
 - `scripts/hindcast_county_ages.py` pekade fortfarande på Motalas gamla plats efter flytten till `municipalities/`; rättat.
 
+## Blandningen är standard för flyttningen (2026-11-26)
+
+- Användarens beslut: hälften egna år, hälften kommungruppen är standard. `Assumptions.migrationGroupWeight = 0.5`,
+  omslaget `BrowserContinuous` har 0,5 med Motalas tal för 2025 som standardvärden, och sidan skickar 50 %
+  (`MIGRATION_GROUP_WEIGHT` i `scenario-inputs.js`). Saknas flyttalen för basåret räknar sidan med egna år.
+- Omkört med den nya standarden: `hindcast_vintages.py` (Motala, Finspång, Mjölby), `hindcast_long.py`,
+  `explain_outcome.py` för alla 13 och `--summary`.
+- Långa bakåttestet, folkmängdens medelabsolutfel efter 1, 2, 3, 4, 6, 8 år: 0,6 / 1,1 / 1,6 / 2,2 / 3,7 / 6,8 %
+  (egna år: 0,6 / 1,2 / 1,7 / 2,4 / 3,8 / 6,1). Resultatet: 1,8 / 2,3 / 2,7 / 3,7 / 3,1 / 2,1 % (förut 1,8 / 2,4 / 2,8 /
+  3,7 / 3,3 / 2,1). Åtta år är bara basåret 2017 (flyktingåren), där grupperna hade samma invandring.
+- Mot SKR:s cirkulär, Motalas resultat, medelabsolutfel mnkr efter 1 / 2 / 3 år: 41 / 63 / 66 (förut 41 / 62 / 64);
+  med facit 44 / 55 / 31. Mjölby 42 / 67 / 112, Finspång 37 / 78 / 59. Nettokostnadens fel efter tre år med SKR:s
+  antaganden −188 mnkr, med prisfacit +4.
+- Motala 2026–2033 på sidan ändras inte: den inlästa befolkningsprognosen följs de åren.
+

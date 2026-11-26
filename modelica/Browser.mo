@@ -8,7 +8,7 @@ model BrowserContinuous "Omslag för webbläsaren kring Motala.Continuous: lager
     residualMigration=if useObservedMigration then observedMigration else Kommunekonomi.Data.calibratedMigrationRates(
       historyCohorts, historyTotals, historyBirths, mortalityRates, ageProfile[1:2, :], olderShares)
       + migrationGroupWeight*(groupMigration - ownMigration) .* p0,
-    migrationGroupWeight=0,
+    migrationGroupWeight=0.5,
     tax0=2330, grants0=987, debt0=1040, cash0=81, assets0=2997, depreciation0=180,
     financialIncome=15, otherFinancialExpense=4, births0=334,
     payroll0=2288, pension0=190, otherOperatingExpense0=1297, operatingRevenue0=751,
@@ -50,8 +50,8 @@ model BrowserContinuous "Omslag för webbläsaren kring Motala.Continuous: lager
   parameter Units.Persons historyTotals[3] = {43728, 43505, 43131} "Redovisad folkmängd samma år";
   parameter Units.Persons historyBirths[2] = {336, 334} "Födda de två senare åren";
   parameter Units.Persons historyDeaths = 468 "Döda under basåret";
-  parameter Units.Rate groupMigration[5] = zeros(5) "Flyttnetto per invånare och år i kommunens grupp enligt SKR, medel av basåret och året före";
-  parameter Units.Rate ownMigration[5] = zeros(5) "Kommunens eget flyttnetto per invånare och år, samma två år";
+  parameter Units.Rate groupMigration[5] = {0.006841, -0.000647, 0.001372, -0.001624, -0.000291} "Flyttnetto per invånare och år i kommunens grupp enligt SKR, medel av basåret och året före";
+  parameter Units.Rate ownMigration[5] = {0.008407, -0.00257, -0.000901, -0.009076, 0.000287} "Kommunens eget flyttnetto per invånare och år, samma två år";
   parameter Boolean useObservedMigration = false "Restflödet är det observerade flyttnettot i stället för det kalibrerade";
   parameter Units.PersonsPerYear observedMigration[5] = zeros(5) "Observerat flyttnetto per åldersgrupp, personer per år";
   parameter Units.Persons projectedCohorts[100, 5] = zeros(100, 5) "Befolkningsprojektionens åldersgrupper vid varje årsskifte";
