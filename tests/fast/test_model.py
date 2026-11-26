@@ -85,7 +85,7 @@ def run(name, years=8, start=2025, **parameters):
         for k, old in changed.items():
             m.setParameters(**{k: str(old)})
     names = m.getSolutions(resultfile=str(result))
-    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual')
+    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual', 'revenues.grantParts')
     wanted = [n for n in names if n == 'time' or '.' not in n or n.startswith(extra)]
     series = dict(zip(wanted, m.getSolutions(wanted, resultfile=str(result))))
     rows = {}
@@ -264,6 +264,113 @@ class PageWrapper(unittest.TestCase):
         more_deaths, _ = run(WRAPPER, years=1, historyDeaths=600)
         self.assertGreater(more_deaths[2026]['mortalityRates[5]'], base[2026]['mortalityRates[5]'] + 0.01)
         self.assertNotAlmostEqual(more_deaths[2026]['residualMigration[5]'], base[2026]['residualMigration[5]'], delta=1)
+
+
+
+def skr_path(years=8):
+    """Motala's SKR path as the page sends it: tax, grants, population, tax before settlement, income equalisation, regulation."""
+    import json
+    planning = json.loads((ROOT / 'data/planning-inputs.json').read_text())
+    path = planning['revenuePath']
+    parts = {c['year']: c['tkrByOutputRow'] for c in path['provenance']['recalculation']['components']}
+    rows = [[r['tax'], r['grants'], r['population'], parts[r['year']]['12']/1000, parts[r['year']]['14']/1000, r['regulation']]
+            for r in path['rows'][:years]]
+    growth = [r['taxBaseGrowth']/100 for r in planning['rows'][:years]]
+    return rows, growth
+
+
+def sent(rows, growth, **more):
+    parameters = {'sourcedRevenueYears': len(rows), **more}
+    for i, row in enumerate(rows, start=1):
+        parameters[f'taxBaseGrowthPath[{i}]'] = growth[i - 1]
+        for j, x in enumerate(row, start=1):
+            parameters[f'sourcedRevenue[{i},{j}]'] = x
+    return parameters
+
+
+@unittest.skipIf(SKIP, SKIP)
+class StateFrame(unittest.TestCase):
+    """The state's frame: the regulation grant is what is left of it, the same per inhabitant in every municipality."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rows, cls.growth = skr_path()
+        cls.last = 0.0389  # the tax base growth the page keeps after SKR's last year
+        cls.frame, _ = run(WRAPPER, years=12, regulationDecidedYears=2, **sent(cls.rows, cls.growth),
+                           **{f'taxBaseGrowthPath[{i}]': cls.last for i in range(9, 13)})
+        cls.skr, _ = run(WRAPPER, years=12, stateFrame=False, **sent(cls.rows, cls.growth))  # as the page sends it: no decided years
+
+    def path(self, result, i, j):
+        return result[2026][f'revenuePath[{i},{j}]']
+
+    def test_the_decided_years_are_skrs(self):
+        for i in (1, 2):
+            for j in range(1, 7):
+                self.assertAlmostEqual(self.path(self.frame, i, j), self.rows[i - 1][j - 1], delta=1e-6, msg=(i, j))
+
+    def test_the_regulation_grant_per_inhabitant_follows_the_nations_tax_base(self):
+        # The wrapper's national population is flat here, so the tax base per inhabitant grows by the tax base's rate.
+        decided = self.rows[1][5]/self.rows[1][2]
+        capacity = 1.0
+        for i in range(3, 13):
+            capacity *= 1 + (self.growth[i - 1] if i <= 8 else self.last)
+            per_inhabitant = self.path(self.frame, i, 6)/self.path(self.frame, i, 3)
+            self.assertAlmostEqual(per_inhabitant, decided*capacity, delta=1e-9, msg=i)
+        # SKR's own post shrinks each year; the frame gives 140 mnkr in 2033 against SKR's 15.
+        self.assertAlmostEqual(self.path(self.frame, 8, 6), 139.5, delta=0.5)
+        self.assertAlmostEqual(self.path(self.skr, 8, 6), self.rows[7][5], delta=1e-6)
+
+    def test_only_the_regulation_grant_differs_from_skr_within_its_years(self):
+        for i in range(1, 9):
+            self.assertAlmostEqual(self.path(self.frame, i, 1), self.rows[i - 1][0], delta=1e-6, msg=i)
+            self.assertAlmostEqual(self.path(self.frame, i, 2) - self.path(self.frame, i, 6), self.rows[i - 1][1] - self.rows[i - 1][5], delta=1e-6, msg=i)
+            for j in range(1, 7):
+                self.assertAlmostEqual(self.path(self.skr, i, j), self.rows[i - 1][j - 1], delta=1e-6, msg=(i, j))
+
+    def test_after_skrs_last_year_every_part_keeps_its_last_rate(self):
+        last, before = self.rows[7], self.rows[6]
+        rates = {1: last[0]/before[0], 3: last[2]/before[2], 4: last[0]/before[0], 5: last[4]/before[4]}
+        other = (last[1] - last[5])/(before[1] - before[5])
+        for result in (self.frame, self.skr):
+            for i in range(9, 13):
+                for j, rate in rates.items():
+                    self.assertAlmostEqual(self.path(result, i, j), last[j - 1]*rate**(i - 8), delta=1e-6, msg=(i, j))
+                self.assertAlmostEqual(self.path(result, i, 2) - self.path(result, i, 6), (last[1] - last[5])*other**(i - 8), delta=1e-6, msg=i)
+        # Grants keep growing after 2033: 3 to 4 per cent a year with the frame, not a standstill.
+        for i in range(9, 13):
+            growth = self.path(self.frame, i, 2)/self.path(self.frame, i - 1, 2) - 1
+            self.assertGreater(growth, 0.03, msg=i)
+            self.assertLess(growth, 0.04, msg=i)
+        # SKR's own post keeps its yearly change in kronor and turns into a fee.
+        step = last[5] - before[5]
+        self.assertAlmostEqual(self.path(self.skr, 10, 6), last[5] + 2*step, delta=1e-6)
+        self.assertLess(self.path(self.skr, 10, 6), 0)
+
+    def test_the_model_uses_the_path_and_reports_it(self):
+        for y in range(2026, 2038):
+            i = y - 2025
+            self.assertAlmostEqual(self.frame[y]['referenceRevenue'], self.path(self.frame, i, 1) + self.path(self.frame, i, 2), delta=1e-6, msg=y)
+        self.assertGreater(self.frame[2033]['grants'], self.skr[2033]['grants'] + 100)
+        self.assertGreater(self.frame[2037]['grants'], self.frame[2033]['grants']*1.1)
+
+    def test_without_a_sourced_path_the_rows_stand_as_given(self):
+        wrapper, _ = run(WRAPPER)
+        for i in (1, 5, 8):
+            self.assertAlmostEqual(self.path(wrapper, i, 1), 2330, delta=1e-9)
+            self.assertAlmostEqual(self.path(wrapper, i, 2), 987, delta=1e-9)
+
+    def test_by_component_the_regulation_grant_follows_the_tax_base_per_inhabitant(self):
+        frame, _ = run('GrantParts')
+        held, _ = run('GrantPartsHeld')
+        # The parts are set at the start of each year, so the row of a year end holds the next year's. Year one is SCB's
+        # decided amount in both; after that the held grant only follows the population.
+        self.assertAlmostEqual(frame[2025]['revenues.grantParts[3]'], held[2025]['revenues.grantParts[3]'], delta=1e-6)
+        for y in range(2026, 2033):
+            ratio = frame[y]['revenues.grantParts[3]']/held[y]['revenues.grantParts[3]']
+            before = frame[y - 1]['revenues.grantParts[3]']/held[y - 1]['revenues.grantParts[3]']
+            self.assertGreater(ratio/before, 1.02, msg=y)   # the tax base per inhabitant grows about 3 per cent a year
+            self.assertLess(ratio/before, 1.05, msg=y)
+        self.assertGreater(frame[2033]['result'], held[2033]['result'])
 
 
 if __name__ == '__main__':

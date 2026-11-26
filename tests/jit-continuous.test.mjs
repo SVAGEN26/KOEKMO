@@ -215,3 +215,24 @@ simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96,
     for(const row of browser) for(const k of keys) close(row[k],reference.get(row.year)[k],0.01,`${row.year} ${k}`);
   } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('the state frame raises the grants after the decided years, and they keep growing after SKR\'s last year',{skip},async()=>{
+  const {followStateFrame}=await import('../site/src/scenario-inputs.js');
+  const long={...b,assumptions:{...b.assumptions,years:12},planningInputs:extendPlanning(planning,b.baseYear+12)};
+  const path=long.planningInputs.revenuePath,decided=planning.regulationRule.heldFrom-b.baseYear;
+  const framed=continuous(long,history,{},followStateFrame(path,planning.regulationRule.heldFrom)),skr=continuous(long,history,{},path);
+  for(let i=1;i<=decided;i++) assert.ok(Math.abs(framed.rows[i].grants-skr.rows[i].grants)<1e-6,`year ${i} is SKR's`);
+  for(let i=decided+1;i<=12;i++) assert.ok(framed.rows[i].grants>skr.rows[i].grants,`year ${i}`);
+  // SKR's regulation grant shrinks to 15 mnkr in 2033; with the frame following the tax base it is about 140.
+  const last=path.rows.at(-1),i2033=last.year-b.baseYear;
+  assert.ok(framed.rows[i2033].benchmarkRevenue-skr.rows[i2033].benchmarkRevenue>110&&framed.rows[i2033].benchmarkRevenue-skr.rows[i2033].benchmarkRevenue<140);
+  assert.ok(Math.abs(skr.rows[i2033].benchmarkRevenue-last.tax-last.grants)<1e-6,'without the frame the reference is SKR\'s');
+  // After the last year: the reference keeps growing 3 to 4.5 per cent a year, and is no longer SKR's own figure.
+  for(let i=i2033+1;i<=12;i++) {
+    const growth=framed.rows[i].benchmarkRevenue/framed.rows[i-1].benchmarkRevenue-1;
+    assert.ok(growth>0.03&&growth<0.045,`reference growth ${growth} in year ${i}`);
+    assert.equal(framed.rows[i].officialRevenue,null);
+  }
+  assert.ok(framed.rows[i2033].officialRevenue>0);
+});
+

@@ -1,0 +1,179 @@
+{
+  "source": "scripts/hindcast_regulation.py from data/equalisation.json (SCB TAB1981)",
+  "unit": "kr per inhabitant; error = rule minus outcome",
+  "startYears": [
+    2011,
+    2025
+  ],
+  "outcomes": [
+    2005,
+    2026
+  ],
+  "regulationPerInhabitant": {
+    "2005": -222,
+    "2006": -18,
+    "2007": 913,
+    "2008": -458,
+    "2009": -490,
+    "2010": 257,
+    "2011": 1024,
+    "2012": 492,
+    "2013": 456,
+    "2014": 232,
+    "2015": -39,
+    "2016": -34,
+    "2017": -10,
+    "2018": 157,
+    "2019": 702,
+    "2020": 1024,
+    "2021": 2973,
+    "2022": 2760,
+    "2023": 2336,
+    "2024": 3055,
+    "2025": 2644,
+    "2026": 2799
+  },
+  "taxCapacityGrowthPercent": {
+    "2006": 1.89,
+    "2007": 3.16,
+    "2008": 7.22,
+    "2009": 2.67,
+    "2010": -4.03,
+    "2011": 1.31,
+    "2012": 3.38,
+    "2013": 7.17,
+    "2014": 1.55,
+    "2015": 4.78,
+    "2016": 6.51,
+    "2017": 4.97,
+    "2018": 1.4,
+    "2019": 2.55,
+    "2020": 2.63,
+    "2021": 2.38,
+    "2022": 7.77,
+    "2023": 7.23,
+    "2024": 3.01,
+    "2025": 4.35,
+    "2026": 5.49
+  },
+  "stateCostOfIncomeEqualisation2026": 8066,
+  "rules": {
+    "fixed": "The state's frame fixed in kronor (SKR's assumption)",
+    "hold": "The regulation grant per inhabitant held in kronor",
+    "taxbase": "The state's frame follows the nation's tax base (the model's rule)"
+  },
+  "summary": {
+    "fixed": {
+      "1": {
+        "cases": 15,
+        "meanError": -420,
+        "meanAbsError": 488
+      },
+      "2": {
+        "cases": 14,
+        "meanError": -881,
+        "meanAbsError": 898
+      },
+      "3": {
+        "cases": 13,
+        "meanError": -1389,
+        "meanAbsError": 1409
+      },
+      "4": {
+        "cases": 12,
+        "meanError": -1908,
+        "meanAbsError": 1928
+      },
+      "6": {
+        "cases": 10,
+        "meanError": -3156,
+        "meanAbsError": 3156
+      },
+      "8": {
+        "cases": 8,
+        "meanError": -4221,
+        "meanAbsError": 4221
+      },
+      "10": {
+        "cases": 6,
+        "meanError": -5228,
+        "meanAbsError": 5228
+      }
+    },
+    "hold": {
+      "1": {
+        "cases": 15,
+        "meanError": -118,
+        "meanAbsError": 400
+      },
+      "2": {
+        "cases": 14,
+        "meanError": -280,
+        "meanAbsError": 635
+      },
+      "3": {
+        "cases": 13,
+        "meanError": -502,
+        "meanAbsError": 836
+      },
+      "4": {
+        "cases": 12,
+        "meanError": -719,
+        "meanAbsError": 1129
+      },
+      "6": {
+        "cases": 10,
+        "meanError": -1444,
+        "meanAbsError": 1717
+      },
+      "8": {
+        "cases": 8,
+        "meanError": -2002,
+        "meanAbsError": 2082
+      },
+      "10": {
+        "cases": 6,
+        "meanError": -2406,
+        "meanAbsError": 2406
+      }
+    },
+    "taxbase": {
+      "1": {
+        "cases": 15,
+        "meanError": -58,
+        "meanAbsError": 426
+      },
+      "2": {
+        "cases": 14,
+        "meanError": -167,
+        "meanAbsError": 662
+      },
+      "3": {
+        "cases": 13,
+        "meanError": -357,
+        "meanAbsError": 876
+      },
+      "4": {
+        "cases": 12,
+        "meanError": -542,
+        "meanAbsError": 1235
+      },
+      "6": {
+        "cases": 10,
+        "meanError": -1321,
+        "meanAbsError": 1689
+      },
+      "8": {
+        "cases": 8,
+        "meanError": -1900,
+        "meanAbsError": 2075
+      },
+      "10": {
+        "cases": 6,
+        "meanError": -2238,
+        "meanAbsError": 2238
+      }
+    }
+  },
+  "note": "One series for the whole country, start years that overlap, and a period in which the state raised the frame several times: every rule is too low. hold and taxbase cannot be told apart on the absolute error."
+}

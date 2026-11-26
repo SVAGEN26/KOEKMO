@@ -1685,3 +1685,39 @@ arkivera data.
 - Dokumenten (fem cirkulär, fem Konjunkturläget, ESV:s tabeller) ligger i privata repot `cirkular/` med
   `kallor-cirkular.csv`.
 
+## Statens ram och intäkterna efter SKR:s sista år (2026-11-26)
+
+- Felet: sidan förlängde SKR:s bana efter 2033 i JavaScript med summan av bidragen i sista årets takt (1,2 %, nerdragen
+  av SKR:s krympande regleringspost). Med Motalas fallande folkmängd stod bidragen still på cirka 1 150 mnkr och
+  resultatet 2045 blev −354 mnkr.
+- Nu räknas banan i Modelica (`Kommunekonomi.Data.sourcedRevenue`, anropad i `MotalaBrowserContinuous` och i den
+  exporterade Scenario.mo). Sidan skickar SKR:s rader som de står (`sourcedRevenue`, `sourcedRevenueYears`,
+  `regulationDecidedYears`, `stateFrame`, `taxBaseGrowthPath`). `extendPlanning` förlänger bara årstakterna och
+  `holdRegulation` är ersatt av `followStateFrame`, som bara märker banan. `Report.referenceRevenue` ger banans skatt
+  och bidrag per år (sidans `benchmarkRevenue`).
+- Statens ram: regleringsposten per invånare = ram/invånare − statens kostnad för inkomstutjämningen. Följer ramen
+  rikets skatteunderlag växer regleringsposten per invånare med skatteunderlaget per invånare från det sista beslutade
+  året (2027 på sidan; året efter basåret med `grantsByComponent`, `Assumptions.stateFrameFollowsTaxBase`).
+  Kryssrutan heter nu "Statens ram följer rikets skatteunderlag efter 2027"; avmarkerad ger SKR:s stilla ram.
+- Efter banans sista år: skatt och inkomstutjämning i sin sista årstakt, bidragen utom regleringsposten i banans sista
+  takt (Motala 3,0 %), regleringsposten enligt ramen. Utan ramregeln fortsätter SKR:s post sin förändring i kronor och
+  blir en avgift.
+- Test mot regleringsposten 2005–2026 (`scripts/hindcast_regulation.py`, `data/regulation-hindcast.json`), startår
+  2011–2025, medelfel / medelabsolutfel kr/inv efter 2, 4, 8 år: ram still i kronor −881/898, −1 908/1 928,
+  −4 221/4 221; bidrag per invånare kvar −280/635, −719/1 129, −2 002/2 082; ram följer skatteunderlaget −167/662,
+  −542/1 235, −1 900/2 075. Alla för låga (staten höjde ramen 2019–2021 och 2024). Hålla kvar är något bättre på
+  absolutfelet 1–4 år, ramregeln har mindre systematiskt fel; de går inte att skilja åt.
+- Test mot decembercirkulären (`hindcast_vintages.py`, ny uppsättning `frame`; `hold` sätter nu
+  `stateFrameFollowsTaxBase = false`): generella bidrag i Motala, Finspång och Mjölby, medelfel / medelabsolutfel mnkr
+  efter 1, 2, 3 år (15, 12, 9 fall): SKR:s regleringspost +6/17, −18/34, −45/49; kvar per invånare +8/17, −1/29,
+  −15/39; ramen +8/17, +3/28, −9/38.
+- Kostnads- och LSS-utjämning: att räkna upp beloppet per invånare gav inget bättre än att hålla det i de 13 kommunerna
+  (medelabsolutfel efter 8 år 827 mot 831 kr/inv för kostnadsutjämningen, 576 mot 483 för LSS). De ligger kvar per
+  invånare. Brist: kostnadsutjämningen följer inte kommunens åldrande i förhållande till riket.
+- Sidan till 2045, Motala: bidrag 1 462 mnkr, resultat +14 mnkr, skuld 2 943; med SKR:s ram 1 097, −431 och 6 956.
+  2033: resultat 53 mnkr (23 med regleringsposten kvar per invånare).
+- Rikets generella bidrag och utjämning steg 12 % 2021–2025 (SCB TAB6777) medan skatteunderlaget steg 19 %: ramregeln är
+  ett antagande om staten, inte en prognos.
+- En fallgrop: `a and b` i en Modelica-funktion beräknar båda leden; `d >= 1 and sourced[d, 6] <> 0` med d = 0 gick
+  igenom i inbyggd omc men gav "assertion failed" i webbkompilatorn. Skriv ett villkor i taget.
+

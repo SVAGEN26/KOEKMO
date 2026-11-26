@@ -23,6 +23,12 @@ export function modelicaSource(b,history,overrides={},path=null) {
   fields.mortalityRates=`Kommunekonomi.Data.deathRatesPerYear(${literal(historyCohorts)},${literal(historyTotals)},${historyDeaths})`;
   fields.residualMigration=useObservedMigration?observedMigration
     :`Kommunekonomi.Data.calibratedMigrationRates(${literal(historyCohorts)},${literal(historyTotals)},${literal(historyBirths)},mortalityRates,ageProfile[1:2,:],olderShares)`;
+  // The revenue path too: SKR's rows become a call of the library's function, declared in the scenario model.
+  const {sourcedRevenue,sourcedRevenueYears,regulationDecidedYears,stateFrame,taxBaseGrowthPath}=fields;
+  for(const k of ['sourcedRevenue','sourcedRevenueYears','regulationDecidedYears','stateFrame','taxBaseGrowthPath']) delete fields[k];
+  Object.assign(fields,{referenceTax:'revenuePath[:,1]',referenceGrants:'revenuePath[:,2]',referencePopulation:'revenuePath[:,3]'});
+  if(fields.importedRevenueMode===2) fields.importedComponents='revenuePath[:,4:6]';
+  const revenue=`  parameter Real revenuePath[${fields.horizon},6]=Kommunekonomi.Data.sourcedRevenue(${literal(sourcedRevenue)},${sourcedRevenueYears},${regulationDecidedYears},${stateFrame},${literal(taxBaseGrowthPath)},nationalPopulationPath)\n    "Intäktsbanan: skatt, bidrag, folkmängd, skatt före slutavräkning, inkomstutjämning och regleringspost";\n`;
   if(projectedCohorts) fields.residualMigrationPath=`Kommunekonomi.Data.projectionResiduals(p0,${literal(projectedCohorts)},${literal(followProjection)},births0,mortalityRates,ageProfile[3:${fields.horizon}+2,:],olderShares,residualMigration)`;
-  return `within ;\nmodel Scenario\n  extends ${settings.packageName}.Continuous(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=${1/12}));\nend Scenario;\n`;
+  return `within ;\nmodel Scenario\n  extends ${settings.packageName}.Continuous(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n${revenue}  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=${1/12}));\nend Scenario;\n`;
 }

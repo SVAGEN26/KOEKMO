@@ -31,8 +31,9 @@ export function assemble(b,prepared,simRows,revenuePath=null) {
     row.cohorts=[1,2,3,4,5].map(j=>r[`p[${j}]`]);
     row.investment=r.annualInvestment;
     row.otherFinancialExpense=b.otherFinancialExpense;
-    row.benchmarkRevenue=fields.referenceTax[i]+fields.referenceGrants[i];
-    row.officialRevenue=revenuePath&&!revenuePath.rows.find(p=>p.year===row.year)?.projected?row.benchmarkRevenue:null;
+    // The reference path as the model computed it: SKR's figures with the state's frame, continued after its last year.
+    row.benchmarkRevenue=r.referenceRevenue;
+    row.officialRevenue=revenuePath?.rows.some(p=>p.year===row.year)?row.benchmarkRevenue:null;
     rows.push(row);
   });
   const {fields:_,ageMigration:__,...details}=prepared;
