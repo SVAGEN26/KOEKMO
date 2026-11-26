@@ -410,5 +410,52 @@ class OneOffCost(unittest.TestCase):
                 self.assertAlmostEqual(self.event[y][balance], 0, delta=1e-6, msg=(y, balance))
 
 
+
+@unittest.skipIf(SKIP, SKIP)
+class MigrationBasis(unittest.TestCase):
+    """Where the calibrated migration comes from: the municipality's own two years, its SKR group, or a mix."""
+
+    @classmethod
+    def setUpClass(cls):
+        import json
+        table = json.loads((ROOT / 'data/migration-groups.json').read_text())
+        own, group = table['municipalities']['0583'], table['groups']['B5']
+        mean = lambda rates: [round((a + b)/2, 6) for a, b in zip(rates['2024'], rates['2025'])]
+        cls.own, cls.group = mean(own['rates']), mean(group['rates'])
+        cls.base, _ = run('Base')
+        cls.half, _ = run('HalfGroupMigration')
+        cls.full, _ = run('GroupMigration')
+
+    def test_the_municipalitys_own_migration_is_swapped_for_the_groups(self):
+        for i in range(5):
+            people = self.base[2025][f'p0[{i + 1}]']
+            swap = (self.group[i] - self.own[i])*people
+            flow = lambda r: r[2025][f'residualMigration[{i + 1}]']
+            self.assertAlmostEqual(flow(self.full) - flow(self.base), swap, delta=1e-6, msg=i)
+            self.assertAlmostEqual(flow(self.half) - flow(self.base), swap/2, delta=1e-6, msg=i)
+
+    def test_motala_loses_fewer_people_with_its_groups_migration(self):
+        # Motala's own two years were weak: 19-64 lost 0.9 % a year, the group 0.2 %.
+        self.assertLess(self.own[3], self.group[3] - 0.005)
+        yearly = sum((g - o)*self.base[2025][f'p0[{i + 1}]'] for i, (g, o) in enumerate(zip(self.group, self.own)))
+        self.assertGreater(yearly, 100)
+        for y in range(2026, 2034):
+            self.assertGreater(self.full[y]['population'], self.half[y]['population'])
+            self.assertGreater(self.half[y]['population'], self.base[y]['population'])
+        # The flow is constant, so eight years add about eight times the yearly swap (and the births that follow).
+        self.assertAlmostEqual(self.full[2033]['population'] - self.base[2033]['population'], 8*yearly, delta=0.1*8*yearly)
+        for y in self.full:
+            self.assertAlmostEqual(self.full[y]['populationBalance'], 0, delta=1e-6, msg=y)
+
+    def test_the_pages_wrapper_gives_the_same_population(self):
+        rates = {f'groupMigration[{i + 1}]': g for i, g in enumerate(self.group)} | {f'ownMigration[{i + 1}]': o for i, o in enumerate(self.own)}
+        wrapper, _ = run(WRAPPER, migrationGroupWeight=1, **rates)
+        for y in wrapper:
+            self.assertAlmostEqual(wrapper[y]['population'], self.full[y]['population'], delta=1e-3, msg=y)
+        untouched, _ = run(WRAPPER, **rates)   # weight 0: the rates are carried but not used
+        for y in untouched:
+            self.assertAlmostEqual(untouched[y]['population'], self.base[y]['population'], delta=1e-3, msg=y)
+
+
 if __name__ == '__main__':
     unittest.main()

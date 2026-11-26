@@ -1,0 +1,724 @@
+{
+  "retrieved_at": "2026-11-26T09:34:33.765113+00:00",
+  "files": [
+    {
+      "file": "kommungruppsindelning-2023.xlsx",
+      "url": "https://skr.se/download/18.7c5af3d619913bebe3cc3074/1757509057199/Kommungruppsindelning-2023-SKR.xlsx",
+      "bytes": 82324,
+      "sha256": "a96420f10bbf77ead425964b3f425164199295d6d634272de3d6893ec96ea98c"
+    },
+    {
+      "file": "pop_age_1999_2002.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 5342559,
+      "sha256": "375028ce5002277d0b279dc611ceb603458270c17d89fe14c04dad8fb49c97b0",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "1999",
+          "2000",
+          "2001",
+          "2002"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2003_2006.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 5343151,
+      "sha256": "35d75ff18bee4db8485f949c2ec53d32a568be787b4459b6ed5cb8b03ffb8949",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "2003",
+          "2004",
+          "2005",
+          "2006"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2007_2010.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 5343984,
+      "sha256": "e03655265c73774ca48d43d21e7fe310657903ca601be12e59beb96ae0ca7774",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "2007",
+          "2008",
+          "2009",
+          "2010"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2011_2014.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 5345334,
+      "sha256": "fe682345d36b46dfcd57771c291b3ec58470210f042046d7bcd57f11dfa2379d",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "2011",
+          "2012",
+          "2013",
+          "2014"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2015_2018.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 5348135,
+      "sha256": "7d8edd7c7cc4b4abd3454c238471f88b61fc561a558f9c0d6169ff4fedea43dd",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "2015",
+          "2016",
+          "2017",
+          "2018"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2019_2022.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 5349570,
+      "sha256": "cb077a323551170e551ff4d467cc635ae91a330fb02a8c91a892962f9372c600",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "2019",
+          "2020",
+          "2021",
+          "2022"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2023_2024.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningNy",
+      "bytes": 2676340,
+      "sha256": "0827a39e98d731dacdec812d25944047aaae2115cff8580b37df56169f413bfe",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101N1"
+        ],
+        "Tid": [
+          "2023",
+          "2024"
+        ]
+      }
+    },
+    {
+      "file": "pop_age_2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/BefolkningCKM",
+      "bytes": 1718188,
+      "sha256": "cb2cc1e0ff25662512253708e2ea64ac6230cc93b9c7095675ede160c54f37ec",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Civilstand": [
+          "SC"
+        ],
+        "Alder": "101 values 0..100+1",
+        "Kon": [
+          "TotSa"
+        ],
+        "ContentsCode": [
+          "000007ME"
+        ],
+        "Tid": [
+          "2025"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2000.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1659229,
+      "sha256": "04b92cf85446502d51cc5c132c41acb37f4f33cef4cc3117f9863e2a8bec47ec",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2000"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2001.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1659073,
+      "sha256": "22917dc2069b70c71894a6bcbe9341b4ac6c5ef7adeed3730a04512738cc20d4",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2001"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2002.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1659106,
+      "sha256": "431d65e0718dcdc64802e37846e4385d0c9b6c968a33223e0b95024bd46577b0",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2002"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2003.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1659284,
+      "sha256": "148a1f5f1499350ee5455d4715cc7632201d73735305126c5facd610e064405b",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2003"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2004.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1659490,
+      "sha256": "1266d4e45e1bd3932ddc05bdc1e798798a2c91394fb6910bb89c8beba7578075",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2004"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2005.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1659791,
+      "sha256": "70e254234479110721ce6b9e101e2fa1c00513018b53b8044c69cff6da041909",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2005"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2006.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1661128,
+      "sha256": "67fb2a93d7648d85fbb6b23d36736de63d601751cfe359bd4cb707fa3b4ae457",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2006"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2007.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1661481,
+      "sha256": "ae1b0cf0fe9416f035b2cd0914e1efa4e58ed62f380fd398bfdf11b8015b770a",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2007"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2008.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1661284,
+      "sha256": "400e6eb2a08cb93b332408d35219ed425011eede512cf4ba77aaf8b047d94726",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2008"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2009.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1660705,
+      "sha256": "81333c2bb52b133d2f5f850a78b69b5778015f795f1180849481b53ec3cae6d6",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2009"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2010.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1661312,
+      "sha256": "063f37d028ebc27f0d7b4b7013a9328abbe62e53a44b41da00fe8a19cf7633a5",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2010"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2011.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1661519,
+      "sha256": "e31b90d3e103569ab988225dd0efaf85425f0f7ae496e325b0fd31502295ff98",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2011"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2012.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1661899,
+      "sha256": "4b8406118b3a6b91503e650c1577538b94e3de8ae0f4ff03664560574f5184ad",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2012"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2013.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1663122,
+      "sha256": "2d39b434478f0e4a9a219e18bf15cec3a9766e13566ffaca1882f0b141d61d23",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2013"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2014.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1664615,
+      "sha256": "d49aaa6b35a566b13983d90ef87cb57a2dde347abaddc654f9dd6ddb95c0637d",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2014"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2015.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1665643,
+      "sha256": "6f292116b56f7317c2c7b59a5a63cfc4f2277d1e5f521bf0b5a20122745bae88",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2015"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2016.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1666862,
+      "sha256": "42b4b189c7cdb5603f66c775a3ce1c8f0ded61fca2e2510a2bb25db817ae5c84",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2016"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2017.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1667161,
+      "sha256": "a46ef836e66c3ae3e7c79b8677bad6a6270f711864890310e3c75730317712cc",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2017"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2018.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1666285,
+      "sha256": "085149f7f9aece19ed03d7448ff2da476e3cfda60380ed284c36dd4f6ca9bcb6",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2018"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2019.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1665637,
+      "sha256": "28c0df917d2ef90d816f448910329ec8bc78d0b2392a2edc0cb20857e5a362b7",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2019"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2020.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1665716,
+      "sha256": "2253588e230c38ae7da6ce10109d2722606ecfd6bc70c4c987df4cf8a0060d49",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2020"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2021.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1666060,
+      "sha256": "9c8de19717f738c72b8a2d085e882e2a87abeed4eaf597f98345e022f18050f0",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2021"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2022.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1666017,
+      "sha256": "c0dc15d1cb4f3b6ab8178f7534f7037cf382f6ed82169917755fe34275c44ae8",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2022"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2023.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1665327,
+      "sha256": "316a289ab51a4ebd6263b4c90f80e1c60fadd556a07c79e32fd7dd8553da0584",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2023"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2024.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97",
+      "bytes": 1665776,
+      "sha256": "3d3738c0506aef45091d2694c3b014c63e4cfa2cefce351410c8ac3743b0953a",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+",
+        "ContentsCode": [
+          "BE0101A2",
+          "BE0101A3",
+          "BE0101AX",
+          "BE0101AY"
+        ],
+        "Tid": [
+          "2024"
+        ]
+      }
+    },
+    {
+      "file": "mig_age_2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97CKM",
+      "bytes": 1899000,
+      "sha256": "5665bba4d4113bb8bafc0b681b0bf6e93ae8706d88d913d3f2684389cdfe6ebb",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": "101 values 0..100+1",
+        "Kon": [
+          "TotSa"
+        ],
+        "ContentsCode": [
+          "0000086D",
+          "0000086E",
+          "00000869",
+          "00000867"
+        ],
+        "Tid": [
+          "2025"
+        ]
+      }
+    },
+    {
+      "file": "pop_groups_2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101A/FolkmangdDecCKM",
+      "bytes": 100053,
+      "sha256": "4af890c6b60ef56bca50b4cf0aec63355b0c284e505596b663bd213494dc1b69",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": [
+          "TotSA",
+          "0-6",
+          "7-15",
+          "16-18",
+          "19-64",
+          "65+"
+        ],
+        "Kon": [
+          "TotSa"
+        ],
+        "ContentsCode": [
+          "000008HY"
+        ],
+        "Tid": [
+          "2025"
+        ]
+      }
+    },
+    {
+      "file": "mig_groups_2025.json",
+      "url": "https://api.scb.se/OV0104/v1/doris/sv/ssd/BE/BE0101/BE0101J/Flyttningar97CKM",
+      "bytes": 264267,
+      "sha256": "f3b8c2d672fed709ca5f8d48bb8c0d8c949b06140ee0d3e867a1245cb4e9da4b",
+      "query": {
+        "Region": "290 values 0114..2584",
+        "Alder": [
+          "-4",
+          "10-14",
+          "20-29",
+          "30-39",
+          "40-49",
+          "50-59",
+          "60-64",
+          "65-69",
+          "70-79",
+          "80-89",
+          "90-99",
+          "100+1",
+          "tot"
+        ],
+        "Kon": [
+          "TotSa"
+        ],
+        "ContentsCode": [
+          "0000086D",
+          "0000086E",
+          "00000869",
+          "00000867"
+        ],
+        "Tid": [
+          "2025"
+        ]
+      }
+    }
+  ],
+  "source": "SCB, Statistikdatabasen (CC BY 4.0); SKR, Kommungruppsindelning 2023"
+}

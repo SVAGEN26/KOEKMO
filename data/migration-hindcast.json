@@ -1,6 +1,6 @@
 {
  "source": "SCB, Statistikdatabasen (CC BY 4.0): folkmängd per ålder, födda och döda, 2009-2025",
- "method": "The five-group demography (Kommunekonomi.Components.Demography, the page's yearly model) moves people by\nbirths, deaths, ageing and a residual flow per age group: migration and statistical adjustments. The residual\nis calibrated as the mean of the last years' residuals before the base year; the library and the page use\ntwo years. Base years 2015-2017 (the large refugee immigration) gave a population 6 % too high after eight\nyears in scripts/hindcast_long.py.\n\nThis script repeats the demography in Python, from every base year 2012-2024 to 2025, with windows of 1, 2,\n3, 5 and 8 years, and compares the total population and the five groups with SCB. Only data up to the base\nyear are used. The rule is the model's: death rates from the base year (four fixed, 65+ from the year's\ndeaths), births in proportion to the 19-64 group, ageing by the groups' widths. Its two-year window is\nchecked against the model's own population in data/long-hindcast.json.\n\nThe births are the model's (births per adult kept from the base year); a second set uses SCB's births, to\nseparate the error from falling fertility. data/migration-hindcast.json has the mean error and mean absolute\nerror per window and horizon for base years 2017-2024 and 2020-2024, the error in 2025 per base year, and\nthe yearly residual flow each window gives from the 2025 accounts.",
+ "method": "The five-group demography (Kommunekonomi.Components.Demography, the page's yearly model) moves people by\nbirths, deaths, ageing and a residual flow per age group: migration and statistical adjustments. The residual\nis calibrated as the mean of the last years' residuals before the base year; the library and the page use\ntwo years. Base years 2015-2017 (the large refugee immigration) gave a population 6 % too high after eight\nyears in scripts/hindcast_long.py.\n\nThis script repeats the demography in Python, from every base year 2012-2024 to 2025, with windows of 1, 2,\n3, 5 and 8 years, and compares the total population and the five groups with SCB. Only data up to the base\nyear are used. The rule is the model's: death rates from the base year (four fixed, 65+ from the year's\ndeaths), births in proportion to the 19-64 group, ageing by the groups' widths. Its two-year window is\nchecked against the model's own population in data/long-hindcast-continuous.json.\n\nThe births are the model's (births per adult kept from the base year); a second set uses SCB's births, to\nseparate the error from falling fertility. data/migration-hindcast.json has the mean error and mean absolute\nerror per window and horizon for base years 2017-2024 and 2020-2024, the error in 2025 per base year, and\nthe yearly residual flow each window gives from the 2025 accounts.",
  "unit": "procent av utfallet; grupper 0-6, 7-15, 16-18, 19-64, 65+; flöden i personer per år",
  "windows": [
   1,
@@ -1619,6 +1619,493 @@
        0.95
       ]
      }
+    }
+   }
+  }
+ },
+ "migrationBasis": {
+  "note": "Two-year window. own: the municipality's own years; group: its own net migration replaced by that of its group in SKR's Kommungruppsindelning 2023 (data/migration-groups.json); half: half of each.",
+  "bases2017to2024": {
+   "own": {
+    "1": {
+     "cases": 104,
+     "meanError": 0.148,
+     "meanAbsError": 0.538,
+     "groupsMeanError": [
+      0.8,
+      0.11,
+      0.58,
+      0.13,
+      -0.02
+     ]
+    },
+    "2": {
+     "cases": 91,
+     "meanError": 0.459,
+     "meanAbsError": 0.992,
+     "groupsMeanError": [
+      2.7,
+      0.2,
+      1.28,
+      0.39,
+      0.02
+     ]
+    },
+    "3": {
+     "cases": 78,
+     "meanError": 0.901,
+     "meanAbsError": 1.492,
+     "groupsMeanError": [
+      5.39,
+      0.55,
+      1.51,
+      0.77,
+      0.07
+     ]
+    },
+    "4": {
+     "cases": 65,
+     "meanError": 1.203,
+     "meanAbsError": 2.11,
+     "groupsMeanError": [
+      8.19,
+      0.93,
+      1.31,
+      1.01,
+      -0.05
+     ]
+    },
+    "5": {
+     "cases": 52,
+     "meanError": 1.852,
+     "meanAbsError": 2.756,
+     "groupsMeanError": [
+      11.49,
+      2.12,
+      1.78,
+      1.63,
+      -0.06
+     ]
+    },
+    "6": {
+     "cases": 39,
+     "meanError": 3.26,
+     "meanAbsError": 3.697,
+     "groupsMeanError": [
+      15.98,
+      4.41,
+      4.48,
+      3.02,
+      0.27
+     ]
+    },
+    "7": {
+     "cases": 26,
+     "meanError": 4.691,
+     "meanAbsError": 4.908,
+     "groupsMeanError": [
+      20.03,
+      7.5,
+      9.47,
+      4.51,
+      0.2
+     ]
+    },
+    "8": {
+     "cases": 13,
+     "meanError": 5.888,
+     "meanAbsError": 5.94,
+     "groupsMeanError": [
+      23.36,
+      10.89,
+      14.31,
+      5.52,
+      0.14
+     ]
+    }
+   },
+   "half": {
+    "1": {
+     "cases": 104,
+     "meanError": 0.173,
+     "meanAbsError": 0.506,
+     "groupsMeanError": [
+      0.84,
+      0.21,
+      0.71,
+      0.14,
+      -0.01
+     ]
+    },
+    "2": {
+     "cases": 91,
+     "meanError": 0.532,
+     "meanAbsError": 0.922,
+     "groupsMeanError": [
+      2.84,
+      0.49,
+      1.54,
+      0.44,
+      0.04
+     ]
+    },
+    "3": {
+     "cases": 78,
+     "meanError": 1.041,
+     "meanAbsError": 1.34,
+     "groupsMeanError": [
+      5.7,
+      1.09,
+      1.92,
+      0.88,
+      0.08
+     ]
+    },
+    "4": {
+     "cases": 65,
+     "meanError": 1.424,
+     "meanAbsError": 1.854,
+     "groupsMeanError": [
+      8.62,
+      1.75,
+      2.0,
+      1.19,
+      -0.03
+     ]
+    },
+    "5": {
+     "cases": 52,
+     "meanError": 2.07,
+     "meanAbsError": 2.596,
+     "groupsMeanError": [
+      11.91,
+      3.1,
+      2.6,
+      1.75,
+      -0.04
+     ]
+    },
+    "6": {
+     "cases": 39,
+     "meanError": 3.428,
+     "meanAbsError": 3.623,
+     "groupsMeanError": [
+      16.6,
+      5.5,
+      5.02,
+      2.97,
+      0.33
+     ]
+    },
+    "7": {
+     "cases": 26,
+     "meanError": 4.916,
+     "meanAbsError": 4.916,
+     "groupsMeanError": [
+      20.78,
+      8.63,
+      9.9,
+      4.4,
+      0.45
+     ]
+    },
+    "8": {
+     "cases": 13,
+     "meanError": 6.53,
+     "meanAbsError": 6.53,
+     "groupsMeanError": [
+      24.57,
+      12.04,
+      15.24,
+      5.95,
+      0.7
+     ]
+    }
+   },
+   "group": {
+    "1": {
+     "cases": 104,
+     "meanError": 0.199,
+     "meanAbsError": 0.537,
+     "groupsMeanError": [
+      0.88,
+      0.31,
+      0.84,
+      0.15,
+      0.01
+     ]
+    },
+    "2": {
+     "cases": 91,
+     "meanError": 0.605,
+     "meanAbsError": 1.011,
+     "groupsMeanError": [
+      2.98,
+      0.78,
+      1.8,
+      0.49,
+      0.05
+     ]
+    },
+    "3": {
+     "cases": 78,
+     "meanError": 1.181,
+     "meanAbsError": 1.539,
+     "groupsMeanError": [
+      6.02,
+      1.64,
+      2.33,
+      0.99,
+      0.09
+     ]
+    },
+    "4": {
+     "cases": 65,
+     "meanError": 1.644,
+     "meanAbsError": 2.059,
+     "groupsMeanError": [
+      9.05,
+      2.57,
+      2.69,
+      1.36,
+      -0.02
+     ]
+    },
+    "5": {
+     "cases": 52,
+     "meanError": 2.289,
+     "meanAbsError": 2.718,
+     "groupsMeanError": [
+      12.32,
+      4.09,
+      3.42,
+      1.88,
+      -0.03
+     ]
+    },
+    "6": {
+     "cases": 39,
+     "meanError": 3.596,
+     "meanAbsError": 3.857,
+     "groupsMeanError": [
+      17.22,
+      6.6,
+      5.56,
+      2.91,
+      0.4
+     ]
+    },
+    "7": {
+     "cases": 26,
+     "meanError": 5.141,
+     "meanAbsError": 5.196,
+     "groupsMeanError": [
+      21.54,
+      9.77,
+      10.32,
+      4.29,
+      0.7
+     ]
+    },
+    "8": {
+     "cases": 13,
+     "meanError": 7.171,
+     "meanAbsError": 7.171,
+     "groupsMeanError": [
+      25.78,
+      13.19,
+      16.17,
+      6.38,
+      1.25
+     ]
+    }
+   }
+  },
+  "bases2020to2024": {
+   "own": {
+    "1": {
+     "cases": 65,
+     "meanError": -0.016,
+     "meanAbsError": 0.511,
+     "groupsMeanError": [
+      0.74,
+      -0.51,
+      0.35,
+      -0.05,
+      -0.04
+     ]
+    },
+    "2": {
+     "cases": 52,
+     "meanError": 0.147,
+     "meanAbsError": 0.859,
+     "groupsMeanError": [
+      2.86,
+      -1.2,
+      1.15,
+      -0.02,
+      0.04
+     ]
+    },
+    "3": {
+     "cases": 39,
+     "meanError": 0.463,
+     "meanAbsError": 1.281,
+     "groupsMeanError": [
+      6.41,
+      -1.9,
+      1.58,
+      0.11,
+      0.17
+     ]
+    },
+    "4": {
+     "cases": 26,
+     "meanError": 0.229,
+     "meanAbsError": 1.759,
+     "groupsMeanError": [
+      8.96,
+      -2.84,
+      0.9,
+      -0.34,
+      -0.09
+     ]
+    },
+    "5": {
+     "cases": 13,
+     "meanError": -0.145,
+     "meanAbsError": 2.127,
+     "groupsMeanError": [
+      11.22,
+      -3.29,
+      -1.65,
+      -0.78,
+      -0.58
+     ]
+    }
+   },
+   "half": {
+    "1": {
+     "cases": 65,
+     "meanError": 0.007,
+     "meanAbsError": 0.464,
+     "groupsMeanError": [
+      0.71,
+      -0.47,
+      0.57,
+      -0.03,
+      -0.02
+     ]
+    },
+    "2": {
+     "cases": 52,
+     "meanError": 0.231,
+     "meanAbsError": 0.77,
+     "groupsMeanError": [
+      2.9,
+      -1.01,
+      1.61,
+      0.09,
+      0.05
+     ]
+    },
+    "3": {
+     "cases": 39,
+     "meanError": 0.657,
+     "meanAbsError": 1.076,
+     "groupsMeanError": [
+      6.66,
+      -1.43,
+      2.33,
+      0.37,
+      0.15
+     ]
+    },
+    "4": {
+     "cases": 26,
+     "meanError": 0.613,
+     "meanAbsError": 1.367,
+     "groupsMeanError": [
+      9.35,
+      -1.97,
+      2.33,
+      0.18,
+      -0.12
+     ]
+    },
+    "5": {
+     "cases": 13,
+     "meanError": 0.312,
+     "meanAbsError": 1.712,
+     "groupsMeanError": [
+      11.29,
+      -2.18,
+      0.47,
+      -0.12,
+      -0.68
+     ]
+    }
+   },
+   "group": {
+    "1": {
+     "cases": 65,
+     "meanError": 0.031,
+     "meanAbsError": 0.48,
+     "groupsMeanError": [
+      0.68,
+      -0.44,
+      0.79,
+      -0.0,
+      0.0
+     ]
+    },
+    "2": {
+     "cases": 52,
+     "meanError": 0.316,
+     "meanAbsError": 0.856,
+     "groupsMeanError": [
+      2.94,
+      -0.82,
+      2.07,
+      0.19,
+      0.07
+     ]
+    },
+    "3": {
+     "cases": 39,
+     "meanError": 0.851,
+     "meanAbsError": 1.33,
+     "groupsMeanError": [
+      6.91,
+      -0.95,
+      3.08,
+      0.62,
+      0.13
+     ]
+    },
+    "4": {
+     "cases": 26,
+     "meanError": 0.996,
+     "meanAbsError": 1.658,
+     "groupsMeanError": [
+      9.73,
+      -1.09,
+      3.75,
+      0.69,
+      -0.15
+     ]
+    },
+    "5": {
+     "cases": 13,
+     "meanError": 0.769,
+     "meanAbsError": 1.701,
+     "groupsMeanError": [
+      11.37,
+      -1.07,
+      2.58,
+      0.55,
+      -0.78
+     ]
     }
    }
   }

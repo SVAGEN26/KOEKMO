@@ -1,5 +1,5 @@
 import {DEFAULT_MUNICIPALITY,municipalities} from './municipalities.js';
-import {sum,validateRevenuePath,followStateFrame,extendPlanning,workingCapitalDays,rateFixing,liquidityFor,liquidityRule} from './scenario-inputs.js';
+import {sum,validateRevenuePath,followStateFrame,extendPlanning,migrationBasis,workingCapitalDays,rateFixing,liquidityFor,liquidityRule} from './scenario-inputs.js';
 import {MAX_YEARS} from './omc-session.js';
 import {createWorkerEngine,ENGINE} from './jit-engine.js';
 import {modelicaSource} from './modelica-adapter.js';
@@ -22,10 +22,10 @@ const definitions=[
   ['costDrift','Kostnadsökning utöver demografi och pris',-2,3,.05,'%', 'Standard 0; historiskt -0,3 till 0,4 %/år'],
   ['grantIncrease','Statens bidragshöjning per år, utöver SKR',-10,20,.5,'mdkr', 'I riket, från andra prognosåret']
 ];
-const advanced=[['inflationShock','Extra inflation första prognosåret',0,8,.25,'p.e.', 'Priser samma år; löner, pensioner och ränta åren efter'],['inflationPersistence','Andel av den extra inflationen kvar året därpå',0,1,.05,'', '0,5 = halveras varje år'],['inflationWagePassThrough','Löner och skatteunderlag: andel av inflationen',0,1,.05,'', '2022–2025 cirka 0,4'],['inflationPensionPassThrough','Pensionskostnadens svar på inflationen',0,15,.5,'', 'Procent högre pensionskostnad per procentenhet; 2023–2025 cirka 7–10'],['inflationRateResponse','Räntans svar på extra inflation',0,1.5,.05,'', 'Procentenheter högre marknadsränta per procentenhet inflation, åren efter'],['inflationGrantCompensation','Statlig kompensation i bidragen',0,100,5,'%', 'Andel av förra årets extra inflation; 0 = bidragen fasta i kronor'],['stormCost','Skyfall: skador på kommunens anläggningar',0,5000,100,'kr/inv', 'Engångskostnad i driften; Gävle 2021 cirka 1 300'],['stormYear','Skyfallets år',1,8,1,'år', '1 = första prognosåret; skadorna betalas juli–december'],['rateShock','Räntehöjning på marknadsräntan',0,8,.25,'p.e.', 'Nya och omsatta lån, från vald månad första prognosåret'],['rateShockMonth','Räntehöjningens första månad',1,12,1,'mån', '1 = januari första prognosåret'],['rateFixingYears','Genomsnittlig räntebindning',0,8,.1,'år', 'Hur snabbt en räntehöjning slår igenom'],['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
+const advanced=[['inflationShock','Extra inflation första prognosåret',0,8,.25,'p.e.', 'Priser samma år; löner, pensioner och ränta åren efter'],['inflationPersistence','Andel av den extra inflationen kvar året därpå',0,1,.05,'', '0,5 = halveras varje år'],['inflationWagePassThrough','Löner och skatteunderlag: andel av inflationen',0,1,.05,'', '2022–2025 cirka 0,4'],['inflationPensionPassThrough','Pensionskostnadens svar på inflationen',0,15,.5,'', 'Procent högre pensionskostnad per procentenhet; 2023–2025 cirka 7–10'],['inflationRateResponse','Räntans svar på extra inflation',0,1.5,.05,'', 'Procentenheter högre marknadsränta per procentenhet inflation, åren efter'],['inflationGrantCompensation','Statlig kompensation i bidragen',0,100,5,'%', 'Andel av förra årets extra inflation; 0 = bidragen fasta i kronor'],['stormCost','Skyfall: skador på kommunens anläggningar',0,5000,100,'kr/inv', 'Engångskostnad i driften; Gävle 2021 cirka 1 300'],['stormYear','Skyfallets år',1,8,1,'år', '1 = första prognosåret; skadorna betalas juli–december'],['rateShock','Räntehöjning på marknadsräntan',0,8,.25,'p.e.', 'Nya och omsatta lån, från vald månad första prognosåret'],['rateShockMonth','Räntehöjningens första månad',1,12,1,'mån', '1 = januari första prognosåret'],['rateFixingYears','Genomsnittlig räntebindning',0,8,.1,'år', 'Hur snabbt en räntehöjning slår igenom'],['grantGrowth','Bidrag, årlig referenstillväxt',0,6,.1,'%', 'Förenklad intäktsbana'],['operatingRevenueGrowth','Verksamhetsintäkter, årlig ökning',-5,8,.1,'%', '751 mnkr i basåret, volymjusterat'],['birthChange','Förändring i födelsetal',-30,30,1,'%', 'Mot basårets födelseexponering'],['migrationGroupWeight','Flyttning: andel från SKR:s kommungrupp',0,100,50,'%', '0 = kommunens egna två år, 100 = kommungruppen'],['taxRate','Kommunal skattesats',19,24,.1,'%', 'Bokslut: 21,70 %'],['adjustment','Årlig kapacitetsanpassning',0,1,.05,'', '0 = låst kapacitet; 1 = direkt anpassning'],['equalisationOffset','Utjämning av lokal skatteavvikelse',0,1,.05,'', 'Känslighet, ej exakt lagberäkning']];
 // The assumptions in the panel, grouped. Every key of `definitions` and `advanced` is in exactly one group.
 const assumptionGroups=[
-  ['population','Befolkning','Flyttnetto och födda',['migrationDelta','birthChange']],
+  ['population','Befolkning','Flyttnetto och födda',['migrationDelta','birthChange','migrationGroupWeight']],
   ['revenue','Intäkter','Skattesats, skatteunderlag och bidrag',['taxRate','taxGrowth','grantIncrease','grantGrowth','equalisationOffset']],
   ['costs','Kostnader och verksamhet','Löner, priser, pensioner och anpassning',['wageGrowth','priceGrowth','pensionGrowth','costDrift','productivity','operatingRevenueGrowth','adjustment']],
   ['capital','Investeringar och lån','Investeringar, ränta och räntebindning',['investment','interestRate','rateFixingYears']],
@@ -57,13 +57,14 @@ const explanations={
   rateFixingYears:'Genomsnittlig räntebindningstid för lån och derivat. Kortare bindning gör att en höjning slår igenom snabbare. Motala: årsredovisningen; övriga kommuner 3 år som antagande.',
   grantGrowth:'Årlig tillväxt för de generella bidragen i riket när ingen SKR-bana används. Kommunens del följer folkmängden mot rikets. Låst när SKR:s kommunvisa intäkter används.',
   operatingRevenueGrowth:'Taxor, avgifter, försäljning och riktade bidrag. Växer med vald takt och med folkmängden.',
+  migrationGroupWeight:'Varifrån det kalibrerade flyttflödet tas. 0: kommunens egna två senaste år, som är brusiga i små kommuner. 100: kommunens grupp i SKR:s kommungruppsindelning 2023, alla gruppens kommuner sammanvägda samma två år (SCB). 50: hälften av varje, som gav lägst fel i bakåttestet för länets 13 kommuner. Kommunens eget flyttnetto per åldersgrupp byts mot gruppens; resten av restflödet ligger kvar. Gäller inte år då en inläst befolkningsprognos följs.',
   birthChange:'Fler eller färre födda än i modellens bana, i procent. Påverkar förskola och skola de följande åren.',
   taxRate:'Kommunal skattesats. Skatteintäkterna ändras i proportion till skattesatsen; bidragen och utjämningen ändras inte. Låst när SKR:s publicerade bana används rakt av.',
   adjustment:'Hur stor del av glappet mellan behov och kapacitet i verksamheten som stängs varje år. 0 = kapaciteten ligger still, 1 = följer behovet direkt. Illustrativt.',
   equalisationOffset:'Hur stor del av en lokal avvikelse i skatteunderlaget, till exempel en ändrad andel i arbetsför ålder, som utjämningen tar tillbaka via bidragen. Förenklad känslighet, inte lagens beräkning.'
 };
 let engine,b,history,planning,current,replay,regional,periodPlanning,experiments,ageIncome,overrides={},path=null,customPath,run,base,version=0,modelSource=null,modelView=null;
-let rateFixingTable,rateStress,investmentPlans,liquidityTable,revenueUncertainty,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
+let rateFixingTable,rateStress,investmentPlans,liquidityTable,revenueUncertainty,migrationGroups,lastScenarioKey,previousRun,outcomeBudgetMotala,activeMunicipality=DEFAULT_MUNICIPALITY;
 const scenarioMunicipality=item=>item.settings.municipality??DEFAULT_MUNICIPALITY;
 const presets={
   base:{},
@@ -286,7 +287,7 @@ function selectPeriod(firstYear,settings={}) {
   periodPlanning=period.planning??(motala&&year===2025?planning:null);
   b=motala&&year!==2024?{...period.baseline,name:municipalities[activeMunicipality].name,ageIncome:{year:incomeYear,weights:ageIncome.municipalities['0583'][incomeYear],countyRate:ageIncome.countyRate},experiments:{...experiments[year],
     novemberPopulation:replay.novemberPopulation.rows.find(row=>row.year===year)?.population}}:period.baseline;
-  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,investmentPlan:investmentPlanFor(activeMunicipality,year),liquidity:liquidityFor(liquidityTable,activeMunicipality),assumptions:{costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,stormCost:0,stormYear:2,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
+  b={...b,municipality:activeMunicipality,rateEpisodes:rateStress.episodes,investmentPlan:investmentPlanFor(activeMunicipality,year),liquidity:liquidityFor(liquidityTable,activeMunicipality),migrationBasis:migrationBasis(migrationGroups,activeMunicipality,year),assumptions:{migrationGroupWeight:0,costDrift:0,grantIncrease:0,inflationShock:0,inflationPersistence:0.5,inflationWagePassThrough:0.4,inflationPensionPassThrough:8,inflationRateResponse:0.5,inflationGrantCompensation:0,stormCost:0,stormYear:2,rateShock:0,rateShockMonth:1,rateFixingYears:rateFixing(rateFixingTable,activeMunicipality,year).years,...b.assumptions}};
   history=period.history;
   overrides={...settings.overrides};
   customPath=settings.customPath;
@@ -1336,7 +1337,7 @@ async function boot(){try{
     onCompiling:()=>{$('engine').textContent='Kompilerar modellen…';}});
   engine.ready.catch(report);
   modelView=createModelView($('model-view'),{source:fetch('Kommunekonomi.mo').then(r=>r.ok?r.text():Promise.reject(Error('Kommunekonomi.mo')))});
-  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json','liquidity.json','revenue-uncertainty.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
+  const files=await Promise.all(['baseline.json','history.json','sources.json','backtest.json','municipal-benchmarks.json','planning-inputs.json','replay-2022.json','model-experiments.json','age-income.json','municipalities-data.json','rate-fixing.json','rate-stress.json','investment-plans.json','liquidity.json','revenue-uncertainty.json','migration-groups.json'].map(async f=>{const r=await fetch(f);if(!r.ok){if(f==='backtest.json')return null;throw Error(`Kunde inte läsa ${f}`);}return r.json();}));
   current={baseline:files[0],history:files[1].rows};
   planning=files[5];
   replay=files[6];
@@ -1348,6 +1349,7 @@ async function boot(){try{
   investmentPlans=files[12];
   liquidityTable=files[13];
   revenueUncertainty=files[14];
+  migrationGroups=files[15];
   outcomeBudgetMotala=files[4].rows.find(row=>row.stage==='budget')?.forecast;
   const ordered=Object.entries(municipalities).sort(([,a],[,b])=>a.name.localeCompare(b.name,'sv'));
   for(const [code,{name}] of ordered) $('municipality').add(new Option(name,code));

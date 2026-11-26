@@ -120,6 +120,7 @@ def build(code, archive):
     care = json.loads((folder / 'care-weights.json').read_text())['baseYears']
     sectors = json.loads((folder / 'sector-costs.json').read_text())['years']
     roads = json.loads((ROOT / 'data/roads.json').read_text())['municipalities'].get(code, {})
+    migration = json.loads((ROOT / 'data/migration-groups.json').read_text())
     capacity = json.loads((ROOT / 'data/tax-capacity.json').read_text())['municipalities'][code]
     equalisation = json.loads((ROOT / 'data/equalisation.json').read_text())['municipalities'][code]['years']
 
@@ -228,9 +229,21 @@ def build(code, archive):
         sector = sectors.get(str(year))
         record['infrastructureShare'] = (round(road / (sector['krPerInhabitant']['N03067'] * sector['shares']['other']), 4)
                                          if road is not None and sector else 0.0)
+        # Net migration per inhabitant and year by age group, the mean of the base year and the year before: the
+        # municipality's own and that of its group in SKR's classification (fetch_migration_groups.py). The model can
+        # take its migration from the group instead of the municipality's own two years (migrationGroupWeight).
+        record['ownMigration'], record['groupMigration'] = migration_rates(migration, code, year)
         # Single years of age 0-100+, both sexes: the library reads from them who crosses each group's upper age in which year.
         record['ages'] = [round(x, 1) for x in population[year][:100]] + [round(sum(population[year][100:]), 1)]
     return years, years[max(YEARS)]['olderShares']
+
+
+def migration_rates(migration, code, year):
+    """The municipality's and its SKR group's net migration per inhabitant, mean of year - 1 and year, five age groups."""
+    own = migration['municipalities'][code]
+    group = migration['groups'][own['group']]
+    mean = lambda rates: [round((a + b) / 2, 6) for a, b in zip(rates[str(year - 1)], rates[str(year)])]
+    return mean(own['rates']), mean(group['rates'])
 
 
 def number(x, digits=1):
@@ -273,6 +286,7 @@ def modelica(package, name, code, archive, years, older_shares):
       sectorShares = {vector(r['sectorShares'], 4)}, educationShares = {vector(r['educationShares'], 4)},
       careCostPerInhabitant = {vector(r['careCostPerInhabitant'], 0)}{f", interestRate = {number(r['interestRate'], 4)}" if 'interestRate' in r else ''},
       infrastructureShare = {number(r['infrastructureShare'], 4)},
+      groupMigration = {vector(r['groupMigration'], 6)}, ownMigration = {vector(r['ownMigration'], 6)},
       ages = {vector(r['ages'], 1)})
       "SCB:s räkenskapssammandrag och befolkningsstatistik {y} (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares{y}[3] = {vector(r['olderShares'], 6)};''')

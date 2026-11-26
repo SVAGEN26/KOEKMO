@@ -70,10 +70,27 @@ def residual(pop, changes, base, window, rates):
     return [sum(f[i] for f in flows) / window for i in range(5)]
 
 
-def project(pop, changes, base, window, observed_births=False):
-    """Population at each year end from the base year to 2025. observed_births: a diagnostic with SCB's births."""
+def swap(table, code, base, weight):
+    """The change of the flow when a share of the municipality's own net migration is replaced by its SKR group's.
+
+    Both are the mean of the base year and the year before, per inhabitant of each age group
+    (data/migration-groups.json), as in the model (migrationGroupWeight)."""
+    if not weight:
+        return [0.0] * 5
+    own = table['municipalities'][code]
+    group = table['groups'][own['group']]
+    mean = lambda rates: [(a + b) / 2 for a, b in zip(rates[str(base - 1)], rates[str(base)])]
+    return [weight * (g - o) for g, o in zip(mean(group['rates']), mean(own['rates']))]
+
+
+def project(pop, changes, base, window, observed_births=False, rate_change=None):
+    """Population at each year end from the base year to 2025. observed_births: a diagnostic with SCB's births.
+
+    rate_change: a change of the yearly flow per inhabitant of each group at the base year (see swap)."""
     rates = death_rates(pop[base], changes[base]['deaths'])
     flow = residual(pop, changes, base, window, rates)
+    if rate_change:
+        flow = [f + r * x for f, r, x in zip(flow, rate_change, pop[base])]
     p, births0, adults0, out = pop[base], changes[base]['births'], pop[base][3], {}
     for y in range(base + 1, LAST + 1):
         births = changes[y]['births'] if observed_births else births0 * p[3] / adults0
@@ -82,11 +99,11 @@ def project(pop, changes, base, window, observed_births=False):
     return out, flow
 
 
-def errors(data, window, bases, observed_births=False):
+def errors(data, window, bases, observed_births=False, table=None, weight=0):
     rows = []
     for code, (pop, changes) in data.items():
         for base in bases:
-            projected, _ = project(pop, changes, base, window, observed_births)
+            projected, _ = project(pop, changes, base, window, observed_births, swap(table, code, base, weight) if table else None)
             for y, p in projected.items():
                 rows.append({'municipality': code, 'base': base, 'horizon': y - base,
                              'total': 100 * (sum(p) - sum(pop[y])) / sum(pop[y]),
@@ -110,6 +127,11 @@ def main():
                                                 for pop, ch in data.values()), 3)
                            for w in WINDOWS if base - w >= min(min(pop) for pop, _ in data.values())}
                for base in range(FIRST_BASE, LAST)}
+    # Where the migration comes from: the municipality's own two years (the model's default), its group in SKR's
+    # classification, or half of each. The window is two years in all three.
+    table = json.loads((ROOT / 'data/migration-groups.json').read_text())
+    basis = {name: {label: errors(data, 2, bases, table=table, weight=weight) for label, weight in (('own', 0), ('half', 0.5), ('group', 1))}
+             for name, bases in periods.items()}
     flows = {}
     for code, (pop, changes) in data.items():
         rates = death_rates(pop[LAST], changes[LAST]['deaths'])
@@ -118,6 +140,8 @@ def main():
            'method': __doc__.split('\n\n', 2)[2].strip(),
            'unit': 'procent av utfallet; grupper 0-6, 7-15, 16-18, 19-64, 65+; flöden i personer per år',
            'windows': list(WINDOWS), 'summary': summary,
+           'migrationBasis': {'note': 'Two-year window. own: the municipality\'s own years; group: its own net migration replaced by that of its group in '
+                                      'SKR\'s Kommungruppsindelning 2023 (data/migration-groups.json); half: half of each.', **basis},
            'errorIn2025ByBaseYear': by_base, 'residualFlowFrom2025': flows}
     (ROOT / 'data/migration-hindcast.json').write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
     for name in periods:
@@ -125,6 +149,8 @@ def main():
         for w in WINDOWS:
             s = summary[name]['modelBirths'][str(w)]
             print(f'  window {w}: ' + '  '.join(f"{h}: {v['meanError']:+.1f}/{v['meanAbsError']:.1f}" for h, v in s.items()))
+        for label, s in basis[name].items():
+            print(f'  basis {label}: ' + '  '.join(f"{h}: {v['meanError']:+.1f}/{v['meanAbsError']:.2f}" for h, v in s.items()))
 
 
 if __name__ == '__main__':

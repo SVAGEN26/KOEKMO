@@ -49,6 +49,8 @@ dimensionslösa. Antagna flyttflöden är personer per år (<code>PersonsPerYear
       Real educationShares[3] "Utbildningens fördelning på 0-6, 7-15 och 16-18 år, andel; Kolada";
       Units.MoneyPerPerson careCostPerInhabitant[2] "Äldreomsorgens kostnad per invånare 65-79 och 80+, kr; Kolada, treårsmedel (data/care-weights.json)";
       Real infrastructureShare = 0 "Gator och vägar som andel av övrig verksamhet: nettokostnaden för väg- och järnvägsnät samt parkering (Kolada N07024) delad med övrig verksamhets nettokostnad; 0 när uppgiften saknas";
+      Units.Rate groupMigration[5] = zeros(5) "Flyttnetto per invånare och år i kommunens grupp enligt SKR:s kommungruppsindelning 2023, medel av basåret och året före, per åldersgrupp 0-6, 7-15, 16-18, 19-64 och 65+ (SCB; data/migration-groups.json)";
+      Units.Rate ownMigration[5] = zeros(5) "Kommunens eget flyttnetto per invånare och år, samma två år och åldersgrupper (SCB; data/migration-groups.json)";
       Units.Persons ages[101] = zeros(101) "Invånare per ettårsålder 0-100+ vid basårets slut, båda könen (SCB); nollor när uppgiften saknas";
       Real interestRate = -1 "Genomsnittlig ränta på upplåningen enligt årsredovisningen, andel; -1 när den saknas och räntan härleds ur räntekostnaden och årets medelskuld";
       annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-100, 50}, {100, 100}}), Text(textColor = {255, 255, 255}, extent = {{-92, 55}, {92, 95}}, textString = "Basår"), Line(points = {{-100, 0}, {100, 0}}, color = {40, 95, 140}), Line(points = {{-100, -50}, {100, -50}}, color = {40, 95, 140}), Line(points = {{0, 50}, {0, -100}}, color = {40, 95, 140})}));
@@ -668,6 +670,8 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Real olderShares[3] "Uppdelning av 65+ i 65-79, 80-89 och 90+ vid basårets slut för femgruppsdemografin; kommunens paket ger den ur SCB-data";
     parameter Real ageProfile[horizon + 2, 12] = Data.ageProfile(base.ages, births0, horizon, olderShares) "Åldrande och dödlighet år för år ur basårets ettårsåldrar (Data.ageProfile): rad 1-2 året före basåret och basåret, sedan prognosåren; kolumn 1-6 andel per år som åldras ur varje lager, 7-9 dödstal i 65-79, 80-89 och 90+ i förhållande till 65+:s, 10-12 uppdelningen av 65+ vid årets början";
     parameter Real migrationWeights[5] = {0.15, 0.12, 0.03, 0.65, 0.05} "Hur ett förändrat flyttnetto fördelas på åldersgrupperna; summerar till 1";
+    parameter Real migrationGroupWeight(min = 0, max = 1) = 0
+      "Varifrån det kalibrerade flyttflödet tas: 0 = kommunens egna två år, 1 = kommunens grupp enligt SKR:s kommungruppsindelning, 0,5 = hälften av varje. Kommunens eget flyttnetto byts då mot gruppens; resten av restflödet ligger kvar";
     parameter Units.Persons births0 = base.births[2] "Födda under basåret";
     parameter Units.PersonsPerYear migrationDelta = 0 "Förändrat årligt flyttnetto jämfört med kalibreringen, personer per år";
     parameter Real birthChange = 0 "Relativ förändring av antalet födda, andel (0,1 = tio procent fler)";
@@ -2160,7 +2164,8 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
     end Finance;
 
     partial model Economy "Kommunens ekonomi i kontinuerlig tid: lager och flöden"
-      extends Assumptions(residualMigration = Data.calibratedMigrationRates(base.cohorts, base.reportedPopulation, base.births, mortalityRates, ageProfile[1:2, :], olderShares));
+      extends Assumptions(residualMigration = Data.calibratedMigrationRates(base.cohorts, base.reportedPopulation, base.births, mortalityRates, ageProfile[1:2, :], olderShares)
+        + migrationGroupWeight*(base.groupMigration - base.ownMigration) .* p0);
       extends Report;
       parameter Units.Rate mortalityRates[5] = Data.deathRatesPerYear(base.cohorts, base.reportedPopulation, base.deaths)
         "Dödstal per åldersgrupp och år för demografin i kontinuerlig tid; 65+ ger basårets döda delat med medelfolkmängden";

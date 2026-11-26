@@ -59,4 +59,12 @@ package FastTests "Scenarier för snabbtesterna (tests/fast/test_model.py): Mota
   model Cloudburst "Ett skyfall i juli 2027: 56 mnkr i reparationer under ett halvår"
     extends Motala.Continuous(oneOffCost = 56, oneOffCostTime = 2027.5);
   end Cloudburst;
+
+  model GroupMigration "Flyttningen tas från kommunens grupp enligt SKR i stället för kommunens egna två år"
+    extends Motala.Continuous(migrationGroupWeight = 1);
+  end GroupMigration;
+
+  model HalfGroupMigration "Hälften från kommunens egna år, hälften från kommungruppen"
+    extends Motala.Continuous(migrationGroupWeight = 0.5);
+  end HalfGroupMigration;
 end FastTests;
