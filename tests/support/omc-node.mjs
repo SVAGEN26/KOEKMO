@@ -16,8 +16,7 @@ export async function boot(options) {
   omc.omc_set_env('OPENMODELICAHOME','/usr');
   if(!omc.omc_init()) throw Error('OpenModelica did not start');
   omc.omc_enable_wasm_blobs?.();
-  const names=['Kommunekonomi.mo','Motala.mo','MotalaBrowser.mo',...Object.entries(municipalities)
-    .filter(([code])=>code!==DEFAULT_MUNICIPALITY).map(([,item])=>`municipalities/${item.packageName}.mo`)];
+  const names=['Kommunekonomi.mo',...Object.values(municipalities).map(item=>`municipalities/${item.packageName}.mo`),'Browser.mo'];
   const session=createSession(omc,names.map(name=>({name,text:fs.readFileSync(url(`../../modelica/${name}`),'utf8')})),options);
   return {omc,session};
 }

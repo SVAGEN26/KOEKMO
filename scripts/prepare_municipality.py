@@ -287,6 +287,7 @@ def modelica(package, name, code, archive, years, older_shares):
       careCostPerInhabitant = {vector(r['careCostPerInhabitant'], 0)}{f", interestRate = {number(r['interestRate'], 4)}" if 'interestRate' in r else ''},
       infrastructureShare = {number(r['infrastructureShare'], 4)},
       groupMigration = {vector(r['groupMigration'], 6)}, ownMigration = {vector(r['ownMigration'], 6)},
+      source = Kommunekonomi.Data.AccountsSource.accountSummary,
       ages = {vector(r['ages'], 1)})
       "SCB:s räkenskapssammandrag och befolkningsstatistik {y} (kommunen); Kolada för omsorgs- och sektorvikter";
     constant Real olderShares{y}[3] = {vector(r['olderShares'], 6)};''')

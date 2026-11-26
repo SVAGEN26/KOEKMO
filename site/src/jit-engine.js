@@ -37,7 +37,7 @@ export function assemble(b,prepared,simRows,revenuePath=null) {
     rows.push(row);
   });
   const {fields:_,ageMigration:__,...details}=prepared;
-  // The population calibration as the model computed it (Kommunekonomi.Data, in MotalaBrowserContinuous).
+  // The population calibration as the model computed it (Kommunekonomi.Data, in BrowserContinuous).
   const first=simRows[0]??{};
   details.calibration={source:prepared.calibration,deathRates:[1,2,3,4,5].map(j=>first[`mortalityRates[${j}]`]),migration:[1,2,3,4,5].map(j=>first[`residualMigration[${j}]`])};
   return {...details,rows,engine:ENGINE};

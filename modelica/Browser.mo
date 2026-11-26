@@ -1,5 +1,5 @@
 within ;
-model MotalaBrowserContinuous "Omslag för webbläsaren kring Motala.Continuous: lager och flöden i kontinuerlig tid"
+model BrowserContinuous "Omslag för webbläsaren kring Motala.Continuous: lager och flöden i kontinuerlig tid"
   extends Motala.Continuous(
     final horizon=100,
     p0={2894,4629,1575,23019,11022}*(43131/43139),
@@ -76,4 +76,4 @@ räknas här ur historiken och projektionen med <code>Kommunekonomi.Data.deathRa
 (<code>revenuePath</code>) räknas på samma sätt av <code>Kommunekonomi.Data.sourcedRevenue</code>: SKR:s bana som den står,
 regleringsposten enligt statens ram efter de beslutade åren, och förlängningen efter banans sista år. Rikets folkmängd står här som ett fast tal och skrivs
 alltid över.</p></html>"));
-end MotalaBrowserContinuous;
+end BrowserContinuous;

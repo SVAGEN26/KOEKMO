@@ -43,7 +43,7 @@ async function start() {
   omc.omc_set_env('OPENMODELICAHOME','/usr');
   if(!omc.omc_init()) throw Error('OpenModelica kunde inte starta.');
   omc.omc_enable_wasm_blobs?.();
-  const sources=await Promise.all(['Kommunekonomi.mo',...Object.values(municipalities).map(item=>item.packageName+'.mo'),'MotalaBrowser.mo'].map(async name=>{
+  const sources=await Promise.all(['Kommunekonomi.mo',...Object.values(municipalities).map(item=>item.packageName+'.mo'),'Browser.mo'].map(async name=>{
     const r=await fetch(new URL(name,base));
     if(!r.ok) throw Error(`Kunde inte läsa ${name}`);
     return {name,text:await r.text()};

@@ -1,6 +1,9 @@
 # Modellerna som sajten kör
 
-Ladda alltid `Kommunekonomi.mo` först.
+Ladda alltid `Kommunekonomi.mo` först. En kommunfil som öppnas ensam i OMEdit blir en tom modell, eftersom OMEdit bara
+letar efter bibliotek i `~/.openmodelica/libraries/`. Med en länk dit hittar OMEdit biblioteket själv:
+
+    ln -s "$PWD/modelica/Kommunekonomi.mo" "$HOME/.openmodelica/libraries/Kommunekonomi 0.1.0.mo"
 
 - `Kommunekonomi.mo`: biblioteket. Posttyper för bokslut och befolkning, rikets SCB-data, de gemensamma delarna
   (`Components.Scenario`, `Revenue`, `Calendar`, `Fertility`), de gemensamma antagandena (`Assumptions`), utdata
@@ -8,12 +11,15 @@ Ladda alltid `Kommunekonomi.mo` först.
   `Demography`, `CohortDemography`, `Services`, `OperatingAccounts`, `Payments`, `Capital` och `Finance`.
   Årsmodellen (`Annual`) togs bort i november 2026. `Components.Demography` och `CohortDemography` finns kvar
   med årssteg för demografitesterna (`Motala.Examples.DemographyOnly`).
-- `Motala.mo`: Motalas basår 2020–2025 (`Data.motala2020` till `motala2025`), handledning och ordlista,
-  `Motala.Continuous` och exempel som `Hindcast2025`, `ContinuousCohort` och `Budget2026`.
-- `municipalities/`: ett paket per kommun i Östergötland, genererat av `scripts/prepare_municipality.py`
-  ur SCB och Kolada, med basår 2017–2025. Redigera inte för hand.
-- `MotalaBrowser.mo`: omslaget som webbläsaren kompilerar (wasm-jit), `MotalaBrowserContinuous` kring
-  `Motala.Continuous`. Fast kapacitet på 100 år och alla indata som fria parametrar med bokstavliga
+- `municipalities/`: ett paket per kommun i Östergötland.
+  - `Motala.mo` är skriven för hand ur kommunens årsredovisningar: basår 2020–2025 (`Data.motala2020` till
+    `motala2025`), handledning och ordlista, `Motala.Continuous` och exempel som `Hindcast2025`, `ContinuousCohort`
+    och `Budget2026`.
+  - De tolv andra genereras av `scripts/prepare_municipality.py` ur SCB:s räkenskapssammandrag och Kolada, med basår
+    2017–2025. Redigera dem inte för hand.
+  - Varje basårspost säger var bokslutet kommer ifrån (`BaseYear.source`: årsredovisning eller räkenskapssammandrag).
+- `Browser.mo`: omslaget som webbläsaren kompilerar (wasm-jit), `BrowserContinuous` kring
+  `Motala.Continuous`. Sajten skriver över varje tal med den valda kommunens. Fast kapacitet på 100 år och alla indata som fria parametrar med bokstavliga
   standardvärden, så att `-override` når dem.
 
 Tiden är kalenderår. Starttiden är basåret (bokslutet 31 december), och `horizon` år räknas fram; standard
@@ -49,5 +55,14 @@ Modellen behöver en riktig lösare. Sajten kör den implicita lösaren `ida`, s
 
 Standardvärdena är illustrativa. Hämta `Scenario.mo` från sajten för att återskapa ett scenario med
 planeringsunderlagen. Ekvationerna beskrivs i [../docs/methodology.md](../docs/methodology.md).
+
+Diagram i OMEdit: `Continuous.Economy`, `Capital`, `Payments` och `Finance` är byggda av komponenter och har diagram med
+alla kopplingar dragna. Layouten är gjord med [mocoal](https://github.com/OpenModelica/mocoal-rs):
+
+    mocoal -i -c Kommunekonomi.Continuous.Economy -c Kommunekonomi.Continuous.Capital \
+           -c Kommunekonomi.Continuous.Payments -c Kommunekonomi.Continuous.Finance modelica/Kommunekonomi.mo
+
+Kör om det när komponenter eller kopplingar ändras; `--svg KATALOG` skriver en förhandsvisning. `Demography`, `Services`
+och `OperatingAccounts` är skrivna som ekvationer och har inget diagram över insidan.
 
 Forskningsmodellerna M1 och M2 ligger i `../research/` och används inte av sajten.

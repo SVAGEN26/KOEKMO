@@ -89,7 +89,7 @@ def municipalities():
         data = json.loads(path.read_text())
         code = path.parent.name
         package = data['packageName']
-        file = ROOT / 'modelica' / ('Motala.mo' if package == 'Motala' else f'municipalities/{package}.mo')
+        file = ROOT / 'modelica' / f'municipalities/{package}.mo'
         if not file.exists():
             continue
         skr = ROOT / ('data/skr-revenue-path.json' if code == '0583' else f'data/municipalities/{code}/skr-revenue-path.json')

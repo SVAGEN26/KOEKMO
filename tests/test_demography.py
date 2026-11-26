@@ -17,16 +17,16 @@ class Demography(unittest.TestCase):
         writer = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(writer)
         with tempfile.TemporaryDirectory() as tmp:
-            copies = {}
-            for name in ('Kommunekonomi.mo', 'Motala.mo'):
-                copies[name] = Path(tmp) / name
-                shutil.copy(ROOT / 'modelica' / name, copies[name])
+            copies, sources = {}, {}
+            for name, source in (('Kommunekonomi.mo', ROOT / 'modelica/Kommunekonomi.mo'), ('Motala.mo', ROOT / 'modelica/municipalities/Motala.mo')):
+                copies[name], sources[name] = Path(tmp) / name, source
+                shutil.copy(source, copies[name])
             writer.LIBRARY, writer.MUNICIPALITY = copies['Kommunekonomi.mo'], copies['Motala.mo']
             writer.main()
             # Compare without whitespace: OMEdit reformats the file when it saves.
             squeeze = lambda text: ''.join(text.split())
             for name, copy in copies.items():
-                self.assertEqual(squeeze(copy.read_text()), squeeze((ROOT / 'modelica' / name).read_text()),
+                self.assertEqual(squeeze(copy.read_text()), squeeze(sources[name].read_text()),
                                  f'{name}: run scripts/write_demography_modelica.py after prepare_demography.py')
 
     def test_each_base_year_uses_its_own_observations(self):

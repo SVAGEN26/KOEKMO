@@ -41,7 +41,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix='units-') as tmp:
         tmp = Path(tmp)
         (tmp / 'Kommunekonomi.mo').write_text(source.replace(units, translated))
-        shutil.copy(ROOT / 'modelica/Motala.mo', tmp)
+        shutil.copy(ROOT / 'modelica/municipalities/Motala.mo', tmp)
         (tmp / 'check.mos').write_text('setCommandLineOptions("--unitChecking"); getErrorString();\n'
                                        'loadFile("Kommunekonomi.mo"); getErrorString();\n'
                                        'loadFile("Motala.mo"); getErrorString();\n'

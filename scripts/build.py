@@ -125,7 +125,7 @@ def main():
     for name in DATA:
         shutil.copy2(ROOT / 'data' / name, DIST / name)
     shutil.copy2(ROOT / 'modelica/Kommunekonomi.mo', DIST / 'Kommunekonomi.mo')
-    shutil.copy2(ROOT / 'modelica/Motala.mo', DIST / 'Motala.mo')
+    shutil.copy2(ROOT / 'modelica/municipalities/Motala.mo', DIST / 'Motala.mo')
     municipal_data = {}
     for folder in sorted((ROOT / 'data/municipalities').glob('[0-9]*')):
         if not (folder / 'web.json').is_file():
@@ -150,7 +150,7 @@ def main():
     shutil.copy2(ROOT / 'data/municipalities/0562/web.json', DIST / 'finspang.json')
     shutil.copy2(ROOT / 'data/municipalities/0562/skr-revenue-path.json', DIST / 'finspang-skr-revenue-path.json')
     shutil.copy2(ROOT / 'data/municipalities/0562/vintage-hindcast-continuous.json', DIST / 'finspang-vintage-hindcast.json')
-    shutil.copy2(ROOT / 'modelica/MotalaBrowser.mo', DIST / 'MotalaBrowser.mo')
+    shutil.copy2(ROOT / 'modelica/Browser.mo', DIST / 'Browser.mo')
     shutil.copytree(OMC, DIST / 'omc-web')
     shutil.copy2(ROOT / 'docs/methodology.md', DIST / 'methodology.md')
     shutil.copy2(ROOT / 'LICENSE', DIST / 'LICENSE.txt')

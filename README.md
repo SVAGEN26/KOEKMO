@@ -329,8 +329,8 @@ see [Connect an AI to the page](#connect-an-ai-to-the-page).
 | Model | Where | Used by |
 | --- | --- | --- |
 | `Kommunekonomi.Continuous.Economy` | `modelica/Kommunekonomi.mo` | The site, the MCP server, the hindcasts |
-| `Motala.Continuous`, examples | `modelica/Motala.mo` | Motala's base years 2020–2025 |
-| One package per municipality | `modelica/municipalities/*.mo` | Generated from SCB and Kolada |
+| One package per municipality | `modelica/municipalities/*.mo` | Motala's is written by hand from the annual reports (base years 2020–2025, with a tutorial and examples); the other twelve are generated from SCB and Kolada |
+| `BrowserContinuous` | `modelica/Browser.mo` | The wrapper the site compiles; no equations of its own |
 | M1, M2 (research) | `research/` | Nothing on the site; see [research/M2.md](research/M2.md) |
 
 `Continuous.Economy` is the model, in continuous time. Money and population
@@ -345,8 +345,22 @@ and cash is steered toward a liquidity reserve of days of payments
 November 2026; it was removed so that one model in a system-dynamics form
 remains. See [docs/methodology.md](docs/methodology.md#continuous-time).
 
-In OMEdit, load `Kommunekonomi.mo` first, then `Motala.mo`, and open
-`Motala.Continuous` in Diagram view. Defaults are
+In OMEdit, load `Kommunekonomi.mo` first, then a municipality's file from
+`modelica/municipalities/`, and open for example `Motala.Continuous` in Diagram
+view. A municipality's file opened alone is an empty model: OMEdit looks for the
+library only in `~/.openmodelica/libraries/`. A link there makes it find the
+library by itself:
+
+    ln -s "$PWD/modelica/Kommunekonomi.mo" "$HOME/.openmodelica/libraries/Kommunekonomi 0.1.0.mo"
+
+`Continuous.Economy`, `Capital`, `Payments` and `Finance` are built of components
+and have diagrams with every connection drawn, laid out with
+[mocoal](https://github.com/OpenModelica/mocoal-rs)
+(`mocoal -i -c Kommunekonomi.Continuous.Economy modelica/Kommunekonomi.mo`, and
+the same for the other three; `--svg DIR` writes a preview). `Demography`,
+`Services` and `OperatingAccounts` are written as equations and have no diagram of
+their inside. Each base-year record says where its accounts come from
+(`BaseYear.source`: the annual report or SCB's account summary). Defaults are
 illustrative; download `Scenario.mo` from the site to reproduce a scenario with
 the planning inputs. See [modelica/README.md](modelica/README.md).
 
@@ -724,10 +738,10 @@ Details and the history of earlier attempts are in
 
 The site has one engine: OpenModelica's compiler built for WebAssembly. A worker
 (`site/src/omc-worker.js`) fetches the compiler (about 100 MB, cached afterwards),
-loads `Kommunekonomi.mo`, the municipality's package and `MotalaBrowser.mo`, and
+loads `Kommunekonomi.mo`, the municipality's package and `Browser.mo`, and
 runs `buildModel` with the `wasm-jit` target (two to three seconds; nine with
 single-year ages). Each scenario re-runs the compiled model with `-override`, in
-about 0.1 s. `MotalaBrowser.mo` holds the wrapper `MotalaBrowserContinuous`,
+about 0.1 s. `Browser.mo` holds the wrapper `BrowserContinuous`,
 which adds no equations: it fixes the array capacity at 100 years and makes every input a free parameter
 with a literal default (OpenModelica folds defaults that depend on the base year
 at compile time, out of `-override`'s reach). No cross-origin isolation is

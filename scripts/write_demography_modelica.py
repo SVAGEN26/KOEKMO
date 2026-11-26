@@ -5,7 +5,7 @@
 
 Kommunekonomi.Data.SCB (modelica/Kommunekonomi.mo) gets what is the same for every
 municipality: the record type, Sweden's population, fertility and mortality, and the
-helper functions. Motala.Data.SCB (modelica/Motala.mo) extends it with Motala's base
+helper functions. Motala.Data.SCB (modelica/municipalities/Motala.mo) extends it with Motala's base
 years. Each package is replaced in place. Run it after scripts/prepare_demography.py;
 tests/test_demography.py checks that the files and the JSON agree.
 """
@@ -17,7 +17,7 @@ from prepare_demography import fertility_profiles
 
 ROOT = Path(__file__).resolve().parents[1]
 LIBRARY = ROOT / 'modelica/Kommunekonomi.mo'
-MUNICIPALITY = ROOT / 'modelica/Motala.mo'
+MUNICIPALITY = ROOT / 'modelica/municipalities/Motala.mo'
 NAME, PREFIX = 'Motala', 'motala'
 HORIZON = 30  # years of projected fertility to carry, from the first projection year
 

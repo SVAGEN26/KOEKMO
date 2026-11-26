@@ -1820,3 +1820,23 @@ arkivera data.
 - Motala 2025: eget flyttnetto 19–64 år −0,9 % per år (medel 2024–2025), gruppens −0,2 %. Med gruppens tal cirka 170
   fler invånare per år, cirka 1 400 fler 2033 när ingen prognos följs.
 
+## Modelica-filerna omordnade, diagram i OMEdit (2026-11-26)
+
+- `modelica/Motala.mo` ligger nu i `modelica/municipalities/` med de tolv andra. Omslaget heter `BrowserContinuous` i
+  `modelica/Browser.mo` (förut `MotalaBrowserContinuous` i `MotalaBrowser.mo`). Sajtens filnamn är oförändrade utom
+  `Browser.mo`. Äldre anteckningar här ovan använder de gamla namnen.
+- `BaseYear.source` (`Data.AccountsSource`: `annualReport`, `accountSummary`, `unknown`): Motalas sex poster är
+  årsredovisning, de tolv genererade paketen räkenskapssammandrag. Bibliotekets första uppräkningstyp; den går igenom
+  webbkompilatorn.
+- Varför OMEdit visade tomma modeller: en kommunfil som öppnas ensam hittar inte `Kommunekonomi` ("Skipped loading
+  package Kommunekonomi"), eftersom OMEdit bara letar i `~/.openmodelica/libraries/`. En länk
+  `~/.openmodelica/libraries/Kommunekonomi 0.1.0.mo` till bibliotekets fil löser det (lagd på användarens dator mot
+  `/home/johti17/MOTALA/modelica/Kommunekonomi.mo`). Dessutom saknade alla 53 kopplingar `Line`-annotation, så OMEdit
+  ritade komponenter utan linjer.
+- Layout med mocoal (https://github.com/OpenModelica/mocoal-rs, byggt i `/home/johti17/OpenModelicaWork/mocoal-rs`,
+  version 0.1.1): `Continuous.Economy`, `Capital`, `Payments` och `Finance` har ny placering och alla kopplingar dragna.
+  Bara annotationer ändrades (filen utan annotationer är tecken för tecken densamma). `--svg` ger en förhandsvisning
+  utan att starta OMEdit. `Economy` har fått en ikon, som kommunernas `Continuous` ärver.
+- Kvar: `Demography`, `Services` och `OperatingAccounts` är ekvationer och har inget diagram över insidan. Demografin kan
+  byggas om av lagerkomponenter (sju åldersgrupper med flöden) och läggas ut med mocoal.
+

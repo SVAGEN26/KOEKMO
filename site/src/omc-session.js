@@ -10,7 +10,7 @@ export const OUTPUTS=['population','population80Plus','births','deaths','migrati
   'repayment','prefinancing','outstandingDeferredInvestment','annualFinancialIncome','referenceRevenue','projectPaid','projectCommissioned','projectWorkInProgress',
   'projectPlacesInUse','missingProjectPlaces','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
 // The wrapper around Motala.Continuous: stocks and flows in continuous time.
-export const MODEL='MotalaBrowserContinuous';
+export const MODEL='BrowserContinuous';
 export const MAX_YEARS=100;
 // Continuous time is integrated with IDA, an implicit solver with its own step control; twelve values a year are
 // stored. It gives the values of native OpenModelica's DASSL within 0.01 mnkr, and it also takes the flows with

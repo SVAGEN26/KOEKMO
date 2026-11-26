@@ -744,9 +744,9 @@ the hindsight and prices sets use outcomes on purpose.
 ## Browser engine
 
 The site compiles `Kommunekonomi.mo`, the municipality's package and
-`MotalaBrowser.mo` with OpenModelica's web compiler (`wasm-jit`), and re-runs the
-compiled model with `-override` for every scenario. `MotalaBrowser.mo` holds the
-wrapper `MotalaBrowserContinuous` around `Motala.Continuous`, without equations of
+`Browser.mo` with OpenModelica's web compiler (`wasm-jit`), and re-runs the
+compiled model with `-override` for every scenario. `Browser.mo` holds the
+wrapper `BrowserContinuous` around `Motala.Continuous`, without equations of
 its own.
 Inputs are validated in JavaScript, and the model asserts the same limits. The
 compiler revision and file hashes are in `omc-web/manifest.json` on the site. No
