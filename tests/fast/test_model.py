@@ -85,7 +85,8 @@ def run(name, years=8, start=2025, **parameters):
         for k, old in changed.items():
             m.setParameters(**{k: str(old)})
     names = m.getSolutions(resultfile=str(result))
-    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual', 'revenues.grantParts', 'operations.oneOffCostRate')
+    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual', 'revenues.grantParts', 'operations.oneOffCostRate',
+             'demography.age', 'demography.turn', 'demography.death', 'demography.move', 'demography.birth', 'demography.migrationRate')
     wanted = [n for n in names if n == 'time' or '.' not in n or n.startswith(extra)]
     series = dict(zip(wanted, m.getSolutions(wanted, resultfile=str(result))))
     rows = {}
@@ -455,6 +456,49 @@ class MigrationBasis(unittest.TestCase):
         untouched, _ = run(WRAPPER, **rates)   # weight 0: the rates are carried but not used
         for y in untouched:
             self.assertAlmostEqual(untouched[y]['population'], self.base[y]['population'], delta=1e-3, msg=y)
+
+
+
+@unittest.skipIf(SKIP, SKIP)
+class DemographyOfComponents(unittest.TestCase):
+    """The demography is built of stocks (AgeGroup) and flows (Births, Ageing, Deaths, Migration) connected in a chain."""
+
+    GROUPS = ('0to6', '7to15', '16to18', '19to64', '65to79', '80to89', '90plus')
+    TURNS = ('turn7', 'turn16', 'turn19', 'turn65', 'turn80', 'turn90')
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rows, cls.points = run('Base')
+
+    def test_the_readings_are_the_stocks_and_the_flows(self):
+        for y, r in self.rows.items():
+            for i, g in enumerate(self.GROUPS[:4], start=1):
+                self.assertEqual(r[f'demography.young[{i}]'], r[f'demography.age{g}.people'], (y, g))
+            for j, g in enumerate(self.GROUPS[4:], start=1):
+                self.assertEqual(r[f'demography.older[{j}]'], r[f'demography.age{g}.people'], (y, g))
+            self.assertAlmostEqual(sum(r[f'demography.age{g}.people'] for g in self.GROUPS), r['population'], delta=1e-6, msg=y)
+            self.assertEqual(r['demography.ageing[4]'], r['demography.turn65.rate'], y)
+
+    def test_every_stock_changes_by_its_flows_and_nothing_else(self):
+        # Between two stored points a stock changes by what flows in minus what flows out (trapezoid over the month).
+        t = self.points['time']
+        flow = lambda name: self.points[name]
+        for k, g in enumerate(self.GROUPS):
+            inflow = flow('demography.birth.rate') if k == 0 else flow(f'demography.{self.TURNS[k - 1]}.rate')
+            out = flow(f'demography.{self.TURNS[k]}.rate') if k < 6 else 0*inflow
+            net = inflow - out - flow(f'demography.death{g}.rate') + flow(f'demography.move{g}.rate')
+            people = flow(f'demography.age{g}.people')
+            # One year without events inside it: from just after the first year end to just before the second.
+            a = int(np.where(np.isclose(t, 2026))[0][-1]); b = int(np.where(np.isclose(t, 2027))[0][0])
+            integral = float(np.sum((net[a + 1:b + 1] + net[a:b])/2*np.diff(t[a:b + 1])))
+            self.assertAlmostEqual(people[b] - people[a], integral, delta=0.02 + 2e-4*abs(people[a]), msg=g)
+
+    def test_people_only_leave_the_chain_by_death_or_migration(self):
+        # What leaves one group by ageing arrives in the next: the ageing flows cancel in the total.
+        r = self.rows[2030]
+        total = (r['demography.birth.rate'] - sum(r[f'demography.death{g}.rate'] for g in self.GROUPS)
+                 + sum(r[f'demography.move{g}.rate'] for g in self.GROUPS))
+        self.assertAlmostEqual(total, r['demography.birthRate'] - r['demography.deathRate'] + r['demography.migrationRate'], delta=1e-6)
 
 
 if __name__ == '__main__':

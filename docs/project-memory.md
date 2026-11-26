@@ -1840,3 +1840,15 @@ arkivera data.
 - Kvar: `Demography`, `Services` och `OperatingAccounts` är ekvationer och har inget diagram över insidan. Demografin kan
   byggas om av lagerkomponenter (sju åldersgrupper med flöden) och läggas ut med mocoal.
 
+## Demografin som lager och flöden i komponenter (2026-11-26)
+
+- `Continuous.Demography` är ombyggd av komponenter: sju `AgeGroup` (lager: `age0to6` till `age90plus`), sex `Ageing`
+  (`turn7` till `turn90`), ett `Births`, sju `Deaths` och sju `Migration`, kopplade med `connect` genom `PeoplePort`
+  (antal personer och flöde in). Ekvationerna är desamma som förut, uppdelade på komponenterna.
+- De gamla namnen finns kvar som avläsningar (`young`, `older`, `p`, `ageing`, `died`, `moved` och så vidare), så tester,
+  sidan och "Valfri variabel i modellen" fungerar som förut.
+- Jämförelse med versionen före: Motala 2025–2040 med DASSL och tolerans 1e-10, 32 variabler vid 16 årsslut; största
+  relativa avvikelse 1,5e-10.
+- Diagrammet är utlagt med mocoal (28 komponenter, 27 kopplingar): kedjan går från vänster till höger.
+- `Continuous.CohortDemography` (ettårsåldrar, 202 lager) är oförändrad och har inget diagram.
+

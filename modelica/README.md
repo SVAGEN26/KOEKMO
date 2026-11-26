@@ -56,13 +56,15 @@ Modellen behöver en riktig lösare. Sajten kör den implicita lösaren `ida`, s
 Standardvärdena är illustrativa. Hämta `Scenario.mo` från sajten för att återskapa ett scenario med
 planeringsunderlagen. Ekvationerna beskrivs i [../docs/methodology.md](../docs/methodology.md).
 
-Diagram i OMEdit: `Continuous.Economy`, `Capital`, `Payments` och `Finance` är byggda av komponenter och har diagram med
-alla kopplingar dragna. Layouten är gjord med [mocoal](https://github.com/OpenModelica/mocoal-rs):
+Diagram i OMEdit: `Continuous.Economy`, `Demography`, `Capital`, `Payments` och `Finance` är byggda av komponenter och har
+diagram med alla kopplingar dragna. Demografin är sju åldersgrupper som lager (`AgeGroup`) i en kedja, med födda
+(`Births`), åldrande (`Ageing`), döda (`Deaths`) och flyttningar (`Migration`) som flödeskomponenter. Layouten är gjord med [mocoal](https://github.com/OpenModelica/mocoal-rs):
 
-    mocoal -i -c Kommunekonomi.Continuous.Economy -c Kommunekonomi.Continuous.Capital \
-           -c Kommunekonomi.Continuous.Payments -c Kommunekonomi.Continuous.Finance modelica/Kommunekonomi.mo
+    mocoal -i -c Kommunekonomi.Continuous.Economy -c Kommunekonomi.Continuous.Demography \
+           -c Kommunekonomi.Continuous.Capital -c Kommunekonomi.Continuous.Payments \
+           -c Kommunekonomi.Continuous.Finance modelica/Kommunekonomi.mo
 
-Kör om det när komponenter eller kopplingar ändras; `--svg KATALOG` skriver en förhandsvisning. `Demography`, `Services`
+Kör om det när komponenter eller kopplingar ändras; `--svg KATALOG` skriver en förhandsvisning. `Services`
 och `OperatingAccounts` är skrivna som ekvationer och har inget diagram över insidan.
 
 Forskningsmodellerna M1 och M2 ligger i `../research/` och används inte av sajten.
