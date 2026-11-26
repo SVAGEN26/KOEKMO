@@ -1852,3 +1852,16 @@ arkivera data.
 - Diagrammet är utlagt med mocoal (28 komponenter, 27 kopplingar): kedjan går från vänster till höger.
 - `Continuous.CohortDemography` (ettårsåldrar, 202 lager) är oförändrad och har inget diagram.
 
+## Kommunerna som paketmappar (2026-11-26)
+
+- Varje kommun är en mapp med `package.mo`: `modelica/municipalities/Motala/package.mo` och så vidare. Bredvid mapparna
+  ligger länken `modelica/municipalities/Kommunekonomi 0.1.0.mo` → `../Kommunekonomi.mo`.
+- Skälet: när ett paket som ligger i en mapp laddas lägger OpenModelica mappens förälder i sökvägen för `uses`, och hittar
+  då ett bibliotek med versionsnamn där. För en ensam `.mo`-fil görs inte det, och en mapp utan versionsnamn
+  (`Kommunekonomi/`) godtas inte för `uses(Kommunekonomi(version = "0.1.0"))`. Prövat med omc utan länken i
+  hemkatalogen: `Motala/package.mo` och `Finspang/package.mo` laddar biblioteket själva.
+- Länken i `~/.openmodelica/libraries/` (lagd tidigare samma dag mot huvudkatalogen) behövs inte längre.
+- Sajten och webbkompilatorn laddar fortfarande platta filer (`Motala.mo` och så vidare i `site/dist`); testerna ger
+  webbkompilatorn samma platta namn.
+- `scripts/hindcast_county_ages.py` pekade fortfarande på Motalas gamla plats efter flytten till `municipalities/`; rättat.
+

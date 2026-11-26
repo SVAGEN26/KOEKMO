@@ -201,7 +201,7 @@ test('the page\'s solver in the browser gives native OpenModelica\'s DASSL',{ski
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuous-'));
   try {
     const mo=name=>JSON.stringify(fileURLToPath(new URL(`../modelica/${name}`,import.meta.url)));
-    fs.writeFileSync(path.join(dir,'run.mos'),`loadFile(${mo('Kommunekonomi.mo')}); loadFile(${mo('municipalities/Motala.mo')}); getErrorString();
+    fs.writeFileSync(path.join(dir,'run.mos'),`loadFile(${mo('Kommunekonomi.mo')}); loadFile(${mo('municipalities/Motala/package.mo')}); getErrorString();
 simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, method="dassl", tolerance=1e-8, outputFormat="csv", variableFilter="${keys.join('|')}"); getErrorString();\n`);
     execFileSync(native,['run.mos'],{cwd:dir,stdio:'pipe'});
     const [header,...lines]=fs.readFileSync(path.join(dir,'Motala.Continuous_res.csv'),'utf8').trim().split('\n');

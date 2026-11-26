@@ -88,7 +88,7 @@ def municipality(code, tmp):
     years = {int(y): r for y, r in records['years'].items()}
     missing = [y for y in ORIGINS if 'interestRate' not in years[y] and not plausible_rate(years[y])]
     if not missing:
-        return package, ROOT / f'modelica/municipalities/{package}.mo', years
+        return package, ROOT / f'modelica/municipalities/{package}/package.mo', years
     # The library asserts that the base year gives a rate; write the package again with the fallback in those years.
     for y in missing:
         years[y]['interestRate'] = FALLBACK_RATE

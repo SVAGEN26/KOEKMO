@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL = (ROOT / 'modelica/municipalities/Motala.mo').read_text()
+MODEL = (ROOT / 'modelica/municipalities/Motala/package.mo').read_text()
 HISTORY = {r['year']: r for r in json.loads((ROOT / 'data/history.json').read_text())['rows']}
 ACCOUNTS = {r['year']: r for r in json.loads((ROOT / 'data/operating-accounts-history.json').read_text())['rows']}
 BASELINE = json.loads((ROOT / 'data/baseline.json').read_text())

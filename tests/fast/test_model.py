@@ -55,7 +55,7 @@ def model(name):
     if name not in MODELS:
         work = Path(WORK) / name.replace('.', '_')
         work.mkdir()
-        libraries = [str(ROOT / 'modelica/Kommunekonomi.mo'), str(ROOT / 'modelica/municipalities/Motala.mo')]
+        libraries = [str(ROOT / 'modelica/Kommunekonomi.mo'), str(ROOT / 'modelica/municipalities/Motala/package.mo')]
         file, full = (ROOT / 'modelica/Browser.mo', name) if name == WRAPPER else (Path(__file__).with_name('Scenarios.mo'), f'FastTests.{name}')
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')

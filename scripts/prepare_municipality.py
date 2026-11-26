@@ -8,7 +8,7 @@ equalisation, operating costs, investment and population), and the municipality'
 weights and sector shares (fetch_care_data.py + prepare_care.py, fetch_sector_costs.py) under
 data/municipalities/<code>/, and the relative tax capacity from data/tax-capacity.json (fetch_tax_capacity.py).
 Writes data/municipalities/<code>/base-years.json and, with
---modelica, modelica/municipalities/<Package>.mo: Data (one BaseYear per year 2017-2025), Continuous extending
+--modelica, modelica/municipalities/<Package>/package.mo: Data (one BaseYear per year 2017-2025), Continuous extending
 Kommunekonomi.Continuous.Economy with the latest base year, and a one-year test against the outcome.
 
 Definitions (SCB item codes):
@@ -335,7 +335,7 @@ def main():
     parser.add_argument('package', help='Modelica package name, ASCII (for example Mjolby)')
     parser.add_argument('name', help='Municipality name as written (for example Mjölby)')
     parser.add_argument('archive', type=Path)
-    parser.add_argument('--modelica', action='store_true', help='also write modelica/municipalities/<package>.mo')
+    parser.add_argument('--modelica', action='store_true', help='also write modelica/municipalities/<package>/package.mo')
     args = parser.parse_args()
     archive = args.archive.resolve()
     manifest = json.loads((archive / 'manifest.json').read_text())
@@ -352,7 +352,7 @@ def main():
     if args.modelica:
         if not args.package.isascii() or not args.package.isidentifier():
             raise SystemExit('The package name must be an ASCII identifier')
-        (ROOT / f'modelica/municipalities/{args.package}.mo').write_text(
+        (ROOT / f'modelica/municipalities/{args.package}/package.mo').write_text(
             modelica(args.package, args.name, args.code, archive.relative_to(ROOT), years, older_shares))
     for y, r in years.items():
         print(y, f"pop {r['reportedPopulation'][-1]:.0f} tax {r['tax']:.0f} grants {r['grants']:.0f} "

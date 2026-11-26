@@ -185,7 +185,7 @@ def simulate(origin, horizon, source, directory):
     (directory / 'Run.mo').write_text(source)
     (directory / 'run.mos').write_text(
         f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-        f'loadFile({json.dumps(str(ROOT / f"modelica/municipalities/{PACKAGE}.mo"))}); getErrorString();\n'
+        f'loadFile({json.dumps(str(ROOT / f"modelica/municipalities/{PACKAGE}/package.mo"))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {origin}, stopTime = {origin + horizon}, numberOfIntervals = {horizon * 12},'
         ' outputFormat = "csv"); getErrorString();\n')

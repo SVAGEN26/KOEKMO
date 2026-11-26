@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL = (ROOT / 'modelica/municipalities/Motala.mo').read_text()
+MODEL = (ROOT / 'modelica/municipalities/Motala/package.mo').read_text()
 WEIGHTS = json.loads((ROOT / 'data/care-weights.json').read_text())
 
 

@@ -119,7 +119,7 @@ def simulate(book_path, migration, outcomes, directory, omc):
     archive = Path(records['archive'])
     actuals = {**actual_before_2025(archive), 2025: outcomes[code]}
     is_motala = code == '0583'
-    package_path = ROOT / 'modelica' / (f'{package}.mo' if is_motala else f'municipalities/{package}.mo')
+    package_path = ROOT / 'modelica/municipalities' / package / 'package.mo'
     county_package = ''
     if not is_motala:
         years = {int(y): row for y, row in records['years'].items()}

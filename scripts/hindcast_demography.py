@@ -42,7 +42,7 @@ end Run;
     (directory / 'Run.mo').write_text(source)
     (directory / 'run.mos').write_text(
         f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-        f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Motala.mo"))}); getErrorString();\n'
+        f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Motala/package.mo"))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {base}, stopTime = {LAST}, numberOfIntervals = {horizon}, outputFormat = "csv",'
         ' variableFilter = "demography\\\\.(population|births|deaths|migration|older.*)"); getErrorString();\n')

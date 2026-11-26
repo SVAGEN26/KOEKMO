@@ -27,8 +27,8 @@ end {name};''')
     (folder/'test.mo').write_text('\n'.join(models))
     (folder/'test.mos').write_text(''.join(
         f'loadFile({json.dumps(str(file))}); getErrorString();\n' for file in [
-        root/'modelica/Kommunekonomi.mo', root/'modelica/municipalities/Motala.mo',
-        root/'modelica/municipalities/Mjolby.mo', folder/'test.mo']) + '\n'.join(
+        root/'modelica/Kommunekonomi.mo', root/'modelica/municipalities/Motala/package.mo',
+        root/'modelica/municipalities/Mjolby/package.mo', folder/'test.mo']) + '\n'.join(
         f'simulate({name},startTime=2025,stopTime=2027,numberOfIntervals=24,outputFormat="csv",'
         f'variableFilter="tax|grants|population|careIndex"); getErrorString();'
         for _, _, name in cases))

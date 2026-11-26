@@ -50,7 +50,7 @@ class MigrationGroups(unittest.TestCase):
                 own, group = migration_rates(self.table, code, int(year))
                 self.assertEqual(years[year]['ownMigration'], own)
                 self.assertEqual(years[year]['groupMigration'], group)
-        motala = (ROOT / 'modelica/municipalities/Motala.mo').read_text()
+        motala = (ROOT / 'modelica/municipalities/Motala/package.mo').read_text()
         own, group = migration_rates(self.table, '0583', 2025)
         self.assertIn('groupMigration = {' + ', '.join(f'{x:g}' for x in group) + '}, ownMigration = {' + ', '.join(f'{x:g}' for x in own) + '}', motala)
 
