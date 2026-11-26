@@ -48,7 +48,7 @@ CHECKS = ('populationBalance', 'assetBalance', 'cashBalance', 'debtBalance', 'eq
 CORE_DECISIONS = ('taxRatePath', 'investmentPath', 'interestRatePath', 'wageGrowthPath', 'priceGrowthPath',
                   'productivityGrowth', 'migrationDeltaPath', 'serviceAdjustment', 'liquidityPolicy', 'reserveDays', 'creditLine',
                   'constructionYears', 'constructionShare', 'workingCapitalEnabled', 'collectionDays', 'paymentDays',
-                  'rateShock', 'rateShockTime', 'rateFixingYears', 'inflationShock', 'inflationPersistence',
+                  'rateShock', 'rateShockTime', 'rateFixingYears', 'oneOffCost', 'oneOffCostTime', 'inflationShock', 'inflationPersistence',
                   'inflationWagePassThrough', 'inflationPensionPassThrough', 'inflationRateResponse', 'inflationGrantCompensation')
 RATE_FIXING = json.loads((ROOT / 'data' / 'rate-fixing.json').read_text())
 SCENARIOS = {

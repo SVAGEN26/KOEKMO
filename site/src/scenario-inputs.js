@@ -64,6 +64,8 @@ export function validate(b,a) {
   for(const [k,low,high] of [['inflationPersistence',0,1],['inflationWagePassThrough',0,2],['inflationPensionPassThrough',0,30],['inflationRateResponse',0,3],['inflationGrantCompensation',0,100]])
     if(a[k]!=null&&(!Number.isFinite(a[k])||a[k]<low||a[k]>high)) throw Error(`${k} ska ligga mellan ${low} och ${high}.`);
   if(a.rateShock!=null&&(!Number.isFinite(a.rateShock)||a.rateShock<-5||a.rateShock>15)) throw Error('Räntehöjningen ska vara mellan -5 och 15 procentenheter.');
+  if(a.stormCost!=null&&(!Number.isFinite(a.stormCost)||a.stormCost<0||a.stormCost>20000)) throw Error('Skyfallets kostnad ska vara 0–20 000 kronor per invånare.');
+  if(a.stormYear!=null&&(!Number.isInteger(a.stormYear)||a.stormYear<1||a.stormYear>100)) throw Error('Skyfallets år ska vara ett helt prognosår.');
   rateEpisode(b,a);
   if(a.investmentPlan&&!(b.investmentPlan?.factors?.length&&b.investmentPlan.factors.every(f=>Number.isFinite(f)&&f>=0))) throw Error('Kommunen saknar investeringsplan för basåret.');
   if(a.rateShockMonth!=null&&(!Number.isInteger(a.rateShockMonth)||a.rateShockMonth<1||a.rateShockMonth>12)) throw Error('Räntehöjningens månad ska vara 1–12.');
@@ -286,6 +288,10 @@ export function prepareScenario(b,history,overrides={},revenuePath=null) {
   fields.inflationRateResponse=a.inflationRateResponse??0.5;
   fields.inflationGrantCompensation=(a.inflationGrantCompensation??0)/100;
   fields.rateFixingYears=a.rateFixingYears??0;
+  // A cloudburst: kronor per inhabitant at the base year's population, as a one-off operating cost from 1 July of the
+  // chosen forecast year (the model's oneOffCost, in the base year's prices).
+  fields.oneOffCost=(a.stormCost??0)*sum(b.population)/1e6;
+  fields.oneOffCostTime=b.baseYear+(a.stormYear??2)+0.5;
   fields.rateShock=(a.rateShock??0)/100;
   fields.rateShockTime=b.baseYear+1+((a.rateShockMonth??1)-1)/12;
   fields.migrationDeltaPath=inputs.map(()=>a.migrationDelta);

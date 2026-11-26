@@ -1778,3 +1778,17 @@ arkivera data.
 - Sammantaget stöd: drift cirka 30–110 kr/inv och år runt 2050 (0,05–0,15 % av nettokostnaden); 2035 finns ingen
   källa för. Källorna i `data/downloads/20261126T093000Z-underlag/klimat/` (utanför git). Inte infört i modellen.
 
+## Skyfall som stresscenario (2026-11-26)
+
+- Modellen har en engångskostnad i driften: `oneOffCost` (mnkr, basårets priser), `oneOffCostTime` (decimalår) och
+  `oneOffCostDuration` (0,5 år). Den är ett flöde i övriga verksamhetskostnader (`operations.oneOffCostRate`).
+- Sidan: gruppen "Extremväder" med `stormCost` (kr/inv) och `stormYear`, och knappen "Skyfall" (1 300 kr/inv andra
+  prognosåret). Avstängt från början. MCP-servern tar `oneOffCost` och `oneOffCostTime` direkt.
+- Beloppet: Gävle augusti 2021, direkta skador för offentliga aktörer 120–150 mnkr = 1 160–1 450 kr/inv
+  (Länsstyrelsen Gävleborg, rapport 2022:05, s. 18 och 22), inklusive kommunens bolag och Trafikverket. Köpenhamn 2011:
+  cirka 600 mnkr i kommunal infrastruktur (SOU 2017:42 s. 288). Arvika 2000: 58,5 mnkr för kommunen, två tredjedelar VA
+  (SOU 2007:60 tabell 4.44).
+- Motala: 56 mnkr i basårets priser, resultat 2027 från 78 till 18 mnkr, skulden cirka 69 mnkr högre därefter.
+- Inte med: privata skador, försäkringsbolagens regresskrav (Gävle: 1,2 mdkr krävt, 250 mnkr avsatt av Gästrike
+  Vatten), VA-taxan och en jämn årlig klimatkostnad (se underlaget ovan).
+

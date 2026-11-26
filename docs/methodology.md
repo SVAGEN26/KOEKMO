@@ -316,7 +316,9 @@ Interest is charged on the debt as it stands (opening debt times the year's rate
 period (`rateFixingYears = 0`) that is the year's rate. With one, the rate path
 is the market rate for new and refixed loans, and the average rate moves toward
 it by the share 1 − exp(−1/τ) of the debt each year; new loans pay the market
-rate. `rateShock` raises the market rate from a date, counted for the rest of
+rate. `oneOffCost` is a one-off operating cost in the base year's prices, a flow
+from the date `oneOffCostTime` for `oneOffCostDuration` (half a year); the site's
+cloudburst scenario sets it in kronor per inhabitant. `rateShock` raises the market rate from a date, counted for the rest of
 that year. The default rate is the base year's reported average rate when the
 annual report gives one, otherwise interest expense over the year's mean debt
 (opening and closing). Cash above the base year's earns the market rate less

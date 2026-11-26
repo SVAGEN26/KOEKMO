@@ -55,4 +55,8 @@ package FastTests "Scenarier för snabbtesterna (tests/fast/test_model.py): Mota
   model GrantPartsHeld "Bidragen per del; regleringsbidraget per invånare ligger kvar i kronor"
     extends Motala.Continuous(grantsByComponent = true, stateFrameFollowsTaxBase = false);
   end GrantPartsHeld;
+
+  model Cloudburst "Ett skyfall i juli 2027: 56 mnkr i reparationer under ett halvår"
+    extends Motala.Continuous(oneOffCost = 56, oneOffCostTime = 2027.5);
+  end Cloudburst;
 end FastTests;

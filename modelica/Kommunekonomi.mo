@@ -787,6 +787,9 @@ befolkning vid basårets slut), <code>Budget</code> och <code>SCB.DemographyYear
     parameter Units.Duration rateFixingYears(min = 0) = 0 "Genomsnittlig räntebindningstid för lånen, år (årsredovisningens avsnitt om finansiella risker); 0 = hela skulden till årets ränta. Med räntebindning är interestRatePath marknadsräntan för nya och omsatta lån";
     parameter Real rateShock = 0 "Plötslig höjning av marknadsräntan, andel (0,03 = tre procentenheter)";
     parameter Real rateShockTime = base.year + 1 "Datum för räntehöjningen som decimalår: 2026,0 = 1 januari 2026, 2026,5 = 1 juli 2026";
+    parameter Units.Money oneOffCost(min=0) = 0 "Engångskostnad i driften i basårets priser, mnkr: till exempel reparationer efter ett skyfall";
+    parameter Real oneOffCostTime = base.year + 2.5 "Datum då engångskostnaden börjar som decimalår: 2027,5 = 1 juli 2027";
+    parameter Units.Duration oneOffCostDuration(min=0.01) = 0.5 "Tid som engångskostnaden fördelas över, år";
     parameter Real inflationShock = 0 "Extra inflation första prognosåret utöver prisbanan, andel (0,03 = tre procentenheter)";
     parameter Real inflationPersistence(min = 0, max = 1) = 0.5 "Andel av den extra inflationen som finns kvar året därpå";
     parameter Real inflationShockPath[horizon] = {inflationShock*inflationPersistence^(i - 1) for i in 1:horizon} "Extra inflation per år, andel";
@@ -1758,6 +1761,9 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       parameter Boolean pensionFollowsPayroll = false "Pensionskostnaden följer lönesumman; banan anger då kostnaden vid basårets lönesumma";
       parameter Real productivityGrowth "Årlig produktivitetsökning, andel";
       parameter Real costDrift = 0 "Kostnadsökning utöver demografi och pris, andel per år";
+      parameter Units.Money oneOffCost = 0 "Engångskostnad i basårets priser, mnkr";
+      parameter Real oneOffCostTime = 1e9 "Datum då engångskostnaden börjar som decimalår (2026,5 = 1 juli 2026)";
+      parameter Units.Duration oneOffCostDuration = 0.5 "Tid som engångskostnaden fördelas över, år";
       outer Components.Calendar calendar;
       outer Clock clock;
       Interfaces.CohortsInput cohorts "Befolkning just nu" annotation(
@@ -1772,6 +1778,7 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       output Units.MoneyRate pensionCashPaymentsRate "Pensionsutbetalningar, mnkr per år";
       output Units.MoneyRate otherOperatingExpenseRate "Övriga verksamhetskostnader, mnkr per år";
       output Units.MoneyRate operatingRevenueRate "Verksamhetens intäkter, mnkr per år";
+      Units.MoneyRate oneOffCostRate "Engångskostnaden just nu, mnkr per år";
       Real level[5](each fixed = false) "Löne-, pris-, taxe-, produktivitets- och standardnivå just nu, index (basårets medel = 1)";
       Units.Rate growth[5] "Nivåernas tillväxttakt just nu";
       Real payrollIndex "Lönesumman just nu i förhållande till basårets, när pensionskostnaden följer den; annars 1";
@@ -1812,7 +1819,11 @@ stängs med andelen <code>adjustment</code> på ett år.</p></html>"));
       payrollIndex = if pensionFollowsPayroll then (wagesRate + employerContributionsRate)*Units.year/payroll0 else 1;
       pensionExpenseRate = drivers.pensionExpense/Units.year*payrollIndex;
       pensionCashPaymentsRate = drivers.pensionCashPayments/Units.year*payrollIndex;
-      otherOperatingExpenseRate = otherOperatingExpense0/Units.year*level[2]*serviceVolume*level[5];
+      // En engångskostnad (till exempel reparationer efter ett skyfall) är ett flöde under en begränsad tid, i basårets priser.
+      // Tiden t är den 31 december år t, så datumet oneOffCostTime är tiden oneOffCostTime - 1.
+      // Utan kostnad ligger starten bortom all tid, så att lösaren inte får en händelse att stanna vid.
+      oneOffCostRate = if time >= (if oneOffCost > 0 then oneOffCostTime - 1 else 1e9)*Units.year and time < (if oneOffCost > 0 then oneOffCostTime - 1 else 1e9)*Units.year + oneOffCostDuration then oneOffCost/oneOffCostDuration*level[2] else 0;
+      otherOperatingExpenseRate = otherOperatingExpense0/Units.year*level[2]*serviceVolume*level[5] + oneOffCostRate;
       operatingRevenueRate = operatingRevenue0/Units.year*level[3]*cohorts.population/population0;
       der(accumulated[1]) = wagesRate;
       der(accumulated[2]) = employerContributionsRate;
@@ -2165,7 +2176,7 @@ står i data/liquidity.json; standard är 30 dagar och ingen kredit.</li></ul></
         Placement(transformation(origin = {-90, 100}, extent = {{-20, -15}, {20, 15}})));
       Services services(careWeights = careWeights, educationWeights = educationWeights, sectorCosts = sectorCosts, adjustment = serviceAdjustment, fixedShare = serviceFixedShare, plannedProjectPlaces = projectPlaces, infrastructureShare = infrastructureShare, networkGrowth = networkGrowth) "Verksamhet" annotation(
         Placement(transformation(origin = {0, 100}, extent = {{-20, -15}, {20, 15}})));
-      OperatingAccounts operations(population0 = sum(p0), payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, inflationRevenuePassThrough = inflationRevenuePassThrough, pensionFollowsPayroll = pensionFollowsPayroll, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
+      OperatingAccounts operations(population0 = sum(p0), oneOffCost = oneOffCost, oneOffCostTime = oneOffCostTime, oneOffCostDuration = oneOffCostDuration, payroll0 = payroll0, employerContributions0 = employerContributions0, horizon = horizon, employerContributionRatePath = employerContributionRatePath, pension0 = pension0, otherOperatingExpense0 = otherOperatingExpense0, operatingRevenue0 = operatingRevenue0, netCostRoundingAdjustment = netCostRoundingAdjustment, operatingRevenueGrowth = operatingRevenueGrowth, inflationRevenuePassThrough = inflationRevenuePassThrough, pensionFollowsPayroll = pensionFollowsPayroll, productivityGrowth = productivityGrowth, costDrift = costDrift) "Drift" annotation(
         Placement(transformation(origin = {60, 100}, extent = {{-20, -15}, {20, 15}})));
       Components.Revenue revenues(p0 = revenuePopulation0, tax0 = tax0, grants0 = grants0, taxRate = taxRate, taxRatePath = taxRatePath, baseTaxRate = baseTaxRate, equalisationOffset = equalisationOffset, populationRevenueElasticity = populationRevenueElasticity, importedRevenue = importedRevenue, importedRevenueMode = importedRevenueMode, novemberPopulation0 = novemberPopulation0, openingCohorts = p0, ageIncomeWeights = ageIncomeWeights, equalisationCountyRate = equalisationCountyRate, importedComponents = importedComponents, followReference = revenueFromReference, nationalPopulation0 = nationalPopulation0, grantsByComponent = grantsByComponent, horizon = horizon, grantComponents0 = grantComponents0, incomeEqualisationPerCapita = incomeEqualisationPerCapitaPath, equalisationGuarantee = equalisationGuarantee, relativeTaxCapacity0 = incomeEqualisationCapacity, incomeEqualisationComposition = incomeEqualisationComposition, relativeTaxCapacity = relativeTaxCapacityPath, costEqualisationPerCapita = costEqualisationPerCapitaPath, regulationPerCapita = regulationPerCapitaPath, lssEqualisationPerCapita = lssEqualisationPerCapitaPath, propertyFee = propertyFeePath, otherGeneralGrants = otherGeneralGrantsPath, grantIncrease = grantIncrease, novemberObserved = true, novemberCohortsObserved = novemberCohorts, novemberPopulationObserved = novemberPopulation) "Intäkter: årets belopp beslutas när året börjar och betalas jämnt under året" annotation(
         Placement(transformation(origin = {-120, 20}, extent = {{-20, -15}, {20, 15}})));

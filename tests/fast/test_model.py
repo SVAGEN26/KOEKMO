@@ -85,7 +85,7 @@ def run(name, years=8, start=2025, **parameters):
         for k, old in changed.items():
             m.setParameters(**{k: str(old)})
     names = m.getSolutions(resultfile=str(result))
-    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual', 'revenues.grantParts')
+    extra = ('demography.older', 'demography.ageing', 'demography.young', 'services.demand', 'services.network', 'finance.depositRate', 'finance.financial.annual', 'revenues.grantParts', 'operations.oneOffCostRate')
     wanted = [n for n in names if n == 'time' or '.' not in n or n.startswith(extra)]
     series = dict(zip(wanted, m.getSolutions(wanted, resultfile=str(result))))
     rows = {}
@@ -371,6 +371,43 @@ class StateFrame(unittest.TestCase):
             self.assertGreater(ratio/before, 1.02, msg=y)   # the tax base per inhabitant grows about 3 per cent a year
             self.assertLess(ratio/before, 1.05, msg=y)
         self.assertGreater(frame[2033]['result'], held[2033]['result'])
+
+
+
+@unittest.skipIf(SKIP, SKIP)
+class OneOffCost(unittest.TestCase):
+    """A one-off operating cost, for example repairs after a cloudburst: a flow for a limited time."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.base, _ = run('Base')
+        cls.event, cls.points = run('Cloudburst')
+
+    def test_the_cost_is_booked_in_the_year_of_the_event_in_that_years_prices(self):
+        extra = {y: self.event[y]['cost'] - self.base[y]['cost'] for y in self.base}
+        # 56 mnkr in the base year's prices, paid July to December 2027 at the price level then (2 % a year).
+        self.assertGreater(extra[2027], 56*1.02)
+        self.assertLess(extra[2027], 56*1.02**2.5)
+        for y in (2026, 2028, 2030, 2033):
+            self.assertAlmostEqual(extra[y], 0, delta=0.05, msg=y)
+        self.assertAlmostEqual(self.event[2027]['otherOperatingExpense'] - self.base[2027]['otherOperatingExpense'], extra[2027], delta=1e-3)
+
+    def test_the_result_falls_that_year_and_the_debt_stays_higher(self):
+        cost = self.event[2027]['cost'] - self.base[2027]['cost']
+        self.assertAlmostEqual(self.base[2027]['result'] - self.event[2027]['result'], cost, delta=1.5)  # and half a year's interest
+        for y in range(2028, 2034):
+            self.assertGreater(self.event[y]['debt'], self.base[y]['debt'] + 0.9*cost, msg=y)
+            self.assertLess(self.base[y]['result'] - self.event[y]['result'], 4, msg=y)   # only the interest on the loan
+            self.assertGreater(self.base[y]['result'] - self.event[y]['result'], 0, msg=y)
+
+    def test_the_flow_runs_for_half_a_year_and_the_books_balance(self):
+        t, rate = self.points['time'], self.points['operations.oneOffCostRate']
+        active = [float(x) for x, r in zip(t, rate) if r > 0]
+        self.assertAlmostEqual(min(active), 2026.5, delta=0.09)   # time 2026.5 is 1 July 2027
+        self.assertAlmostEqual(max(active), 2027.0, delta=0.09)
+        for y in self.event:
+            for balance in ('assetBalance', 'cashBalance', 'debtBalance'):
+                self.assertAlmostEqual(self.event[y][balance], 0, delta=1e-6, msg=(y, balance))
 
 
 if __name__ == '__main__':
