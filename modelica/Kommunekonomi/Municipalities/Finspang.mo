@@ -1,6 +1,8 @@
 within Kommunekonomi.Municipalities;
 package Finspang "Finspång: kommunens ekonomi år för år med biblioteket Kommunekonomi; belopp i mnkr, tid i kalenderår"
+  extends Kommunekonomi.Icons.Municipality;
   package Data "Finspångs basår ur SCB:s räkenskapssammandrag och befolkningsstatistik; genereras av scripts/prepare_municipality.py"
+    extends Kommunekonomi.Icons.DataPackage;
     import Kommunekonomi.Data.BaseYear;
 
     constant BaseYear finspang2025 = BaseYear(
@@ -322,6 +324,7 @@ ett annat år med <code>Continuous(base = Data.finspang2024)</code>.</p></html>"
   end Continuous;
 
   package Examples "Färdiga modeller att simulera"
+    extends Kommunekonomi.Icons.ExamplesPackage;
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet i Data.finspang2025"
       extends Continuous(base = Data.finspang2024, olderShares = Data.olderShares2024, horizon = 1);
       annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333));

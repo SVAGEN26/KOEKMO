@@ -350,6 +350,8 @@ and all 13 municipalities, which are its sub-package `Kommunekonomi.Municipaliti
 one file each, as the Modelica specification lays out a library in a folder
 (section 13.4). Then open `Kommunekonomi.Municipalities.Motala.Continuous` in
 Diagram view.
+The icons are drawn by `scripts/write_icons.py` (`--preview DIR` shows them as
+SVG); packages inherit theirs from `Kommunekonomi.Icons`.
 
 `Continuous.Economy` and all its parts (`Demography`, `Services`,
 `OperatingAccounts`, `Capital`, `Payments`, `Finance`) are built
