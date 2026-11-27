@@ -1,0 +1,49 @@
+# Runs the full test suite on every pull request. The web compiler is not rebuilt:
+# the run restores the newest one that a main build cached (see site.yml). A PR
+# that needs a newer compiler must wait for main to cache it, or run Site by hand.
+name: Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore the web compiler
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: site/omc-web
+          key: omc-web-none
+          restore-keys: omc-web-
+
+      - name: Check the compiler is there
+        run: |
+          if [ -z "${{ steps.cache.outputs.cache-matched-key }}" ]; then
+            echo "::error::No cached web compiler. Run the Site workflow on main once."
+            exit 1
+          fi
+          test -n "$(ls -A site/omc-web)"
+          echo "Using ${{ steps.cache.outputs.cache-matched-key }}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build the site
+        run: python3 scripts/build.py
+
+      - name: Test
+        run: npm test
