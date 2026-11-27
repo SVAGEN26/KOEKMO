@@ -1,6 +1,6 @@
 within ;
-model BrowserContinuous "Omslag för webbläsaren kring Motala.Continuous: lager och flöden i kontinuerlig tid"
-  extends Motala.Continuous(
+model BrowserContinuous "Omslag för webbläsaren kring Kommunekonomi.Municipalities.Motala.Continuous: lager och flöden i kontinuerlig tid"
+  extends Kommunekonomi.Municipalities.Motala.Continuous(
     final horizon=100,
     p0={2894,4629,1575,23019,11022}*(43131/43139),
     deathRates={0.0004,0.0001,0.0002,0.0018,0.03867709722785895},
@@ -69,7 +69,7 @@ model BrowserContinuous "Omslag för webbläsaren kring Motala.Continuous: lager
     "Intäktsbanan som modellen använder: skatt, bidrag, folkmängd och de tre delposterna";
   import Units = Kommunekonomi.Units;
   annotation(Documentation(info="<html><p>Omslag kring
-<a href=\"modelica://Motala.Continuous\">Motala.Continuous</a>. Sajten kör den med IDA och lagrar tolv värden per
+<a href=\"modelica://Motala.Continuous\">Kommunekonomi.Municipalities.Motala.Continuous</a>. Sajten kör den med IDA och lagrar tolv värden per
 år. Dödstalen (<code>mortalityRates</code>) och restflödet (<code>residualMigration</code>, <code>residualMigrationPath</code>)
 räknas här ur historiken och projektionen med <code>Kommunekonomi.Data.deathRatesPerYear</code>,
 <code>calibratedMigrationRates</code> och <code>projectionResiduals</code>; sajten skickar bara uppgifterna. Intäktsbanan

@@ -1,4 +1,4 @@
-// The page runs the continuous model (Motala.Continuous) by default. These tests run it in the staged
+// The page runs the continuous model (Kommunekonomi.Municipalities.Motala.Continuous) by default. These tests run it in the staged
 // compiler the way the page does and check it against the library's own calibration, against SCB's and
 // SKR's inputs, and against native OpenModelica.
 // Needs site/omc-web (scripts/stage_omc.py); skipped when the compiler is not staged.
@@ -43,14 +43,14 @@ test('the page has only continuous time',()=>{
   assert.doesNotMatch(html,/Årssteg/);
 });
 
-test('the page\'s calibration is the library\'s: site inputs give Motala.Continuous as written',{skip},()=>{
+test('the page\'s calibration is the library\'s: site inputs give Kommunekonomi.Municipalities.Motala.Continuous as written',{skip},()=>{
   // Motala's liquidity rule from data/liquidity.json and its migration rates from data/migration-groups.json, as the page
-  // attaches them; Motala.Continuous has the same in Modelica, with half the migration from the group by default.
+  // attaches them; Kommunekonomi.Municipalities.Motala.Continuous has the same in Modelica, with half the migration from the group by default.
   const site=continuous({...b,planningInputs:null,liquidity:read('data/liquidity.json').municipalities['0583'],
     migrationBasis:migrationBasis(read('data/migration-groups.json'),'0583',b.baseYear)},history);
   const keys=['population','births','deaths','migration','cost','payroll','otherOperatingExpense','operatingRevenue','depreciation',
     'tax','grants','result','debt','cash','assets','interest','borrowing','repayment','educationIndex','careIndex'];
-  const model=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
+  const model=runModel(omc,'Kommunekonomi.Municipalities.Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
   assert.equal(site.rows.length,9);
   for(const [i,row] of model.entries()) for(const k of keys) {
     close(site.rows[i+1][k],row[k],1e-8*Math.max(1,Math.abs(row[k])),`${row.year} ${k}`);
@@ -166,7 +166,7 @@ test('single-year ages run in continuous time for the calibrated and the observe
 test('the exported Scenario.mo is the scenario the page ran',{skip},()=>{
   const overrides={timeModel:'continuous',taxRate:22.2,investment:300,migrationDelta:150,years:5};
   const source=modelicaSource(sourced,history,overrides,revenue);
-  assert.match(source,/extends Motala\.Continuous\(/);
+  assert.match(source,/extends Kommunekonomi\.Municipalities\.Motala\.Continuous\(/);
   // The calibration is computed by the library's functions, in the exported model as in the page's wrapper.
   assert.match(source,/mortalityRates=Kommunekonomi\.Data\.deathRatesPerYear\(/);
   assert.match(source,/residualMigrationPath=Kommunekonomi\.Data\.projectionResiduals\(/);
@@ -203,17 +203,17 @@ test('the page\'s solver in the browser gives native OpenModelica\'s DASSL',{ski
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuous-'));
   try {
     const mo=name=>JSON.stringify(fileURLToPath(new URL(`../modelica/${name}`,import.meta.url)));
-    fs.writeFileSync(path.join(dir,'run.mos'),`loadFile(${mo('Kommunekonomi.mo')}); loadFile(${mo('municipalities/Motala/package.mo')}); getErrorString();
-simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, method="dassl", tolerance=1e-8, outputFormat="csv", variableFilter="${keys.join('|')}"); getErrorString();\n`);
+    fs.writeFileSync(path.join(dir,'run.mos'),`loadFile(${mo('Kommunekonomi/package.mo')}); getErrorString();
+simulate(Kommunekonomi.Municipalities.Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, method="dassl", tolerance=1e-8, outputFormat="csv", variableFilter="${keys.join('|')}"); getErrorString();\n`);
     execFileSync(native,['run.mos'],{cwd:dir,stdio:'pipe'});
-    const [header,...lines]=fs.readFileSync(path.join(dir,'Motala.Continuous_res.csv'),'utf8').trim().split('\n');
+    const [header,...lines]=fs.readFileSync(path.join(dir,'Kommunekonomi.Municipalities.Motala.Continuous_res.csv'),'utf8').trim().split('\n');
     const names=header.split(',').map(x=>x.replace(/"/g,''));
     const reference=new Map();
     for(const line of lines) {
       const values=line.split(',').map(Number),t=values[0];
       if(Math.abs(t-Math.round(t))<1e-9) reference.set(Math.round(t),Object.fromEntries(names.map((n,i)=>[n,values[i]])));
     }
-    const browser=runModel(omc,'Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
+    const browser=runModel(omc,'Kommunekonomi.Municipalities.Motala.Continuous',{start:2025,stop:2033,intervals:96,method:CONTINUOUS_METHOD},keys);
     for(const row of browser) for(const k of keys) close(row[k],reference.get(row.year)[k],0.01,`${row.year} ${k}`);
   } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });

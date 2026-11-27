@@ -21,7 +21,7 @@ GRANTS = [1000, 1010, 1030, 1060, 1070, 1100, 1120, 1150]
 TAX_RATE = [21.7, 21.7, 22.2, 22.2, 22.2, 21.95, 21.95, 21.95]
 WAGES = [0.03, 0.035, 0.06, 0.03, 0.03, 0.03, 0.03, 0.03]
 REFERENCE = f'''model Reference "Skatt och bidrag enligt en given bana; skattesatsen och lönerna ändras"
-  extends Motala.Continuous(revenueFromReference = true, referenceTax = {{{", ".join(map(str, TAX))}}},
+  extends Kommunekonomi.Municipalities.Motala.Continuous(revenueFromReference = true, referenceTax = {{{", ".join(map(str, TAX))}}},
     referenceGrants = {{{", ".join(map(str, GRANTS))}}}, taxRatePath = {{{", ".join(map(str, TAX_RATE))}}},
     wageGrowthPath = {{{", ".join(map(str, WAGES))}}});
 end Reference;
@@ -50,23 +50,22 @@ class ContinuousEconomy(unittest.TestCase):
         cls.dir = Path(tempfile.mkdtemp(prefix='continuous-'))
         (cls.dir / 'Reference.mo').write_text(REFERENCE)
         script = '\n'.join([
-            f'loadFile("{ROOT / "modelica/Kommunekonomi.mo"}"); getErrorString();',
-            f'loadFile("{ROOT / "modelica/municipalities/Motala/package.mo"}"); getErrorString();',
+            f'loadFile("{ROOT / "modelica/Kommunekonomi/package.mo"}"); getErrorString();',
             'loadFile("Reference.mo"); getErrorString();',
-            'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
-            'simulate(Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv",'
+            'simulate(Kommunekonomi.Municipalities.Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
+            'simulate(Kommunekonomi.Municipalities.Motala.Continuous, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv",'
             ' simflags="-override=workingCapitalEnabled=true,collectionDays=30,paymentDays=30,liquidityPolicy=true,reserveDays=15,creditLine=0,reserveAdjustmentTime=0,constructionYears=2",'
             ' fileNamePrefix="Stress"); getErrorString();',
             'simulate(Reference, startTime=2025, stopTime=2033, numberOfIntervals=96, outputFormat="csv"); getErrorString();',
-            'simulate(Motala.Examples.ContinuousCohort, startTime=2025, stopTime=2030, numberOfIntervals=60, outputFormat="csv"); getErrorString();'])
+            'simulate(Kommunekonomi.Municipalities.Motala.Examples.ContinuousCohort, startTime=2025, stopTime=2030, numberOfIntervals=60, outputFormat="csv"); getErrorString();'])
         (cls.dir / 'run.mos').write_text(script)
         subprocess.run([OMC, 'run.mos'], cwd=cls.dir, capture_output=True, text=True, timeout=900)
-        cls.continuous = year_rows(cls.dir / 'Motala.Continuous_res.csv')
+        cls.continuous = year_rows(cls.dir / 'Kommunekonomi.Municipalities.Motala.Continuous_res.csv')
         cls.stress = year_rows(cls.dir / 'Stress_res.csv')
         cls.reference = year_rows(cls.dir / 'Reference_res.csv')
         cls.reference_all = all_rows(cls.dir / 'Reference_res.csv')
-        cls.cohort = year_rows(cls.dir / 'Motala.Examples.ContinuousCohort_res.csv')
-        cls.cohort_all = all_rows(cls.dir / 'Motala.Examples.ContinuousCohort_res.csv')
+        cls.cohort = year_rows(cls.dir / 'Kommunekonomi.Municipalities.Motala.Examples.ContinuousCohort_res.csv')
+        cls.cohort_all = all_rows(cls.dir / 'Kommunekonomi.Municipalities.Motala.Examples.ContinuousCohort_res.csv')
 
     @classmethod
     def tearDownClass(cls):
@@ -117,7 +116,7 @@ class ContinuousEconomy(unittest.TestCase):
             previous = row
 
     def test_base_year_row_is_the_accounts(self):
-        # Motala's accounts 2025 (Motala.Data.motala2025): debt, cash, assets, depreciation, tax and grants.
+        # Motala's accounts 2025 (Kommunekonomi.Municipalities.Motala.Data.motala2025): debt, cash, assets, depreciation, tax and grants.
         c = self.continuous[2025]
         for key, value in (('debt', 1040), ('cash', 81), ('assets', 2997), ('depreciation', 180), ('tax', 2330), ('grants', 987)):
             self.assertAlmostEqual(c[key], value, places=6, msg=key)

@@ -35,7 +35,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / 'build' / 'mcp'
-LIBRARY = ROOT / 'modelica' / 'Kommunekonomi.mo'
+LIBRARY = ROOT / 'modelica/Kommunekonomi/package.mo'
 OMC = os.environ.get('OMC') or shutil.which('omc')
 PROTOCOLS = ('2025-06-18', '2025-03-26', '2024-11-05')
 SERVER_INFO = {'name': 'koekmo', 'title': 'KOEKMO', 'version': '0.1.0'}
@@ -89,7 +89,7 @@ def municipalities():
         data = json.loads(path.read_text())
         code = path.parent.name
         package = data['packageName']
-        file = ROOT / 'modelica/municipalities' / package / 'package.mo'
+        file = ROOT / 'modelica/Kommunekonomi/Municipalities' / f'{package}.mo'
         if not file.exists():
             continue
         skr = ROOT / ('data/skr-revenue-path.json' if code == '0583' else f'data/municipalities/{code}/skr-revenue-path.json')
@@ -229,12 +229,12 @@ def literal(value):
 def run_source(m, model, base_year, horizon, overrides):
     package = m['package']
     if f'olderShares{base_year}' in m['file'].read_text():
-        older = f'{package}.Data.olderShares{base_year}'
+        older = f'Kommunekonomi.Municipalities.{package}.Data.olderShares{base_year}'
     else:
-        older = f'{package}.Data.SCB.olderShares({package}.Data.SCB.{package.lower()}{base_year}.population)'
-    mods = [f'base = {package}.Data.{package.lower()}{base_year}', f'olderShares = {older}', f'horizon = {horizon}']
+        older = f'Kommunekonomi.Municipalities.{package}.Data.SCB.olderShares(Kommunekonomi.Municipalities.{package}.Data.SCB.{package.lower()}{base_year}.population)'
+    mods = [f'base = Kommunekonomi.Municipalities.{package}.Data.{package.lower()}{base_year}', f'olderShares = {older}', f'horizon = {horizon}']
     mods += [f'{name} = {literal(value)}' for name, value in sorted(overrides.items())]
-    return f'model Run\n  extends {package}.{model}(\n    ' + ',\n    '.join(mods) + ');\nend Run;\n'
+    return f'model Run\n  extends Kommunekonomi.Municipalities.{package}.{model}(\n    ' + ',\n    '.join(mods) + ');\nend Run;\n'
 
 
 def simulate(m, model, base_year, horizon, years, overrides):
@@ -253,7 +253,6 @@ def simulate(m, model, base_year, horizon, years, overrides):
             (directory / 'Run.mo').write_text(source)
             (directory / 'run.mos').write_text(
                 f'loadFile({json.dumps(str(LIBRARY))}); getErrorString();\n'
-                f'loadFile({json.dumps(str(m["file"]))}); getErrorString();\n'
                 'loadFile("Run.mo"); getErrorString();\n'
                 f'simulate(Run, startTime = {base_year}, stopTime = {base_year + years}, numberOfIntervals = {intervals}); getErrorString();\n')
             process = subprocess.run([OMC, 'run.mos'], cwd=directory, capture_output=True, text=True, timeout=600)
@@ -558,7 +557,7 @@ def tool_save_session(args):
               'modelica': str((directory / f'{s.id}.mo').relative_to(ROOT))}
     (directory / f'{s.id}.json').write_text(json.dumps(record, ensure_ascii=False, indent=1) + '\n')
     return {'saved': str((directory / f'{s.id}.json').relative_to(ROOT)), 'modelica': record['modelica'],
-            'open': f'Load modelica/Kommunekonomi.mo and {s.m["file"].relative_to(ROOT)} in OMEdit, then the .mo file, and simulate Session_{s.id} '
+            'open': f'Load modelica/Kommunekonomi/package.mo in OMEdit (the municipalities come with it), then the .mo file, and simulate Session_{s.id} '
                     f'from {s.base_year} to {s.base_year + s.horizon}.'}
 
 

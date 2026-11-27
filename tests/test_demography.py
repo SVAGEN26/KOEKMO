@@ -18,7 +18,7 @@ class Demography(unittest.TestCase):
         spec.loader.exec_module(writer)
         with tempfile.TemporaryDirectory() as tmp:
             copies, sources = {}, {}
-            for name, source in (('Kommunekonomi.mo', ROOT / 'modelica/Kommunekonomi.mo'), ('Motala.mo', ROOT / 'modelica/municipalities/Motala/package.mo')):
+            for name, source in (('Kommunekonomi.mo', ROOT / 'modelica/Kommunekonomi/package.mo'), ('Motala.mo', ROOT / 'modelica/Kommunekonomi/Municipalities/Motala.mo')):
                 copies[name], sources[name] = Path(tmp) / name, source
                 shutil.copy(source, copies[name])
             writer.LIBRARY, writer.MUNICIPALITY = copies['Kommunekonomi.mo'], copies['Motala.mo']

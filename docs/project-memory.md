@@ -1894,3 +1894,16 @@ arkivera data.
 - Utlagda med mocoal: `Services` 10 komponenter och 4 kopplingar, `OperatingAccounts` 13 och 5. Alla delar av
   `Economy` har nu diagram.
 
+
+## Kommunerna som underpaket i biblioteket (2026-11-27)
+
+- Ersätter paketmapparna från 2026-11-26. Biblioteket är mappen `modelica/Kommunekonomi/` med `package.mo` och
+  `package.order`, som Modelica-specifikationen beskriver (avsnitt 13.4.1) och som standardbiblioteket gör. Kommunerna
+  är underpaketet `Kommunekonomi.Municipalities`, en fil per kommun (`Municipalities/Motala.mo` och så vidare), var och
+  en med `within Kommunekonomi.Municipalities;`. Länken `Kommunekonomi 0.1.0.mo` och `uses` behövs inte längre.
+- Användarens skäl: kommunerna delar bibliotekets komponenter och hör till samma projekt; ett eget toppaket per kommun
+  var fel. OMEdit öppnar en enda fil, `Kommunekonomi/package.mo`, och får alla 13.
+- Klassnamnen byter: `Motala.Continuous` heter `Kommunekonomi.Municipalities.Motala.Continuous`. Ett gammalt
+  `Scenario.mo` från sidan ärver det gamla namnet och behöver hämtas på nytt.
+- Sajten laddar platta filer som förut och en till, `Municipalities.mo`, mellan biblioteket och kommunerna. Den går
+  också att hämta från sidan.

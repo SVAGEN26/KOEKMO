@@ -1,3 +1,4 @@
+within Kommunekonomi.Municipalities;
 package Norrkoping "Norrköping: kommunens ekonomi år för år med biblioteket Kommunekonomi; belopp i mnkr, tid i kalenderår"
   package Data "Norrköpings basår ur SCB:s räkenskapssammandrag och befolkningsstatistik; genereras av scripts/prepare_municipality.py"
     import Kommunekonomi.Data.BaseYear;
@@ -328,7 +329,7 @@ ett annat år med <code>Continuous(base = Data.norrkoping2024)</code>.</p></html
       annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333));
     end Hindcast2025;
   end Examples;
-  annotation(uses(Kommunekonomi(version = "0.1.0")), Documentation(info = "<html><p>Norrköping (kommunkod 0581) med biblioteket
+  annotation(Documentation(info = "<html><p>Norrköping (kommunkod 0581) med biblioteket
 <a href=\"modelica://Kommunekonomi\">Kommunekonomi</a>. Data från SCB och Kolada, genererade av scripts/prepare_municipality.py.
 Detta är en forskningsmodell, inte kommunens prognos.</p></html>"));
 end Norrkoping;

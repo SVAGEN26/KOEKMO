@@ -6,8 +6,8 @@
 OpenModelica's checker (--unitChecking) knows only SI units. It says nothing about "MSEK" or "a",
 so a check of the library as written passes without checking anything. This script copies
 Kommunekonomi.mo to a temporary folder, writes the money units as an SI unit the checker knows
-("MSEK" and "SEK" as "mol", "a" as "s", "1/a" as "1/s"), and checks Motala.Continuous,
-Motala.Examples.ContinuousCohort and Kommunekonomi.Continuous.Economy. Any equation the checker calls inconsistent fails the script.
+("MSEK" and "SEK" as "mol", "a" as "s", "1/a" as "1/s"), and checks Kommunekonomi.Municipalities.Motala.Continuous,
+Kommunekonomi.Municipalities.Motala.Examples.ContinuousCohort and Kommunekonomi.Continuous.Economy. Any equation the checker calls inconsistent fails the script.
 
 What it covers: equations between variables that declare a unit (Kommunekonomi.Units), including
 der() of a stock against its flows and the connections between components. It does not cover
@@ -26,12 +26,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelicaWork/om-install/bin/omc'
-MODELS = ('Motala.Continuous', 'Motala.Examples.ContinuousCohort', 'Kommunekonomi.Continuous.Economy')
+MODELS = ('Kommunekonomi.Municipalities.Motala.Continuous', 'Kommunekonomi.Municipalities.Motala.Examples.ContinuousCohort', 'Kommunekonomi.Continuous.Economy')
 SI = {'"MSEK"': '"mol"', '"MSEK/a"': '"mol/s"', '"SEK"': '"mol"', '"a"': '"s"', '"1/a"': '"1/s"'}
 
 
 def main():
-    source = (ROOT / 'modelica/Kommunekonomi.mo').read_text()
+    source = (ROOT / 'modelica/Kommunekonomi/package.mo').read_text()
     units = source[source.index('package Units'):source.index('end Units;')]
     translated = units
     for unit, si in SI.items():
@@ -40,11 +40,11 @@ def main():
         raise SystemExit('No units found in Kommunekonomi.Units')
     with tempfile.TemporaryDirectory(prefix='units-') as tmp:
         tmp = Path(tmp)
-        (tmp / 'Kommunekonomi.mo').write_text(source.replace(units, translated))
-        shutil.copy(ROOT / 'modelica/municipalities/Motala/package.mo', tmp / 'Motala.mo')
+        # The whole library folder, with the units rewritten in its package.mo.
+        shutil.copytree(ROOT / 'modelica/Kommunekonomi', tmp / 'Kommunekonomi')
+        (tmp / 'Kommunekonomi/package.mo').write_text(source.replace(units, translated))
         (tmp / 'check.mos').write_text('setCommandLineOptions("--unitChecking"); getErrorString();\n'
-                                       'loadFile("Kommunekonomi.mo"); getErrorString();\n'
-                                       'loadFile("Motala.mo"); getErrorString();\n'
+                                       'loadFile("Kommunekonomi/package.mo"); getErrorString();\n'
                                        + ''.join(f'checkModel({m}); getErrorString();\n' for m in MODELS))
         out = subprocess.run([OMC, 'check.mos'], cwd=tmp, capture_output=True, text=True, timeout=600).stdout
     checked = re.findall(r'Check of (\S+) completed successfully', out)

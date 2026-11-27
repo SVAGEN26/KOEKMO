@@ -328,8 +328,8 @@ see [Connect an AI to the page](#connect-an-ai-to-the-page).
 
 | Model | Where | Used by |
 | --- | --- | --- |
-| `Kommunekonomi.Continuous.Economy` | `modelica/Kommunekonomi.mo` | The site, the MCP server, the hindcasts |
-| One package per municipality | `modelica/municipalities/<Name>/package.mo` | Motala's is written by hand from the annual reports (base years 2020–2025, with a tutorial and examples); the other twelve are generated from SCB and Kolada |
+| `Kommunekonomi.Continuous.Economy` | `modelica/Kommunekonomi/package.mo` | The site, the MCP server, the hindcasts |
+| One package per municipality | `modelica/Kommunekonomi/Municipalities/<Name>.mo` | Motala's is written by hand from the annual reports (base years 2020–2025, with a tutorial and examples); the other twelve are generated from SCB and Kolada |
 | `BrowserContinuous` | `modelica/Browser.mo` | The wrapper the site compiles; no equations of its own |
 | M1, M2 (research) | `research/` | Nothing on the site; see [research/M2.md](research/M2.md) |
 
@@ -345,19 +345,17 @@ and cash is steered toward a liquidity reserve of days of payments
 November 2026; it was removed so that one model in a system-dynamics form
 remains. See [docs/methodology.md](docs/methodology.md#continuous-time).
 
-In OMEdit, open a municipality's `package.mo`, for example
-`modelica/municipalities/Motala/package.mo`, and then `Motala.Continuous` in
-Diagram view. The library is loaded by itself: each municipality is a package
-folder, OpenModelica looks for the libraries a package uses beside its folder, and
-`modelica/municipalities/Kommunekonomi 0.1.0.mo` is a link to the library there.
-(A checkout without symbolic links, as on Windows by default, needs
-`Kommunekonomi.mo` loaded first.)
+In OMEdit, open `modelica/Kommunekonomi/package.mo`. That loads the library
+and all 13 municipalities, which are its sub-package `Kommunekonomi.Municipalities`,
+one file each, as the Modelica specification lays out a library in a folder
+(section 13.4). Then open `Kommunekonomi.Municipalities.Motala.Continuous` in
+Diagram view.
 
 `Continuous.Economy` and all its parts (`Demography`, `Services`,
 `OperatingAccounts`, `Capital`, `Payments`, `Finance`) are built
 of components and have diagrams with every connection drawn, laid out with
 [mocoal](https://github.com/OpenModelica/mocoal-rs)
-(`mocoal -i -c Kommunekonomi.Continuous.Economy modelica/Kommunekonomi.mo`, and
+(`mocoal -i -c Kommunekonomi.Continuous.Economy modelica/Kommunekonomi/package.mo`, and
 the same for the others; `--svg DIR` writes a preview). `Demography` is seven age
 groups as stocks (`AgeGroup`) in a chain, with births, ageing, deaths and
 migration as flow components between and around them. `Services` has four level

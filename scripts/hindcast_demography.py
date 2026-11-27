@@ -3,7 +3,7 @@
 
     OMC=/path/to/omc python3 scripts/hindcast_demography.py
 
-For each base year 2020-2024, simulates Motala.Examples.DemographyOnly up to 2025 with
+For each base year 2020-2024, simulates Kommunekonomi.Municipalities.Motala.Examples.DemographyOnly up to 2025 with
 each birth model and compares births, deaths and population with SCB's outcome. The
 calibration for a base year uses data up to that year only (Data.SCB.motala<year>), and
 no scenario changes are applied. Writes data/demography-hindcast.json.
@@ -23,26 +23,25 @@ OMC = os.environ.get('OMC') or shutil.which('omc') or '/home/johti17/OpenModelic
 LAST = 2025
 BIRTH_MODELS = {
     'fertility 1.41': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = 1.41)',
-    'Motala base year': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertility)',
-    'Motala 5-year mean': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Motala.Data.SCB.motala{base}.totalFertilityMean5)',
+    'Motala base year': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Kommunekonomi.Municipalities.Motala.Data.SCB.motala{base}.totalFertility)',
+    'Motala 5-year mean': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Kommunekonomi.Municipalities.Motala.Data.SCB.motala{base}.totalFertilityMean5)',
     'old rule (19-64)': 'Kommunekonomi.Components.Fertility.Legacy fertility',
     # Sweden's level in the base year times the municipality's relation to Sweden over five years: known at the base year.
-    'national level, local relation': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Kommunekonomi.Data.SCB.totalFertilityAt({base})*Motala.Data.SCB.motala{base}.totalFertilityMean5/Kommunekonomi.Data.SCB.totalFertilityMean5({base}))',
+    'national level, local relation': 'Kommunekonomi.Components.Fertility.Constant fertility(totalFertility = Kommunekonomi.Data.SCB.totalFertilityAt({base})*Kommunekonomi.Municipalities.Motala.Data.SCB.motala{base}.totalFertilityMean5/Kommunekonomi.Data.SCB.totalFertilityMean5({base}))',
 }
 
 
 def simulate(base, birth_model, directory):
     horizon = LAST - base
     source = f'''model Run
-  extends Motala.Examples.DemographyOnly(horizon = {horizon},
-    redeclare Kommunekonomi.Components.CohortDemography demography(data = Motala.Data.SCB.motala{base},
+  extends Kommunekonomi.Municipalities.Motala.Examples.DemographyOnly(horizon = {horizon},
+    redeclare Kommunekonomi.Components.CohortDemography demography(data = Kommunekonomi.Municipalities.Motala.Data.SCB.motala{base},
       redeclare {birth_model.format(base=base)}));
 end Run;
 '''
     (directory / 'Run.mo').write_text(source)
     (directory / 'run.mos').write_text(
-        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-        f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Motala/package.mo"))}); getErrorString();\n'
+        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi/package.mo"))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {base}, stopTime = {LAST}, numberOfIntervals = {horizon}, outputFormat = "csv",'
         ' variableFilter = "demography\\\\.(population|births|deaths|migration|older.*)"); getErrorString();\n')
@@ -91,7 +90,7 @@ def main():
     benchmark = {'source': 'SCB regional projection for Motala, base year 2024 (BefProgOsiktRegN)',
                  'year': 2025, 'births': scb['Födda'], 'deaths': scb['Döda'], 'population': scb['Folkmängd'],
                  'observed': observed[2025]}
-    out = {'source': 'Källa: SCB (CC BY 4.0); model Motala.Examples.DemographyOnly',
+    out = {'source': 'Källa: SCB (CC BY 4.0); model Kommunekonomi.Municipalities.Motala.Examples.DemographyOnly',
            'note': 'Calibration per base year uses data up to that year only. No scenario changes. '
                    'Births, deaths and population are compared with SCB outcomes.',
            'summaryByHorizon': summary, 'scbProjection2025': benchmark, 'runs': runs}

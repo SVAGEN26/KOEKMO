@@ -7,7 +7,7 @@ export function modelicaSource(b,history,overrides={},path=null) {
   if(!settings) throw Error('Kommunen saknar modellpaket.');
   const prepared=prepareScenario(b,history,overrides,path);
   const fields={horizon:prepared.assumptions.years,...prepared.fields};
-  const data=`${settings.packageName}.Data`,year=b.baseYear;
+  const data=`Kommunekonomi.Municipalities.${settings.packageName}.Data`,year=b.baseYear;
   const shares=municipality===DEFAULT_MUNICIPALITY?`${data}.SCB.olderShares(${data}.SCB.motala${year}.population)`:`${data}.olderShares${year}`;
   const base=year===2025?'':`base=${data}.${settings.packageName.toLowerCase()}${year},
     olderShares=${shares},
@@ -32,5 +32,5 @@ export function modelicaSource(b,history,overrides={},path=null) {
   if(fields.importedRevenueMode===2) fields.importedComponents='revenuePath[:,4:6]';
   const revenue=`  parameter Real revenuePath[${fields.horizon},6]=Kommunekonomi.Data.sourcedRevenue(${literal(sourcedRevenue)},${sourcedRevenueYears},${regulationDecidedYears},${stateFrame},${literal(taxBaseGrowthPath)},nationalPopulationPath)\n    "Intäktsbanan: skatt, bidrag, folkmängd, skatt före slutavräkning, inkomstutjämning och regleringspost";\n`;
   if(projectedCohorts) fields.residualMigrationPath=`Kommunekonomi.Data.projectionResiduals(p0,${literal(projectedCohorts)},${literal(followProjection)},births0,mortalityRates,ageProfile[3:${fields.horizon}+2,:],olderShares,residualMigration)`;
-  return `within ;\nmodel Scenario\n  extends ${settings.packageName}.Continuous(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n${revenue}  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=${1/12}));\nend Scenario;\n`;
+  return `within ;\nmodel Scenario\n  extends Kommunekonomi.Municipalities.${settings.packageName}.Continuous(\n    ${base}${ageModel}${Object.entries(fields).map(([k,v])=>`${k}=${literal(v)}`).join(',\n    ')});\n${revenue}  annotation(experiment(StartTime=${b.baseYear}, StopTime=${b.baseYear+fields.horizon}, Interval=${1/12}));\nend Scenario;\n`;
 }

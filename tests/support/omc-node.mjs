@@ -17,7 +17,8 @@ export async function boot(options) {
   if(!omc.omc_init()) throw Error('OpenModelica did not start');
   omc.omc_enable_wasm_blobs?.();
   // The page loads each package from one flat file; the names here are the page's.
-  const files=[['Kommunekonomi.mo','Kommunekonomi.mo'],...Object.values(municipalities).map(item=>[`${item.packageName}.mo`,`municipalities/${item.packageName}/package.mo`]),['Browser.mo','Browser.mo']];
+  const files=[['Kommunekonomi.mo','Kommunekonomi/package.mo'],['Municipalities.mo','Kommunekonomi/Municipalities/package.mo'],
+    ...Object.values(municipalities).map(item=>[`${item.packageName}.mo`,`Kommunekonomi/Municipalities/${item.packageName}.mo`]),['Browser.mo','Browser.mo']];
   const session=createSession(omc,files.map(([name,file])=>({name,text:fs.readFileSync(url(`../../modelica/${file}`),'utf8')})),options);
   return {omc,session};
 }

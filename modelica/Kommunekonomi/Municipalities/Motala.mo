@@ -1,3 +1,4 @@
+within Kommunekonomi.Municipalities;
 package Motala "KOEKMO, Motala: kommunens ekonomi år för år; belopp i mnkr, tid i kalenderår"
   package Handledning "Handledning: ordlista och hur modellen läses"
     class Ordlista "Ordlista: ekonomiska begrepp i modellen"
@@ -146,11 +147,11 @@ kommer att hända; kommunen gör prognoser för innevarande år i april och augu
 <h4>Hur begreppen hänger ihop i modellen</h4>
 <p>Demografi ger befolkningen. Verksamhet räknar behovet av skola och omsorg. Drift ger nettokostnaden, Intäkter ger
 skatt och bidrag och Kapital ger avskrivningarna. I Finans möts allt: resultat, kassaflöde, nya lån och skuld. Pilarna i
-diagrammet för <a href=\"modelica://Motala.Continuous\">Motala.Continuous</a> följer den kedjan.</p>
+diagrammet för <a href=\"modelica://Kommunekonomi.Municipalities.Motala.Continuous\">Motala.Continuous</a> följer den kedjan.</p>
 </html>"));
     end Ordlista;
-    annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html><p>Börja med <a href=\"modelica://Motala.Handledning.Ordlista\">ordlistan</a>
-om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Motala.Examples\">Examples</a>.</p></html>"));
+    annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html><p>Börja med <a href=\"modelica://Kommunekonomi.Municipalities.Motala.Handledning.Ordlista\">ordlistan</a>
+om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Kommunekonomi.Municipalities.Motala.Examples\">Examples</a>.</p></html>"));
   end Handledning;
   package Data "Utfall för Motalas basår: bokslut (kommunen) och befolkning; en konstant per basår"
     import Kommunekonomi.Data.BaseYear;
@@ -740,19 +741,19 @@ ingående skuld (basårets räntekostnad delad med skulden vid årets början). 
     end DemographyOnly;
     annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Polygon(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, points = {{-35, 55}, {55, 0}, {-35, -55}, {-35, 55}})}));
   end Examples;
-  annotation(uses(Kommunekonomi(version = "0.1.0")), Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-70, -70}, {-35, 0}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-17, -70}, {18, 30}}), Rectangle(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, extent = {{35, -70}, {70, 60}})}), Documentation(info = "<html>
+  annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-70, -70}, {-35, 0}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-17, -70}, {18, 30}}), Rectangle(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, extent = {{35, -70}, {70, 60}})}), Documentation(info = "<html>
 <p><b>KOEKMO</b> (kommunekonomisk modell) räknar här Motala kommuns ekonomi i kontinuerlig tid: befolkning, verksamhet, drift, skatt och bidrag,
 investeringar, resultat och lån. Belopp i mnkr och löpande priser; tiden är kalenderår.</p>
 <ul>
-<li><a href=\"modelica://Motala.Handledning.Ordlista\">Ordlista</a>: de ekonomiska begreppen.</li>
-<li><a href=\"modelica://Motala.Continuous\">Continuous</a>: modellen som webbplatsen kör, från bokslutet 2025.</li>
-<li><a href=\"modelica://Motala.Examples.ContinuousCohort\">Examples.ContinuousCohort</a>: samma modell med ettårsåldrar och
+<li><a href=\"modelica://Kommunekonomi.Municipalities.Motala.Handledning.Ordlista\">Ordlista</a>: de ekonomiska begreppen.</li>
+<li><a href=\"modelica://Kommunekonomi.Municipalities.Motala.Continuous\">Continuous</a>: modellen som webbplatsen kör, från bokslutet 2025.</li>
+<li><a href=\"modelica://Kommunekonomi.Municipalities.Motala.Examples.ContinuousCohort\">Examples.ContinuousCohort</a>: samma modell med ettårsåldrar och
 äldreomsorgen viktad efter ålder.</li>
-<li><a href=\"modelica://Motala.Examples.Hindcast2025\">Examples.Hindcast2025</a>: från bokslutet 2024 fram till 2025,
+<li><a href=\"modelica://Kommunekonomi.Municipalities.Motala.Examples.Hindcast2025\">Examples.Hindcast2025</a>: från bokslutet 2024 fram till 2025,
 för att jämföra med utfallet.</li>
 </ul>
 <p>Modellen bygger på biblioteket <a href=\"modelica://Kommunekonomi\">Kommunekonomi</a>; det här paketet har Motalas data
 och exempel.</p>
-<p>Källor: Motala kommuns årsredovisningar och budgetar, SCB och Kolada; se <a href=\"modelica://Motala.Data\">Data</a>.
+<p>Källor: Motala kommuns årsredovisningar och budgetar, SCB och Kolada; se <a href=\"modelica://Kommunekonomi.Municipalities.Motala.Data\">Data</a>.
 Detta är en forskningsmodell, inte kommunens officiella prognos.</p></html>"));
 end Motala;

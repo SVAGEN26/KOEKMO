@@ -16,7 +16,7 @@ await omc.default({module_or_path:fs.readFileSync(file(compiler+'/OpenModelicaCo
 omc.omc_set_env('OPENMODELICAHOME','/usr');
 if(!omc.omc_init()) throw Error('OpenModelica could not start');
 omc.omc_enable_wasm_blobs?.();
-const sources=['Kommunekonomi.mo','municipalities/Motala/package.mo','Browser.mo'].map(name=>({name,text:fs.readFileSync(file('modelica/'+name),'utf8')}));
+const sources=['Kommunekonomi/package.mo','Kommunekonomi/Municipalities/package.mo','Kommunekonomi/Municipalities/Motala.mo','Browser.mo'].map(name=>({name,text:fs.readFileSync(file('modelica/'+name),'utf8')}));
 const simulate=createDirectSimulator(createSession(omc,sources));
 
 const replay=read('data/replay-2022.json');

@@ -71,7 +71,7 @@ def literal(value):
 
 
 def case_source(package, cohort_package, base, observed):
-    book = f'{package}.Data.{package.lower()}{base}'
+    book = f'Kommunekonomi.Municipalities.{package}.Data.{package.lower()}{base}'
     demography = f'{cohort_package}.{package.lower()}{base}'
     cohort_args = f"""data = {demography}, reportedTotal = sum(p0),
       migrationWeights = weights,
@@ -119,7 +119,7 @@ def simulate(book_path, migration, outcomes, directory, omc):
     archive = Path(records['archive'])
     actuals = {**actual_before_2025(archive), 2025: outcomes[code]}
     is_motala = code == '0583'
-    package_path = ROOT / 'modelica/municipalities' / package / 'package.mo'
+    package_path = ROOT / 'modelica/Kommunekonomi/Municipalities' / f'{package}.mo'
     county_package = ''
     if not is_motala:
         years = {int(y): row for y, row in records['years'].items()}
@@ -131,15 +131,14 @@ def simulate(book_path, migration, outcomes, directory, omc):
 {constants}
   end Inputs;
 '''
-    cohort_package = f'{package}.Data.SCB' if is_motala else 'Run.Inputs'
+    cohort_package = f'Kommunekonomi.Municipalities.{package}.Data.SCB' if is_motala else 'Run.Inputs'
     cases = '\n'.join(case_source(package, cohort_package, base,
                                  migration_inputs(migration, code, list(range(base - 2, base + 1))))
                       for base in BASES)
     instances = '\n'.join(f'  Case{base} base{base};' for base in BASES)
     (directory / 'Run.mo').write_text(f'model Run\n{county_package}{cases}{instances}\nend Run;\n')
     (directory / 'run.mos').write_text(
-        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-        f'loadFile({json.dumps(str(package_path))}); getErrorString();\n'
+        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi/package.mo"))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {BASES[0]}, stopTime = {LAST}, numberOfIntervals = {LAST - BASES[0]},'
         ' method = "euler", outputFormat = "csv", variableFilter = "base.*metrics.*"); getErrorString();\n'

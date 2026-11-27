@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {COMPONENTS,FLOWS,modelicaSection} from '../site/src/model-view.js';
 
-const source=fs.readFileSync(new URL('../modelica/Kommunekonomi.mo',import.meta.url),'utf8');
+const source=fs.readFileSync(new URL('../modelica/Kommunekonomi/package.mo',import.meta.url),'utf8');
 const continuous=source.slice(source.indexOf('package Continuous '));
 const economy=continuous.slice(continuous.indexOf('partial model Economy'));
 const compact=economy.replace(/\s+/g,'');
