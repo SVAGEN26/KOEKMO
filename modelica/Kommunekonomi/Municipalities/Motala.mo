@@ -1,5 +1,6 @@
 within Kommunekonomi.Municipalities;
 package Motala "KOEKMO, Motala: kommunens ekonomi år för år; belopp i mnkr, tid i kalenderår"
+  extends Kommunekonomi.Icons.Municipality;
   package Handledning "Handledning: ordlista och hur modellen läses"
     class Ordlista "Ordlista: ekonomiska begrepp i modellen"
       annotation(DocumentationClass = true, Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Ellipse(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}), Text(textColor = {40, 95, 140}, extent = {{-60, -70}, {60, 70}}, textString = "i", fontSize = 60)}), Documentation(info = "<html>
@@ -154,6 +155,7 @@ diagrammet för <a href=\"modelica://Kommunekonomi.Municipalities.Motala.Continu
 om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Kommunekonomi.Municipalities.Motala.Examples\">Examples</a>.</p></html>"));
   end Handledning;
   package Data "Utfall för Motalas basår: bokslut (kommunen) och befolkning; en konstant per basår"
+    extends Kommunekonomi.Icons.DataPackage;
     import Kommunekonomi.Data.BaseYear;
     import Kommunekonomi.Data.Budget;
 
@@ -653,8 +655,7 @@ om begreppen är nya. Modellen att simulera finns i <a href=\"modelica://Kommune
   Varje basår har en egen dödlighetstrend, skattad ur rikets livslängdstabeller de tio åren fram till basåret.
   SCB:s framskrivna dödlighet och fruktsamhet kommer från framskrivningen 2026 och är bara rättvisa för basåret 2025.</p></html>"));
     end SCB;
-    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Text(textColor = {35, 50, 65}, extent = {{-92, -30}, {92, 40}}, textString = "Data"), Text(textColor = {90, 110, 130}, extent = {{-92, -80}, {92, -35}}, textString = "basår")}), 
-      Documentation(info = "<html><p>Varje konstant innehåller det som publicerats för ett basår. Modellen kalibrerar
+    annotation(Documentation(info = "<html><p>Varje konstant innehåller det som publicerats för ett basår. Modellen kalibrerar
 dödlighet och restflöden från den (se Assumptions). Starta från ett annat år med
 <code>Continuous(base = Data.motala2024)</code>. Värdena avser kommunen, inte koncernen.</p>
 <p>Källor: Motala kommuns årsredovisningar, SCB och Kolada; se respektive post och paketet <code>SCB</code>.</p></html>"));
@@ -673,6 +674,7 @@ dödlighet och restflöden från den (se Assumptions). Starta från ett annat å
 årsskiftena; mellan dem visas året månad för månad. Uppdelningen av de äldre i femgruppsdemografin är SCB:s för 2025.</p></html>"));
   end Continuous;
   package Examples "Färdiga modeller att simulera"
+    extends Kommunekonomi.Icons.ExamplesPackage;
     model Hindcast2025 "Starta i bokslutet 2024 och räkna fram 2025; jämför med utfallet 105 och budgeten 96 mnkr"
       extends Continuous(base = Data.motala2024, horizon = 1);
       annotation(experiment(StartTime = 2024, StopTime = 2025, Interval = 0.0833333333333333),
@@ -739,9 +741,8 @@ ingående skuld (basårets räntekostnad delad med skulden vid årets början). 
 <p>För att pröva demografin mot det som hände: starta i ett basår och jämför födda, döda och folkmängd med SCB:s utfall
 åren efter (scripts/hindcast_demography.py).</p></html>"));
     end DemographyOnly;
-    annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {90, 110, 130}, fillColor = {245, 248, 250}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Polygon(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, points = {{-35, 55}, {55, 0}, {-35, -55}, {-35, 55}})}));
   end Examples;
-  annotation(Icon(coordinateSystem(extent = {{-100, -100}, {100, 100}}), graphics = {Rectangle(lineColor = {40, 95, 140}, fillColor = {235, 245, 252}, fillPattern = FillPattern.Solid, extent = {{-100, -100}, {100, 100}}, radius = 25), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-70, -70}, {-35, 0}}), Rectangle(lineColor = {40, 95, 140}, fillColor = {40, 95, 140}, fillPattern = FillPattern.Solid, extent = {{-17, -70}, {18, 30}}), Rectangle(lineColor = {35, 115, 85}, fillColor = {35, 115, 85}, fillPattern = FillPattern.Solid, extent = {{35, -70}, {70, 60}})}), Documentation(info = "<html>
+  annotation(Documentation(info = "<html>
 <p><b>KOEKMO</b> (kommunekonomisk modell) räknar här Motala kommuns ekonomi i kontinuerlig tid: befolkning, verksamhet, drift, skatt och bidrag,
 investeringar, resultat och lån. Belopp i mnkr och löpande priser; tiden är kalenderår.</p>
 <ul>

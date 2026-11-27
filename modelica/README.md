@@ -72,6 +72,12 @@ anpassar den mot behovet (`Adjustment`), och vägnätet med sin tillväxt. Drift
 pris-, taxe-, produktivitets- och standardnivån, var och en med sin tillväxt (`Growth`). Kostnadsflödena är ekvationer;
 deras lager är kassan, som ritas i `Payments`.
 
+Ikonerna ritas av `scripts/write_icons.py`: delarna av `Continuous.Economy` har varsin bild (människor för demografin,
+en skola för verksamheten, mynt för driften, en byggkran för kapitalet, sedlar för betalningarna och en bank för
+finansen), och paketen ärver sina ikoner ur `Kommunekonomi.Icons` (`Municipality`, `DataPackage`, `ExamplesPackage`),
+som standardbiblioteket gör med `Modelica.Icons`. Ändra en bild i skriptet och kör det igen;
+`python3 scripts/write_icons.py --preview KATALOG` visar alla ikoner som SVG utan att ändra något.
+
 Forskningsmodellerna M1 och M2 ligger i `../research/` och används inte av sajten.
 
 Sajten laddar biblioteket som platta filer: `Kommunekonomi.mo` (kopia av `package.mo`), `Municipalities.mo` och en fil

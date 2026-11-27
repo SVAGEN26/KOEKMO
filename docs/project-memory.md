@@ -1907,3 +1907,14 @@ arkivera data.
   `Scenario.mo` från sidan ärver det gamla namnet och behöver hämtas på nytt.
 - Sajten laddar platta filer som förut och en till, `Municipalities.mo`, mellan biblioteket och kommunerna. Den går
   också att hämta från sidan.
+
+## Ikoner (2026-11-27)
+
+- `scripts/write_icons.py` ritar ikonerna och skriver in dem: paketet `Kommunekonomi.Icons` (`Package`, `Municipality`,
+  `DataPackage`, `ExamplesPackage`) och en bild för varje del av `Continuous.Economy`, för `Scenario`, `Calendar`,
+  `Revenue` och för paketen `Units`, `Components`, `Continuous` och `Municipalities`. `--preview KATALOG` skriver en
+  SVG-översikt.
+- Kommunernas paket, deras `Data` och `Examples` ärver ikonerna (`extends Kommunekonomi.Icons.Municipality;` och så
+  vidare); `prepare_municipality.py` skriver samma rader, och Finspång återskapas exakt.
+- Lager- och flödeskomponenterna (`Stock`, `Transfer`, `AgeGroup` med flera) hade redan bilder och är orörda. Placeringar
+  och kopplingar är orörda, så mocoals diagram gäller.

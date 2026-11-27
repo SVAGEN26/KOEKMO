@@ -295,7 +295,9 @@ def modelica(package, name, code, archive, years, older_shares):
     newline = '\n'
     return f'''within Kommunekonomi.Municipalities;
 package {package} "{name}: kommunens ekonomi år för år med biblioteket Kommunekonomi; belopp i mnkr, tid i kalenderår"
+  extends Kommunekonomi.Icons.Municipality;
   package Data "{name}s basår ur SCB:s räkenskapssammandrag och befolkningsstatistik; genereras av scripts/prepare_municipality.py"
+    extends Kommunekonomi.Icons.DataPackage;
     import Kommunekonomi.Data.BaseYear;
 
 {newline.join(constants)}
@@ -318,6 +320,7 @@ ett annat år med <code>Continuous(base = Data.{package.lower()}{last - 1})</cod
   end Continuous;
 
   package Examples "Färdiga modeller att simulera"
+    extends Kommunekonomi.Icons.ExamplesPackage;
     model Hindcast{last} "Starta i bokslutet {last - 1} och räkna fram {last}; jämför med utfallet i Data.{package.lower()}{last}"
       extends Continuous(base = Data.{package.lower()}{last - 1}, olderShares = Data.olderShares{last - 1}, horizon = 1);
       annotation(experiment(StartTime = {last - 1}, StopTime = {last}, Interval = 0.0833333333333333));
