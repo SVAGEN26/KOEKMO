@@ -55,7 +55,7 @@ def model(name):
     if name not in MODELS:
         work = Path(WORK) / name.replace('.', '_')
         work.mkdir()
-        libraries = [str(ROOT / 'modelica/Kommunekonomi.mo'), str(ROOT / 'modelica/municipalities/Motala/package.mo')]
+        libraries = [str(ROOT / 'modelica/Kommunekonomi/package.mo')]   # the library folder: the municipalities come with it
         file, full = (ROOT / 'modelica/Browser.mo', name) if name == WRAPPER else (Path(__file__).with_name('Scenarios.mo'), f'FastTests.{name}')
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
@@ -141,7 +141,7 @@ class AgeProfile(unittest.TestCase):
     """Ageing between the stocks follows the base year's single years of age (Data.ageProfile)."""
 
     def test_those_who_turn_65_are_the_64_year_olds(self):
-        # SCB, Motala 31 December 2025: 533 persons aged 64, 486 aged 63 (Motala.Data.SCB.motala2025.population).
+        # SCB, Motala 31 December 2025: 533 persons aged 64, 486 aged 63 (Kommunekonomi.Municipalities.Motala.Data.SCB.motala2025.population).
         _, s = run('Base', years=2)
         inside = lambda year: (s['time'] > year) & (s['time'] < year + 1)
         flow = lambda year: float(np.mean((s['demography.ageing[4]'])[inside(year)]))

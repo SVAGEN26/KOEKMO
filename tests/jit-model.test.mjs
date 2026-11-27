@@ -44,7 +44,7 @@ test('switching the base year keeps the calendar and financial inputs aligned',{
   const short=simulate(historical,replay.history,{years:1},path);
   near(short.rows[1],forecast.rows[1],'one year');
   const source=modelicaSource(historical,replay.history,{},path);
-  assert.match(source,/base=Motala.Data.motala2021/);
+  assert.match(source,/base=Kommunekonomi.Municipalities.Motala.Data.motala2021/);
   assert.match(source,/StartTime=2021, StopTime=2026/);
 
   const extended=extendPlanning(planning,2055);
@@ -91,7 +91,7 @@ test('Finspång uses its own base year, reacts to migration, and keeps the Motal
   assert.throws(()=>simulate(baseline,localHistory,{years:3},planning.revenuePath),/0562/);
   const aligned=simulate(baseline,localHistory,{years:3,revenueMode:1},skrRevenue);
   assert.ok(Math.abs(aligned.rows[1].tax-skrRevenue.rows[0].tax)<1e-6);
-  assert.match(modelicaSource(baseline,localHistory,{years:3}),/extends Finspang\.Continuous/);
+  assert.match(modelicaSource(baseline,localHistory,{years:3}),/extends Kommunekonomi\.Municipalities\.Finspang\.Continuous/);
   assert.equal(simulate(b,history,{years:1}).rows[0].debt,b.debt);
 });
 
@@ -111,7 +111,7 @@ test('the same cohort component runs for every municipality from both county bas
     assert.ok(Math.abs(first.populationBalance)<1e-7,code);
     assert.ok(first.population80Plus>0&&first.population80Plus<first.cohorts[4],code);
     assert.match(modelicaSource(baseline,previous.history,{demographyMode:'cohort'}),
-      new RegExp(`data=${packageName}\\.Data\\.SCB\\.${packageName.toLowerCase()}2024`));
+      new RegExp(`data=Kommunekonomi\\.Municipalities\\.${packageName}\\.Data\\.SCB\\.${packageName.toLowerCase()}2024`));
     const observed=simulate(current.baseline,current.history,{demographyMode:'cohort-observed',years:1,migrationDelta:100});
     assert.equal(observed.rows[1].year,2026,code);
     assert.ok(Math.abs(observed.rows[1].populationBalance)<1e-7,code);

@@ -9,7 +9,7 @@ export const OUTPUTS=['population','population80Plus','births','deaths','migrati
   'depreciation','tax','grants','recurringTaxAdjustment','incomeEqualisationAdjustment','regulationPopulationAdjustment','result','debt','cash','assets','commissioned','workInProgress','interest','borrowing',
   'repayment','prefinancing','outstandingDeferredInvestment','annualFinancialIncome','referenceRevenue','projectPaid','projectCommissioned','projectWorkInProgress',
   'projectPlacesInUse','missingProjectPlaces','educationIndex','careIndex','populationBalance','assetBalance','cashBalance','debtBalance'];
-// The wrapper around Motala.Continuous: stocks and flows in continuous time.
+// The wrapper around Kommunekonomi.Municipalities.Motala.Continuous: stocks and flows in continuous time.
 export const MODEL='BrowserContinuous';
 export const MAX_YEARS=100;
 // Continuous time is integrated with IDA, an implicit solver with its own step control; twelve values a year are
@@ -56,7 +56,7 @@ export function createSession(omc,sources,{method=CONTINUOUS_METHOD,stepsPerYear
         redeclare Kommunekonomi.Continuous.CohortDemography demography(
           ${cohortModifiers(settings.packageName,baseYear)}
           ${observed?', residualMigration=zeros(2,101), observedDeltaShape=zeros(2,101), useObservedDeltaShape=false':''})`:'';
-      const data=`${settings.packageName}.Data`;
+      const data=`Kommunekonomi.Municipalities.${settings.packageName}.Data`;
       const base=`${data}.${settings.packageName.toLowerCase()}${baseYear}`;
       const olderShares=motala?`${data}.SCB.olderShares(${data}.SCB.motala${baseYear}.population)`:`${data}.olderShares${baseYear}`;
       const source=`model ${model}

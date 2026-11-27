@@ -9,8 +9,8 @@ With a municipality code and its Modelica package (scripts/prepare_municipality.
 the municipality's adopted budget when recorded with a source, and older age shares from
 the corresponding base year. Written to data/municipalities/<code>/vintage-hindcast-continuous.json.
 
-Each run starts in the closing accounts of a base year (Motala.Data.motala<year>) and
-simulates Motala.Continuous up to three years ahead, but not past 2025. Two sets of
+Each run starts in the closing accounts of a base year (Kommunekonomi.Municipalities.Motala.Data.motala<year>) and
+simulates Kommunekonomi.Municipalities.Motala.Continuous up to three years ahead, but not past 2025. Two sets of
 assumptions are run from every base year:
 
   skr       what SKR's December circular of the base year said: national tax-base
@@ -132,7 +132,7 @@ def modelica_array(values):
 def model_source(origin, horizon, v, assumptions, older_shares=None):
     n0, path = national_path(origin, horizon, v)
     years = [origin + i for i in range(1, horizon + 1)]
-    lines = [f'base = {PACKAGE}.Data.{PREFIX}{origin}', f'horizon = {horizon}',
+    lines = [f'base = Kommunekonomi.Municipalities.{PACKAGE}.Data.{PREFIX}{origin}', f'horizon = {horizon}',
              f'nationalPopulation0 = {n0:.10g}', f'nationalPopulationPath = {modelica_array(path)}']
     if older_shares:
         lines.append(f'olderShares = {modelica_array(older_shares)}')
@@ -168,7 +168,7 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
     if assumptions == 'hindsight':
         # The state's grants as they turned out: each component as booked in year y, per inhabitant at the end of
         # y - 1 (the population the model multiplies by), so a mid-year decision is included.
-        record = lambda y: f'{PACKAGE}.Data.{PREFIX}{y}'
+        record = lambda y: f'Kommunekonomi.Municipalities.{PACKAGE}.Data.{PREFIX}{y}'
         per_capita = lambda k: '{' + ', '.join(f'{record(y)}.grantComponents[{k}]*1e6/{record(y)}.reportedPopulation[2]' for y in years) + '}'
         lines += ['grantsByComponent = true',
                   f'incomeEqualisationPerCapitaPath = {per_capita(1)}',
@@ -178,14 +178,13 @@ def model_source(origin, horizon, v, assumptions, older_shares=None):
                   f'lssEqualisationPerCapitaPath = {per_capita(4)}',
                   'propertyFeePath = {' + ', '.join(f'{record(y)}.grantComponents[5]' for y in years) + '}',
                   'otherGeneralGrantsPath = {' + ', '.join(f'{record(y)}.grants - sum({record(y)}.grantComponents)' for y in years) + '}']
-    return f'model Run\n  extends {PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+    return f'model Run\n  extends Kommunekonomi.Municipalities.{PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
 def simulate(origin, horizon, source, directory):
     (directory / 'Run.mo').write_text(source)
     (directory / 'run.mos').write_text(
-        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-        f'loadFile({json.dumps(str(ROOT / f"modelica/municipalities/{PACKAGE}/package.mo"))}); getErrorString();\n'
+        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi/package.mo"))}); getErrorString();\n'
         'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {origin}, stopTime = {origin + horizon}, numberOfIntervals = {horizon * 12},'
         ' outputFormat = "csv"); getErrorString();\n')

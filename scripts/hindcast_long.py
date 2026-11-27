@@ -88,7 +88,7 @@ def municipality(code, tmp):
     years = {int(y): r for y, r in records['years'].items()}
     missing = [y for y in ORIGINS if 'interestRate' not in years[y] and not plausible_rate(years[y])]
     if not missing:
-        return package, ROOT / f'modelica/municipalities/{package}/package.mo', years
+        return package, ROOT / f'modelica/Kommunekonomi/Municipalities/{package}.mo', years
     # The library asserts that the base year gives a rate; write the package again with the fallback in those years.
     for y in missing:
         years[y]['interestRate'] = FALLBACK_RATE
@@ -116,8 +116,8 @@ def model_source(package, code, origin, records, assumptions):
     years = list(range(origin + 1, LAST + 1))
     national = {int(y): p for y, p in load('data/national-population.json')['population'].items()}
     base = records[origin]
-    record = lambda y: f'{package}.Data.{package.lower()}{y}'
-    lines = [f'base = {record(origin)}', f'olderShares = {package}.Data.olderShares{origin}', f'horizon = {horizon}',
+    record = lambda y: f'Kommunekonomi.Municipalities.{package}.Data.{package.lower()}{y}'
+    lines = [f'base = {record(origin)}', f'olderShares = Kommunekonomi.Municipalities.{package}.Data.olderShares{origin}', f'horizon = {horizon}',
              f'nationalPopulation0 = {national[origin - 1]:.10g}',
              f'nationalPopulationPath = {modelica_array([national[y - 1] for y in years])}']
     if assumptions in ('hindsight', 'drift'):
@@ -143,15 +143,19 @@ def model_source(package, code, origin, records, assumptions):
                   f'lssEqualisationPerCapitaPath = {per_capita(4)}',
                   'propertyFeePath = {' + ', '.join(f'{record(y)}.grantComponents[5]' for y in years) + '}',
                   'otherGeneralGrantsPath = {' + ', '.join(f'{record(y)}.grants - sum({record(y)}.grantComponents)' for y in years) + '}']
-    return f'model Run\n  extends {package}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+    return f'model Run\n  extends Kommunekonomi.Municipalities.{package}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+
+
+LIBRARY_MUNICIPALITIES = ROOT / 'modelica/Kommunekonomi/Municipalities'
 
 
 def simulate(package_file, origin, source, directory):
     (directory / 'Run.mo').write_text(source)
     (directory / 'run.mos').write_text(
-        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-        f'loadFile({json.dumps(str(package_file))}); getErrorString();\n'
-        'loadFile("Run.mo"); getErrorString();\n'
+        f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi/package.mo"))}); getErrorString();\n'
+        # A package written for this run (Motala from SCB, or a fallback interest rate) replaces the library's own.
+        + (f'loadFile({json.dumps(str(package_file))}); getErrorString();\n' if package_file.parent != LIBRARY_MUNICIPALITIES else '')
+        + 'loadFile("Run.mo"); getErrorString();\n'
         f'simulate(Run, startTime = {origin}, stopTime = {LAST}, numberOfIntervals = {(LAST - origin)*STEPS}, outputFormat = "csv"); getErrorString();\n')
     process = subprocess.run([OMC, 'run.mos'], cwd=directory, capture_output=True, text=True, timeout=600)
     result = directory / 'Run_res.csv'

@@ -88,7 +88,7 @@ def model_source(origin, horizon, v, done, ledgers, older_shares=None, extra=())
     """The model with every input in `done` set to its outcome."""
     n0, path = hv.national_path(origin, horizon, v)
     years = [origin + i for i in range(1, horizon + 1)]
-    pkv, record = hv.pkv_outcomes(), lambda y: f'{hv.PACKAGE}.Data.{hv.PREFIX}{y}'
+    pkv, record = hv.pkv_outcomes(), lambda y: f'Kommunekonomi.Municipalities.{hv.PACKAGE}.Data.{hv.PREFIX}{y}'
     labour = {y: pkv[y]['labour'] if 'wages' in done else v['labour'][y] for y in years}
     other = {y: pkv[y]['other'] if 'prices' in done else v['other'][y] for y in years}
     tax_base = hv.tax_base_outcomes() if 'taxBase' in done else v['taxBase']
@@ -124,7 +124,7 @@ def model_source(origin, horizon, v, done, ledgers, older_shares=None, extra=())
     if 'investment' in done:
         lines.append('investmentPath = ' + hv.modelica_array([ledgers[y]['investment'] for y in years]))
     lines += extra
-    return f'model Run\n  extends {hv.PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
+    return f'model Run\n  extends Kommunekonomi.Municipalities.{hv.PACKAGE}.{MODEL}(\n    ' + ',\n    '.join(lines) + ');\nend Run;\n'
 
 
 def skr_forecasts(years):

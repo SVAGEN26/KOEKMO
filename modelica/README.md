@@ -1,25 +1,26 @@
 # Modellerna som sajten kör
 
-Öppna en kommuns `package.mo` i OMEdit, till exempel `municipalities/Motala/package.mo`. Biblioteket laddas av sig självt:
-varje kommun är en paketmapp, OpenModelica letar efter de bibliotek ett paket använder (`uses`) bredvid mappen, och
-`municipalities/Kommunekonomi 0.1.0.mo` är en länk dit till `Kommunekonomi.mo`. Utan symboliska länkar (Windows utan den
-inställningen) laddar man `Kommunekonomi.mo` först. När bibliotekets version ändras ska länken och `uses` byta namn med den.
+Öppna `Kommunekonomi/package.mo` i OMEdit. Det laddar biblioteket och alla 13 kommuner. Biblioteket är en mapp,
+som Modelica-specifikationen beskriver (avsnitt 13.4): `package.mo` definierar `Kommunekonomi`, och filer och mappar
+bredvid den blir dess delar i den ordning `package.order` anger. Kommunerna är underpaketet
+`Kommunekonomi.Municipalities`, en fil per kommun.
 
-- `Kommunekonomi.mo`: biblioteket. Posttyper för bokslut och befolkning, rikets SCB-data, de gemensamma delarna
+- `Kommunekonomi/package.mo`: biblioteket. Posttyper för bokslut och befolkning, rikets SCB-data, de gemensamma delarna
   (`Components.Scenario`, `Revenue`, `Calendar`, `Fertility`), de gemensamma antagandena (`Assumptions`), utdata
   (`Report`) och modellen `Continuous.Economy`: lager och flöden i kontinuerlig tid, med komponenterna
   `Demography`, `CohortDemography`, `Services`, `OperatingAccounts`, `Payments`, `Capital` och `Finance`.
   Årsmodellen (`Annual`) togs bort i november 2026. `Components.Demography` och `CohortDemography` finns kvar
-  med årssteg för demografitesterna (`Motala.Examples.DemographyOnly`).
-- `municipalities/`: ett paket per kommun i Östergötland, var och en en mapp med `package.mo`.
-  - `Motala/package.mo` är skriven för hand ur kommunens årsredovisningar: basår 2020–2025 (`Data.motala2020` till
-    `motala2025`), handledning och ordlista, `Motala.Continuous` och exempel som `Hindcast2025`, `ContinuousCohort`
+  med årssteg för demografitesterna (`Municipalities.Motala.Examples.DemographyOnly`).
+- `Kommunekonomi/Municipalities/`: ett paket per kommun i Östergötland, en fil var, till exempel
+  `Kommunekonomi.Municipalities.Motala` i `Motala.mo`.
+  - `Motala.mo` är skriven för hand ur kommunens årsredovisningar: basår 2020–2025 (`Data.motala2020` till
+    `motala2025`), handledning och ordlista, `Continuous` och exempel som `Hindcast2025`, `ContinuousCohort`
     och `Budget2026`.
   - De tolv andra genereras av `scripts/prepare_municipality.py` ur SCB:s räkenskapssammandrag och Kolada, med basår
     2017–2025. Redigera dem inte för hand.
   - Varje basårspost säger var bokslutet kommer ifrån (`BaseYear.source`: årsredovisning eller räkenskapssammandrag).
 - `Browser.mo`: omslaget som webbläsaren kompilerar (wasm-jit), `BrowserContinuous` kring
-  `Motala.Continuous`. Sajten skriver över varje tal med den valda kommunens. Fast kapacitet på 100 år och alla indata som fria parametrar med bokstavliga
+  `Kommunekonomi.Municipalities.Motala.Continuous`. Sajten skriver över varje tal med den valda kommunens. Fast kapacitet på 100 år och alla indata som fria parametrar med bokstavliga
   standardvärden, så att `-override` når dem.
 
 Tiden är kalenderår. Starttiden är basåret (bokslutet 31 december), och `horizon` år räknas fram; standard
@@ -32,8 +33,8 @@ division med `Units.year`. Modelicas `time` räknas här i år, inte i sekunder 
 
 OpenModelicas enhetskontroll (`--unitChecking`) känner bara SI-enheter och säger inget om `MSEK` eller `a`.
 `npm run check:units` (`scripts/check_units.py`) skriver därför om enheterna till SI-enheter som kontrollen känner
-(`MSEK` och `SEK` som `mol`, `a` som `s`) och kontrollerar `Motala.Continuous`,
-`Motala.Examples.ContinuousCohort` och `Kommunekonomi.Continuous.Economy`. Den hittade 13 motsägelser, mest årsbelopp som kopplades direkt till flöden i
+(`MSEK` och `SEK` som `mol`, `a` som `s`) och kontrollerar `Municipalities.Motala.Continuous`,
+`Municipalities.Motala.Examples.ContinuousCohort` och `Kommunekonomi.Continuous.Economy`. Den hittade 13 motsägelser, mest årsbelopp som kopplades direkt till flöden i
 `Continuous`; de är rättade och siffrorna oförändrade. Kontrollen täcker ekvationer och kopplingar mellan variabler
 med angiven enhet, men inte algoritmavsnitt: årsstegen (`when calendar.tick` med `:=`) kontrolleras inte. Där är enheterna deklarerade men bara granskade för hand. Vektorekvationer
 (`x = y .* z` på hela fält) kontrolleras inte heller; den kontinuerliga demografin är därför skriven med for-slingor. Variabler utan enhet får en
@@ -63,7 +64,7 @@ Diagram i OMEdit: `Continuous.Economy` och alla dess delar (`Demography`, `Servi
     mocoal -i -c Kommunekonomi.Continuous.Economy -c Kommunekonomi.Continuous.Demography \
            -c Kommunekonomi.Continuous.Services -c Kommunekonomi.Continuous.OperatingAccounts \
            -c Kommunekonomi.Continuous.Capital -c Kommunekonomi.Continuous.Payments \
-           -c Kommunekonomi.Continuous.Finance modelica/Kommunekonomi.mo
+           -c Kommunekonomi.Continuous.Finance modelica/Kommunekonomi/package.mo
 
 Kör om det när komponenter eller kopplingar ändras; `--svg KATALOG` skriver en förhandsvisning. Verksamheten
 (`Services`) har fyra nivålager (`Level`): kapaciteten i utbildning, äldreomsorg och övrigt, var och en med ett flöde som
@@ -72,3 +73,6 @@ pris-, taxe-, produktivitets- och standardnivån, var och en med sin tillväxt (
 deras lager är kassan, som ritas i `Payments`.
 
 Forskningsmodellerna M1 och M2 ligger i `../research/` och används inte av sajten.
+
+Sajten laddar biblioteket som platta filer: `Kommunekonomi.mo` (kopia av `package.mo`), `Municipalities.mo` och en fil
+per kommun, i den ordningen (`scripts/build.py`). Samma filer går att hämta från sajten.

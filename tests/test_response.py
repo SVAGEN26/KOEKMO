@@ -2,7 +2,7 @@
 
 scripts/response_test.py computes the model's service volume in Python from the observed population. That copy
 must be the model's rule, or the test says nothing about the model. The model tests run
-Finspang.Continuous in OpenModelica and compare; they are skipped without OMC or omc on PATH.
+Kommunekonomi.Municipalities.Finspang.Continuous in OpenModelica and compare; they are skipped without OMC or omc on PATH.
 """
 import csv
 import json
@@ -108,8 +108,7 @@ def simulate(model, intervals):
         tmp = Path(tmp)
         names = 'p\\\\[.\\\\]|demography.cohorts.older\\\\[.\\\\]|population80Plus|population|serviceVolume|capacity\\\\[.\\\\]|educationIndex|careIndex'
         (tmp / 'run.mos').write_text(
-            f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi.mo"))}); getErrorString();\n'
-            f'loadFile({json.dumps(str(ROOT / "modelica/municipalities/Finspang/package.mo"))}); getErrorString();\n'
+            f'loadFile({json.dumps(str(ROOT / "modelica/Kommunekonomi/package.mo"))}); getErrorString();\n'
             f'simulate({model}, startTime=2025, stopTime=2033, numberOfIntervals={intervals}, tolerance=1e-9, outputFormat="csv", '
             f'variableFilter="{names}"); getErrorString();\n')
         out = subprocess.run([OMC, 'run.mos'], cwd=tmp, capture_output=True, text=True, timeout=600).stdout
@@ -137,7 +136,7 @@ class AgainstTheModel(unittest.TestCase):
         c65, c80 = record['careCostPerInhabitant']
         cls.care = [c65, c80, c80]
         cls.roads = record['infrastructureShare']
-        cls.continuous = simulate('Finspang.Continuous', 96)
+        cls.continuous = simulate('Kommunekonomi.Municipalities.Finspang.Continuous', 96)
 
     def needs(self, rows):
         # Five age groups: 65+ is split by the model's ageing chain (Continuous.Demography, olderChain).

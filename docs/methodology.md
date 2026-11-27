@@ -9,7 +9,7 @@ Structure to Finance state the rules per year, the way they are simplest to read
 (and the way the removed yearly model ran them); [Continuous time](#continuous-time)
 says how the model runs them as flows. Comparisons with `Annual` below are the
 record of how the continuous model was checked while both existed. The
-equations are read from `modelica/Kommunekonomi.mo`; the Modelica documentation
+equations are read from `modelica/Kommunekonomi/package.mo`; the Modelica documentation
 of each component says the same in Swedish.
 
 Scope: the municipality's own accounts (kommunen), not the group. Money is
@@ -747,7 +747,8 @@ the hindsight and prices sets use outcomes on purpose.
 The site compiles `Kommunekonomi.mo`, the municipality's package and
 `Browser.mo` with OpenModelica's web compiler (`wasm-jit`), and re-runs the
 compiled model with `-override` for every scenario. `Browser.mo` holds the
-wrapper `BrowserContinuous` around `Motala.Continuous`, without equations of
+wrapper `BrowserContinuous` around
+`Kommunekonomi.Municipalities.Motala.Continuous`, without equations of
 its own.
 Inputs are validated in JavaScript, and the model asserts the same limits. The
 compiler revision and file hashes are in `omc-web/manifest.json` on the site. No

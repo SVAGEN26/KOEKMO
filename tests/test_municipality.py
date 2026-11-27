@@ -33,7 +33,7 @@ class FromSCB(unittest.TestCase):
             self.assertAlmostEqual(scb[str(y)]['priorYearSettlement'], r['priorYearSettlement'], delta=1, msg=f'{y} settlement')
 
     def test_generated_package_carries_the_base_years(self):
-        source = (ROOT / 'modelica/municipalities/Mjolby/package.mo').read_text()
+        source = (ROOT / 'modelica/Kommunekonomi/Municipalities/Mjolby.mo').read_text()
         self.assertIn('extends Kommunekonomi.Continuous.Economy(base = Data.mjolby2025', source)
         for y, r in years('0586').items():
             self.assertIn(f'constant BaseYear mjolby{y} = BaseYear(', source)

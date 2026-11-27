@@ -1,4 +1,4 @@
-// The "Modellen" tab: a flow diagram of Kommunekonomi.Continuous.Economy (which Motala.Continuous extends), documentation per component and
+// The "Modellen" tab: a flow diagram of Kommunekonomi.Continuous.Economy (which Kommunekonomi.Municipalities.Motala.Continuous extends), documentation per component and
 // a result-to-debt waterfall, all for one chosen year of the current scenario.
 // Assumptions are edited through the scenario lab's own controls, so both views share
 // one scenario and one validation path.

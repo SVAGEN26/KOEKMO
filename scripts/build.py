@@ -124,8 +124,11 @@ def main():
             shutil.copy2(source, DIST / source.name)
     for name in DATA:
         shutil.copy2(ROOT / 'data' / name, DIST / name)
-    shutil.copy2(ROOT / 'modelica/Kommunekonomi.mo', DIST / 'Kommunekonomi.mo')
-    shutil.copy2(ROOT / 'modelica/municipalities/Motala/package.mo', DIST / 'Motala.mo')
+    # The site ships the library as flat files: the library itself, the empty package the municipalities live in, and
+    # one file per municipality (each begins with `within Kommunekonomi.Municipalities;`).
+    shutil.copy2(ROOT / 'modelica/Kommunekonomi/package.mo', DIST / 'Kommunekonomi.mo')
+    shutil.copy2(ROOT / 'modelica/Kommunekonomi/Municipalities/package.mo', DIST / 'Municipalities.mo')
+    shutil.copy2(ROOT / 'modelica/Kommunekonomi/Municipalities/Motala.mo', DIST / 'Motala.mo')
     municipal_data = {}
     for folder in sorted((ROOT / 'data/municipalities').glob('[0-9]*')):
         if not (folder / 'web.json').is_file():
@@ -138,7 +141,7 @@ def main():
             'historical': json.loads((folder / 'web-2024.json').read_text()),
         }
         if code != '0583':
-            shutil.copy2(ROOT / 'modelica/municipalities' / package / 'package.mo', DIST / f'{package}.mo')
+            shutil.copy2(ROOT / 'modelica/Kommunekonomi/Municipalities' / f'{package}.mo', DIST / f'{package}.mo')
         reference = folder / 'skr-revenue-path.json'
         if reference.is_file():
             target = DIST / 'municipalities' / code

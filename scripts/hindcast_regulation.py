@@ -54,7 +54,7 @@ def main():
         index[y] = index[y - 1] * statistics.median(growth)
     regulation = {y: value(MOTALA, y, 'regulation') for y in YEARS}
     assert all(value(c, y, 'regulation') == regulation[y] for c in municipalities for y in YEARS), 'the regulation grant differs between municipalities'
-    source = (ROOT / 'modelica/Kommunekonomi.mo').read_text()
+    source = (ROOT / 'modelica/Kommunekonomi/package.mo').read_text()
     table = re.search(r'constant Real nationalPopulation\[\d+\] = \{([^}]*)\}', source).group(1)
     first = int(re.search(r'constant Integer nationalFirstYear = (\d+)', source).group(1))
     national = {first + i: float(x) for i, x in enumerate(table.replace('\n', ' ').split(','))}
